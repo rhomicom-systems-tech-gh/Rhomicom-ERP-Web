@@ -1,6 +1,7 @@
 <?php
 $canAddRoles = test_prmssns($dfltPrvldgs[10], $mdlNm);
 $canEdtRoles = test_prmssns($dfltPrvldgs[11], $mdlNm);
+$canVwRcHstry = test_prmssns("View Record History", $mdlNm);
 
 $pageNo = isset($_POST['pageNo']) ? cleanInputData($_POST['pageNo']) : 1;
 $lmtSze = isset($_POST['limitSze']) ? cleanInputData($_POST['limitSze']) : 10;
@@ -14,9 +15,55 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {
-                
+                $slctdAllRoles = isset($_POST['slctdAllRoles']) ? cleanInputData($_POST['slctdAllRoles']) : '';
+                $affctdRws = 0;
+                //var_dump($_POST);
+                if (trim($slctdAllRoles, "|~") != "") {
+                    $variousRows = explode("|", trim($slctdAllRoles, "|"));
+                    for ($z = 0; $z < count($variousRows); $z++) {
+                        $crntRow = explode("~", $variousRows[$z]);
+                        if (count($crntRow) == 5) {
+                            $inptRoleID = (int) (cleanInputData1($crntRow[0]));
+                            $inptRoleNm = (cleanInputData1($crntRow[1]));
+                            $canAdmin = (cleanInputData1($crntRow[2]));
+                            $canAssign = ($canAdmin == "YES") ? "1" : "0";
+                            $vldStrtDte = cleanInputData1($crntRow[3]);
+                            $vldEndDte = cleanInputData1($crntRow[4]);
+                            $oldRoleID = getRoleID($inptRoleNm);
+                            if ($oldRoleID <= 0 && $inptRoleID <= 0) {
+                                $affctdRws += createRole($inptRoleNm, $vldStrtDte, $vldEndDte, $canAssign);
+                            } else if ($inptRoleID > 0 && ($oldRoleID == $inptRoleID || $oldRoleID <= 0)) {
+                                $affctdRws += updateRole($inptRoleID, $inptRoleNm, $vldStrtDte, $vldEndDte, $canAssign);
+                            }
+                        }
+                    }
+                }
+                echo ("<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>" . $affctdRws . " Role(s) Saved!");
+                exit();
             } else if ($actyp == 2) {
-                
+                $rlPrvldgSbmtdRoleID = isset($_POST['rlPrvldgSbmtdRoleID']) ? (int) cleanInputData($_POST['rlPrvldgSbmtdRoleID']) : -1;
+                $slctdRolesPrvldgs = isset($_POST['slctdRolesPrvldgs']) ? cleanInputData($_POST['slctdRolesPrvldgs']) : '';
+                $affctdRws = 0;
+                //var_dump($_POST);
+                if (trim($slctdRolesPrvldgs, "|~") != "" && $rlPrvldgSbmtdRoleID > 0) {
+                    $variousRows = explode("|", trim($slctdRolesPrvldgs, "|"));
+                    for ($z = 0; $z < count($variousRows); $z++) {
+                        $crntRow = explode("~", $variousRows[$z]);
+                        if (count($crntRow) == 4) {
+                            $inptPrvldgID = (int) (cleanInputData1($crntRow[0]));
+                            $inptPrvldgNm = (cleanInputData1($crntRow[1]));
+                            $vldStrtDte = cleanInputData1($crntRow[2]);
+                            $vldEndDte = cleanInputData1($crntRow[3]);
+                            if (hsRoleEverHdThisPrvldg($rlPrvldgSbmtdRoleID, $inptPrvldgID) == false) {
+                                $affctdRws += asgnPrvlgToRole($inptPrvldgID, $rlPrvldgSbmtdRoleID, $vldStrtDte, $vldEndDte);
+                            } else {
+                                $affctdRws += updateRolesPrticulrPrvldg($inptPrvldgID, $rlPrvldgSbmtdRoleID, $vldStrtDte, $vldEndDte);
+                            }
+                        }
+                    }
+                }
+                echo ("<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>" . $affctdRws . " Role Priviledge(s) Saved!");
+                exit();
             }
         } else {
             if ($vwtyp == 0) {
@@ -43,36 +90,40 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <div class="row rhoRowMargin">
                         <?php
                         if ($canAddRoles === true) {
-                            $nwRowHtml = urlencode("<tr id=\"allRolesEdtRow__WWW123WWW\">"
-                                    . "<td>New</td>"
-                                    . "<td><div class=\"form-group form-group-sm col-md-12\">"
+                            $nwRowHtml = "<tr id=\"allRolesEdtRow__WWW123WWW\">"
+                                    . "<td class=\"lovtd\">New</td>"
+                                    . "<td class=\"lovtd\"><div class=\"form-group form-group-sm col-md-12\">"
                                     . "<input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"allRolesEdtRow_WWW123WWW_RoleNm\" name=\"allRolesEdtRow_WWW123WWW_RoleNm\" value=\"\" style=\"width:100%\">"
                                     . "<input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"allRolesEdtRow_WWW123WWW_RoleID\" name=\"allRolesEdtRow_WWW123WWW_RoleID\" value=\"-1\">"
                                     . "</div>"
                                     . "</td>"
-                                    . "<td><div class=\"form-group form-group-sm col-md-12\">
+                                    . "<td class=\"lovtd\"><div class=\"form-group form-group-sm col-md-12\">
                                                                 <div class=\"input-group date form_date_tme\" data-date=\"\" data-date-format=\"dd-M-yyyy hh:ii:ss\" data-link-field=\"dtp_input2\" data-link-format=\"yyyy-mm-dd hh:ii:ss\" style=\"width:100%\">
                                                                     <input class=\"form-control\" size=\"16\" type=\"text\" id=\"allRolesEdtRow_WWW123WWW_StrtDte\" name=\"allRolesEdtRow_WWW123WWW_StrtDte\" value=\"\" readonly=\"\">
                                                                     <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-remove\"></span></span>
                                                                     <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-calendar\"></span></span>
                                                                 </div>                                                                
                                                             </div></td>"
-                                    . "<td><div class=\"form-group form-group-sm col-md-12\">
+                                    . "<td class=\"lovtd\"><div class=\"form-group form-group-sm col-md-12\">
                                                                 <div class=\"input-group date form_date_tme\" data-date=\"\" data-date-format=\"dd-M-yyyy hh:ii:ss\" data-link-field=\"dtp_input2\" data-link-format=\"yyyy-mm-dd hh:ii:ss\" style=\"width:100%\">
                                                                     <input class=\"form-control\" size=\"16\" type=\"text\" id=\"allRolesEdtRow_WWW123WWW_EndDte\" name=\"allRolesEdtRow_WWW123WWW_EndDte\" value=\"\" readonly=\"\">
                                                                     <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-remove\"></span></span>
                                                                     <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-calendar\"></span></span>
                                                                 </div>                                                                
                                                             </div></td>"
-                                    . "<td><div class=\"form-group form-group-sm col-md-12\">
+                                    . "<td class=\"lovtd\"><div class=\"form-group form-group-sm col-md-12\">
                                                         <select data-placeholder=\"Select...\" class=\"form-control chosen-select\" id=\"allRolesEdtRow_WWW123WWW_CanAdmn\" name=\"allRolesEdtRow_WWW123WWW_CanAdmn\">
                                                                 <option value=\"NO\">NO</option>
                                                                 <option value=\"YES\">YES</option>
                                                         </select>                                                               
                                                     </div>                                                        
                                             </td>"
-                                    . "<td>&nbsp;</td>"
-                                    . "</tr>");
+                                    . "<td class=\"lovtd\">&nbsp;</td>";
+                            if ($canVwRcHstry === true) {
+                                $nwRowHtml .= "<td class=\"lovtd\">&nbsp;</td>";
+                            }
+                            $nwRowHtml .= "</tr>";
+                            $nwRowHtml = urlencode($nwRowHtml);
                             ?> 
                             <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 1px !important;">     
                                 <div class="col-md-6">
@@ -113,13 +164,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <?php
                                 $valslctdArry = array("", "", "");
                                 $srchInsArrys = array("Role Name", "Priviledge Name", "Owner Module");
-
                                 for ($z = 0; $z < count($srchInsArrys); $z++) {
                                     if ($srchIn == $srchInsArrys[$z]) {
                                         $valslctdArry[$z] = "selected";
                                     }
                                     ?>
-                                                                        <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                                                <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                 <?php } ?>
                                 </select>-->
                                 <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
@@ -187,6 +237,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <th>End Date</th>
                                         <th>Can Mini-Admins Assign?</th>
                                         <th>...</th>
+                                        <?php if ($canVwRcHstry === true) { ?>
+                                            <th>...</th>
+                                        <?php } ?>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -195,8 +248,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         $cntr += 1;
                                         ?>
                                         <tr id="allRolesEdtRow_<?php echo $cntr; ?>">                                    
-                                            <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                            <td>
+                                            <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                            <td class="lovtd">
                                                 <?php if ($canEdtRoles === true) { ?>
                                                     <div class="form-group form-group-sm col-md-12">
                                                         <input type="text" class="form-control" aria-label="..." id="allRolesEdtRow<?php echo $cntr; ?>_RoleNm" name="allRolesEdtRow<?php echo $cntr; ?>_RoleNm" value="<?php echo $row[1]; ?>" style="width:100%;">
@@ -206,7 +259,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <span><?php echo $row[1]; ?></span>
                                                 <?php } ?>                                                         
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <?php if ($canEdtRoles === true) { ?>
                                                     <div class="form-group form-group-sm col-md-12">
                                                         <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%;">
@@ -219,7 +272,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <span><?php echo $row[2]; ?></span>
                                                 <?php } ?>                                                         
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <?php if ($canEdtRoles === true) { ?>
                                                     <div class="form-group form-group-sm col-md-12">
                                                         <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%;">
@@ -232,7 +285,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <span><?php echo $row[3]; ?></span>
                                                 <?php } ?>                                                         
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <?php if ($canEdtRoles === true) { ?>
                                                     <div class="form-group form-group-sm col-md-12">
                                                         <select data-placeholder="Select..." class="form-control chosen-select" id="allRolesEdtRow<?php echo $cntr; ?>_CanAdmn" name="allRolesEdtRow<?php echo $cntr; ?>_CanAdmn">
@@ -252,12 +305,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <span><?php echo ($row[4] == '1' ? "YES" : "NO"); ?></span>
                                                 <?php } ?>                                                         
                                             </td>
-                                            <td>
-                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Details" onclick="getOneRoleForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'rolePrvldgsForm', 'View/Edit Priviledges for Role (<?php echo $row[1]; ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo ?>, 'clear');" style="padding:2px !important;" style="padding:2px !important;">
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Details" onclick="getOneRoleForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'rolePrvldgsForm', 'View/Edit Priviledges for Role (<?php echo $row[1]; ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo ?>, 'clear');" style="padding:2px !important;">
                                                     <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                     <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 </button>
                                             </td>
+                                            <?php if ($canVwRcHstry === true) { ?>
+                                                <td class="lovtd">
+                                                    <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php echo urlencode(encrypt1(($row[0] . "|sec.sec_roles|role_id"), $smplTokenWord1)); ?>');" style="padding:2px !important;">
+                                                        <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                    </button>
+                                                </td>
+                                            <?php } ?>
                                         </tr>
                                         <?php
                                     }
@@ -290,9 +350,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="row">
                                 <?php
                                 if ($canEdtRoles === true) {
-                                    $nwRowHtml = urlencode("<tr id=\"rolePrvldgsEdtRow__WWW123WWW\">"
-                                            . "<td>New</td>"
-                                            . "<td><div class=\"form-group form-group-sm col-md-12\">"
+                                    $nwRowHtml = "<tr id=\"rolePrvldgsEdtRow__WWW123WWW\">"
+                                            . "<td class=\"lovtd\">New</td>"
+                                            . "<td class=\"lovtd\"><div class=\"form-group form-group-sm col-md-12\">"
                                             . "<div class=\"input-group\"  style=\"width:100%\">"
                                             . "<input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"rolePrvldgsEdtRow_WWW123WWW_PrvldgNm\" value=\"\">"
                                             . "<input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"rolePrvldgsEdtRow_WWW123WWW_PrvldgID\" value=\"-1\">"
@@ -303,22 +363,29 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             . "</div>"
                                             . "</div>"
                                             . "</td>"
-                                            . "<td>&nbsp;</td>"
-                                            . "<td><div class=\"form-group form-group-sm col-md-12\">
+                                            . "<td class=\"lovtd\">&nbsp;</td>"
+                                            . "<td class=\"lovtd\"><div class=\"form-group form-group-sm col-md-12\">
                                                                 <div class=\"input-group date form_date_tme\" data-date=\"\" data-date-format=\"dd-M-yyyy hh:ii:ss\" data-link-field=\"dtp_input2\" data-link-format=\"yyyy-mm-dd hh:ii:ss\" style=\"width:100%\">
                                                                     <input class=\"form-control\" size=\"16\" type=\"text\" id=\"rolePrvldgsEdtRow_WWW123WWW_StrtDte\" value=\"\" readonly=\"\">
                                                                     <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-remove\"></span></span>
                                                                     <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-calendar\"></span></span>
                                                                 </div>                                                                
-                                                            </div></td>"
-                                            . "<td><div class=\"form-group form-group-sm col-md-12\">
+                                                            </div>
+                                                   </td>"
+                                            . "<td class=\"lovtd\">
+                                                <div class=\"form-group form-group-sm col-md-12\">
                                                                 <div class=\"input-group date form_date_tme\" data-date=\"\" data-date-format=\"dd-M-yyyy hh:ii:ss\" data-link-field=\"dtp_input2\" data-link-format=\"yyyy-mm-dd hh:ii:ss\" style=\"width:100%\">
                                                                     <input class=\"form-control\" size=\"16\" type=\"text\" id=\"rolePrvldgsEdtRow_WWW123WWW_EndDte\" value=\"\" readonly=\"\">
                                                                     <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-remove\"></span></span>
                                                                     <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-calendar\"></span></span>
                                                                 </div>                                                                
-                                                            </div></td>"
-                                            . "</tr>");
+                                                </div>
+                                               </td>";
+                                    if ($canVwRcHstry === true) {
+                                        $nwRowHtml .= "<td class=\"lovtd\">&nbsp;</td>";
+                                    }
+                                    $nwRowHtml .= "</tr>";
+                                    $nwRowHtml = urlencode($nwRowHtml);
                                     ?> 
                                     <div class="<?php echo $colClassType2; ?>" style="padding:0px 1px 0px 1px !important;">     
                                         <div class="col-md-6">
@@ -344,6 +411,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <div class="input-group">
                                         <input class="form-control" id="rolePrvldgsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncOneRole(event, 'myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'rolePrvldgsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>, '');">
                                         <input id="rolePrvldgsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                                        <input id="rlPrvldgSbmtdRoleID" type = "hidden" value="<?php echo $pkID; ?>">
                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getOneRoleForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'rolePrvldgsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>, 'clear');">
                                             <span class="glyphicon glyphicon-remove"></span>
                                         </label>
@@ -379,7 +447,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-sort-by-attributes"></span></span>
                                         <select data-placeholder="Select..." class="form-control chosen-select" id="rolePrvldgsSortBy">
                                             <?php
-                                            $valslctdArry = array("", "", "");
+                                            $valslctdArry = array("", "", "","");
                                             $srchInsArrys = array("Priviledge Name", "Owner Module", "Start Date", "End Date");
                                             for ($z = 0; $z < count($srchInsArrys); $z++) {
                                                 if ($sortBy == $srchInsArrys[$z]) {
@@ -418,6 +486,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <th>Owner Module</th>
                                                 <th>Start Date</th>
                                                 <th>End Date</th>
+                                                <?php if ($canVwRcHstry === true) { ?>
+                                                    <th>...</th>
+                                                <?php } ?>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -427,8 +498,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 $cntr += 1;
                                                 ?>
                                                 <tr id="rolePrvldgsEdtRow_<?php echo $cntr; ?>">                                    
-                                                    <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                                    <td>
+                                                    <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                                    <td class="lovtd">
                                                         <?php if ($canEdtRoles === true) { ?>
                                                             <div class="form-group form-group-sm col-md-12">                                                                
                                                                 <input type="text" class="form-control" aria-label="..." id="rolePrvldgsEdtRow<?php echo $cntr; ?>_PrvldgNm" name="rolePrvldgsEdtRow<?php echo $cntr; ?>_PrvldgNm" value="<?php echo $row1[2]; ?>" style="width:100%;" readonly="">
@@ -439,8 +510,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <span><?php echo $row1[2]; ?></span>
                                                         <?php } ?>                                                         
                                                     </td>
-                                                    <td><span><?php echo $row1[3]; ?></span></td>
-                                                    <td>
+                                                    <td class="lovtd"><span><?php echo $row1[3]; ?></span></td>
+                                                    <td class="lovtd">
                                                         <?php if ($canEdtRoles === true) { ?>
                                                             <div class="form-group form-group-sm col-md-12">
                                                                 <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%;">
@@ -453,7 +524,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <span><?php echo $row1[4]; ?></span>
                                                         <?php } ?>                                                         
                                                     </td>
-                                                    <td>
+                                                    <td class="lovtd">
                                                         <?php if ($canEdtRoles === true) { ?>
                                                             <div class="form-group form-group-sm col-md-12">
                                                                 <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%;">
@@ -466,6 +537,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <span><?php echo $row1[5]; ?></span>
                                                         <?php } ?>                                                         
                                                     </td>
+                                                    <?php if ($canVwRcHstry === true) { ?>
+                                                        <td class="lovtd">
+                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php echo urlencode(encrypt1(($row1[0] . "|sec.sec_roles_n_prvldgs|dflt_row_id"), $smplTokenWord1)); ?>');" style="padding:2px !important;">
+                                                                <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                            </button>
+                                                        </td>
+                                                    <?php } ?>
                                                 </tr>
                                                 <?php
                                             }

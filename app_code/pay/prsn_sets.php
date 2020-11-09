@@ -285,8 +285,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <tr>
                                         <th>No.</th>
                                         <th>Person Set Name</th>   
-                                        <th>Enabled?</th>   
-                                        <th>Is Default?</th> 
+                                        <th style="text-align:center;">Enabled?</th>   
+                                        <th style="text-align:center;">Is Default?</th> 
                                         <th>&nbsp;</th>                                       
                                         <?php if ($canDelPrsSet === true) { ?>
                                             <th>&nbsp;</th>
@@ -308,7 +308,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <td class="lovtd"><?php echo $row[1]; ?>
                                                 <input type="hidden" class="form-control" aria-label="..." id="allPrsSetsRow<?php echo $cntr; ?>_PrsSetID" value="<?php echo $row[0]; ?>">
                                             </td>
-                                            <td class="lovtd">
+                                            <td class="lovtd" style="text-align:center;">
                                                 <?php
                                                 $isChkd = "";
                                                 $isRdOnly = "disabled=\"true\"";
@@ -324,7 +324,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td class="lovtd">
+                                            <td class="lovtd" style="text-align:center;">
                                                 <?php
                                                 $isChkd = "";
                                                 $isRdOnly = "disabled=\"true\"";

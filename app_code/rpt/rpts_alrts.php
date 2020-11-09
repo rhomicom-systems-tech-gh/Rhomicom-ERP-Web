@@ -106,10 +106,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $pkID = isset($_POST['sbmtdAlrtID']) ? $_POST['sbmtdAlrtID'] : -1;
                 $sbmtdRptID = isset($_POST['sbmtdRptID']) ? $_POST['sbmtdRptID'] : -1;
                 $sbmtdAlrtID = $pkID;
-                echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=$group&typ=$type');\">
-						<span style=\"text-decoration:none;\">Reports Menu</span>
-					</li>
-                                        <li>
+                echo $cntent . "<li>
                                     <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
                                     <span style=\"text-decoration:none;\">Run Alerts</span>
 				</li>
@@ -137,8 +134,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="<?php echo $colClassType2; ?>" style="padding:0px 1px 0px 1px !important;"> 
                                 <div class="col-md-12">
                                     <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Reports and Processes', '', '', '', 'radio', true, '-1', 'sbmtdAlertRptID', 'None', 'clear', 0, '', function () {
-                                                getOneNewAlrtForm();
-                                            });" style="width:100% !important;">
+                                                                    getOneAlertStpForm(-1, 4, 'ShowDialog', '0');
+                                                                });" style="width:100% !important;">
                                         <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                         New Alert
                                     </button>
@@ -218,15 +215,21 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     </div>
                     <div class="row"  style="padding:1px 15px 1px 15px !important;"><hr style="margin:1px 0px 3px 0px;"></div>
                     <div class="row" style="padding:0px 15px 0px 15px !important"> 
-                        <div  class="col-lg-3" style="padding:0px 1px 0px 1px !important">
+                        <div  class="col-lg-4" style="padding:0px 1px 0px 1px !important">
                             <fieldset class="basic_person_fs">                                        
                                 <table class="table table-striped table-bordered table-responsive" id="allAlrtsTable" cellspacing="0" width="100%" style="width:100%;">
                                     <thead>
                                         <tr>
                                             <th>No.</th>
                                             <!--<th>Report / Process Name</th>-->
-                                            <th>Alert Name</th>
+                                            <th style="min-width: 150px;width:150px;">Alert Name</th>
                                             <th>&nbsp;</th>
+                                            <?php if ($canEdtAlrts === true) { ?>
+                                            <th>&nbsp;</th>
+                                            <?php } ?>
+                                            <?php if ($canAddAlrts === true) { ?>
+                                                <th>&nbsp;</th>
+                                            <?php } ?>
                                             <?php if ($canDelAlrts === true) { ?>
                                                 <th>&nbsp;</th>
                                             <?php } ?>
@@ -248,10 +251,24 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <input type="hidden" class="form-control" aria-label="..." id="allAlrtsRow<?php echo $cntr; ?>_AlrtID" value="<?php echo $row[0]; ?>">
                                                 </td>
                                                 <td class="lovtd">
-                                                    <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="getOneRptsParamsForm(<?php echo $row[1]; ?>, -1, '<?php echo $row[3]; ?>', 2, <?php echo $row[0]; ?>);" data-toggle="tooltip" data-placement="bottom" title="Run Alert">
+                                                    <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="getOneRptsParamsForm(<?php echo $row[1]; ?>, -1, '<?php echo $row[3]; ?>', 2, <?php echo $row[0]; ?>, 'ShowDialog');" data-toggle="tooltip" data-placement="bottom" title="Run Alert">
                                                         <img src="cmn_images/98.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                     </button>
                                                 </td>
+                                                <?php if ($canEdtAlrts === true) { ?>
+                                                    <td class="lovtd">
+                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="getOneAlertStpForm(<?php echo $row[0]; ?>, 3, 'ShowDialog', '0');" data-toggle="tooltip" data-placement="bottom" title="Edit Alert">
+                                                            <img src="cmn_images/edit32.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                        </button>
+                                                    </td>
+                                                <?php } ?>
+                                                <?php if ($canAddAlrts === true) { ?>
+                                                    <td class="lovtd">
+                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="getOneAlertStpForm(<?php echo $row[0]; ?>, 3, 'ShowDialog', '1');" data-toggle="tooltip" data-placement="bottom" title="Duplicate Alert">
+                                                            <img src="cmn_images/Copy.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                        </button>
+                                                    </td>
+                                                <?php } ?>
                                                 <?php if ($canDelAlrts === true) { ?>
                                                     <td class="lovtd">
                                                         <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delAlrts('allAlrtsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Alert">
@@ -267,7 +284,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </table>                        
                             </fieldset>
                         </div>                        
-                        <div  class="col-lg-9" style="padding:0px 1px 0px 1px !important">
+                        <div  class="col-lg-8" style="padding:0px 1px 0px 1px !important">
                             <fieldset class="basic_person_fs" style="padding-top:10px !important;">
                                 <div class="rho-container-fluid" id="alrtsDetailInfo">
                                     <?php
@@ -277,442 +294,112 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         while ($row1 = loc_db_fetch_array($result1)) {
                                             if ($canEdtAlrts === true) {
                                                 ?>
-                                                <div class="row phone-only-btn" style="margin: 0px 0px 10px 0px !important;">
-                                                    <div class="col-md-12" style="padding:0px 0px 0px 0px !important;">
-                                                        <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#alrtsDetailInfo', 'grp=9&typ=1&pg=2&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">Alert Runs</button>
-                                                        <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#alrtSetupTbPage', 'grp=9&typ=1&pg=2&vtyp=3&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">Alerts Setup</button>
-                                                    </div>
-                                                </div>
-                                                <ul class="nav nav-tabs rho-hideable-tabs" style="margin-top:-5px !important;">
-                                                    <li class="active"><a data-toggle="tab" data-rhodata="&pg=2&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>" href="#alrtRunsTbPage" id="alrtRunsTbPagetab">Alert Runs</a></li>
-                                                    <li><a data-toggle="tabajxalrt" data-rhodata="&pg=2&vtyp=3&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>" href="#alrtSetupTbPage" id="alrtSetupTbPagetab">Alerts Setup</a></li>
-                                                </ul>                                    
-                                                <div class="row">                  
-                                                    <div class="col-md-12">
-                                                        <div class="custDiv"> 
-                                                            <div class="tab-content">
-                                                                <div id="alrtRunsTbPage" class="tab-pane fadein active" style="border:none !important;"> 
-                                                                <?php } else { ?>
-                                                                    <div class="rho-container-fluid1">
-                                                                    <?php } ?>       
-                                                                    <div class="row">
-                                                                        <div  class="col-md-6" style="padding:0px 3px 0px 3px !important;"> 
-                                                                            <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
-                                                                                <label for="alrtsRptNm" class="control-label col-lg-4">Report Name:</label>
-                                                                                <div  class="col-lg-8">
-                                                                                    <span><?php echo $row1[3]; ?></span>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div  class="col-md-6" style="padding:0px 3px 0px 3px !important;">
-                                                                            <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
-                                                                                <label for="alrtsAlertNm" class="control-label col-lg-4">Alert Name:</label>
-                                                                                <div  class="col-lg-8">
-                                                                                    <span><?php echo $row1[1]; ?></span>
-                                                                                </div>
-                                                                            </div>  
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row"  style="padding:1px 3px 1px 3px !important;"><hr style="margin:1px 0px 5px 0px;"></div>
-                                                                    <div class="row">
-                                                                        <?php
-                                                                        $pageNo = 1;
-                                                                        $lmtSze = 10;
-                                                                        $srchFor = "%";
-                                                                        $srchIn = "Report Run ID";
-                                                                        $colClassType1 = "col-lg-3";
-                                                                        $colClassType2 = "col-lg-4";
-                                                                        $colClassType3 = "col-lg-5";
-                                                                        ?>
-                                                                        <div class="<?php echo $colClassType2; ?>" style="padding:0px 3px 0px 3px !important;">
-                                                                            <div class="input-group">
-                                                                                <input class="form-control" id="alrtRunsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAlrtRuns(event, '', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">
-                                                                                <input id="alrtRunsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
-                                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getAllAlrtRuns('clear', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">
-                                                                                    <span class="glyphicon glyphicon-remove"></span>
-                                                                                </label>
-                                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getAllAlrtRuns('', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">
-                                                                                    <span class="glyphicon glyphicon-search"></span>
-                                                                                </label> 
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="<?php echo $colClassType3; ?>" style="padding:0px 3px 0px 3px !important;">
-                                                                            <div class="input-group">
-                                                                                <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
-                                                                                <select data-placeholder="Select..." class="form-control chosen-select" id="alrtRunsSrchIn">
-                                                                                    <?php
-                                                                                    $valslctdArry = array("", "", "", "");
-                                                                                    $srchInsArrys = array("Report Run ID", "Run By", "Run Date", "Run Status");
-
-                                                                                    for ($z = 0; $z < count($srchInsArrys); $z++) {
-                                                                                        if ($srchIn == $srchInsArrys[$z]) {
-                                                                                            $valslctdArry[$z] = "selected";
-                                                                                        }
-                                                                                        ?>
-                                                                                        <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
-                                                                                    <?php } ?>
-                                                                                </select>
-                                                                                <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
-                                                                                <select data-placeholder="Select..." class="form-control chosen-select" id="alrtRunsDsplySze" style="min-width:70px !important;">                            
-                                                                                    <?php
-                                                                                    $valslctdArry = array("", "", "", "", "", "", "", "");
-                                                                                    $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
-                                                                                    for ($y = 0; $y < count($dsplySzeArry); $y++) {
-                                                                                        if ($lmtSze == $dsplySzeArry[$y]) {
-                                                                                            $valslctdArry[$y] = "selected";
-                                                                                        } else {
-                                                                                            $valslctdArry[$y] = "";
-                                                                                        }
-                                                                                        ?>
-                                                                                        <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
-                                                                                        <?php
-                                                                                    }
-                                                                                    ?>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="<?php echo $colClassType1; ?>" style="padding:0px 3px 0px 3px !important;">
-                                                                            <nav aria-label="Page navigation">
-                                                                                <ul class="pagination" style="margin: 0px !important;">
-                                                                                    <li>
-                                                                                        <a class="rhopagination" href="javascript:getAllAlrtRuns('previous', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');" aria-label="Previous">
-                                                                                            <span aria-hidden="true">&laquo;</span>
-                                                                                        </a>
-                                                                                    </li>
-                                                                                    <li>
-                                                                                        <a class="rhopagination" href="javascript:getAllAlrtRuns('next', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');" aria-label="Next">
-                                                                                            <span aria-hidden="true">&raquo;</span>
-                                                                                        </a>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </nav>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-md-12" style="padding:0px 3px 0px 3px !important;">
-                                                                            <fieldset class="basic_person_fs">                                       
-                                                                                <table class="table table-striped table-bordered table-responsive" id="alrtRunsTable" cellspacing="0" width="100%" style="width:100%;min-width: 730px;">
-                                                                                    <thead>
-                                                                                        <tr>
-                                                                                            <th>No.</th>
-                                                                                            <th>Report Run ID</th>
-                                                                                            <th style="min-width:110px !important;">Run Status</th>
-                                                                                            <th style="min-width:140px !important;">Last Time Active</th>
-                                                                                            <th>Open Output File</th>
-                                                                                            <th>Log Files</th>
-                                                                                            <th>Run By</th>
-                                                                                            <!--<th>Progress (%)</th>
-                                                                                            <th>Date Run</th>
-                                                                                            <th>Output Used</th>-->
-                                                                                            <th>&nbsp;</th>
-                                                                                        </tr>
-                                                                                    </thead>
-                                                                                    <tbody>
-                                                                                        <?php
-                                                                                        $total = get_AlrtRunsTtl($pkID, $srchFor, $srchIn);
-                                                                                        if ($pageNo > ceil($total / $lmtSze)) {
-                                                                                            $pageNo = 1;
-                                                                                        } else if ($pageNo < 1) {
-                                                                                            $pageNo = ceil($total / $lmtSze);
-                                                                                        }
-
-                                                                                        $curIdx = $pageNo - 1;
-                                                                                        $result2 = get_AlrtRuns($pkID, $srchFor, $srchIn, $curIdx, $lmtSze);
-                                                                                        $cntr = 0;
-                                                                                        while ($row2 = loc_db_fetch_array($result2)) {
-                                                                                            $cntr += 1;
-
-                                                                                            //$chckd = FALSE; 
-                                                                                            $outptUsd = $row2[8];
-                                                                                            $sbmtdAlrtID = $row2[14];
-                                                                                            $sbmtdRptID = $row2[16];
-                                                                                            $rpt_src_encrpt = "";
-                                                                                            if ($outptUsd == "HTML" || $outptUsd == "COLUMN CHART" || $outptUsd == "SIMPLE COLUMN CHART" || $outptUsd == "BAR CHART" || $outptUsd == "PIE CHART" || $outptUsd == "LINE CHART") {
-                                                                                                $rpt_src = str_replace("\\", "/", $ftp_base_db_fldr . "/Rpts") . "/amcharts_2100/samples/$row2[0].html";
-                                                                                                $rpt_src_encrpt = encrypt1($rpt_src, $smplTokenWord1);
-                                                                                                if (file_exists($rpt_src)) {
-                                                                                                    //file exists!
-                                                                                                } else {
-                                                                                                    //file does not exist.
-                                                                                                    $rpt_src_encrpt = "None";
-                                                                                                }
-                                                                                            } else if ($outptUsd == "STANDARD") {
-                                                                                                $rpt_src = str_replace("\\", "/", $ftp_base_db_fldr . "/Rpts") . "/$row2[0].txt";
-                                                                                                $rpt_src_encrpt = encrypt1($rpt_src, $smplTokenWord1);
-                                                                                                if (file_exists($rpt_src)) {
-                                                                                                    //file exists!
-                                                                                                } else {
-                                                                                                    //file does not exist.
-                                                                                                    $rpt_src_encrpt = "None";
-                                                                                                }
-                                                                                            } else if ($outptUsd == "PDF") {
-                                                                                                $rpt_src = str_replace("\\", "/", $ftp_base_db_fldr . "/Rpts") . "/$row2[0].pdf";
-                                                                                                $rpt_src_encrpt = encrypt1($rpt_src, $smplTokenWord1);
-                                                                                                if (file_exists($rpt_src)) {
-                                                                                                    //file exists!
-                                                                                                } else {
-                                                                                                    //file does not exist.
-                                                                                                    $rpt_src_encrpt = "None";
-                                                                                                }
-                                                                                            } else if ($outptUsd == "MICROSOFT WORD") {
-                                                                                                $rpt_src = str_replace("\\", "/", $ftp_base_db_fldr . "/Rpts") . "/$row2[0].rtf";
-                                                                                                $rpt_src_encrpt = encrypt1($rpt_src, $smplTokenWord1);
-                                                                                                if (file_exists($rpt_src)) {
-                                                                                                    //file exists!
-                                                                                                } else {
-                                                                                                    //file does not exist.
-                                                                                                    $rpt_src_encrpt = "None";
-                                                                                                }
-                                                                                            } else if ($outptUsd == "MICROSOFT EXCEL") {
-                                                                                                $rpt_src = str_replace("\\", "/", $ftp_base_db_fldr . "/Rpts") . "/$row2[0].xls";
-                                                                                                $rpt_src_encrpt = encrypt1($rpt_src, $smplTokenWord1);
-                                                                                                if (file_exists($rpt_src)) {
-                                                                                                    //file exists!
-                                                                                                } else {
-                                                                                                    //file does not exist.
-                                                                                                    $rpt_src_encrpt = "None";
-                                                                                                }
-                                                                                            } else if ($outptUsd == "CHARACTER SEPARATED FILE (CSV)") {
-                                                                                                $rpt_src = str_replace("\\", "/", $ftp_base_db_fldr . "/Rpts") . "/$row2[0].csv";
-                                                                                                $rpt_src_encrpt = encrypt1($rpt_src, $smplTokenWord1);
-                                                                                                if (file_exists($rpt_src)) {
-                                                                                                    //file exists!
-                                                                                                } else {
-                                                                                                    //file does not exist.
-                                                                                                    $rpt_src_encrpt = "None";
-                                                                                                }
-                                                                                            } else {
-                                                                                                $rpt_src_encrpt = "None";
-                                                                                            }
-                                                                                            ?>
-                                                                                            <tr id="alrtRunsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                                                                                <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                                                                                <td class="lovtd"><a href="javascript:getOneRptsRnStsForm(<?php echo $sbmtdRptID; ?>, <?php echo $row2[0]; ?>, 3,'0', <?php echo $sbmtdAlrtID; ?>);" style="color:blue;font-weight:bold;"><?php echo $row2[0]; ?></a></td>
-                                                                                                <td class="lovtd"><span <?php
-                                                                                                    $style2 = "";
-                                                                                                    if ($row2[4] == "Not Started!") {
-                                                                                                        $style2 = "style=\"background-color: #E8D68C;padding:5px !important;\"";
-                                                                                                    } else if ($row2[4] == "Preparing to Start...") {
-                                                                                                        $style2 = "style=\"background-color: yellow;padding:5px !important;\"";
-                                                                                                    } else if ($row2[4] == "Running SQL...") {
-                                                                                                        $style2 = "style=\"background-color: lightgreen;padding:5px !important;\"";
-                                                                                                    } else if ($row2[4] == "Formatting Output...") {
-                                                                                                        $style2 = "style=\"background-color: lime;padding:5px !important;\"";
-                                                                                                    } else if ($row2[4] == "Storing Output..." || $row2[4] == "Sending Output...") {
-                                                                                                        $style2 = "style=\"background-color: cyan;padding:5px !important;\"";
-                                                                                                    } else if ($row2[4] == "Completed!") {
-                                                                                                        $style2 = "style=\"background-color: gainsboro;padding:5px !important;\"";
-                                                                                                    } else if (strpos($row2[4], "Error") !== FALSE) {
-                                                                                                        $style2 = "style=\"background-color: red;padding:5px !important;\"";
-                                                                                                    }
-                                                                                                    echo $style2;
-                                                                                                    ?>><?php echo $row2[4]; ?></span></td>
-                                                                                                <td class="lovtd"><span <?php
-                                                                                                    $tst = isDteTmeWthnIntrvl(cnvrtDMYTmToYMDTm($row2[10]), '40 second');
-                                                                                                    $style2 = "";
-                                                                                                    if ($tst == true) {
-                                                                                                        $style2 = "style=\"background-color: limegreen;color: white; font-size:12px;padding:2px;\"";
-                                                                                                    }
-                                                                                                    echo $style2;
-                                                                                                    ?>><?php echo $row2[10]; ?></span></td>
-                                                                                                <td class="lovtd">
-                                                                                                    <?php
-                                                                                                    if ($rpt_src_encrpt == "None") {
-                                                                                                        ?>
-                                                                                                        <span style="font-weight: bold;color:#FF0000;">
-                                                                                                            <?php
-                                                                                                            echo $rpt_src_encrpt;
-                                                                                                            ?>
-                                                                                                        </span>
-                                                                                                        <?php
-                                                                                                    } else {
-                                                                                                        ?>
-                                                                                                        <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="doAjax('grp=1&typ=11&q=Download&fnm=<?php echo $rpt_src_encrpt; ?>', '', 'Redirect', '', '', '');" data-toggle="tooltip" data-placement="bottom" title="OPEN OUTPUT FILE">
-                                                                                                            <img src="cmn_images/dwldicon.png" style="height:20px; width:auto; position: relative; vertical-align: middle;"> View Output
-                                                                                                        </button>
-                                                                                                    <?php }
-                                                                                                    ?>
-                                                                                                </td>
-                                                                                                <td class="lovtd">
-                                                                                                    <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="getOneRptsLogForm(<?php echo $row2[0]; ?>);" data-toggle="tooltip" data-placement="bottom" title="VIEW PROCESS LOG FILE INFO">
-                                                                                                        <img src="cmn_images/vwlog.png" style="height:20px; width:auto; position: relative; vertical-align: middle;"> View Log
-                                                                                                    </button>
-                                                                                                </td>
-                                                                                                <td class="lovtd"><?php echo $row2[2]; ?></td>
-                                                                                                <!--<td><?php echo $row2[5]; ?></td>
-                                                                                                <td><span><?php echo $row2[3]; ?></span></td>
-                                                                                                <td><span><?php echo $row2[8]; ?></span></td>
-                                                                                                <td class="lovtd"><span><?php echo $row2[11]; ?></span></td>-->
-                                                                                                <td class="lovtd">
-                                                                                                    <?php if ((float) $row2[15] > 0) { ?>
-                                                                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Alert Message Details" onclick="getOneAlrtsDetForm(<?php echo $row2[15]; ?>);" style="margin: 0px !important;padding:0px 3px 2px 4px !important;">
-                                                                                                            <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
-                                                                                                            <img src="cmn_images/kghostview.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
-                                                                                                        </button>
-                                                                                                    <?php } else { ?>
-                                                                                                        <span>&nbsp;</span>
-                                                                                                    <?php } ?>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                            <?php
-                                                                                        }
-                                                                                        ?>
-                                                                                    </tbody>
-                                                                                </table>
-                                                                            </fieldset>
-                                                                        </div>
-                                                                    </div>
-                                                                    <?php
-                                                                    if ($canEdtAlrts === true) {
-                                                                        ?>
-                                                                    </div>
-                                                                    <div id="alrtSetupTbPage" class="tab-pane fade" style="border:none !important;padding:1px !important;"></div>
-                                                                </div>                        
-                                                            </div>                         
-                                                        </div>                
-                                                    </div> 
+                                                <div id="alrtRunsTbPage" class="tab-pane fadein active col-md-12" style="border:none !important;"> 
                                                 <?php } else { ?>
-                                                </div>
-                                                <?php
-                                            }
-                                        }
-                                    } else {
-                                        ?>
-                                        <span>No Results Found</span>
-                                        <?php
-                                    }
-                                    ?>
-                                </div>
-                            </fieldset>
-                        </div>
-                    </div>
-                </form>
-                <?php
-            } else if ($vwtyp == 1) {
-                $pkID = isset($_POST['sbmtdAlrtID']) ? $_POST['sbmtdAlrtID'] : -1;
-                if ($pkID > 0) {
-                    $sbmtdAlrtID = $pkID;
-                    $result1 = get_RptAlertsDet($pkID);
-                    while ($row1 = loc_db_fetch_array($result1)) {
-                        if ($canEdtAlrts === true) {
-                            ?>
-                            <div class="row phone-only-btn" style="margin: 0px 0px 10px 0px !important;">
-                                <div class="col-md-12" style="padding:0px 0px 0px 0px !important;">
-                                    <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#alrtsDetailInfo', 'grp=9&typ=1&pg=2&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">Alert Runs</button>
-                                    <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#alrtSetupTbPage', 'grp=9&typ=1&pg=2&vtyp=3&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">Alerts Setup</button>
-                                </div>
-                            </div>
-                            <ul class="nav nav-tabs rho-hideable-tabs" style="margin-top:-5px !important;">
-                                <li class="active"><a data-toggle="tab" data-rhodata="&pg=2&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>" href="#alrtRunsTbPage" id="alrtRunsTbPagetab">Alert Runs</a></li>
-                                <li><a data-toggle="tabajxalrt" data-rhodata="&pg=2&vtyp=3&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>" href="#alrtSetupTbPage" id="alrtSetupTbPagetab">Alerts Setup</a></li>
-                            </ul>                                    
-                            <div class="row">                  
-                                <div class="col-md-12">
-                                    <div class="custDiv"> 
-                                        <div class="tab-content">
-                                            <div id="alrtRunsTbPage" class="tab-pane fadein active" style="border:none !important;"> 
-                                            <?php } else { ?>
-                                                <div class="rho-container-fluid1">
-                                                <?php } ?>
-                                                <div class="row">
-                                                    <div  class="col-md-6" style="padding:0px 3px 0px 3px !important;"> 
-                                                        <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
-                                                            <label for="alrtsRptNm" class="control-label col-lg-4">Report Name:</label>
-                                                            <div  class="col-lg-8">
-                                                                <span><?php echo $row1[3]; ?></span>
+                                                    <div class="rho-container-fluid1">
+                                                    <?php } ?>       
+                                                    <div class="row">
+                                                        <div  class="col-md-6" style="padding:0px 3px 0px 3px !important;"> 
+                                                            <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                                                <label for="alrtsRptNm" class="control-label col-lg-4">Report Name:</label>
+                                                                <div  class="col-lg-8">
+                                                                    <span><?php echo $row1[3]; ?></span>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div  class="col-md-6" style="padding:0px 3px 0px 3px !important;">
-                                                        <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
-                                                            <label for="alrtsAlertNm" class="control-label col-lg-4">Alert Name:</label>
-                                                            <div  class="col-lg-8">
-                                                                <span><?php echo $row1[1]; ?></span>
-                                                            </div>
-                                                        </div>  
-                                                    </div>
-                                                </div>
-                                                <div class="row"  style="padding:1px 3px 1px 3px !important;"><hr style="margin:1px 0px 5px 0px;"></div>
-                                                <div class="row">
-                                                    <?php
-                                                    $colClassType1 = "col-lg-3";
-                                                    $colClassType2 = "col-lg-4";
-                                                    $colClassType3 = "col-lg-5";
-                                                    ?>
-                                                    <div class="<?php echo $colClassType2; ?>" style="padding:0px 3px 0px 3px !important;">
-                                                        <div class="input-group">
-                                                            <input class="form-control" id="alrtRunsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAlrtRuns(event, '', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">
-                                                            <input id="alrtRunsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
-                                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getAllAlrtRuns('clear', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">
-                                                                <span class="glyphicon glyphicon-remove"></span>
-                                                            </label>
-                                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getAllAlrtRuns('', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">
-                                                                <span class="glyphicon glyphicon-search"></span>
-                                                            </label> 
+                                                        <div  class="col-md-6" style="padding:0px 3px 0px 3px !important;">
+                                                            <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                                                <label for="alrtsAlertNm" class="control-label col-lg-4">Alert Name:</label>
+                                                                <div  class="col-lg-8">
+                                                                    <span><?php echo $row1[1]; ?></span>
+                                                                </div>
+                                                            </div>  
                                                         </div>
                                                     </div>
-                                                    <div class="<?php echo $colClassType3; ?>" style="padding:0px 3px 0px 3px !important;">
-                                                        <div class="input-group">
-                                                            <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
-                                                            <select data-placeholder="Select..." class="form-control chosen-select" id="alrtRunsSrchIn">
-                                                                <?php
-                                                                $valslctdArry = array("", "", "", "");
-                                                                $srchInsArrys = array("Report Run ID", "Run By", "Run Date", "Run Status");
-
-                                                                for ($z = 0; $z < count($srchInsArrys); $z++) {
-                                                                    if ($srchIn == $srchInsArrys[$z]) {
-                                                                        $valslctdArry[$z] = "selected";
-                                                                    }
-                                                                    ?>
-                                                                    <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
-                                                                <?php } ?>
-                                                            </select>
-                                                            <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
-                                                            <select data-placeholder="Select..." class="form-control chosen-select" id="alrtRunsDsplySze" style="min-width:70px !important;">                            
-                                                                <?php
-                                                                $valslctdArry = array("", "", "", "", "", "", "", "");
-                                                                $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
-                                                                for ($y = 0; $y < count($dsplySzeArry); $y++) {
-                                                                    if ($lmtSze == $dsplySzeArry[$y]) {
-                                                                        $valslctdArry[$y] = "selected";
-                                                                    } else {
-                                                                        $valslctdArry[$y] = "";
-                                                                    }
-                                                                    ?>
-                                                                    <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
+                                                    <div class="row"  style="padding:1px 3px 1px 3px !important;"><hr style="margin:1px 0px 5px 0px;"></div>
+                                                    <div class="row">
+                                                        <?php
+                                                        $pageNo = 1;
+                                                        $lmtSze = 10;
+                                                        $srchFor = "%";
+                                                        $srchIn = "Report Run ID";
+                                                        $colClassType1 = "col-lg-3";
+                                                        $colClassType2 = "col-lg-4";
+                                                        $colClassType3 = "col-lg-5";
+                                                        ?>
+                                                        <div class="<?php echo $colClassType2; ?>" style="padding:0px 3px 0px 3px !important;">
+                                                            <div class="input-group">
+                                                                <input class="form-control" id="alrtRunsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAlrtRuns(event, '', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">
+                                                                <input id="alrtRunsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getAllAlrtRuns('clear', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">
+                                                                    <span class="glyphicon glyphicon-remove"></span>
+                                                                </label>
+                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getAllAlrtRuns('', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">
+                                                                    <span class="glyphicon glyphicon-search"></span>
+                                                                </label> 
+                                                            </div>
+                                                        </div>
+                                                        <div class="<?php echo $colClassType3; ?>" style="padding:0px 3px 0px 3px !important;">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
+                                                                <select data-placeholder="Select..." class="form-control chosen-select" id="alrtRunsSrchIn">
                                                                     <?php
-                                                                }
-                                                                ?>
-                                                            </select>
+                                                                    $valslctdArry = array("", "", "", "");
+                                                                    $srchInsArrys = array("Report Run ID", "Run By", "Run Date", "Run Status");
+
+                                                                    for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                                        if ($srchIn == $srchInsArrys[$z]) {
+                                                                            $valslctdArry[$z] = "selected";
+                                                                        }
+                                                                        ?>
+                                                                        <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                                    <?php } ?>
+                                                                </select>
+                                                                <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
+                                                                <select data-placeholder="Select..." class="form-control chosen-select" id="alrtRunsDsplySze" style="min-width:70px !important;">                            
+                                                                    <?php
+                                                                    $valslctdArry = array("", "", "", "", "", "", "", "");
+                                                                    $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
+                                                                    for ($y = 0; $y < count($dsplySzeArry); $y++) {
+                                                                        if ($lmtSze == $dsplySzeArry[$y]) {
+                                                                            $valslctdArry[$y] = "selected";
+                                                                        } else {
+                                                                            $valslctdArry[$y] = "";
+                                                                        }
+                                                                        ?>
+                                                                        <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
+                                                                        <?php
+                                                                    }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="<?php echo $colClassType1; ?>" style="padding:0px 3px 0px 3px !important;">
+                                                            <nav aria-label="Page navigation">
+                                                                <ul class="pagination" style="margin: 0px !important;">
+                                                                    <li>
+                                                                        <a class="rhopagination" href="javascript:getAllAlrtRuns('previous', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');" aria-label="Previous">
+                                                                            <span aria-hidden="true">&laquo;</span>
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a class="rhopagination" href="javascript:getAllAlrtRuns('next', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');" aria-label="Next">
+                                                                            <span aria-hidden="true">&raquo;</span>
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </nav>
                                                         </div>
                                                     </div>
-                                                    <div class="<?php echo $colClassType1; ?>" style="padding:0px 3px 0px 3px !important;">
-                                                        <nav aria-label="Page navigation">
-                                                            <ul class="pagination" style="margin: 0px !important;">
-                                                                <li>
-                                                                    <a class="rhopagination" href="javascript:getAllAlrtRuns('previous', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');" aria-label="Previous">
-                                                                        <span aria-hidden="true">&laquo;</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a class="rhopagination" href="javascript:getAllAlrtRuns('next', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');" aria-label="Next">
-                                                                        <span aria-hidden="true">&raquo;</span>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </nav>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-12" style="padding:0px 3px 0px 3px !important;">
-                                                        <fieldset class="basic_person_fs">                                       
-                                                            <table class="table table-striped table-bordered table-responsive" id="alrtRunsTable" cellspacing="0" width="100%" style="width:100%;min-width: 730px;">
+                                                    <div class="row">
+                                                        <div class="col-md-12" style="padding:0px 3px 0px 3px !important;">       
+                                                            <table class="table table-striped table-bordered table-responsive" id="alrtRunsTable" cellspacing="0" width="100%" style="width:100%;min-width: 530px;">
                                                                 <thead>
                                                                     <tr>
                                                                         <th>No.</th>
                                                                         <th>Report Run ID</th>
                                                                         <th style="min-width:110px !important;">Run Status</th>
-                                                                        <th style="min-width:140px !important;">Last Time Active</th>
+                                                                        <th style="min-width:100px !important;">Last Time Active</th>
                                                                         <th>Open Output File</th>
                                                                         <th>Log Files</th>
                                                                         <th>Run By</th>
@@ -821,8 +508,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     $style2 = "style=\"background-color: red;padding:5px !important;\"";
                                                                                 }
                                                                                 echo $style2;
-                                                                                ?>><?php echo $row2[4]; ?></span>
-                                                                            </td>
+                                                                                ?>><?php echo $row2[4]; ?></span></td>
                                                                             <td class="lovtd"><span <?php
                                                                                 $tst = isDteTmeWthnIntrvl(cnvrtDMYTmToYMDTm($row2[10]), '40 second');
                                                                                 $style2 = "";
@@ -875,27 +561,356 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     ?>
                                                                 </tbody>
                                                             </table>
-                                                        </fieldset>
+                                                        </div>
+                                                    </div>
+                                                    <?php
+                                                    if ($canEdtAlrts === true) {
+                                                        ?>
                                                     </div>
                                                 </div>
-                                                <?php
-                                                if ($canEdtAlrts === true) {
-                                                    ?>
+                                                <!--<div class="row phone-only-btn" style="margin: 0px 0px 10px 0px !important;">
+                                                    <div class="col-md-12" style="padding:0px 0px 0px 0px !important;">
+                                                        <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#alrtsDetailInfo', 'grp=9&typ=1&pg=2&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">Alert Runs</button>
+                                                        <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#alrtSetupTbPage', 'grp=9&typ=1&pg=2&vtyp=3&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">Alerts Setup</button>
+                                                    </div>
                                                 </div>
-                                                <div id="alrtSetupTbPage" class="tab-pane fade" style="border:none !important;padding:1px !important;"></div>
-                                            </div>                        
+                                                <ul class="nav nav-tabs rho-hideable-tabs" style="margin-top:-5px !important;">
+                                                    <li class="active"><a data-toggle="tab" data-rhodata="&pg=2&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>" href="#alrtRunsTbPage" id="alrtRunsTbPagetab">Alert Runs</a></li>
+                                                    <li><a data-toggle="tabajxalrt" data-rhodata="&pg=2&vtyp=3&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>" href="#alrtSetupTbPage" id="alrtSetupTbPagetab">Alerts Setup</a></li>
+                                                </ul>                                    
+                                                <div class="row">                  
+                                                    <div class="col-md-12">
+                                                        <div class="custDiv"> 
+                                                            <div class="tab-content">
+                                                                <div id="alrtSetupTbPage" class="tab-pane fade" style="border:none !important;padding:1px !important;"></div>                       
+                                                            </div>                         
+                                                        </div>                
+                                                    </div> 
+                                                </div>--> 
+                                            <?php } else { ?>
+                                                <?php
+                                            }
+                                        }
+                                    } else {
+                                        ?>
+                                        <span>No Results Found</span>
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </form>
+                <?php
+            } else if ($vwtyp == 1) {
+                $pkID = isset($_POST['sbmtdAlrtID']) ? $_POST['sbmtdAlrtID'] : -1;
+                if ($pkID > 0) {
+                    $sbmtdAlrtID = $pkID;
+                    $result1 = get_RptAlertsDet($pkID);
+                    while ($row1 = loc_db_fetch_array($result1)) {
+                        if ($canEdtAlrts === true) {
+                            ?>
+                            <div id="alrtRunsTbPage" class="tab-pane fadein active col-md-12" style="border:none !important;"> 
+                            <?php } else { ?>
+                                <div class="rho-container-fluid1">
+                                <?php } ?>       
+                                <div class="row">
+                                    <div  class="col-md-6" style="padding:0px 3px 0px 3px !important;"> 
+                                        <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                            <label for="alrtsRptNm" class="control-label col-lg-4">Report Name:</label>
+                                            <div  class="col-lg-8">
+                                                <span><?php echo $row1[3]; ?></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div  class="col-md-6" style="padding:0px 3px 0px 3px !important;">
+                                        <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                            <label for="alrtsAlertNm" class="control-label col-lg-4">Alert Name:</label>
+                                            <div  class="col-lg-8">
+                                                <span><?php echo $row1[1]; ?></span>
+                                            </div>
+                                        </div>  
+                                    </div>
+                                </div>
+                                <div class="row"  style="padding:1px 3px 1px 3px !important;"><hr style="margin:1px 0px 5px 0px;"></div>
+                                <div class="row">
+                                    <?php
+                                    $pageNo = 1;
+                                    $lmtSze = 10;
+                                    $srchFor = "%";
+                                    $srchIn = "Report Run ID";
+                                    $colClassType1 = "col-lg-3";
+                                    $colClassType2 = "col-lg-4";
+                                    $colClassType3 = "col-lg-5";
+                                    ?>
+                                    <div class="<?php echo $colClassType2; ?>" style="padding:0px 3px 0px 3px !important;">
+                                        <div class="input-group">
+                                            <input class="form-control" id="alrtRunsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAlrtRuns(event, '', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">
+                                            <input id="alrtRunsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getAllAlrtRuns('clear', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">
+                                                <span class="glyphicon glyphicon-remove"></span>
+                                            </label>
+                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getAllAlrtRuns('', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">
+                                                <span class="glyphicon glyphicon-search"></span>
+                                            </label> 
+                                        </div>
+                                    </div>
+                                    <div class="<?php echo $colClassType3; ?>" style="padding:0px 3px 0px 3px !important;">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
+                                            <select data-placeholder="Select..." class="form-control chosen-select" id="alrtRunsSrchIn">
+                                                <?php
+                                                $valslctdArry = array("", "", "", "");
+                                                $srchInsArrys = array("Report Run ID", "Run By", "Run Date", "Run Status");
+
+                                                for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                    if ($srchIn == $srchInsArrys[$z]) {
+                                                        $valslctdArry[$z] = "selected";
+                                                    }
+                                                    ?>
+                                                    <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                            <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
+                                            <select data-placeholder="Select..." class="form-control chosen-select" id="alrtRunsDsplySze" style="min-width:70px !important;">                            
+                                                <?php
+                                                $valslctdArry = array("", "", "", "", "", "", "", "");
+                                                $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
+                                                for ($y = 0; $y < count($dsplySzeArry); $y++) {
+                                                    if ($lmtSze == $dsplySzeArry[$y]) {
+                                                        $valslctdArry[$y] = "selected";
+                                                    } else {
+                                                        $valslctdArry[$y] = "";
+                                                    }
+                                                    ?>
+                                                    <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
+                                                    <?php
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="<?php echo $colClassType1; ?>" style="padding:0px 3px 0px 3px !important;">
+                                        <nav aria-label="Page navigation">
+                                            <ul class="pagination" style="margin: 0px !important;">
+                                                <li>
+                                                    <a class="rhopagination" href="javascript:getAllAlrtRuns('previous', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');" aria-label="Previous">
+                                                        <span aria-hidden="true">&laquo;</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="rhopagination" href="javascript:getAllAlrtRuns('next', '#alrtsDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');" aria-label="Next">
+                                                        <span aria-hidden="true">&raquo;</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12" style="padding:0px 3px 0px 3px !important;">       
+                                        <table class="table table-striped table-bordered table-responsive" id="alrtRunsTable" cellspacing="0" width="100%" style="width:100%;min-width: 530px;">
+                                            <thead>
+                                                <tr>
+                                                    <th>No.</th>
+                                                    <th>Report Run ID</th>
+                                                    <th style="min-width:110px !important;">Run Status</th>
+                                                    <th style="min-width:100px !important;">Last Time Active</th>
+                                                    <th>Open Output File</th>
+                                                    <th>Log Files</th>
+                                                    <th>Run By</th>
+                                                    <!--<th>Progress (%)</th>
+                                                    <th>Date Run</th>
+                                                    <th>Output Used</th>-->
+                                                    <th>&nbsp;</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $total = get_AlrtRunsTtl($pkID, $srchFor, $srchIn);
+                                                if ($pageNo > ceil($total / $lmtSze)) {
+                                                    $pageNo = 1;
+                                                } else if ($pageNo < 1) {
+                                                    $pageNo = ceil($total / $lmtSze);
+                                                }
+
+                                                $curIdx = $pageNo - 1;
+                                                $result2 = get_AlrtRuns($pkID, $srchFor, $srchIn, $curIdx, $lmtSze);
+                                                $cntr = 0;
+                                                while ($row2 = loc_db_fetch_array($result2)) {
+                                                    $cntr += 1;
+
+                                                    //$chckd = FALSE; 
+                                                    $outptUsd = $row2[8];
+                                                    $sbmtdAlrtID = $row2[14];
+                                                    $sbmtdRptID = $row2[16];
+                                                    $rpt_src_encrpt = "";
+                                                    if ($outptUsd == "HTML" || $outptUsd == "COLUMN CHART" || $outptUsd == "SIMPLE COLUMN CHART" || $outptUsd == "BAR CHART" || $outptUsd == "PIE CHART" || $outptUsd == "LINE CHART") {
+                                                        $rpt_src = str_replace("\\", "/", $ftp_base_db_fldr . "/Rpts") . "/amcharts_2100/samples/$row2[0].html";
+                                                        $rpt_src_encrpt = encrypt1($rpt_src, $smplTokenWord1);
+                                                        if (file_exists($rpt_src)) {
+                                                            //file exists!
+                                                        } else {
+                                                            //file does not exist.
+                                                            $rpt_src_encrpt = "None";
+                                                        }
+                                                    } else if ($outptUsd == "STANDARD") {
+                                                        $rpt_src = str_replace("\\", "/", $ftp_base_db_fldr . "/Rpts") . "/$row2[0].txt";
+                                                        $rpt_src_encrpt = encrypt1($rpt_src, $smplTokenWord1);
+                                                        if (file_exists($rpt_src)) {
+                                                            //file exists!
+                                                        } else {
+                                                            //file does not exist.
+                                                            $rpt_src_encrpt = "None";
+                                                        }
+                                                    } else if ($outptUsd == "PDF") {
+                                                        $rpt_src = str_replace("\\", "/", $ftp_base_db_fldr . "/Rpts") . "/$row2[0].pdf";
+                                                        $rpt_src_encrpt = encrypt1($rpt_src, $smplTokenWord1);
+                                                        if (file_exists($rpt_src)) {
+                                                            //file exists!
+                                                        } else {
+                                                            //file does not exist.
+                                                            $rpt_src_encrpt = "None";
+                                                        }
+                                                    } else if ($outptUsd == "MICROSOFT WORD") {
+                                                        $rpt_src = str_replace("\\", "/", $ftp_base_db_fldr . "/Rpts") . "/$row2[0].rtf";
+                                                        $rpt_src_encrpt = encrypt1($rpt_src, $smplTokenWord1);
+                                                        if (file_exists($rpt_src)) {
+                                                            //file exists!
+                                                        } else {
+                                                            //file does not exist.
+                                                            $rpt_src_encrpt = "None";
+                                                        }
+                                                    } else if ($outptUsd == "MICROSOFT EXCEL") {
+                                                        $rpt_src = str_replace("\\", "/", $ftp_base_db_fldr . "/Rpts") . "/$row2[0].xls";
+                                                        $rpt_src_encrpt = encrypt1($rpt_src, $smplTokenWord1);
+                                                        if (file_exists($rpt_src)) {
+                                                            //file exists!
+                                                        } else {
+                                                            //file does not exist.
+                                                            $rpt_src_encrpt = "None";
+                                                        }
+                                                    } else if ($outptUsd == "CHARACTER SEPARATED FILE (CSV)") {
+                                                        $rpt_src = str_replace("\\", "/", $ftp_base_db_fldr . "/Rpts") . "/$row2[0].csv";
+                                                        $rpt_src_encrpt = encrypt1($rpt_src, $smplTokenWord1);
+                                                        if (file_exists($rpt_src)) {
+                                                            //file exists!
+                                                        } else {
+                                                            //file does not exist.
+                                                            $rpt_src_encrpt = "None";
+                                                        }
+                                                    } else {
+                                                        $rpt_src_encrpt = "None";
+                                                    }
+                                                    ?>
+                                                    <tr id="alrtRunsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
+                                                        <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                                        <td class="lovtd"><a href="javascript:getOneRptsRnStsForm(<?php echo $sbmtdRptID; ?>, <?php echo $row2[0]; ?>, 3,'0', <?php echo $sbmtdAlrtID; ?>);" style="color:blue;font-weight:bold;"><?php echo $row2[0]; ?></a></td>
+                                                        <td class="lovtd"><span <?php
+                                                            $style2 = "";
+                                                            if ($row2[4] == "Not Started!") {
+                                                                $style2 = "style=\"background-color: #E8D68C;padding:5px !important;\"";
+                                                            } else if ($row2[4] == "Preparing to Start...") {
+                                                                $style2 = "style=\"background-color: yellow;padding:5px !important;\"";
+                                                            } else if ($row2[4] == "Running SQL...") {
+                                                                $style2 = "style=\"background-color: lightgreen;padding:5px !important;\"";
+                                                            } else if ($row2[4] == "Formatting Output...") {
+                                                                $style2 = "style=\"background-color: lime;padding:5px !important;\"";
+                                                            } else if ($row2[4] == "Storing Output..." || $row2[4] == "Sending Output...") {
+                                                                $style2 = "style=\"background-color: cyan;padding:5px !important;\"";
+                                                            } else if ($row2[4] == "Completed!") {
+                                                                $style2 = "style=\"background-color: gainsboro;padding:5px !important;\"";
+                                                            } else if (strpos($row2[4], "Error") !== FALSE) {
+                                                                $style2 = "style=\"background-color: red;padding:5px !important;\"";
+                                                            }
+                                                            echo $style2;
+                                                            ?>><?php echo $row2[4]; ?></span></td>
+                                                        <td class="lovtd"><span <?php
+                                                            $tst = isDteTmeWthnIntrvl(cnvrtDMYTmToYMDTm($row2[10]), '40 second');
+                                                            $style2 = "";
+                                                            if ($tst == true) {
+                                                                $style2 = "style=\"background-color: limegreen;color: white; font-size:12px;padding:2px;\"";
+                                                            }
+                                                            echo $style2;
+                                                            ?>><?php echo $row2[10]; ?></span></td>
+                                                        <td class="lovtd">
+                                                            <?php
+                                                            if ($rpt_src_encrpt == "None") {
+                                                                ?>
+                                                                <span style="font-weight: bold;color:#FF0000;">
+                                                                    <?php
+                                                                    echo $rpt_src_encrpt;
+                                                                    ?>
+                                                                </span>
+                                                                <?php
+                                                            } else {
+                                                                ?>
+                                                                <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="doAjax('grp=1&typ=11&q=Download&fnm=<?php echo $rpt_src_encrpt; ?>', '', 'Redirect', '', '', '');" data-toggle="tooltip" data-placement="bottom" title="OPEN OUTPUT FILE">
+                                                                    <img src="cmn_images/dwldicon.png" style="height:20px; width:auto; position: relative; vertical-align: middle;"> View Output
+                                                                </button>
+                                                            <?php }
+                                                            ?>
+                                                        </td>
+                                                        <td class="lovtd">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="getOneRptsLogForm(<?php echo $row2[0]; ?>);" data-toggle="tooltip" data-placement="bottom" title="VIEW PROCESS LOG FILE INFO">
+                                                                <img src="cmn_images/vwlog.png" style="height:20px; width:auto; position: relative; vertical-align: middle;"> View Log
+                                                            </button>
+                                                        </td>
+                                                        <td class="lovtd"><?php echo $row2[2]; ?></td>
+                                                        <!--<td><?php echo $row2[5]; ?></td>
+                                                        <td><span><?php echo $row2[3]; ?></span></td>
+                                                        <td><span><?php echo $row2[8]; ?></span></td>
+                                                        <td class="lovtd"><span><?php echo $row2[11]; ?></span></td>-->
+                                                        <td class="lovtd">
+                                                            <?php if ((float) $row2[15] > 0) { ?>
+                                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Alert Message Details" onclick="getOneAlrtsDetForm(<?php echo $row2[15]; ?>);" style="margin: 0px !important;padding:0px 3px 2px 4px !important;">
+                                                                    <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                                                    <img src="cmn_images/kghostview.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                                </button>
+                                                            <?php } else { ?>
+                                                                <span>&nbsp;</span>
+                                                            <?php } ?>
+                                                        </td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <?php
+                                if ($canEdtAlrts === true) {
+                                    ?>
+                                </div>
+                            </div>
+                            <!--<div class="row phone-only-btn" style="margin: 0px 0px 10px 0px !important;">
+                                <div class="col-md-12" style="padding:0px 0px 0px 0px !important;">
+                                    <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#alrtsDetailInfo', 'grp=9&typ=1&pg=2&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">Alert Runs</button>
+                                    <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#alrtSetupTbPage', 'grp=9&typ=1&pg=2&vtyp=3&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>');">Alerts Setup</button>
+                                </div>
+                            </div>
+                            <ul class="nav nav-tabs rho-hideable-tabs" style="margin-top:-5px !important;">
+                                <li class="active"><a data-toggle="tab" data-rhodata="&pg=2&vtyp=1&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>" href="#alrtRunsTbPage" id="alrtRunsTbPagetab">Alert Runs</a></li>
+                                <li><a data-toggle="tabajxalrt" data-rhodata="&pg=2&vtyp=3&sbmtdAlrtID=<?php echo $sbmtdAlrtID; ?>" href="#alrtSetupTbPage" id="alrtSetupTbPagetab">Alerts Setup</a></li>
+                            </ul>                                    
+                            <div class="row">                  
+                                <div class="col-md-12">
+                                    <div class="custDiv"> 
+                                        <div class="tab-content">
+                                            <div id="alrtSetupTbPage" class="tab-pane fade" style="border:none !important;padding:1px !important;"></div>                       
                                         </div>                         
                                     </div>                
                                 </div> 
-                            <?php } else { ?>
-                            </div>
+                            </div>--> 
+                        <?php } else { ?>
                             <?php
                         }
                     }
                 } else {
                     ?>
                     <span>No Results Found</span>
-
                     <?php
                 }
             } else if ($vwtyp == 2) {
@@ -993,11 +1008,21 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 }
             } else if ($vwtyp == 3) {
                 $pkID = isset($_POST['sbmtdAlrtID']) ? $_POST['sbmtdAlrtID'] : -1;
-                $sbmtdRptID = -1;
+                $shdDplct = isset($_POST['shdDplct']) ? $_POST['shdDplct'] : '0';
+                $sbmtdAlrtID = -1;
+                $sbmtdAlrtIDDsply = -1;
+                $alrtsAlertNm = "";
                 if ($pkID > 0) {
                     $sbmtdAlrtID = $pkID;
                     $result1 = get_RptAlertsDet($pkID);
                     while ($row1 = loc_db_fetch_array($result1)) {
+                        if ($shdDplct == '0') {
+                            $sbmtdAlrtIDDsply = $pkID;
+                            $alrtsAlertNm = $row1[1];
+                        } else {
+                            $sbmtdAlrtIDDsply = -1;
+                            $alrtsAlertNm = "(Duplicate) " . $row1[1];
+                        }
                         $sbmtdRptID = $row1[2];
                         if ($canEdtAlrts === true) {
                             ?>
@@ -1022,8 +1047,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <label for="alrtsAlertNm" class="control-label col-lg-4">Alert Name:</label>
                                     <div  class="col-lg-8">
                                         <?php if ($canEdtAlrts === true) { ?>
-                                            <input type="text" class="form-control" aria-label="..." id="alrtsAlertNm" name="alrtsAlertNm" value="<?php echo $row1[1]; ?>" style="width:100%;">
-                                            <input type="hidden" class="form-control" aria-label="..." id="alrtsAlertID" name="alrtsAlertID" value="<?php echo $row1[0]; ?>" style="width:100%;">
+                                            <input type="text" class="form-control" aria-label="..." id="alrtsAlertNm" name="alrtsAlertNm" value="<?php echo $alrtsAlertNm; ?>" style="width:100%;">
+                                            <input type="hidden" class="form-control" aria-label="..." id="alrtsAlertID" name="alrtsAlertID" value="<?php echo $sbmtdAlrtIDDsply; ?>" style="width:100%;">
                                             <input type="hidden" class="form-control" aria-label="..." id="alrtsRptID" name="alrtsRptID" value="<?php echo $row1[2]; ?>" style="width:100%;">
                                         <?php } else { ?>
                                             <span><?php echo $row1[1]; ?></span>
@@ -1181,7 +1206,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                            <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 20px 3px !important;">
                                 <label for="alrtsParamSQL" class="control-label col-lg-2">Parameter Set Generation SQL:</label>
                                 <div  class="col-lg-10">
                                     <?php if ($canEdtAlrts === true) { ?>
@@ -1587,7 +1612,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                     </div>
                     <div class="row">
-                        <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                        <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 20px 3px !important;">
                             <label for="alrtsParamSQL" class="control-label col-lg-2">Parameter Set Generation SQL:</label>
                             <div  class="col-lg-10">
                                 <textarea class="form-control rqrdFld" aria-label="..." id="alrtsParamSQL" name="alrtsParamSQL" style="width:100%;" cols="9" rows="9"></textarea>

@@ -7,12 +7,57 @@ function prepareProfile(lnkArgs, htBody, targ, rspns)
     } else if (lnkArgs.indexOf("&pg=2") !== -1)
     {
         prepareProfileEDT(lnkArgs, htBody, targ, rspns);
+    } else if (lnkArgs.indexOf("&pg=4") !== -1)
+    {
+        $(targ).html(rspns);
+        $(function () {
+            $('[data-toggle="tabajxleave"]').off('click');
+            $('[data-toggle="tabajxleave"]').click(function (e) {
+                e.preventDefault();
+                var $this = $(this);
+                var targ = $this.attr('href');
+                $(targ + 'tab').tab('show');
+                var dttrgt = $this.attr('data-rhodata');
+                var linkArgs = 'grp=8&typ=1' + dttrgt;
+                if (targ.indexOf('planExctns') >= 0) {
+                    $('#planExctns').removeClass('hideNotice');
+                    $('#planExctnLns').addClass('hideNotice');
+                    $('#plansLv').addClass('hideNotice');
+                    return openATab(targ, linkArgs);
+                } else if (targ.indexOf('planExctnLns') >= 0) {
+                    $('#planExctns').addClass('hideNotice');
+                    $('#planExctnLns').removeClass('hideNotice');
+                    $('#plansLv').addClass('hideNotice');
+                    return openATab(targ, linkArgs);
+                } else {
+                    $('#planExctns').addClass('hideNotice');
+                    $('#planExctnLns').addClass('hideNotice');
+                    $('#plansLv').removeClass('hideNotice');
+                    return openATab(targ, linkArgs);
+                }
+            });
+        });
+        $('.form_date').datetimepicker({
+            format: "dd-M-yyyy",
+            language: 'en',
+            weekStart: 0,
+            todayBtn: true,
+            autoclose: true,
+            todayHighlight: true,
+            keyboardNavigation: true,
+            startView: 2,
+            minView: 2,
+            maxView: 4,
+            forceParse: true
+        });
+        $('#allOtherInputData99').val(0);
+        htBody.removeClass("mdlloading");
     } else if (lnkArgs.indexOf("&pg=5") !== -1
             || lnkArgs.indexOf("&pg=6") !== -1
             || lnkArgs.indexOf("&pg=7") !== -1
             || lnkArgs.indexOf("&pg=8") !== -1)
     {
-        loadScript("app/prs/prsn_admin.js?v=110", function () {
+        loadScript("app/prs/prsn_admin.js?v=" + jsFilesVrsn, function () {
             prepareDataAdmin(lnkArgs, htBody, targ, rspns);
         });
     } else {
@@ -39,6 +84,7 @@ function prepareProfileRO(lnkArgs, htBody, targ, rspns)
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip();
                 $('[data-toggle="tabajxprflro"]').click(function (e) {
+                    e.preventDefault();
                     var $this = $(this);
                     var targ = $this.attr('href');
                     var dttrgt = $this.attr('data-rhodata');
@@ -99,7 +145,6 @@ function prepareProfileRO(lnkArgs, htBody, targ, rspns)
     });
 }
 
-
 function prepareProfileEDT(lnkArgs, htBody, targ, rspns)
 {
     $(targ).html(rspns);
@@ -117,27 +162,62 @@ function prepareProfileEDT(lnkArgs, htBody, targ, rspns)
             $('#nationalIDTblEDT').wrap('<div class="dataTables_scroll" />');
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip();
-                $('.form_date').datetimepicker({
-                    format: "dd-M-yyyy",
-                    language: 'en',
-                    weekStart: 0,
-                    todayBtn: true,
-                    autoclose: true,
-                    todayHighlight: true,
-                    keyboardNavigation: true,
-                    startView: 2,
-                    minView: 2,
-                    maxView: 4,
-                    forceParse: false
-                });
                 $('[data-toggle="tabajxprfledt"]').click(function (e) {
+                    e.preventDefault();
                     var $this = $(this);
                     var targ = $this.attr('href');
                     var dttrgt = $this.attr('data-rhodata');
                     var linkArgs = 'grp=8&typ=1' + dttrgt;
-                    //alert(linkArgs);
-                    return openATab(targ, linkArgs);
+                    $(targ + 'tab').tab('show');
+                    if (targ.indexOf('prflHomeEDT') >= 0) {
+                        $('#prflAddPrsnDataEDT').addClass('hideNotice');
+                        $('#prflOrgAsgnEDT').addClass('hideNotice');
+                        $('#prflCVEDT').addClass('hideNotice');
+                        $('#prflOthrInfoEDT').addClass('hideNotice');
+                        $('#prflHomeEDT').removeClass('hideNotice');
+                    } else {
+                        openATab(targ, linkArgs);
+                        if (targ.indexOf('prflAddPrsnDataEDT') >= 0) {
+                            $('#prflHomeEDT').addClass('hideNotice');
+                            $('#prflOrgAsgnEDT').addClass('hideNotice');
+                            $('#prflCVEDT').addClass('hideNotice');
+                            $('#prflOthrInfoEDT').addClass('hideNotice');
+                            $('#prflAddPrsnDataEDT').removeClass('hideNotice');
+                        } else if (targ.indexOf('prflOrgAsgnEDT') >= 0) {
+                            $('#prflAddPrsnDataEDT').addClass('hideNotice');
+                            $('#prflHomeEDT').addClass('hideNotice');
+                            $('#prflCVEDT').addClass('hideNotice');
+                            $('#prflOthrInfoEDT').addClass('hideNotice');
+                            $('#prflOrgAsgnEDT').removeClass('hideNotice');
+                        } else if (targ.indexOf('prflCVEDT') >= 0) {
+                            $('#prflAddPrsnDataEDT').addClass('hideNotice');
+                            $('#prflOrgAsgnEDT').addClass('hideNotice');
+                            $('#prflHomeEDT').addClass('hideNotice');
+                            $('#prflOthrInfoEDT').addClass('hideNotice');
+                            $('#prflCVEDT').removeClass('hideNotice');
+                        } else if (targ.indexOf('prflOthrInfoEDT') >= 0) {
+                            $('#prflAddPrsnDataEDT').addClass('hideNotice');
+                            $('#prflOrgAsgnEDT').addClass('hideNotice');
+                            $('#prflCVEDT').addClass('hideNotice');
+                            $('#prflHomeEDT').addClass('hideNotice');
+                            $('#prflOthrInfoEDT').removeClass('hideNotice');
+                        }
+                    }
                 });
+            });
+
+            $('.form_date').datetimepicker({
+                format: "dd-M-yyyy",
+                language: 'en',
+                weekStart: 0,
+                todayBtn: true,
+                autoclose: true,
+                todayHighlight: true,
+                keyboardNavigation: true,
+                startView: 2,
+                minView: 2,
+                maxView: 4,
+                forceParse: false
             });
         } else if (lnkArgs.indexOf("&vtyp=1") !== -1)
         {
@@ -297,7 +377,7 @@ function saveNtnlIDForm(elementID, tRowElementID, ntnlIDpKey, ntnlIDPersonID)
         var nicExpDate = typeof $("#ntnlIDCardsExpDate").val() === 'undefined' ? '' : $("#ntnlIDCardsExpDate").val();
         var nicOtherInfo = typeof $("#ntnlIDCardsOtherInfo").val() === 'undefined' ? '' : $("#ntnlIDCardsOtherInfo").val();
         var srcForm = $("#allAdminsSrcForm").val() ? $("#allAdminsSrcForm").val() : '0';
-
+        var daPersonID = typeof $("#daPersonID").val() === 'undefined' ? ntnlIDPersonID : $("#daPersonID").val();
 
         var errMsg = "";
         if (nicCountry.trim().length <= 0)
@@ -323,7 +403,7 @@ function saveNtnlIDForm(elementID, tRowElementID, ntnlIDpKey, ntnlIDPersonID)
         if (nicExpDate.trim().length === 10)
         {
             nicExpDate = '0' + nicExpDate;
-            $("#ntnlIDCardsDateIssd").val(nicExpDate);
+            $("#ntnlIDCardsExpDate").val(nicExpDate);
         }
         if (rhotrim(errMsg, '; ') !== '')
         {
@@ -385,8 +465,8 @@ function saveNtnlIDForm(elementID, tRowElementID, ntnlIDpKey, ntnlIDPersonID)
                 "&ntnlIDCardsDateIssd=" + nicDateIssd +
                 "&ntnlIDCardsExpDate=" + nicExpDate +
                 "&ntnlIDCardsOtherInfo=" + nicOtherInfo +
-                "&ntnlIDPersonID=" + ntnlIDPersonID +
-                "&sbmtdPersonID=" + ntnlIDPersonID +
+                "&ntnlIDPersonID=" + daPersonID +
+                "&sbmtdPersonID=" + daPersonID +
                 "&ntnlIDpKey=" + ntnlIDpKey +
                 "&srcForm=" + srcForm);
     });
@@ -424,7 +504,10 @@ function delNtnlID(rowIDAttrb)
                 var dialog1 = bootbox.alert({
                     title: 'Delete ID?',
                     size: 'small',
-                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting ID...Please Wait...</p>'
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting ID...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
@@ -560,7 +643,14 @@ function saveAddtnlDataForm(modalBodyID, addtnlPrsPkey, pipeSprtdFieldIDs, extDt
         var str_flds_array_val = pipeSprtdFieldIDs.split('|');
         var lnkArgs = "";
         var tdsAppend = "";
-        var $tds = $('#' + tRowElementID).find('td');
+
+        var $tds = null;
+        if (tRowElementID === '') {
+            addOrEdit = 'ADD';
+        } else {
+            addOrEdit = 'EDIT';
+            $tds = $("#" + tRowElementID).find('td');
+        }
         var rndmNum = Math.floor((Math.random() * 99999) + parseInt(extDtColNum));
         for (var i = 0; i < str_flds_array.length; i++) {
             // Trim the excess whitespace.
@@ -596,15 +686,13 @@ function saveAddtnlDataForm(modalBodyID, addtnlPrsPkey, pipeSprtdFieldIDs, extDt
             }
             allTblValues = allTblValues + "|";
         });
-
+        $('#addtnlPrsnDataCol' + extDtColNum).val(allTblValues);
         var xmlhttp;
         if (window.XMLHttpRequest)
         {
-            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
             xmlhttp = new XMLHttpRequest();
         } else
         {
-            /*code for IE6, IE5*/
             xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
         xmlhttp.onreadystatechange = function ()
@@ -617,6 +705,7 @@ function saveAddtnlDataForm(modalBodyID, addtnlPrsPkey, pipeSprtdFieldIDs, extDt
                 var msg = '<span style="font-weight:bold;">Status: </span>' +
                         '<span style="color:red;font-weight: bold;">Requires Approval </span>';
                 $("#mySelfStatusBtn").html(msg);
+                $('#myFormsModal').modal('hide');
             }
         };
         xmlhttp.open("POST", "index.php", true);
@@ -853,7 +942,10 @@ function delEducID(rowIDAttrb)
                 var dialog1 = bootbox.alert({
                     title: 'Delete Educ. Background?',
                     size: 'small',
-                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Educ. Background...Please Wait...</p>'
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Educ. Background...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
@@ -1120,7 +1212,10 @@ function delWorkID(rowIDAttrb)
                 var dialog1 = bootbox.alert({
                     title: 'Delete Work Background?',
                     size: 'small',
-                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Work Background...Please Wait...</p>'
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Work Background...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
@@ -1372,7 +1467,10 @@ function delSkillID(rowIDAttrb)
                 var dialog1 = bootbox.alert({
                     title: 'Delete Skill?',
                     size: 'small',
-                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Skill...Please Wait...</p>'
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Skill...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
@@ -1422,14 +1520,24 @@ function delSkillID(rowIDAttrb)
     });
 }
 
-function saveBasicPrsnData(actTyp, shdSbmt)
+function saveBasicPrsnData(actTyp, shdSbmt, elementID, modalBodyID, titleElementID, formElementID,
+        formTitle, vtyp, pgNo, addOrEdit, actionText)
 {
+    if (typeof elementID === 'undefined' || elementID === null)
+    {
+        elementID = "";
+    }
+    if (typeof formTitle === 'undefined' || formTitle === null)
+    {
+        formTitle = "";
+    }
     if (typeof shdSbmt === 'undefined' || shdSbmt === null)
     {
         shdSbmt = 0;
     }
     var daPersonID = typeof $("#daPersonID").val() === 'undefined' ? -1 : $("#daPersonID").val();
     var sbmtdPersonID = typeof $("#daPersonID").val() === 'undefined' ? -1 : $("#daPersonID").val();
+    var daPrsnCrntOrgID= typeof $("#daPrsnCrntOrgID").val() === 'undefined' ? -1 : $("#daPrsnCrntOrgID").val();
     var daPrsnLocalID = typeof $("#daPrsnLocalID").val() === 'undefined' ? '' : $("#daPrsnLocalID").val();
     var daTitle = $("#daTitle").val() ? $("#daTitle").val() : '';
     var daFirstName = typeof $("#daFirstName").val() === 'undefined' ? '' : $("#daFirstName").val();
@@ -1465,11 +1573,11 @@ function saveBasicPrsnData(actTyp, shdSbmt)
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                 'font-weight:bold;color:red;">ID No. cannot be empty!</span></p>';
     }
-    if (daTitle.trim() === '')
+    /*if (daTitle.trim() === '')
     {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                 'font-weight:bold;color:red;">Title cannot be empty!</span></p>';
-    }
+    }*/
     if (daFirstName.trim() === '')
     {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
@@ -1661,6 +1769,7 @@ function saveBasicPrsnData(actTyp, shdSbmt)
             formData.append('shdSbmt', shdSbmt);
             formData.append('actyp', actTyp);
             formData.append('daPersonID', daPersonID);
+            formData.append('daPrsnCrntOrgID', daPrsnCrntOrgID);
             formData.append('sbmtdPersonID', sbmtdPersonID);
             formData.append('daPrsnLocalID', daPrsnLocalID);
             formData.append('daTitle', daTitle);
@@ -1754,10 +1863,21 @@ function saveBasicPrsnData(actTyp, shdSbmt)
                 processData: false,
                 success: function (data) {
                     $("#myInformation").html(data.message);
+                    daPersonID = data.daPersonID;
                     if (data.message.indexOf("Success") !== -1) {
                         var msg = '<span style="font-weight:bold;">Status: </span>' +
                                 '<span style="color:red;font-weight: bold;">Requires Approval </span>';
                         $("#mySelfStatusBtn").html(msg);
+                    }
+                    if (daPersonID > 0 && elementID.trim() !== "") {
+                        $("#daPersonID").val(daPersonID);
+                        if (formTitle.trim() === "View/Edit My Person Basic Profile") {
+                            getBscProfile1Form(elementID, modalBodyID, titleElementID, formElementID,
+                                    formTitle, daPersonID, 0, pgNo, "EDIT", actionText);
+                        } else {
+                            getBscProfileForm(elementID, modalBodyID, titleElementID, formElementID,
+                                    formTitle, daPersonID, 0, pgNo, "EDIT", actionText);
+                        }
                     }
                     if (shdSbmt > 0) {
                         setTimeout(function () {
@@ -2011,7 +2131,10 @@ function delAttchdDoc(rowIDAttrb)
                 var dialog1 = bootbox.alert({
                     title: 'Delete Document?',
                     size: 'small',
-                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Document...Please Wait...</p>'
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Document...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
@@ -2039,6 +2162,2326 @@ function delAttchdDoc(rowIDAttrb)
                                             var msg = '<span style="font-weight:bold;">Status: </span>' +
                                                     '<span style="color:red;font-weight: bold;">Requires Approval </span>';
                                             $("#mySelfStatusBtn").html(msg);
+                                        }
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1)
+                                {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                }
+                            });
+                        });
+                    } else
+                    {
+                        setTimeout(function () {
+                            $("#" + rowIDAttrb).remove();
+                            dialog1.find('.bootbox-body').html('Row Removed Successfully!');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
+}
+
+function getAllLeaveRqsts(actionText, slctr, linkArgs)
+{
+    var srchFor = typeof $("#allLeaveRqstsSrchFor").val() === 'undefined' ? '%' : $("#allLeaveRqstsSrchFor").val();
+    var srchIn = typeof $("#allLeaveRqstsSrchIn").val() === 'undefined' ? 'Both' : $("#allLeaveRqstsSrchIn").val();
+    var pageNo = typeof $("#allLeaveRqstsPageNo").val() === 'undefined' ? 1 : $("#allLeaveRqstsPageNo").val();
+    var limitSze = typeof $("#allLeaveRqstsDsplySze").val() === 'undefined' ? 10 : $("#allLeaveRqstsDsplySze").val();
+    var sortBy = typeof $("#allLeaveRqstsSortBy").val() === 'undefined' ? '' : $("#allLeaveRqstsSortBy").val();
+    var qStrtDte = typeof $("#allLeaveRqstsStrtDate").val() === 'undefined' ? '' : $("#allLeaveRqstsStrtDate").val();
+    var qEndDte = typeof $("#allLeaveRqstsEndDate").val() === 'undefined' ? '' : $("#allLeaveRqstsEndDate").val();
+    var qNotSentToGl = $('#allLeaveRqstsSntToGl:checked').length > 0;
+    var qUnbalncdOnly = $('#allLeaveRqstsUnbalncd:checked').length > 0;
+    var qUsrGnrtd = $('#allLeaveRqstsUsrTrns:checked').length > 0;
+    var qLowVal = typeof $("#allLeaveRqstsLowVal").val() === 'undefined' ? 0 : $("#allLeaveRqstsLowVal").val();
+    var qHighVal = typeof $("#allLeaveRqstsHighVal").val() === 'undefined' ? 0 : $("#allLeaveRqstsHighVal").val();
+    if (actionText == 'clear')
+    {
+        srchFor = "%";
+        pageNo = 1;
+    } else if (actionText == 'next')
+    {
+        pageNo = parseInt(pageNo) + 1;
+    } else if (actionText == 'previous')
+    {
+        pageNo = parseInt(pageNo) - 1;
+    }
+    linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn +
+            "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy +
+            "&qStrtDte=" + qStrtDte + "&qEndDte=" + qEndDte +
+            "&qNotSentToGl=" + qNotSentToGl + "&qUnbalncdOnly=" + qUnbalncdOnly +
+            "&qUsrGnrtd=" + qUsrGnrtd + "&qLowVal=" + qLowVal + "&qHighVal=" + qHighVal;
+    openATab(slctr, linkArgs);
+}
+
+function enterKeyFuncAllLeaveRqsts(e, actionText, slctr, linkArgs)
+{
+    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+    if (charCode == 13) {
+        getAllLeaveRqsts(actionText, slctr, linkArgs);
+    }
+}
+
+function getOneLeaveRqstsForm(pKeyID, actionTxt)
+{
+    if (typeof actionTxt === 'undefined' || actionTxt === null)
+    {
+        actionTxt = 'ShowDialog';
+    }
+    var lnkArgs = 'grp=8&typ=1&pg=4&vtyp=101&sbmtdExctnID=' + pKeyID;
+    doAjaxWthCallBck(lnkArgs, 'myFormsModalNrml', actionTxt, 'Leave Plan Execution (ID:' + pKeyID + ')', 'myFormsModalNrmlTitle', 'myFormsModalNrmlBody', function () {
+        $('#leavePlnExctnForm').submit(function (e) {
+            e.preventDefault();
+            return false;
+        });
+        $('.form_date').datetimepicker({
+            format: "dd-M-yyyy",
+            language: 'en',
+            weekStart: 0,
+            todayBtn: true,
+            autoclose: true,
+            todayHighlight: true,
+            keyboardNavigation: true,
+            startView: 2,
+            minView: 2,
+            maxView: 4,
+            forceParse: true
+        });
+        $('#allOtherInputData99').val(0);
+        $('#myFormsModalNrml').off('hidden.bs.modal');
+        $('#myFormsModalNrml').one('hidden.bs.modal', function (e) {
+            $('#myFormsModalNrmlTitle').html('');
+            $('#myFormsModalNrmlBody').html('');
+            getAllLeaveRqsts('clear', '#allmodules', 'grp=8&typ=1&pg=4&vtyp=0');
+            $(e.currentTarget).unbind();
+        });
+    });
+}
+
+function saveLeaveRqstsForm(shdSbmt)
+{
+    var sbmtdExctnID = typeof $("#sbmtdExctnID").val() === 'undefined' ? '-1' : $("#sbmtdExctnID").val();
+    var sbmtdPlanID = typeof $("#sbmtdPlanID").val() === 'undefined' ? '-1' : $("#sbmtdPlanID").val();
+    var rmrksCmnts = typeof $("#rmrksCmnts").val() === 'undefined' ? '' : $("#rmrksCmnts").val();
+    var lnkdPrsnID = typeof $("#lnkdPrsnID").val() === 'undefined' ? '-1' : $("#lnkdPrsnID").val();
+    var errMsg = "";
+    if (Number(sbmtdExctnID.replace(/[^-?0-9\.]/g, '')) <= 0)
+    {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                'font-weight:bold;color:red;">Invalid Leave Plan Execution!</span></p>';
+    }
+    if (Number(sbmtdPlanID.replace(/[^-?0-9\.]/g, '')) <= 0)
+    {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                'font-weight:bold;color:red;">Invalid Leave Plan!</span></p>';
+    }
+    if (Number(lnkdPrsnID.replace(/[^-?0-9\.]/g, '')) <= 0)
+    {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                'font-weight:bold;color:red;">Invalid Linked Person!</span></p>';
+    }
+    var slctdAbscLines = "";
+    var isVld = true;
+    var slctdLnCnt = 0;
+    $('#onePlnExctnAbsncsTable').find('tr').each(function (i, el) {
+        if (i > 0)
+        {
+            if (typeof $(el).attr('id') === 'undefined')
+            {
+                /*Do Nothing*/
+            } else {
+                var rndmNum = $(el).attr('id').split("_")[1];
+                var rowPrfxNm = $(el).attr('id').split("_")[0];
+                if (typeof $('#' + rowPrfxNm + rndmNum + '_LineID').val() === 'undefined')
+                {
+                    /*Do Nothing*/
+                } else {
+                    var lnID = typeof $('#' + rowPrfxNm + rndmNum + '_LineID').val() === 'undefined' ? '-1' : $('#' + rowPrfxNm + rndmNum + '_LineID').val();
+                    var lnStrtDte = typeof $('#' + rowPrfxNm + rndmNum + '_StrtDte').val() === 'undefined' ? '' : $('#' + rowPrfxNm + rndmNum + '_StrtDte').val();
+                    var lnNoDays = typeof $('#' + rowPrfxNm + rndmNum + '_NoOfDays').val() === 'undefined' ? '0' : $('#' + rowPrfxNm + rndmNum + '_NoOfDays').val();
+                    if (lnStrtDte.trim() === '')
+                    {
+                        /*Do Nothing*/
+                    } else if (Number(lnNoDays.replace(/[^-?0-9\.]/g, '')) > 0) {
+                        $('#' + rowPrfxNm + rndmNum + '_NoOfDays').removeClass('rho-error');
+                        var lnDesc = typeof $('#' + rowPrfxNm + rndmNum + '_AbsRsn').val() === 'undefined' ? '' : $('#' + rowPrfxNm + rndmNum + '_AbsRsn').val();
+                        if (lnDesc.trim() === "")
+                        {
+                            isVld = false;
+                            $('#' + rowPrfxNm + rndmNum + '_AbsRsn').addClass('rho-error');
+                        } else {
+                            $('#' + rowPrfxNm + rndmNum + '_AbsRsn').removeClass('rho-error');
+                        }
+                        if (isVld === true)
+                        {
+                            slctdAbscLines = slctdAbscLines + lnID.replace(/[^-?0-9\.]/g, '').replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                                    + lnStrtDte.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                                    + lnNoDays.replace(/[^-?0-9\.]/g, '').replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                                    + lnDesc.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                            slctdLnCnt++;
+                        }
+                    } else {
+                        isVld = false;
+                        $('#' + rowPrfxNm + rndmNum + '_NoOfDays').addClass('rho-error');
+                    }
+                }
+            }
+        }
+    });
+    if (slctdLnCnt <= 0)
+    {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                'font-weight:bold;color:red;">Absence Lines Cannot be Empty!</span></p>';
+    }
+    if (isVld === false)
+    {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                'font-weight:bold;color:red;">Please fix all Line Errors!</span></p>';
+    }
+    if (rhotrim(errMsg, '; ') !== '')
+    {
+        $body = $("body");
+        $body.removeClass("mdlloading");
+        bootbox.alert({
+            title: 'System Alert!',
+            /*size: 'small',*/
+            message: errMsg});
+        return;
+    }
+    var shdClose = 0;
+    var dialog = bootbox.alert({
+        title: 'Save Plan Execution',
+        size: 'small',
+        message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Plan Execution...Please Wait...</p>',
+        callback: function () {
+            if (shdClose > 0) {
+                $('#myFormsModalx').modal('hide');
+            }
+        }
+    });
+    dialog.init(function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+            $body = $("body");
+            $body.removeClass("mdlloading");
+            $.ajax({
+                method: "POST",
+                url: "index.php",
+                data: {
+                    grp: 8,
+                    typ: 1,
+                    pg: 4,
+                    q: 'UPDATE',
+                    actyp: 1,
+                    sbmtdExctnID: sbmtdExctnID,
+                    sbmtdPlanID: sbmtdPlanID,
+                    lnkdPrsnID: lnkdPrsnID,
+                    rmrksCmnts: rmrksCmnts,
+                    shdSbmt: shdSbmt,
+                    slctdAbscLines: slctdAbscLines
+                },
+                success: function (result) {
+                    dialog.find('.bootbox-body').html(result.message);
+                    if (result.message.indexOf("Success") !== -1) {
+                        shdClose = 1;
+                        getOneLeaveRqstsForm(sbmtdExctnID, 'ReloadDialog');
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    /*dialog.find('.bootbox-body').html(errorThrown);*/
+                    console.warn(jqXHR.responseText);
+                }
+            });
+        });
+    });
+}
+
+function delLeaveRqsts(rowIDAttrb)
+{
+    var msgTitle = 'Leave Plan Execution';
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var rowPrfxNm = rowIDAttrb.split("_")[0];
+    var pKeyID = -1;
+    var pKeyNm = "";
+    if (typeof $('#' + rowPrfxNm + rndmNum + '_LineID').val() === 'undefined')
+    {
+        /*Do Nothing*/
+    } else {
+        pKeyID = $('#' + rowPrfxNm + rndmNum + '_LineID').val();
+        var $tds = $('#' + rowIDAttrb).find('td');
+        pKeyNm = $.trim($tds.eq(1).text());
+    }
+    var dialog = bootbox.confirm({
+        title: 'Delete ' + msgTitle + '?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">DELETE</span> this ' + msgTitle + '?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true)
+            {
+                var dialog1 = bootbox.alert({
+                    title: 'Delete ' + msgTitle + '?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting ' + msgTitle + '...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 8,
+                                    typ: 1,
+                                    pg: 4,
+                                    q: 'DELETE',
+                                    actyp: 1,
+                                    pKeyID: pKeyID,
+                                    pKeyNm: pKeyNm
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                        if (result1.indexOf("Success") !== -1) {
+                                            $("#" + rowIDAttrb).remove();
+                                        }
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1)
+                                {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                }
+                            });
+                        });
+                    } else
+                    {
+                        setTimeout(function () {
+                            $("#" + rowIDAttrb).remove();
+                            dialog1.find('.bootbox-body').html('Row Removed Successfully!');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
+}
+
+function delLeaveRqstsLines(rowIDAttrb)
+{
+    var msgTitle = 'Absence Request';
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var rowPrfxNm = rowIDAttrb.split("_")[0];
+    var pKeyID = -1;
+    var pKeyNm = "";
+    if (typeof $('#' + rowPrfxNm + rndmNum + '_LineID').val() === 'undefined')
+    {
+        /*Do Nothing*/
+    } else {
+        pKeyID = $('#' + rowPrfxNm + rndmNum + '_LineID').val();
+        var $tds = $('#' + rowIDAttrb).find('td');
+        pKeyNm = $.trim($tds.eq(1).text());
+    }
+    var dialog = bootbox.confirm({
+        title: 'Delete ' + msgTitle + '?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">DELETE</span> this ' + msgTitle + '?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true)
+            {
+                var dialog1 = bootbox.alert({
+                    title: 'Delete ' + msgTitle + '?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting ' + msgTitle + '...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 8,
+                                    typ: 1,
+                                    pg: 4,
+                                    q: 'DELETE',
+                                    actyp: 2,
+                                    pKeyID: pKeyID,
+                                    pKeyNm: pKeyNm
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                        if (result1.indexOf("Success") !== -1) {
+                                            $("#" + rowIDAttrb).remove();
+                                        }
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1)
+                                {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                }
+                            });
+                        });
+                    } else
+                    {
+                        setTimeout(function () {
+                            $("#" + rowIDAttrb).remove();
+                            dialog1.find('.bootbox-body').html('Row Removed Successfully!');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
+}
+
+function actOnLeaveRqst(acttype)
+{
+    var pKeyID = typeof $("#sbmtdExctnID").val() === 'undefined' ? '-1' : $("#sbmtdExctnID").val();
+    var dialog = bootbox.confirm({
+        title: acttype + ' Request?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">' + acttype + '</span> this Request?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true)
+            {
+                var dialog1 = bootbox.alert({
+                    title: acttype + ' Request?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Acting on Request...Please Wait...</p>',
+                    callback: function () {
+                        if (pKeyID > 0)
+                        {
+                            openATab('#allmodules', 'grp=8&typ=1&pg=4&vtyp=0');
+                        }
+                    }
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 8,
+                                    typ: 1,
+                                    pg: 4,
+                                    q: 'UPDATE',
+                                    actyp: 40,
+                                    actiontyp: acttype,
+                                    sbmtdExctnID: pKeyID
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1)
+                                {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                }
+                            });
+                        });
+                    } else
+                    {
+                        setTimeout(function () {
+                            dialog1.find('.bootbox-body').html('<span style="color:red;">Nothing to Act On!</span>');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
+}
+
+function getAllAbsences(actionText, slctr, linkArgs)
+{
+    var srchFor = typeof $("#allAbsencesSrchFor").val() === 'undefined' ? '%' : $("#allAbsencesSrchFor").val();
+    var srchIn = typeof $("#allAbsencesSrchIn").val() === 'undefined' ? 'Both' : $("#allAbsencesSrchIn").val();
+    var pageNo = typeof $("#allAbsencesPageNo").val() === 'undefined' ? 1 : $("#allAbsencesPageNo").val();
+    var limitSze = typeof $("#allAbsencesDsplySze").val() === 'undefined' ? 10 : $("#allAbsencesDsplySze").val();
+    var sortBy = typeof $("#allAbsencesSortBy").val() === 'undefined' ? '' : $("#allAbsencesSortBy").val();
+    var qStrtDte = typeof $("#allAbsencesStrtDate").val() === 'undefined' ? '' : $("#allAbsencesStrtDate").val();
+    var qEndDte = typeof $("#allAbsencesEndDate").val() === 'undefined' ? '' : $("#allAbsencesEndDate").val();
+    var qNotSentToGl = $('#allAbsencesSntToGl:checked').length > 0;
+    var qUnbalncdOnly = $('#allAbsencesUnbalncd:checked').length > 0;
+    var qUsrGnrtd = $('#allAbsencesUsrTrns:checked').length > 0;
+    var qLowVal = typeof $("#allAbsencesLowVal").val() === 'undefined' ? 0 : $("#allAbsencesLowVal").val();
+    var qHighVal = typeof $("#allAbsencesHighVal").val() === 'undefined' ? 0 : $("#allAbsencesHighVal").val();
+    if (actionText == 'clear')
+    {
+        srchFor = "%";
+        pageNo = 1;
+    } else if (actionText == 'next')
+    {
+        pageNo = parseInt(pageNo) + 1;
+    } else if (actionText == 'previous')
+    {
+        pageNo = parseInt(pageNo) - 1;
+    }
+    linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn +
+            "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy +
+            "&qStrtDte=" + qStrtDte + "&qEndDte=" + qEndDte +
+            "&qNotSentToGl=" + qNotSentToGl + "&qUnbalncdOnly=" + qUnbalncdOnly +
+            "&qUsrGnrtd=" + qUsrGnrtd + "&qLowVal=" + qLowVal + "&qHighVal=" + qHighVal;
+    openATab(slctr, linkArgs);
+}
+
+function enterKeyFuncAllAbsences(e, actionText, slctr, linkArgs)
+{
+    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+    if (charCode == 13) {
+        getAllAbsences(actionText, slctr, linkArgs);
+    }
+}
+
+function getAllAccrlPlns(actionText, slctr, linkArgs)
+{
+    var srchFor = typeof $("#allAccrlPlnsSrchFor").val() === 'undefined' ? '%' : $("#allAccrlPlnsSrchFor").val();
+    var srchIn = typeof $("#allAccrlPlnsSrchIn").val() === 'undefined' ? 'Both' : $("#allAccrlPlnsSrchIn").val();
+    var pageNo = typeof $("#allAccrlPlnsPageNo").val() === 'undefined' ? 1 : $("#allAccrlPlnsPageNo").val();
+    var limitSze = typeof $("#allAccrlPlnsDsplySze").val() === 'undefined' ? 10 : $("#allAccrlPlnsDsplySze").val();
+    var sortBy = typeof $("#allAccrlPlnsSortBy").val() === 'undefined' ? '' : $("#allAccrlPlnsSortBy").val();
+    var qStrtDte = typeof $("#allAccrlPlnsStrtDate").val() === 'undefined' ? '' : $("#allAccrlPlnsStrtDate").val();
+    var qEndDte = typeof $("#allAccrlPlnsEndDate").val() === 'undefined' ? '' : $("#allAccrlPlnsEndDate").val();
+    var qNotSentToGl = $('#allAccrlPlnsSntToGl:checked').length > 0;
+    var qUnbalncdOnly = $('#allAccrlPlnsUnbalncd:checked').length > 0;
+    var qUsrGnrtd = $('#allAccrlPlnsUsrTrns:checked').length > 0;
+    var qLowVal = typeof $("#allAccrlPlnsLowVal").val() === 'undefined' ? 0 : $("#allAccrlPlnsLowVal").val();
+    var qHighVal = typeof $("#allAccrlPlnsHighVal").val() === 'undefined' ? 0 : $("#allAccrlPlnsHighVal").val();
+    if (actionText == 'clear')
+    {
+        srchFor = "%";
+        pageNo = 1;
+    } else if (actionText == 'next')
+    {
+        pageNo = parseInt(pageNo) + 1;
+    } else if (actionText == 'previous')
+    {
+        pageNo = parseInt(pageNo) - 1;
+    }
+    linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn +
+            "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy +
+            "&qStrtDte=" + qStrtDte + "&qEndDte=" + qEndDte +
+            "&qNotSentToGl=" + qNotSentToGl + "&qUnbalncdOnly=" + qUnbalncdOnly +
+            "&qUsrGnrtd=" + qUsrGnrtd + "&qLowVal=" + qLowVal + "&qHighVal=" + qHighVal;
+    openATab(slctr, linkArgs);
+}
+
+function enterKeyFuncAllAccrlPlns(e, actionText, slctr, linkArgs)
+{
+    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+    if (charCode == 13) {
+        getAllAccrlPlns(actionText, slctr, linkArgs);
+    }
+}
+
+function getOneAccrlPlnsForm(pKeyID, actionTxt)
+{
+    if (typeof actionTxt === 'undefined' || actionTxt === null)
+    {
+        actionTxt = 'ShowDialog';
+    }
+    if (pKeyID <= 0)
+    {
+        pKeyID = typeof $("#sbmtdPlanID").val() === 'undefined' ? -1 : parseFloat($("#sbmtdPlanID").val());
+    }
+    if (pKeyID <= 0 && actionTxt !== 'ShowDialog') {
+        bootbox.alert({
+            title: 'System Alert!',
+            /*size: 'small',*/
+            message: 'Please save form First!'});
+        return false;
+    }
+    var lnkArgs = 'grp=8&typ=1&pg=4&vtyp=301&sbmtdPlanID=' + pKeyID;
+    doAjaxWthCallBck(lnkArgs, 'myFormsModalNrml', actionTxt, 'Leave Accrual Plan (ID:' + pKeyID + ')', 'myFormsModalNrmlTitle', 'myFormsModalNrmlBody', function () {
+        $('#oneAccrlPlnsForm').submit(function (e) {
+            e.preventDefault();
+            return false;
+        });
+        $('.form_date').datetimepicker({
+            format: "dd-M-yyyy",
+            language: 'en',
+            weekStart: 0,
+            todayBtn: true,
+            autoclose: true,
+            todayHighlight: true,
+            keyboardNavigation: true,
+            startView: 2,
+            minView: 2,
+            maxView: 4,
+            forceParse: true
+        });
+        $('#allOtherInputData99').val(0);
+        $('#myFormsModalNrml').off('hidden.bs.modal');
+        $('#myFormsModalNrml').one('hidden.bs.modal', function (e) {
+            $('#myFormsModalNrmlTitle').html('');
+            $('#myFormsModalNrmlBody').html('');
+            getAllAccrlPlns('clear', '#plansLv', 'grp=8&typ=1&pg=4&vtyp=3');
+            $(e.currentTarget).unbind();
+        });
+    });
+}
+
+function saveAccrlPlnsForm()
+{
+    var sbmtdPlanID = typeof $("#sbmtdPlanID").val() === 'undefined' ? '-1' : $("#sbmtdPlanID").val();
+    var plnNm = typeof $("#plnNm").val() === 'undefined' ? '' : $("#plnNm").val();
+    var plnDesc = typeof $("#plnDesc").val() === 'undefined' ? '' : $("#plnDesc").val();
+    var plnExctnIntrvl = typeof $("#plnExctnIntrvl").val() === 'undefined' ? '' : $("#plnExctnIntrvl").val();
+    var plnStrtDte = typeof $("#plnStrtDte").val() === 'undefined' ? '' : $("#plnStrtDte").val();
+    var plnEndDte = typeof $("#plnEndDte").val() === 'undefined' ? '' : $("#plnEndDte").val();
+    var lnkdBalsItmID = typeof $("#lnkdBalsItmID").val() === 'undefined' ? '-1' : $("#lnkdBalsItmID").val();
+    var lnkdAddItmID = typeof $("#lnkdAddItmID").val() === 'undefined' ? '-1' : $("#lnkdAddItmID").val();
+    var lnkdSbtrctItmID = typeof $("#lnkdSbtrctItmID").val() === 'undefined' ? '-1' : $("#lnkdSbtrctItmID").val();
+    var canExcdEntlmnt = typeof $("input[name='canExcdEntlmnt']:checked").val() === 'undefined' ? 'NO' : 'YES';
+    var errMsg = "";
+    if (plnNm.trim() === "")
+    {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                'font-weight:bold;color:red;">Plan Name cannot be empty!</span></p>';
+    }
+    if (plnDesc.trim() === "")
+    {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                'font-weight:bold;color:red;">Plan Description cannot be empty!</span></p>';
+    }
+    if (plnExctnIntrvl.trim() === "")
+    {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                'font-weight:bold;color:red;">Execution Interval cannot be empty!</span></p>';
+    }
+    if (plnStrtDte.trim() === "")
+    {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                'font-weight:bold;color:red;">Plan Start Date cannot be empty!</span></p>';
+    }
+    /*if (Number(lnkdBalsItmID.replace(/[^-?0-9\.]/g, '')) <= 0)
+     {
+     errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+     'font-weight:bold;color:red;">Linked Balance Item cannot be empty!</span></p>';
+     }*/
+    if (Number(lnkdAddItmID.replace(/[^-?0-9\.]/g, '')) == 0)
+    {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                'font-weight:bold;color:red;">Linked Add Item cannot be Empty!</span></p>';
+    }
+    /*if (Number(lnkdSbtrctItmID.replace(/[^-?0-9\.]/g, '')) == 0)
+     {
+     errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+     'font-weight:bold;color:red;">Linked Subtraction Item cannot be empty!</span></p>';
+     }*/
+
+    if (rhotrim(errMsg, '; ') !== '')
+    {
+        bootbox.alert({
+            title: 'System Alert!',
+            /*size: 'small',*/
+            message: errMsg});
+        return false;
+    }
+
+    var shdClose = 0;
+    var dialog = bootbox.alert({
+        title: 'Save Leave Plan',
+        size: 'small',
+        message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Leave Plan...Please Wait...</p>',
+        callback: function () {
+            if (shdClose > 0) {
+                $('#myFormsModalx').modal('hide');
+            }
+        }
+    });
+    dialog.init(function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+            $body = $("body");
+            $body.removeClass("mdlloading");
+            $.ajax({
+                method: "POST",
+                url: "index.php",
+                data: {
+                    grp: 8,
+                    typ: 1,
+                    pg: 4,
+                    q: 'UPDATE',
+                    actyp: 3,
+                    sbmtdPlanID: sbmtdPlanID,
+                    plnNm: plnNm,
+                    plnDesc: plnDesc,
+                    plnExctnIntrvl: plnExctnIntrvl,
+                    plnStrtDte: plnStrtDte,
+                    plnEndDte: plnEndDte,
+                    lnkdBalsItmID: lnkdBalsItmID,
+                    lnkdAddItmID: lnkdAddItmID,
+                    lnkdSbtrctItmID: lnkdSbtrctItmID,
+                    canExcdEntlmnt: canExcdEntlmnt
+                },
+                success: function (result) {
+                    dialog.find('.bootbox-body').html(result.message);
+                    if (result.message.indexOf("Success") !== -1) {
+                        shdClose = 1;
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    /*dialog.find('.bootbox-body').html(errorThrown);*/
+                    console.warn(jqXHR.responseText);
+                }
+            });
+        });
+    });
+}
+
+function delAccrlPlns(rowIDAttrb)
+{
+    var msgTitle = 'Accrual Plan';
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var rowPrfxNm = rowIDAttrb.split("_")[0];
+    var pKeyID = -1;
+    var pKeyNm = "";
+    if (typeof $('#' + rowPrfxNm + rndmNum + '_LineID').val() === 'undefined')
+    {
+        /*Do Nothing*/
+    } else {
+        pKeyID = $('#' + rowPrfxNm + rndmNum + '_LineID').val();
+        var $tds = $('#' + rowIDAttrb).find('td');
+        pKeyNm = $.trim($tds.eq(1).text());
+    }
+    var dialog = bootbox.confirm({
+        title: 'Delete ' + msgTitle + '?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">DELETE</span> this ' + msgTitle + '?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true)
+            {
+                var dialog1 = bootbox.alert({
+                    title: 'Delete ' + msgTitle + '?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting ' + msgTitle + '...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 8,
+                                    typ: 1,
+                                    pg: 4,
+                                    q: 'DELETE',
+                                    actyp: 3,
+                                    pKeyID: pKeyID,
+                                    pKeyNm: pKeyNm
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                        if (result1.indexOf("Success") !== -1) {
+                                            $("#" + rowIDAttrb).remove();
+                                        }
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1)
+                                {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                }
+                            });
+                        });
+                    } else
+                    {
+                        setTimeout(function () {
+                            $("#" + rowIDAttrb).remove();
+                            dialog1.find('.bootbox-body').html('Row Removed Successfully!');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
+}
+
+function getPDivGrpForm(elementID, modalBodyID, titleElementID, formElementID,
+        tRowElementID, formTitle, vtyp, addOrEdit, pKeyID, personID)
+{
+    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $('#' + titleElementID).html(formTitle);
+                $('#' + modalBodyID).html(xmlhttp.responseText);
+                $('#' + modalBodyID + 'Diag').draggable();
+                $(function () {
+                    $('.form_date').datetimepicker({
+                        format: "d-M-yyyy",
+                        language: 'en',
+                        weekStart: 0,
+                        todayBtn: true,
+                        autoclose: true,
+                        todayHighlight: true,
+                        keyboardNavigation: true,
+                        startView: 2,
+                        minView: 2,
+                        maxView: 4,
+                        forceParse: true
+                    });
+                });
+
+                if (addOrEdit === 'EDIT')
+                {
+                    /*Get various field element IDs and populate values*/
+                    var rndmNum = tRowElementID.split("_")[1];
+                    var pDivGrpPKeyID = typeof $('#pDivGrpRow' + rndmNum + '_PKeyID').val() === 'undefined' ? '-1' : $('#pDivGrpRow' + rndmNum + '_PKeyID').val();
+                    var pDivGrpDivID = typeof $('#pDivGrpRow' + rndmNum + '_DivID').val() === 'undefined' ? '-1' : $('#pDivGrpRow' + rndmNum + '_DivID').val();
+                    $("#pDivGrpPKeyID").val(pDivGrpPKeyID);
+                    $("#pDivGrpDivID").val(pDivGrpDivID);
+                    var $tds = $('#' + tRowElementID).find('td');
+                    $('#pDivGrpName').val($.trim($tds.eq(1).text()));
+                    $('#pDivGrpType').val($.trim($tds.eq(2).text()));
+                    $('#pDivGrpStartDate').val($.trim($tds.eq(3).text()));
+                    $('#pDivGrpEndDate').val($.trim($tds.eq(4).text()));
+                }
+                $('#' + elementID).on('show.bs.modal', function (e) {
+                    $(this).find('.modal-body').css({
+                        'max-height': '100%'
+                    });
+                });
+                $body.removeClass("mdlloadingDiag");
+                $('#' + elementID).modal({backdrop: 'static', keyboard: false});
+                $body.removeClass("mdlloading");
+                $(document).ready(function () {
+                    $('#' + formElementID).submit(function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+
+                });
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("grp=8&typ=1&pg=2&vtyp=" + vtyp + "&pDivGrpPkeyID=" + pKeyID + "&sbmtdPersonID=" + personID + "&tRowElmntNm=" + tRowElementID);
+    });
+}
+
+function savePDivGrpForm(elementID, pKeyID, personID, tRowElementID)
+{
+    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        var pDivGrpPKeyID = typeof $("#pDivGrpPKeyID").val() === 'undefined' ? '-1' : $("#pDivGrpPKeyID").val();
+        var pDivGrpDivID = typeof $("#pDivGrpDivID").val() === 'undefined' ? '-1' : $("#pDivGrpDivID").val();
+        var pDivGrpName = typeof $("#pDivGrpName").val() === 'undefined' ? '' : $("#pDivGrpName").val();
+        var pDivGrpType = typeof $("#pDivGrpType").val() === 'undefined' ? '' : $("#pDivGrpType").val();
+        var pDivGrpStartDate = typeof $("#pDivGrpStartDate").val() === 'undefined' ? '' : $("#pDivGrpStartDate").val();
+        var pDivGrpEndDate = typeof $("#pDivGrpEndDate").val() === 'undefined' ? '' : $("#pDivGrpEndDate").val();
+        var srcForm = $("#allAdminsSrcForm").val() ? $("#allAdminsSrcForm").val() : '0';
+        var errMsg = "";
+        if (pDivGrpName.trim().length <= 0)
+        {
+            errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;color:red;">Group Name cannot be empty!</span></p>';
+        }
+        if (pDivGrpStartDate.trim() === '')
+        {
+            errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;color:red;">Start Date cannot be empty!</span></p>';
+        }
+        if (pDivGrpStartDate.trim().length === 10)
+        {
+            pDivGrpStartDate = '0' + pDivGrpStartDate;
+            $("#pDivGrpStartDate").val(pDivGrpStartDate);
+        }
+        if (pDivGrpEndDate.trim().length === 10)
+        {
+            pDivGrpEndDate = '0' + pDivGrpEndDate;
+            $("#pDivGrpEndDate").val(pDivGrpEndDate);
+        }
+        if (rhotrim(errMsg, '; ') !== '')
+        {
+            bootbox.alert({
+                title: 'System Alert!',
+                size: 'small',
+                message: errMsg});
+            return false;
+        }
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $body.removeClass("mdlloadingDiag");
+                $body.removeClass("mdlloading");
+                if (xmlhttp.responseText.indexOf("Error") !== -1) {
+                    /*Do Nothing*/
+                    bootbox.alert({
+                        title: 'System Alert!',
+                        size: 'small',
+                        message: xmlhttp.responseText});
+                } else {
+                    if (pKeyID <= 0) {
+                        $('#pDivGrpTable').append(xmlhttp.responseText);
+                    } else {
+                        var rndmNum = tRowElementID.split("_")[1];
+                        $('#pDivGrpRow' + rndmNum + '_PKeyID').val(pDivGrpPKeyID);
+                        $('#pDivGrpRow' + rndmNum + '_DivID').val(pDivGrpDivID);
+                        var $tds = $('#' + tRowElementID).find('td');
+                        $tds.eq(1).text(pDivGrpName);
+                        $tds.eq(2).text(pDivGrpType);
+                        $tds.eq(3).text(pDivGrpStartDate);
+                        $tds.eq(4).text(pDivGrpEndDate);
+                    }
+                    /*var msg = '<span style="font-weight:bold;">Status: </span>' +
+                     '<span style="color:red;font-weight: bold;">Requires Approval </span>';
+                     $("#mySelfStatusBtn").html(msg);*/
+                    $('#' + elementID).modal('hide');
+                }
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=5" +
+                "&pDivGrpName=" + pDivGrpName +
+                "&pDivGrpType=" + pDivGrpType +
+                "&pDivGrpStartDate=" + pDivGrpStartDate +
+                "&pDivGrpEndDate=" + pDivGrpEndDate +
+                "&pDivGrpPkeyID=" + pKeyID +
+                "&pDivGrpDivID=" + pDivGrpDivID +
+                "&sbmtdPersonID=" + personID +
+                "&srcForm=" + srcForm);
+    });
+}
+
+function delPDivGrpID(rowIDAttrb)
+{
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var srcForm = $("#allAdminsSrcForm").val() ? $("#allAdminsSrcForm").val() : '0';
+    var sbmtdPersonID = typeof $("#daPersonID").val() === 'undefined' ? -1 : $("#daPersonID").val();
+    var pKeyID = -1;
+    if (typeof $('#pDivGrpRow' + rndmNum + '_PKeyID').val() === 'undefined')
+    {
+        /*Do Nothing allnoticesRow<?php echo $cntr; ?> */
+    } else {
+        pKeyID = $('#pDivGrpRow' + rndmNum + '_PKeyID').val();
+    }
+    /*alert(pKeyID);*/
+    var dialog = bootbox.confirm({
+        title: 'Delete Division/Group?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">DELETE</span> this Division/Group?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true)
+            {
+                var dialog1 = bootbox.alert({
+                    title: 'Delete Division/Group?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Division/Group...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 8,
+                                    typ: 1,
+                                    pg: 2,
+                                    q: 'DELETE',
+                                    actyp: 5,
+                                    pDivGrpPkeyID: pKeyID,
+                                    srcForm: srcForm,
+                                    sbmtdPersonID: sbmtdPersonID
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                        if (result1.indexOf("Success") !== -1) {
+                                            $("#" + rowIDAttrb).remove();
+                                            var msg = '<span style="font-weight:bold;">Status: </span>' +
+                                                    '<span style="color:red;font-weight: bold;">Requires Approval </span>';
+                                            $("#mySelfStatusBtn").html(msg);
+                                        }
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1)
+                                {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                }
+                            });
+                        });
+                    } else
+                    {
+                        setTimeout(function () {
+                            $("#" + rowIDAttrb).remove();
+                            dialog1.find('.bootbox-body').html('Row Removed Successfully!');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
+}
+
+function getPSiteLocForm(elementID, modalBodyID, titleElementID, formElementID,
+        tRowElementID, formTitle, vtyp, addOrEdit, pKeyID, personID)
+{
+    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $('#' + titleElementID).html(formTitle);
+                $('#' + modalBodyID).html(xmlhttp.responseText);
+                $('#' + modalBodyID + 'Diag').draggable();
+                $(function () {
+                    $('.form_date').datetimepicker({
+                        format: "d-M-yyyy",
+                        language: 'en',
+                        weekStart: 0,
+                        todayBtn: true,
+                        autoclose: true,
+                        todayHighlight: true,
+                        keyboardNavigation: true,
+                        startView: 2,
+                        minView: 2,
+                        maxView: 4,
+                        forceParse: true
+                    });
+                });
+
+                if (addOrEdit === 'EDIT')
+                {
+                    /*Get various field element IDs and populate values*/
+                    var rndmNum = tRowElementID.split("_")[1];
+                    var pSiteLocPKeyID = typeof $('#pSiteLocRow' + rndmNum + '_PKeyID').val() === 'undefined' ? '-1' : $('#pSiteLocRow' + rndmNum + '_PKeyID').val();
+                    var pSiteLocID = typeof $('#pSiteLocRow' + rndmNum + '_SiteLocID').val() === 'undefined' ? '-1' : $('#pSiteLocRow' + rndmNum + '_SiteLocID').val();
+                    $("#pSiteLocPKeyID").val(pSiteLocPKeyID);
+                    $("#pSiteLocID").val(pSiteLocID);
+                    var $tds = $('#' + tRowElementID).find('td');
+                    $('#pSiteLocName').val($.trim($tds.eq(1).text()));
+                    $('#pSiteLocType').val($.trim($tds.eq(2).text()));
+                    $('#pSiteLocStartDate').val($.trim($tds.eq(3).text()));
+                    $('#pSiteLocEndDate').val($.trim($tds.eq(4).text()));
+                }
+                $('#' + elementID).on('show.bs.modal', function (e) {
+                    $(this).find('.modal-body').css({
+                        'max-height': '100%'
+                    });
+                });
+                $body.removeClass("mdlloadingDiag");
+                $('#' + elementID).modal({backdrop: 'static', keyboard: false});
+                $body.removeClass("mdlloading");
+                $(document).ready(function () {
+                    $('#' + formElementID).submit(function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+
+                });
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("grp=8&typ=1&pg=2&vtyp=" + vtyp + "&pSiteLocPkeyID=" + pKeyID + "&sbmtdPersonID=" + personID + "&tRowElmntNm=" + tRowElementID);
+    });
+}
+
+function savePSiteLocForm(elementID, pKeyID, personID, tRowElementID)
+{
+    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        var pSiteLocPKeyID = typeof $("#pSiteLocPKeyID").val() === 'undefined' ? '-1' : $("#pSiteLocPKeyID").val();
+        var pSiteLocID = typeof $("#pSiteLocID").val() === 'undefined' ? '-1' : $("#pSiteLocID").val();
+        var pSiteLocName = typeof $("#pSiteLocName").val() === 'undefined' ? '' : $("#pSiteLocName").val();
+        var pSiteLocType = typeof $("#pSiteLocType").val() === 'undefined' ? '' : $("#pSiteLocType").val();
+        var pSiteLocStartDate = typeof $("#pSiteLocStartDate").val() === 'undefined' ? '' : $("#pSiteLocStartDate").val();
+        var pSiteLocEndDate = typeof $("#pSiteLocEndDate").val() === 'undefined' ? '' : $("#pSiteLocEndDate").val();
+        var srcForm = $("#allAdminsSrcForm").val() ? $("#allAdminsSrcForm").val() : '0';
+        var errMsg = "";
+        if (pSiteLocName.trim().length <= 0)
+        {
+            errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;color:red;">Location Name cannot be empty!</span></p>';
+        }
+        if (pSiteLocStartDate.trim() === '')
+        {
+            errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;color:red;">Start Date cannot be empty!</span></p>';
+        }
+        if (pSiteLocStartDate.trim().length === 10)
+        {
+            pSiteLocStartDate = '0' + pSiteLocStartDate;
+            $("#pSiteLocStartDate").val(pSiteLocStartDate);
+        }
+        if (pSiteLocEndDate.trim().length === 10)
+        {
+            pSiteLocEndDate = '0' + pSiteLocEndDate;
+            $("#pSiteLocEndDate").val(pSiteLocEndDate);
+        }
+        if (rhotrim(errMsg, '; ') !== '')
+        {
+            bootbox.alert({
+                title: 'System Alert!',
+                size: 'small',
+                message: errMsg});
+            return false;
+        }
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $body.removeClass("mdlloadingDiag");
+                $body.removeClass("mdlloading");
+                if (xmlhttp.responseText.indexOf("Error") !== -1) {
+                    /*Do Nothing*/
+                    bootbox.alert({
+                        title: 'System Alert!',
+                        size: 'small',
+                        message: xmlhttp.responseText});
+                } else {
+                    if (pKeyID <= 0) {
+                        $('#pSiteLocTable').append(xmlhttp.responseText);
+                    } else {
+                        var rndmNum = tRowElementID.split("_")[1];
+                        $('#pSiteLocRow' + rndmNum + '_PKeyID').val(pSiteLocPKeyID);
+                        $('#pSiteLocRow' + rndmNum + '_SiteLocID').val(pSiteLocID);
+                        var $tds = $('#' + tRowElementID).find('td');
+                        $tds.eq(1).text(pSiteLocName);
+                        $tds.eq(2).text(pSiteLocType);
+                        $tds.eq(3).text(pSiteLocStartDate);
+                        $tds.eq(4).text(pSiteLocEndDate);
+                    }
+                    /*var msg = '<span style="font-weight:bold;">Status: </span>' +
+                     '<span style="color:red;font-weight: bold;">Requires Approval </span>';
+                     $("#mySelfStatusBtn").html(msg);*/
+                    $('#' + elementID).modal('hide');
+                }
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=6" +
+                "&pSiteLocName=" + pSiteLocName +
+                "&pSiteLocType=" + pSiteLocType +
+                "&pSiteLocStartDate=" + pSiteLocStartDate +
+                "&pSiteLocEndDate=" + pSiteLocEndDate +
+                "&pSiteLocPkeyID=" + pKeyID +
+                "&pSiteLocID=" + pSiteLocID +
+                "&sbmtdPersonID=" + personID +
+                "&srcForm=" + srcForm);
+    });
+}
+
+function delPSiteLocID(rowIDAttrb)
+{
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var srcForm = $("#allAdminsSrcForm").val() ? $("#allAdminsSrcForm").val() : '0';
+    var sbmtdPersonID = typeof $("#daPersonID").val() === 'undefined' ? -1 : $("#daPersonID").val();
+    var pKeyID = -1;
+    if (typeof $('#pSiteLocRow' + rndmNum + '_PKeyID').val() === 'undefined')
+    {
+        /*Do Nothing allnoticesRow<?php echo $cntr; ?> */
+    } else {
+        pKeyID = $('#pSiteLocRow' + rndmNum + '_PKeyID').val();
+    }
+    /*alert(pKeyID);*/
+    var dialog = bootbox.confirm({
+        title: 'Delete Site/Location?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">DELETE</span> this Site/Location?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true)
+            {
+                var dialog1 = bootbox.alert({
+                    title: 'Delete Site/Location?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Site/Location...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 8,
+                                    typ: 1,
+                                    pg: 2,
+                                    q: 'DELETE',
+                                    actyp: 6,
+                                    pSiteLocPkeyID: pKeyID,
+                                    srcForm: srcForm,
+                                    sbmtdPersonID: sbmtdPersonID
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                        if (result1.indexOf("Success") !== -1) {
+                                            $("#" + rowIDAttrb).remove();
+                                        }
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1)
+                                {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                }
+                            });
+                        });
+                    } else
+                    {
+                        setTimeout(function () {
+                            $("#" + rowIDAttrb).remove();
+                            dialog1.find('.bootbox-body').html('Row Removed Successfully!');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
+}
+
+function getPGradeForm(elementID, modalBodyID, titleElementID, formElementID,
+        tRowElementID, formTitle, vtyp, addOrEdit, pKeyID, personID)
+{
+    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $('#' + titleElementID).html(formTitle);
+                $('#' + modalBodyID).html(xmlhttp.responseText);
+                $('#' + modalBodyID + 'Diag').draggable();
+                $(function () {
+                    $('.form_date').datetimepicker({
+                        format: "d-M-yyyy",
+                        language: 'en',
+                        weekStart: 0,
+                        todayBtn: true,
+                        autoclose: true,
+                        todayHighlight: true,
+                        keyboardNavigation: true,
+                        startView: 2,
+                        minView: 2,
+                        maxView: 4,
+                        forceParse: true
+                    });
+                });
+
+                if (addOrEdit === 'EDIT')
+                {
+                    /*Get various field element IDs and populate values*/
+                    var rndmNum = tRowElementID.split("_")[1];
+                    var pGradePKeyID = typeof $('#pGradeRow' + rndmNum + '_PKeyID').val() === 'undefined' ? '-1' : $('#pGradeRow' + rndmNum + '_PKeyID').val();
+                    var pGradeID = typeof $('#pGradeRow' + rndmNum + '_GradeID').val() === 'undefined' ? '-1' : $('#pGradeRow' + rndmNum + '_GradeID').val();
+                    $("#pGradePKeyID").val(pGradePKeyID);
+                    $("#pGradeID").val(pGradeID);
+                    var $tds = $('#' + tRowElementID).find('td');
+                    $('#pGradeName').val($.trim($tds.eq(1).text()));
+                    $('#pGradeStartDate').val($.trim($tds.eq(2).text()));
+                    $('#pGradeEndDate').val($.trim($tds.eq(3).text()));
+                }
+                $('#' + elementID).on('show.bs.modal', function (e) {
+                    $(this).find('.modal-body').css({
+                        'max-height': '100%'
+                    });
+                });
+                $body.removeClass("mdlloadingDiag");
+                $('#' + elementID).modal({backdrop: 'static', keyboard: false});
+                $body.removeClass("mdlloading");
+                $(document).ready(function () {
+                    $('#' + formElementID).submit(function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+
+                });
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("grp=8&typ=1&pg=2&vtyp=" + vtyp + "&pGradePkeyID=" + pKeyID + "&sbmtdPersonID=" + personID + "&tRowElmntNm=" + tRowElementID);
+    });
+}
+
+function savePGradeForm(elementID, pKeyID, personID, tRowElementID)
+{
+    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        var pGradePKeyID = typeof $("#pGradePKeyID").val() === 'undefined' ? '-1' : $("#pGradePKeyID").val();
+        var pGradeID = typeof $("#pGradeID").val() === 'undefined' ? '-1' : $("#pGradeID").val();
+        var pGradeName = typeof $("#pGradeName").val() === 'undefined' ? '' : $("#pGradeName").val();
+        var pGradeType = typeof $("#pGradeType").val() === 'undefined' ? '' : $("#pGradeType").val();
+        var pGradeStartDate = typeof $("#pGradeStartDate").val() === 'undefined' ? '' : $("#pGradeStartDate").val();
+        var pGradeEndDate = typeof $("#pGradeEndDate").val() === 'undefined' ? '' : $("#pGradeEndDate").val();
+        var srcForm = $("#allAdminsSrcForm").val() ? $("#allAdminsSrcForm").val() : '0';
+        var errMsg = "";
+        if (pGradeName.trim().length <= 0)
+        {
+            errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;color:red;">Grade Name cannot be empty!</span></p>';
+        }
+        if (pGradeStartDate.trim() === '')
+        {
+            errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;color:red;">Start Date cannot be empty!</span></p>';
+        }
+        if (pGradeStartDate.trim().length === 10)
+        {
+            pGradeStartDate = '0' + pGradeStartDate;
+            $("#pGradeStartDate").val(pGradeStartDate);
+        }
+        if (pGradeEndDate.trim().length === 10)
+        {
+            pGradeEndDate = '0' + pGradeEndDate;
+            $("#pGradeEndDate").val(pGradeEndDate);
+        }
+        if (rhotrim(errMsg, '; ') !== '')
+        {
+            bootbox.alert({
+                title: 'System Alert!',
+                size: 'small',
+                message: errMsg});
+            return false;
+        }
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $body.removeClass("mdlloadingDiag");
+                $body.removeClass("mdlloading");
+                if (xmlhttp.responseText.indexOf("Error") !== -1) {
+                    /*Do Nothing*/
+                    bootbox.alert({
+                        title: 'System Alert!',
+                        size: 'small',
+                        message: xmlhttp.responseText});
+                } else {
+                    if (pKeyID <= 0) {
+                        $('#pGradeTable').append(xmlhttp.responseText);
+                    } else {
+                        var rndmNum = tRowElementID.split("_")[1];
+                        $('#pGradeRow' + rndmNum + '_PKeyID').val(pGradePKeyID);
+                        $('#pGradeRow' + rndmNum + '_GradeID').val(pGradeID);
+                        var $tds = $('#' + tRowElementID).find('td');
+                        $tds.eq(1).text(pGradeName);
+                        $tds.eq(2).text(pGradeStartDate);
+                        $tds.eq(3).text(pGradeEndDate);
+                    }
+                    /*var msg = '<span style="font-weight:bold;">Status: </span>' +
+                     '<span style="color:red;font-weight: bold;">Requires Approval </span>';
+                     $("#mySelfStatusBtn").html(msg);*/
+                    $('#' + elementID).modal('hide');
+                }
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=7" +
+                "&pGradeName=" + pGradeName +
+                "&pGradeType=" + pGradeType +
+                "&pGradeStartDate=" + pGradeStartDate +
+                "&pGradeEndDate=" + pGradeEndDate +
+                "&pGradePkeyID=" + pKeyID +
+                "&pGradeID=" + pGradeID +
+                "&sbmtdPersonID=" + personID +
+                "&srcForm=" + srcForm);
+    });
+}
+
+function delPGradeID(rowIDAttrb)
+{
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var srcForm = $("#allAdminsSrcForm").val() ? $("#allAdminsSrcForm").val() : '0';
+    var sbmtdPersonID = typeof $("#daPersonID").val() === 'undefined' ? -1 : $("#daPersonID").val();
+    var pKeyID = -1;
+    if (typeof $('#pGradeRow' + rndmNum + '_PKeyID').val() === 'undefined')
+    {
+        /*Do Nothing allnoticesRow<?php echo $cntr; ?> */
+    } else {
+        pKeyID = $('#pGradeRow' + rndmNum + '_PKeyID').val();
+    }
+    /*alert(pKeyID);*/
+    var dialog = bootbox.confirm({
+        title: 'Delete Grade?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">DELETE</span> this Grade?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true)
+            {
+                var dialog1 = bootbox.alert({
+                    title: 'Delete Grade?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Grade...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 8,
+                                    typ: 1,
+                                    pg: 2,
+                                    q: 'DELETE',
+                                    actyp: 7,
+                                    pGradePkeyID: pKeyID,
+                                    srcForm: srcForm,
+                                    sbmtdPersonID: sbmtdPersonID
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                        if (result1.indexOf("Success") !== -1) {
+                                            $("#" + rowIDAttrb).remove();
+                                        }
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1)
+                                {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                }
+                            });
+                        });
+                    } else
+                    {
+                        setTimeout(function () {
+                            $("#" + rowIDAttrb).remove();
+                            dialog1.find('.bootbox-body').html('Row Removed Successfully!');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
+}
+
+function getPSuprvsrForm(elementID, modalBodyID, titleElementID, formElementID,
+        tRowElementID, formTitle, vtyp, addOrEdit, pKeyID, personID)
+{
+    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $('#' + titleElementID).html(formTitle);
+                $('#' + modalBodyID).html(xmlhttp.responseText);
+                $('#' + modalBodyID + 'Diag').draggable();
+                $(function () {
+                    $('.form_date').datetimepicker({
+                        format: "d-M-yyyy",
+                        language: 'en',
+                        weekStart: 0,
+                        todayBtn: true,
+                        autoclose: true,
+                        todayHighlight: true,
+                        keyboardNavigation: true,
+                        startView: 2,
+                        minView: 2,
+                        maxView: 4,
+                        forceParse: true
+                    });
+                });
+
+                if (addOrEdit === 'EDIT')
+                {
+                    /*Get various field element IDs and populate values*/
+                    var rndmNum = tRowElementID.split("_")[1];
+                    var pSuprvsrPKeyID = typeof $('#pSuprvsrRow' + rndmNum + '_PKeyID').val() === 'undefined' ? '-1' : $('#pSuprvsrRow' + rndmNum + '_PKeyID').val();
+                    var pSuprvsrID = typeof $('#pSuprvsrRow' + rndmNum + '_SuprvsrID').val() === 'undefined' ? '-1' : $('#pSuprvsrRow' + rndmNum + '_SuprvsrID').val();
+                    $("#pSuprvsrPKeyID").val(pSuprvsrPKeyID);
+                    $("#pSuprvsrID").val(pSuprvsrID);
+                    var $tds = $('#' + tRowElementID).find('td');
+                    $('#pSuprvsrName').val($.trim($tds.eq(1).text()));
+                    $('#pSuprvsrStartDate').val($.trim($tds.eq(2).text()));
+                    $('#pSuprvsrEndDate').val($.trim($tds.eq(3).text()));
+                }
+                $('#' + elementID).on('show.bs.modal', function (e) {
+                    $(this).find('.modal-body').css({
+                        'max-height': '100%'
+                    });
+                });
+                $body.removeClass("mdlloadingDiag");
+                $('#' + elementID).modal({backdrop: 'static', keyboard: false});
+                $body.removeClass("mdlloading");
+                $(document).ready(function () {
+                    $('#' + formElementID).submit(function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+
+                });
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("grp=8&typ=1&pg=2&vtyp=" + vtyp + "&pSuprvsrPkeyID=" + pKeyID + "&sbmtdPersonID=" + personID + "&tRowElmntNm=" + tRowElementID);
+    });
+}
+
+function savePSuprvsrForm(elementID, pKeyID, personID, tRowElementID)
+{
+    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        var pSuprvsrPKeyID = typeof $("#pSuprvsrPKeyID").val() === 'undefined' ? '-1' : $("#pSuprvsrPKeyID").val();
+        var pSuprvsrID = typeof $("#pSuprvsrID").val() === 'undefined' ? '-1' : $("#pSuprvsrID").val();
+        var pSuprvsrName = typeof $("#pSuprvsrName").val() === 'undefined' ? '' : $("#pSuprvsrName").val();
+        var pSuprvsrType = typeof $("#pSuprvsrType").val() === 'undefined' ? '' : $("#pSuprvsrType").val();
+        var pSuprvsrStartDate = typeof $("#pSuprvsrStartDate").val() === 'undefined' ? '' : $("#pSuprvsrStartDate").val();
+        var pSuprvsrEndDate = typeof $("#pSuprvsrEndDate").val() === 'undefined' ? '' : $("#pSuprvsrEndDate").val();
+        var srcForm = $("#allAdminsSrcForm").val() ? $("#allAdminsSrcForm").val() : '0';
+        var errMsg = "";
+        if (pSuprvsrName.trim().length <= 0)
+        {
+            errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;color:red;">Supervisor Name cannot be empty!</span></p>';
+        }
+        if (pSuprvsrStartDate.trim() === '')
+        {
+            errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;color:red;">Start Date cannot be empty!</span></p>';
+        }
+        if (pSuprvsrStartDate.trim().length === 10)
+        {
+            pSuprvsrStartDate = '0' + pSuprvsrStartDate;
+            $("#pSuprvsrStartDate").val(pSuprvsrStartDate);
+        }
+        if (pSuprvsrEndDate.trim().length === 10)
+        {
+            pSuprvsrEndDate = '0' + pSuprvsrEndDate;
+            $("#pSuprvsrEndDate").val(pSuprvsrEndDate);
+        }
+        if (rhotrim(errMsg, '; ') !== '')
+        {
+            bootbox.alert({
+                title: 'System Alert!',
+                size: 'small',
+                message: errMsg});
+            return false;
+        }
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $body.removeClass("mdlloadingDiag");
+                $body.removeClass("mdlloading");
+                if (xmlhttp.responseText.indexOf("Error") !== -1) {
+                    /*Do Nothing*/
+                    bootbox.alert({
+                        title: 'System Alert!',
+                        size: 'small',
+                        message: xmlhttp.responseText});
+                } else {
+                    if (pKeyID <= 0) {
+                        $('#pSuprvsrTable').append(xmlhttp.responseText);
+                    } else {
+                        var rndmNum = tRowElementID.split("_")[1];
+                        $('#pSuprvsrRow' + rndmNum + '_PKeyID').val(pSuprvsrPKeyID);
+                        $('#pSuprvsrRow' + rndmNum + '_SuprvsrID').val(pSuprvsrID);
+                        var $tds = $('#' + tRowElementID).find('td');
+                        $tds.eq(1).text(pSuprvsrName);
+                        $tds.eq(2).text(pSuprvsrStartDate);
+                        $tds.eq(3).text(pSuprvsrEndDate);
+                    }
+                    /*var msg = '<span style="font-weight:bold;">Status: </span>' +
+                     '<span style="color:red;font-weight: bold;">Requires Approval </span>';
+                     $("#mySelfStatusBtn").html(msg);*/
+                    $('#' + elementID).modal('hide');
+                }
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=8" +
+                "&pSuprvsrName=" + pSuprvsrName +
+                "&pSuprvsrType=" + pSuprvsrType +
+                "&pSuprvsrStartDate=" + pSuprvsrStartDate +
+                "&pSuprvsrEndDate=" + pSuprvsrEndDate +
+                "&pSuprvsrPkeyID=" + pKeyID +
+                "&pSuprvsrID=" + pSuprvsrID +
+                "&sbmtdPersonID=" + personID +
+                "&srcForm=" + srcForm);
+    });
+}
+
+function delPSuprvsrID(rowIDAttrb)
+{
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var srcForm = $("#allAdminsSrcForm").val() ? $("#allAdminsSrcForm").val() : '0';
+    var sbmtdPersonID = typeof $("#daPersonID").val() === 'undefined' ? -1 : $("#daPersonID").val();
+    var pKeyID = -1;
+    if (typeof $('#pSuprvsrRow' + rndmNum + '_PKeyID').val() === 'undefined')
+    {
+        /*Do Nothing allnoticesRow<?php echo $cntr; ?> */
+    } else {
+        pKeyID = $('#pSuprvsrRow' + rndmNum + '_PKeyID').val();
+    }
+    /*alert(pKeyID);*/
+    var dialog = bootbox.confirm({
+        title: 'Delete Supervisor?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">DELETE</span> this Supervisor?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true)
+            {
+                var dialog1 = bootbox.alert({
+                    title: 'Delete Supervisor?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Supervisor...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 8,
+                                    typ: 1,
+                                    pg: 2,
+                                    q: 'DELETE',
+                                    actyp: 8,
+                                    pSuprvsrPkeyID: pKeyID,
+                                    srcForm: srcForm,
+                                    sbmtdPersonID: sbmtdPersonID
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                        if (result1.indexOf("Success") !== -1) {
+                                            $("#" + rowIDAttrb).remove();
+                                        }
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1)
+                                {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                }
+                            });
+                        });
+                    } else
+                    {
+                        setTimeout(function () {
+                            $("#" + rowIDAttrb).remove();
+                            dialog1.find('.bootbox-body').html('Row Removed Successfully!');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
+}
+
+function getPJobForm(elementID, modalBodyID, titleElementID, formElementID,
+        tRowElementID, formTitle, vtyp, addOrEdit, pKeyID, personID)
+{
+    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $('#' + titleElementID).html(formTitle);
+                $('#' + modalBodyID).html(xmlhttp.responseText);
+                $('#' + modalBodyID + 'Diag').draggable();
+                $(function () {
+                    $('.form_date').datetimepicker({
+                        format: "d-M-yyyy",
+                        language: 'en',
+                        weekStart: 0,
+                        todayBtn: true,
+                        autoclose: true,
+                        todayHighlight: true,
+                        keyboardNavigation: true,
+                        startView: 2,
+                        minView: 2,
+                        maxView: 4,
+                        forceParse: true
+                    });
+                });
+
+                if (addOrEdit === 'EDIT')
+                {
+                    /*Get various field element IDs and populate values*/
+                    var rndmNum = tRowElementID.split("_")[1];
+                    var pJobPKeyID = typeof $('#pJobRow' + rndmNum + '_PKeyID').val() === 'undefined' ? '-1' : $('#pJobRow' + rndmNum + '_PKeyID').val();
+                    var pJobID = typeof $('#pJobRow' + rndmNum + '_JobID').val() === 'undefined' ? '-1' : $('#pJobRow' + rndmNum + '_JobID').val();
+                    $("#pJobPKeyID").val(pJobPKeyID);
+                    $("#pJobID").val(pJobID);
+                    var $tds = $('#' + tRowElementID).find('td');
+                    $('#pJobName').val($.trim($tds.eq(1).text()));
+                    $('#pJobStartDate').val($.trim($tds.eq(2).text()));
+                    $('#pJobEndDate').val($.trim($tds.eq(3).text()));
+                }
+                $('#' + elementID).on('show.bs.modal', function (e) {
+                    $(this).find('.modal-body').css({
+                        'max-height': '100%'
+                    });
+                });
+                $body.removeClass("mdlloadingDiag");
+                $('#' + elementID).modal({backdrop: 'static', keyboard: false});
+                $body.removeClass("mdlloading");
+                $(document).ready(function () {
+                    $('#' + formElementID).submit(function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+
+                });
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("grp=8&typ=1&pg=2&vtyp=" + vtyp + "&pJobPkeyID=" + pKeyID + "&sbmtdPersonID=" + personID + "&tRowElmntNm=" + tRowElementID);
+    });
+}
+
+function savePJobForm(elementID, pKeyID, personID, tRowElementID)
+{
+    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        var pJobPKeyID = typeof $("#pJobPKeyID").val() === 'undefined' ? '-1' : $("#pJobPKeyID").val();
+        var pJobID = typeof $("#pJobID").val() === 'undefined' ? '-1' : $("#pJobID").val();
+        var pJobName = typeof $("#pJobName").val() === 'undefined' ? '' : $("#pJobName").val();
+        var pJobType = typeof $("#pJobType").val() === 'undefined' ? '' : $("#pJobType").val();
+        var pJobStartDate = typeof $("#pJobStartDate").val() === 'undefined' ? '' : $("#pJobStartDate").val();
+        var pJobEndDate = typeof $("#pJobEndDate").val() === 'undefined' ? '' : $("#pJobEndDate").val();
+        var srcForm = $("#allAdminsSrcForm").val() ? $("#allAdminsSrcForm").val() : '0';
+        var errMsg = "";
+        if (pJobName.trim().length <= 0)
+        {
+            errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;color:red;">Job Name cannot be empty!</span></p>';
+        }
+        if (pJobStartDate.trim() === '')
+        {
+            errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;color:red;">Start Date cannot be empty!</span></p>';
+        }
+        if (pJobStartDate.trim().length === 10)
+        {
+            pJobStartDate = '0' + pJobStartDate;
+            $("#pJobStartDate").val(pJobStartDate);
+        }
+        if (pJobEndDate.trim().length === 10)
+        {
+            pJobEndDate = '0' + pJobEndDate;
+            $("#pJobEndDate").val(pJobEndDate);
+        }
+        if (rhotrim(errMsg, '; ') !== '')
+        {
+            bootbox.alert({
+                title: 'System Alert!',
+                size: 'small',
+                message: errMsg});
+            return false;
+        }
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $body.removeClass("mdlloadingDiag");
+                $body.removeClass("mdlloading");
+                if (xmlhttp.responseText.indexOf("Error") !== -1) {
+                    /*Do Nothing*/
+                    bootbox.alert({
+                        title: 'System Alert!',
+                        size: 'small',
+                        message: xmlhttp.responseText});
+                } else {
+                    if (pKeyID <= 0) {
+                        $('#pJobTable').append(xmlhttp.responseText);
+                    } else {
+                        var rndmNum = tRowElementID.split("_")[1];
+                        $('#pJobRow' + rndmNum + '_PKeyID').val(pJobPKeyID);
+                        $('#pJobRow' + rndmNum + '_JobID').val(pJobID);
+                        var $tds = $('#' + tRowElementID).find('td');
+                        $tds.eq(1).text(pJobName);
+                        $tds.eq(2).text(pJobStartDate);
+                        $tds.eq(3).text(pJobEndDate);
+                    }
+                    /*var msg = '<span style="font-weight:bold;">Status: </span>' +
+                     '<span style="color:red;font-weight: bold;">Requires Approval </span>';
+                     $("#mySelfStatusBtn").html(msg);*/
+                    $('#' + elementID).modal('hide');
+                }
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=9" +
+                "&pJobName=" + pJobName +
+                "&pJobType=" + pJobType +
+                "&pJobStartDate=" + pJobStartDate +
+                "&pJobEndDate=" + pJobEndDate +
+                "&pJobPkeyID=" + pKeyID +
+                "&pJobID=" + pJobID +
+                "&sbmtdPersonID=" + personID +
+                "&srcForm=" + srcForm);
+    });
+}
+
+function delPJobID(rowIDAttrb)
+{
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var srcForm = $("#allAdminsSrcForm").val() ? $("#allAdminsSrcForm").val() : '0';
+    var sbmtdPersonID = typeof $("#daPersonID").val() === 'undefined' ? -1 : $("#daPersonID").val();
+    var pKeyID = -1;
+    if (typeof $('#pJobRow' + rndmNum + '_PKeyID').val() === 'undefined')
+    {
+        /*Do Nothing allnoticesRow<?php echo $cntr; ?> */
+    } else {
+        pKeyID = $('#pJobRow' + rndmNum + '_PKeyID').val();
+    }
+    /*alert(pKeyID);*/
+    var dialog = bootbox.confirm({
+        title: 'Delete Job?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">DELETE</span> this Job?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true)
+            {
+                var dialog1 = bootbox.alert({
+                    title: 'Delete Job?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Job...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 8,
+                                    typ: 1,
+                                    pg: 2,
+                                    q: 'DELETE',
+                                    actyp: 9,
+                                    pJobPkeyID: pKeyID,
+                                    srcForm: srcForm,
+                                    sbmtdPersonID: sbmtdPersonID
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                        if (result1.indexOf("Success") !== -1) {
+                                            $("#" + rowIDAttrb).remove();
+                                        }
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1)
+                                {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                }
+                            });
+                        });
+                    } else
+                    {
+                        setTimeout(function () {
+                            $("#" + rowIDAttrb).remove();
+                            dialog1.find('.bootbox-body').html('Row Removed Successfully!');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
+}
+
+function getPPositionForm(elementID, modalBodyID, titleElementID, formElementID,
+        tRowElementID, formTitle, vtyp, addOrEdit, pKeyID, personID)
+{
+    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $('#' + titleElementID).html(formTitle);
+                $('#' + modalBodyID).html(xmlhttp.responseText);
+                $('#' + modalBodyID + 'Diag').draggable();
+                $(function () {
+                    $('.form_date').datetimepicker({
+                        format: "d-M-yyyy",
+                        language: 'en',
+                        weekStart: 0,
+                        todayBtn: true,
+                        autoclose: true,
+                        todayHighlight: true,
+                        keyboardNavigation: true,
+                        startView: 2,
+                        minView: 2,
+                        maxView: 4,
+                        forceParse: true
+                    });
+                });
+
+                if (addOrEdit === 'EDIT')
+                {
+                    /*Get various field element IDs and populate values*/
+                    var rndmNum = tRowElementID.split("_")[1];
+                    var pPositionPKeyID = typeof $('#pPositionRow' + rndmNum + '_PKeyID').val() === 'undefined' ? '-1' : $('#pPositionRow' + rndmNum + '_PKeyID').val();
+                    var pPositionID = typeof $('#pPositionRow' + rndmNum + '_PositionID').val() === 'undefined' ? '-1' : $('#pPositionRow' + rndmNum + '_PositionID').val();
+                    var pPositionDivID = typeof $('#pPositionRow' + rndmNum + '_PositionDivID').val() === 'undefined' ? '-1' : $('#pPositionRow' + rndmNum + '_PositionDivID').val();
+                    $("#pPositionPKeyID").val(pPositionPKeyID);
+                    $("#pPositionID").val(pPositionID);
+                    $("#pPositionDivID").val(pPositionDivID);
+                    var $tds = $('#' + tRowElementID).find('td');
+                    $('#pPositionName').val($.trim($tds.eq(1).text()));
+                    $('#pPositionDivNm').val($.trim($tds.eq(2).text()));
+                    $('#pPositionStartDate').val($.trim($tds.eq(3).text()));
+                    $('#pPositionEndDate').val($.trim($tds.eq(4).text()));
+                }
+                $('#' + elementID).on('show.bs.modal', function (e) {
+                    $(this).find('.modal-body').css({
+                        'max-height': '100%'
+                    });
+                });
+                $body.removeClass("mdlloadingDiag");
+                $('#' + elementID).modal({backdrop: 'static', keyboard: false});
+                $body.removeClass("mdlloading");
+                $(document).ready(function () {
+                    $('#' + formElementID).submit(function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+
+                });
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("grp=8&typ=1&pg=2&vtyp=" + vtyp + "&pPositionPkeyID=" + pKeyID + "&sbmtdPersonID=" + personID + "&tRowElmntNm=" + tRowElementID);
+    });
+}
+
+function savePPositionForm(elementID, pKeyID, personID, tRowElementID)
+{
+    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        var pPositionPKeyID = typeof $("#pPositionPKeyID").val() === 'undefined' ? '-1' : $("#pPositionPKeyID").val();
+        var pPositionID = typeof $("#pPositionID").val() === 'undefined' ? '-1' : $("#pPositionID").val();
+        var pPositionName = typeof $("#pPositionName").val() === 'undefined' ? '' : $("#pPositionName").val();
+        var pPositionDivID = typeof $("#pPositionDivID").val() === 'undefined' ? '-1' : $("#pPositionDivID").val();
+        var pPositionDivNm = typeof $("#pPositionDivNm").val() === 'undefined' ? '' : $("#pPositionDivNm").val();
+        var pPositionStartDate = typeof $("#pPositionStartDate").val() === 'undefined' ? '' : $("#pPositionStartDate").val();
+        var pPositionEndDate = typeof $("#pPositionEndDate").val() === 'undefined' ? '' : $("#pPositionEndDate").val();
+        var srcForm = $("#allAdminsSrcForm").val() ? $("#allAdminsSrcForm").val() : '0';
+        var errMsg = "";
+        if (pPositionName.trim().length <= 0)
+        {
+            errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;color:red;">Position Name cannot be empty!</span></p>';
+        }
+        if (pPositionStartDate.trim() === '')
+        {
+            errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;color:red;">Start Date cannot be empty!</span></p>';
+        }
+        if (pPositionStartDate.trim().length === 10)
+        {
+            pPositionStartDate = '0' + pPositionStartDate;
+            $("#pPositionStartDate").val(pPositionStartDate);
+        }
+        if (pPositionEndDate.trim().length === 10)
+        {
+            pPositionEndDate = '0' + pPositionEndDate;
+            $("#pPositionEndDate").val(pPositionEndDate);
+        }
+        if (rhotrim(errMsg, '; ') !== '')
+        {
+            bootbox.alert({
+                title: 'System Alert!',
+                size: 'small',
+                message: errMsg});
+            return false;
+        }
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $body.removeClass("mdlloadingDiag");
+                $body.removeClass("mdlloading");
+                if (xmlhttp.responseText.indexOf("Error") !== -1) {
+                    /*Do Nothing*/
+                    bootbox.alert({
+                        title: 'System Alert!',
+                        size: 'small',
+                        message: xmlhttp.responseText});
+                } else {
+                    if (pKeyID <= 0) {
+                        $('#pPositionTable').append(xmlhttp.responseText);
+                    } else {
+                        var rndmNum = tRowElementID.split("_")[1];
+                        $('#pPositionRow' + rndmNum + '_PKeyID').val(pPositionPKeyID);
+                        $('#pPositionRow' + rndmNum + '_PositionID').val(pPositionID);
+                        $('#pPositionRow' + rndmNum + '_PositionDivID').val(pPositionDivID);
+                        var $tds = $('#' + tRowElementID).find('td');
+                        $tds.eq(1).text(pPositionName);
+                        $tds.eq(2).text(pPositionDivNm);
+                        $tds.eq(3).text(pPositionStartDate);
+                        $tds.eq(4).text(pPositionEndDate);
+                    }
+                    /*var msg = '<span style="font-weight:bold;">Status: </span>' +
+                     '<span style="color:red;font-weight: bold;">Requires Approval </span>';
+                     $("#mySelfStatusBtn").html(msg);*/
+                    $('#' + elementID).modal('hide');
+                }
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=10" +
+                "&pPositionName=" + pPositionName +
+                "&pPositionDivNm=" + pPositionDivNm +
+                "&pPositionStartDate=" + pPositionStartDate +
+                "&pPositionEndDate=" + pPositionEndDate +
+                "&pPositionPkeyID=" + pKeyID +
+                "&pPositionID=" + pPositionID +
+                "&pPositionDivID=" + pPositionDivID +
+                "&sbmtdPersonID=" + personID +
+                "&srcForm=" + srcForm);
+    });
+}
+
+function delPPositionID(rowIDAttrb)
+{
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var srcForm = $("#allAdminsSrcForm").val() ? $("#allAdminsSrcForm").val() : '0';
+    var sbmtdPersonID = typeof $("#daPersonID").val() === 'undefined' ? -1 : $("#daPersonID").val();
+    var pKeyID = -1;
+    if (typeof $('#pPositionRow' + rndmNum + '_PKeyID').val() === 'undefined')
+    {
+        /*Do Nothing allnoticesRow<?php echo $cntr; ?> */
+    } else {
+        pKeyID = $('#pPositionRow' + rndmNum + '_PKeyID').val();
+    }
+    /*alert(pKeyID);*/
+    var dialog = bootbox.confirm({
+        title: 'Delete Position?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">DELETE</span> this Position?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true)
+            {
+                var dialog1 = bootbox.alert({
+                    title: 'Delete Position?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Position...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 8,
+                                    typ: 1,
+                                    pg: 2,
+                                    q: 'DELETE',
+                                    actyp: 10,
+                                    pPositionPkeyID: pKeyID,
+                                    srcForm: srcForm,
+                                    sbmtdPersonID: sbmtdPersonID
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                        if (result1.indexOf("Success") !== -1) {
+                                            $("#" + rowIDAttrb).remove();
                                         }
                                     }, 500);
                                 },

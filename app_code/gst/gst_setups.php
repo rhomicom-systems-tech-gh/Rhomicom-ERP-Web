@@ -165,7 +165,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 if ($canDelGst === true) {
                                                     ?>
                                                     <td class="lovtd">
-                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="alert('del');" data-toggle="tooltip" data-placement="bottom" title="Delete Value List">
+                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delLOV('allLovStpsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Value List">
                                                             <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                         </button>
                                                     </td>
@@ -223,7 +223,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 <label for="lovDetLovDesc" class="control-label col-lg-4">Value List Description:</label>
                                                                                 <div  class="col-lg-8">
                                                                                     <?php if ($canEdtGst === true) { ?>
-                                                                                        <textarea class="form-control" aria-label="..." id="lovDetLovDesc" name="lovDetLovDesc" style="width:100%;" cols="3" rows="3"><?php echo $row1[2]; ?></textarea>
+                                                                                        <textarea class="form-control" aria-label="..." id="lovDetLovDesc" name="lovDetLovDesc" style="width:100%;" cols="3" rows="4"><?php echo $row1[2]; ?></textarea>
                                                                                     <?php } else {
                                                                                         ?>
                                                                                         <span><?php echo $row1[2]; ?></span>
@@ -299,6 +299,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     <?php } else {
                                                                                         ?>
                                                                                         <span><?php echo ($row1[6] == "YES" ? "YES" : "NO"); ?></span>
+                                                                                        <?php
+                                                                                    }
+                                                                                    ?>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                                                                <label for="lovDetOrdrByCls" class="control-label col-lg-6">Order By Clause:</label>
+                                                                                <div  class="col-lg-6">
+                                                                                    <?php if ($canEdtGst === true) { ?>
+                                                                                        <input type="text" class="form-control" aria-label="..." id="lovDetOrdrByCls" name="lovDetOrdrByCls" value="<?php echo $row1[7]; ?>" style="width:100%;">
+                                                                                    <?php } else {
+                                                                                        ?>
+                                                                                        <span><?php echo $row1[7]; ?></span>
                                                                                         <?php
                                                                                     }
                                                                                     ?>
@@ -391,7 +404,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="lovDetLovDesc" class="control-label col-lg-4">Value List Description:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtGst === true) { ?>
-                                                                    <textarea class="form-control" aria-label="..." id="lovDetLovDesc" name="lovDetLovDesc" style="width:100%;" cols="3" rows="3"><?php echo $row1[2]; ?></textarea>
+                                                                    <textarea class="form-control" aria-label="..." id="lovDetLovDesc" name="lovDetLovDesc" style="width:100%;" cols="3" rows="4"><?php echo $row1[2]; ?></textarea>
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[2]; ?></span>
@@ -472,6 +485,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 ?>
                                                             </div>
                                                         </div>
+                                                        <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                                            <label for="lovDetOrdrByCls" class="control-label col-lg-6">Order By Clause:</label>
+                                                            <div  class="col-lg-6">
+                                                                <?php if ($canEdtGst === true) { ?>
+                                                                    <input type="text" class="form-control" aria-label="..." id="lovDetOrdrByCls" name="lovDetOrdrByCls" value="<?php echo $row1[7]; ?>" style="width:100%;">
+                                                                <?php } else {
+                                                                    ?>
+                                                                    <span><?php echo $row1[7]; ?></span>
+                                                                    <?php
+                                                                }
+                                                                ?>
+                                                            </div>
+                                                        </div>
                                                     </fieldset>
                                                 </div>
                                             </div>
@@ -535,7 +561,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                     <label for="lovDetLovDesc" class="control-label col-lg-4">Value List Description:</label>
                                                     <div  class="col-lg-8">
-                                                        <textarea class="form-control" aria-label="..." id="lovDetLovDesc" name="lovDetLovDesc" style="width:100%;" cols="3" rows="3"></textarea>
+                                                        <textarea class="form-control" aria-label="..." id="lovDetLovDesc" name="lovDetLovDesc" style="width:100%;" cols="3" rows="4"></textarea>
                                                     </div>
                                                 </div>
                                             </fieldset>
@@ -579,6 +605,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <label class="radio-inline"><input type="radio" name="lovDetIsEnabled" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                                     </div>
                                                 </div>
+                                                <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                                    <label for="lovDetOrdrByCls" class="control-label col-lg-6">Order By Clause:</label>
+                                                    <div  class="col-lg-6">
+                                                        <input type="text" class="form-control" aria-label="..." id="lovDetOrdrByCls" name="lovDetOrdrByCls" value="ORDER BY 1 ASC" style="width:100%;">
+                                                    </div>
+                                                </div>
                                             </fieldset>
                                         </div>
                                     </div>
@@ -604,7 +636,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <?php
             } else if ($vwtyp == 3) {
                 //echo "Lov Possible Values";
-                //$lmtSze = isset($_POST['limitSze']) ? cleanInputData($_POST['limitSze']) : 5;
+                $lmtSze = isset($_POST['limitSze']) ? cleanInputData($_POST['limitSze']) : 30;
                 $curIdx = 0;
                 $pkID = isset($_POST['sbmtdLovID']) ? $_POST['sbmtdLovID'] : -1;
                 if ($pkID > 0) {
@@ -740,15 +772,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <table class="table table-striped table-bordered table-responsive" id="psblValsTable" cellspacing="0" width="100%" style="width:100%;min-width: 600px !important;">
                                     <thead>
                                         <tr>
-                                            <th>No.</th>
-                                            <th>Possible Value</th>
-                                            <th>Possible Value Description</th>
-                                            <th>Enabled?</th>
-                                            <th>Allowed Org IDs</th>
+                                            <th style="max-width:30px;width:30px;">No.</th>
+                                            <th style="min-width:300px;">Possible Value</th>
+                                            <th style="min-width:310px;">Possible Value Description</th>
+                                            <th style="max-width:50px;width:50px;text-align: center;">Enabled?</th>
+                                            <th style="max-width:50px;width:50px;">Allowed Org IDs</th>
                                             <?php
                                             if ($canDelGst === true && $isdynmc != "1") {
                                                 ?>
-                                                <th>&nbsp;</th>
+                                                <th style="max-width:30px;width:30px;">&nbsp;</th>
                                             <?php } ?>
                                         </tr>
                                     </thead>
@@ -779,7 +811,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <span><?php echo $row1[3]; ?></span>
                                                     <?php } ?>                                                         
                                                 </td>
-                                                <td class="lovtd">
+                                                <td class="lovtd" style="max-width:50px;width:50px;text-align: center;">
                                                     <?php
                                                     $isChkd = "";
                                                     if ($row1[4] == "1") {
@@ -811,7 +843,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 if ($canDelGst === true && $isdynmc != "1") {
                                                     ?>
                                                     <td class="lovtd">
-                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="" data-toggle="tooltip" data-placement="bottom" title="Delete Possible Value">
+                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delPsblValue('psblValsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Possible Value">
                                                             <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                         </button>
                                                     </td>

@@ -2,6 +2,7 @@
 $canAddUsers = test_prmssns($dfltPrvldgs[8], $mdlNm);
 $canEdtUsers = test_prmssns($dfltPrvldgs[9], $mdlNm);
 $canDelUsers = test_prmssns($dfltPrvldgs[10], $mdlNm);
+$canVwRcHstry = test_prmssns("View Record History", $mdlNm);
 
 $pageNo = isset($_POST['pageNo']) ? cleanInputData($_POST['pageNo']) : 1;
 $lmtSze = isset($_POST['limitSze']) ? cleanInputData($_POST['limitSze']) : 10;
@@ -63,7 +64,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 $inptRoleNm = (cleanInputData1($crntRow[1]));
                                 $dfltRowID = (int) (cleanInputData1($crntRow[2]));
                                 $vldStrtDte = cleanInputData1($crntRow[3]);
-                                $vldEndDte = cleanInputData1($crntRow[4]) == "YES" ? TRUE : FALSE;
+                                $vldEndDte = cleanInputData1($crntRow[4]);
                                 $oldDefaultRowID = getUsrIDHvThsRoleID($inptUserID, $inptRoleID);
                                 if (trim($vldStrtDte) == "") {
                                     $vldStrtDte = date("d-M-Y H:i:s");
@@ -242,7 +243,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <th>Password Expired?</th>
                                         <th>Active Roles</th>
                                         <th>&nbsp;</th>
+                                        <?php if ($canDelUsers === true) { ?>
                                         <th>&nbsp;</th>
+                                        <?php } ?>
+                                        <?php if ($canVwRcHstry === true) { ?>
+                                            <th>...</th>
+                                        <?php } ?>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -325,6 +331,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <td class="lovtd">
                                                     <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delUser('allUsersRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete User">
                                                         <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                    </button>
+                                                </td>
+                                            <?php } ?>
+                                            <?php if ($canVwRcHstry === true) { ?>
+                                                <td class="lovtd">
+                                                    <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php echo urlencode(encrypt1(($row[9] . "|sec.sec_users|user_id"), $smplTokenWord1)); ?>');" style="padding:2px !important;">
+                                                        <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                     </button>
                                                 </td>
                                             <?php } ?>
@@ -560,7 +573,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-remove\"></span></span>
                                                                     <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-calendar\"></span></span>
                                                                 </div>                                                                
-                                                            </div></td>"
+                                                            </div>
+                                               </td>
+                                                <td class=\"lovtd\"> 
+                                                   &nbsp;
+                                                </td>"
                                             . "</tr>");
                                     ?> 
                                     <div class="<?php echo $colClassType2; ?>" style="padding:0px 1px 0px 15px !important;">     
@@ -660,6 +677,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <th>Role Name</th>
                                                 <th>Start Date</th>
                                                 <th>End Date</th>
+                                                <?php if ($canVwRcHstry === true) { ?>
+                                                    <th>...</th>
+                                                <?php } ?>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -712,6 +732,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <span><?php echo $row1[2]; ?></span>
                                                         <?php } ?>                                                         
                                                     </td>
+                                                    <?php if ($canVwRcHstry === true) { ?>
+                                                        <td class="lovtd">
+                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php echo urlencode(encrypt1(($row1[4] . "|sec.sec_users_n_roles|dflt_row_id"), $smplTokenWord1)); ?>');" style="padding:2px !important;">
+                                                                <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                            </button>
+                                                        </td>
+                                                    <?php } ?>
                                                 </tr>
                                                 <?php
                                             }
@@ -1059,6 +1086,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <th>Role Name</th>
                                                     <th>Start Date</th>
                                                     <th>End Date</th>
+	<?php if($canVwRcHstry === true){?>
+		<th>...</th>
+    <?php } ?>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -1082,6 +1112,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <td class="lovtd"><?php echo $row1[0]; ?></td>
                                                         <td class="lovtd"><?php echo $row1[1]; ?></td>
                                                         <td class="lovtd"><?php echo $row1[2]; ?></td>
+                                                    <?php if ($canVwRcHstry === true) { ?>
+                                                        <td class="lovtd">
+                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php echo urlencode(encrypt1(($row1[4] . "|sec.sec_users_n_roles|dflt_row_id"), $smplTokenWord1)); ?>');" style="padding:2px !important;">
+                                                                <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                            </button>
+                                                        </td>
+                                                    <?php } ?>
                                                     </tr>
                                                     <?php
                                                 }

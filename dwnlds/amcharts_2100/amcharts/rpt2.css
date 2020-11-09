@@ -1,0 +1,61 @@
+ p {
+	font-family: "Lucida Console", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+
+img {
+float: left;
+padding-right: 1em;
+height:75px;
+  width:auto;
+}
+
+table {	background-color: #fafafa;
+        /*width: 100%;*/
+	border-radius: 2px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+}
+ td{
+	color: #333;
+}
+th {
+	color: #fefefe;
+}
+
+ caption {
+	font-family: "Lucida Console", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	padding: 2px 5px 2px 5px;
+	/*text-align: left;*/
+	color: #4B4B4B;
+	border-bottom: solid 1px #999;
+	background-color: #C8C8C8;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#e3e3e3), color-stop(.6,#B3B3B3));
+	background-image: -moz-linear-gradient(top, #D6D6D6, #B0B0B0, #B3B3B3 90%);
+}
+ thead {
+	font-family: "Lucida Console", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	padding: 2px 5px 2px 5px;
+	color: #fefefe;
+	background-color: #3989c6;
+	border: solid 1px #3989c6;
+}
+ th {
+	padding: 2px 5px 2px 5px;
+	font-family: 'Lucida Console', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-size: 15px;
+	font-style: normal;
+	font-weight: normal;
+	text-shadow: black 1px 1px 1px;
+        border-left: solid 1px #fefefe;
+}
+ td {
+	padding: 2px 5px 2px 5px;
+	font-family: 'Lucida Console', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-size: 12px;
+	border-bottom: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+}
+ td:hover {
+	background-color: #fff;
+}

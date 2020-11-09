@@ -307,19 +307,19 @@ function updateWkfHrchy($hrchyID, $hrchyNm, $desc, $hrchyTyp, $sqlStmnt, $isEnbl
 }
 
 function deleteWkfHrchy($hrchyID, $hrchyNm = "") {
-    $affctd1 = 0;
+    //$affctd1 = 0;
     $affctd2 = 0;
     $affctd3 = 0;
 
-    $insSQL = "DELETE FROM wkf.wkf_pstn_hierarchy_details WHERE hierarchy_id = " . $hrchyID;
-    $affctd1 += execUpdtInsSQL($insSQL, "Hierarchy Name:" . $hrchyNm);
+    //$insSQL = "DELETE FROM wkf.wkf_pstn_hierarchy_details WHERE hierarchy_id = " . $hrchyID;
+    //$affctd1 += execUpdtInsSQL($insSQL, "Hierarchy Name:" . $hrchyNm);
     $insSQL = "DELETE FROM wkf.wkf_manl_hierarchy_details WHERE hierarchy_id = " . $hrchyID;
     $affctd2 += execUpdtInsSQL($insSQL, "Hierarchy Name:" . $hrchyNm);
     $insSQL = "DELETE FROM wkf.wkf_hierarchy_hdr WHERE hierarchy_id = " . $hrchyID;
     $affctd3 += execUpdtInsSQL($insSQL, "Hierarchy Name:" . $hrchyNm);
     if ($affctd3 > 0) {
         $dsply = "Successfully Deleted the ff Records-";
-        $dsply .= "<br/>$affctd1 Position Hierarchies Deleted!";
+        //$dsply .= "<br/>$affctd1 Position Hierarchies Deleted!";
         $dsply .= "<br/>$affctd2 Manual Hierarchies Deleted!";
         $dsply .= "<br/>$affctd3 Hierarchy Headers Deleted!";
         return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";

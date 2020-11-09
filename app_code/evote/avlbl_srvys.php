@@ -32,7 +32,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $grpcntr = 0;
                 $i = 0;
                 $cntent = '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' .
-                        'font-weight:normal;">Sorry, there are currently no Elections/Surveys Available.<br/>Thank you for expressing interest in it.<br/>We will alert you as soon as there are Surveys or Elections Available.<br/><br/>Warm Regards...<br/><br/>Portal Administrator</span></p>';
+                        'font-weight:normal;">Sorry, there are currently no Elections/Surveys Available.<br/>Thank you for expressing interest in it.<br/>We will alert you as soon as there are Surveys or Elections Available.<br/><br/>Warm Regards...<br/><br/>'.$admin_name.'</span></p>';
                 if (loc_db_num_rows($result) > 0) {
                     $cntent = "";
                 }

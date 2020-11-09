@@ -328,10 +328,13 @@ function getHrchyLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteri
                 $('#' + modalBodyID).html(xmlhttp.responseText);
                 $('#myLovModalDiag').draggable();
 
-                $('#' + elementID).on('show.bs.modal', function (e) {
+                $('#' + elementID).off('show.bs.modal');
+                $('#' + elementID).off('hidden.bs.modal');
+                $('#' + elementID).one('show.bs.modal', function (e) {
                     $(this).find('.modal-body').css({
                         'max-height': '100%'
                     });
+                    $(e.currentTarget).unbind();
                 });
                 $body.removeClass("mdlloadingDiag");
                 $('#' + elementID).modal({backdrop: 'static', keyboard: false});
@@ -715,7 +718,10 @@ function delWkfAppAction(rowIDAttrb)
                 var dialog1 = bootbox.alert({
                     title: 'Delete Workflow Action?',
                     size: 'small',
-                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Workflow Action...Please Wait...</p>'
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Workflow Action...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
@@ -1012,7 +1018,10 @@ function delWkfHrchyLvl(rowIDAttrb)
                 var dialog1 = bootbox.alert({
                     title: 'Delete Hierarchy Level?',
                     size: 'small',
-                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Hierarchy Level...Please Wait...</p>'
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Hierarchy Level...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
@@ -1284,7 +1293,10 @@ function delWkfAprvrGrpPrsn(rowIDAttrb)
                 var dialog1 = bootbox.alert({
                     title: 'Delete Group Member?',
                     size: 'small',
-                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Group Member...Please Wait...</p>'
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Group Member...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {

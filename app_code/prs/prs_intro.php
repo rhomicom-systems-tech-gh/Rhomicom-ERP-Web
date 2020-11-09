@@ -1,26 +1,42 @@
 <?php
-
-//session_start();
-$menuItems = array("Personal Profile", "Data Change Requests",
-    "Grade Progression Requests", "Leave of Absence Requests",
-    "Data Administrator", "Manage My Institution", "Send Bulk Email/SMS", "Additional Data Setups");
-$menuImages = array("person.png", "edit32.png", "bb_flow.gif",
-    "change06.gif", "chng_prvdr.ico", "reassign_users.png", "Mail.png", "settings.png");
+$menuItems = array(
+    "Personal Profile", "Data Change Requests",
+    "Grade Progression Requests", "Leave of Absence",
+    "Data Administrator", "Manage My Institution",
+    "Send Bulk Email/SMS", "Additional Data Setups",
+    "Standard Reports"
+);
+$menuImages = array(
+    "person.png", "edit32.png", "bb_flow.gif",
+    "absence_1.png", "chng_prvdr.ico", "reassign_users.png",
+    "Mail.png", "settings.png", "report-icon-png.png", ""
+);
 $vwtyp1 = 0;
 //echo $vwtyp1;
 $mdlNm = "Basic Person Data";
 $ModuleName = $mdlNm;
 $pageHtmlID = "prsnDataPage";
 
-$dfltPrvldgs = array("View Person", "View Basic Person Data",
+$dfltPrvldgs = array(
+    "View Person", "View Basic Person Data",
     /* 2 */ "View Curriculum Vitae", "View Basic Person Assignments",
     /* 4 */ "View Person Pay Item Assignments", "View SQL", "View Record History",
     /* 7 */ "Add Person Info", "Edit Person Info", "Delete Person Info",
     /* 10 */ "Add Basic Assignments", "Edit Basic Assignments", "Delete Basic Assignments",
     /* 13 */ "Add Pay Item Assignments", "Edit Pay Item Assignments", "Delete Pay Item Assignments", "View Banks",
     /* 17 */ "Define Assignment Templates", "Edit Assignment Templates", "Delete Assignment Templates",
-    /* 20 */ "View Assignment Templates", "Manage My Firm");
+    /* 20 */ "View Assignment Templates", "Manage My Firm",
+    /* 22 */ "View Leave Management", "Add Leave Management", "Edit Leave Management", "Delete Leave Management",
+    /* 26 */ "View Other Person's Absences"
+);
+
 $canview = test_prmssns($dfltPrvldgs[0], $mdlNm) || test_prmssns("View Self-Service", "Self Service");
+
+$prsnid = $_SESSION['PRSN_ID'];
+$orgID = $_SESSION['ORG_ID'];
+$crntOrgName = getOrgName($orgID);
+$usrID = $_SESSION['USRID'];
+$uName = $_SESSION['UNAME'];
 
 $vwtyp = "0";
 $qstr = "";
@@ -32,6 +48,9 @@ $PKeyID = -1;
 $fltrTypValue = "All";
 $fltrTyp = "Relation Type";
 $sortBy = "ID ASC";
+$gnrlTrnsDteDMYHMS = getFrmtdDB_Date_time();
+$gnrlTrnsDteYMDHMS = cnvrtDMYTmToYMDTm($gnrlTrnsDteDMYHMS);
+$gnrlTrnsDteYMD = substr($gnrlTrnsDteYMDHMS, 0, 10);
 if (isset($formArray)) {
     if (count($formArray) > 0) {
         $vwtyp = isset($formArray['vtyp']) ? cleanInputData($formArray['vtyp']) : "0";
@@ -76,24 +95,24 @@ if (strpos($srchFor, "%") === FALSE) {
 
 //grp=40&typ=5
 $cntent = "<div>
-				<ul class=\"breadcrumb\" style=\"$breadCrmbBckclr\">
-					<li onclick=\"openATab('#home', 'grp=40&typ=1');\">
-                                                <i class=\"fa fa-home\" aria-hidden=\"true\"></i>
-						<span style=\"text-decoration:none;\">Home</span>
-                                                <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
-					</li>
-					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
-						<span style=\"text-decoration:none;\">All Modules&nbsp;</span><span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
-					</li>";
+            <ul class=\"breadcrumb\" style=\"$breadCrmbBckclr\">
+                    <li onclick=\"openATab('#home', 'grp=40&typ=1');\">
+                            <i class=\"fa fa-home\" aria-hidden=\"true\"></i>
+                            <span style=\"text-decoration:none;\">Home</span>
+                            <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+                    </li>
+                    <li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
+                            <span style=\"text-decoration:none;\">All Modules&nbsp;</span><span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+                    </li>";
 if ($lgn_num > 0 && $canview === true) {
-    $prsnid = $_SESSION['PRSN_ID'];
     if ($pgNo == 0) {
         $cntent .= "
 					<li onclick=\"openATab('#allmodules', 'grp=8&typ=1');\">
 						<span style=\"text-decoration:none;\">Person Records Menu</span>
 					</li>
                                        </ul>
-                                     </div>" . "<div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
+                                     </div>" .
+            "<div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
                     padding:10px 15px 15px 20px;border:1px solid #ccc;\">                    
       <!--<h4>FUNCTIONS UNDER THE PERSONAL RECORDS MANAGER</h4>-->
       <div style=\"padding:5px 30px 5px 10px;margin-bottom:2px;\">
@@ -107,17 +126,17 @@ if ($lgn_num > 0 && $canview === true) {
             $No = $i + 1;
 
             if ($i == 0) {
-                
             } else if ($i == 1) {
-                //continue;
+                continue;
             } else if ($i == 2) {
                 if (strpos($prsnType, "Registered Member") !== FALSE) {
                     //
                 } else {
                     continue;
                 }
+                continue;
             } else if ($i == 3) {
-                if (strpos($prsnType, "Staff") === FALSE && strpos($prsnType, "Employee") === FALSE) {
+                if (strpos($prsnType, "Staff") === FALSE && strpos($prsnType, "Employee") === FALSE && test_prmssns($dfltPrvldgs[22], $mdlNm) == FALSE) {
                     continue;
                 }
             } else if ($i == 4 && test_prmssns($dfltPrvldgs[7], $mdlNm) == FALSE) {
@@ -132,9 +151,23 @@ if ($lgn_num > 0 && $canview === true) {
             if ($grpcntr == 0) {
                 $cntent .= "<div class=\"row\">";
             }
-            if ($i == 5) {
+            if ($i == 0) {
+                $cntent .= "<div class=\"col-md-3 colmd3special2\">
+        <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"window.location='" . $app_url . "self/';\">
+            <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
+            <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
+        </button>
+            </div>";
+            } else if ($i == 5) {
                 $cntent .= "<div class=\"col-md-3 colmd3special2\">
         <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$No&vtyp=1');\">
+            <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
+            <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
+        </button>
+            </div>";
+            } else if ($i == 6) {
+                $cntent .= "<div class=\"col-md-3 colmd3special2\">
+        <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"sendGeneralMessage();\">
             <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
             <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
         </button>
@@ -166,7 +199,6 @@ if ($lgn_num > 0 && $canview === true) {
         $datestr = getDB_Date_time();
 
         if ($rcdExst == true) {
-            
         } else {
             $insSQL = "INSERT INTO self.self_prsn_names_nos SELECT * from prs.prsn_names_nos WHERE person_id=$prsnid";
             execUpdtInsSQL($insSQL);
@@ -230,7 +262,7 @@ if ($lgn_num > 0 && $canview === true) {
 
             if ($rslt <= 0) {
                 $insSQL = "INSERT INTO self.self_prsn_extra_data(person_id, created_by, creation_date, last_update_by,"
-                        . "last_update_date) VALUES($prsnid, $usrID, '$datestr', $usrID, '$datestr')";
+                    . "last_update_date) VALUES($prsnid, $usrID, '$datestr', $usrID, '$datestr')";
                 execUpdtInsSQL($insSQL);
             }
         }
@@ -240,6 +272,7 @@ if ($lgn_num > 0 && $canview === true) {
 						<span style=\"text-decoration:none;\">Person Records Menu</span>
     </li>";
         if ($pgNo == 1) {
+            //echo "RedirectTo:" . $app_url . "self";
             require "profile.php";
         } else if ($pgNo == 2) {
             require "edit_profile.php";
@@ -250,11 +283,7 @@ if ($lgn_num > 0 && $canview === true) {
                                        </ul>
                                      </div>" . "Grade Progression Requests";
         } else if ($pgNo == 4) {
-            echo $cntent . "<li>
-						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span><span style=\"text-decoration:none;\">Leave of Absence Requests</span>
-					</li>
-                                       </ul>
-                                     </div>" . "Leave of Absence Requests";
+            require "leave_admin.php";
         } else if ($pgNo == 5) {
             //Get Basic Person
             require "data_admin.php";
@@ -265,6 +294,8 @@ if ($lgn_num > 0 && $canview === true) {
             require "bulk_msg_system.php";
         } else if ($pgNo == 8) {
             require 'addtnl_data_stps.php';
+        } else if ($pgNo == 9) {
+            require 'prs_rpts.php';
         } else {
             restricted();
         }
@@ -273,7 +304,77 @@ if ($lgn_num > 0 && $canview === true) {
     restricted();
 }
 
-function get_LtstPrsnType($pkID) {
+function getLtstRecPkID($tblNm, $pkeyCol)
+{
+    $sqlStr = "select " . $pkeyCol . " from " . $tblNm . " ORDER BY 1 DESC LIMIT 1 OFFSET 0";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return ((float) $row[0]) + 1;
+    }
+    return 1000;
+}
+
+function getLtstPrsnIDNo()
+{
+    global $orgID;
+    $sqlStr = "select count(person_id) from prs.prsn_names_nos WHERE org_id=" . $orgID . "";
+
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return str_pad((((float) $row[0]) + 1) . "", 4, '0', STR_PAD_LEFT);
+    }
+    return "0001";
+}
+
+function getLtstPrsnIDNoInPrfx($prfxTxt)
+{
+    global $orgID;
+    $sqlStr = "select count(person_id) from prs.prsn_names_nos WHERE org_id=" . $orgID .
+        " and local_id_no ilike '" . loc_db_escape_string($prfxTxt) . "%'";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return str_pad((((float) $row[0]) + 1) . "", 4, '0', STR_PAD_LEFT);
+    }
+    return "0001";
+}
+
+function getLastPrsnIDNo()
+{
+    global $orgID;
+    $sqlStr = "select (chartonumeric(local_id_no) + 1) from prs.prsn_names_nos 
+        WHERE org_id=" . $orgID . "
+      ORDER BY chartonumeric(local_id_no) DESC LIMIT 1 OFFSET 0";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return str_pad((((float) $row[0]) + 1) . "", 5, '0', STR_PAD_LEFT);
+    }
+    return "00001";
+}
+
+function getNewLocIDNumber($locIDTextBox, $iDPrfxComboBox)
+{
+    $tst = "0001";
+    if (getEnbldPssblValID("Yes", getLovID("Person ID No. Prefix Determines ID Serial No.")) > 0) {
+        if ($iDPrfxComboBox === "") {
+            $tst = getLastPrsnIDNo();
+        } else {
+            $tst = getLtstPrsnIDNoInPrfx($iDPrfxComboBox);
+        }
+    } else {
+        if ($iDPrfxComboBox === "") {
+            $tst = getLastPrsnIDNo();
+        } else {
+            $tst = getLtstPrsnIDNo();
+        }
+    }
+    if (strlen($tst) < 4) {
+        $tst = str_pad($tst, 4, '0', STR_PAD_LEFT);
+    }
+    return $iDPrfxComboBox . $tst;
+}
+
+function get_LtstPrsnType($pkID)
+{
     $strSql = "SELECT prsn_type 
             FROM pasn.prsn_prsntyps WHERE ((person_id =  $pkID)) 
                 ORDER BY valid_end_date DESC, valid_start_date DESC LIMIT 1 OFFSET 0";
@@ -284,7 +385,8 @@ function get_LtstPrsnType($pkID) {
     return '';
 }
 
-function get_BscPrsnTtl($searchFor, $searchIn, $orgID, $searchAll, $fltrTypValue, $fltrTyp, $extra4 = "") {
+function get_BscPrsnTtl($searchFor, $searchIn, $orgID, $searchAll, $fltrTypValue, $fltrTyp, $extra4 = "")
+{
     $extra1 = "";
     $extra2 = "";
     $extra3 = "";
@@ -328,51 +430,52 @@ to_timestamp(z.valid_end_date,'YYYY-MM-DD HH24:MI:SS'))))";
     }
     $strSql = "";
     $whrcls = "";
-    if ($searchIn == "ID") {
-        $whrcls = " AND (a.local_id_no ilike '" . loc_db_escape_string($searchFor) . "')";
+    if ($searchIn == "ID/Full Name") {
+        $whrcls = " AND (a.local_id_no ilike '" . loc_db_escape_string($searchFor) . "' or trim(a.title || ' ' || a.sur_name || " .
+            "', ' || a.first_name || ' ' || a.other_names) ilike '" . loc_db_escape_string($searchFor) . "')";
     } else if ($searchIn == "Full Name") {
         $whrcls = " AND (trim(a.title || ' ' || a.sur_name || " .
-                "', ' || a.first_name || ' ' || a.other_names) ilike '" . loc_db_escape_string($searchFor) . "')";
+            "', ' || a.first_name || ' ' || a.other_names) ilike '" . loc_db_escape_string($searchFor) . "')";
     } else if ($searchIn == "Residential Address") {
         $whrcls = " AND (a.res_address ilike '" . loc_db_escape_string($searchFor) . "')";
     } else if ($searchIn == "Contact Information") {
         $whrcls = " AND (a.pstl_addrs ilike '" . loc_db_escape_string($searchFor) .
-                "' or a.email ilike '" . loc_db_escape_string($searchFor) .
-                "' or a.cntct_no_tel ilike '" . loc_db_escape_string($searchFor) .
-                "' or a.cntct_no_mobl ilike '" . loc_db_escape_string($searchFor) .
-                "' or a.cntct_no_fax ilike '" . loc_db_escape_string($searchFor) . "')";
+            "' or a.email ilike '" . loc_db_escape_string($searchFor) .
+            "' or a.cntct_no_tel ilike '" . loc_db_escape_string($searchFor) .
+            "' or a.cntct_no_mobl ilike '" . loc_db_escape_string($searchFor) .
+            "' or a.cntct_no_fax ilike '" . loc_db_escape_string($searchFor) . "')";
     } else if ($searchIn == "Linked Firm/Workplace") {
         $whrcls = " AND (scm.get_cstmr_splr_name(a.lnkd_firm_org_id) ilike '" . loc_db_escape_string($searchFor) .
-                "' or scm.get_cstmr_splr_site_name(a.lnkd_firm_site_id) ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "' or scm.get_cstmr_splr_site_name(a.lnkd_firm_site_id) ilike '" . loc_db_escape_string($searchFor) .
+            "')";
     } else if ($searchIn == "Person Type") {
         $whrcls = " AND ((Select g.prsn_type || ' ' || g.prn_typ_asgnmnt_rsn "
-                . "|| ' ' || g.further_details from pasn.prsn_prsntyps g "
-                . "where g.person_id=a.person_id ORDER BY g.valid_start_date DESC "
-                . "LIMIT 1 OFFSET 0) ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            . "|| ' ' || g.further_details from pasn.prsn_prsntyps g "
+            . "where g.person_id=a.person_id ORDER BY g.valid_start_date DESC "
+            . "LIMIT 1 OFFSET 0) ilike '" . loc_db_escape_string($searchFor) .
+            "')";
     } else if ($searchIn == "Date of Birth") {
         $whrcls = " AND (to_char(to_timestamp(a.date_of_birth,"
-                . "'YYYY-MM-DD'),'DD-Mon-YYYY') ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            . "'YYYY-MM-DD'),'DD-Mon-YYYY') ilike '" . loc_db_escape_string($searchFor) .
+            "')";
     } else if ($searchIn == "Home Town") {
         $whrcls = " AND (a.hometown ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     } else if ($searchIn == "Gender") {
         $whrcls = " AND (a.gender ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     } else if ($searchIn == "Marital Status") {
         $whrcls = " AND (a.marital_status ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     }
 
     $strSql = "SELECT count(1) " .
-            "FROM prs.prsn_names_nos a "
-            . "LEFT OUTER JOIN pasn.prsn_prsntyps b " .
-            "ON (a.person_id = b.person_id and "
-            . "b.valid_start_date = (SELECT MAX(c.valid_start_date) from pasn.prsn_prsntyps c where c.person_id = a.person_id)) " .
-            "WHERE ((a.org_id = " . $orgID . " " . $extra1 . ")" . $whrcls . $extra2 . $extra3 . $extra4 .
-            ")";
+        "FROM prs.prsn_names_nos a "
+        . "LEFT OUTER JOIN pasn.prsn_prsntyps b " .
+        "ON (a.person_id = b.person_id and "
+        . "b.prsntype_id = (SELECT MAX(c.prsntype_id) from pasn.prsn_prsntyps c where c.person_id = a.person_id)) " .
+        "WHERE ((a.org_id = " . $orgID . " " . $extra1 . ")" . $whrcls . $extra2 . $extra3 . $extra4 .
+        ")";
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -380,8 +483,18 @@ to_timestamp(z.valid_end_date,'YYYY-MM-DD HH24:MI:SS'))))";
     return 0;
 }
 
-function get_BscPrsn($searchFor, $searchIn, $offset, $limit_size, $orgID, $searchAll, $sortBy
-, $fltrTypValue, $fltrTyp, $extra4 = "") {
+function get_BscPrsn(
+    $searchFor,
+    $searchIn,
+    $offset,
+    $limit_size,
+    $orgID,
+    $searchAll,
+    $sortBy,
+    $fltrTypValue,
+    $fltrTyp,
+    $extra4 = ""
+) {
     $extra1 = "";
     $extra2 = "";
     $extra3 = "";
@@ -426,42 +539,43 @@ to_timestamp(z.valid_end_date,'YYYY-MM-DD HH24:MI:SS'))))";
     $strSql = "";
     $whrcls = "";
     $ordrBy = "";
-    if ($searchIn == "ID") {
-        $whrcls = " AND (a.local_id_no ilike '" . loc_db_escape_string($searchFor) . "')";
+    if ($searchIn == "ID/Full Name") {
+        $whrcls = " AND (a.local_id_no ilike '" . loc_db_escape_string($searchFor) . "' or trim(a.title || ' ' || a.sur_name || " .
+            "', ' || a.first_name || ' ' || a.other_names) ilike '" . loc_db_escape_string($searchFor) . "')";
     } else if ($searchIn == "Full Name") {
         $whrcls = " AND (trim(a.title || ' ' || a.sur_name || " .
-                "', ' || a.first_name || ' ' || a.other_names) ilike '" . loc_db_escape_string($searchFor) . "')";
+            "', ' || a.first_name || ' ' || a.other_names) ilike '" . loc_db_escape_string($searchFor) . "')";
     } else if ($searchIn == "Residential Address") {
         $whrcls = " AND (a.res_address ilike '" . loc_db_escape_string($searchFor) . "')";
     } else if ($searchIn == "Contact Information") {
         $whrcls = " AND (a.pstl_addrs ilike '" . loc_db_escape_string($searchFor) .
-                "' or a.email ilike '" . loc_db_escape_string($searchFor) .
-                "' or a.cntct_no_tel ilike '" . loc_db_escape_string($searchFor) .
-                "' or a.cntct_no_mobl ilike '" . loc_db_escape_string($searchFor) .
-                "' or a.cntct_no_fax ilike '" . loc_db_escape_string($searchFor) . "')";
+            "' or a.email ilike '" . loc_db_escape_string($searchFor) .
+            "' or a.cntct_no_tel ilike '" . loc_db_escape_string($searchFor) .
+            "' or a.cntct_no_mobl ilike '" . loc_db_escape_string($searchFor) .
+            "' or a.cntct_no_fax ilike '" . loc_db_escape_string($searchFor) . "')";
     } else if ($searchIn == "Linked Firm/Workplace") {
         $whrcls = " AND (scm.get_cstmr_splr_name(a.lnkd_firm_org_id) ilike '" . loc_db_escape_string($searchFor) .
-                "' or scm.get_cstmr_splr_site_name(a.lnkd_firm_site_id) ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "' or scm.get_cstmr_splr_site_name(a.lnkd_firm_site_id) ilike '" . loc_db_escape_string($searchFor) .
+            "')";
     } else if ($searchIn == "Person Type") {
         $whrcls = " AND ((Select g.prsn_type || ' ' || g.prn_typ_asgnmnt_rsn "
-                . "|| ' ' || g.further_details from pasn.prsn_prsntyps g "
-                . "where g.person_id=a.person_id ORDER BY g.valid_start_date DESC "
-                . "LIMIT 1 OFFSET 0) ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            . "|| ' ' || g.further_details from pasn.prsn_prsntyps g "
+            . "where g.person_id=a.person_id ORDER BY g.valid_start_date DESC "
+            . "LIMIT 1 OFFSET 0) ilike '" . loc_db_escape_string($searchFor) .
+            "')";
     } else if ($searchIn == "Date of Birth") {
         $whrcls = " AND (to_char(to_timestamp(a.date_of_birth,"
-                . "'YYYY-MM-DD'),'DD-Mon-YYYY') ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            . "'YYYY-MM-DD'),'DD-Mon-YYYY') ilike '" . loc_db_escape_string($searchFor) .
+            "')";
     } else if ($searchIn == "Home Town") {
         $whrcls = " AND (a.hometown ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     } else if ($searchIn == "Gender") {
         $whrcls = " AND (a.gender ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     } else if ($searchIn == "Marital Status") {
         $whrcls = " AND (a.marital_status ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     }
 
     if ($sortBy == "Date Added DESC") {
@@ -470,7 +584,7 @@ to_timestamp(z.valid_end_date,'YYYY-MM-DD HH24:MI:SS'))))";
         $ordrBy = "a.date_of_birth ASC";
     } else if ($sortBy == "Full Name") {
         $ordrBy = "trim(a.sur_name || " .
-                "', ' || a.first_name || ' ' || a.other_names) ASC";
+            "', ' || a.first_name || ' ' || a.other_names) ASC";
     } else if ($sortBy == "ID ASC") {
         $ordrBy = "a.local_id_no ASC";
     } else if ($sortBy == "ID DESC") {
@@ -480,36 +594,253 @@ to_timestamp(z.valid_end_date,'YYYY-MM-DD HH24:MI:SS'))))";
     }
 
     $strSql = "SELECT a.person_id, a.local_id_no, trim(a.title || ' ' || a.sur_name || " .
-            "', ' || a.first_name || ' ' || a.other_names) fullname, "
-            . "a.img_location, a.first_name, a.sur_name, a.other_names,
+        "', ' || a.first_name || ' ' || a.other_names) fullname, "
+        . "COALESCE(a.img_location,''), a.first_name, a.sur_name, a.other_names,
                 gender, marital_status,date_of_birth,
           place_of_birth, religion, res_address, pstl_addrs, email, cntct_no_tel, 
-          cntct_no_mobl, cntct_no_fax, img_location, hometown, nationality, 
+          cntct_no_mobl, cntct_no_fax, COALESCE(img_location,''), hometown, nationality, 
           lnkd_firm_org_id, 
           CASE WHEN lnkd_firm_org_id <=0 THEN new_company ELSE scm.get_cstmr_splr_name(lnkd_firm_org_id) END, 
           lnkd_firm_site_id, 
           CASE WHEN lnkd_firm_site_id <=0 THEN new_company_loc ELSE scm.get_cstmr_splr_site_name(lnkd_firm_site_id) END, 
           a.title, 
           b.prsn_type, b.prn_typ_asgnmnt_rsn, " .
-            "b.further_details, b.valid_start_date, b.valid_end_date  " .
-            "FROM prs.prsn_names_nos a "
-            . "LEFT OUTER JOIN pasn.prsn_prsntyps b " .
-            "ON (a.person_id = b.person_id and "
-            . "b.valid_start_date = (SELECT MAX(c.valid_start_date) from pasn.prsn_prsntyps c where c.person_id = a.person_id)) " .
-            "WHERE ((a.org_id = " . $orgID . " " . $extra1 . ")" . $whrcls . $extra2 . $extra3 . $extra4 .
-            ") ORDER BY " . $ordrBy . " LIMIT " . $limit_size .
-            " OFFSET " . abs($offset * $limit_size);
+        "b.further_details, b.valid_start_date, b.valid_end_date  " .
+        "FROM prs.prsn_names_nos a "
+        . "LEFT OUTER JOIN pasn.prsn_prsntyps b " .
+        "ON (a.person_id = b.person_id and "
+        . "b.prsntype_id = (SELECT MAX(c.prsntype_id) from pasn.prsn_prsntyps c where c.person_id = a.person_id)) " .
+        "WHERE ((a.org_id = " . $orgID . " " . $extra1 . ")" . $whrcls . $extra2 . $extra3 . $extra4 .
+        ") ORDER BY " . $ordrBy . " LIMIT " . $limit_size .
+        " OFFSET " . abs($offset * $limit_size);
+    //echo $strSql;
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_BscPrsnDetail($person_id) {
+function get_BscPrsnExprt(
+    $searchFor,
+    $searchIn,
+    $offset,
+    $limit_size,
+    $orgID,
+    $searchAll,
+    $sortBy,
+    $fltrTypValue,
+    $fltrTyp,
+    $extra4 = ""
+) {
+    $extra1 = "";
+    $extra2 = "";
+    $extra3 = "";
+    $aldPrsTyp = getAllwdPrsnTyps();
+    $aldPrsTyp = "'" . trim($aldPrsTyp, "'") . "'";
+    if ($aldPrsTyp != "'All'") {
+        $extra3 = " and ((SELECT z.prsn_type FROM pasn.prsn_prsntyps z WHERE (z.person_id = a.person_id) 
+ORDER BY z.valid_end_date DESC, z.valid_start_date DESC LIMIT 1 OFFSET 0) IN (" . $aldPrsTyp . "))";
+    }
+    if ($searchAll == true) {
+        $extra1 = "or 1 = 1";
+    }
+    if ($fltrTypValue == "All") {
+        $extra2 = " and 1 = 1";
+    } else {
+        if ($fltrTyp == "Relation Type") {
+            $extra2 = " and ((SELECT z.prsn_type FROM pasn.prsn_prsntyps z WHERE (z.person_id = a.person_id) 
+ORDER BY z.valid_end_date DESC, z.valid_start_date DESC LIMIT 1 OFFSET 0)='" . $fltrTypValue . "')";
+        } else if ($fltrTyp == "Division/Group") {
+            $extra2 = " and (EXISTS(SELECT w.div_code_name FROM pasn.prsn_divs_groups z, org.org_divs_groups w 
+WHERE (z.person_id = a.person_id and w.div_id = z.div_id and w.div_code_name='" . $fltrTypValue . "'  
+and now() between to_timestamp(z.valid_start_date,'YYYY-MM-DD HH24:MI:SS') and 
+to_timestamp(z.valid_end_date,'YYYY-MM-DD HH24:MI:SS'))))";
+        } else if ($fltrTyp == "Job") {
+            $extra2 = " and (EXISTS(SELECT w.job_code_name FROM pasn.prsn_jobs z, org.org_jobs w 
+WHERE (z.person_id = a.person_id and w.job_id = z.job_id and w.job_code_name='" . $fltrTypValue . "'  
+and now() between to_timestamp(z.valid_start_date,'YYYY-MM-DD HH24:MI:SS') and 
+to_timestamp(z.valid_end_date,'YYYY-MM-DD HH24:MI:SS'))))";
+        } else if ($fltrTyp == "Grade") {
+            $extra2 = " and (EXISTS(SELECT w.grade_code_name FROM pasn.prsn_grades z, org.org_grades w 
+WHERE (z.person_id = a.person_id and w.grade_id = z.grade_id and w.grade_code_name='" . $fltrTypValue . "'  
+and now() between to_timestamp(z.valid_start_date,'YYYY-MM-DD HH24:MI:SS') and 
+to_timestamp(z.valid_end_date,'YYYY-MM-DD HH24:MI:SS'))))";
+        } else if ($fltrTyp == "Position") {
+            $extra2 = " and (EXISTS(SELECT w.position_code_name FROM pasn.prsn_positions z, org.org_positions w 
+WHERE (z.person_id = a.person_id and w.position_id = z.position_id and w.position_code_name='" . $fltrTypValue . "'  
+and now() between to_timestamp(z.valid_start_date,'YYYY-MM-DD HH24:MI:SS') and 
+to_timestamp(z.valid_end_date,'YYYY-MM-DD HH24:MI:SS'))))";
+        }
+    }
+    $strSql = "";
+    $whrcls = "";
+    $ordrBy = "";
+    if ($searchIn == "ID/Full Name") {
+        $whrcls = " AND (a.local_id_no ilike '" . loc_db_escape_string($searchFor) . "' or trim(a.title || ' ' || a.sur_name || " .
+            "', ' || a.first_name || ' ' || a.other_names) ilike '" . loc_db_escape_string($searchFor) . "')";
+    } else if ($searchIn == "Full Name") {
+        $whrcls = " AND (trim(a.title || ' ' || a.sur_name || " .
+            "', ' || a.first_name || ' ' || a.other_names) ilike '" . loc_db_escape_string($searchFor) . "')";
+    } else if ($searchIn == "Residential Address") {
+        $whrcls = " AND (a.res_address ilike '" . loc_db_escape_string($searchFor) . "')";
+    } else if ($searchIn == "Contact Information") {
+        $whrcls = " AND (a.pstl_addrs ilike '" . loc_db_escape_string($searchFor) .
+            "' or a.email ilike '" . loc_db_escape_string($searchFor) .
+            "' or a.cntct_no_tel ilike '" . loc_db_escape_string($searchFor) .
+            "' or a.cntct_no_mobl ilike '" . loc_db_escape_string($searchFor) .
+            "' or a.cntct_no_fax ilike '" . loc_db_escape_string($searchFor) . "')";
+    } else if ($searchIn == "Linked Firm/Workplace") {
+        $whrcls = " AND (scm.get_cstmr_splr_name(a.lnkd_firm_org_id) ilike '" . loc_db_escape_string($searchFor) .
+            "' or scm.get_cstmr_splr_site_name(a.lnkd_firm_site_id) ilike '" . loc_db_escape_string($searchFor) .
+            "')";
+    } else if ($searchIn == "Person Type") {
+        $whrcls = " AND ((Select g.prsn_type || ' ' || g.prn_typ_asgnmnt_rsn "
+            . "|| ' ' || g.further_details from pasn.prsn_prsntyps g "
+            . "where g.person_id=a.person_id ORDER BY g.valid_start_date DESC "
+            . "LIMIT 1 OFFSET 0) ilike '" . loc_db_escape_string($searchFor) .
+            "')";
+    } else if ($searchIn == "Date of Birth") {
+        $whrcls = " AND (to_char(to_timestamp(a.date_of_birth,"
+            . "'YYYY-MM-DD'),'DD-Mon-YYYY') ilike '" . loc_db_escape_string($searchFor) .
+            "')";
+    } else if ($searchIn == "Home Town") {
+        $whrcls = " AND (a.hometown ilike '" . loc_db_escape_string($searchFor) .
+            "')";
+    } else if ($searchIn == "Gender") {
+        $whrcls = " AND (a.gender ilike '" . loc_db_escape_string($searchFor) .
+            "')";
+    } else if ($searchIn == "Marital Status") {
+        $whrcls = " AND (a.marital_status ilike '" . loc_db_escape_string($searchFor) .
+            "')";
+    }
+
+    if ($sortBy == "Date Added DESC") {
+        $ordrBy = "a.creation_date DESC";
+    } else if ($sortBy == "Date of Birth") {
+        $ordrBy = "a.date_of_birth ASC";
+    } else if ($sortBy == "Full Name") {
+        $ordrBy = "trim(a.sur_name || " .
+            "', ' || a.first_name || ' ' || a.other_names) ASC";
+    } else if ($sortBy == "ID ASC") {
+        $ordrBy = "a.local_id_no ASC";
+    } else if ($sortBy == "ID DESC") {
+        $ordrBy = "a.local_id_no DESC";
+    } else {
+        $ordrBy = "a.local_id_no ASC";
+    }
+
+
+    $strSql = "SELECT '''' || a.local_id_no, a.title, a.first_name, a.sur_name, a.other_names,
+                gender, marital_status,'''' || to_char(to_timestamp(a.date_of_birth,'YYYY-MM-DD'),'DD-Mon-YYYY') date_of_birth,
+          place_of_birth, hometown, religion, res_address, pstl_addrs, email, '''' || a.cntct_no_tel, '''' || a.cntct_no_mobl, 
+          '''' || a.cntct_no_fax, nationality, COALESCE(img_location,''), 
+          b.prsn_type, b.prn_typ_asgnmnt_rsn, b.further_details, 
+          '''' || to_char(to_timestamp(b.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') valid_start_date, 
+          '''' || to_char(to_timestamp(b.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') valid_end_date, 
+          CASE WHEN lnkd_firm_org_id <=0 THEN new_company ELSE scm.get_cstmr_splr_name(lnkd_firm_org_id) END, 
+          CASE WHEN lnkd_firm_site_id <=0 THEN new_company_loc ELSE scm.get_cstmr_splr_site_name(lnkd_firm_site_id) END,
+          (SELECT tbl1.prsntyphstry
+        FROM (SELECT z.person_id,
+                     STRING_AGG(z.prsn_type || '~' || z.prn_typ_asgnmnt_rsn || '~' || to_char(to_timestamp(z.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') || '~' ||
+                                to_char(to_timestamp(z.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY'), '|' ORDER BY z.valid_start_date DESC) prsntyphstry
+              FROM pasn.prsn_prsntyps z
+              where z.person_id = a.person_id
+              group by z.person_id) tbl1) prsntyphstry, 
+          (SELECT tbl2.divsgrps
+        FROM (SELECT z2.person_id,
+                     STRING_AGG(org.get_div_name(z2.div_id) || '~' || to_char(to_timestamp(z2.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') || '~' ||
+                                to_char(to_timestamp(z2.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY'), '|' ORDER BY z2.valid_start_date DESC) divsgrps
+              FROM pasn.prsn_divs_groups z2
+              where z2.person_id = a.person_id
+              group by z2.person_id) tbl2) divsgrps, 
+          (SELECT tbl3.spvsrs
+        FROM (SELECT z3.person_id,
+                     STRING_AGG(prs.get_prsn_loc_id(z3.supervisor_prsn_id) || '~' || to_char(to_timestamp(z3.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') || '~' ||
+                                to_char(to_timestamp(z3.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY'), '|' ORDER BY z3.valid_start_date DESC) spvsrs
+              FROM pasn.prsn_supervisors z3
+              where z3.person_id = a.person_id
+              group by z3.person_id) tbl3) spvsrs, 
+          (SELECT tbl4.siteslocs
+        FROM (SELECT z4.person_id,
+                     STRING_AGG(org.get_site_name(z4.location_id) || '~' || to_char(to_timestamp(z4.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') || '~' ||
+                                to_char(to_timestamp(z4.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY'), '|' ORDER BY z4.valid_start_date DESC) siteslocs
+              FROM pasn.prsn_locations z4
+              where z4.person_id = a.person_id
+              group by z4.person_id) tbl4) siteslocs, 
+          (SELECT tbl5.jobs
+        FROM (SELECT z5.person_id,
+                     STRING_AGG(org.get_job_name(z5.job_id) || '~' || to_char(to_timestamp(z5.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') || '~' ||
+                                to_char(to_timestamp(z5.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY'), '|' ORDER BY z5.valid_start_date DESC) jobs
+              FROM pasn.prsn_jobs z5
+              where z5.person_id = a.person_id
+              group by z5.person_id) tbl5) jobs, 
+          (SELECT tbl6.grades
+        FROM (SELECT z6.person_id,
+                     STRING_AGG(org.get_grade_name(z6.grade_id) || '~' || to_char(to_timestamp(z6.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') || '~' ||
+                                to_char(to_timestamp(z6.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY'), '|' ORDER BY z6.valid_start_date DESC) grades
+              FROM pasn.prsn_grades z6
+              where z6.person_id = a.person_id
+              group by z6.person_id) tbl6) grades, 
+          (SELECT tbl7.positions
+        FROM (SELECT z7.person_id,
+                     STRING_AGG(org.get_pos_name(z7.position_id) || '~' || coalesce(org.get_div_name(z7.div_id),'') || '~' || to_char(to_timestamp(z7.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') || '~' ||
+                                to_char(to_timestamp(z7.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY'), '|' ORDER BY z7.valid_start_date DESC) positions
+              FROM pasn.prsn_positions z7
+              where z7.person_id = a.person_id
+              group by z7.person_id) tbl7) positions, 
+          (SELECT tbl8.educbkgrd
+        FROM (SELECT z8.person_id,
+                     STRING_AGG(course_name || '~' || school_institution || '~' || school_location || '~' || cert_obtained|| '~' ||  cert_type || '~' ||
+                                date_cert_awarded || '~' ||  to_char(to_timestamp(z8.course_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') || '~' ||to_char(to_timestamp(z8.course_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY'), '|' ORDER BY z8.date_cert_awarded DESC) educbkgrd
+              FROM prs.prsn_education z8
+              where z8.person_id = a.person_id
+              group by z8.person_id) tbl8) educbkgrd, 
+          (SELECT tbl9.wrkexprnc
+        FROM (SELECT z9.person_id,
+                     STRING_AGG(job_name_title || '~' || institution_name || '~' || job_location || '~' || job_description|| '~' ||  feats_achvments || '~' ||
+                                to_char(to_timestamp(z9.job_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') || '~' ||  to_char(to_timestamp(z9.job_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY'), '|' ORDER BY z9.job_start_date DESC) wrkexprnc
+              FROM prs.prsn_work_experience z9
+              where z9.person_id = a.person_id
+              group by z9.person_id) tbl9) wrkexprnc, 
+          (SELECT tbl10.skillsnature
+        FROM (SELECT z10.person_id,
+                     STRING_AGG(languages || '~' || hobbies || '~' || interests || '~' || conduct || '~' ||  attitude || '~' ||
+                                to_char(to_timestamp(z10.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') || '~' ||  to_char(to_timestamp(z10.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY'), '|' ORDER BY z10.valid_start_date DESC) skillsnature
+              FROM prs.prsn_skills_nature z10
+              where z10.person_id = a.person_id 
+              group by z10.person_id) tbl10) skillsnature, 
+          (SELECT tbl11.ntnlIDCards
+        FROM (SELECT z11.person_id,
+                     STRING_AGG(nationality || '~' || national_id_typ || '~' || id_number || '~' || date_issued || '~' ||  expiry_date || '~' ||
+                                other_info, '|' ORDER BY z11.date_issued DESC) ntnlIDCards
+              FROM prs.prsn_national_ids z11
+              where z11.person_id = a.person_id 
+              group by z11.person_id) tbl11) ntnlIDCards, 
+            data_col1, data_col2, data_col3, data_col4, 
+            data_col5, data_col6, data_col7, data_col8, data_col9, data_col10, 
+            data_col11, data_col12, data_col13, data_col14, data_col15, data_col16, 
+            data_col17, data_col18, data_col19, data_col20, data_col21, data_col22, 
+            data_col23, data_col24, data_col25, data_col26, data_col27, data_col28, 
+            data_col29, data_col30, data_col31, data_col32, data_col33, data_col34, 
+            data_col35, data_col36, data_col37, data_col38, data_col39, data_col40, 
+            data_col41, data_col42, data_col43, data_col44, data_col45, data_col46, 
+            data_col47, data_col48, data_col49, data_col50  
+            FROM prs.prsn_names_nos a LEFT OUTER JOIN pasn.prsn_prsntyps b 
+            ON (a.person_id = b.person_id and b.prsntype_id = (SELECT MAX(c.prsntype_id) from pasn.prsn_prsntyps c where c.person_id = a.person_id))
+            LEFT OUTER JOIN prs.prsn_extra_data c ON (a.person_id = c.person_id)
+           WHERE ((a.org_id = " . $orgID . " " . $extra1 . ")" . $whrcls . $extra2 . $extra3 . $extra4 . ") ORDER BY " . $ordrBy . " LIMIT " . $limit_size .
+        " OFFSET " . abs($offset * $limit_size);
+    //echo $strSql;
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_BscPrsnDetail($person_id)
+{
     $strSql = "SELECT  
-                a.img_location \"Person's Picture\", 
+                COALESCE(a.img_location,'') \"Person's Picture\", 
                 a.person_id \"Person ID\", "
-            . "a.local_id_no \"ID No. \", "
-            . "trim(a.title || ' ' || a.sur_name || " .
-            "', ' || a.first_name || ' ' || a.other_names) \"Full Name \",
+        . "a.local_id_no \"ID No. \", "
+        . "trim(a.title || ' ' || a.sur_name || " .
+        "', ' || a.first_name || ' ' || a.other_names) \"Full Name \",
                 a.gender \"Gender \", 
                 a.marital_status \"Marital Status \", 
                 to_char(to_timestamp(a.date_of_birth,'YYYY-MM-DD'),'DD-Mon-YYYY') \"Date of Birth \",
@@ -529,19 +860,20 @@ function get_BscPrsnDetail($person_id) {
           scm.get_cstmr_splr_site_name(a.lnkd_firm_site_id) \"Site/Branch \", 
           b.prsn_type \"Relation Type\", 
           b.prn_typ_asgnmnt_rsn \"Cause of Relation\", " .
-            "b.further_details \"Further Details\", "
-            . "to_char(to_timestamp(b.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"Start Date \", "
-            . "to_char(to_timestamp(b.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"End Date \" " .
-            "FROM prs.prsn_names_nos a "
-            . "LEFT OUTER JOIN pasn.prsn_prsntyps b " .
-            "ON (a.person_id = b.person_id and "
-            . "b.valid_start_date = (SELECT MAX(c.valid_start_date) from pasn.prsn_prsntyps c where c.person_id = a.person_id)) " .
-            "WHERE (a.person_id = $person_id)";
+        "b.further_details \"Further Details\", "
+        . "to_char(to_timestamp(b.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"Start Date \", "
+        . "to_char(to_timestamp(b.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"End Date \" " .
+        "FROM prs.prsn_names_nos a "
+        . "LEFT OUTER JOIN pasn.prsn_prsntyps b " .
+        "ON (a.person_id = b.person_id and "
+        . "b.prsntype_id = (SELECT MAX(c.prsntype_id) from pasn.prsn_prsntyps c where c.person_id = a.person_id)) " .
+        "WHERE (a.person_id = $person_id)";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function getAllwdPrsnTyps() {
+function getAllwdPrsnTyps()
+{
     $strSql = "select a.pssbl_value_desc from gst.gen_stp_lov_values a, gst.gen_stp_lov_names b, sec.sec_roles c
 WHERE a.value_list_id = b.value_list_id and a.pssbl_value = c.role_name 
 and b.value_list_name = 'Allowed Person Types for Roles' and a.is_enabled='1' 
@@ -553,7 +885,8 @@ and c.role_id IN (" . concatCurRoleIDs() . ") ORDER BY a.pssbl_value_id LIMIT 1 
     return "";
 }
 
-function get_FilterValues($fltrTyp, $orgID) {
+function get_FilterValues($fltrTyp, $orgID)
+{
     $result = null;
     if ($fltrTyp == "Position") {
         //Positions
@@ -580,35 +913,39 @@ function get_FilterValues($fltrTyp, $orgID) {
     return $result;
 }
 
-function getAllEnbldPssblVals($lovNm, $extrWhr) {
+function getAllEnbldPssblVals($lovNm, $extrWhr)
+{
     global $orgID;
     $sqlStr = "select pssbl_value from gst.gen_stp_lov_values " .
-            "WHERE is_enabled='1' and value_list_id = " . getLovID($lovNm) .
-            " and allowed_org_ids ilike '%," . $orgID .
-            ",%'" . $extrWhr . " ORDER BY 1";
+        "WHERE is_enabled='1' and value_list_id = " . getLovID($lovNm) .
+        " and allowed_org_ids ilike '%," . $orgID .
+        ",%'" . $extrWhr . " ORDER BY 1";
     $result = executeSQLNoParams($sqlStr);
     return $result;
 }
 
-function endOldPrsnTypes($prsnid, $nwStrtDte) {
+function endOldPrsnTypes($prsnid, $nwStrtDte)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $updtSQL = "UPDATE pasn.prsn_prsntyps " .
-            "SET last_update_by=" . $usrID . ", " .
-            "last_update_date='" . $dateStr . "', valid_end_date='" . $nwStrtDte . "' " .
-            "WHERE ((person_id=" . $prsnid .
-            ") and (to_timestamp(valid_end_date || ' 23:59:59','YYYY-MM-DD HH24:MI:SS') " .
-            ">= to_timestamp('" . $nwStrtDte . " 00:00:00','YYYY-MM-DD HH24:MI:SS')))";
+        "SET last_update_by=" . $usrID . ", " .
+        "last_update_date='" . $dateStr . "', valid_end_date='" . $nwStrtDte . "' " .
+        "WHERE ((person_id=" . $prsnid .
+        ") and (to_timestamp((CASE WHEN char_length(coalesce(valid_end_date,''))>0 THEN valid_end_date ELSE '1900-01-01' END) || ' 23:59:59' ,'YYYY-MM-DD HH24:MI:SS') " .
+        ">= to_timestamp('" . $nwStrtDte . " 00:00:00','YYYY-MM-DD HH24:MI:SS')))";
+    //echo $updtSQL;
     execUpdtInsSQL($updtSQL);
 }
 
-function checkPrsnType($prsnid, $prsntyp, $nwStrtDte, &$rowID) {
+function checkPrsnType($prsnid, $prsntyp, $nwStrtDte, &$rowID)
+{
     $strSql = "SELECT prsntype_id " .
-            "FROM pasn.prsn_prsntyps WHERE ((person_id = " . $prsnid .
-            ") and (((prsn_type = '" . loc_db_escape_string($prsntyp) .
-            "') and (to_timestamp(valid_start_date || ' 00:00:00','YYYY-MM-DD HH24:MI:SS') " .
-            ">= to_timestamp('" . $nwStrtDte . "','YYYY-MM-DD HH24:MI:SS'))) or (to_timestamp(valid_start_date || ' 00:00:00','YYYY-MM-DD HH24:MI:SS') " .
-            "= to_timestamp('" . $nwStrtDte . "','YYYY-MM-DD HH24:MI:SS'))))";
+        "FROM pasn.prsn_prsntyps WHERE ((person_id = " . $prsnid .
+        ") and (((prsn_type = '" . loc_db_escape_string($prsntyp) .
+        "') and (to_timestamp(valid_start_date || ' 00:00:00','YYYY-MM-DD HH24:MI:SS') " .
+        ">= to_timestamp('" . $nwStrtDte . "','YYYY-MM-DD HH24:MI:SS'))) or (to_timestamp(valid_start_date || ' 00:00:00','YYYY-MM-DD HH24:MI:SS') " .
+        "= to_timestamp('" . $nwStrtDte . "','YYYY-MM-DD HH24:MI:SS'))))";
 
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
@@ -618,154 +955,255 @@ function checkPrsnType($prsnid, $prsntyp, $nwStrtDte, &$rowID) {
     return false;
 }
 
-function createPrsnsType($prsnid, $rsn, $date1, $date2, $futhDet, $prsntyp) {
+function createPrsnsType($prsnid, $rsn, $date1, $date2, $futhDet, $prsntyp)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO pasn.prsn_prsntyps(" .
-            "person_id, prn_typ_asgnmnt_rsn, valid_start_date, valid_end_date, " .
-            "created_by, creation_date, last_update_by, last_update_date, " .
-            "further_details, prsn_type)" .
-            "VALUES (" . $prsnid . ", '" . loc_db_escape_string($rsn) .
-            "', '" . loc_db_escape_string($date1) . "', '" . loc_db_escape_string($date2) . "', " .
-            "" . $usrID . ", '" . $dateStr . "', " . $usrID . ", '" . $dateStr . "', " .
-            "'" . loc_db_escape_string($futhDet) . "', '" . loc_db_escape_string($prsntyp) . "')";
+        "person_id, prn_typ_asgnmnt_rsn, valid_start_date, valid_end_date, " .
+        "created_by, creation_date, last_update_by, last_update_date, " .
+        "further_details, prsn_type)" .
+        "VALUES (" . $prsnid . ", '" . loc_db_escape_string($rsn) .
+        "', '" . loc_db_escape_string($date1) . "', '" . loc_db_escape_string($date2) . "', " .
+        "" . $usrID . ", '" . $dateStr . "', " . $usrID . ", '" . $dateStr . "', " .
+        "'" . loc_db_escape_string($futhDet) . "', '" . loc_db_escape_string($prsntyp) . "')";
     execUpdtInsSQL($insSQL);
 }
 
-function updtPrsnsType($rowid, $prsnid, $rsn, $date1, $date2, $futhDet, $prsntyp) {
+function updtPrsnsType($rowid, $prsnid, $rsn, $date1, $date2, $futhDet, $prsntyp)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $updtSQL = "UPDATE pasn.prsn_prsntyps " .
-            "SET person_id=" . $prsnid . ", prn_typ_asgnmnt_rsn='" . loc_db_escape_string($rsn) .
-            "', valid_start_date='" . loc_db_escape_string($date1) .
-            "', valid_end_date='" . loc_db_escape_string($date2) . "', " .
-            "last_update_by=" . $usrID . ", last_update_date='" . $dateStr . "', " .
-            "further_details='" . loc_db_escape_string($futhDet) .
-            "', prsn_type='" . loc_db_escape_string($prsntyp) . "' " .
-            "WHERE prsntype_id= " . $rowid;
+        "SET person_id=" . $prsnid . ", prn_typ_asgnmnt_rsn='" . loc_db_escape_string($rsn) .
+        "', valid_start_date='" . loc_db_escape_string($date1) .
+        "', valid_end_date='" . loc_db_escape_string($date2) . "', " .
+        "last_update_by=" . $usrID . ", last_update_date='" . $dateStr . "', " .
+        "further_details='" . loc_db_escape_string($futhDet) .
+        "', prsn_type='" . loc_db_escape_string($prsntyp) . "' " .
+        "WHERE prsntype_id= " . $rowid;
     execUpdtInsSQL($updtSQL);
 }
 
-function createPrsnBasic($frstnm, $surname, $othnm, $title
-, $loc_id, $orgid, $gender, $marsts, $dob, $pob, $rlgn, $resaddrs, $pstladrs, $email, $tel, $mobl, $fax, $hometwn, $ntnlty, $imgLoc, $lnkdFrmID, $lnkdFrmSiteID, $lnkdFirmNm, $lnkdFirmSiteName) {
+function createPrsnBasic(
+    $frstnm,
+    $surname,
+    $othnm,
+    $title,
+    $loc_id,
+    $orgid,
+    $gender,
+    $marsts,
+    $dob,
+    $pob,
+    $rlgn,
+    $resaddrs,
+    $pstladrs,
+    $email,
+    $tel,
+    $mobl,
+    $fax,
+    $hometwn,
+    $ntnlty,
+    $imgLoc,
+    $lnkdFrmID,
+    $lnkdFrmSiteID,
+    $lnkdFirmNm,
+    $lnkdFirmSiteName
+) {
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO prs.prsn_names_nos(" .
-            "created_by, creation_date, last_update_by, last_update_date, " .
-            "first_name, sur_name, other_names, title, local_id_no, org_id, " .
-            "gender, marital_status, date_of_birth, place_of_birth, religion, " .
-            "res_address, pstl_addrs, email, cntct_no_tel, cntct_no_mobl, " .
-            "cntct_no_fax, hometown, nationality, img_location, lnkd_firm_org_id, 
+        "created_by, creation_date, last_update_by, last_update_date, " .
+        "first_name, sur_name, other_names, title, local_id_no, org_id, " .
+        "gender, marital_status, date_of_birth, place_of_birth, religion, " .
+        "res_address, pstl_addrs, email, cntct_no_tel, cntct_no_mobl, " .
+        "cntct_no_fax, hometown, nationality, img_location, lnkd_firm_org_id, 
             lnkd_firm_site_id, new_company, new_company_loc)" .
-            "VALUES (" . $usrID . ", '" . $dateStr . "', " .
-            $usrID . ", '" . $dateStr . "', '" . loc_db_escape_string($frstnm) . "', " .
-            "'" . loc_db_escape_string($surname) . "', '" . loc_db_escape_string($othnm) .
-            "', '" . loc_db_escape_string($title) . "', '" . loc_db_escape_string($loc_id) .
-            "', " . $orgid . ", '" . loc_db_escape_string($gender) . "', " .
-            "'" . loc_db_escape_string($marsts) . "', '" . $dob .
-            "', '" . loc_db_escape_string($pob) . "', '" . loc_db_escape_string($rlgn) .
-            "', '" . loc_db_escape_string($resaddrs) . "', " .
-            "'" . loc_db_escape_string($pstladrs) . "', '" . loc_db_escape_string($email) .
-            "', '" . loc_db_escape_string($tel) . "', '" . loc_db_escape_string($mobl) .
-            "', '" . loc_db_escape_string($fax) . "', '" . loc_db_escape_string($hometwn) .
-            "', '" . loc_db_escape_string($ntnlty) . "', '" . loc_db_escape_string($imgLoc) .
-            "', " . $lnkdFrmID . ", " . $lnkdFrmSiteID .
-            ", '" . loc_db_escape_string($lnkdFirmNm) . "', '" . loc_db_escape_string($lnkdFirmSiteName) . "')";
+        "VALUES (" . $usrID . ", '" . $dateStr . "', " .
+        $usrID . ", '" . $dateStr . "', '" . loc_db_escape_string($frstnm) . "', " .
+        "'" . loc_db_escape_string($surname) . "', '" . loc_db_escape_string($othnm) .
+        "', '" . loc_db_escape_string($title) . "', '" . loc_db_escape_string($loc_id) .
+        "', " . $orgid . ", '" . loc_db_escape_string($gender) . "', " .
+        "'" . loc_db_escape_string($marsts) . "', '" . $dob .
+        "', '" . loc_db_escape_string($pob) . "', '" . loc_db_escape_string($rlgn) .
+        "', '" . loc_db_escape_string($resaddrs) . "', " .
+        "'" . loc_db_escape_string($pstladrs) . "', '" . loc_db_escape_string($email) .
+        "', '" . loc_db_escape_string($tel) . "', '" . loc_db_escape_string($mobl) .
+        "', '" . loc_db_escape_string($fax) . "', '" . loc_db_escape_string($hometwn) .
+        "', '" . loc_db_escape_string($ntnlty) . "', '" . loc_db_escape_string($imgLoc) .
+        "', " . $lnkdFrmID . ", " . $lnkdFrmSiteID .
+        ", '" . loc_db_escape_string($lnkdFirmNm) . "', '" . loc_db_escape_string($lnkdFirmSiteName) . "')";
     execUpdtInsSQL($insSQL);
 }
 
-function updatePrsnBasic($prsnid, $frstnm, $surname, $othnm, $title
-, $loc_id, $orgid, $gender, $marsts, $dob, $pob, $rlgn, $resaddrs, $pstladrs, $email, $tel, $mobl, $fax, $hometwn, $ntnlty, $lnkdFrmID, $lnkdFrmSiteID, $lnkdFirmNm, $lnkdFirmSiteName) {
+function updatePrsnBasic(
+    $prsnid,
+    $frstnm,
+    $surname,
+    $othnm,
+    $title,
+    $loc_id,
+    $orgid,
+    $gender,
+    $marsts,
+    $dob,
+    $pob,
+    $rlgn,
+    $resaddrs,
+    $pstladrs,
+    $email,
+    $tel,
+    $mobl,
+    $fax,
+    $hometwn,
+    $ntnlty,
+    $lnkdFrmID,
+    $lnkdFrmSiteID,
+    $lnkdFirmNm,
+    $lnkdFirmSiteName
+) {
     global $usrID;
     $dateStr = getDB_Date_time();
     $updtSQL = "UPDATE prs.prsn_names_nos " .
-            "SET last_update_by=" . $usrID . ", " .
-            "last_update_date='" . $dateStr .
-            "', first_name='" . loc_db_escape_string($frstnm) .
-            "', sur_name='" . loc_db_escape_string($surname) .
-            "', other_names='" . loc_db_escape_string($othnm) .
-            "', title='" . loc_db_escape_string($title) .
-            "', local_id_no='" . loc_db_escape_string($loc_id) .
-            "', org_id=" . $orgid . ", gender='" . loc_db_escape_string($gender) .
-            "', marital_status='" . loc_db_escape_string($marsts) . "', date_of_birth='" . $dob .
-            "', place_of_birth='" . loc_db_escape_string($pob) .
-            "', religion='" . loc_db_escape_string($rlgn) .
-            "', res_address='" . loc_db_escape_string($resaddrs) .
-            "', pstl_addrs='" . loc_db_escape_string($pstladrs) .
-            "', email='" . loc_db_escape_string($email) .
-            "', cntct_no_tel='" . loc_db_escape_string($tel) .
-            "', cntct_no_mobl='" . loc_db_escape_string($mobl) .
-            "', cntct_no_fax='" . loc_db_escape_string($fax) .
-            "', hometown='" . loc_db_escape_string($hometwn) .
-            "', nationality='" . loc_db_escape_string($ntnlty) .
-            "', lnkd_firm_org_id=" . $lnkdFrmID .
-            ", lnkd_firm_site_id=" . $lnkdFrmSiteID .
-            ", new_company='" . loc_db_escape_string($lnkdFirmNm) .
-            "', new_company_loc='" . loc_db_escape_string($lnkdFirmSiteName) .
-            "' WHERE person_id=" . $prsnid;
+        "SET last_update_by=" . $usrID . ", " .
+        "last_update_date='" . $dateStr .
+        "', first_name='" . loc_db_escape_string($frstnm) .
+        "', sur_name='" . loc_db_escape_string($surname) .
+        "', other_names='" . loc_db_escape_string($othnm) .
+        "', title='" . loc_db_escape_string($title) .
+        "', local_id_no='" . loc_db_escape_string($loc_id) .
+        "', org_id=" . $orgid . ", gender='" . loc_db_escape_string($gender) .
+        "', marital_status='" . loc_db_escape_string($marsts) . "', date_of_birth='" . $dob .
+        "', place_of_birth='" . loc_db_escape_string($pob) .
+        "', religion='" . loc_db_escape_string($rlgn) .
+        "', res_address='" . loc_db_escape_string($resaddrs) .
+        "', pstl_addrs='" . loc_db_escape_string($pstladrs) .
+        "', email='" . loc_db_escape_string($email) .
+        "', cntct_no_tel='" . loc_db_escape_string($tel) .
+        "', cntct_no_mobl='" . loc_db_escape_string($mobl) .
+        "', cntct_no_fax='" . loc_db_escape_string($fax) .
+        "', hometown='" . loc_db_escape_string($hometwn) .
+        "', nationality='" . loc_db_escape_string($ntnlty) .
+        "', lnkd_firm_org_id=" . $lnkdFrmID .
+        ", lnkd_firm_site_id=" . $lnkdFrmSiteID .
+        ", new_company='" . loc_db_escape_string($lnkdFirmNm) .
+        "', new_company_loc='" . loc_db_escape_string($lnkdFirmSiteName) .
+        "' WHERE person_id=" . $prsnid;
     execUpdtInsSQL($updtSQL);
 }
 
-function createPrsnBasicSelf($prsnID, $frstnm, $surname, $othnm, $title
-, $loc_id, $orgid, $gender, $marsts, $dob, $pob, $rlgn, $resaddrs, $pstladrs, $email, $tel, $mobl, $fax, $hometwn, $ntnlty, $imgLoc, $lnkdFrmID, $lnkdFrmSiteID, $lnkdFirmNm, $lnkdFirmSiteName) {
+function createPrsnBasicSelf(
+    $prsnID,
+    $frstnm,
+    $surname,
+    $othnm,
+    $title,
+    $loc_id,
+    $orgid,
+    $gender,
+    $marsts,
+    $dob,
+    $pob,
+    $rlgn,
+    $resaddrs,
+    $pstladrs,
+    $email,
+    $tel,
+    $mobl,
+    $fax,
+    $hometwn,
+    $ntnlty,
+    $imgLoc,
+    $lnkdFrmID,
+    $lnkdFrmSiteID,
+    $lnkdFirmNm,
+    $lnkdFirmSiteName
+) {
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO self.self_prsn_names_nos(person_id, " .
-            "created_by, creation_date, last_update_by, last_update_date, " .
-            "first_name, sur_name, other_names, title, local_id_no, org_id, " .
-            "gender, marital_status, date_of_birth, place_of_birth, religion, " .
-            "res_address, pstl_addrs, email, cntct_no_tel, cntct_no_mobl, " .
-            "cntct_no_fax, hometown, nationality, img_location, lnkd_firm_org_id, 
+        "created_by, creation_date, last_update_by, last_update_date, " .
+        "first_name, sur_name, other_names, title, local_id_no, org_id, " .
+        "gender, marital_status, date_of_birth, place_of_birth, religion, " .
+        "res_address, pstl_addrs, email, cntct_no_tel, cntct_no_mobl, " .
+        "cntct_no_fax, hometown, nationality, img_location, lnkd_firm_org_id, 
             lnkd_firm_site_id, new_company, new_company_loc)" .
-            "VALUES (" . $prsnID . ", " . $usrID . ", '" . $dateStr . "', " .
-            $usrID . ", '" . $dateStr . "', '" . loc_db_escape_string($frstnm) . "', " .
-            "'" . loc_db_escape_string($surname) . "', '" . loc_db_escape_string($othnm) .
-            "', '" . loc_db_escape_string($title) . "', '" . loc_db_escape_string($loc_id) .
-            "', " . $orgid . ", '" . loc_db_escape_string($gender) . "', " .
-            "'" . loc_db_escape_string($marsts) . "', '" . $dob .
-            "', '" . loc_db_escape_string($pob) . "', '" . loc_db_escape_string($rlgn) .
-            "', '" . loc_db_escape_string($resaddrs) . "', " .
-            "'" . loc_db_escape_string($pstladrs) . "', '" . loc_db_escape_string($email) .
-            "', '" . loc_db_escape_string($tel) . "', '" . loc_db_escape_string($mobl) .
-            "', '" . loc_db_escape_string($fax) . "', '" . loc_db_escape_string($hometwn) .
-            "', '" . loc_db_escape_string($ntnlty) . "', '" . loc_db_escape_string($imgLoc) .
-            "', " . $lnkdFrmID . ", " . $lnkdFrmSiteID .
-            ", '" . loc_db_escape_string($lnkdFirmNm) . "', '" . loc_db_escape_string($lnkdFirmSiteName) . "')";
+        "VALUES (" . $prsnID . ", " . $usrID . ", '" . $dateStr . "', " .
+        $usrID . ", '" . $dateStr . "', '" . loc_db_escape_string($frstnm) . "', " .
+        "'" . loc_db_escape_string($surname) . "', '" . loc_db_escape_string($othnm) .
+        "', '" . loc_db_escape_string($title) . "', '" . loc_db_escape_string($loc_id) .
+        "', " . $orgid . ", '" . loc_db_escape_string($gender) . "', " .
+        "'" . loc_db_escape_string($marsts) . "', '" . $dob .
+        "', '" . loc_db_escape_string($pob) . "', '" . loc_db_escape_string($rlgn) .
+        "', '" . loc_db_escape_string($resaddrs) . "', " .
+        "'" . loc_db_escape_string($pstladrs) . "', '" . loc_db_escape_string($email) .
+        "', '" . loc_db_escape_string($tel) . "', '" . loc_db_escape_string($mobl) .
+        "', '" . loc_db_escape_string($fax) . "', '" . loc_db_escape_string($hometwn) .
+        "', '" . loc_db_escape_string($ntnlty) . "', '" . loc_db_escape_string($imgLoc) .
+        "', " . $lnkdFrmID . ", " . $lnkdFrmSiteID .
+        ", '" . loc_db_escape_string($lnkdFirmNm) . "', '" . loc_db_escape_string($lnkdFirmSiteName) . "')";
     execUpdtInsSQL($insSQL);
 }
 
-function updatePrsnBasicSelf($prsnid, $frstnm, $surname, $othnm, $title, $loc_id, $orgid, $gender, $marsts, $dob, $pob, $rlgn, $resaddrs, $pstladrs, $email, $tel, $mobl, $fax, $hometwn, $ntnlty, $lnkdFrmID, $lnkdFrmSiteID, $lnkdFirmNm, $lnkdFirmSiteName) {
+function updatePrsnBasicSelf(
+    $prsnid,
+    $frstnm,
+    $surname,
+    $othnm,
+    $title,
+    $loc_id,
+    $orgid,
+    $gender,
+    $marsts,
+    $dob,
+    $pob,
+    $rlgn,
+    $resaddrs,
+    $pstladrs,
+    $email,
+    $tel,
+    $mobl,
+    $fax,
+    $hometwn,
+    $ntnlty,
+    $lnkdFrmID,
+    $lnkdFrmSiteID,
+    $lnkdFirmNm,
+    $lnkdFirmSiteName
+) {
     global $usrID;
     $dateStr = getDB_Date_time();
     $updtSQL = "UPDATE self.self_prsn_names_nos " .
-            "SET last_update_by=" . $usrID . ", " .
-            "last_update_date='" . $dateStr .
-            "', first_name='" . loc_db_escape_string($frstnm) .
-            "', sur_name='" . loc_db_escape_string($surname) .
-            "', other_names='" . loc_db_escape_string($othnm) .
-            "', title='" . loc_db_escape_string($title) .
-            "', local_id_no='" . loc_db_escape_string($loc_id) .
-            "', org_id=" . $orgid . ", gender='" . loc_db_escape_string($gender) .
-            "', marital_status='" . loc_db_escape_string($marsts) . "', date_of_birth='" . $dob .
-            "', place_of_birth='" . loc_db_escape_string($pob) .
-            "', religion='" . loc_db_escape_string($rlgn) .
-            "', res_address='" . loc_db_escape_string($resaddrs) .
-            "', pstl_addrs='" . loc_db_escape_string($pstladrs) .
-            "', email='" . loc_db_escape_string($email) .
-            "', cntct_no_tel='" . loc_db_escape_string($tel) .
-            "', cntct_no_mobl='" . loc_db_escape_string($mobl) .
-            "', cntct_no_fax='" . loc_db_escape_string($fax) .
-            "', hometown='" . loc_db_escape_string($hometwn) .
-            "', nationality='" . loc_db_escape_string($ntnlty) .
-            "', lnkd_firm_org_id=" . $lnkdFrmID .
-            ", lnkd_firm_site_id=" . $lnkdFrmSiteID .
-            ", new_company='" . loc_db_escape_string($lnkdFirmNm) .
-            "', new_company_loc='" . loc_db_escape_string($lnkdFirmSiteName) .
-            "' WHERE person_id=" . $prsnid;
+        "SET last_update_by=" . $usrID . ", " .
+        "last_update_date='" . $dateStr .
+        "', first_name='" . loc_db_escape_string($frstnm) .
+        "', sur_name='" . loc_db_escape_string($surname) .
+        "', other_names='" . loc_db_escape_string($othnm) .
+        "', title='" . loc_db_escape_string($title) .
+        "', local_id_no='" . loc_db_escape_string($loc_id) .
+        "', org_id=" . $orgid . ", gender='" . loc_db_escape_string($gender) .
+        "', marital_status='" . loc_db_escape_string($marsts) . "', date_of_birth='" . $dob .
+        "', place_of_birth='" . loc_db_escape_string($pob) .
+        "', religion='" . loc_db_escape_string($rlgn) .
+        "', res_address='" . loc_db_escape_string($resaddrs) .
+        "', pstl_addrs='" . loc_db_escape_string($pstladrs) .
+        "', email='" . loc_db_escape_string($email) .
+        "', cntct_no_tel='" . loc_db_escape_string($tel) .
+        "', cntct_no_mobl='" . loc_db_escape_string($mobl) .
+        "', cntct_no_fax='" . loc_db_escape_string($fax) .
+        "', hometown='" . loc_db_escape_string($hometwn) .
+        "', nationality='" . loc_db_escape_string($ntnlty) .
+        "', lnkd_firm_org_id=" . $lnkdFrmID .
+        ", lnkd_firm_site_id=" . $lnkdFrmSiteID .
+        ", new_company='" . loc_db_escape_string($lnkdFirmNm) .
+        "', new_company_loc='" . loc_db_escape_string($lnkdFirmSiteName) .
+        "' WHERE person_id=" . $prsnid;
     execUpdtInsSQL($updtSQL);
 }
 
-function uploadDaImage($prsnid, &$nwImgLoc) {
+function uploadDaImage($prsnid, &$nwImgLoc)
+{
     global $tmpDest;
     global $ftp_base_db_fldr;
     global $usrID;
@@ -794,7 +1232,8 @@ function uploadDaImage($prsnid, &$nwImgLoc) {
                     ($_FILES["daPrsnPicture"]["type"] == "image/x-png") ||
                     ($_FILES["daPrsnPicture"]["type"] == "image/png") ||
                     in_array($extension, $allowedExts)) &&
-                    ($_FILES["daPrsnPicture"]["size"] < 2000000)) {
+                ($_FILES["daPrsnPicture"]["size"] < 2000000)
+            ) {
                 $nwFileName = encrypt1($prsnid . "." . $extension, $smplTokenWord1) . "." . $extension;
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daPrsnPicture"]["tmp_name"], $img_src);
@@ -804,9 +1243,9 @@ function uploadDaImage($prsnid, &$nwImgLoc) {
 
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE prs.prsn_names_nos " .
-                            "SET last_update_by=" . $usrID . ", " .
-                            "last_update_date='" . $dateStr .
-                            "', img_location = '" . $prsnid . "." . $extension . "' WHERE person_id=" . $prsnid;
+                        "SET last_update_by=" . $usrID . ", " .
+                        "last_update_date='" . $dateStr .
+                        "', img_location = '" . $prsnid . "." . $extension . "' WHERE person_id=" . $prsnid;
                     execUpdtInsSQL($updtSQL);
                 }
                 $msg .= "Image Stored";
@@ -823,7 +1262,56 @@ function uploadDaImage($prsnid, &$nwImgLoc) {
     return FALSE;
 }
 
-function uploadDaImageSelf($prsnid, &$nwImgLoc) {
+function uploadDaImageExcel($prsnid, $inputImgName, &$nwImgLoc)
+{
+    global $tmpDest;
+    global $ftp_base_db_fldr;
+    global $usrID;
+    global $fldrPrfx;
+    global $smplTokenWord1;
+
+    $msg = "";
+    $allowedExts = array("gif", "jpeg", "jpg", "png", "bmp");
+    if ($inputImgName != "") {
+        //$files = multiple($_FILES);
+        $flnm = $inputImgName;
+        $msg .= $flnm;
+        $temp = explode(".", $flnm);
+        $extension = end($temp);
+        $img_src = $inputImgName;
+        $msg .= "Upload: " . $inputImgName . "<br>";
+        $msg .= "Type: " . $inputImgName . "<br>";
+        $msg .= "Size: " . $inputImgName . " bytes<br>";
+        $msg .= "Temp file: " . $inputImgName . "<br>";
+        if (in_array($extension, $allowedExts)) {
+            //$nwFileName = encrypt1($prsnid . "." . $extension, $smplTokenWord1) . "." . $extension;
+            //$img_src = $fldrPrfx . $tmpDest . "$nwFileName";
+            //copy($inputImgName, $img_src);
+            $ftp_src = $ftp_base_db_fldr . "/Person/$prsnid" . "." . $extension;
+            if (file_exists($img_src)) {
+                copy("$img_src", "$ftp_src");
+                $dateStr = getDB_Date_time();
+                $updtSQL = "UPDATE prs.prsn_names_nos " .
+                    "SET last_update_by=" . $usrID . ", " .
+                    "last_update_date='" . $dateStr .
+                    "', img_location = '" . $prsnid . "." . $extension . "' WHERE person_id=" . $prsnid;
+                execUpdtInsSQL($updtSQL);
+            }
+            $msg .= "Image Stored";
+            $nwImgLoc = "$prsnid" . "." . $extension;
+            return TRUE;
+        } else {
+            $msg .= "<br/>Invalid file!<br/>File Size must be below 2MB and<br/>File Type must be in the ff:<br/>" . implode(", ", $allowedExts);
+            $nwImgLoc = $msg;
+        }
+    }
+    $msg .= "<br/>Invalid file";
+    $nwImgLoc = $msg;
+    return FALSE;
+}
+
+function uploadDaImageSelf($prsnid, &$nwImgLoc)
+{
     global $tmpDest;
     global $ftp_base_db_fldr;
     global $usrID;
@@ -852,7 +1340,8 @@ function uploadDaImageSelf($prsnid, &$nwImgLoc) {
                     ($_FILES["daPrsnPicture"]["type"] == "image/x-png") ||
                     ($_FILES["daPrsnPicture"]["type"] == "image/png") ||
                     in_array($extension, $allowedExts)) &&
-                    ($_FILES["daPrsnPicture"]["size"] < 2000000)) {
+                ($_FILES["daPrsnPicture"]["size"] < 2000000)
+            ) {
                 $nwFileName = encrypt1($prsnid . "." . $extension, $smplTokenWord1) . "." . $extension;
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daPrsnPicture"]["tmp_name"], $img_src);
@@ -862,9 +1351,9 @@ function uploadDaImageSelf($prsnid, &$nwImgLoc) {
 
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE self.self_prsn_names_nos " .
-                            "SET last_update_by=" . $usrID . ", " .
-                            "last_update_date='" . $dateStr .
-                            "', img_location = '" . $prsnid . "." . $extension . "' WHERE person_id=" . $prsnid;
+                        "SET last_update_by=" . $usrID . ", " .
+                        "last_update_date='" . $dateStr .
+                        "', img_location = '" . $prsnid . "." . $extension . "' WHERE person_id=" . $prsnid;
                     execUpdtInsSQL($updtSQL);
                 }
                 $msg .= "Image Stored";
@@ -881,7 +1370,8 @@ function uploadDaImageSelf($prsnid, &$nwImgLoc) {
     return FALSE;
 }
 
-function uploadDaDocSelf($attchmntID, &$nwImgLoc, &$errMsg) {
+function uploadDaDocSelf($attchmntID, &$nwImgLoc, &$errMsg)
+{
     global $tmpDest;
     global $ftp_base_db_fldr;
     global $usrID;
@@ -910,7 +1400,8 @@ function uploadDaDocSelf($attchmntID, &$nwImgLoc, &$errMsg) {
                     ($_FILES["daPrsnAttchmnt"]["type"] == "image/x-png") ||
                     ($_FILES["daPrsnAttchmnt"]["type"] == "image/png") ||
                     in_array($extension, $allowedExts)) &&
-                    ($_FILES["daPrsnAttchmnt"]["size"] < 6000000)) {
+                ($_FILES["daPrsnAttchmnt"]["size"] < 6000000)
+            ) {
                 $nwFileName = encrypt1($attchmntID . "." . $extension, $smplTokenWord1) . "." . $extension;
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daPrsnAttchmnt"]["tmp_name"], $img_src);
@@ -921,9 +1412,9 @@ function uploadDaDocSelf($attchmntID, &$nwImgLoc, &$errMsg) {
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE self.self_prsn_doc_attchmnts
                             SET file_name='" . $attchmntID . "." . $extension .
-                            "', last_update_by=" . $usrID .
-                            ", last_update_date='" . $dateStr .
-                            "' WHERE attchmnt_id=" . $attchmntID;
+                        "', last_update_by=" . $usrID .
+                        ", last_update_date='" . $dateStr .
+                        "' WHERE attchmnt_id=" . $attchmntID;
                     execUpdtInsSQL($updtSQL);
                 }
                 $msg .= "Document Stored Successfully!<br/>";
@@ -943,7 +1434,8 @@ function uploadDaDocSelf($attchmntID, &$nwImgLoc, &$errMsg) {
     return FALSE;
 }
 
-function uploadDaDoc($attchmntID, &$nwImgLoc, &$errMsg) {
+function uploadDaDoc($attchmntID, &$nwImgLoc, &$errMsg)
+{
     global $tmpDest;
     global $ftp_base_db_fldr;
     global $usrID;
@@ -971,7 +1463,8 @@ function uploadDaDoc($attchmntID, &$nwImgLoc, &$errMsg) {
                     ($_FILES["daPrsnAttchmnt"]["type"] == "image/x-png") ||
                     ($_FILES["daPrsnAttchmnt"]["type"] == "image/png") ||
                     in_array($extension, $allowedExts)) &&
-                    ($_FILES["daPrsnAttchmnt"]["size"] < 6000000)) {
+                ($_FILES["daPrsnAttchmnt"]["size"] < 6000000)
+            ) {
                 $nwFileName = encrypt1($attchmntID . "." . $extension, $smplTokenWord1) . "." . $extension;
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daPrsnAttchmnt"]["tmp_name"], $img_src);
@@ -982,9 +1475,9 @@ function uploadDaDoc($attchmntID, &$nwImgLoc, &$errMsg) {
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE prs.prsn_doc_attchmnts
                             SET file_name='" . $attchmntID . "." . $extension .
-                            "', last_update_by=" . $usrID .
-                            ", last_update_date='" . $dateStr .
-                            "' WHERE attchmnt_id=" . $attchmntID;
+                        "', last_update_by=" . $usrID .
+                        ", last_update_date='" . $dateStr .
+                        "' WHERE attchmnt_id=" . $attchmntID;
                     execUpdtInsSQL($updtSQL);
                 }
                 $msg .= "Document Stored Successfully!<br/>";
@@ -1004,7 +1497,8 @@ function uploadDaDoc($attchmntID, &$nwImgLoc, &$errMsg) {
     return FALSE;
 }
 
-function prsn_ChngRqst_Exist($pkID) {
+function prsn_ChngRqst_Exist($pkID)
+{
     $sqlStr = "select 1 from self.self_prsn_chng_rqst WHERE (person_id=$pkID)
            and rqst_status in ('Initiated','Requires Approval')";
     $result = executeSQLNoParams($sqlStr);
@@ -1014,7 +1508,8 @@ function prsn_ChngRqst_Exist($pkID) {
     return -1;
 }
 
-function prsn_Record_Exist($pkID) {
+function prsn_Record_Exist($pkID)
+{
     $sqlStr = "select person_id FROM self.self_prsn_names_nos WHERE (person_id=$pkID)";
     //echo $sqlStr;
     $result = executeSQLNoParams($sqlStr);
@@ -1024,7 +1519,44 @@ function prsn_Record_Exist($pkID) {
     return false;
 }
 
-function get_RqstStatus($pkID) {
+function prsn_AddtnlRecord_Exist($pkID)
+{
+    $sqlStr = "select extra_data_id FROM prs.prsn_extra_data WHERE (person_id=$pkID "
+        . "and (coalesce(data_col1,'')!='' or coalesce(data_col2,'')!=''"
+        . " or coalesce(data_col3,'')!='' or coalesce(data_col4,'')!=''"
+        . " or coalesce(data_col5,'')!='' or coalesce(data_col6,'')!=''"
+        . " or coalesce(data_col7,'')!='' or coalesce(data_col8,'')!=''"
+        . " or coalesce(data_col9,'')!='' or coalesce(data_col10,'')!=''"
+        . " or coalesce(data_col11,'')!='' or coalesce(data_col12,'')!=''"
+        . " or coalesce(data_col13,'')!='' or coalesce(data_col14,'')!=''"
+        . " or coalesce(data_col15,'')!='' or coalesce(data_col16,'')!=''"
+        . " or coalesce(data_col17,'')!='' or coalesce(data_col18,'')!=''"
+        . " or coalesce(data_col19,'')!='' or coalesce(data_col20,'')!=''"
+        . " or coalesce(data_col21,'')!='' or coalesce(data_col22,'')!=''"
+        . " or coalesce(data_col23,'')!='' or coalesce(data_col24,'')!=''"
+        . " or coalesce(data_col25,'')!='' or coalesce(data_col26,'')!=''"
+        . " or coalesce(data_col27,'')!='' or coalesce(data_col28,'')!=''"
+        . " or coalesce(data_col29,'')!='' or coalesce(data_col30,'')!=''"
+        . " or coalesce(data_col31,'')!='' or coalesce(data_col32,'')!=''"
+        . " or coalesce(data_col33,'')!='' or coalesce(data_col34,'')!=''"
+        . " or coalesce(data_col35,'')!='' or coalesce(data_col36,'')!=''"
+        . " or coalesce(data_col37,'')!='' or coalesce(data_col38,'')!=''"
+        . " or coalesce(data_col39,'')!='' or coalesce(data_col40,'')!=''"
+        . " or coalesce(data_col41,'')!='' or coalesce(data_col42,'')!=''"
+        . " or coalesce(data_col43,'')!='' or coalesce(data_col44,'')!=''"
+        . " or coalesce(data_col45,'')!='' or coalesce(data_col46,'')!=''"
+        . " or coalesce(data_col47,'')!='' or coalesce(data_col48,'')!=''"
+        . " or coalesce(data_col49,'')!='' or coalesce(data_col50,'')!=''))";
+    //echo $sqlStr;
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return -1;
+}
+
+function get_RqstStatus($pkID)
+{
     $sqlStr = "select rqst_status from self.self_prsn_chng_rqst WHERE (person_id=$pkID)
            and rqst_id = (select coalesce(max(rqst_id),0) from self.self_prsn_chng_rqst WHERE (person_id=$pkID))";
     $result = executeSQLNoParams($sqlStr);
@@ -1034,7 +1566,8 @@ function get_RqstStatus($pkID) {
     return 'Approved';
 }
 
-function get_RqstStatusUsngID($pkID) {
+function get_RqstStatusUsngID($pkID)
+{
     $sqlStr = "select rqst_status from self.self_prsn_chng_rqst WHERE rqst_id = " . $pkID;
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -1043,7 +1576,8 @@ function get_RqstStatusUsngID($pkID) {
     return 'Approved';
 }
 
-function get_RqstID($pkID) {
+function get_RqstID($pkID)
+{
     $sqlStr = "select coalesce(max(rqst_id),0) from self.self_prsn_chng_rqst WHERE (person_id=$pkID)";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -1052,8 +1586,9 @@ function get_RqstID($pkID) {
     return -1;
 }
 
-function get_SelfPrsnDet($pkID) {
-    $strSql = "SELECT a.person_id mt, local_id_no \"ID No.\", img_location \"Person's Picture\", 
+function get_SelfPrsnDet($pkID)
+{
+    $strSql = "SELECT a.person_id mt, local_id_no \"ID No.\", COALESCE(img_location,'') \"Person's Picture\", 
           title, first_name, sur_name \"surname\", other_names, org.get_org_name(org_id) organisation, 
           gender, marital_status, 
           to_char(to_timestamp(date_of_birth,'YYYY-MM-DD'),'DD-Mon-YYYY') \"Date of Birth\", 
@@ -1076,19 +1611,20 @@ function get_SelfPrsnDet($pkID) {
             b.further_details \"Further Details\", 
             to_char(to_timestamp(b.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"Start Date \", 
             to_char(to_timestamp(b.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"End Date \",
-            lnkd_firm_org_id 
+            lnkd_firm_org_id, org_id
             FROM self.self_prsn_names_nos a 
             LEFT OUTER JOIN pasn.prsn_prsntyps b 
             ON (a.person_id = b.person_id and 
-           b.valid_start_date = (SELECT MAX(c.valid_start_date) from pasn.prsn_prsntyps c where c.person_id = a.person_id)) 
+           b.prsntype_id = (SELECT MAX(c.prsntype_id) from pasn.prsn_prsntyps c where c.person_id = a.person_id)) 
     WHERE (a.person_id=$pkID)";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_PrsnDet($pkID) {
+function get_PrsnDet($pkID)
+{
     $strSql = "SELECT a.person_id mt, local_id_no \"ID No.\", 
-       CASE WHEN img_location='' THEN a.person_id ||'.png' ELSE img_location END \"Person's Picture\", 
+       CASE WHEN COALESCE(img_location,'')='' THEN a.person_id ||'.png' ELSE COALESCE(img_location,'') END \"Person's Picture\", 
           title, first_name, sur_name \"surname\", other_names, org.get_org_name(org_id) organisation, 
           gender, marital_status, 
           to_char(to_timestamp(date_of_birth,'YYYY-MM-DD'),'DD-Mon-YYYY') \"Date of Birth\", 
@@ -1111,17 +1647,18 @@ function get_PrsnDet($pkID) {
             b.further_details \"Further Details\", 
             to_char(to_timestamp(b.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"Start Date \", 
             to_char(to_timestamp(b.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"End Date \",
-            lnkd_firm_org_id
+            lnkd_firm_org_id, org_id
             FROM prs.prsn_names_nos a  
             LEFT OUTER JOIN pasn.prsn_prsntyps b 
             ON (a.person_id = b.person_id and 
-           b.valid_start_date = (SELECT MAX(c.valid_start_date) from pasn.prsn_prsntyps c where c.person_id = a.person_id))  
+           b.prsntype_id = (SELECT MAX(c.prsntype_id) from pasn.prsn_prsntyps c where c.person_id = a.person_id))  
     WHERE (a.person_id=$pkID)";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_AllNtnlty($pkID) {
+function get_AllNtnlty($pkID)
+{
     $strSql = "SELECT ntnlty_id mt, nationality \"Country\", national_id_typ national_id_type, 
         id_number, date_issued, expiry_date, other_info other_information 
           FROM prs.prsn_national_ids WHERE ((person_id = $pkID))";
@@ -1129,7 +1666,8 @@ function get_AllNtnlty($pkID) {
     return $result;
 }
 
-function get_AllNtnlty_Self($pkID) {
+function get_AllNtnlty_Self($pkID)
+{
     $strSql = "SELECT ntnlty_id mt, nationality \"Country\", national_id_typ national_id_type, 
         id_number, date_issued, expiry_date, other_info other_information 
           FROM self.self_prsn_national_ids WHERE ((person_id = $pkID))";
@@ -1137,11 +1675,12 @@ function get_AllNtnlty_Self($pkID) {
     return $result;
 }
 
-function getNtnltyID($prsnID, $country, $idtype) {
+function getNtnltyID($prsnID, $country, $idtype)
+{
     //Example priviledge 'View Security Module'
     $sqlStr = "SELECT ntnlty_id from prs.prsn_national_ids where (lower(nationality) = '" .
-            loc_db_escape_string(strtolower($country)) . "' AND lower(national_id_typ) = '" .
-            loc_db_escape_string(strtolower($idtype)) . "' AND person_id = $prsnID)";
+        loc_db_escape_string(strtolower($country)) . "' AND lower(national_id_typ) = '" .
+        loc_db_escape_string(strtolower($idtype)) . "' AND person_id = $prsnID)";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return (float) $row[0];
@@ -1149,11 +1688,12 @@ function getNtnltyID($prsnID, $country, $idtype) {
     return -1;
 }
 
-function getNtnltySelfID($prsnID, $country, $idtype) {
+function getNtnltySelfID($prsnID, $country, $idtype)
+{
     //Example priviledge 'View Security Module'
     $sqlStr = "SELECT ntnlty_id from self.self_prsn_national_ids where (lower(nationality) = '" .
-            loc_db_escape_string(strtolower($country)) . "' AND lower(national_id_typ) = '" .
-            loc_db_escape_string(strtolower($idtype)) . "' AND person_id = $prsnID)";
+        loc_db_escape_string(strtolower($country)) . "' AND lower(national_id_typ) = '" .
+        loc_db_escape_string(strtolower($idtype)) . "' AND person_id = $prsnID)";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return (float) $row[0];
@@ -1161,7 +1701,8 @@ function getNtnltySelfID($prsnID, $country, $idtype) {
     return -1;
 }
 
-function getAllRltvs($pkID) {
+function getAllRltvs($pkID)
+{
     $strSql = "SELECT a.local_id_no \"Relative's ID No.\", 
         trim(a.title || ' ' || a.sur_name || 
            ', ' || a.first_name || ' ' || a.other_names) \"Relative's full_name\", 
@@ -1174,7 +1715,8 @@ function getAllRltvs($pkID) {
     return $result;
 }
 
-function get_PrsnTypes($pkID) {
+function get_PrsnTypes($pkID)
+{
     $strSql = "SELECT person_id mt, prsn_type person_type, 
         prn_typ_asgnmnt_rsn reason_for_this_person_type, 
         further_details, 
@@ -1186,7 +1728,147 @@ to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date
     return $result;
 }
 
-function get_EducBkgrd($pkID) {
+function getAllPrsnTypsRpt($prsnid)
+{
+    $strSql = "SELECT distinct prsn_type \" Relationship Type \", prn_typ_asgnmnt_rsn \" Relationship Type Reason \", further_details \" Further Details   \", " .
+        "CASE WHEN valid_start_date!='' THEN to_char(to_timestamp(valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') ELSE '' END \"Start Date  \", " .
+        "CASE WHEN valid_end_date!='' THEN REPLACE(to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY'),'31-Dec-4000','') ELSE '' END \"End Date    \", " .
+        "valid_end_date mt, valid_start_date mt " .
+        "FROM pasn.prsn_prsntyps WHERE ((person_id = " . $prsnid .
+        ")) ORDER BY valid_end_date DESC, valid_start_date DESC";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function getAllSkillsRpt($prsnid)
+{
+    $strSql = "SELECT languages \"Languages     \", 
+        trim(hobbies || ', ' || interests, ', ') \"Hobbies/Interests     \", 
+        trim(conduct || ', ' || attitude, ', ') \"Conduct/Attitude     \", 
+        to_char(to_timestamp(valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"From        \", 
+        REPLACE(to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY'), '31-Dec-4000','') \"To          \", skills_id mt " .
+        "FROM prs.prsn_skills_nature WHERE ((person_id = " . $prsnid .
+        ")) ORDER BY valid_end_date DESC, valid_start_date DESC, skills_id DESC";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function getAllWrkExpRpt($prsnid)
+{
+    $strSql = "SELECT job_name_title \"Job Title         \", 
+        institution_name || ' ' || job_location \"Institution                    \", 
+       to_char(to_timestamp(job_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \" Start Date    \", 
+REPLACE(to_char(to_timestamp(job_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY'), '31-Dec-4000','') \" End Date    \", 
+job_description || ' ' || feats_achvments \"Remarks           \", wrk_exprnc_id mt 
+                  FROM prs.prsn_work_experience WHERE ((person_id = " . $prsnid .
+        ")) ORDER BY job_end_date DESC, job_start_date DESC, wrk_exprnc_id DESC";
+
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function getAllNtnltyRpt($prsnid)
+{
+    $strSql = "SELECT nationality \" Country   \", national_id_typ \" ID Type      \", id_number \" ID Number       \",
+      ntnlty_id mt, date_issued \" Date Issued \", expiry_date \" Expiry Date \", other_info \" Other Information     \"
+                  FROM prs.prsn_national_ids WHERE ((person_id = " . $prsnid .
+        "))";
+
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function getAllEducRpt($prsnid)
+{
+    $strSql = "SELECT course_name \" Course Name       \", school_institution || ' ' || school_location \" School/Institution                     \", 
+       to_char(to_timestamp(course_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') mt, 
+       to_char(to_timestamp(course_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') mt1, 
+       cert_obtained || ' (' || cert_type || ')' \" Certificate Obtained  \", date_cert_awarded \" Date Obtained  \", educ_id mt 
+                  FROM prs.prsn_education WHERE ((person_id = " . $prsnid .
+        ")) ORDER BY course_end_date DESC, course_start_date DESC, educ_id DESC";
+
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function getAllSitesRpts($prsnid)
+{
+    $strSql = "SELECT a.location_id mt, b.location_code_name \" Branch Name                  \", 
+to_char(to_timestamp(a.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \" Start Date    \", 
+REPLACE(to_char(to_timestamp(a.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY'),'31-Dec-4000','') \" End Date    \", 
+a.prsn_loc_id mt, gst.get_pssbl_val(b.site_type_id) site_type 
+FROM pasn.prsn_locations a, org.org_sites_locations b WHERE ((a.location_id = b.location_id) and (a.person_id = " . $prsnid .
+        ")) ORDER BY a.valid_end_date DESC, a.valid_start_date DESC, a.prsn_loc_id DESC";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function getAllDivsRpts($prsnid)
+{
+    $strSql = "SELECT org.get_div_name(a.div_id) \" Group Name                   \", 
+to_char(to_timestamp(valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \" Start Date    \", 
+REPLACE(to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY'),'31-Dec-4000','') \" End Date    \", a.prsn_div_id mt, 
+org.get_div_type(a.div_id) \" Group Type              \" 
+                FROM pasn.prsn_divs_groups a WHERE ((person_id = " . $prsnid .
+        ") and (now() between to_timestamp(valid_start_date|| ' 00:00:00','YYYY-MM-DD HH24:MI:SS')
+                  AND to_timestamp(valid_end_date || ' 23:59:59','YYYY-MM-DD HH24:MI:SS'))) ORDER BY valid_end_date DESC, valid_start_date DESC";
+
+
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function getAllJobsRpt($prsnid)
+{
+    $strSql = "SELECT a.job_id mt, b.job_code_name \" Job                          \", 
+to_char(to_timestamp(a.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \" Start Date    \", 
+REPLACE(to_char(to_timestamp(a.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY'),'31-Dec-4000','') \" End Date    \", row_id mt1 
+            FROM pasn.prsn_jobs a, org.org_jobs b WHERE ((a.job_id = b.job_id) and (a.person_id = " . $prsnid .
+        ")) ORDER BY a.valid_end_date DESC, a.valid_start_date DESC,a.row_id DESC";
+
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function getAllGradesRpt($prsnid)
+{
+    $strSql = "SELECT a.grade_id mt, b.grade_code_name \" Grade                        \",
+to_char(to_timestamp(a.valid_start_date, 'YYYY-MM-DD'),'DD-Mon-YYYY') \" Start Date    \", 
+REPLACE(to_char(to_timestamp(a.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY'),'31-Dec-4000','') \" End Date    \", row_id mt1 
+            FROM pasn.prsn_grades a, org.org_grades b WHERE ((a.grade_id = b.grade_id) and (a.person_id = " . $prsnid .
+        ")) ORDER BY a.valid_end_date DESC, a.valid_start_date DESC,a.row_id DESC";
+
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function getAllPositionsRpt($prsnid)
+{
+    $strSql = "SELECT a.position_id mt, b.position_code_name \" Position                     \",
+to_char(to_timestamp(a.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \" Start Date    \", 
+REPLACE(to_char(to_timestamp(a.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY'),'31-Dec-4000','') \" End Date    \", a.row_id mt1, a.div_id mt2,
+(select REPLACE(y.div_code_name || '.' || y.div_desc, '.' || y.div_code_name,'') from org.org_divs_groups y where y.div_id=a.div_id) div 
+            FROM pasn.prsn_positions a, org.org_positions b WHERE ((a.position_id = b.position_id) and (a.person_id = " . $prsnid .
+        ")) ORDER BY a.valid_end_date DESC, a.valid_start_date DESC, a.row_id DESC";
+
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function getAllRltvsRpt($prsnid)
+{
+    $strSql = "SELECT a.local_id_no \" Relative's ID No. \", trim(a.title || ' ' || a.sur_name || 
+                ', ' || a.first_name || ' ' || a.other_names) \" Relative's Full Name                 \", 
+                b.relationship_type \" Relation Type           \", b.relative_prsn_id mt, b.rltv_id mt 
+                 FROM prs.prsn_relatives b LEFT OUTER JOIN prs.prsn_names_nos a ON b.relative_prsn_id = a.person_id WHERE ((b.person_id = " . $prsnid .
+        ")) ORDER BY a.local_id_no DESC ";
+
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_EducBkgrd($pkID)
+{
     $strSql = "SELECT educ_id mt, course_name, school_institution \"school/institution\", 
         school_location, 
        to_char(to_timestamp(course_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') start_date, 
@@ -1199,7 +1881,8 @@ function get_EducBkgrd($pkID) {
     return $result;
 }
 
-function get_WrkBkgrd($pkID) {
+function get_WrkBkgrd($pkID)
+{
     $strSql = "SELECT wrk_exprnc_id mt, job_name_title \"job name/title\", institution_name, job_location, 
         to_char(to_timestamp(job_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') start_date, 
         to_char(to_timestamp(job_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date, job_description, 
@@ -1211,7 +1894,8 @@ function get_WrkBkgrd($pkID) {
     return $result;
 }
 
-function get_SkillNature($pkID) {
+function get_SkillNature($pkID)
+{
     $strSql = "SELECT skills_id mt, languages, hobbies, interests, 
        conduct, attitude, to_char(to_timestamp(valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"valid_start_date\", 
         to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"valid_end_date\"
@@ -1221,7 +1905,8 @@ function get_SkillNature($pkID) {
     return $result;
 }
 
-function get_EducBkgrdSelf($pkID) {
+function get_EducBkgrdSelf($pkID)
+{
     $strSql = "SELECT educ_id mt, course_name, school_institution \"school/institution\", 
         school_location, 
        to_char(to_timestamp(course_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') start_date, 
@@ -1234,7 +1919,8 @@ function get_EducBkgrdSelf($pkID) {
     return $result;
 }
 
-function get_WrkBkgrdSelf($pkID) {
+function get_WrkBkgrdSelf($pkID)
+{
     $strSql = "SELECT wrk_exprnc_id mt, job_name_title \"job name/title\", institution_name, job_location, 
         to_char(to_timestamp(job_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') start_date, 
         to_char(to_timestamp(job_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date, job_description, 
@@ -1246,7 +1932,8 @@ function get_WrkBkgrdSelf($pkID) {
     return $result;
 }
 
-function get_SkillNatureSelf($pkID) {
+function get_SkillNatureSelf($pkID)
+{
     $strSql = "SELECT skills_id mt, languages, hobbies, interests, 
        conduct, attitude, to_char(to_timestamp(valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"valid_start_date\", 
         to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"valid_end_date\"
@@ -1256,19 +1943,21 @@ function get_SkillNatureSelf($pkID) {
     return $result;
 }
 
-function get_PrsExtrDataGrpCols($grpnm, $org_ID) {
+function get_PrsExtrDataGrpCols($grpnm, $org_ID)
+{
     $strSql = "SELECT extra_data_cols_id, column_no, column_label, attchd_lov_name, 
        column_data_type, column_data_category, data_length, 
        CASE WHEN data_dsply_type='T' THEN 'Tabular' ELSE 'Detail' END, 
-       org_id, no_cols_tblr_dsply, col_order, csv_tblr_col_nms 
+       org_id, no_cols_tblr_dsply, col_order, csv_tblr_col_nms,is_required 
         FROM prs.prsn_extra_data_cols 
         WHERE column_data_category= '" . loc_db_escape_string($grpnm) .
-            "' and org_id = " . $org_ID . " and column_label !='' ORDER BY col_order, column_no, extra_data_cols_id";
+        "' and org_id = " . $org_ID . " and column_label !='' ORDER BY col_order, column_no, extra_data_cols_id";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_AllPrsExtrDataCols($org_ID) {
+function get_AllPrsExtrDataCols($org_ID)
+{
     $strSql = "SELECT extra_data_cols_id, column_no, column_label, attchd_lov_name, 
        column_data_type, column_data_category, data_length, 
        CASE WHEN data_dsply_type='T' THEN 'Tabular' ELSE 'Detail' END, 
@@ -1279,19 +1968,21 @@ function get_AllPrsExtrDataCols($org_ID) {
     return $result;
 }
 
-function get_PrsExtrDataGrpCols1($colNum, $org_ID) {
+function get_PrsExtrDataGrpCols1($colNum, $org_ID)
+{
     $strSql = "SELECT extra_data_cols_id, column_no, column_label, attchd_lov_name, 
        column_data_type, column_data_category, data_length, 
        CASE WHEN data_dsply_type='T' THEN 'Tabular' ELSE 'Detail' END, 
        org_id, no_cols_tblr_dsply, col_order, csv_tblr_col_nms 
         FROM prs.prsn_extra_data_cols 
         WHERE column_no= '" . $colNum .
-            "' and org_id = " . $org_ID . " ORDER BY col_order, column_no, extra_data_cols_id";
+        "' and org_id = " . $org_ID . " ORDER BY col_order, column_no, extra_data_cols_id";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_PrsExtrDataGrps($org_ID) {
+function get_PrsExtrDataGrps($org_ID)
+{
     $strSql = "SELECT column_data_category, MIN(extra_data_cols_id) , MIN(col_order)  
         FROM prs.prsn_extra_data_cols 
         WHERE org_id =$org_ID and column_label !='' 
@@ -1300,8 +1991,10 @@ function get_PrsExtrDataGrps($org_ID) {
     return $result;
 }
 
-function get_PrsExtrData($pkID, $colNum = "1") {
-    $colNms = array("data_col1", "data_col2", "data_col3", "data_col4",
+function get_PrsExtrData($pkID, $colNum = "1")
+{
+    $colNms = array(
+        "data_col1", "data_col2", "data_col3", "data_col4",
         "data_col5", "data_col6", "data_col7", "data_col8", "data_col9", "data_col10",
         "data_col11", "data_col12", "data_col13", "data_col14", "data_col15", "data_col16",
         "data_col17", "data_col18", "data_col19", "data_col20", "data_col21", "data_col22",
@@ -1309,7 +2002,8 @@ function get_PrsExtrData($pkID, $colNum = "1") {
         "data_col29", "data_col30", "data_col31", "data_col32", "data_col33", "data_col34",
         "data_col35", "data_col36", "data_col37", "data_col38", "data_col39", "data_col40",
         "data_col41", "data_col42", "data_col43", "data_col44", "data_col45", "data_col46",
-        "data_col47", "data_col48", "data_col49", "data_col50");
+        "data_col47", "data_col48", "data_col49", "data_col50"
+    );
     $strSql = "SELECT " . $colNms[$colNum - 1] . ", extra_data_id 
   FROM prs.prsn_extra_data a WHERE ((person_id = $pkID))";
     $result = executeSQLNoParams($strSql);
@@ -1319,8 +2013,10 @@ function get_PrsExtrData($pkID, $colNum = "1") {
     return "";
 }
 
-function get_PrsExtrData_Self($pkID, $colNum = "1") {
-    $colNms = array("data_col1", "data_col2", "data_col3", "data_col4",
+function get_PrsExtrData_Self($pkID, $colNum = "1")
+{
+    $colNms = array(
+        "data_col1", "data_col2", "data_col3", "data_col4",
         "data_col5", "data_col6", "data_col7", "data_col8", "data_col9", "data_col10",
         "data_col11", "data_col12", "data_col13", "data_col14", "data_col15", "data_col16",
         "data_col17", "data_col18", "data_col19", "data_col20", "data_col21", "data_col22",
@@ -1328,7 +2024,8 @@ function get_PrsExtrData_Self($pkID, $colNum = "1") {
         "data_col29", "data_col30", "data_col31", "data_col32", "data_col33", "data_col34",
         "data_col35", "data_col36", "data_col37", "data_col38", "data_col39", "data_col40",
         "data_col41", "data_col42", "data_col43", "data_col44", "data_col45", "data_col46",
-        "data_col47", "data_col48", "data_col49", "data_col50");
+        "data_col47", "data_col48", "data_col49", "data_col50"
+    );
     $strSql = "SELECT " . $colNms[$colNum - 1] . ", extra_data_id 
   FROM self.self_prsn_extra_data a WHERE ((person_id = $pkID))";
     $result = executeSQLNoParams($strSql);
@@ -1338,7 +2035,8 @@ function get_PrsExtrData_Self($pkID, $colNum = "1") {
     return "";
 }
 
-function get_DivsGrps($pkID) {
+function get_DivsGrps($pkID)
+{
     $strSql = "SELECT a.prsn_div_id mt, a.div_id mt, org.get_div_name(a.div_id) group_name, 
         to_char(to_timestamp(valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') start_date, 
 to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date, 
@@ -1350,19 +2048,23 @@ gst.get_pssbl_val(COALESCE((select b.div_typ_id from org.org_divs_groups b where
     return $result;
 }
 
-function get_SitesLocs($pkID) {
+function get_SitesLocs($pkID)
+{
     $strSql = "SELECT a.prsn_loc_id mt, a.location_id mt, 
-(select b.location_code_name from org.org_sites_locations b where b.location_id = a.location_id) site_name,       
+(select REPLACE(b.location_code_name || '.' || b.site_desc, '.' || b.location_code_name,'') from org.org_sites_locations b where b.location_id = a.location_id) site_name,       
 to_char(to_timestamp(valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') start_date, 
-to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date  
+to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date,
+gst.get_pssbl_val(COALESCE((select b.site_type_id from org.org_sites_locations b where a.location_id = b.location_id),-1)) site_type  
             FROM pasn.prsn_locations a 
             WHERE ((person_id = $pkID))
                 ORDER BY a.valid_end_date DESC, a.valid_start_date DESC, 1 DESC";
+    //echo $strSql;
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_Spvsrs($pkID) {
+function get_Spvsrs($pkID)
+{
     $strSql = "SELECT row_id mt, supervisor_prsn_id mt, 
         prs.get_prsn_loc_id(supervisor_prsn_id) id_of_supervisor,
         prs.get_prsn_name(supervisor_prsn_id) name_of_supervisor,
@@ -1374,7 +2076,8 @@ to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date
     return $result;
 }
 
-function get_Jobs($pkID) {
+function get_Jobs($pkID)
+{
     $strSql = "SELECT a.row_id mt, a.job_id mt, 
         (select b.job_code_name from org.org_jobs b where b.job_id = a.job_id) job_name,
         to_char(to_timestamp(valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') start_date, 
@@ -1386,7 +2089,8 @@ to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date
     return $result;
 }
 
-function get_Grades($pkID) {
+function get_Grades($pkID)
+{
     $strSql = "SELECT a.row_id mt, a.grade_id mt, 
         (select b.grade_code_name from org.org_grades b where b.grade_id = a.grade_id) grade_name,
         to_char(to_timestamp(valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') start_date, 
@@ -1396,53 +2100,56 @@ to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date
     return $result;
 }
 
-function get_Pos($pkID) {
+function get_Pos($pkID)
+{
     $strSql = "SELECT a.row_id mt, a.position_id mt, 
         (select b.position_code_name from org.org_positions b where b.position_id = a.position_id) pos_name,
         to_char(to_timestamp(valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') start_date, 
-        to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date
+        to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date,
+        a.div_id, org.get_div_name(a.div_id)
       FROM pasn.prsn_positions a WHERE ((person_id = $pkID))";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function getAllwdExtInfosNVals($searchWord, $searchIn, $offset, $limit_size, &$brghtsqlStr, $tblID, $row_id_val, $valTbl, $Org_id) {
-    $strSql = "";
-    $whrCls = "";
+/* function getAllwdExtInfosNVals($searchWord, $searchIn, $offset, $limit_size, &$brghtsqlStr, $tblID, $row_id_val, $valTbl, $Org_id) {
+  $strSql = "";
+  $whrCls = "";
 
-    if ($searchIn == "Value") {
-        $whrCls = " AND (tbl1.othr_inf ilike '" .
-                loc_db_escape_string($searchWord) . "' or tbl1.othr_inf IS NULL) ";
-    } else if ($searchIn == "Extra Info Label") {
-        $whrCls = " AND (tbl1.other_info_label ilike '" .
-                loc_db_escape_string($searchWord) . "' or tbl1.other_info_category ilike '" .
-                loc_db_escape_string($searchWord) . "') ";
-    }
-    $strSql = "SELECT tbl1.* FROM (SELECT b.pssbl_value other_info_category, 
-          COALESCE((select c.other_info_label from " . $valTbl . " c " .
-            "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))), b.pssbl_value) other_info_label, 
-         COALESCE((select c.other_info_value from " . $valTbl . " c " .
-            "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))),'') othr_inf, " .
-            "a.comb_info_id, a.table_id, COALESCE((select c.dflt_row_id from " . $valTbl . " c " .
-            "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))),-1) othr_inf_row_id " .
-            "FROM sec.sec_allwd_other_infos a " .
-            "LEFT OUTER JOIN gst.gen_stp_lov_values b ON (a.other_info_id = b.pssbl_value_id) " .
-            "WHERE((a.is_enabled = '1')  AND (a.table_id = " . $tblID . ") AND (b.allowed_org_ids like '%," . $Org_id .
-            ",%') AND (((select c.other_info_value from " . $valTbl . " c " .
-            "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))) ilike '" .
-            loc_db_escape_string($searchWord) . "') OR ((select c.other_info_value from " . $valTbl . " c " .
-            "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))) is null))) " .
-            " UNION 
-                  SELECT c.other_info_category, c.other_info_label, c.other_info_value othr_inf, 99999999 comb_info_id, -1 table_id, c.dflt_row_id from " . $valTbl .
-            " c  WHERE c.tbl_othr_inf_combntn_id<=0 and c.row_pk_id_val = " . $row_id_val . ") tbl1 WHERE 1=1" . $whrCls .
-            " ORDER BY tbl1.comb_info_id LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+  if ($searchIn == "Value") {
+  $whrCls = " AND (tbl1.othr_inf ilike '" .
+  loc_db_escape_string($searchWord) . "' or tbl1.othr_inf IS NULL) ";
+  } else if ($searchIn == "Extra Info Label") {
+  $whrCls = " AND (tbl1.other_info_label ilike '" .
+  loc_db_escape_string($searchWord) . "' or tbl1.other_info_category ilike '" .
+  loc_db_escape_string($searchWord) . "') ";
+  }
+  $strSql = "SELECT tbl1.* FROM (SELECT b.pssbl_value other_info_category,
+  COALESCE((select c.other_info_label from " . $valTbl . " c " .
+  "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))), b.pssbl_value) other_info_label,
+  COALESCE((select c.other_info_value from " . $valTbl . " c " .
+  "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))),'') othr_inf, " .
+  "a.comb_info_id, a.table_id, COALESCE((select c.dflt_row_id from " . $valTbl . " c " .
+  "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))),-1) othr_inf_row_id " .
+  "FROM sec.sec_allwd_other_infos a " .
+  "LEFT OUTER JOIN gst.gen_stp_lov_values b ON (a.other_info_id = b.pssbl_value_id) " .
+  "WHERE((a.is_enabled = '1')  AND (a.table_id = " . $tblID . ") AND (b.allowed_org_ids like '%," . $Org_id .
+  ",%') AND (((select c.other_info_value from " . $valTbl . " c " .
+  "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))) ilike '" .
+  loc_db_escape_string($searchWord) . "') OR ((select c.other_info_value from " . $valTbl . " c " .
+  "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))) is null))) " .
+  " UNION
+  SELECT c.other_info_category, c.other_info_label, c.other_info_value othr_inf, 99999999 comb_info_id, -1 table_id, c.dflt_row_id from " . $valTbl .
+  " c  WHERE c.tbl_othr_inf_combntn_id<=0 and c.row_pk_id_val = " . $row_id_val . ") tbl1 WHERE 1=1" . $whrCls .
+  " ORDER BY tbl1.comb_info_id LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
 
-    $result = executeSQLNoParams($strSql);
-    $brghtsqlStr = $strSql;
-    return $result;
-}
+  $result = executeSQLNoParams($strSql);
+  $brghtsqlStr = $strSql;
+  return $result;
+  } */
 
-function getPrsnsInvolved($srchCrtr, $grpType, $grpNm, $grpID, $cstmrID, $cstmrSiteID) {
+function getPrsnsInvolved($srchCrtr, $grpType, $grpNm, $grpID, $cstmrID, $cstmrSiteID)
+{
     global $orgID;
     $dateStr = getDB_Date_time();
     $extrWhr = "";
@@ -1463,35 +2170,35 @@ function getPrsnsInvolved($srchCrtr, $grpType, $grpNm, $grpID, $cstmrID, $cstmrS
     $grpSQL = "";
     if ($grpType == "Divisions/Groups") {
         $grpSQL = "Select distinct a.person_id From pasn.prsn_divs_groups a Where ((a.div_id IN " .
-                "(select z.div_id from org.org_divs_groups z where z.div_code_name ilike '" . $srchCrtr . "')) and (to_timestamp('" . $dateStr .
-                "','YYYY-MM-DD HH24:MI:SS') between to_timestamp(a.valid_start_date|| ' 00:00:00','YYYY-MM-DD HH24:MI:SS') " .
-                "AND to_timestamp(a.valid_end_date || ' 23:59:59','YYYY-MM-DD HH24:MI:SS'))" . $extrWhr . ") ORDER BY a.person_id";
+            "(select z.div_id from org.org_divs_groups z where z.div_code_name ilike '" . $srchCrtr . "')) and (to_timestamp('" . $dateStr .
+            "','YYYY-MM-DD HH24:MI:SS') between to_timestamp(a.valid_start_date|| ' 00:00:00','YYYY-MM-DD HH24:MI:SS') " .
+            "AND to_timestamp(a.valid_end_date || ' 23:59:59','YYYY-MM-DD HH24:MI:SS'))" . $extrWhr . ") ORDER BY a.person_id";
     } else if ($grpType == "Grade") {
         $grpSQL = "Select distinct a.person_id From pasn.prsn_grades a Where ((a.grade_id IN " .
-                "(select z.grade_id from org.org_grades z where z.grade_code_name ilike '" . $srchCrtr . "')) and (to_timestamp('" . $dateStr .
-                "','YYYY-MM-DD HH24:MI:SS') between to_timestamp(a.valid_start_date|| ' 00:00:00','YYYY-MM-DD HH24:MI:SS') " .
-                "AND to_timestamp(a.valid_end_date || ' 23:59:59','YYYY-MM-DD HH24:MI:SS'))" . $extrWhr . ") ORDER BY a.person_id";
+            "(select z.grade_id from org.org_grades z where z.grade_code_name ilike '" . $srchCrtr . "')) and (to_timestamp('" . $dateStr .
+            "','YYYY-MM-DD HH24:MI:SS') between to_timestamp(a.valid_start_date|| ' 00:00:00','YYYY-MM-DD HH24:MI:SS') " .
+            "AND to_timestamp(a.valid_end_date || ' 23:59:59','YYYY-MM-DD HH24:MI:SS'))" . $extrWhr . ") ORDER BY a.person_id";
     } else if ($grpType == "Job") {
         $grpSQL = "Select distinct a.person_id From pasn.prsn_jobs a Where ((a.job_id IN " .
-                "(select z.job_id from org.org_jobs z where z.job_code_name ilike '" . $srchCrtr . "')) and (to_timestamp('" . $dateStr .
-                "','YYYY-MM-DD HH24:MI:SS') between to_timestamp(a.valid_start_date|| ' 00:00:00','YYYY-MM-DD HH24:MI:SS') " .
-                "AND to_timestamp(a.valid_end_date || ' 23:59:59','YYYY-MM-DD HH24:MI:SS'))" . $extrWhr . ") ORDER BY a.person_id";
+            "(select z.job_id from org.org_jobs z where z.job_code_name ilike '" . $srchCrtr . "')) and (to_timestamp('" . $dateStr .
+            "','YYYY-MM-DD HH24:MI:SS') between to_timestamp(a.valid_start_date|| ' 00:00:00','YYYY-MM-DD HH24:MI:SS') " .
+            "AND to_timestamp(a.valid_end_date || ' 23:59:59','YYYY-MM-DD HH24:MI:SS'))" . $extrWhr . ") ORDER BY a.person_id";
     } else if ($grpType == "Position") {
         $grpSQL = "Select distinct a.person_id From pasn.prsn_positions a Where ((a.position_id IN " .
-                "(select z.position_id from org.org_positions z where z.position_code_name ilike '" . $srchCrtr . "')) and (to_timestamp('" . $dateStr .
-                "','YYYY-MM-DD HH24:MI:SS') between to_timestamp(a.valid_start_date|| ' 00:00:00','YYYY-MM-DD HH24:MI:SS') " .
-                "AND to_timestamp(a.valid_end_date || ' 23:59:59','YYYY-MM-DD HH24:MI:SS'))" . $extrWhr . ") ORDER BY a.person_id";
+            "(select z.position_id from org.org_positions z where z.position_code_name ilike '" . $srchCrtr . "')) and (to_timestamp('" . $dateStr .
+            "','YYYY-MM-DD HH24:MI:SS') between to_timestamp(a.valid_start_date|| ' 00:00:00','YYYY-MM-DD HH24:MI:SS') " .
+            "AND to_timestamp(a.valid_end_date || ' 23:59:59','YYYY-MM-DD HH24:MI:SS'))" . $extrWhr . ") ORDER BY a.person_id";
     } else if ($grpType == "Site/Location") {
         $grpSQL = "Select distinct a.person_id From pasn.prsn_locations a Where ((a.location_id IN " .
-                "(select z.location_id from org.org_sites_locations z where z.location_code_name ilike '" . $srchCrtr . "')) and (to_timestamp('" . $dateStr .
-                "','YYYY-MM-DD HH24:MI:SS') between to_timestamp(a.valid_start_date|| ' 00:00:00','YYYY-MM-DD HH24:MI:SS') " .
-                "AND to_timestamp(a.valid_end_date || ' 23:59:59','YYYY-MM-DD HH24:MI:SS'))" . $extrWhr . ") ORDER BY a.person_id";
+            "(select z.location_id from org.org_sites_locations z where z.location_code_name ilike '" . $srchCrtr . "')) and (to_timestamp('" . $dateStr .
+            "','YYYY-MM-DD HH24:MI:SS') between to_timestamp(a.valid_start_date|| ' 00:00:00','YYYY-MM-DD HH24:MI:SS') " .
+            "AND to_timestamp(a.valid_end_date || ' 23:59:59','YYYY-MM-DD HH24:MI:SS'))" . $extrWhr . ") ORDER BY a.person_id";
     } else if ($grpType == "Person Type") {
         $grpSQL = "Select distinct a.person_id From pasn.prsn_prsntyps a, prs.prsn_names_nos b " .
-                "Where ((a.person_id = b.person_id) and (b.org_id = " . $orgID . ") and (a.prsn_type ilike '" .
-                $srchCrtr . "') and (to_timestamp('" . $dateStr .
-                "','YYYY-MM-DD HH24:MI:SS') between to_timestamp(a.valid_start_date|| ' 00:00:00','YYYY-MM-DD HH24:MI:SS') " .
-                "AND to_timestamp(a.valid_end_date || ' 23:59:59','YYYY-MM-DD HH24:MI:SS'))" . $extrWhr . ") ORDER BY a.person_id";
+            "Where ((a.person_id = b.person_id) and (b.org_id = " . $orgID . ") and (a.prsn_type ilike '" .
+            $srchCrtr . "') and (to_timestamp('" . $dateStr .
+            "','YYYY-MM-DD HH24:MI:SS') between to_timestamp(a.valid_start_date|| ' 00:00:00','YYYY-MM-DD HH24:MI:SS') " .
+            "AND to_timestamp(a.valid_end_date || ' 23:59:59','YYYY-MM-DD HH24:MI:SS'))" . $extrWhr . ") ORDER BY a.person_id";
     } else if ($grpType == "Everyone") {
         $grpSQL = "Select distinct a.person_id From prs.prsn_names_nos a Where ((a.org_id = " . $orgID . ")" . $extrWhr . ") ORDER BY a.person_id";
     } else {
@@ -1505,9 +2212,10 @@ function getPrsnsInvolved($srchCrtr, $grpType, $grpNm, $grpID, $cstmrID, $cstmrS
     return $prsnIDs;
 }
 
-function getCstmrSpplrEmails($cstmrID) {
+function getCstmrSpplrEmails($cstmrID)
+{
     $sqlStr = "select string_agg(a.email,',') from scm.scm_cstmr_suplr_sites a where a.cust_supplier_id = " .
-            $cstmrID . " and a.email IS NOT NULL and a.email !=''";
+        $cstmrID . " and a.email IS NOT NULL and a.email !=''";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -1515,9 +2223,10 @@ function getCstmrSpplrEmails($cstmrID) {
     return "";
 }
 
-function getCstmrSpplrMobiles($cstmrID) {
+function getCstmrSpplrMobiles($cstmrID)
+{
     $sqlStr = "select string_agg(a.contact_nos,',') from scm.scm_cstmr_suplr_sites a where a.cust_supplier_id = " .
-            $cstmrID . " and a.contact_nos IS NOT NULL and a.contact_nos !=''";
+        $cstmrID . " and a.contact_nos IS NOT NULL and a.contact_nos !=''";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -1525,7 +2234,8 @@ function getCstmrSpplrMobiles($cstmrID) {
     return "";
 }
 
-function insert_ChangeRequest($pkID) {
+function insert_ChangeRequest($pkID)
+{
     global $usrID;
     $datestr = getDB_Date_time();
     $dsply = "";
@@ -1539,7 +2249,8 @@ VALUES('$datestr', $pkID, 'Requires Approval', $usrID, '$datestr', $usrID, '$dat
     return $affctd;
 }
 
-function createQckCstmrSpplr($ctmrNm) {
+function createQckCstmrSpplr($ctmrNm)
+{
     global $usrID;
     global $orgID;
     $dateStr = getDB_Date_time();
@@ -1551,15 +2262,16 @@ function createQckCstmrSpplr($ctmrNm) {
             company_reg_num, date_of_incorptn, type_of_incorporation, vat_number, 
             tin_number, ssnit_reg_number, no_of_emplyees, description_of_services, 
             list_of_services)" .
-            "VALUES ('" . loc_db_escape_string($ctmrNm) .
-            "'," . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr .
-            "', '" . loc_db_escape_string($ctmrNm) .
-            "', 'Organisation','Customer'," . $orgID . ",-1,-1,-1,'Not Applicable','1970-01-01','1',"
-            . "'','','','','','','','',0,'','')";
+        "VALUES ('" . loc_db_escape_string($ctmrNm) .
+        "'," . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr .
+        "', '" . loc_db_escape_string($ctmrNm) .
+        "', 'Organisation','Customer'," . $orgID . ",-1,-1,-1,'Not Applicable','1970-01-01','1',"
+        . "'','','','','','','','',0,'','')";
     execUpdtInsSQL($insSQL);
 }
 
-function createQckCstmrSpplrSite($siteNm, $cstmrID, $ctmrNm) {
+function createQckCstmrSpplrSite($siteNm, $cstmrID, $ctmrNm)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO scm.scm_cstmr_suplr_sites(
@@ -1569,15 +2281,16 @@ function createQckCstmrSpplrSite($siteNm, $cstmrID, $ctmrNm) {
             billing_address, ship_to_address, swift_code, 
             nationality, national_id_typ, id_number, date_issued, expiry_date, 
             other_info, is_enabled, iban_number, accnt_cur_id)" .
-            "VALUES (" . $cstmrID . ", '" . loc_db_escape_string($ctmrNm) .
-            "','',''," . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr .
-            "', '" . loc_db_escape_string($siteNm) .
-            "', '" . loc_db_escape_string($siteNm) .
-            "','','','',-1,-1,'','','','','','','','','','1','',-1)";
+        "VALUES (" . $cstmrID . ", '" . loc_db_escape_string($ctmrNm) .
+        "','',''," . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr .
+        "', '" . loc_db_escape_string($siteNm) .
+        "', '" . loc_db_escape_string($siteNm) .
+        "','','','',-1,-1,'','','','','','','','','','1','',-1)";
     execUpdtInsSQL($insSQL);
 }
 
-function updateNtnlID($pkeyID, $country, $idtype, $idnum, $dteissued, $expirydte, $othrinfo) {
+function updateNtnlID($pkeyID, $country, $idtype, $idnum, $dteissued, $expirydte, $othrinfo)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $updtSQL = "UPDATE prs.prsn_national_ids
@@ -1593,7 +2306,8 @@ function updateNtnlID($pkeyID, $country, $idtype, $idnum, $dteissued, $expirydte
     return execUpdtInsSQL($updtSQL, "Update of National ID");
 }
 
-function updateNtnlIDSelf($pkeyID, $country, $idtype, $idnum, $dteissued, $expirydte, $othrinfo) {
+function updateNtnlIDSelf($pkeyID, $country, $idtype, $idnum, $dteissued, $expirydte, $othrinfo)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $updtSQL = "UPDATE self.self_prsn_national_ids
@@ -1609,7 +2323,8 @@ function updateNtnlIDSelf($pkeyID, $country, $idtype, $idnum, $dteissued, $expir
     return execUpdtInsSQL($updtSQL, "Self Update of National ID");
 }
 
-function createNtnlID($prsnID, $country, $idtype, $idnum, $dteissued, $expirydte, $othrinfo) {
+function createNtnlID($prsnID, $country, $idtype, $idnum, $dteissued, $expirydte, $othrinfo)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO prs.prsn_national_ids(
@@ -1624,7 +2339,8 @@ function createNtnlID($prsnID, $country, $idtype, $idnum, $dteissued, $expirydte
     return execUpdtInsSQL($insSQL);
 }
 
-function createNtnlIDSelf($prsnID, $country, $idtype, $idnum, $dteissued, $expirydte, $othrinfo) {
+function createNtnlIDSelf($prsnID, $country, $idtype, $idnum, $dteissued, $expirydte, $othrinfo)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO self.self_prsn_national_ids(
@@ -1639,7 +2355,8 @@ function createNtnlIDSelf($prsnID, $country, $idtype, $idnum, $dteissued, $expir
     return execUpdtInsSQL($insSQL);
 }
 
-function deleteNtnlID($pkeyID) {
+function deleteNtnlID($pkeyID)
+{
     $insSQL = "DELETE FROM prs.prsn_national_ids WHERE ntnlty_id = " . $pkeyID;
     $affctd1 = execUpdtInsSQL($insSQL, "Remove a National ID");
 
@@ -1653,7 +2370,8 @@ function deleteNtnlID($pkeyID) {
     }
 }
 
-function deleteNtnlIDSelf($pkeyID) {
+function deleteNtnlIDSelf($pkeyID)
+{
     $insSQL = "DELETE FROM self.self_prsn_national_ids WHERE ntnlty_id = " . $pkeyID;
     $affctd1 = execUpdtInsSQL($insSQL, "Self Removal of National ID");
 
@@ -1667,7 +2385,8 @@ function deleteNtnlIDSelf($pkeyID) {
     }
 }
 
-function createPrsnExtrData($prsnID, $data_col) {
+function createPrsnExtrData($prsnID, $data_col)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO prs.prsn_extra_data(
@@ -1682,35 +2401,36 @@ function createPrsnExtrData($prsnID, $data_col) {
             data_col47, data_col48, data_col49, data_col50, created_by, creation_date, 
             last_update_by, last_update_date)  
             VALUES($prsnID, '" . loc_db_escape_string($data_col[1]) .
-            "', '" . loc_db_escape_string($data_col[2]) . "', '" . loc_db_escape_string($data_col[3]) .
-            "', '" . loc_db_escape_string($data_col[4]) . "', '" . loc_db_escape_string($data_col[5]) .
-            "', '" . loc_db_escape_string($data_col[6]) . "', '" . loc_db_escape_string($data_col[7]) .
-            "', '" . loc_db_escape_string($data_col[8]) . "', '" . loc_db_escape_string($data_col[9]) .
-            "', '" . loc_db_escape_string($data_col[10]) . "', '" . loc_db_escape_string($data_col[11]) .
-            "', '" . loc_db_escape_string($data_col[12]) . "', '" . loc_db_escape_string($data_col[13]) .
-            "', '" . loc_db_escape_string($data_col[14]) . "', '" . loc_db_escape_string($data_col[15]) .
-            "', '" . loc_db_escape_string($data_col[16]) . "', '" . loc_db_escape_string($data_col[17]) .
-            "', '" . loc_db_escape_string($data_col[18]) . "', '" . loc_db_escape_string($data_col[19]) .
-            "', '" . loc_db_escape_string($data_col[20]) . "', '" . loc_db_escape_string($data_col[21]) .
-            "', '" . loc_db_escape_string($data_col[22]) . "', '" . loc_db_escape_string($data_col[23]) .
-            "', '" . loc_db_escape_string($data_col[24]) . "', '" . loc_db_escape_string($data_col[25]) .
-            "', '" . loc_db_escape_string($data_col[26]) . "', '" . loc_db_escape_string($data_col[27]) .
-            "', '" . loc_db_escape_string($data_col[28]) . "', '" . loc_db_escape_string($data_col[29]) .
-            "', '" . loc_db_escape_string($data_col[30]) . "', '" . loc_db_escape_string($data_col[31]) .
-            "', '" . loc_db_escape_string($data_col[32]) . "', '" . loc_db_escape_string($data_col[33]) .
-            "', '" . loc_db_escape_string($data_col[34]) . "', '" . loc_db_escape_string($data_col[35]) .
-            "', '" . loc_db_escape_string($data_col[36]) . "', '" . loc_db_escape_string($data_col[37]) .
-            "', '" . loc_db_escape_string($data_col[38]) . "', '" . loc_db_escape_string($data_col[39]) .
-            "', '" . loc_db_escape_string($data_col[40]) . "', '" . loc_db_escape_string($data_col[41]) .
-            "', '" . loc_db_escape_string($data_col[42]) . "', '" . loc_db_escape_string($data_col[43]) .
-            "', '" . loc_db_escape_string($data_col[44]) . "', '" . loc_db_escape_string($data_col[45]) .
-            "', '" . loc_db_escape_string($data_col[46]) . "', '" . loc_db_escape_string($data_col[47]) .
-            "', '" . loc_db_escape_string($data_col[48]) . "', '" . loc_db_escape_string($data_col[49]) .
-            "', '" . loc_db_escape_string($data_col[50]) . "', $usrID, '$dateStr', $usrID, '$dateStr')";
+        "', '" . loc_db_escape_string($data_col[2]) . "', '" . loc_db_escape_string($data_col[3]) .
+        "', '" . loc_db_escape_string($data_col[4]) . "', '" . loc_db_escape_string($data_col[5]) .
+        "', '" . loc_db_escape_string($data_col[6]) . "', '" . loc_db_escape_string($data_col[7]) .
+        "', '" . loc_db_escape_string($data_col[8]) . "', '" . loc_db_escape_string($data_col[9]) .
+        "', '" . loc_db_escape_string($data_col[10]) . "', '" . loc_db_escape_string($data_col[11]) .
+        "', '" . loc_db_escape_string($data_col[12]) . "', '" . loc_db_escape_string($data_col[13]) .
+        "', '" . loc_db_escape_string($data_col[14]) . "', '" . loc_db_escape_string($data_col[15]) .
+        "', '" . loc_db_escape_string($data_col[16]) . "', '" . loc_db_escape_string($data_col[17]) .
+        "', '" . loc_db_escape_string($data_col[18]) . "', '" . loc_db_escape_string($data_col[19]) .
+        "', '" . loc_db_escape_string($data_col[20]) . "', '" . loc_db_escape_string($data_col[21]) .
+        "', '" . loc_db_escape_string($data_col[22]) . "', '" . loc_db_escape_string($data_col[23]) .
+        "', '" . loc_db_escape_string($data_col[24]) . "', '" . loc_db_escape_string($data_col[25]) .
+        "', '" . loc_db_escape_string($data_col[26]) . "', '" . loc_db_escape_string($data_col[27]) .
+        "', '" . loc_db_escape_string($data_col[28]) . "', '" . loc_db_escape_string($data_col[29]) .
+        "', '" . loc_db_escape_string($data_col[30]) . "', '" . loc_db_escape_string($data_col[31]) .
+        "', '" . loc_db_escape_string($data_col[32]) . "', '" . loc_db_escape_string($data_col[33]) .
+        "', '" . loc_db_escape_string($data_col[34]) . "', '" . loc_db_escape_string($data_col[35]) .
+        "', '" . loc_db_escape_string($data_col[36]) . "', '" . loc_db_escape_string($data_col[37]) .
+        "', '" . loc_db_escape_string($data_col[38]) . "', '" . loc_db_escape_string($data_col[39]) .
+        "', '" . loc_db_escape_string($data_col[40]) . "', '" . loc_db_escape_string($data_col[41]) .
+        "', '" . loc_db_escape_string($data_col[42]) . "', '" . loc_db_escape_string($data_col[43]) .
+        "', '" . loc_db_escape_string($data_col[44]) . "', '" . loc_db_escape_string($data_col[45]) .
+        "', '" . loc_db_escape_string($data_col[46]) . "', '" . loc_db_escape_string($data_col[47]) .
+        "', '" . loc_db_escape_string($data_col[48]) . "', '" . loc_db_escape_string($data_col[49]) .
+        "', '" . loc_db_escape_string($data_col[50]) . "', $usrID, '$dateStr', $usrID, '$dateStr')";
     return execUpdtInsSQL($insSQL);
 }
 
-function createPrsnExtrDataSelf($prsnID, $data_col) {
+function createPrsnExtrDataSelf($prsnID, $data_col)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO self.self_prsn_extra_data (
@@ -1725,107 +2445,108 @@ function createPrsnExtrDataSelf($prsnID, $data_col) {
             data_col47, data_col48, data_col49, data_col50, created_by, creation_date, 
             last_update_by, last_update_date)  
             VALUES($prsnID, '" . loc_db_escape_string($data_col[1]) .
-            "', '" . loc_db_escape_string($data_col[2]) . "', '" . loc_db_escape_string($data_col[3]) .
-            "', '" . loc_db_escape_string($data_col[4]) . "', '" . loc_db_escape_string($data_col[5]) .
-            "', '" . loc_db_escape_string($data_col[6]) . "', '" . loc_db_escape_string($data_col[7]) .
-            "', '" . loc_db_escape_string($data_col[8]) . "', '" . loc_db_escape_string($data_col[9]) .
-            "', '" . loc_db_escape_string($data_col[10]) . "', '" . loc_db_escape_string($data_col[11]) .
-            "', '" . loc_db_escape_string($data_col[12]) . "', '" . loc_db_escape_string($data_col[13]) .
-            "', '" . loc_db_escape_string($data_col[14]) . "', '" . loc_db_escape_string($data_col[15]) .
-            "', '" . loc_db_escape_string($data_col[16]) . "', '" . loc_db_escape_string($data_col[17]) .
-            "', '" . loc_db_escape_string($data_col[18]) . "', '" . loc_db_escape_string($data_col[19]) .
-            "', '" . loc_db_escape_string($data_col[20]) . "', '" . loc_db_escape_string($data_col[21]) .
-            "', '" . loc_db_escape_string($data_col[22]) . "', '" . loc_db_escape_string($data_col[23]) .
-            "', '" . loc_db_escape_string($data_col[24]) . "', '" . loc_db_escape_string($data_col[25]) .
-            "', '" . loc_db_escape_string($data_col[26]) . "', '" . loc_db_escape_string($data_col[27]) .
-            "', '" . loc_db_escape_string($data_col[28]) . "', '" . loc_db_escape_string($data_col[29]) .
-            "', '" . loc_db_escape_string($data_col[30]) . "', '" . loc_db_escape_string($data_col[31]) .
-            "', '" . loc_db_escape_string($data_col[32]) . "', '" . loc_db_escape_string($data_col[33]) .
-            "', '" . loc_db_escape_string($data_col[34]) . "', '" . loc_db_escape_string($data_col[35]) .
-            "', '" . loc_db_escape_string($data_col[36]) . "', '" . loc_db_escape_string($data_col[37]) .
-            "', '" . loc_db_escape_string($data_col[38]) . "', '" . loc_db_escape_string($data_col[39]) .
-            "', '" . loc_db_escape_string($data_col[40]) . "', '" . loc_db_escape_string($data_col[41]) .
-            "', '" . loc_db_escape_string($data_col[42]) . "', '" . loc_db_escape_string($data_col[43]) .
-            "', '" . loc_db_escape_string($data_col[44]) . "', '" . loc_db_escape_string($data_col[45]) .
-            "', '" . loc_db_escape_string($data_col[46]) . "', '" . loc_db_escape_string($data_col[47]) .
-            "', '" . loc_db_escape_string($data_col[48]) . "', '" . loc_db_escape_string($data_col[49]) .
-            "', '" . loc_db_escape_string($data_col[50]) . "', $usrID, '$dateStr', $usrID, '$dateStr')";
+        "', '" . loc_db_escape_string($data_col[2]) . "', '" . loc_db_escape_string($data_col[3]) .
+        "', '" . loc_db_escape_string($data_col[4]) . "', '" . loc_db_escape_string($data_col[5]) .
+        "', '" . loc_db_escape_string($data_col[6]) . "', '" . loc_db_escape_string($data_col[7]) .
+        "', '" . loc_db_escape_string($data_col[8]) . "', '" . loc_db_escape_string($data_col[9]) .
+        "', '" . loc_db_escape_string($data_col[10]) . "', '" . loc_db_escape_string($data_col[11]) .
+        "', '" . loc_db_escape_string($data_col[12]) . "', '" . loc_db_escape_string($data_col[13]) .
+        "', '" . loc_db_escape_string($data_col[14]) . "', '" . loc_db_escape_string($data_col[15]) .
+        "', '" . loc_db_escape_string($data_col[16]) . "', '" . loc_db_escape_string($data_col[17]) .
+        "', '" . loc_db_escape_string($data_col[18]) . "', '" . loc_db_escape_string($data_col[19]) .
+        "', '" . loc_db_escape_string($data_col[20]) . "', '" . loc_db_escape_string($data_col[21]) .
+        "', '" . loc_db_escape_string($data_col[22]) . "', '" . loc_db_escape_string($data_col[23]) .
+        "', '" . loc_db_escape_string($data_col[24]) . "', '" . loc_db_escape_string($data_col[25]) .
+        "', '" . loc_db_escape_string($data_col[26]) . "', '" . loc_db_escape_string($data_col[27]) .
+        "', '" . loc_db_escape_string($data_col[28]) . "', '" . loc_db_escape_string($data_col[29]) .
+        "', '" . loc_db_escape_string($data_col[30]) . "', '" . loc_db_escape_string($data_col[31]) .
+        "', '" . loc_db_escape_string($data_col[32]) . "', '" . loc_db_escape_string($data_col[33]) .
+        "', '" . loc_db_escape_string($data_col[34]) . "', '" . loc_db_escape_string($data_col[35]) .
+        "', '" . loc_db_escape_string($data_col[36]) . "', '" . loc_db_escape_string($data_col[37]) .
+        "', '" . loc_db_escape_string($data_col[38]) . "', '" . loc_db_escape_string($data_col[39]) .
+        "', '" . loc_db_escape_string($data_col[40]) . "', '" . loc_db_escape_string($data_col[41]) .
+        "', '" . loc_db_escape_string($data_col[42]) . "', '" . loc_db_escape_string($data_col[43]) .
+        "', '" . loc_db_escape_string($data_col[44]) . "', '" . loc_db_escape_string($data_col[45]) .
+        "', '" . loc_db_escape_string($data_col[46]) . "', '" . loc_db_escape_string($data_col[47]) .
+        "', '" . loc_db_escape_string($data_col[48]) . "', '" . loc_db_escape_string($data_col[49]) .
+        "', '" . loc_db_escape_string($data_col[50]) . "', $usrID, '$dateStr', $usrID, '$dateStr')";
     return execUpdtInsSQL($insSQL);
 }
 
-function updatePrsnExtrData($prsnID, $data_col) {
+function updatePrsnExtrData($prsnID, $data_col)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $updtSQL = "UPDATE prs.prsn_extra_data 
    SET data_col1='" . loc_db_escape_string($data_col[1]) .
-            "', data_col2='" . loc_db_escape_string($data_col[2]) . "', data_col3='" . loc_db_escape_string($data_col[3]) .
-            "', data_col4='" . loc_db_escape_string($data_col[4]) . "', data_col5='" . loc_db_escape_string($data_col[5]) .
-            "', data_col6='" . loc_db_escape_string($data_col[6]) . "', data_col7='" . loc_db_escape_string($data_col[7]) .
-            "', data_col8='" . loc_db_escape_string($data_col[8]) . "', data_col9='" . loc_db_escape_string($data_col[9]) .
-            "', data_col10='" . loc_db_escape_string($data_col[10]) . "', data_col11='" . loc_db_escape_string($data_col[11]) .
-            "', data_col12='" . loc_db_escape_string($data_col[12]) . "', data_col13='" . loc_db_escape_string($data_col[13]) .
-            "', data_col14='" . loc_db_escape_string($data_col[14]) . "', data_col15='" . loc_db_escape_string($data_col[15]) .
-            "', data_col16='" . loc_db_escape_string($data_col[16]) . "', data_col17='" . loc_db_escape_string($data_col[17]) .
-            "', data_col18='" . loc_db_escape_string($data_col[18]) . "', data_col19='" . loc_db_escape_string($data_col[19]) .
-            "', data_col20='" . loc_db_escape_string($data_col[20]) . "', data_col21='" . loc_db_escape_string($data_col[21]) .
-            "', data_col22='" . loc_db_escape_string($data_col[22]) . "', data_col23='" . loc_db_escape_string($data_col[23]) .
-            "', data_col24='" . loc_db_escape_string($data_col[24]) . "', data_col25='" . loc_db_escape_string($data_col[25]) .
-            "', data_col26='" . loc_db_escape_string($data_col[26]) . "', data_col27='" . loc_db_escape_string($data_col[27]) .
-            "', data_col28='" . loc_db_escape_string($data_col[28]) . "', data_col29='" . loc_db_escape_string($data_col[29]) .
-            "', data_col30='" . loc_db_escape_string($data_col[30]) . "', data_col31='" . loc_db_escape_string($data_col[31]) .
-            "', data_col32='" . loc_db_escape_string($data_col[32]) . "', data_col33='" . loc_db_escape_string($data_col[33]) .
-            "', data_col34='" . loc_db_escape_string($data_col[34]) . "', data_col35='" . loc_db_escape_string($data_col[35]) .
-            "', data_col36='" . loc_db_escape_string($data_col[36]) . "', data_col37='" . loc_db_escape_string($data_col[37]) .
-            "', data_col38='" . loc_db_escape_string($data_col[38]) . "', data_col39='" . loc_db_escape_string($data_col[39]) .
-            "', data_col40='" . loc_db_escape_string($data_col[40]) . "', data_col41='" . loc_db_escape_string($data_col[41]) .
-            "', data_col42='" . loc_db_escape_string($data_col[42]) . "', data_col43='" . loc_db_escape_string($data_col[43]) .
-            "', data_col44='" . loc_db_escape_string($data_col[44]) . "', data_col45='" . loc_db_escape_string($data_col[45]) .
-            "', data_col46='" . loc_db_escape_string($data_col[46]) . "', data_col47='" . loc_db_escape_string($data_col[47]) .
-            "', data_col48='" . loc_db_escape_string($data_col[48]) . "', data_col49='" . loc_db_escape_string($data_col[49]) .
-            "', data_col50='" . loc_db_escape_string($data_col[50]) . "', last_update_by=$usrID,  
+        "', data_col2='" . loc_db_escape_string($data_col[2]) . "', data_col3='" . loc_db_escape_string($data_col[3]) .
+        "', data_col4='" . loc_db_escape_string($data_col[4]) . "', data_col5='" . loc_db_escape_string($data_col[5]) .
+        "', data_col6='" . loc_db_escape_string($data_col[6]) . "', data_col7='" . loc_db_escape_string($data_col[7]) .
+        "', data_col8='" . loc_db_escape_string($data_col[8]) . "', data_col9='" . loc_db_escape_string($data_col[9]) .
+        "', data_col10='" . loc_db_escape_string($data_col[10]) . "', data_col11='" . loc_db_escape_string($data_col[11]) .
+        "', data_col12='" . loc_db_escape_string($data_col[12]) . "', data_col13='" . loc_db_escape_string($data_col[13]) .
+        "', data_col14='" . loc_db_escape_string($data_col[14]) . "', data_col15='" . loc_db_escape_string($data_col[15]) .
+        "', data_col16='" . loc_db_escape_string($data_col[16]) . "', data_col17='" . loc_db_escape_string($data_col[17]) .
+        "', data_col18='" . loc_db_escape_string($data_col[18]) . "', data_col19='" . loc_db_escape_string($data_col[19]) .
+        "', data_col20='" . loc_db_escape_string($data_col[20]) . "', data_col21='" . loc_db_escape_string($data_col[21]) .
+        "', data_col22='" . loc_db_escape_string($data_col[22]) . "', data_col23='" . loc_db_escape_string($data_col[23]) .
+        "', data_col24='" . loc_db_escape_string($data_col[24]) . "', data_col25='" . loc_db_escape_string($data_col[25]) .
+        "', data_col26='" . loc_db_escape_string($data_col[26]) . "', data_col27='" . loc_db_escape_string($data_col[27]) .
+        "', data_col28='" . loc_db_escape_string($data_col[28]) . "', data_col29='" . loc_db_escape_string($data_col[29]) .
+        "', data_col30='" . loc_db_escape_string($data_col[30]) . "', data_col31='" . loc_db_escape_string($data_col[31]) .
+        "', data_col32='" . loc_db_escape_string($data_col[32]) . "', data_col33='" . loc_db_escape_string($data_col[33]) .
+        "', data_col34='" . loc_db_escape_string($data_col[34]) . "', data_col35='" . loc_db_escape_string($data_col[35]) .
+        "', data_col36='" . loc_db_escape_string($data_col[36]) . "', data_col37='" . loc_db_escape_string($data_col[37]) .
+        "', data_col38='" . loc_db_escape_string($data_col[38]) . "', data_col39='" . loc_db_escape_string($data_col[39]) .
+        "', data_col40='" . loc_db_escape_string($data_col[40]) . "', data_col41='" . loc_db_escape_string($data_col[41]) .
+        "', data_col42='" . loc_db_escape_string($data_col[42]) . "', data_col43='" . loc_db_escape_string($data_col[43]) .
+        "', data_col44='" . loc_db_escape_string($data_col[44]) . "', data_col45='" . loc_db_escape_string($data_col[45]) .
+        "', data_col46='" . loc_db_escape_string($data_col[46]) . "', data_col47='" . loc_db_escape_string($data_col[47]) .
+        "', data_col48='" . loc_db_escape_string($data_col[48]) . "', data_col49='" . loc_db_escape_string($data_col[49]) .
+        "', data_col50='" . loc_db_escape_string($data_col[50]) . "', last_update_by=$usrID,  
         last_update_date='$dateStr' WHERE person_id=$prsnID";
     //echo $updtSQL;
     return execUpdtInsSQL($updtSQL, "Extra Person Data Update");
 }
 
-function updatePrsnExtrDataSelf($prsnID, $data_col) {
+function updatePrsnExtrDataSelf($prsnID, $data_col)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $updtSQL = "UPDATE self.self_prsn_extra_data 
    SET data_col1='" . loc_db_escape_string($data_col[1]) .
-            "', data_col2='" . loc_db_escape_string($data_col[2]) . "', data_col3='" . loc_db_escape_string($data_col[3]) .
-            "', data_col4='" . loc_db_escape_string($data_col[4]) . "', data_col5='" . loc_db_escape_string($data_col[5]) .
-            "', data_col6='" . loc_db_escape_string($data_col[6]) . "', data_col7='" . loc_db_escape_string($data_col[7]) .
-            "', data_col8='" . loc_db_escape_string($data_col[8]) . "', data_col9='" . loc_db_escape_string($data_col[9]) .
-            "', data_col10='" . loc_db_escape_string($data_col[10]) . "', data_col11='" . loc_db_escape_string($data_col[11]) .
-            "', data_col12='" . loc_db_escape_string($data_col[12]) . "', data_col13='" . loc_db_escape_string($data_col[13]) .
-            "', data_col14='" . loc_db_escape_string($data_col[14]) . "', data_col15='" . loc_db_escape_string($data_col[15]) .
-            "', data_col16='" . loc_db_escape_string($data_col[16]) . "', data_col17='" . loc_db_escape_string($data_col[17]) .
-            "', data_col18='" . loc_db_escape_string($data_col[18]) . "', data_col19='" . loc_db_escape_string($data_col[19]) .
-            "', data_col20='" . loc_db_escape_string($data_col[20]) . "', data_col21='" . loc_db_escape_string($data_col[21]) .
-            "', data_col22='" . loc_db_escape_string($data_col[22]) . "', data_col23='" . loc_db_escape_string($data_col[23]) .
-            "', data_col24='" . loc_db_escape_string($data_col[24]) . "', data_col25='" . loc_db_escape_string($data_col[25]) .
-            "', data_col26='" . loc_db_escape_string($data_col[26]) . "', data_col27='" . loc_db_escape_string($data_col[27]) .
-            "', data_col28='" . loc_db_escape_string($data_col[28]) . "', data_col29='" . loc_db_escape_string($data_col[29]) .
-            "', data_col30='" . loc_db_escape_string($data_col[30]) . "', data_col31='" . loc_db_escape_string($data_col[31]) .
-            "', data_col32='" . loc_db_escape_string($data_col[32]) . "', data_col33='" . loc_db_escape_string($data_col[33]) .
-            "', data_col34='" . loc_db_escape_string($data_col[34]) . "', data_col35='" . loc_db_escape_string($data_col[35]) .
-            "', data_col36='" . loc_db_escape_string($data_col[36]) . "', data_col37='" . loc_db_escape_string($data_col[37]) .
-            "', data_col38='" . loc_db_escape_string($data_col[38]) . "', data_col39='" . loc_db_escape_string($data_col[39]) .
-            "', data_col40='" . loc_db_escape_string($data_col[40]) . "', data_col41='" . loc_db_escape_string($data_col[41]) .
-            "', data_col42='" . loc_db_escape_string($data_col[42]) . "', data_col43='" . loc_db_escape_string($data_col[43]) .
-            "', data_col44='" . loc_db_escape_string($data_col[44]) . "', data_col45='" . loc_db_escape_string($data_col[45]) .
-            "', data_col46='" . loc_db_escape_string($data_col[46]) . "', data_col47='" . loc_db_escape_string($data_col[47]) .
-            "', data_col48='" . loc_db_escape_string($data_col[48]) . "', data_col49='" . loc_db_escape_string($data_col[49]) .
-            "', data_col50='" . loc_db_escape_string($data_col[50]) . "', last_update_by=$usrID,  
+        "', data_col2='" . loc_db_escape_string($data_col[2]) . "', data_col3='" . loc_db_escape_string($data_col[3]) .
+        "', data_col4='" . loc_db_escape_string($data_col[4]) . "', data_col5='" . loc_db_escape_string($data_col[5]) .
+        "', data_col6='" . loc_db_escape_string($data_col[6]) . "', data_col7='" . loc_db_escape_string($data_col[7]) .
+        "', data_col8='" . loc_db_escape_string($data_col[8]) . "', data_col9='" . loc_db_escape_string($data_col[9]) .
+        "', data_col10='" . loc_db_escape_string($data_col[10]) . "', data_col11='" . loc_db_escape_string($data_col[11]) .
+        "', data_col12='" . loc_db_escape_string($data_col[12]) . "', data_col13='" . loc_db_escape_string($data_col[13]) .
+        "', data_col14='" . loc_db_escape_string($data_col[14]) . "', data_col15='" . loc_db_escape_string($data_col[15]) .
+        "', data_col16='" . loc_db_escape_string($data_col[16]) . "', data_col17='" . loc_db_escape_string($data_col[17]) .
+        "', data_col18='" . loc_db_escape_string($data_col[18]) . "', data_col19='" . loc_db_escape_string($data_col[19]) .
+        "', data_col20='" . loc_db_escape_string($data_col[20]) . "', data_col21='" . loc_db_escape_string($data_col[21]) .
+        "', data_col22='" . loc_db_escape_string($data_col[22]) . "', data_col23='" . loc_db_escape_string($data_col[23]) .
+        "', data_col24='" . loc_db_escape_string($data_col[24]) . "', data_col25='" . loc_db_escape_string($data_col[25]) .
+        "', data_col26='" . loc_db_escape_string($data_col[26]) . "', data_col27='" . loc_db_escape_string($data_col[27]) .
+        "', data_col28='" . loc_db_escape_string($data_col[28]) . "', data_col29='" . loc_db_escape_string($data_col[29]) .
+        "', data_col30='" . loc_db_escape_string($data_col[30]) . "', data_col31='" . loc_db_escape_string($data_col[31]) .
+        "', data_col32='" . loc_db_escape_string($data_col[32]) . "', data_col33='" . loc_db_escape_string($data_col[33]) .
+        "', data_col34='" . loc_db_escape_string($data_col[34]) . "', data_col35='" . loc_db_escape_string($data_col[35]) .
+        "', data_col36='" . loc_db_escape_string($data_col[36]) . "', data_col37='" . loc_db_escape_string($data_col[37]) .
+        "', data_col38='" . loc_db_escape_string($data_col[38]) . "', data_col39='" . loc_db_escape_string($data_col[39]) .
+        "', data_col40='" . loc_db_escape_string($data_col[40]) . "', data_col41='" . loc_db_escape_string($data_col[41]) .
+        "', data_col42='" . loc_db_escape_string($data_col[42]) . "', data_col43='" . loc_db_escape_string($data_col[43]) .
+        "', data_col44='" . loc_db_escape_string($data_col[44]) . "', data_col45='" . loc_db_escape_string($data_col[45]) .
+        "', data_col46='" . loc_db_escape_string($data_col[46]) . "', data_col47='" . loc_db_escape_string($data_col[47]) .
+        "', data_col48='" . loc_db_escape_string($data_col[48]) . "', data_col49='" . loc_db_escape_string($data_col[49]) .
+        "', data_col50='" . loc_db_escape_string($data_col[50]) . "', last_update_by=$usrID,  
         last_update_date='$dateStr' WHERE person_id=$prsnID";
     return execUpdtInsSQL($updtSQL, "Self Extra Person Data Update");
 }
 
-function getEducSelfID($prsnID, $crseNm, $schoolNm) {
-    $sqlStr = "SELECT educ_id from self.self_prsn_education where (lower(course_name) = '" .
-            loc_db_escape_string(strtolower($crseNm)) . "' AND lower(school_institution) = '" .
-            loc_db_escape_string(strtolower($schoolNm)) . "' AND person_id = $prsnID)";
+function getPDivGrpID($prsnID, $divGrpID)
+{
+    $sqlStr = "SELECT prsn_div_id from pasn.prsn_divs_groups where (div_id = " . $divGrpID . " AND person_id = $prsnID)";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return (float) $row[0];
@@ -1833,52 +2554,370 @@ function getEducSelfID($prsnID, $crseNm, $schoolNm) {
     return -1;
 }
 
-function getEducID($prsnID, $crseNm, $schoolNm) {
-    $sqlStr = "SELECT educ_id from prs.prsn_education where (lower(course_name) = '" .
-            loc_db_escape_string(strtolower($crseNm)) . "' AND lower(school_institution) = '" .
-            loc_db_escape_string(strtolower($schoolNm)) . "' AND person_id = $prsnID)";
-    $result = executeSQLNoParams($sqlStr);
-    while ($row = loc_db_fetch_array($result)) {
-        return (float) $row[0];
-    }
-    return -1;
-}
-
-function updateEduc($pkeyID, $myCourseName, $mySchoolInstitution, $mySchoolLocation, $myCertObtained, $myCourseStartDate, $myCourseEndDate, $myDateCertAwarded, $myCertTyp) {
+function createPDivGrp($prsnID, $divGrpID, $pDivGrpStartDate, $pDivGrpEndDate)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
-    $updtSQL = "UPDATE self.self_prsn_education 
+    $insSQL = "INSERT INTO pasn.prsn_divs_groups(person_id, div_id, valid_start_date, valid_end_date, created_by, creation_date,
+                                  last_update_by, last_update_date)
+                                            VALUES (" . $prsnID . ","
+        . $divGrpID . ",'"
+        . cnvrtDMYToYMD($pDivGrpStartDate) . "','"
+        . cnvrtDMYToYMD($pDivGrpEndDate) . "',"
+        . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
+    return execUpdtInsSQL($insSQL);
+}
+
+function updatePDivGrp($pkeyID, $divGrpID, $pDivGrpStartDate, $pDivGrpEndDate)
+{
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $updtSQL = "UPDATE pasn.prsn_divs_groups
+        SET div_id=" . $divGrpID .
+        ", valid_start_date='" . cnvrtDMYToYMD($pDivGrpStartDate) .
+        "', valid_end_date='" . cnvrtDMYToYMD($pDivGrpEndDate) .
+        "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
+        "' WHERE prsn_div_id = " . $pkeyID;
+    return execUpdtInsSQL($updtSQL, "Update of Division/Group");
+}
+
+function deletePDivGrp($pkeyID)
+{
+    $insSQL = "DELETE FROM pasn.prsn_divs_groups WHERE prsn_div_id = " . $pkeyID;
+    $affctd1 = execUpdtInsSQL($insSQL, "Remove Person's Division/Group");
+
+    if ($affctd1 > 0) {
+        $dsply = "Successfully Deleted the ff Records-";
+        $dsply .= "<br/>$affctd1 Division/Group(s)!";
+        return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
+    } else {
+        $dsply = "No Record Deleted";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+}
+
+function getPSiteLocID($prsnID, $siteLocID)
+{
+    $sqlStr = "SELECT prsn_loc_id from pasn.prsn_locations where (location_id = " . $siteLocID . " AND person_id = $prsnID)";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return -1;
+}
+
+function createPSiteLoc($prsnID, $siteLocID, $pSiteLocStartDate, $pSiteLocEndDate)
+{
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO pasn.prsn_locations(person_id, location_id, valid_start_date, valid_end_date, created_by, creation_date,
+                                  last_update_by, last_update_date)
+                                            VALUES (" . $prsnID . ","
+        . $siteLocID . ",'"
+        . cnvrtDMYToYMD($pSiteLocStartDate) . "','"
+        . cnvrtDMYToYMD($pSiteLocEndDate) . "',"
+        . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
+    return execUpdtInsSQL($insSQL);
+}
+
+function updatePSiteLoc($pkeyID, $siteLocID, $pSiteLocStartDate, $pSiteLocEndDate)
+{
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $updtSQL = "UPDATE pasn.prsn_locations
+        SET location_id=" . $siteLocID .
+        ", valid_start_date='" . cnvrtDMYToYMD($pSiteLocStartDate) .
+        "', valid_end_date='" . cnvrtDMYToYMD($pSiteLocEndDate) .
+        "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
+        "' WHERE prsn_loc_id = " . $pkeyID;
+    return execUpdtInsSQL($updtSQL, "Update of Site/Location");
+}
+
+function deletePSiteLoc($pkeyID)
+{
+    $insSQL = "DELETE FROM pasn.prsn_locations WHERE prsn_loc_id = " . $pkeyID;
+    $affctd1 = execUpdtInsSQL($insSQL, "Remove Person's Site/Location");
+
+    if ($affctd1 > 0) {
+        $dsply = "Successfully Deleted the ff Records-";
+        $dsply .= "<br/>$affctd1 Site/Location(s)!";
+        return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
+    } else {
+        $dsply = "No Record Deleted";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+}
+
+function getPGradeID($prsnID, $gradeID)
+{
+    $sqlStr = "SELECT row_id from pasn.prsn_grades where (grade_id = " . $gradeID . " AND person_id = $prsnID)";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return -1;
+}
+
+function createPGrade($prsnID, $gradeID, $pGradeStartDate, $pGradeEndDate)
+{
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO pasn.prsn_grades(person_id, grade_id, valid_start_date, valid_end_date, created_by, creation_date,
+                                  last_update_by, last_update_date)
+                                            VALUES (" . $prsnID . ","
+        . $gradeID . ",'"
+        . cnvrtDMYToYMD($pGradeStartDate) . "','"
+        . cnvrtDMYToYMD($pGradeEndDate) . "',"
+        . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
+    return execUpdtInsSQL($insSQL);
+}
+
+function updatePGrade($pkeyID, $gradeID, $pGradeStartDate, $pGradeEndDate)
+{
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $updtSQL = "UPDATE pasn.prsn_grades
+        SET grade_id=" . $gradeID .
+        ", valid_start_date='" . cnvrtDMYToYMD($pGradeStartDate) .
+        "', valid_end_date='" . cnvrtDMYToYMD($pGradeEndDate) .
+        "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
+        "' WHERE row_id = " . $pkeyID;
+    return execUpdtInsSQL($updtSQL, "Update of Grade");
+}
+
+function deletePGrade($pkeyID)
+{
+    $insSQL = "DELETE FROM pasn.prsn_grades WHERE row_id = " . $pkeyID;
+    $affctd1 = execUpdtInsSQL($insSQL, "Remove Person's Grade");
+
+    if ($affctd1 > 0) {
+        $dsply = "Successfully Deleted the ff Records-";
+        $dsply .= "<br/>$affctd1 Grade(s)!";
+        return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
+    } else {
+        $dsply = "No Record Deleted";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+}
+
+function getPSuprvsrID($prsnID, $suprvsrID)
+{
+    $sqlStr = "SELECT row_id from pasn.prsn_supervisors where (supervisor_prsn_id = " . $suprvsrID . " AND person_id = $prsnID)";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return -1;
+}
+
+function createPSuprvsr($prsnID, $suprvsrID, $pSuprvsrStartDate, $pSuprvsrEndDate)
+{
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO pasn.prsn_supervisors(person_id, supervisor_prsn_id, valid_start_date, valid_end_date, created_by, creation_date,
+                                  last_update_by, last_update_date)
+                                            VALUES (" . $prsnID . ","
+        . $suprvsrID . ",'"
+        . cnvrtDMYToYMD($pSuprvsrStartDate) . "','"
+        . cnvrtDMYToYMD($pSuprvsrEndDate) . "',"
+        . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
+    return execUpdtInsSQL($insSQL);
+}
+
+function updatePSuprvsr($pkeyID, $suprvsrID, $pSuprvsrStartDate, $pSuprvsrEndDate)
+{
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $updtSQL = "UPDATE pasn.prsn_supervisors
+        SET supervisor_prsn_id=" . $suprvsrID .
+        ", valid_start_date='" . cnvrtDMYToYMD($pSuprvsrStartDate) .
+        "', valid_end_date='" . cnvrtDMYToYMD($pSuprvsrEndDate) .
+        "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
+        "' WHERE row_id = " . $pkeyID;
+    return execUpdtInsSQL($updtSQL, "Update of Supervisor");
+}
+
+function deletePSuprvsr($pkeyID)
+{
+    $insSQL = "DELETE FROM pasn.prsn_supervisors WHERE row_id = " . $pkeyID;
+    $affctd1 = execUpdtInsSQL($insSQL, "Remove Person's Supervisor");
+
+    if ($affctd1 > 0) {
+        $dsply = "Successfully Deleted the ff Records-";
+        $dsply .= "<br/>$affctd1 Supervisor(s)!";
+        return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
+    } else {
+        $dsply = "No Record Deleted";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+}
+
+function getPJobID($prsnID, $jobID)
+{
+    $sqlStr = "SELECT row_id from pasn.prsn_jobs where (job_id = " . $jobID . " AND person_id = $prsnID)";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return -1;
+}
+
+function createPJob($prsnID, $jobID, $pJobStartDate, $pJobEndDate)
+{
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO pasn.prsn_jobs(person_id, job_id, valid_start_date, valid_end_date, created_by, creation_date,
+                                  last_update_by, last_update_date)
+                                            VALUES (" . $prsnID . ","
+        . $jobID . ",'"
+        . cnvrtDMYToYMD($pJobStartDate) . "','"
+        . cnvrtDMYToYMD($pJobEndDate) . "',"
+        . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
+    return execUpdtInsSQL($insSQL);
+}
+
+function updatePJob($pkeyID, $jobID, $pJobStartDate, $pJobEndDate)
+{
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $updtSQL = "UPDATE pasn.prsn_jobs
+        SET job_id=" . $jobID .
+        ", valid_start_date='" . cnvrtDMYToYMD($pJobStartDate) .
+        "', valid_end_date='" . cnvrtDMYToYMD($pJobEndDate) .
+        "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
+        "' WHERE row_id = " . $pkeyID;
+    return execUpdtInsSQL($updtSQL, "Update of Job");
+}
+
+function deletePJob($pkeyID)
+{
+    $insSQL = "DELETE FROM pasn.prsn_jobs WHERE row_id = " . $pkeyID;
+    $affctd1 = execUpdtInsSQL($insSQL, "Remove Person's Job");
+
+    if ($affctd1 > 0) {
+        $dsply = "Successfully Deleted the ff Records-";
+        $dsply .= "<br/>$affctd1 Job(s)!";
+        return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
+    } else {
+        $dsply = "No Record Deleted";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+}
+
+function getPPositionID($prsnID, $positionID, $positionDivID)
+{
+    $sqlStr = "SELECT row_id from pasn.prsn_positions where (position_id = " . $positionID . " AND person_id = $prsnID AND div_id=" . $positionDivID . ")";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return -1;
+}
+
+function createPPosition($prsnID, $positionID, $pPositionStartDate, $pPositionEndDate, $div_id)
+{
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO pasn.prsn_positions(person_id, position_id, valid_start_date, valid_end_date, created_by, creation_date,
+                                  last_update_by, last_update_date, div_id)
+                                            VALUES (" . $prsnID . ","
+        . $positionID . ",'"
+        . cnvrtDMYToYMD($pPositionStartDate) . "','"
+        . cnvrtDMYToYMD($pPositionEndDate) . "',"
+        . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "'," . $div_id . ")";
+    return execUpdtInsSQL($insSQL);
+}
+
+function updatePPosition($pkeyID, $positionID, $pPositionStartDate, $pPositionEndDate, $div_id)
+{
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $updtSQL = "UPDATE pasn.prsn_positions
+        SET position_id=" . $positionID .
+        ", valid_start_date='" . cnvrtDMYToYMD($pPositionStartDate) .
+        "', valid_end_date='" . cnvrtDMYToYMD($pPositionEndDate) .
+        "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
+        "', div_id=" . $div_id . " WHERE row_id = " . $pkeyID;
+    return execUpdtInsSQL($updtSQL, "Update of Position");
+}
+
+function deletePPosition($pkeyID)
+{
+    $insSQL = "DELETE FROM pasn.prsn_positions WHERE row_id = " . $pkeyID;
+    $affctd1 = execUpdtInsSQL($insSQL, "Remove Person's Position");
+
+    if ($affctd1 > 0) {
+        $dsply = "Successfully Deleted the ff Records-";
+        $dsply .= "<br/>$affctd1 Position(s)!";
+        return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
+    } else {
+        $dsply = "No Record Deleted";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+}
+
+function getEducSelfID($prsnID, $crseNm, $schoolNm)
+{
+    $sqlStr = "SELECT educ_id from self.self_prsn_education where (lower(course_name) = '" .
+        loc_db_escape_string(strtolower($crseNm)) . "' AND lower(school_institution) = '" .
+        loc_db_escape_string(strtolower($schoolNm)) . "' AND person_id = $prsnID)";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return -1;
+}
+
+function getEducID($prsnID, $crseNm, $schoolNm)
+{
+    $sqlStr = "SELECT educ_id from prs.prsn_education where (lower(course_name) = '" .
+        loc_db_escape_string(strtolower($crseNm)) . "' AND lower(school_institution) = '" .
+        loc_db_escape_string(strtolower($schoolNm)) . "' AND person_id = $prsnID)";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return -1;
+}
+
+function updateEduc($pkeyID, $myCourseName, $mySchoolInstitution, $mySchoolLocation, $myCertObtained, $myCourseStartDate, $myCourseEndDate, $myDateCertAwarded, $myCertTyp)
+{
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $updtSQL = "UPDATE prs.prsn_education 
         SET course_name='" . loc_db_escape_string($myCourseName) .
-            "', school_institution='" . loc_db_escape_string($mySchoolInstitution) .
-            "', school_location='" . loc_db_escape_string($mySchoolLocation) .
-            "', cert_obtained='" . loc_db_escape_string($myCertObtained) .
-            "', course_start_date='" . cnvrtDMYToYMD($myCourseStartDate) .
-            "', course_end_date='" . cnvrtDMYToYMD($myCourseEndDate) .
-            "', date_cert_awarded='" . loc_db_escape_string($myDateCertAwarded) .
-            "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
-            "', cert_type='" . loc_db_escape_string($myCertTyp) .
-            "' WHERE educ_id = " . $pkeyID;
+        "', school_institution='" . loc_db_escape_string($mySchoolInstitution) .
+        "', school_location='" . loc_db_escape_string($mySchoolLocation) .
+        "', cert_obtained='" . loc_db_escape_string($myCertObtained) .
+        "', course_start_date='" . cnvrtDMYToYMD($myCourseStartDate) .
+        "', course_end_date='" . cnvrtDMYToYMD($myCourseEndDate) .
+        "', date_cert_awarded='" . loc_db_escape_string($myDateCertAwarded) .
+        "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
+        "', cert_type='" . loc_db_escape_string($myCertTyp) .
+        "' WHERE educ_id = " . $pkeyID;
     return execUpdtInsSQL($updtSQL, "Update of Educ Bkgrnd");
 }
 
-function updateEducSelf($pkeyID, $myCourseName, $mySchoolInstitution, $mySchoolLocation, $myCertObtained, $myCourseStartDate, $myCourseEndDate, $myDateCertAwarded, $myCertTyp) {
+function updateEducSelf($pkeyID, $myCourseName, $mySchoolInstitution, $mySchoolLocation, $myCertObtained, $myCourseStartDate, $myCourseEndDate, $myDateCertAwarded, $myCertTyp)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $updtSQL = "UPDATE self.self_prsn_education 
         SET course_name='" . loc_db_escape_string($myCourseName) .
-            "', school_institution='" . loc_db_escape_string($mySchoolInstitution) .
-            "', school_location='" . loc_db_escape_string($mySchoolLocation) .
-            "', cert_obtained='" . loc_db_escape_string($myCertObtained) .
-            "', course_start_date='" . cnvrtDMYToYMD($myCourseStartDate) .
-            "', course_end_date='" . cnvrtDMYToYMD($myCourseEndDate) .
-            "', date_cert_awarded='" . loc_db_escape_string($myDateCertAwarded) .
-            "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
-            "', cert_type='" . loc_db_escape_string($myCertTyp) .
-            "' WHERE educ_id = " . $pkeyID;
+        "', school_institution='" . loc_db_escape_string($mySchoolInstitution) .
+        "', school_location='" . loc_db_escape_string($mySchoolLocation) .
+        "', cert_obtained='" . loc_db_escape_string($myCertObtained) .
+        "', course_start_date='" . cnvrtDMYToYMD($myCourseStartDate) .
+        "', course_end_date='" . cnvrtDMYToYMD($myCourseEndDate) .
+        "', date_cert_awarded='" . loc_db_escape_string($myDateCertAwarded) .
+        "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
+        "', cert_type='" . loc_db_escape_string($myCertTyp) .
+        "' WHERE educ_id = " . $pkeyID;
     return execUpdtInsSQL($updtSQL, "Self-Update of Educ Bkgrnd");
 }
 
-function createEduc($prsnID, $myCourseName, $mySchoolInstitution, $mySchoolLocation, $myCertObtained, $myCourseStartDate, $myCourseEndDate, $myDateCertAwarded, $myCertTyp) {
+function createEduc($prsnID, $myCourseName, $mySchoolInstitution, $mySchoolLocation, $myCertObtained, $myCourseStartDate, $myCourseEndDate, $myDateCertAwarded, $myCertTyp)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO prs.prsn_education(
@@ -1887,19 +2926,20 @@ function createEduc($prsnID, $myCourseName, $mySchoolInstitution, $mySchoolLocat
                                             created_by, creation_date, last_update_by, last_update_date, 
                                             cert_type)
                                             VALUES (" . $prsnID . ",'"
-            . loc_db_escape_string($myCourseName) . "','"
-            . loc_db_escape_string($mySchoolInstitution) . "','"
-            . loc_db_escape_string($mySchoolLocation) . "','"
-            . loc_db_escape_string($myCertObtained) . "','"
-            . cnvrtDMYToYMD($myCourseStartDate) . "','"
-            . cnvrtDMYToYMD($myCourseEndDate) . "','"
-            . loc_db_escape_string($myDateCertAwarded) . "',"
-            . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "','"
-            . loc_db_escape_string($myCertTyp) . "')";
+        . loc_db_escape_string($myCourseName) . "','"
+        . loc_db_escape_string($mySchoolInstitution) . "','"
+        . loc_db_escape_string($mySchoolLocation) . "','"
+        . loc_db_escape_string($myCertObtained) . "','"
+        . cnvrtDMYToYMD($myCourseStartDate) . "','"
+        . cnvrtDMYToYMD($myCourseEndDate) . "','"
+        . loc_db_escape_string($myDateCertAwarded) . "',"
+        . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "','"
+        . loc_db_escape_string($myCertTyp) . "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function createEducSelf($prsnID, $myCourseName, $mySchoolInstitution, $mySchoolLocation, $myCertObtained, $myCourseStartDate, $myCourseEndDate, $myDateCertAwarded, $myCertTyp) {
+function createEducSelf($prsnID, $myCourseName, $mySchoolInstitution, $mySchoolLocation, $myCertObtained, $myCourseStartDate, $myCourseEndDate, $myDateCertAwarded, $myCertTyp)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO self.self_prsn_education(
@@ -1908,19 +2948,20 @@ function createEducSelf($prsnID, $myCourseName, $mySchoolInstitution, $mySchoolL
                                             created_by, creation_date, last_update_by, last_update_date, 
                                             cert_type)
                                             VALUES (" . $prsnID . ",'"
-            . loc_db_escape_string($myCourseName) . "','"
-            . loc_db_escape_string($mySchoolInstitution) . "','"
-            . loc_db_escape_string($mySchoolLocation) . "','"
-            . loc_db_escape_string($myCertObtained) . "','"
-            . cnvrtDMYToYMD($myCourseStartDate) . "','"
-            . cnvrtDMYToYMD($myCourseEndDate) . "','"
-            . loc_db_escape_string($myDateCertAwarded) . "',"
-            . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "','"
-            . loc_db_escape_string($myCertTyp) . "')";
+        . loc_db_escape_string($myCourseName) . "','"
+        . loc_db_escape_string($mySchoolInstitution) . "','"
+        . loc_db_escape_string($mySchoolLocation) . "','"
+        . loc_db_escape_string($myCertObtained) . "','"
+        . cnvrtDMYToYMD($myCourseStartDate) . "','"
+        . cnvrtDMYToYMD($myCourseEndDate) . "','"
+        . loc_db_escape_string($myDateCertAwarded) . "',"
+        . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "','"
+        . loc_db_escape_string($myCertTyp) . "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function deleteEduc($pkeyID) {
+function deleteEduc($pkeyID)
+{
     $insSQL = "DELETE FROM prs.prsn_education WHERE educ_id = " . $pkeyID;
     $affctd1 = execUpdtInsSQL($insSQL, "Remove an Educ Bkgrnd");
 
@@ -1934,7 +2975,8 @@ function deleteEduc($pkeyID) {
     }
 }
 
-function deleteEducSelf($pkeyID) {
+function deleteEducSelf($pkeyID)
+{
     $insSQL = "DELETE FROM self.self_prsn_education WHERE educ_id = " . $pkeyID;
     $affctd1 = execUpdtInsSQL($insSQL, "Self Removal of Educ Bkgrnd");
 
@@ -1948,10 +2990,11 @@ function deleteEducSelf($pkeyID) {
     }
 }
 
-function getWorkSelfID($prsnID, $jobNm, $instNm) {
+function getWorkSelfID($prsnID, $jobNm, $instNm)
+{
     $sqlStr = "SELECT wrk_exprnc_id from self.self_prsn_work_experience where (lower(job_name_title) = '" .
-            loc_db_escape_string(strtolower($jobNm)) . "' AND lower(institution_name) = '" .
-            loc_db_escape_string(strtolower($instNm)) . "' AND person_id = $prsnID)";
+        loc_db_escape_string(strtolower($jobNm)) . "' AND lower(institution_name) = '" .
+        loc_db_escape_string(strtolower($instNm)) . "' AND person_id = $prsnID)";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return (float) $row[0];
@@ -1959,10 +3002,11 @@ function getWorkSelfID($prsnID, $jobNm, $instNm) {
     return -1;
 }
 
-function getWorkID($prsnID, $jobNm, $instNm) {
+function getWorkID($prsnID, $jobNm, $instNm)
+{
     $sqlStr = "SELECT wrk_exprnc_id from prs.prsn_work_experience where (lower(job_name_title) = '" .
-            loc_db_escape_string(strtolower($jobNm)) . "' AND lower(school_institution) = '" .
-            loc_db_escape_string(strtolower($instNm)) . "' AND person_id = $prsnID)";
+        loc_db_escape_string(strtolower($jobNm)) . "' AND lower(institution_name) = '" .
+        loc_db_escape_string(strtolower($instNm)) . "' AND person_id = $prsnID)";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return (float) $row[0];
@@ -1970,39 +3014,42 @@ function getWorkID($prsnID, $jobNm, $instNm) {
     return -1;
 }
 
-function updateWork($pkeyID, $myJobNameTitle, $myInstitutionName, $myJobLocation, $myJobStartDate, $myJobEndDate, $myJobDescription, $myFeatsAchvments) {
+function updateWork($pkeyID, $myJobNameTitle, $myInstitutionName, $myJobLocation, $myJobStartDate, $myJobEndDate, $myJobDescription, $myFeatsAchvments)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $updtSQL = "UPDATE prs.prsn_work_experience "
-            . "SET job_name_title='" . loc_db_escape_string($myJobNameTitle) .
-            "', institution_name='" . loc_db_escape_string($myInstitutionName) .
-            "', job_location='" . loc_db_escape_string($myJobLocation) .
-            "', job_start_date='" . date('Y-m-d', $myJobStartDate) .
-            "', job_end_date='" . date('Y-m-d', $myJobEndDate) .
-            "', job_description='" . loc_db_escape_string($myJobDescription) .
-            "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
-            "', feats_achvments='" . loc_db_escape_string($myFeatsAchvments) .
-            "' WHERE wrk_exprnc_id = " . $pkeyID;
+        . "SET job_name_title='" . loc_db_escape_string($myJobNameTitle) .
+        "', institution_name='" . loc_db_escape_string($myInstitutionName) .
+        "', job_location='" . loc_db_escape_string($myJobLocation) .
+        "', job_start_date='" . cnvrtDMYToYMD($myJobStartDate) .
+        "', job_end_date='" . cnvrtDMYToYMD($myJobEndDate) .
+        "', job_description='" . loc_db_escape_string($myJobDescription) .
+        "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
+        "', feats_achvments='" . loc_db_escape_string($myFeatsAchvments) .
+        "' WHERE wrk_exprnc_id = " . $pkeyID;
     return execUpdtInsSQL($updtSQL, "Update of Work Bkgrnd");
 }
 
-function updateWorkSelf($pkeyID, $myJobNameTitle, $myInstitutionName, $myJobLocation, $myJobStartDate, $myJobEndDate, $myJobDescription, $myFeatsAchvments) {
+function updateWorkSelf($pkeyID, $myJobNameTitle, $myInstitutionName, $myJobLocation, $myJobStartDate, $myJobEndDate, $myJobDescription, $myFeatsAchvments)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $updtSQL = "UPDATE self.self_prsn_work_experience "
-            . "SET job_name_title='" . loc_db_escape_string($myJobNameTitle) .
-            "', institution_name='" . loc_db_escape_string($myInstitutionName) .
-            "', job_location='" . loc_db_escape_string($myJobLocation) .
-            "', job_start_date='" . cnvrtDMYToYMD($myJobStartDate) .
-            "', job_end_date='" . cnvrtDMYToYMD($myJobEndDate) .
-            "', job_description='" . loc_db_escape_string($myJobDescription) .
-            "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
-            "', feats_achvments='" . loc_db_escape_string($myFeatsAchvments) .
-            "' WHERE wrk_exprnc_id = " . $pkeyID;
+        . "SET job_name_title='" . loc_db_escape_string($myJobNameTitle) .
+        "', institution_name='" . loc_db_escape_string($myInstitutionName) .
+        "', job_location='" . loc_db_escape_string($myJobLocation) .
+        "', job_start_date='" . cnvrtDMYToYMD($myJobStartDate) .
+        "', job_end_date='" . cnvrtDMYToYMD($myJobEndDate) .
+        "', job_description='" . loc_db_escape_string($myJobDescription) .
+        "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
+        "', feats_achvments='" . loc_db_escape_string($myFeatsAchvments) .
+        "' WHERE wrk_exprnc_id = " . $pkeyID;
     return execUpdtInsSQL($updtSQL, "Self-Update of Work Bkgrnd");
 }
 
-function createWork($prsnID, $myJobNameTitle, $myInstitutionName, $myJobLocation, $myJobStartDate, $myJobEndDate, $myJobDescription, $myFeatsAchvments) {
+function createWork($prsnID, $myJobNameTitle, $myInstitutionName, $myJobLocation, $myJobStartDate, $myJobEndDate, $myJobDescription, $myFeatsAchvments)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO prs.prsn_work_experience(
@@ -2010,18 +3057,19 @@ function createWork($prsnID, $myJobNameTitle, $myInstitutionName, $myJobLocation
                                                     job_start_date, job_end_date, job_description, feats_achvments,  
                                                     created_by, creation_date, last_update_by, last_update_date)
                                             VALUES (" . $prsnID . ",'"
-            . loc_db_escape_string($myJobNameTitle) . "','"
-            . loc_db_escape_string($myInstitutionName) . "','"
-            . loc_db_escape_string($myJobLocation) . "','"
-            . cnvrtDMYToYMD($myJobStartDate) . "','"
-            . cnvrtDMYToYMD($myJobEndDate) . "','"
-            . loc_db_escape_string($myJobDescription) . "','"
-            . loc_db_escape_string($myFeatsAchvments) . "',"
-            . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
+        . loc_db_escape_string($myJobNameTitle) . "','"
+        . loc_db_escape_string($myInstitutionName) . "','"
+        . loc_db_escape_string($myJobLocation) . "','"
+        . cnvrtDMYToYMD($myJobStartDate) . "','"
+        . cnvrtDMYToYMD($myJobEndDate) . "','"
+        . loc_db_escape_string($myJobDescription) . "','"
+        . loc_db_escape_string($myFeatsAchvments) . "',"
+        . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function createWorkSelf($prsnID, $myJobNameTitle, $myInstitutionName, $myJobLocation, $myJobStartDate, $myJobEndDate, $myJobDescription, $myFeatsAchvments) {
+function createWorkSelf($prsnID, $myJobNameTitle, $myInstitutionName, $myJobLocation, $myJobStartDate, $myJobEndDate, $myJobDescription, $myFeatsAchvments)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO self.self_prsn_work_experience(
@@ -2029,18 +3077,19 @@ function createWorkSelf($prsnID, $myJobNameTitle, $myInstitutionName, $myJobLoca
                                         job_start_date, job_end_date, job_description, feats_achvments,  
                                         created_by, creation_date, last_update_by, last_update_date)
                                             VALUES (" . $prsnID . ",'"
-            . loc_db_escape_string($myJobNameTitle) . "','"
-            . loc_db_escape_string($myInstitutionName) . "','"
-            . loc_db_escape_string($myJobLocation) . "','"
-            . cnvrtDMYToYMD($myJobStartDate) . "','"
-            . cnvrtDMYToYMD($myJobEndDate) . "','"
-            . loc_db_escape_string($myJobDescription) . "','"
-            . loc_db_escape_string($myFeatsAchvments) . "',"
-            . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
+        . loc_db_escape_string($myJobNameTitle) . "','"
+        . loc_db_escape_string($myInstitutionName) . "','"
+        . loc_db_escape_string($myJobLocation) . "','"
+        . cnvrtDMYToYMD($myJobStartDate) . "','"
+        . cnvrtDMYToYMD($myJobEndDate) . "','"
+        . loc_db_escape_string($myJobDescription) . "','"
+        . loc_db_escape_string($myFeatsAchvments) . "',"
+        . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function deleteWork($pkeyID) {
+function deleteWork($pkeyID)
+{
     $insSQL = "DELETE FROM prs.prsn_work_experience WHERE wrk_exprnc_id = " . $pkeyID;
     $affctd1 = execUpdtInsSQL($insSQL, "Remove an Work Bkgrnd");
 
@@ -2054,7 +3103,8 @@ function deleteWork($pkeyID) {
     }
 }
 
-function deleteWorkSelf($pkeyID) {
+function deleteWorkSelf($pkeyID)
+{
     $insSQL = "DELETE FROM self.self_prsn_work_experience WHERE wrk_exprnc_id = " . $pkeyID;
     $affctd1 = execUpdtInsSQL($insSQL, "Self Removal of Work Bkgrnd");
 
@@ -2068,13 +3118,14 @@ function deleteWorkSelf($pkeyID) {
     }
 }
 
-function getSkillsSelfID($prsnID, $vldStrtDate, $vldEndDate) {
-    $sqlStr = "SELECT skills_id from self.self_prsn_skills_nature where ("
-            . "((to_timestamp('"
-            . loc_db_escape_string($vldStrtDate) . "','DD-Mon-YYYY') between to_timestamp('valid_start_date','YYYY-MM-DD') and "
-            . "to_timestamp('valid_end_date','YYYY-MM-DD')) OR (to_timestamp('"
-            . loc_db_escape_string($vldEndDate) . "','DD-Mon-YYYY') between to_timestamp('valid_start_date','YYYY-MM-DD') and "
-            . "to_timestamp('valid_end_date','YYYY-MM-DD')) AND person_id = $prsnID)";
+function getSkillsSelfID($prsnID, $vldStrtDate, $vldEndDate)
+{
+    $sqlStr = "SELECT skills_id from self.self_prsn_skills_nature where "
+        . "((to_timestamp('"
+        . loc_db_escape_string($vldStrtDate) . "','DD-Mon-YYYY') between to_timestamp(valid_start_date,'YYYY-MM-DD') and "
+        . "to_timestamp(valid_end_date,'YYYY-MM-DD')) OR (to_timestamp('"
+        . loc_db_escape_string($vldEndDate) . "','DD-Mon-YYYY') between to_timestamp(valid_start_date,'YYYY-MM-DD') and "
+        . "to_timestamp(valid_end_date,'YYYY-MM-DD')) AND person_id = $prsnID)";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return (float) $row[0];
@@ -2082,13 +3133,14 @@ function getSkillsSelfID($prsnID, $vldStrtDate, $vldEndDate) {
     return -1;
 }
 
-function getSkillsID($prsnID, $vldStrtDate, $vldEndDate) {
-    $sqlStr = "SELECT skills_id from prs.prsn_skills_nature where ("
-            . "((to_timestamp('"
-            . loc_db_escape_string($vldStrtDate) . "','DD-Mon-YYYY') between to_timestamp('valid_start_date','YYYY-MM-DD') and "
-            . "to_timestamp('valid_end_date','YYYY-MM-DD')) OR (to_timestamp('"
-            . loc_db_escape_string($vldEndDate) . "','DD-Mon-YYYY') between to_timestamp('valid_start_date','YYYY-MM-DD') and "
-            . "to_timestamp('valid_end_date','YYYY-MM-DD')) AND person_id = $prsnID)";
+function getSkillsID($prsnID, $vldStrtDate, $vldEndDate)
+{
+    $sqlStr = "SELECT skills_id from prs.prsn_skills_nature where "
+        . "((to_timestamp('"
+        . loc_db_escape_string($vldStrtDate) . "','DD-Mon-YYYY') between to_timestamp(valid_start_date,'YYYY-MM-DD') and "
+        . "to_timestamp(valid_end_date,'YYYY-MM-DD')) OR (to_timestamp('"
+        . loc_db_escape_string($vldEndDate) . "','DD-Mon-YYYY') between to_timestamp(valid_start_date,'YYYY-MM-DD') and "
+        . "to_timestamp(valid_end_date,'YYYY-MM-DD'))) AND person_id = $prsnID)";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return (float) $row[0];
@@ -2096,39 +3148,42 @@ function getSkillsID($prsnID, $vldStrtDate, $vldEndDate) {
     return -1;
 }
 
-function updateSkills($pkeyID, $languages, $hobbies, $interests, $conduct, $attitude, $vldStrtDate, $vldEndDate) {
+function updateSkills($pkeyID, $languages, $hobbies, $interests, $conduct, $attitude, $vldStrtDate, $vldEndDate)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $updtSQL = "UPDATE prs.prsn_skills_nature 
    SET languages='" . loc_db_escape_string($languages) .
-            "', hobbies='" . loc_db_escape_string($hobbies) .
-            "', interests='" . loc_db_escape_string($interests) .
-            "', conduct='" . loc_db_escape_string($conduct) .
-            "', attitude='" . loc_db_escape_string($attitude) .
-            "', valid_start_date='" . cnvrtDMYToYMD($vldStrtDate) .
-            "', valid_end_date='" . cnvrtDMYToYMD($vldEndDate) .
-            "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
-            "' WHERE skills_id=" . $pkeyID;
+        "', hobbies='" . loc_db_escape_string($hobbies) .
+        "', interests='" . loc_db_escape_string($interests) .
+        "', conduct='" . loc_db_escape_string($conduct) .
+        "', attitude='" . loc_db_escape_string($attitude) .
+        "', valid_start_date='" . cnvrtDMYToYMD($vldStrtDate) .
+        "', valid_end_date='" . cnvrtDMYToYMD($vldEndDate) .
+        "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
+        "' WHERE skills_id=" . $pkeyID;
     return execUpdtInsSQL($updtSQL, "Update of Skill");
 }
 
-function updateSkillsSelf($pkeyID, $languages, $hobbies, $interests, $conduct, $attitude, $vldStrtDate, $vldEndDate) {
+function updateSkillsSelf($pkeyID, $languages, $hobbies, $interests, $conduct, $attitude, $vldStrtDate, $vldEndDate)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $updtSQL = "UPDATE self.self_prsn_skills_nature
    SET languages='" . loc_db_escape_string($languages) .
-            "', hobbies='" . loc_db_escape_string($hobbies) .
-            "', interests='" . loc_db_escape_string($interests) .
-            "', conduct='" . loc_db_escape_string($conduct) .
-            "', attitude='" . loc_db_escape_string($attitude) .
-            "', valid_start_date='" . cnvrtDMYToYMD($vldStrtDate) .
-            "', valid_end_date='" . cnvrtDMYToYMD($vldEndDate) .
-            "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
-            "' WHERE skills_id=" . $pkeyID;
+        "', hobbies='" . loc_db_escape_string($hobbies) .
+        "', interests='" . loc_db_escape_string($interests) .
+        "', conduct='" . loc_db_escape_string($conduct) .
+        "', attitude='" . loc_db_escape_string($attitude) .
+        "', valid_start_date='" . cnvrtDMYToYMD($vldStrtDate) .
+        "', valid_end_date='" . cnvrtDMYToYMD($vldEndDate) .
+        "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
+        "' WHERE skills_id=" . $pkeyID;
     return execUpdtInsSQL($updtSQL, "Self-Update of Skill");
 }
 
-function createSkills($prsnID, $languages, $hobbies, $interests, $conduct, $attitude, $vldStrtDate, $vldEndDate) {
+function createSkills($prsnID, $languages, $hobbies, $interests, $conduct, $attitude, $vldStrtDate, $vldEndDate)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO prs.prsn_skills_nature(
@@ -2136,18 +3191,19 @@ function createSkills($prsnID, $languages, $hobbies, $interests, $conduct, $atti
             valid_start_date, valid_end_date, created_by, creation_date, 
             last_update_by, last_update_date)
              VALUES (" . $prsnID . ",'"
-            . loc_db_escape_string($languages) . "','"
-            . loc_db_escape_string($hobbies) . "','"
-            . loc_db_escape_string($interests) . "','"
-            . loc_db_escape_string($conduct) . "','"
-            . loc_db_escape_string($attitude) . "',"
-            . cnvrtDMYToYMD($vldStrtDate) . "','"
-            . cnvrtDMYToYMD($vldEndDate) . "','"
-            . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
+        . loc_db_escape_string($languages) . "','"
+        . loc_db_escape_string($hobbies) . "','"
+        . loc_db_escape_string($interests) . "','"
+        . loc_db_escape_string($conduct) . "','"
+        . loc_db_escape_string($attitude) . "','"
+        . cnvrtDMYToYMD($vldStrtDate) . "','"
+        . cnvrtDMYToYMD($vldEndDate) . "',"
+        . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function createSkillsSelf($prsnID, $languages, $hobbies, $interests, $conduct, $attitude, $vldStrtDate, $vldEndDate) {
+function createSkillsSelf($prsnID, $languages, $hobbies, $interests, $conduct, $attitude, $vldStrtDate, $vldEndDate)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO self.self_prsn_skills_nature(
@@ -2155,18 +3211,19 @@ function createSkillsSelf($prsnID, $languages, $hobbies, $interests, $conduct, $
             valid_start_date, valid_end_date, created_by, creation_date, 
             last_update_by, last_update_date)
              VALUES (" . $prsnID . ",'"
-            . loc_db_escape_string($languages) . "','"
-            . loc_db_escape_string($hobbies) . "','"
-            . loc_db_escape_string($interests) . "','"
-            . loc_db_escape_string($conduct) . "','"
-            . loc_db_escape_string($attitude) . "',"
-            . cnvrtDMYToYMD($vldStrtDate) . "','"
-            . cnvrtDMYToYMD($vldEndDate) . "','"
-            . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
+        . loc_db_escape_string($languages) . "','"
+        . loc_db_escape_string($hobbies) . "','"
+        . loc_db_escape_string($interests) . "','"
+        . loc_db_escape_string($conduct) . "','"
+        . loc_db_escape_string($attitude) . "','"
+        . cnvrtDMYToYMD($vldStrtDate) . "','"
+        . cnvrtDMYToYMD($vldEndDate) . "',"
+        . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function deleteSkills($pkeyID) {
+function deleteSkills($pkeyID)
+{
     $insSQL = "DELETE FROM prs.prsn_skills_nature WHERE skills_id = " . $pkeyID;
     $affctd1 = execUpdtInsSQL($insSQL, "Remove a Skill");
     if ($affctd1 > 0) {
@@ -2179,7 +3236,8 @@ function deleteSkills($pkeyID) {
     }
 }
 
-function deleteSkillsSelf($pkeyID) {
+function deleteSkillsSelf($pkeyID)
+{
     $insSQL = "DELETE FROM self.self_prsn_skills_nature WHERE skills_id = " . $pkeyID;
     $affctd1 = execUpdtInsSQL($insSQL, "Self Removal of skills_id");
     if ($affctd1 > 0) {
@@ -2192,7 +3250,8 @@ function deleteSkillsSelf($pkeyID) {
     }
 }
 
-function getAttachmentDocs() {
+function getAttachmentDocs()
+{
     global $prsnid;
 
     $sqlStr = "SELECT attchmnt_id, file_name, attchmnt_desc
@@ -2202,7 +3261,8 @@ function getAttachmentDocs() {
     return $result;
 }
 
-function getApprovedAttachmentDocs() {
+function getApprovedAttachmentDocs()
+{
     global $prsnid;
 
     $sqlStr = "SELECT attchmnt_id, file_name, attchmnt_desc
@@ -2212,22 +3272,24 @@ function getApprovedAttachmentDocs() {
     return $result;
 }
 
-function get_Attachments($searchWord, $offset, $limit_size, $hdrID, &$attchSQL) {
+function get_Attachments($searchWord, $offset, $limit_size, $hdrID, &$attchSQL)
+{
     $strSql = "SELECT a.attchmnt_id, a.person_id, a.attchmnt_desc, a.file_name " .
-            "FROM prs.prsn_doc_attchmnts a " .
-            "WHERE(a.attchmnt_desc ilike '" . loc_db_escape_string($searchWord) .
-            "' and a.person_id = " . $hdrID . ") ORDER BY a.attchmnt_id LIMIT " . $limit_size .
-            " OFFSET " . (abs($offset * $limit_size));
+        "FROM prs.prsn_doc_attchmnts a " .
+        "WHERE(a.attchmnt_desc ilike '" . loc_db_escape_string($searchWord) .
+        "' and a.person_id = " . $hdrID . ") ORDER BY a.attchmnt_id LIMIT " . $limit_size .
+        " OFFSET " . (abs($offset * $limit_size));
     $result = executeSQLNoParams($strSql);
     $attchSQL = $strSql;
     return $result;
 }
 
-function get_Total_Attachments($searchWord, $hdrID) {
+function get_Total_Attachments($searchWord, $hdrID)
+{
     $strSql = "SELECT count(1) " .
-            "FROM prs.prsn_doc_attchmnts a " .
-            "WHERE(a.attchmnt_desc ilike '" . loc_db_escape_string($searchWord) .
-            "' and a.person_id = " . $hdrID . ")";
+        "FROM prs.prsn_doc_attchmnts a " .
+        "WHERE(a.attchmnt_desc ilike '" . loc_db_escape_string($searchWord) .
+        "' and a.person_id = " . $hdrID . ")";
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -2235,22 +3297,24 @@ function get_Total_Attachments($searchWord, $hdrID) {
     return 0;
 }
 
-function get_AttachmentsSelf($searchWord, $offset, $limit_size, $hdrID, &$attchSQL) {
+function get_AttachmentsSelf($searchWord, $offset, $limit_size, $hdrID, &$attchSQL)
+{
     $strSql = "SELECT a.attchmnt_id, a.person_id, a.attchmnt_desc, a.file_name " .
-            "FROM self.self_prsn_doc_attchmnts a " .
-            "WHERE(a.attchmnt_desc ilike '" . loc_db_escape_string($searchWord) .
-            "' and a.person_id = " . $hdrID . ") ORDER BY a.attchmnt_id LIMIT " . $limit_size .
-            " OFFSET " . (abs($offset * $limit_size));
+        "FROM self.self_prsn_doc_attchmnts a " .
+        "WHERE(a.attchmnt_desc ilike '" . loc_db_escape_string($searchWord) .
+        "' and a.person_id = " . $hdrID . ") ORDER BY a.attchmnt_id LIMIT " . $limit_size .
+        " OFFSET " . (abs($offset * $limit_size));
     $result = executeSQLNoParams($strSql);
     $attchSQL = $strSql;
     return $result;
 }
 
-function get_Total_AttachmentsSelf($searchWord, $hdrID) {
+function get_Total_AttachmentsSelf($searchWord, $hdrID)
+{
     $strSql = "SELECT count(1) " .
-            "FROM self.self_prsn_doc_attchmnts a " .
-            "WHERE(a.attchmnt_desc ilike '" . loc_db_escape_string($searchWord) .
-            "' and a.person_id = " . $hdrID . ")";
+        "FROM self.self_prsn_doc_attchmnts a " .
+        "WHERE(a.attchmnt_desc ilike '" . loc_db_escape_string($searchWord) .
+        "' and a.person_id = " . $hdrID . ")";
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -2258,7 +3322,8 @@ function get_Total_AttachmentsSelf($searchWord, $hdrID) {
     return 0;
 }
 
-function getNewPrsnDocIDSelf() {
+function getNewPrsnDocIDSelf()
+{
     $strSql = "select nextval('self.self_prsn_doc_attchmnts_attchmnt_id_seq')";
     $result = executeSQLNoParams($strSql);
 
@@ -2269,42 +3334,46 @@ function getNewPrsnDocIDSelf() {
     return -1;
 }
 
-function createPrsnDocSelf($attchmnt_id, $person_id, $attchmnt_desc, $file_name) {
+function createPrsnDocSelf($attchmnt_id, $person_id, $attchmnt_desc, $file_name)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO self.self_prsn_doc_attchmnts(
             attchmnt_id, person_id, attchmnt_desc, file_name, created_by, 
             creation_date, last_update_by, last_update_date)
              VALUES (" . $attchmnt_id . ", " . $person_id . ", '"
-            . loc_db_escape_string($attchmnt_desc) . "', '"
-            . loc_db_escape_string($file_name) . "', "
-            . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
+        . loc_db_escape_string($attchmnt_desc) . "', '"
+        . loc_db_escape_string($file_name) . "', "
+        . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function updatePrsnDocFlNmSelf($attchmnt_id, $file_name) {
+function updatePrsnDocFlNmSelf($attchmnt_id, $file_name)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "UPDATE self.self_prsn_doc_attchmnts SET file_name='"
-            . loc_db_escape_string($file_name) .
-            "', last_update_by=" . $usrID .
-            ", last_update_date='" . $dateStr . "'
+        . loc_db_escape_string($file_name) .
+        "', last_update_by=" . $usrID .
+        ", last_update_date='" . $dateStr . "'
                 WHERE attchmnt_id=" . $attchmnt_id;
     return execUpdtInsSQL($insSQL);
 }
 
-function updatePrsnDocFlNm($attchmnt_id, $file_name) {
+function updatePrsnDocFlNm($attchmnt_id, $file_name)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "UPDATE prs.prsn_doc_attchmnts SET file_name='"
-            . loc_db_escape_string($file_name) .
-            "', last_update_by=" . $usrID .
-            ", last_update_date='" . $dateStr . "'
+        . loc_db_escape_string($file_name) .
+        "', last_update_by=" . $usrID .
+        ", last_update_date='" . $dateStr . "'
                 WHERE attchmnt_id=" . $attchmnt_id;
     return execUpdtInsSQL($insSQL);
 }
 
-function getNewPrsnDocID() {
+function getNewPrsnDocID()
+{
     $strSql = "select nextval('prs.prsn_doc_attchmnts_attchmnt_id_seq')";
     $result = executeSQLNoParams($strSql);
 
@@ -2315,20 +3384,22 @@ function getNewPrsnDocID() {
     return -1;
 }
 
-function createPrsnDoc($attchmnt_id, $person_id, $attchmnt_desc, $file_name) {
+function createPrsnDoc($attchmnt_id, $person_id, $attchmnt_desc, $file_name)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO prs.prsn_doc_attchmnts(
             attchmnt_id, person_id, attchmnt_desc, file_name, created_by, 
             creation_date, last_update_by, last_update_date)
              VALUES (" . $attchmnt_id . ", " . $person_id . ",'"
-            . loc_db_escape_string($attchmnt_desc) . "','"
-            . loc_db_escape_string($file_name) . "',"
-            . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
+        . loc_db_escape_string($attchmnt_desc) . "','"
+        . loc_db_escape_string($file_name) . "',"
+        . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function deletePrsnDoc($pkeyID) {
+function deletePrsnDoc($pkeyID)
+{
     $insSQL = "DELETE FROM prs.prsn_doc_attchmnts WHERE attchmnt_id = " . $pkeyID;
     $affctd1 = execUpdtInsSQL($insSQL, "Remove an Attached Document");
     if ($affctd1 > 0) {
@@ -2341,7 +3412,8 @@ function deletePrsnDoc($pkeyID) {
     }
 }
 
-function deletePrsnDocSelf($pkeyID) {
+function deletePrsnDocSelf($pkeyID)
+{
     $insSQL = "DELETE FROM self.self_prsn_doc_attchmnts WHERE attchmnt_id = " . $pkeyID;
     $affctd1 = execUpdtInsSQL($insSQL, "Self Removal of an Attached Document");
     if ($affctd1 > 0) {
@@ -2354,8 +3426,20 @@ function deletePrsnDocSelf($pkeyID) {
     }
 }
 
-function createExtrDataCol($colno, $collabel, $lovnm, $datatyp
-, $catgry, $lngth, $dsplytyp, $orgid, $tblrnumcols, $ordr, $csvTblColNms, $isrqrd) {
+function createExtrDataCol(
+    $colno,
+    $collabel,
+    $lovnm,
+    $datatyp,
+    $catgry,
+    $lngth,
+    $dsplytyp,
+    $orgid,
+    $tblrnumcols,
+    $ordr,
+    $csvTblColNms,
+    $isrqrd
+) {
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO prs.prsn_extra_data_cols(
@@ -2363,45 +3447,59 @@ function createExtrDataCol($colno, $collabel, $lovnm, $datatyp
             column_data_type, column_data_category, data_length, data_dsply_type, 
             org_id, no_cols_tblr_dsply, col_order, csv_tblr_col_nms, created_by, creation_date, 
             last_update_by, last_update_date,is_required)" .
-            "VALUES (" . $colno .
-            ", '" . loc_db_escape_string($collabel) .
-            "', '" . loc_db_escape_string($lovnm) .
-            "', '" . loc_db_escape_string($datatyp) .
-            "', '" . loc_db_escape_string($catgry) .
-            "', " . loc_db_escape_string($lngth) .
-            ", '" . loc_db_escape_string($dsplytyp) .
-            "', " . $orgid .
-            ", " . $tblrnumcols . ", " . $ordr .
-            ", '" . loc_db_escape_string($csvTblColNms) .
-            "', " . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr .
-            "', '" . cnvrtBoolToBitStr($isrqrd) . "')";
+        "VALUES (" . $colno .
+        ", '" . loc_db_escape_string($collabel) .
+        "', '" . loc_db_escape_string($lovnm) .
+        "', '" . loc_db_escape_string($datatyp) .
+        "', '" . loc_db_escape_string($catgry) .
+        "', " . loc_db_escape_string($lngth) .
+        ", '" . loc_db_escape_string($dsplytyp) .
+        "', " . $orgid .
+        ", " . $tblrnumcols . ", " . $ordr .
+        ", '" . loc_db_escape_string($csvTblColNms) .
+        "', " . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr .
+        "', '" . cnvrtBoolToBitStr($isrqrd) . "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function updateExtrDataCol($colno, $collabel, $lovnm, $datatyp
-, $catgry, $lngth, $dsplytyp, $orgid, $tblrnumcols, $rowid, $ordr, $csvTblColNms, $isrqrd) {
+function updateExtrDataCol(
+    $colno,
+    $collabel,
+    $lovnm,
+    $datatyp,
+    $catgry,
+    $lngth,
+    $dsplytyp,
+    $orgid,
+    $tblrnumcols,
+    $rowid,
+    $ordr,
+    $csvTblColNms,
+    $isrqrd
+) {
     global $usrID;
     $dateStr = getDB_Date_time();
     $updtSQL = "UPDATE prs.prsn_extra_data_cols SET 
             column_no=" . $colno .
-            ", column_label='" . loc_db_escape_string($collabel) .
-            "', attchd_lov_name='" . loc_db_escape_string($lovnm) .
-            "', column_data_type='" . loc_db_escape_string($datatyp) .
-            "', column_data_category='" . loc_db_escape_string($catgry) .
-            "', data_length=" . loc_db_escape_string($lngth) .
-            ", data_dsply_type='" . loc_db_escape_string($dsplytyp) .
-            "', org_id=" . $orgid .
-            ", no_cols_tblr_dsply=" . $tblrnumcols .
-            ", col_order=" . $ordr .
-            ", csv_tblr_col_nms='" . loc_db_escape_string($csvTblColNms) .
-            "', last_update_by=" . $usrID .
-            ", last_update_date='" . $dateStr .
-            "', is_required='" . cnvrtBoolToBitStr($isrqrd)
-            . "' WHERE extra_data_cols_id = " . $rowid;
+        ", column_label='" . loc_db_escape_string($collabel) .
+        "', attchd_lov_name='" . loc_db_escape_string($lovnm) .
+        "', column_data_type='" . loc_db_escape_string($datatyp) .
+        "', column_data_category='" . loc_db_escape_string($catgry) .
+        "', data_length=" . loc_db_escape_string($lngth) .
+        ", data_dsply_type='" . loc_db_escape_string($dsplytyp) .
+        "', org_id=" . $orgid .
+        ", no_cols_tblr_dsply=" . $tblrnumcols .
+        ", col_order=" . $ordr .
+        ", csv_tblr_col_nms='" . loc_db_escape_string($csvTblColNms) .
+        "', last_update_by=" . $usrID .
+        ", last_update_date='" . $dateStr .
+        "', is_required='" . cnvrtBoolToBitStr($isrqrd)
+        . "' WHERE extra_data_cols_id = " . $rowid;
     return execUpdtInsSQL($updtSQL);
 }
 
-function deleteExtrDataCol($pkeyID, $extrInfo = "") {
+function deleteExtrDataCol($pkeyID, $extrInfo = "")
+{
     $insSQL = "DELETE FROM prs.prsn_extra_data_cols WHERE extra_data_cols_id = " . $pkeyID;
     $affctd1 = execUpdtInsSQL($insSQL, "Additional Data Column:" . $extrInfo);
     if ($affctd1 > 0) {
@@ -2414,7 +3512,8 @@ function deleteExtrDataCol($pkeyID, $extrInfo = "") {
     }
 }
 
-function getRqstAttchMnts($prsnid) {
+function getRqstAttchMnts($prsnid)
+{
     global $ftp_base_db_fldr;
     $sqlStr = "SELECT string_agg(REPLACE(a.attchmnt_desc,';',','),';') attchmnt_desc, 
 string_agg(REPLACE('" . $ftp_base_db_fldr . "/PrsnDocs/Request/' || a.file_name,';',','),';') file_name 
@@ -2424,7 +3523,8 @@ string_agg(REPLACE('" . $ftp_base_db_fldr . "/PrsnDocs/Request/' || a.file_name,
     return $result;
 }
 
-function updatePrsDataChangeReq($srcDocID, $nwvalue) {
+function updatePrsDataChangeReq($srcDocID, $nwvalue)
+{
     global $usrID;
     $datestr = getDB_Date_time();
 
@@ -2437,7 +3537,8 @@ function updatePrsDataChangeReq($srcDocID, $nwvalue) {
     return $affctd;
 }
 
-function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrfrm = "Initiate", $srcDocID = -1, $srcDocType = "Personal Records Change") {
+function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrfrm = "Initiate", $srcDocID = -1, $srcDocType = "Personal Records Change")
+{
     global $app_url;
     global $admin_name;
     $userID = $_SESSION['USRID'];
@@ -2475,20 +3576,20 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
         if ($actionToPrfrm == "Initiate" && $srcDocID > 0) {
             $msg_id = getWkfMsgID();
             $appID = getAppID('Personal Records Change', 'Basic Person Data');
-//Requestor
+            //Requestor
             $prsnid = $fromPrsnID;
             $fullNm = $usrFullNm;
             $prsnLocID = getPersonLocID($prsnid);
 
-//Message Header & Details
+            //Message Header & Details
             $msghdr = "$fullNm ($prsnLocID) Requests for Changes in Personal Records";
             $msgbody = "PERSONAL RECORDS CHANGE REQUEST ON ($reqestDte):- "
-                    . "A request for Change in Personal Information has been submitted by $fullNm ($prsnLocID) "
-                    . "<br/>Please open the attached Work Document and attend to this Request.
+                . "A request for Change in Personal Information has been submitted by $fullNm ($prsnLocID) "
+                . "<br/>Please open the attached Work Document and attend to this Request.
                       <br/>Thank you.";
             $msgtyp = "Work Document";
             $msgsts = "0";
-            $hrchyid = 1; //Get hierarchy ID
+            $hrchyid = (float) getGnrlRecID2("wkf.wkf_hierarchy_hdr", "hierarchy_name", "hierarchy_id", $srcDocType . " Hierarchy"); //Get hierarchy ID
             $rslt = getRqstAttchMnts($prsnid);
             $attchmnts = ""; //Get Attachments
             $attchmnts_desc = ""; //Get Attachments
@@ -2498,7 +3599,7 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
             }
 
             createWkfMsg($msg_id, $msghdr, $msgbody, $userID, $appID, $msgtyp, $msgsts, $srcdoctyp, $srcdocid, $hrchyid, $attchmnts, $attchmnts_desc);
-//Get Hierarchy Members
+            //Get Hierarchy Members
             $result = getNextApprvrsInMnlHrchy($hrchyid, $curPrsnsLevel);
             $prsnsFnd = 0;
             $lastPrsnID = "|";
@@ -2532,10 +3633,10 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
                         $nameto = getPrsnFullNm($frmID);
                         if ($docType != "" && $docType != "Login") {
                             $message = "Dear $nameto, <br/><br/>A notification has been sent to your account in the Portal as follows:"
-                                    . "<br/><br/>"
-                                    . $msgPart .
-                                    "<br/><br/>Kindly <a href=\""
-                                    . $app_url . "\">Login via this Link</a> to <strong>VIEW and ACT</strong> on it!<br/>Thank you for your cooperation!<br/><br/>Best Regards,<br/>" . $admin_name;
+                                . "<br/><br/>"
+                                . $msgPart .
+                                "<br/><br/>Kindly <a href=\""
+                                . $app_url . "\">Login via this Link</a> to <strong>VIEW and ACT</strong> on it!<br/>Thank you for your cooperation!<br/><br/>Best Regards,<br/>" . $admin_name;
                             $errMsg = "";
                             createMessageQueue($msgBatchID, trim(str_replace(";", ",", $to), ";, "), "", "", $message, $subject, "", "Email");
                         }
@@ -2545,9 +3646,10 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
             if ($prsnsFnd <= 0) {
                 $dsply .= "<br/>|ERROR|-No Approval Hierarchy Found";
                 $msg = "<p style = \"text-align:left; color:#ff0000;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>";
+            } else {
+                //Update Request Status to In Process
+                updatePrsDataChangeReq($srcdocid, "Approval Initiated");
             }
-            //Update Request Status to In Process
-            updatePrsDataChangeReq($srcdocid, "Approval Initiated");
         } else {
             $dsply .= "<br/>|ERROR|-Update Failed! No Workflow Document(s) Generated";
             $msg = "<p style = \"text-align:left; color:#ff0000;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>";
@@ -2562,9 +3664,9 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
                 $curPrsnsLevel = (float) $row[18];
                 $isActionDone = $row[9];
                 $oldMsgbodyAddOn = $row[17];
-//$rtngMsgID = (float) getGnrlRecNm("wkf.wkf_actual_msgs_routng", "routing_id", "msg_id", $routingID);
-//$curPrsnsLevel = (float) getGnrlRecNm("wkf.wkf_actual_msgs_routng", "routing_id", "to_prsns_hrchy_level", $routingID);
-//$isActionDone = getGnrlRecNm("wkf.wkf_actual_msgs_routng", "routing_id", "is_action_done", $routingID);
+                //$rtngMsgID = (float) getGnrlRecNm("wkf.wkf_actual_msgs_routng", "routing_id", "msg_id", $routingID);
+                //$curPrsnsLevel = (float) getGnrlRecNm("wkf.wkf_actual_msgs_routng", "routing_id", "to_prsns_hrchy_level", $routingID);
+                //$isActionDone = getGnrlRecNm("wkf.wkf_actual_msgs_routng", "routing_id", "is_action_done", $routingID);
             }
             $row = NULL;
 
@@ -2588,7 +3690,7 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
                     echo prsnDataRODsply1($orgnlPrsnID);
                 } else if ($actionToPrfrm == "Reject") {
                     $affctd += updtWkfMsgRtngUsngLvl($rtngMsgID, $curPrsnsLevel, $fromPrsnID, "Rejected", "None", $userID);
-//$affctd1+= updateWkfMsgBdy($rtngMsgID, $msgbodyAddOn, $userID);
+                    //$affctd1+= updateWkfMsgBdy($rtngMsgID, $msgbodyAddOn, $userID);
                     $datestr = getFrmtdDB_Date_time();
                     $msgbodyAddOn = "";
                     $msgbodyAddOn .= "REJECTION ON $datestr:- This document has been Rejected by $usrFullNm with the ff Message:<br/>";
@@ -2599,12 +3701,12 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
                     updateWkfMsgStatus($rtngMsgID, "1", $userID);
                     updtWkfMsgAllUnclsdRtng($rtngMsgID, $fromPrsnID, "Closed", "None", $userID);
 
-//Message Header & Details
+                    //Message Header & Details
                     $msghdr = "REJECTED - " . $msgTitle;
                     $msgbody = $msgBdy; //$msgbodyAddOn. "ORIGINAL MESSAGE :<br/><br/>" .
                     $msgtyp = "Informational";
                     $msgsts = "0";
-//$msg_id = getWkfMsgID();
+                    //$msg_id = getWkfMsgID();
                     $affctd2 += updateWkfMsg($msg_id, $msghdr, $msgbody, $userID, $appID, $msgtyp, $msgsts, $srcdoctyp, $srcdocid, $hrchyid, $attchmnts, $attchmnts_desc);
                     $affctd3 += routWkfMsg($msg_id, $fromPrsnID, $orgnlPrsnID, $userID, "Initiated", "Acknowledge;Open", 1, $msgbodyAddOn);
                     $affctd4 += updatePrsDataChangeReq($srcdocid, "Rejected");
@@ -2632,10 +3734,10 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
                         $nameto = getPrsnFullNm($frmID);
                         if ($docType != "" && $docType != "Login") {
                             $message = "Dear $nameto, <br/><br/>A notification has been sent to your account in the Portal as follows:"
-                                    . "<br/><br/>"
-                                    . $msgPart .
-                                    "<br/><br/>Kindly <a href=\""
-                                    . $app_url . "\">Login via this Link</a> to <strong>VIEW and ACT</strong> on it!<br/>Thank you for your cooperation!<br/><br/>Best Regards,<br/>" . $admin_name;
+                                . "<br/><br/>"
+                                . $msgPart .
+                                "<br/><br/>Kindly <a href=\""
+                                . $app_url . "\">Login via this Link</a> to <strong>VIEW and ACT</strong> on it!<br/>Thank you for your cooperation!<br/><br/>Best Regards,<br/>" . $admin_name;
                             $errMsg = "";
                             createMessageQueue($msgBatchID, trim(str_replace(";", ",", $to), ";, "), "", "", $message, $subject, "", "Email");
                             //sendEMail(trim(str_replace(";", ",", $to), ","), $nameto, $subject, $message, $errMsg, "", "", "", $admin_name);
@@ -2654,9 +3756,9 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
                     }
                 } else if ($actionToPrfrm == "Request for Information") {
                     $nwPrsnID = getPersonID($nwPrsnLocID);
-//$nwPrsnFullNm = getPrsnFullNm($nwPrsnID);
+                    //$nwPrsnFullNm = getPrsnFullNm($nwPrsnID);
                     $affctd += updtWkfMsgRtngUsngLvl($rtngMsgID, $curPrsnsLevel, $fromPrsnID, "Information Requested", "None", $userID);
-//$affctd1+= updateWkfMsgBdy($rtngMsgID, $msgbodyAddOn, $userID);
+                    //$affctd1+= updateWkfMsgBdy($rtngMsgID, $msgbodyAddOn, $userID);
                     $datestr = getFrmtdDB_Date_time();
                     $msgbodyAddOn = "";
                     $msgbodyAddOn .= "INFORMATION REQUESTED ON $datestr:- A requested for Information has been generated by $usrFullNm with the ff Message:<br/>";
@@ -2667,21 +3769,21 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
                     updateWkfMsgStatus($rtngMsgID, "1", $userID);
                     updtWkfMsgAllUnclsdRtng($rtngMsgID, $fromPrsnID, "Closed", "None", $userID);
 
-//Message Header & Details
+                    //Message Header & Details
                     $msghdr = "INFORMATION REQUEST - " . $msgTitle;
                     $msgbody = $msgBdy; //"ORIGINAL MESSAGE :<br/><br/>" . 
                     $msgtyp = "Work Document";
                     $msgsts = "0";
-//$msg_id = getWkfMsgID();
+                    //$msg_id = getWkfMsgID();
                     $affctd2 += updateWkfMsg($msg_id, $msghdr, $msgbody, $userID, $appID, $msgtyp, $msgsts, $srcdoctyp, $srcdocid, $hrchyid, $attchmnts, $attchmnts_desc);
                     $affctd3 += routWkfMsg($msg_id, $fromPrsnID, $nwPrsnID, $userID, "Initiated", "Respond;Open", $curPrsnsLevel, $msgbodyAddOn);
-//$affctd4+=updatePrsDataChangeReq($srcdocid, "Rejected");
+                    //$affctd4+=updatePrsDataChangeReq($srcdocid, "Rejected");
                     if ($affctd > 0) {
                         $dsply .= "<br/>Status of $affctd Workflow Document(s) successfully updated to Information Requested!";
                         $dsply .= "<br/>$affctd1 Workflow Document(s) Message Body Successfully Updated!";
-//$dsply .= "<br/>$affctd2 New Workflow Document(s) Message Body Successfully Created!";
+                        //$dsply .= "<br/>$affctd2 New Workflow Document(s) Message Body Successfully Created!";
                         $dsply .= "<br/>$affctd3 Workflow Document(s) Successfully Re-Routed to New Person!";
-// $dsply .= "<br/>$affctd4 Appointment Status Successfully Updated!";
+                        // $dsply .= "<br/>$affctd4 Appointment Status Successfully Updated!";
                         $msg = "<p style = \"text-align:left; color:#32CD32;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>"; //#32CD32
                     } else {
                         $dsply .= "<br/>|ERROR|-Update Failed! No Workflow Document(s) Worked On";
@@ -2689,9 +3791,9 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
                     }
                 } else if ($actionToPrfrm == "Respond") {
                     $nwPrsnID = getPersonID($nwPrsnLocID);
-//$nwPrsnFullNm = getPrsnFullNm($nwPrsnID);
+                    //$nwPrsnFullNm = getPrsnFullNm($nwPrsnID);
                     $affctd += updtWkfMsgRtngUsngLvl($rtngMsgID, $curPrsnsLevel, $fromPrsnID, "Response Given", "None", $userID);
-//$affctd1+= updateWkfMsgBdy($rtngMsgID, $msgbodyAddOn, $userID);
+                    //$affctd1+= updateWkfMsgBdy($rtngMsgID, $msgbodyAddOn, $userID);
                     $datestr = getFrmtdDB_Date_time();
                     $msgbodyAddOn = "";
                     $msgbodyAddOn .= "RESPONSE TO INFORMATION REQUESTED ON $datestr:- A response to an Information Request has been given by $usrFullNm with the ff Message:<br/>";
@@ -2702,21 +3804,21 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
                     updateWkfMsgStatus($rtngMsgID, "1", $userID);
                     updtWkfMsgAllUnclsdRtng($rtngMsgID, $fromPrsnID, "Closed", "None", $userID);
 
-//Message Header & Details
+                    //Message Header & Details
                     $msghdr = "RESPONSE TO INFORMATION REQUEST - " . $msgTitle;
                     $msgbody = $msgBdy; //"ORIGINAL MESSAGE :<br/><br/>" . 
                     $msgtyp = "Work Document";
                     $msgsts = "0";
-//$msg_id = getWkfMsgID();
+                    //$msg_id = getWkfMsgID();
                     $affctd2 += updateWkfMsg($msg_id, $msghdr, $msgbody, $userID, $appID, $msgtyp, $msgsts, $srcdoctyp, $srcdocid, $hrchyid, $attchmnts, $attchmnts_desc);
                     $affctd3 += routWkfMsg($msg_id, $fromPrsnID, $nwPrsnID, $userID, "Initiated", 'Open;Reject;Request for Information;Approve', $curPrsnsLevel, $msgbodyAddOn);
-//$affctd4+=updatePrsDataChangeReq($srcdocid, "Rejected");
+                    //$affctd4+=updatePrsDataChangeReq($srcdocid, "Rejected");
                     if ($affctd > 0) {
                         $dsply .= "<br/>Status of $affctd Workflow Document(s) successfully updated to Response Given!";
                         $dsply .= "<br/>$affctd1 Workflow Document(s) Message Body Successfully Updated!";
-//$dsply .= "<br/>$affctd2 New Workflow Document(s) Message Body Successfully Created!";
+                        //$dsply .= "<br/>$affctd2 New Workflow Document(s) Message Body Successfully Created!";
                         $dsply .= "<br/>$affctd3 Workflow Document(s) Successfully Re-Routed to New Person!";
-// $dsply .= "<br/>$affctd4 Appointment Status Successfully Updated!";
+                        // $dsply .= "<br/>$affctd4 Appointment Status Successfully Updated!";
                         $msg = "<p style = \"text-align:left; color:#32CD32;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>"; //#32CD32
                     } else {
                         $dsply .= "<br/>|ERROR|-Update Failed! No Workflow Document(s) Worked On";
@@ -2724,13 +3826,13 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
                     }
                 } else if ($actionToPrfrm == "Acknowledge") {
                     $nwPrsnID = getPersonID($nwPrsnLocID);
-//$nwPrsnFullNm = getPrsnFullNm($nwPrsnID);
+                    //$nwPrsnFullNm = getPrsnFullNm($nwPrsnID);
                     $affctd += updtWkfMsgRtngUsngLvl($rtngMsgID, $curPrsnsLevel, $fromPrsnID, "Acknowledged", "None", $userID);
-//$affctd1+= updateWkfMsgBdy($rtngMsgID, $msgbodyAddOn, $userID);
+                    //$affctd1+= updateWkfMsgBdy($rtngMsgID, $msgbodyAddOn, $userID);
                     $datestr = getFrmtdDB_Date_time();
                     $msgbodyAddOn = "";
                     $msgbodyAddOn .= "MESSAGE ACKNOWLEDGED ON $datestr:- An acknowledgement of the message has been given by $usrFullNm <br/><br/>";
-//$msgbodyAddOn.=$apprvrCmmnts . "<br/><br/>";
+                    //$msgbodyAddOn.=$apprvrCmmnts . "<br/><br/>";
                     $affctd1 += updtWkfMsgRtngCmnts($routingID, $msgbodyAddOn, $userID);
 
                     updateWkfMsgStatus($rtngMsgID, "1", $userID);
@@ -2738,61 +3840,69 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
                     if ($affctd > 0) {
                         $dsply .= "<br/>Status of $affctd Workflow Document(s) successfully updated to Acknowledged!";
                         $dsply .= "<br/>$affctd1 Workflow Document(s) Message Body Successfully Updated!";
-//$dsply .= "<br/>$affctd2 New Workflow Document(s) Message Body Successfully Created!";
-//$dsply .= "<br/>$affctd3 Workflow Document(s) Successfully Re-Routed to New Person!";
-// $dsply .= "<br/>$affctd4 Appointment Status Successfully Updated!";
+                        //$dsply .= "<br/>$affctd2 New Workflow Document(s) Message Body Successfully Created!";
+                        //$dsply .= "<br/>$affctd3 Workflow Document(s) Successfully Re-Routed to New Person!";
+                        // $dsply .= "<br/>$affctd4 Appointment Status Successfully Updated!";
                         $msg = "<p style = \"text-align:left; color:#32CD32;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>"; //#32CD32
                     } else {
                         $dsply .= "<br/>|ERROR|-Update Failed! No Workflow Document(s) Worked On";
                         $msg = "<p style = \"text-align:left; color:#ff0000;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>";
                     }
                 } else if ($actionToPrfrm == "Approve") {
-                    $newStatus = "Reviewed";
-                    $nxtStatus = "Open;Reject;Request for Information;Approve";
-                    $nxtApprvr = "Next Approver";
-                    $nxtPrsnID = getNextApprvrInMnlHrchy($hrchyid, $curPrsnsLevel);
-                    if ($nxtPrsnID <= 0) {
+                    $nxtPrsnsRslt = getNextApprvrsInMnlHrchy($hrchyid, $curPrsnsLevel);
+                    $prsnsFnd = 0;
+                    $lastPrsnID = "|";
+                    $msgbodyAddOn = "";
+                    while ($row = loc_db_fetch_array($nxtPrsnsRslt)) {
+                        $nxtPrsnID = (float) $row[0];
+                        $newStatus = "Reviewed";
+                        $nxtStatus = "Open;Reject;Request for Information;Approve";
+                        $nxtApprvr = "Next Approver";
+                        if ($prsnsFnd == 0) {
+                            $affctd += updtWkfMsgRtngUsngLvl($rtngMsgID, $curPrsnsLevel, $fromPrsnID, $newStatus, $nxtStatus, $userID);
+                            $datestr = getFrmtdDB_Date_time();
+                            $msgbodyAddOn .= strtoupper($newStatus) . " ON $datestr:- This document has been $newStatus by $usrFullNm <br/><br/>";
+                            $affctd1 += updtWkfMsgRtngCmnts($routingID, $msgbodyAddOn, $userID);
+                            $msgbodyAddOn .= $oldMsgbodyAddOn;
+                            updtWkfMsgAllUnclsdRtng($rtngMsgID, $fromPrsnID, "Closed", "None", $userID);
+                            $msghdr = $msgTitle;
+                            $msgbody = $msgBdy;
+                            $msgtyp = "Work Document";
+                            $msgsts = "0";
+                            $curPrsnsLevel += 1;
+                            $affctd2 += updateWkfMsg($msg_id, $msghdr, $msgbody, $userID, $appID, $msgtyp, $msgsts, $srcdoctyp, $srcdocid, $hrchyid, $attchmnts, $attchmnts_desc);
+                        }
+                        $prsnsFnd++;
+                        if ($nxtPrsnID > 0) {
+                            $affctd3 += routWkfMsg($msg_id, $fromPrsnID, $nxtPrsnID, $userID, $newStatus, $nxtStatus, $curPrsnsLevel, $msgbodyAddOn);
+                        }
+                        if ($prsnsFnd == 1) {
+                            $affctd4 += updatePrsDataChangeReq($srcdocid, $newStatus);
+                        }
+                    }
+                    if ($prsnsFnd <= 0) {
                         $newStatus = "Approved";
                         $nxtStatus = "None;Acknowledge";
-                    }
-                    $affctd += updtWkfMsgRtngUsngLvl($rtngMsgID, $curPrsnsLevel, $fromPrsnID, $newStatus, $nxtStatus, $userID);
-//$affctd1+= updateWkfMsgBdy($rtngMsgID, $msgbodyAddOn, $userID);
-                    $datestr = getFrmtdDB_Date_time();
-                    $msgbodyAddOn = "";
-                    $msgbodyAddOn .= strtoupper($newStatus) . " ON $datestr:- This document has been $newStatus by $usrFullNm <br/><br/>";
-//$msgbodyAddOn.=$apprvrCmmnts . "<br/><br/>";
-                    $affctd1 += updtWkfMsgRtngCmnts($routingID, $msgbodyAddOn, $userID);
-                    $msgbodyAddOn .= $oldMsgbodyAddOn;
-
-                    updtWkfMsgAllUnclsdRtng($rtngMsgID, $fromPrsnID, "Closed", "None", $userID);
-
-//Message Header & Details
-                    if ($nxtPrsnID <= 0) {
                         $nxtApprvr = "Original Person";
+                        $affctd += updtWkfMsgRtngUsngLvl($rtngMsgID, $curPrsnsLevel, $fromPrsnID, $newStatus, $nxtStatus, $userID);
+                        $datestr = getFrmtdDB_Date_time();
+                        $msgbodyAddOn = "";
+                        $msgbodyAddOn .= strtoupper($newStatus) . " ON $datestr:- This document has been $newStatus by $usrFullNm <br/><br/>";
+                        $affctd1 += updtWkfMsgRtngCmnts($routingID, $msgbodyAddOn, $userID);
+                        $msgbodyAddOn .= $oldMsgbodyAddOn;
+                        updtWkfMsgAllUnclsdRtng($rtngMsgID, $fromPrsnID, "Closed", "None", $userID);
                         updateWkfMsgStatus($rtngMsgID, "1", $userID);
                         $msghdr = "APPROVED - " . $msgTitle;
                         $msgbody = $msgBdy;
                         $msgtyp = "Informational";
                         $msgsts = "0";
-//$msg_id = getWkfMsgID();
                         $curPrsnsLevel += 1;
                         $affctd2 += updateWkfMsg($msg_id, $msghdr, $msgbody, $userID, $appID, $msgtyp, $msgsts, $srcdoctyp, $srcdocid, $hrchyid, $attchmnts, $attchmnts_desc);
                         $affctd3 += routWkfMsg($msg_id, $fromPrsnID, $orgnlPrsnID, $userID, $newStatus, $nxtStatus, $curPrsnsLevel, $msgbodyAddOn);
-                    } else {
-                        $msghdr = $msgTitle;
-                        $msgbody = $msgBdy;
-                        $msgtyp = "Work Document";
-                        $msgsts = "0";
-//$msg_id = getWkfMsgID();
-                        $curPrsnsLevel += 1;
-                        $affctd2 += updateWkfMsg($msg_id, $msghdr, $msgbody, $userID, $appID, $msgtyp, $msgsts, $srcdoctyp, $srcdocid, $hrchyid, $attchmnts, $attchmnts_desc);
-                        $affctd3 += routWkfMsg($msg_id, $fromPrsnID, $nxtPrsnID, $userID, $newStatus, $nxtStatus, $curPrsnsLevel, $msgbodyAddOn);
-                    }
-                    if ($nxtPrsnID <= 0) {
+
                         $dsply .= trnsfrRecsFrmSelfToPrs($orgnlPrsnID);
-                    }
-                    $affctd4 += updatePrsDataChangeReq($srcdocid, $newStatus);
-                    if ($nxtPrsnID <= 0) {
+                        $affctd4 += updatePrsDataChangeReq($srcdocid, $newStatus);
+
                         //Begin Email Sending Process                    
                         $result = getEmlDetailsAftrActn($srcdoctyp, $srcdocid);
                         $lastPrsnID = "|";
@@ -2816,10 +3926,10 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
                             $nameto = getPrsnFullNm($frmID);
                             if ($docType != "" && $docType != "Login") {
                                 $message = "Dear $nameto, <br/><br/>A notification has been sent to your account in the Portal as follows:"
-                                        . "<br/><br/>"
-                                        . $msgPart .
-                                        "<br/><br/>Kindly <a href=\""
-                                        . $app_url . "\">Login via this Link</a> to <strong>VIEW</strong> it!<br/>Thank you for your cooperation!<br/><br/>Best Regards,<br/>" . $admin_name;
+                                    . "<br/><br/>"
+                                    . $msgPart .
+                                    "<br/><br/>Kindly <a href=\""
+                                    . $app_url . "\">Login via this Link</a> to <strong>VIEW</strong> it!<br/>Thank you for your cooperation!<br/><br/>Best Regards,<br/>" . $admin_name;
                                 $errMsg = "";
                                 createMessageQueue($msgBatchID, trim(str_replace(";", ",", $to), ";, "), "", "", $message, $subject, "", "Email");
                                 //sendEMail(trim(str_replace(";", ",", $to), ","), $nameto, $subject, $message, $errMsg, "", "", "", $admin_name);
@@ -2830,7 +3940,7 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
                     if ($affctd > 0) {
                         $dsply .= "<br/>Status of $affctd Workflow Document(s) successfully updated to $newStatus!";
                         $dsply .= "<br/>$affctd1 Workflow Document(s) Message Body Successfully Updated!";
-//$dsply .= "<br/>$affctd2 New Workflow Document(s) Message Body Successfully Created!";
+                        //$dsply .= "<br/>$affctd2 New Workflow Document(s) Message Body Successfully Created!";
                         $dsply .= "<br/>$affctd3 Workflow Document(s) Successfully Re-Routed to $nxtApprvr!";
                         $dsply .= "<br/>$affctd4 Request Status Successfully Updated!";
                         $msg = "<p style = \"text-align:left; color:#32CD32;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>"; //#32CD32
@@ -2851,7 +3961,8 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
     return $msg;
 }
 
-function withdrawDataChngRqst($hdrid) {
+function withdrawDataChngRqst($hdrid)
+{
     $apprvrStatus = 'Withdrawn';
     $msg = "";
     $rqstHdrStatus = get_RqstStatusUsngID($hdrid);
@@ -2878,7 +3989,8 @@ function withdrawDataChngRqst($hdrid) {
     return $msg;
 }
 
-function prsnDataRODsply1($pkID) {
+function prsnDataRODsply1($pkID)
+{
     global $tmpDest;
     global $ftp_base_db_fldr;
     global $smplTokenWord1;
@@ -2886,7 +3998,7 @@ function prsnDataRODsply1($pkID) {
     global $app_url;
 
     $result = get_PrsnDetOrgnl($pkID);
-//echo "PKey:".$pkID;
+    //echo "PKey:".$pkID;
     $resultRqst = get_PrsnDet_Rqst($pkID);
     $colsCnt = loc_db_num_fields($result);
     $output = "<div style=\"padding:2px;\">
@@ -2907,6 +4019,8 @@ function prsnDataRODsply1($pkID) {
         for ($d = 0; $d < $colsCnt; $d++) {
             $style = "";
             $style2 = "";
+            $row[$d] ??= '';
+            $rowRqst[$d] ??= '';
             if (trim(loc_db_field_name($result, $d)) == "mt") {
                 $style = "style=\"display:none;\"";
             }
@@ -2951,9 +4065,9 @@ function prsnDataRODsply1($pkID) {
                 }
 
                 if (file_exists($fldrPrfx . $img_srcRqst)) {
-//image exists!
+                    //image exists!
                 } else {
-//image does not exist.
+                    //image does not exist.
                     $img_srcRqst = "cmn_images/image_up.png";
                 }
 
@@ -3039,7 +4153,8 @@ function prsnDataRODsply1($pkID) {
     return $output;
 }
 
-function getExtraDataDsply($pkID) {
+function getExtraDataDsply($pkID)
+{
     $output = "";
     $orgID = $_SESSION['ORG_ID'];
     $result = get_PrsExtrDataGrps($orgID);
@@ -3051,7 +4166,7 @@ function getExtraDataDsply($pkID) {
         $output .= "<div style=\"float:left;margin-top:10px;padding:3px;width:100%;\">";
         $output .= "<fieldset style=\"width:100%;\"><legend>$row[0]</legend>";
         $output .= "<div style=\"width:100%;float:left;margin:2px;padding:3px;\">";
-//$output .= "<fieldset><legend>(CHANGES REQUESTED)</legend>";
+        //$output .= "<fieldset><legend>(CHANGES REQUESTED)</legend>";
         $result1 = get_PrsExtrDataGrpCols($row[0], $orgID);
         $cntr1 = 0;
         $gcntr1 = 0;
@@ -3065,9 +4180,9 @@ function getExtraDataDsply($pkID) {
              * textbox with number validation
              */
 
-//$label = "";
+            //$label = "";
             if ($row1[7] == "Tabular") {
-//<caption>$row1[2]</caption>
+                //<caption>$row1[2]</caption>
 
                 $output .= "<table id=\"extDataTblCol$row1[1]\" class=\"gridtable\" style=\"margin-top:3px;\"><thead><th>No.</th>";
                 $fieldHdngs = $row1[11];
@@ -3128,12 +4243,12 @@ function getExtraDataDsply($pkID) {
         if (($cntr1 % 3) == 2 || ($cntr1 % 3) == 1) {
             $cntr1 = 0;
             $output .= "</tr>";
-//$output .="</tr>";
-//$output .="</tbody></table>";
+            //$output .="</tr>";
+            //$output .="</tbody></table>";
         }
         if ($gcntr1 == 1) {
             $gcntr1 = 0;
-//$output .="</tr>";
+            //$output .="</tr>";
             $output .= "</tbody></table>";
         }
         $output .= "</div></fieldset></div>";  //</fieldset>      
@@ -3142,9 +4257,12 @@ function getExtraDataDsply($pkID) {
     return $output;
 }
 
-function get_PrsnDet_RqstNw($pkID) {
-    $strSql = "SELECT person_id mt, local_id_no \"ID No.\", img_location \"Person's Picture\", 
-          title, first_name, sur_name \"surname\", other_names, org.get_org_name(org_id) organisation, 
+function get_PrsnDet_RqstNw($pkID)
+{
+    $strSql = "SELECT person_id mt, local_id_no \"ID No.\", 
+          COALESCE(img_location,'') \"Person's Picture\", 
+          title, first_name, sur_name \"surname\", other_names, 
+          org.get_org_name(org_id) organisation, 
           gender, marital_status, 
           date_of_birth \"Date of Birth\", 
           place_of_birth, religion, 
@@ -3158,7 +4276,8 @@ function get_PrsnDet_RqstNw($pkID) {
     return $result;
 }
 
-function getNewPrsDocAttchID() {
+function getNewPrsDocAttchID()
+{
     $sqlStr = "select nextval('prs.prsn_doc_attchmnts_attchmnt_id_seq'::regclass);";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -3167,7 +4286,8 @@ function getNewPrsDocAttchID() {
     return "";
 }
 
-function trnsfrRecsFrmSelfToPrs($pkID) {
+function trnsfrRecsFrmSelfToPrs($pkID)
+{
     global $orgID;
     global $usrID;
     global $fldrPrfx;
@@ -3282,7 +4402,7 @@ function trnsfrRecsFrmSelfToPrs($pkID) {
         }
     }
     //Nationality IDs
-    $delSQL = "DELETE FROM prs.prsn_education WHERE person_id = " . $pkID;
+    $delSQL = "DELETE FROM prs.prsn_national_ids WHERE person_id = " . $pkID;
     execUpdtInsSQL($delSQL);
 
     $insSQL = "INSERT INTO prs.prsn_national_ids(
@@ -3413,41 +4533,44 @@ function trnsfrRecsFrmSelfToPrs($pkID) {
     }
 }
 
-function get_AllNtnlty_Rqst($pkID) {
+function get_AllNtnlty_Rqst($pkID)
+{
     $strSql = "SELECT nationality \"Country\", national_id_typ national_id_type, 
         id_number, date_issued, expiry_date, other_info other_information 
           FROM self.self_prsn_national_ids WHERE ((person_id = $pkID)) "
-            . "except"
-            . " SELECT nationality \"Country\", national_id_typ national_id_type, 
+        . "except"
+        . " SELECT nationality \"Country\", national_id_typ national_id_type, 
         id_number, date_issued, expiry_date, other_info other_information 
           FROM prs.prsn_national_ids WHERE ((person_id = $pkID)) ";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_AllEduc_Rqst($pkID) {
+function get_AllEduc_Rqst($pkID)
+{
     $strSql = "SELECT person_id mt, course_name, school_institution \"School/Institution        \", school_location, 
        cert_obtained \"Certificate Obtained     \", 
        to_char(to_timestamp(course_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"From      \",
        to_char(to_timestamp(course_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"To        \", " .
-            " date_cert_awarded \"Date Obtained     \", " .
-            " cert_type  \"Certificate Type        \"
+        " date_cert_awarded \"Date Obtained     \", " .
+        " cert_type  \"Certificate Type        \"
   FROM self.self_prsn_education 
 WHERE 1=1 AND person_id = " . $pkID .
-            " except " .
-            " SELECT person_id mt, course_name, school_institution \"School/Institution        \", school_location, 
+        " except " .
+        " SELECT person_id mt, course_name, school_institution \"School/Institution        \", school_location, 
        cert_obtained \"Certificate Obtained     \", 
        to_char(to_timestamp(course_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"From      \",
        to_char(to_timestamp(course_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"To        \", " .
-            " date_cert_awarded \"Date Obtained     \", " .
-            " cert_type \"Certificate Type        \" 
+        " date_cert_awarded \"Date Obtained     \", " .
+        " cert_type \"Certificate Type        \" 
   FROM prs.prsn_education 
 WHERE 1=1 AND person_id = " . $pkID;
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_EducBkgrd_Rqst_forUpdate($pkID) {
+function get_EducBkgrd_Rqst_forUpdate($pkID)
+{
     $sqlStr = "SELECT person_id, course_name, school_institution, school_location, 
        cert_obtained, course_start_date, course_end_date, date_cert_awarded, cert_type, educ_id
   FROM self.self_prsn_education 
@@ -3456,15 +4579,16 @@ WHERE 1=1 AND person_id = " . $pkID . " ORDER BY educ_id";
     return $result;
 }
 
-function get_AllWrkExp_Rqst($pkID) {
+function get_AllWrkExp_Rqst($pkID)
+{
     $strSql = "SELECT person_id mt, job_name_title \"Job Name/Title    \", institution_name, job_location,
         to_char(to_timestamp(job_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"From      \",
        to_char(to_timestamp(job_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"To      \", 
        job_description, feats_achvments \"Feats/Achivements      \"   
   FROM self.self_prsn_work_experience 
 WHERE 1=1 AND person_id = " . $pkID .
-            " except " .
-            " SELECT person_id mt, job_name_title \"Job Name/Title\", institution_name, job_location,
+        " except " .
+        " SELECT person_id mt, job_name_title \"Job Name/Title\", institution_name, job_location,
         to_char(to_timestamp(job_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"From      \",
        to_char(to_timestamp(job_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY')  \"To      \", 
        job_description, feats_achvments \"Feats/Achivements      \"    
@@ -3474,9 +4598,11 @@ WHERE 1=1 AND person_id = " . $pkID;
     return $result;
 }
 
-function get_PrsnDetOrgnl($pkID) {
-//org.get_org_name(org_id) organisation,
-    $strSql = "SELECT person_id mt, local_id_no \"ID No.\", img_location \"Person's Picture\", 
+function get_PrsnDetOrgnl($pkID)
+{
+    //org.get_org_name(org_id) organisation,
+    $strSql = "SELECT person_id mt, local_id_no \"ID No.\", 
+          COALESCE(img_location,'') \"Person's Picture\", 
           title, first_name, sur_name \"surname\", other_names,  
           gender, marital_status, 
           to_char(to_timestamp(date_of_birth,'YYYY-MM-DD'),'DD-Mon-YYYY') \"Date of Birth\", 
@@ -3486,20 +4612,22 @@ function get_PrsnDetOrgnl($pkID) {
           cntct_no_fax fax, hometown, nationality, 
           (CASE WHEN lnkd_firm_org_id>0 THEN 
           REPLACE(scm.get_cstmr_splr_name(lnkd_firm_org_id)||' (' || scm.get_cstmr_splr_site_name(lnkd_firm_site_id) || " .
-            "')',' ()','') 
+        "')',' ()','') 
               ELSE 
               REPLACE(new_company || ' (' || new_company_loc || " . "')',' ()','')
               END) \"Linked Firm/ Workplace \" 
           FROM prs.prsn_names_nos a 
     WHERE (a.person_id=$pkID)";
-//echo $strSql;
+    //echo $strSql;
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_PrsnDet_Rqst($pkID) {
-//org.get_org_name(org_id) organisation, 
-    $strSql = "SELECT person_id mt, local_id_no \"ID No.\", img_location \"Person's Picture\", 
+function get_PrsnDet_Rqst($pkID)
+{
+    //org.get_org_name(org_id) organisation, 
+    $strSql = "SELECT person_id mt, local_id_no \"ID No.\", 
+          COALESCE(img_location,'') \"Person's Picture\", 
           title, first_name, sur_name \"surname\", other_names, 
           gender, marital_status, 
           to_char(to_timestamp(date_of_birth,'YYYY-MM-DD'),'DD-Mon-YYYY') \"Date of Birth\", 
@@ -3509,19 +4637,21 @@ function get_PrsnDet_Rqst($pkID) {
           cntct_no_fax fax, hometown, nationality, 
           (CASE WHEN lnkd_firm_org_id>0 THEN 
           REPLACE(scm.get_cstmr_splr_name(lnkd_firm_org_id)||' (' || scm.get_cstmr_splr_site_name(lnkd_firm_site_id) || " .
-            "')',' ()','') 
+        "')',' ()','') 
               ELSE 
               REPLACE(new_company || ' (' || new_company_loc || " . "')',' ()','')
               END) \"Linked Firm/ Workplace \"  
           FROM self.self_prsn_names_nos a 
     WHERE (a.person_id=$pkID)";
-//echo $strSql;
+    //echo $strSql;
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_PrsExtrData_Rqst($pkID, $colNum = "1") {
-    $colNms = array("data_col1", "data_col2", "data_col3", "data_col4",
+function get_PrsExtrData_Rqst($pkID, $colNum = "1")
+{
+    $colNms = array(
+        "data_col1", "data_col2", "data_col3", "data_col4",
         "data_col5", "data_col6", "data_col7", "data_col8", "data_col9", "data_col10",
         "data_col11", "data_col12", "data_col13", "data_col14", "data_col15", "data_col16",
         "data_col17", "data_col18", "data_col19", "data_col20", "data_col21", "data_col22",
@@ -3529,7 +4659,8 @@ function get_PrsExtrData_Rqst($pkID, $colNum = "1") {
         "data_col29", "data_col30", "data_col31", "data_col32", "data_col33", "data_col34",
         "data_col35", "data_col36", "data_col37", "data_col38", "data_col39", "data_col40",
         "data_col41", "data_col42", "data_col43", "data_col44", "data_col45", "data_col46",
-        "data_col47", "data_col48", "data_col49", "data_col50");
+        "data_col47", "data_col48", "data_col49", "data_col50"
+    );
     $strSql = "SELECT " . $colNms[$colNum - 1] . ", extra_data_id 
   FROM self.self_prsn_extra_data a WHERE ((person_id = $pkID))";
     $result = executeSQLNoParams($strSql);
@@ -3539,4 +4670,1673 @@ function get_PrsExtrData_Rqst($pkID, $colNum = "1") {
     return "";
 }
 
+//ABSENSE/LEAVE MANAGEMENT
+function get_PlnExctns($searchWord, $searchIn, $offset, $limit_size, $orgID, $dte1, $dte2)
+{
+    global $prsnid;
+    global $dfltPrvldgs;
+    global $mdlNm;
+    $canVwOthrsLeave = test_prmssns($dfltPrvldgs[26], $mdlNm);
+    $strSql = "";
+    $whereCls = "";
+    if ($canVwOthrsLeave === false) {
+        $whereCls .= "(a.person_id=" . $prsnid . ") and ";
+    }
+    if ($dte1 != "") {
+        $dte1 = cnvrtDMYTmToYMDTm($dte1);
+    }
+    if ($dte2 != "") {
+        $dte2 = cnvrtDMYTmToYMDTm($dte2);
+    }
+    if ($searchIn == "Person Name/Number") {
+        $whereCls .= "((prs.get_prsn_name(a.person_id) || ' (' || prs.get_prsn_loc_id(a.person_id) || ')') ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    } else if ($searchIn == "Status") {
+        $whereCls .= "(a.rqst_status ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    } else if ($searchIn == "Period Date") {
+        $whereCls .= "(to_char(to_timestamp(a.execution_strt_dte,'YYYY-MM-DD'),'DD-Mon-YYYY') ilike '" . loc_db_escape_string($searchWord) .
+            "' or to_char(to_timestamp(a.execution_end_dte,'YYYY-MM-DD'),'DD-Mon-YYYY') ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    } else if ($searchIn == "Request Comment") {
+        $whereCls .= "(a.cmmnt_remark ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    }
+    $strSql = "SELECT a.plan_execution_id, a.person_id,
+        (prs.get_prsn_name(a.person_id) || ' (' || prs.get_prsn_loc_id(a.person_id) || ')') prsnnm, 
+        a.accrual_plan_id, prs.get_accrual_plan_name(a.accrual_plan_id) plnnm,
+        to_char(to_timestamp(a.execution_strt_dte,'YYYY-MM-DD'),'DD-Mon-YYYY') execution_strt_dte, 
+        to_char(to_timestamp(a.execution_end_dte,'YYYY-MM-DD'),'DD-Mon-YYYY') execution_end_dte, 
+        a.days_entitled, a.cmmnt_remark, a.rqst_status,
+        prs.get_accrual_pln_bals_info(a.plan_execution_id,'Taken') tkn,
+        prs.get_accrual_pln_bals_info(a.plan_execution_id,'Scheduled') schdld,
+        prs.get_accrual_pln_bals_info(a.plan_execution_id,'Requested') rqstd,
+        prs.get_accrual_pln_bals_info(a.plan_execution_id,'UnRequested') unrqstd
+  FROM prs.hr_accrual_plan_exctns  a  " .
+        "WHERE ((a.org_id = " . $orgID . ") and " . $whereCls . " (to_timestamp(a.creation_date,'YYYY-MM-DD HH24:MI:SS') between to_timestamp('" . $dte1 .
+        "','YYYY-MM-DD HH24:MI:SS') AND to_timestamp('" . $dte2 . "','YYYY-MM-DD HH24:MI:SS'))) " .
+        "ORDER BY a.plan_execution_id DESC LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    //echo $strSql;
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_PlnExctnsTtl($searchWord, $searchIn, $orgID, $dte1, $dte2)
+{
+    global $prsnid;
+    global $dfltPrvldgs;
+    global $mdlNm;
+    $canVwOthrsLeave = test_prmssns($dfltPrvldgs[26], $mdlNm);
+    $strSql = "";
+    $whereCls = "";
+    if ($canVwOthrsLeave === false) {
+        $whereCls .= "(a.person_id=" . $prsnid . ") and ";
+    }
+    if ($dte1 != "") {
+        $dte1 = cnvrtDMYTmToYMDTm($dte1);
+    }
+    if ($dte2 != "") {
+        $dte2 = cnvrtDMYTmToYMDTm($dte2);
+    }
+    if ($searchIn == "Person Name/Number") {
+        $whereCls .= "((prs.get_prsn_name(a.person_id) || ' (' || prs.get_prsn_loc_id(a.person_id) || ')') ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    } else if ($searchIn == "Status") {
+        $whereCls .= "(a.rqst_status ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    } else if ($searchIn == "Period Date") {
+        $whereCls .= "(to_char(to_timestamp(a.execution_strt_dte,'YYYY-MM-DD'),'DD-Mon-YYYY') ilike '" . loc_db_escape_string($searchWord) .
+            "' or to_char(to_timestamp(a.execution_end_dte,'YYYY-MM-DD'),'DD-Mon-YYYY') ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    } else if ($searchIn == "Request Comment") {
+        $whereCls .= "(a.cmmnt_remark ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    }
+    $strSql = "SELECT count(plan_execution_id) 
+   FROM prs.hr_accrual_plan_exctns a  " .
+        "WHERE ((a.org_id = " . $orgID . ") and " . $whereCls . " (to_timestamp(a.creation_date,'YYYY-MM-DD HH24:MI:SS') between to_timestamp('" . $dte1 .
+        "','YYYY-MM-DD HH24:MI:SS') AND to_timestamp('" . $dte2 . "','YYYY-MM-DD HH24:MI:SS'))) ";
+    $result = executeSQLNoParams($strSql);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
+
+function get_OnePlnExctnDet($plnExctnID)
+{
+    $strSql = "SELECT a.plan_execution_id, a.person_id,
+        (prs.get_prsn_name(a.person_id) || ' (' || prs.get_prsn_loc_id(a.person_id) || ')') prsnnm, 
+        a.accrual_plan_id, prs.get_accrual_plan_name(a.accrual_plan_id) plnnm,
+        to_char(to_timestamp(a.execution_strt_dte,'YYYY-MM-DD'),'DD-Mon-YYYY') execution_strt_dte, 
+        to_char(to_timestamp(a.execution_end_dte,'YYYY-MM-DD'),'DD-Mon-YYYY') execution_end_dte, 
+        a.days_entitled, a.cmmnt_remark, a.rqst_status,
+        prs.get_accrual_pln_bals_info(a.plan_execution_id,'Taken') tkn,
+        prs.get_accrual_pln_bals_info(a.plan_execution_id,'Scheduled') schdld,
+        prs.get_accrual_pln_bals_info(a.plan_execution_id,'Requested') rqstd,
+        prs.get_accrual_pln_bals_info(a.plan_execution_id,'UnRequested') unrqstd
+  FROM prs.hr_accrual_plan_exctns a
+         WHERE (a.plan_execution_id=" . $plnExctnID . ")";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_OnePlnExctnAbsLns($plnExctnID)
+{
+    $strSql = "SELECT a.absence_id, a.plan_execution_id, 
+        a.person_id, (prs.get_prsn_name(a.person_id) || ' (' || prs.get_prsn_loc_id(a.person_id) || ')') prsnnm, 
+        to_char(to_timestamp(a.absence_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') absence_start_date, 
+        to_char(to_timestamp(a.absence_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') absence_end_date, 
+       a.no_of_days, a.absence_reason, a.absence_status
+  FROM prs.hr_person_absences a
+         WHERE (a.plan_execution_id=" . $plnExctnID . ")";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_AbsenseLns($searchWord, $searchIn, $offset, $limit_size, $orgID, $dte1, $dte2)
+{
+    global $prsnid;
+    global $dfltPrvldgs;
+    global $mdlNm;
+    $canVwOthrsLeave = test_prmssns($dfltPrvldgs[26], $mdlNm);
+    $strSql = "";
+    $whereCls = "";
+    if ($canVwOthrsLeave === false) {
+        $whereCls .= "(a.person_id=" . $prsnid . ") and ";
+    }
+    if ($dte1 != "") {
+        $dte1 = cnvrtDMYTmToYMDTm($dte1);
+    }
+    if ($dte2 != "") {
+        $dte2 = cnvrtDMYTmToYMDTm($dte2);
+    }
+    if ($searchIn == "Person Name/Number") {
+        $whereCls .= "((prs.get_prsn_name(a.person_id) || ' (' || prs.get_prsn_loc_id(a.person_id) || ')') ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    } else if ($searchIn == "Status") {
+        $whereCls .= "(a.rqst_status ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    } else if ($searchIn == "Period Date") {
+        $whereCls .= "(to_char(to_timestamp(a.absence_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') ilike '" . loc_db_escape_string($searchWord) .
+            "' or to_char(to_timestamp(a.absence_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    } else if ($searchIn == "Request Comment") {
+        $whereCls .= "(a.cmmnt_remark ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    }
+    $strSql = "SELECT a.absence_id, a.plan_execution_id, 
+        a.person_id, (prs.get_prsn_name(a.person_id) || ' (' || prs.get_prsn_loc_id(a.person_id) || ')') prsnnm, 
+        to_char(to_timestamp(a.absence_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') absence_start_date, 
+        to_char(to_timestamp(a.absence_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') absence_end_date, 
+       a.no_of_days, a.absence_reason, a.absence_status, prs.get_accrual_plan_name(b.accrual_plan_id) plnnm
+        FROM prs.hr_person_absences a, prs.hr_accrual_plan_exctns b " .
+        "WHERE ((a.plan_execution_id = b.plan_execution_id) and " . $whereCls . "(b.org_id = " . $orgID .
+        ") and ((to_timestamp(a.absence_start_date || ' 00:00:00','YYYY-MM-DD HH24:MI:SS') between to_timestamp('" . $dte1 .
+        "','YYYY-MM-DD HH24:MI:SS') AND to_timestamp('" . $dte2 . "','YYYY-MM-DD HH24:MI:SS')) OR (to_timestamp(a.absence_end_date || ' 23:59:59','YYYY-MM-DD HH24:MI:SS') between to_timestamp('" . $dte1 .
+        "','YYYY-MM-DD HH24:MI:SS') AND to_timestamp('" . $dte2 . "','YYYY-MM-DD HH24:MI:SS')))) " .
+        "ORDER BY a.absence_start_date DESC LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    //echo $strSql;
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_AbsenseLnsTtl($searchWord, $searchIn, $orgID, $dte1, $dte2)
+{
+    global $prsnid;
+    global $dfltPrvldgs;
+    global $mdlNm;
+    $canVwOthrsLeave = test_prmssns($dfltPrvldgs[26], $mdlNm);
+    $strSql = "";
+    $whereCls = "";
+    if ($canVwOthrsLeave === false) {
+        $whereCls .= "(a.person_id=" . $prsnid . ") and ";
+    }
+    if ($dte1 != "") {
+        $dte1 = cnvrtDMYTmToYMDTm($dte1);
+    }
+    if ($dte2 != "") {
+        $dte2 = cnvrtDMYTmToYMDTm($dte2);
+    }
+    if ($searchIn == "Person Name/Number") {
+        $whereCls .= "((prs.get_prsn_name(a.person_id) || ' (' || prs.get_prsn_loc_id(a.person_id) || ')') ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    } else if ($searchIn == "Status") {
+        $whereCls .= "(a.rqst_status ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    } else if ($searchIn == "Period Date") {
+        $whereCls .= "(to_char(to_timestamp(a.absence_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') ilike '" . loc_db_escape_string($searchWord) .
+            "' or to_char(to_timestamp(a.absence_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    } else if ($searchIn == "Request Comment") {
+        $whereCls .= "(a.cmmnt_remark ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    }
+    $strSql = "SELECT count(a.absence_id) 
+        FROM prs.hr_person_absences a, prs.hr_accrual_plan_exctns b " .
+        "WHERE ((a.plan_execution_id = b.plan_execution_id) and " . $whereCls . "(b.org_id = " . $orgID .
+        ") and ((to_timestamp(a.absence_start_date || ' 00:00:00','YYYY-MM-DD HH24:MI:SS') between to_timestamp('" . $dte1 .
+        "','YYYY-MM-DD HH24:MI:SS') AND to_timestamp('" . $dte2 . "','YYYY-MM-DD HH24:MI:SS')) OR (to_timestamp(a.absence_end_date || ' 23:59:59','YYYY-MM-DD HH24:MI:SS') between to_timestamp('" . $dte1 .
+        "','YYYY-MM-DD HH24:MI:SS') AND to_timestamp('" . $dte2 . "','YYYY-MM-DD HH24:MI:SS')))) ";
+    $result = executeSQLNoParams($strSql);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
+
+function get_AccrualPlns($searchWord, $searchIn, $offset, $limit_size, $orgID)
+{
+    $strSql = "";
+    $whereCls = "";
+    if ($searchIn == "Plan Name") {
+        $whereCls = "(a.accrual_plan_name ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    } else if ($searchIn == "Plan Description") {
+        $whereCls = "(a.accrual_plan_desc ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    }
+    $strSql = "SELECT accrual_plan_id, accrual_plan_name, accrual_plan_desc, plan_execution_intrvls, 
+        to_char(to_timestamp(a.accrual_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') accrual_start_date, 
+        to_char(to_timestamp(a.accrual_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') accrual_end_date, 
+       lnkd_balance_item_id, org.get_payitm_nm(lnkd_balance_item_id) bals_itm_nm, 
+       lnkd_balnc_add_item_id, org.get_payitm_nm(lnkd_balnc_add_item_id) add_itm_nm,  
+       lnkd_balnc_sbtrct_item_id, org.get_payitm_nm(lnkd_balnc_sbtrct_item_id) sbtrct_itm_nm, 
+       org_id, created_by, creation_date, last_update_by, last_update_date, can_excd_entltlmnt
+  FROM prs.hr_accrual_plans a " .
+        "WHERE ((a.org_id = " . $orgID . ") and " . $whereCls . " 1=1) ORDER BY a.accrual_plan_id DESC LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    //echo $strSql;
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_AccrualPlnsTtl($searchWord, $searchIn, $orgID)
+{
+    $strSql = "";
+    $whereCls = "";
+    if ($searchIn == "Plan Name") {
+        $whereCls = "(a.accrual_plan_name ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    } else if ($searchIn == "Plan Description") {
+        $whereCls = "(a.accrual_plan_desc ilike '" . loc_db_escape_string($searchWord) .
+            "') and ";
+    }
+    $strSql = "SELECT count(1) 
+  FROM prs.hr_accrual_plans a " .
+        "WHERE ((a.org_id = " . $orgID . ") and " . $whereCls . " 1=1)";
+    $result = executeSQLNoParams($strSql);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
+
+function get_OneAccrualPlnDet($plnID)
+{
+    $strSql = "SELECT accrual_plan_id, accrual_plan_name, accrual_plan_desc, plan_execution_intrvls, 
+        to_char(to_timestamp(a.accrual_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') accrual_start_date, 
+        to_char(to_timestamp(a.accrual_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') accrual_end_date, 
+       lnkd_balance_item_id, org.get_payitm_nm(lnkd_balance_item_id) bals_itm_nm, 
+       lnkd_balnc_add_item_id, org.get_payitm_nm(lnkd_balnc_add_item_id) add_itm_nm,  
+       lnkd_balnc_sbtrct_item_id, org.get_payitm_nm(lnkd_balnc_sbtrct_item_id) sbtrct_itm_nm, 
+       org_id, created_by, creation_date, last_update_by, last_update_date, can_excd_entltlmnt
+  FROM prs.hr_accrual_plans a 
+         WHERE (a.accrual_plan_id=" . $plnID . ")";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function getNewPlnExctnID()
+{
+    $sqlStr = "select nextval('prs.hr_accrual_plan_exctns_plan_execution_id_seq'::regclass);";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return "";
+}
+
+function getPlnExctnLineID($startDate, $plnExctnID)
+{
+    if ($startDate != "") {
+        $startDate = cnvrtDMYToYMD($startDate);
+    }
+    $sqlStr = "select absence_id from prs.hr_person_absences where absence_start_date = '" .
+        loc_db_escape_string($startDate) . "' and plan_execution_id = " .
+        loc_db_escape_string($plnExctnID) . " ";
+    // and absence_status = 'Requested'
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return -1;
+}
+
+function getLeaveEndDate($startDate, $noDays)
+{
+    if ($startDate != "") {
+        $startDate = cnvrtDMYToYMD($startDate);
+    }
+    $sqlStr = "select prs.xx_get_next_date_aftr('" .
+        loc_db_escape_string($startDate) . "', " .
+        loc_db_escape_string($noDays) . ") ";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return "";
+}
+
+function getLeaveDaysEntld($endDate, $itmID, $prsnID, $orgid)
+{
+    //$endDate MUST BE YYYY-MM-DD
+    $sqlStr = "Select pay.get_payitm_expctd_amnt(" .
+        loc_db_escape_string($itmID) . ", " .
+        loc_db_escape_string($prsnID) . ", " .
+        loc_db_escape_string($orgid) . ", '" .
+        loc_db_escape_string($endDate) . "') ";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return 0;
+}
+
+function isPlanExctnVld($sbmtdExctnID)
+{
+    $sqlStr = "Select prs.get_accrual_pln_bals_info(" . loc_db_escape_string($sbmtdExctnID) . ", 'UnRequested') ";
+    $result = executeSQLNoParams($sqlStr);
+    $unRqstd = 0;
+    while ($row = loc_db_fetch_array($result)) {
+        $unRqstd = (float) $row[0];
+    }
+    if ($unRqstd != 0) {
+        return FALSE;
+    } else {
+        return TRUE;
+    }
+}
+
+function createPlnExctns(
+    $plnExctnID,
+    $prsnID,
+    $plnID,
+    $startDate,
+    $endDate,
+    $noDays,
+    $rmrkCmmnt,
+    $orgid,
+    $rqstStatus
+) {
+    global $usrID;
+    if ($startDate != "") {
+        $startDate = cnvrtDMYToYMD($startDate);
+    }
+    if ($endDate != "") {
+        $endDate = cnvrtDMYToYMD($endDate);
+    }
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO prs.hr_accrual_plan_exctns(
+            plan_execution_id, person_id, accrual_plan_id, execution_strt_dte, 
+            execution_end_dte, days_entitled, cmmnt_remark, rqst_status,
+            org_id, created_by, creation_date, last_update_by, last_update_date) " .
+        "VALUES (" . $plnExctnID .
+        ", " . $prsnID .
+        "," . $plnID .
+        ",'" . loc_db_escape_string($startDate) .
+        "', '" . loc_db_escape_string($endDate) .
+        "'," . $noDays .
+        ", '" . loc_db_escape_string($rmrkCmmnt) .
+        "', '" . loc_db_escape_string($rqstStatus) .
+        "', " . $orgid .
+        ", " . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr .
+        "')";
+    return execUpdtInsSQL($insSQL);
+}
+
+function updatePlnExctns(
+    $plnExctnID,
+    $prsnID,
+    $plnID,
+    $startDate,
+    $endDate,
+    $noDays,
+    $rmrkCmmnt,
+    $orgid,
+    $rqstStatus
+) {
+    global $usrID;
+    if ($startDate != "") {
+        $startDate = cnvrtDMYToYMD($startDate);
+    }
+    if ($endDate != "") {
+        $endDate = cnvrtDMYToYMD($endDate);
+    }
+    $dateStr = getDB_Date_time();
+    $updtSQL = "UPDATE prs.hr_accrual_plan_exctns
+            SET person_id=" . $prsnID .
+        ", accrual_plan_id=" . $plnID .
+        ", execution_strt_dte='" . loc_db_escape_string($startDate) .
+        "', execution_end_dte='" . loc_db_escape_string($endDate) .
+        "', days_entitled=" . $noDays .
+        ", cmmnt_remark='" . loc_db_escape_string($rmrkCmmnt) .
+        "', rqst_status='" . loc_db_escape_string($rqstStatus) .
+        "', org_id=" . $orgid .
+        ", last_update_by=" . $usrID .
+        ", last_update_date='" . $dateStr . "'
+       WHERE plan_execution_id = " . $plnExctnID;
+    return execUpdtInsSQL($updtSQL);
+}
+
+function updatePlnExctnsInfo($plnExctnID, $noDays, $rmrkCmmnt, $rqstStatus)
+{
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $updtSQL = "UPDATE prs.hr_accrual_plan_exctns
+            SET days_entitled=" . $noDays .
+        ", cmmnt_remark='" . loc_db_escape_string($rmrkCmmnt) .
+        "', rqst_status='" . loc_db_escape_string($rqstStatus) .
+        "', last_update_by=" . $usrID .
+        ", last_update_date='" . $dateStr . "'
+       WHERE plan_execution_id = " . $plnExctnID;
+    return execUpdtInsSQL($updtSQL);
+}
+
+function deletePlnExctns($pkeyID, $extrInfo = "")
+{
+    $selSQL = "Select count(1) from prs.hr_person_absences WHERE plan_execution_id = " . $pkeyID . " and absence_status IN ('Taken','Scheduled')";
+    $result = executeSQLNoParams($selSQL);
+    $trnsCnt = 0;
+    while ($row = loc_db_fetch_array($result)) {
+        $trnsCnt = (float) $row[0];
+    }
+    if ($trnsCnt > 0) {
+        $dsply = "No Record Deleted<br/>Cannot Delete Plans with some Days Finalized!";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+    if ($trnsCnt <= 0) {
+        $insSQL = "DELETE FROM prs.hr_person_absences WHERE plan_execution_id = " . $pkeyID;
+        $affctd = execUpdtInsSQL($insSQL, "Ext. Info:" . $extrInfo);
+        $insSQL = "DELETE FROM prs.hr_accrual_plan_exctns WHERE plan_execution_id = " . $pkeyID;
+        $affctd1 = execUpdtInsSQL($insSQL, "Ext. Info:" . $extrInfo);
+
+        $dsply = "Successfully Deleted the ff Records-";
+        $dsply .= "<br/>$affctd1 Leave Plan Execution(s)!";
+        $dsply .= "<br/>$affctd Absence(s)!";
+        return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
+    } else {
+        $dsply = "No Record Deleted";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+}
+
+function createAbsenseLns(
+    $plnExctnID,
+    $prsnID,
+    $startDate,
+    $noDays,
+    $endDate,
+    $absncRsn,
+    $absncStatus
+) {
+    global $usrID;
+    if ($startDate != "") {
+        $startDate = cnvrtDMYToYMD($startDate);
+    }
+    if ($endDate != "") {
+        $endDate = cnvrtDMYToYMD($endDate);
+    }
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO prs.hr_person_absences(
+            plan_execution_id, person_id, absence_start_date, 
+            no_of_days, absence_end_date, absence_reason, absence_status, 
+            created_by, creation_date, last_update_by, last_update_date) " .
+        "VALUES (" . $plnExctnID .
+        ", " . $prsnID .
+        ", '" . loc_db_escape_string($startDate) .
+        "', " . $noDays .
+        ", '" . loc_db_escape_string($endDate) .
+        "', '" . loc_db_escape_string($absncRsn) .
+        "', '" . loc_db_escape_string($absncStatus) .
+        "', " . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr .
+        "')";
+    return execUpdtInsSQL($insSQL);
+}
+
+function updateAbsenseLns(
+    $absncID,
+    $plnExctnID,
+    $prsnID,
+    $startDate,
+    $noDays,
+    $endDate,
+    $absncRsn,
+    $absncStatus
+) {
+    global $usrID;
+    if ($startDate != "") {
+        $startDate = cnvrtDMYToYMD($startDate);
+    }
+    if ($endDate != "") {
+        $endDate = cnvrtDMYToYMD($endDate);
+    }
+    $dateStr = getDB_Date_time();
+    $updtSQL = "UPDATE prs.hr_person_absences
+      SET plan_execution_id=" . $plnExctnID .
+        ", person_id=" . $prsnID .
+        ", absence_start_date='" . loc_db_escape_string($startDate) .
+        "', no_of_days=" . $noDays .
+        ", absence_end_date='" . loc_db_escape_string($endDate) .
+        "', absence_reason='" . loc_db_escape_string($absncRsn) .
+        "', absence_status='" . loc_db_escape_string($absncStatus) .
+        "', last_update_by=" . $usrID .
+        ", last_update_date='" . $dateStr . "'
+       WHERE absence_id = " . $absncID;
+    return execUpdtInsSQL($updtSQL);
+}
+
+function deleteAbsenseLns($pkeyID, $extrInfo = "")
+{
+    $selSQL = "Select count(1) from prs.hr_person_absences WHERE absence_id = " . $pkeyID . " and absence_status IN ('Taken','Scheduled')";
+    $result = executeSQLNoParams($selSQL);
+    $trnsCnt = 0;
+    while ($row = loc_db_fetch_array($result)) {
+        $trnsCnt = (float) $row[0];
+    }
+    if ($trnsCnt > 0) {
+        $dsply = "No Record Deleted<br/>Cannot Delete Absences with Days Finalized!";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+    if ($trnsCnt <= 0) {
+        $insSQL = "DELETE FROM prs.hr_person_absences WHERE absence_id = " . $pkeyID;
+        $affctd1 = execUpdtInsSQL($insSQL, "Ext. Info:" . $extrInfo);
+        $dsply = "Successfully Deleted the ff Records-";
+        $dsply .= "<br/>$affctd1 Absence(s)!";
+        return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
+    } else {
+        $dsply = "No Record Deleted";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+}
+
+function createAccrualPlns(
+    $plnName,
+    $plnDesc,
+    $plnExctnIntrvls,
+    $startDate,
+    $endDate,
+    $lnkdBalsItmID,
+    $lnkdAddItmID,
+    $orgid,
+    $lnkdSbtrctItmID,
+    $canExcdLmt
+) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    if ($startDate != "") {
+        $startDate = cnvrtDMYToYMD($startDate);
+    }
+    if ($endDate != "") {
+        $endDate = cnvrtDMYToYMD($endDate);
+    }
+    $insSQL = "INSERT INTO prs.hr_accrual_plans(
+            accrual_plan_name, accrual_plan_desc, plan_execution_intrvls, 
+            accrual_start_date, accrual_end_date, lnkd_balance_item_id, lnkd_balnc_add_item_id, 
+            lnkd_balnc_sbtrct_item_id, can_excd_entltlmnt, org_id, created_by, creation_date, 
+            last_update_by, last_update_date) " .
+        "VALUES ('" . loc_db_escape_string($plnName) .
+        "', '" . loc_db_escape_string($plnDesc) .
+        "', '" . loc_db_escape_string($plnExctnIntrvls) .
+        "', '" . loc_db_escape_string($startDate) .
+        "', '" . loc_db_escape_string($endDate) .
+        "', " . $lnkdBalsItmID .
+        ", " . $lnkdAddItmID .
+        ", " . $lnkdSbtrctItmID .
+        ", '" . loc_db_escape_string($canExcdLmt) .
+        "', " . $orgid .
+        ", " . $usrID . ", '" . $dateStr . "', " . $usrID . ",'" . $dateStr .
+        "')";
+    //echo $insSQL;
+    return execUpdtInsSQL($insSQL);
+}
+
+function updateAccrualPlns(
+    $plnID,
+    $plnName,
+    $plnDesc,
+    $plnExctnIntrvls,
+    $startDate,
+    $endDate,
+    $lnkdBalsItmID,
+    $lnkdAddItmID,
+    $orgid,
+    $lnkdSbtrctItmID,
+    $canExcdLmt
+) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    if ($startDate != "") {
+        $startDate = cnvrtDMYToYMD($startDate);
+    }
+    if ($endDate != "") {
+        $endDate = cnvrtDMYToYMD($endDate);
+    }
+    $updtSQL = "UPDATE prs.hr_accrual_plans
+   SET accrual_plan_name='" . loc_db_escape_string($plnName) .
+        "', accrual_plan_desc='" . loc_db_escape_string($plnDesc) .
+        "', plan_execution_intrvls='" . loc_db_escape_string($plnExctnIntrvls) .
+        "', accrual_start_date='" . loc_db_escape_string($startDate) .
+        "', accrual_end_date='" . loc_db_escape_string($endDate) .
+        "', lnkd_balance_item_id=" . $lnkdBalsItmID .
+        ", lnkd_balnc_add_item_id=" . $lnkdAddItmID .
+        ", lnkd_balnc_sbtrct_item_id=" . $lnkdSbtrctItmID .
+        ", can_excd_entltlmnt='" . loc_db_escape_string($canExcdLmt) .
+        "', org_id=" . $orgid .
+        ", last_update_by=" . $usrID .
+        ", last_update_date='" . $dateStr . "'
+       WHERE accrual_plan_id = " . $plnID;
+    return execUpdtInsSQL($updtSQL);
+}
+
+function deleteAccrualPlns($pkeyID, $extrInfo = "")
+{
+    $selSQL = "Select count(1) from prs.hr_person_absences WHERE absence_id = " . $pkeyID . " and absence_status IN ('Taken','Scheduled')";
+    $result = executeSQLNoParams($selSQL);
+    $trnsCnt = 0;
+    while ($row = loc_db_fetch_array($result)) {
+        $trnsCnt = (float) $row[0];
+    }
+    if ($trnsCnt > 0) {
+        $dsply = "No Record Deleted<br/>Cannot Delete Absences with Days Finalized!";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+    if ($trnsCnt <= 0) {
+        $insSQL = "DELETE FROM prs.prsn_extra_data_cols WHERE extra_data_cols_id = " . $pkeyID;
+        $affctd1 = execUpdtInsSQL($insSQL, "Additional Data Column:" . $extrInfo);
+        $dsply = "Successfully Deleted the ff Records-";
+        $dsply .= "<br/>$affctd1 Additional Data Column(s)!";
+        return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
+    } else {
+        $dsply = "No Record Deleted";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+}
+
+function leaveReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrfrm = "Initiate", $srcDocID = -1, $srcDocType = "Leave Requests")
+{
+    global $app_url;
+    global $admin_name;
+    $userID = $_SESSION['USRID'];
+    $user_Name = $_SESSION['UNAME'];
+    $rtngMsgID = -1;
+    $affctd = 0;
+    $affctd1 = 0;
+    $affctd2 = 0;
+    $affctd3 = 0;
+    $affctd4 = 0;
+    $curPrsnsLevel = -123456789;
+    $msgTitle = "";
+    $msgBdy = "";
+    $nwPrsnLocID = isset($_POST['toPrsLocID']) ? cleanInputData($_POST['toPrsLocID']) : "";
+    $apprvrCmmnts = isset($_POST['actReason']) ? cleanInputData($_POST['actReason']) : "";
+    $fromPrsnID = getUserPrsnID($user_Name);
+    $usrFullNm = getPrsnFullNm($fromPrsnID);
+    $msg = "";
+    $dsply = "";
+    $msg_id = -1;
+    $appID = -1;
+    $attchmnts = "";
+    $reqestDte = getFrmtdDB_Date_time();
+
+    $srcdoctyp = $srcDocType;
+    $srcdocid = $srcDocID;
+
+    $reportTitle = "Send Outstanding Bulk Messages";
+    $reportName = "Send Outstanding Bulk Messages";
+    $rptID = getRptID($reportName);
+    $prmID = getParamIDUseSQLRep("{:msg_batch_id}", $rptID);
+    $msgBatchID = -1;
+    //session_write_close();
+    if ($routingID <= 0 && $inptSlctdRtngs == "") {
+        if ($actionToPrfrm == "Initiate" && $srcDocID > 0) {
+            $msg_id = getWkfMsgID();
+            $appID = getAppID('Leave Requests', 'Basic Person Data');
+            //Requestor
+            $prsnid = $fromPrsnID;
+            $fullNm = $usrFullNm;
+            $prsnLocID = getPersonLocID($prsnid);
+
+            //Message Header & Details
+            $msghdr = "$fullNm ($prsnLocID) Requests for Leave of Absence";
+            $msgbody = "LEAVE RECORDS CHANGE REQUEST ON ($reqestDte):- "
+                . "A request for Leave of Absence has been submitted by $fullNm ($prsnLocID) "
+                . "<br/>Please open the attached Work Document and attend to this Request.
+                      <br/>Thank you.";
+            $msgtyp = "Work Document";
+            $msgsts = "0";
+            $hrchyid = (float) getGnrlRecID2("wkf.wkf_hierarchy_hdr", "hierarchy_name", "hierarchy_id", $srcDocType . " Hierarchy"); //Get hierarchy ID
+
+            $attchmnts = ""; //Get Attachments
+            $attchmnts_desc = ""; //Get Attachments
+            $rslt = getLeaveRqstAttchMnts($srcdocid);
+            while ($rw = loc_db_fetch_array($rslt)) {
+                $attchmnts = $rw[1];
+                $attchmnts_desc = $rw[0];
+            }
+            createWkfMsg($msg_id, $msghdr, $msgbody, $userID, $appID, $msgtyp, $msgsts, $srcdoctyp, $srcdocid, $hrchyid, $attchmnts, $attchmnts_desc);
+            //Get Hierarchy Members
+            $result = getNextApprvrsInMnlHrchy($hrchyid, $curPrsnsLevel);
+            $prsnsFnd = 0;
+            $lastPrsnID = "|";
+            $msgBatchID = getMsgBatchID();
+            $paramRepsNVals = $prmID . "~" . $msgBatchID . "|-190~HTML";
+            while ($row = loc_db_fetch_array($result)) {
+                $toPrsnID = (float) $row[0];
+                $prsnsFnd++;
+                if ($toPrsnID > 0) {
+                    //transform:translateY(-50%);
+                    routWkfMsg($msg_id, $prsnid, $toPrsnID, $userID, 'Initiated', 'Open;Reject;Request for Information;Approve');
+                    $dsply = '<div style="text-align:center;font-weight:bold;font-size:18px;color:blue;position:relative;top:50%;">Your request has been submitted successfully for Approval.</br>
+                        A notification will be sent to you on approval of your request. Thank you!</div>';
+                    $msg = $dsply;
+                    //Begin Email Sending Process                    
+                    $result1 = getEmlDetailsB4Actn($srcdoctyp, $srcdocid);
+                    while ($row1 = loc_db_fetch_array($result1)) {
+                        $frmID = $toPrsnID;
+                        if (strpos($lastPrsnID, "|" . $frmID . "|") !== FALSE) {
+                            $lastPrsnID .= $frmID . "|";
+                            continue;
+                        }
+                        $lastPrsnID .= $frmID . "|";
+                        $subject = $row1[1];
+                        $actSoFar = $row1[3];
+                        if ($actSoFar == "") {
+                            $actSoFar = "&nbsp;&nbsp;NONE";
+                        }
+                        $msgPart = "<span style=\"font-weight:bold;text-decoration:underline;color:blue;\">ACTIONS TAKEN SO FAR:</span><br/>" . $actSoFar . "<br/> <span style=\"font-weight:bold;text-decoration:underline;color:blue;\">ORIGINAL MESSAGE:</span><br/>&nbsp;&nbsp;" . $row1[2];
+                        $docType = $srcDocType;
+                        $to = getPrsnEmail($frmID);
+                        $nameto = getPrsnFullNm($frmID);
+                        if ($docType != "" && $docType != "Login") {
+                            $message = "Dear $nameto, <br/><br/>A notification has been sent to your account in the Portal as follows:"
+                                . "<br/><br/>"
+                                . $msgPart .
+                                "<br/><br/>Kindly <a href=\""
+                                . $app_url . "\">Login via this Link</a> to <strong>VIEW and ACT</strong> on it!<br/>Thank you for your cooperation!<br/><br/>Best Regards,<br/>" . $admin_name;
+                            $errMsg = "";
+                            createMessageQueue($msgBatchID, trim(str_replace(";", ",", $to), ";, "), "", "", $message, $subject, "", "Email");
+                        }
+                    }
+                }
+            }
+            if ($prsnsFnd <= 0) {
+                $dsply .= "<br/>|ERROR|-No Approval Hierarchy Found";
+                $msg = "<p style = \"text-align:left; color:#ff0000;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>";
+            } else {
+                //Update Request Status to In Process
+                updatePrsLeaveRqst($srcdocid, "Initiated");
+            }
+        } else {
+            $dsply .= "<br/>|ERROR|-Update Failed! No Workflow Document(s) Generated";
+            $msg = "<p style = \"text-align:left; color:#ff0000;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>";
+        }
+    } else {
+        if ($routingID > 0) {
+            $oldMsgbodyAddOn = "";
+            $reslt1 = getWkfMsgRtngData($routingID);
+            while ($row = loc_db_fetch_array($reslt1)) {
+                $rtngMsgID = (float) $row[0];
+                $msg_id = $rtngMsgID;
+                $curPrsnsLevel = (float) $row[18];
+                $isActionDone = $row[9];
+                $oldMsgbodyAddOn = $row[17];
+                //$rtngMsgID = (float) getGnrlRecNm("wkf.wkf_actual_msgs_routng", "routing_id", "msg_id", $routingID);
+                //$curPrsnsLevel = (float) getGnrlRecNm("wkf.wkf_actual_msgs_routng", "routing_id", "to_prsns_hrchy_level", $routingID);
+                //$isActionDone = getGnrlRecNm("wkf.wkf_actual_msgs_routng", "routing_id", "is_action_done", $routingID);
+            }
+            $row = NULL;
+
+            $reslt2 = getWkfMsgHdrData($rtngMsgID);
+            while ($row = loc_db_fetch_array($reslt2)) {
+                $msgTitle = $row[1]; //getGnrlRecNm("wkf.wkf_actual_msgs_hdr", "msg_id", "msg_hdr", $rtngMsgID);
+                $msgBdy = $row[2]; //getGnrlRecNm("wkf.wkf_actual_msgs_hdr", "msg_id", "msg_body", $rtngMsgID);
+                $srcDocID = (float) $row[10]; //getGnrlRecNm("wkf.wkf_actual_msgs_hdr", "msg_id", "src_doc_id", $rtngMsgID);
+                $srcDocType = $row[9]; //getGnrlRecNm("wkf.wkf_actual_msgs_hdr", "msg_id", "src_doc_type", $rtngMsgID);
+                $orgnlPrsnUsrID = (float) $row[3]; //getGnrlRecNm("wkf.wkf_actual_msgs_hdr", "msg_id", "created_by", $rtngMsgID);
+                $hrchyid = (float) $row[5];
+                $appID = (float) $row[7];
+                $attchmnts = $row[13];
+                $attchmnts_desc = $row[14]; //Get Attachments
+            }
+            $srcdoctyp = $srcDocType;
+            $srcdocid = $srcDocID;
+            $orgnlPrsnID = getUserPrsnID1($orgnlPrsnUsrID);
+            if ($isActionDone == '0') {
+                if ($actionToPrfrm == "Open") {
+                    echo LeaveRqstRODsply($srcDocID);
+                } else if ($actionToPrfrm == "Reject") {
+                    $affctd += updtWkfMsgRtngUsngLvl($rtngMsgID, $curPrsnsLevel, $fromPrsnID, "Rejected", "None", $userID);
+                    //$affctd1+= updateWkfMsgBdy($rtngMsgID, $msgbodyAddOn, $userID);
+                    $datestr = getFrmtdDB_Date_time();
+                    $msgbodyAddOn = "";
+                    $msgbodyAddOn .= "REJECTION ON $datestr:- This document has been Rejected by $usrFullNm with the ff Message:<br/>";
+                    $msgbodyAddOn .= $apprvrCmmnts . "<br/><br/>";
+                    $affctd1 += updtWkfMsgRtngCmnts($routingID, $msgbodyAddOn, $userID);
+                    $msgbodyAddOn .= $oldMsgbodyAddOn;
+
+                    updateWkfMsgStatus($rtngMsgID, "1", $userID);
+                    updtWkfMsgAllUnclsdRtng($rtngMsgID, $fromPrsnID, "Closed", "None", $userID);
+
+                    //Message Header & Details
+                    $msghdr = "REJECTED - " . $msgTitle;
+                    $msgbody = $msgBdy; //$msgbodyAddOn. "ORIGINAL MESSAGE :<br/><br/>" .
+                    $msgtyp = "Informational";
+                    $msgsts = "0";
+                    //$msg_id = getWkfMsgID();
+                    $affctd2 += updateWkfMsg($msg_id, $msghdr, $msgbody, $userID, $appID, $msgtyp, $msgsts, $srcdoctyp, $srcdocid, $hrchyid, $attchmnts, $attchmnts_desc);
+                    $affctd3 += routWkfMsg($msg_id, $fromPrsnID, $orgnlPrsnID, $userID, "Initiated", "Acknowledge;Open", 1, $msgbodyAddOn);
+                    $affctd4 += updatePrsLeaveRqst($srcdocid, "Rejected");
+
+                    //Begin Email Sending Process                    
+                    $result = getEmlDetailsAftrActn($srcdoctyp, $srcdocid);
+                    $lastPrsnID = "|";
+                    $msgBatchID = getMsgBatchID();
+                    $paramRepsNVals = $prmID . "~" . $msgBatchID . "|-190~HTML";
+                    while ($row = loc_db_fetch_array($result)) {
+                        $frmID = $row[0];
+                        if (strpos($lastPrsnID, "|" . $frmID . "|") !== FALSE || $frmID == $fromPrsnID) {
+                            $lastPrsnID .= $frmID . "|";
+                            continue;
+                        }
+                        $lastPrsnID .= $frmID . "|";
+                        $subject = $row[1];
+                        $actSoFar = $row[3];
+                        if ($actSoFar == "") {
+                            $actSoFar = "&nbsp;&nbsp;NONE";
+                        }
+                        $msgPart = "<span style=\"font-weight:bold;text-decoration:underline;color:blue;\">ACTIONS TAKEN SO FAR:</span><br/>" . $actSoFar . "<br/> <span style=\"font-weight:bold;text-decoration:underline;color:blue;\">ORIGINAL MESSAGE:</span><br/>&nbsp;&nbsp;" . $row[2];
+                        $docType = $srcDocType;
+                        $to = getPrsnEmail($frmID);
+                        $nameto = getPrsnFullNm($frmID);
+                        if ($docType != "" && $docType != "Login") {
+                            $message = "Dear $nameto, <br/><br/>A notification has been sent to your account in the Portal as follows:"
+                                . "<br/><br/>"
+                                . $msgPart .
+                                "<br/><br/>Kindly <a href=\""
+                                . $app_url . "\">Login via this Link</a> to <strong>VIEW and ACT</strong> on it!<br/>Thank you for your cooperation!<br/><br/>Best Regards,<br/>" . $admin_name;
+                            $errMsg = "";
+                            createMessageQueue($msgBatchID, trim(str_replace(";", ",", $to), ";, "), "", "", $message, $subject, "", "Email");
+                            //sendEMail(trim(str_replace(";", ",", $to), ","), $nameto, $subject, $message, $errMsg, "", "", "", $admin_name);
+                        }
+                    }
+                    if ($affctd > 0) {
+                        $dsply .= "<br/>Status of $affctd Workflow Document(s) successfully updated to Rejected!";
+                        $dsply .= "<br/>$affctd1 Workflow Document(s) Message Body Successfully Updated!";
+                        //$dsply .= "<br/>$affctd2 New Workflow Document(s) Message Body Successfully Created!";
+                        $dsply .= "<br/>$affctd3 Workflow Document(s) Successfully Re-Routed to Original Sender!";
+                        $dsply .= "<br/>$affctd4 Request Status Successfully Updated!";
+                        $msg = "<p style = \"text-align:left; color:#32CD32;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>"; //#32CD32
+                    } else {
+                        $dsply .= "<br/>|ERROR|-Update Failed! No Workflow Document(s) Rejected";
+                        $msg = "<p style = \"text-align:left; color:#ff0000;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>";
+                    }
+                } else if ($actionToPrfrm == "Withdraw") {
+                    $affctd += updtWkfMsgRtngUsngLvl($rtngMsgID, $curPrsnsLevel, $fromPrsnID, "Rejected", "None", $userID);
+                    //$affctd1+= updateWkfMsgBdy($rtngMsgID, $msgbodyAddOn, $userID);
+                    $datestr = getFrmtdDB_Date_time();
+                    $msgbodyAddOn = "";
+                    $msgbodyAddOn .= "WITHDRAWAL ON $datestr:- This document has been withdrawn by $usrFullNm with the ff Message:<br/>";
+                    $msgbodyAddOn .= $apprvrCmmnts . "<br/><br/>";
+                    $affctd1 += updtWkfMsgRtngCmnts($routingID, $msgbodyAddOn, $userID);
+                    $msgbodyAddOn .= $oldMsgbodyAddOn;
+
+                    updateWkfMsgStatus($rtngMsgID, "1", $userID);
+                    updtWkfMsgAllUnclsdRtng($rtngMsgID, $fromPrsnID, "Closed", "None", $userID);
+
+                    //Message Header & Details
+                    $msghdr = "WITHDRAWN - " . $msgTitle;
+                    $msgbody = $msgBdy; //$msgbodyAddOn. "ORIGINAL MESSAGE :<br/><br/>" .
+                    $msgtyp = "Informational";
+                    $msgsts = "0";
+                    //$msg_id = getWkfMsgID();
+                    $affctd2 += updateWkfMsg($msg_id, $msghdr, $msgbody, $userID, $appID, $msgtyp, $msgsts, $srcdoctyp, $srcdocid, $hrchyid, $attchmnts, $attchmnts_desc);
+                    $affctd3 += routWkfMsg($msg_id, $fromPrsnID, $orgnlPrsnID, $userID, "Initiated", "Acknowledge;Open", 1, $msgbodyAddOn);
+                    $affctd4 += updatePrsLeaveRqst($srcdocid, "Withdrawn");
+
+                    //Begin Email Sending Process                    
+                    $result = getEmlDetailsAftrActn($srcdoctyp, $srcdocid);
+                    $lastPrsnID = "|";
+                    $msgBatchID = getMsgBatchID();
+                    $paramRepsNVals = $prmID . "~" . $msgBatchID . "|-190~HTML";
+                    while ($row = loc_db_fetch_array($result)) {
+                        $frmID = $row[0];
+                        if (strpos($lastPrsnID, "|" . $frmID . "|") !== FALSE || $frmID == $fromPrsnID) {
+                            $lastPrsnID .= $frmID . "|";
+                            continue;
+                        }
+                        $lastPrsnID .= $frmID . "|";
+                        $subject = $row[1];
+                        $actSoFar = $row[3];
+                        if ($actSoFar == "") {
+                            $actSoFar = "&nbsp;&nbsp;NONE";
+                        }
+                        $msgPart = "<span style=\"font-weight:bold;text-decoration:underline;color:blue;\">ACTIONS TAKEN SO FAR:</span><br/>" . $actSoFar . "<br/> <span style=\"font-weight:bold;text-decoration:underline;color:blue;\">ORIGINAL MESSAGE:</span><br/>&nbsp;&nbsp;" . $row[2];
+                        $docType = $srcDocType;
+                        $to = getPrsnEmail($frmID);
+                        $nameto = getPrsnFullNm($frmID);
+                        if ($docType != "" && $docType != "Login") {
+                            $message = "Dear $nameto, <br/><br/>A notification has been sent to your account in the Portal as follows:"
+                                . "<br/><br/>"
+                                . $msgPart .
+                                "<br/><br/>Kindly <a href=\""
+                                . $app_url . "\">Login via this Link</a> to <strong>VIEW and ACT</strong> on it!<br/>Thank you for your cooperation!<br/><br/>Best Regards,<br/>" . $admin_name;
+                            $errMsg = "";
+                            createMessageQueue($msgBatchID, trim(str_replace(";", ",", $to), ";, "), "", "", $message, $subject, "", "Email");
+                            //sendEMail(trim(str_replace(";", ",", $to), ","), $nameto, $subject, $message, $errMsg, "", "", "", $admin_name);
+                        }
+                    }
+                    if ($affctd > 0) {
+                        $dsply .= "<br/>Status of $affctd Workflow Document(s) successfully updated to Withdrawn!";
+                        $dsply .= "<br/>$affctd1 Workflow Document(s) Message Body Successfully Updated!";
+                        //$dsply .= "<br/>$affctd2 New Workflow Document(s) Message Body Successfully Created!";
+                        $dsply .= "<br/>$affctd3 Workflow Document(s) Successfully Re-Routed to Original Sender!";
+                        $dsply .= "<br/>$affctd4 Request Status Successfully Updated!";
+                        $msg = "<p style = \"text-align:left; color:#32CD32;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>"; //#32CD32
+                    } else {
+                        $dsply .= "<br/>|ERROR|-Update Failed! No Workflow Document(s) Rejected";
+                        $msg = "<p style = \"text-align:left; color:#ff0000;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>";
+                    }
+                } else if ($actionToPrfrm == "Request for Information") {
+                    $nwPrsnID = getPersonID($nwPrsnLocID);
+                    //$nwPrsnFullNm = getPrsnFullNm($nwPrsnID);
+                    $affctd += updtWkfMsgRtngUsngLvl($rtngMsgID, $curPrsnsLevel, $fromPrsnID, "Information Requested", "None", $userID);
+                    //$affctd1+= updateWkfMsgBdy($rtngMsgID, $msgbodyAddOn, $userID);
+                    $datestr = getFrmtdDB_Date_time();
+                    $msgbodyAddOn = "";
+                    $msgbodyAddOn .= "INFORMATION REQUESTED ON $datestr:- A requested for Information has been generated by $usrFullNm with the ff Message:<br/>";
+                    $msgbodyAddOn .= $apprvrCmmnts . "<br/><br/>";
+                    $affctd1 += updtWkfMsgRtngCmnts($routingID, $msgbodyAddOn, $userID);
+                    $msgbodyAddOn .= $oldMsgbodyAddOn;
+
+                    updateWkfMsgStatus($rtngMsgID, "1", $userID);
+                    updtWkfMsgAllUnclsdRtng($rtngMsgID, $fromPrsnID, "Closed", "None", $userID);
+
+                    //Message Header & Details
+                    $msghdr = "INFORMATION REQUEST - " . $msgTitle;
+                    $msgbody = $msgBdy; //"ORIGINAL MESSAGE :<br/><br/>" . 
+                    $msgtyp = "Work Document";
+                    $msgsts = "0";
+                    //$msg_id = getWkfMsgID();
+                    $affctd2 += updateWkfMsg($msg_id, $msghdr, $msgbody, $userID, $appID, $msgtyp, $msgsts, $srcdoctyp, $srcdocid, $hrchyid, $attchmnts, $attchmnts_desc);
+                    $affctd3 += routWkfMsg($msg_id, $fromPrsnID, $nwPrsnID, $userID, "Initiated", "Respond;Open", $curPrsnsLevel, $msgbodyAddOn);
+                    //$affctd4+=updatePrsLeaveRqst($srcdocid, "Rejected");
+                    if ($affctd > 0) {
+                        $dsply .= "<br/>Status of $affctd Workflow Document(s) successfully updated to Information Requested!";
+                        $dsply .= "<br/>$affctd1 Workflow Document(s) Message Body Successfully Updated!";
+                        //$dsply .= "<br/>$affctd2 New Workflow Document(s) Message Body Successfully Created!";
+                        $dsply .= "<br/>$affctd3 Workflow Document(s) Successfully Re-Routed to New Person!";
+                        // $dsply .= "<br/>$affctd4 Appointment Status Successfully Updated!";
+                        $msg = "<p style = \"text-align:left; color:#32CD32;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>"; //#32CD32
+                    } else {
+                        $dsply .= "<br/>|ERROR|-Update Failed! No Workflow Document(s) Worked On";
+                        $msg = "<p style = \"text-align:left; color:#ff0000;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>";
+                    }
+                } else if ($actionToPrfrm == "Respond") {
+                    $nwPrsnID = getPersonID($nwPrsnLocID);
+                    //$nwPrsnFullNm = getPrsnFullNm($nwPrsnID);
+                    $affctd += updtWkfMsgRtngUsngLvl($rtngMsgID, $curPrsnsLevel, $fromPrsnID, "Response Given", "None", $userID);
+                    //$affctd1+= updateWkfMsgBdy($rtngMsgID, $msgbodyAddOn, $userID);
+                    $datestr = getFrmtdDB_Date_time();
+                    $msgbodyAddOn = "";
+                    $msgbodyAddOn .= "RESPONSE TO INFORMATION REQUESTED ON $datestr:- A response to an Information Request has been given by $usrFullNm with the ff Message:<br/>";
+                    $msgbodyAddOn .= $apprvrCmmnts . "<br/><br/>";
+                    $affctd1 += updtWkfMsgRtngCmnts($routingID, $msgbodyAddOn, $userID);
+                    $msgbodyAddOn .= $oldMsgbodyAddOn;
+
+                    updateWkfMsgStatus($rtngMsgID, "1", $userID);
+                    updtWkfMsgAllUnclsdRtng($rtngMsgID, $fromPrsnID, "Closed", "None", $userID);
+
+                    //Message Header & Details
+                    $msghdr = "RESPONSE TO INFORMATION REQUEST - " . $msgTitle;
+                    $msgbody = $msgBdy; //"ORIGINAL MESSAGE :<br/><br/>" . 
+                    $msgtyp = "Work Document";
+                    $msgsts = "0";
+                    //$msg_id = getWkfMsgID();
+                    $affctd2 += updateWkfMsg($msg_id, $msghdr, $msgbody, $userID, $appID, $msgtyp, $msgsts, $srcdoctyp, $srcdocid, $hrchyid, $attchmnts, $attchmnts_desc);
+                    $affctd3 += routWkfMsg($msg_id, $fromPrsnID, $nwPrsnID, $userID, "Initiated", 'Open;Reject;Request for Information;Approve', $curPrsnsLevel, $msgbodyAddOn);
+                    //$affctd4+=updatePrsLeaveRqst($srcdocid, "Rejected");
+                    if ($affctd > 0) {
+                        $dsply .= "<br/>Status of $affctd Workflow Document(s) successfully updated to Response Given!";
+                        $dsply .= "<br/>$affctd1 Workflow Document(s) Message Body Successfully Updated!";
+                        //$dsply .= "<br/>$affctd2 New Workflow Document(s) Message Body Successfully Created!";
+                        $dsply .= "<br/>$affctd3 Workflow Document(s) Successfully Re-Routed to New Person!";
+                        // $dsply .= "<br/>$affctd4 Appointment Status Successfully Updated!";
+                        $msg = "<p style = \"text-align:left; color:#32CD32;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>"; //#32CD32
+                    } else {
+                        $dsply .= "<br/>|ERROR|-Update Failed! No Workflow Document(s) Worked On";
+                        $msg = "<p style = \"text-align:left; color:#ff0000;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>";
+                    }
+                } else if ($actionToPrfrm == "Acknowledge") {
+                    $nwPrsnID = getPersonID($nwPrsnLocID);
+                    //$nwPrsnFullNm = getPrsnFullNm($nwPrsnID);
+                    $affctd += updtWkfMsgRtngUsngLvl($rtngMsgID, $curPrsnsLevel, $fromPrsnID, "Acknowledged", "None", $userID);
+                    //$affctd1+= updateWkfMsgBdy($rtngMsgID, $msgbodyAddOn, $userID);
+                    $datestr = getFrmtdDB_Date_time();
+                    $msgbodyAddOn = "";
+                    $msgbodyAddOn .= "MESSAGE ACKNOWLEDGED ON $datestr:- An acknowledgement of the message has been given by $usrFullNm <br/><br/>";
+                    //$msgbodyAddOn.=$apprvrCmmnts . "<br/><br/>";
+                    $affctd1 += updtWkfMsgRtngCmnts($routingID, $msgbodyAddOn, $userID);
+
+                    updateWkfMsgStatus($rtngMsgID, "1", $userID);
+                    updtWkfMsgAllUnclsdRtng($rtngMsgID, $fromPrsnID, "Closed", "None", $userID);
+                    if ($affctd > 0) {
+                        $dsply .= "<br/>Status of $affctd Workflow Document(s) successfully updated to Acknowledged!";
+                        $dsply .= "<br/>$affctd1 Workflow Document(s) Message Body Successfully Updated!";
+                        //$dsply .= "<br/>$affctd2 New Workflow Document(s) Message Body Successfully Created!";
+                        //$dsply .= "<br/>$affctd3 Workflow Document(s) Successfully Re-Routed to New Person!";
+                        // $dsply .= "<br/>$affctd4 Appointment Status Successfully Updated!";
+                        $msg = "<p style = \"text-align:left; color:#32CD32;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>"; //#32CD32
+                    } else {
+                        $dsply .= "<br/>|ERROR|-Update Failed! No Workflow Document(s) Worked On";
+                        $msg = "<p style = \"text-align:left; color:#ff0000;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>";
+                    }
+                } else if ($actionToPrfrm == "Approve") {
+                    $nxtPrsnsRslt = getNextApprvrsInMnlHrchy($hrchyid, $curPrsnsLevel);
+                    $prsnsFnd = 0;
+                    $lastPrsnID = "|";
+                    $msgbodyAddOn = "";
+                    while ($row = loc_db_fetch_array($nxtPrsnsRslt)) {
+                        $nxtPrsnID = (float) $row[0];
+                        $newStatus = "Reviewed";
+                        $nxtStatus = "Open;Reject;Request for Information;Approve";
+                        $nxtApprvr = "Next Approver";
+                        if ($prsnsFnd == 0) {
+                            $affctd += updtWkfMsgRtngUsngLvl($rtngMsgID, $curPrsnsLevel, $fromPrsnID, $newStatus, $nxtStatus, $userID);
+                            $datestr = getFrmtdDB_Date_time();
+                            $msgbodyAddOn .= strtoupper($newStatus) . " ON $datestr:- This document has been $newStatus by $usrFullNm <br/><br/>";
+                            $affctd1 += updtWkfMsgRtngCmnts($routingID, $msgbodyAddOn, $userID);
+                            $msgbodyAddOn .= $oldMsgbodyAddOn;
+                            updtWkfMsgAllUnclsdRtng($rtngMsgID, $fromPrsnID, "Closed", "None", $userID);
+                            $msghdr = $msgTitle;
+                            $msgbody = $msgBdy;
+                            $msgtyp = "Work Document";
+                            $msgsts = "0";
+                            $curPrsnsLevel += 1;
+                            $affctd2 += updateWkfMsg($msg_id, $msghdr, $msgbody, $userID, $appID, $msgtyp, $msgsts, $srcdoctyp, $srcdocid, $hrchyid, $attchmnts, $attchmnts_desc);
+                        }
+                        $prsnsFnd++;
+                        if ($nxtPrsnID > 0) {
+                            $affctd3 += routWkfMsg($msg_id, $fromPrsnID, $nxtPrsnID, $userID, $newStatus, $nxtStatus, $curPrsnsLevel, $msgbodyAddOn);
+                        }
+                        if ($prsnsFnd == 1) {
+                            $affctd4 += updatePrsLeaveRqst($srcdocid, $newStatus);
+                        }
+                    }
+                    if ($prsnsFnd <= 0) {
+                        $newStatus = "Approved";
+                        $nxtStatus = "None;Acknowledge";
+                        $nxtApprvr = "Original Person";
+                        $affctd += updtWkfMsgRtngUsngLvl($rtngMsgID, $curPrsnsLevel, $fromPrsnID, $newStatus, $nxtStatus, $userID);
+                        $datestr = getFrmtdDB_Date_time();
+                        $msgbodyAddOn = "";
+                        $msgbodyAddOn .= strtoupper($newStatus) . " ON $datestr:- This document has been $newStatus by $usrFullNm <br/><br/>";
+                        $affctd1 += updtWkfMsgRtngCmnts($routingID, $msgbodyAddOn, $userID);
+                        $msgbodyAddOn .= $oldMsgbodyAddOn;
+                        updtWkfMsgAllUnclsdRtng($rtngMsgID, $fromPrsnID, "Closed", "None", $userID);
+                        updateWkfMsgStatus($rtngMsgID, "1", $userID);
+                        $msghdr = "APPROVED - " . $msgTitle;
+                        $msgbody = $msgBdy;
+                        $msgtyp = "Informational";
+                        $msgsts = "0";
+                        $curPrsnsLevel += 1;
+                        $affctd2 += updateWkfMsg($msg_id, $msghdr, $msgbody, $userID, $appID, $msgtyp, $msgsts, $srcdoctyp, $srcdocid, $hrchyid, $attchmnts, $attchmnts_desc);
+                        $affctd3 += routWkfMsg($msg_id, $fromPrsnID, $orgnlPrsnID, $userID, $newStatus, $nxtStatus, $curPrsnsLevel, $msgbodyAddOn);
+                        $affctd4 += updatePrsLeaveRqst($srcdocid, $newStatus);
+                        //Begin Email Sending Process                    
+                        $result = getEmlDetailsAftrActn($srcdoctyp, $srcdocid);
+                        $lastPrsnID = "|";
+                        $msgBatchID = getMsgBatchID();
+                        $paramRepsNVals = $prmID . "~" . $msgBatchID . "|-190~HTML";
+                        while ($row = loc_db_fetch_array($result)) {
+                            $frmID = $orgnlPrsnID;
+                            if (strpos($lastPrsnID, "|" . $frmID . "|") !== FALSE) {
+                                $lastPrsnID .= $frmID . "|";
+                                continue;
+                            }
+                            $lastPrsnID .= $frmID . "|";
+                            $subject = $row[1];
+                            $actSoFar = $row[3];
+                            if ($actSoFar == "") {
+                                $actSoFar = "&nbsp;&nbsp;NONE";
+                            }
+                            $msgPart = "<span style=\"font-weight:bold;text-decoration:underline;color:blue;\">ACTIONS TAKEN SO FAR:</span><br/>" . $actSoFar . "<br/> <span style=\"font-weight:bold;text-decoration:underline;color:blue;\">ORIGINAL MESSAGE:</span><br/>&nbsp;&nbsp;" . $row[2];
+                            $docType = $srcDocType;
+                            $to = getPrsnEmail($frmID);
+                            $nameto = getPrsnFullNm($frmID);
+                            if ($docType != "" && $docType != "Login") {
+                                $message = "Dear $nameto, <br/><br/>A notification has been sent to your account in the Portal as follows:"
+                                    . "<br/><br/>"
+                                    . $msgPart .
+                                    "<br/><br/>Kindly <a href=\""
+                                    . $app_url . "\">Login via this Link</a> to <strong>VIEW</strong> it!<br/>Thank you for your cooperation!<br/><br/>Best Regards,<br/>" . $admin_name;
+                                $errMsg = "";
+                                createMessageQueue($msgBatchID, trim(str_replace(";", ",", $to), ";, "), "", "", $message, $subject, "", "Email");
+                                //sendEMail(trim(str_replace(";", ",", $to), ","), $nameto, $subject, $message, $errMsg, "", "", "", $admin_name);
+                            }
+                            break;
+                        }
+                    }
+                    if ($affctd > 0) {
+                        $dsply .= "<br/>Status of $affctd Workflow Document(s) successfully updated to $newStatus!";
+                        $dsply .= "<br/>$affctd1 Workflow Document(s) Message Body Successfully Updated!";
+                        //$dsply .= "<br/>$affctd2 New Workflow Document(s) Message Body Successfully Created!";
+                        $dsply .= "<br/>$affctd3 Workflow Document(s) Successfully Re-Routed to $nxtApprvr!";
+                        $dsply .= "<br/>$affctd4 Request Status Successfully Updated!";
+                        $msg = "<p style = \"text-align:left; color:#32CD32;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>"; //#32CD32
+                    } else {
+                        $dsply .= "<br/>|ERROR|-Update Failed! No Workflow Document(s) Worked On";
+                        $msg = "<p style = \"text-align:left; color:#ff0000;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>";
+                    }
+                }
+            }
+        } else {
+            $dsply .= "<br/>|ERROR|-Update Failed! No Workflow Document(s) Selected";
+            $msg = "<p style = \"text-align:left; color:#ff0000;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>";
+        }
+    }
+    if ($msgBatchID > 0) {
+        generateReportRun($rptID, $paramRepsNVals, -1);
+    }
+    return $msg;
+}
+
+function getLeaveRqstAttchMnts($plnExctnid)
+{
+    global $ftp_base_db_fldr;
+    $sqlStr = "SELECT string_agg(REPLACE(a.attchmnt_desc,';',','),';') attchmnt_desc, 
+string_agg(REPLACE('" . $ftp_base_db_fldr . "/PrsnDocs/Leave/' || a.file_name,';',','),';') file_name 
+  FROM prs.leave_doc_attchmnts a 
+  WHERE plan_execution_id=" . $plnExctnid;
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function updatePrsLeaveRqst($srcDocID, $nwvalue)
+{
+    global $usrID;
+    $affctd = 0;
+    $datestr = getDB_Date_time();
+    $nwvalue1 = "";
+    if ($nwvalue == "Withdrawn" || $nwvalue == "Rejected") {
+        $nwvalue1 = "Requested";
+    } else if ($nwvalue == "Approved") {
+        $nwvalue1 = "Scheduled";
+    } else {
+        $nwvalue1 = "";
+    }
+    if ($nwvalue1 != "") {
+        $updSQL1 = "UPDATE prs.hr_person_absences
+            SET absence_status='" . loc_db_escape_string($nwvalue1) . "',
+                last_update_by = " . $usrID .
+            ", last_update_date = '" . loc_db_escape_string($datestr) .
+            "' WHERE plan_execution_id =" . $srcDocID . " and absence_status NOT IN ('Taken')";
+        $affctd = execUpdtInsSQL($updSQL1);
+    }
+    if ($affctd > 0 || $nwvalue1 == "") {
+        $updSQL = "UPDATE prs.hr_accrual_plan_exctns
+            SET rqst_status='" . loc_db_escape_string($nwvalue) . "',
+                last_update_by = " . $usrID .
+            ", last_update_date = '" . loc_db_escape_string($datestr) .
+            "' WHERE plan_execution_id=" . $srcDocID;
+        $affctd = execUpdtInsSQL($updSQL);
+    }
+    return $affctd;
+}
+
+function LeaveRqstRODsply($sbmtdExctnID)
+{
+    //New Leave Form  
+    $sbmtdPlanID = -1;
+    $plnNm = "";
+    $rmrksCmnts = "";
+    $lnkdPrsnID = -1;
+    $lnkdPrsnNm = "";
+    $exctnStrtDte = "";
+    $exctnEndDte = "";
+    $daysEntitled = 0;
+    $rqstStatus = "";
+    $rqstStatusColor = "red";
+    $mkReadOnly = "";
+    $mkRmrkReadOnly = "";
+    if ($sbmtdExctnID > 0) {
+        $result = get_OnePlnExctnDet($sbmtdExctnID);
+        while ($row = loc_db_fetch_array($result)) {
+            $sbmtdExctnID = (float) $row[0];
+            $lnkdPrsnID = (float) $row[1];
+            $lnkdPrsnNm = $row[2];
+            $exctnStrtDte = $row[5];
+            $exctnEndDte = $row[6];
+            $daysEntitled = (float) $row[7];
+            $rqstStatus = $row[9];
+            $sbmtdPlanID = (float) $row[3];
+            $plnNm = $row[4];
+            $rmrksCmnts = $row[8];
+
+            if ($rqstStatus == "Not Submitted" || $rqstStatus == "Withdrawn" || $rqstStatus == "Rejected") {
+                $rqstStatusColor = "red";
+            } else if ($rqstStatus != "Authorized") {
+                $mkReadOnly = "readonly=\"true\"";
+                $mkRmrkReadOnly = "readonly=\"true\"";
+                $rqstStatusColor = "brown";
+            } else {
+                $rqstStatusColor = "green";
+                $mkReadOnly = "readonly=\"true\"";
+                $mkRmrkReadOnly = "readonly=\"true\"";
+            }
+        }
+    } else {
+        return "ERROR-Nothing to Display!!";
+    }
+    /* if ($sbmtdExctnID <= 0) {
+      $sbmtdExctnID = getNewPlnExctnID();
+      } */
+    $canEdtLve = FALSE;
+    $canAddLve = FALSE;
+    $canDelLve = FALSE;
+
+    $routingID = getMxRoutingID($sbmtdExctnID, "Leave Requests");
+    $reportTitle = "Leave Profile Report";
+    $reportName = "Leave Profile Report";
+    $rptID = getRptID($reportName);
+    $prmID1 = getParamIDUseSQLRep("{:pln_exctn_id}", $rptID);
+    $prmID2 = getParamIDUseSQLRep("{:documentTitle}", $rptID);
+    $trnsID = $sbmtdExctnID;
+    $paramRepsNVals = $prmID1 . "~" . $trnsID . "|" . $prmID2 . "~" . $reportTitle . "|-130~" . $reportTitle . "|-190~PDF";
+    $paramStr = urlencode($paramRepsNVals);
+?>
+    <form class="form-horizontal" id='leavePlnExctnForm' action='' method='post' accept-charset='UTF-8'>
+        <div class="row" style="margin: 0px 0px 10px 0px !important;">
+            <div class="col-md-6" style="padding:0px 15px 0px 0px !important;">
+                <div class="" style="padding:0px 0px 0px 0px;float:left !important;">
+                    <button type="button" class="btn btn-default btn-sm" style="" id="myVmsTrnsStatusBtn"><span style="font-weight:bold;">Status: </span><span style="color:<?php echo $rqstStatusColor; ?>;font-weight: bold;"><?php echo $rqstStatus; ?></span></button>
+                    <?php //if ($rqstStatus == "Authorized") {            
+                    ?>
+                    <button type="button" class="btn btn-default" style="" onclick="getSilentRptsRnSts(<?php echo $rptID; ?>, -1, '<?php echo $paramStr; ?>');" style="width:100% !important;">
+                        <img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">
+                        Print Leave Profile
+                    </button>
+                    <?php //}           
+                    ?>
+                </div>
+            </div>
+            <div class="col-md-6" style="padding:0px 0px 0px 0px !important;">
+                <div class="" style="padding:0px 0px 0px 0px;float:right !important;">
+                    <?php
+                    if (!($rqstStatus == "Not Submitted" || $rqstStatus == "Withdrawn" || $rqstStatus == "Rejected") && ($rqstStatus != "Authorized")) {
+                    ?>
+                        <button type="button" class="btn btn-default btn-sm" style="" onclick="checkWkfRqstStatus(<?php echo $routingID; ?>, 'Leave Approval Progress History');"><img src="cmn_images/workflow.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Progress&nbsp;</button>
+                    <?php
+                    } else if ($rqstStatus == "Authorized") {
+                    ?>
+                        <button type="button" class="btn btn-default btn-sm" style="" onclick="checkWkfRqstStatus(<?php echo $routingID; ?>, 'Leave Approval Progress History');"><img src="cmn_images/workflow.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;" data-toggle="tooltip" title="Approval Progress History">Progress&nbsp;</button>
+                    <?php }
+                    ?>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding: 0px 15px 0px 15px !important;">
+            <div class="col-md-6" style="padding: 0px 5px 0px 5px !important;">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
+                            <label for="sbmtdExctnID" class="control-label">Plan Execution No.:</label>
+                        </div>
+                        <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
+                            <?php if ($canEdtLve === true) { ?>
+                                <input type="number" name="sbmtdExctnID" id="sbmtdExctnID" class="form-control" value="<?php echo $sbmtdExctnID; ?>" style="width:100% !important;" readonly="true">
+                            <?php } else { ?>
+                                <span><?php echo $sbmtdExctnID; ?></span>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
+                            <label for="plnNm" class="control-label">Leave Plan Name:</label>
+                        </div>
+                        <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
+                            <?php if ($canEdtLve === true) { ?>
+                                <input type="text" name="plnNm" id="plnNm" class="form-control" value="<?php echo $plnNm; ?>" style="width:100% !important;" readonly="true">
+                                <input type="hidden" name="sbmtdPlanID" id="sbmtdPlanID" class="form-control" value="<?php echo $sbmtdPlanID; ?>">
+                            <?php } else { ?>
+                                <span><?php echo $plnNm; ?></span>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
+                            <label for="lnkdPrsnNm" class="control-label">Person:</label>
+                        </div>
+                        <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
+                            <input type="hidden" name="lnkdPrsnID" id="lnkdPrsnID" class="form-control" value="<?php echo $lnkdPrsnID; ?>">
+                            <span><?php echo $lnkdPrsnNm; ?></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
+                            <label for="daysEntitled" class="control-label">Days Entitled:</label>
+                        </div>
+                        <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
+                            <?php if ($canEdtLve === true) { ?>
+                                <input type="number" name="daysEntitled" id="daysEntitled" class="form-control" value="<?php echo $daysEntitled; ?>" style="width:100% !important;" readonly="true">
+                            <?php } else { ?>
+                                <span><?php echo $daysEntitled; ?></span>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
+                            <label for="rqstStatus" class="control-label">Status:</label>
+                        </div>
+                        <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
+                            <?php if ($canEdtLve === true) { ?>
+                                <input type="text" name="rqstStatus" id="rqstStatus" class="form-control" value="<?php echo $rqstStatus; ?>" style="width:100% !important;" readonly="true">
+                            <?php } else { ?>
+                                <span><?php echo $rqstStatus; ?></span>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6" style="padding: 1px !important;">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
+                            <label for="exctnStrtDte">Start Date:</label>
+                        </div>
+                        <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
+                            <?php if ($canEdtLve === true) { ?>
+                                <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                                    <input class="form-control" size="16" type="text" id="exctnStrtDte" name="exctnStrtDte" value="<?php echo $exctnStrtDte; ?>" readonly="true">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            <?php } else { ?>
+                                <span><?php echo $exctnStrtDte; ?></span>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
+                            <label for="exctnEndDte">End Date:</label>
+                        </div>
+                        <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
+                            <?php if ($canEdtLve === true) { ?>
+                                <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                                    <input class="form-control" size="16" type="text" id="exctnEndDte" name="exctnEndDte" value="<?php echo $exctnEndDte; ?>" readonly="true">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            <?php } else { ?>
+                                <span><?php echo $exctnEndDte; ?></span>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
+                            <label for="rmrksCmnts" class="control-label">Remarks/ Comments:</label>
+                        </div>
+                        <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
+                            <?php if ($canEdtLve === true) { ?>
+                                <textarea rows="5" name="rmrksCmnts" id="rmrksCmnts" class="form-control"><?php echo $rmrksCmnts; ?></textarea>
+                            <?php } else { ?>
+                                <span><?php echo $rmrksCmnts; ?></span>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding:1px 15px 1px 15px !important;">
+            <hr style="margin:3px 0px 3px 0px;">
+        </div>
+        <div class="row" style="padding:1px 15px 1px 15px !important;">
+            <div id="plnExctnAbsncs" class="" style="min-width:100% !important;">
+                <!--<div class="col-md-12" style="display:none;">
+                    <button id="refreshVltBtn" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneLeaveRqstsForm(<?php echo $sbmtdExctnID; ?>, 'ReloadDialog');" data-toggle="tooltip" data-placement="bottom" title = "Reload Leave Plan Execution">
+                        <img src="cmn_images/refresh.bmp" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                        Refresh
+                    </button>
+                </div>-->
+                <table class="table table-striped table-bordered" id="onePlnExctnAbsncsTable" cellspacing="0" width="100%" style="width:100%;min-width: 300px !important;">
+                    <thead>
+                        <tr>
+                            <th style="">No.</th>
+                            <th style="">Absence Start Date</th>
+                            <th style="text-align:right;">No. Days</th>
+                            <th style="">Absence End Date</th>
+                            <th style="">Remark/Narration</th>
+                            <th style="">Status</th>
+                            <th style="">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $rslt = get_OnePlnExctnAbsLns($sbmtdExctnID);
+                        $cntrUsr = 0;
+                        while ($rwLn = loc_db_fetch_array($rslt)) {
+                            $cntrUsr++;
+                            $noOfDays = $rwLn[6];
+                            $absncStartDte = $rwLn[4];
+                            $absncEndDte = $rwLn[5];
+                            $absStatus = $rwLn[8];
+                            $absReason = $rwLn[7];
+                            $style1 = "text-align:right;font-weight:bold;color:red;";
+                            if ($rwLn[8] == "Scheduled") {
+                                $style1 = "text-align:right;font-weight:bold;color:blue;";
+                            }
+                            if ($rwLn[8] == "Taken") {
+                                $style1 = "text-align:right;font-weight:bold;color:green;";
+                            }
+                        ?>
+                            <tr id="onePlnExctnAbsncsRow_<?php echo $cntrUsr; ?>">
+                                <td class="lovtd"><span><?php echo ($cntrUsr); ?></span></td>
+                                <td class="lovtd">
+                                    <?php if ($canEdtLve === true) { ?>
+                                        <div class="form-group form-group-sm col-md-12">
+                                            <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd" style="width:100%;">
+                                                <input class="form-control rqrdFld" size="16" type="text" id="onePlnExctnAbsncsRow<?php echo $cntrUsr; ?>_StrtDte" value="<?php echo $absncStartDte; ?>" style="width:100%;">
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                            </div>
+                                        </div>
+                                    <?php } else { ?>
+                                        <span><?php echo $absncStartDte; ?></span>
+                                    <?php } ?>
+                                </td>
+                                <td class="lovtd" style="text-align:right;">
+                                    <?php if ($canEdtLve === true) { ?>
+                                        <div class="form-group form-group-sm col-md-12">
+                                            <input type="number" class="form-control rqrdFld" aria-label="..." id="onePlnExctnAbsncsRow<?php echo $cntrUsr; ?>_NoOfDays" value="<?php echo $noOfDays; ?>" style="width:100%;">
+                                            <input type="hidden" class="form-control" aria-label="..." id="onePlnExctnAbsncsRow<?php echo $cntrUsr; ?>_LineID" value="<?php echo $rwLn[0]; ?>">
+                                        </div>
+                                    <?php } else { ?>
+                                        <span><?php echo $noOfDays; ?></span>
+                                    <?php } ?>
+                                </td>
+                                <td class="lovtd">
+                                    <?php if ($canEdtLve === true) { ?>
+                                        <div class="form-group form-group-sm col-md-12" style="width:100%;">
+                                            <input class="form-control" size="16" type="text" id="onePlnExctnAbsncsRow<?php echo $cntrUsr; ?>_EndDte" value="<?php echo $absncEndDte; ?>" readonly="true" style="width:100%;">
+                                        </div>
+                                    <?php } else { ?>
+                                        <span><?php echo $absncEndDte; ?></span>
+                                    <?php } ?>
+                                </td>
+                                <td class="lovtd">
+                                    <?php if ($canEdtLve === true) { ?>
+                                        <div class="form-group form-group-sm col-md-12">
+                                            <input type="text" class="form-control rqrdFld" aria-label="..." id="onePlnExctnAbsncsRow<?php echo $cntrUsr; ?>_AbsRsn" value="<?php echo $absReason; ?>" style="width:100%;">
+                                        </div>
+                                    <?php } else { ?>
+                                        <span><?php echo $absReason; ?></span>
+                                    <?php } ?>
+                                </td>
+                                <td class="lovtd">
+                                    <span style="<?php echo $style1; ?>"><?php echo $absStatus; ?></span>
+                                </td>
+                                <td class="lovtd">
+                                    <?php if ($canEdtLve === true) { ?>
+                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delLeaveRqstsLines('onePlnExctnAbsncsRow_<?php echo $cntrUsr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Absence">
+                                            <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                        </button>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="" style="float:right;margin-top: 5px;">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </form>
+<?php
+}
+
+function loadDataOptions($relationType)
+{
+    global $orgID;
+    $pssblItems = [];
+    if ($relationType === "Relation Type") {
+        $i = 0;
+        $brghtStr = "";
+        $isDynmyc = FALSE;
+        $titleRslt = getLovValues("%", "Both", 0, 500, $brghtStr, getLovID("Person Types"), $isDynmyc, -1, "", "");
+        while ($titleRow = loc_db_fetch_array($titleRslt)) {
+            $pssblItems[$i] = $titleRow[0];
+            $i++;
+        }
+    } else if ($relationType === "Division/Group") {
+        $i = 0;
+        $brghtStr = "";
+        $isDynmyc = TRUE;
+        $titleRslt = getLovValues("%", "Both", 0, 500, $brghtStr, getLovID("Divisions/Groups"), $isDynmyc, $orgID, "", "");
+        while ($titleRow = loc_db_fetch_array($titleRslt)) {
+            $pssblItems[$i] = $titleRow[1];
+            $i++;
+        }
+    } else if ($relationType === "Grade") {
+        $i = 0;
+        $brghtStr = "";
+        $isDynmyc = TRUE;
+        $titleRslt = getLovValues("%", "Both", 0, 500, $brghtStr, getLovID("Grades"), $isDynmyc, $orgID, "", "");
+        while ($titleRow = loc_db_fetch_array($titleRslt)) {
+            $pssblItems[$i] = $titleRow[1];
+            $i++;
+        }
+    } else if ($relationType === "Job") {
+        $i = 0;
+        $brghtStr = "";
+        $isDynmyc = TRUE;
+        $titleRslt = getLovValues("%", "Both", 0, 500, $brghtStr, getLovID("Jobs"), $isDynmyc, $orgID, "", "");
+        while ($titleRow = loc_db_fetch_array($titleRslt)) {
+            $pssblItems[$i] = $titleRow[1];
+            $i++;
+        }
+    } else if ($relationType === "Position") {
+        $i = 0;
+        $brghtStr = "";
+        $isDynmyc = TRUE;
+        $titleRslt = getLovValues("%", "Both", 0, 500, $brghtStr, getLovID("Positions"), $isDynmyc, $orgID, "", "");
+        while ($titleRow = loc_db_fetch_array($titleRslt)) {
+            $pssblItems[$i] = $titleRow[1];
+            $i++;
+        }
+    } else if ($relationType === "Site/Location") {
+        $i = 0;
+        $brghtStr = "";
+        $isDynmyc = TRUE;
+        $titleRslt = getLovValues("%", "Both", 0, 500, $brghtStr, getLovID("Sites/Locations"), $isDynmyc, $orgID, "", "");
+        while ($titleRow = loc_db_fetch_array($titleRslt)) {
+            $pssblItems[$i] = $titleRow[1];
+            //getGnrlRecNm("org.org_sites_locations", "location_id", "location_code_name", ((int) $titleRow[0]));
+            $i++;
+        }
+    }
+    return "All;" . join(";", $pssblItems);
+}
+
+function loadDataOptions2($relationType)
+{
+    global $orgID;
+    $pssblItems = [];
+    if ($relationType === "Relation Type") {
+        $i = 0;
+        $pssblItems[$i] = "All";
+        $i++;
+        $brghtStr = "";
+        $isDynmyc = FALSE;
+        $titleRslt = getLovValues("%", "Both", 0, 500, $brghtStr, getLovID("Person Types"), $isDynmyc, -1, "", "");
+        while ($titleRow = loc_db_fetch_array($titleRslt)) {
+            $pssblItems[$i] = $titleRow[0];
+            $i++;
+        }
+    } else if ($relationType === "Division/Group") {
+        $i = 0;
+        $pssblItems[$i] = "All";
+        $i++;
+        $brghtStr = "";
+        $isDynmyc = TRUE;
+        $titleRslt = getLovValues("%", "Both", 0, 500, $brghtStr, getLovID("Divisions/Groups"), $isDynmyc, $orgID, "", "");
+        while ($titleRow = loc_db_fetch_array($titleRslt)) {
+            $pssblItems[$i] = $titleRow[1];
+            $i++;
+        }
+    } else if ($relationType === "Grade") {
+        $i = 0;
+        $pssblItems[$i] = "All";
+        $i++;
+        $brghtStr = "";
+        $isDynmyc = TRUE;
+        $titleRslt = getLovValues("%", "Both", 0, 500, $brghtStr, getLovID("Grades"), $isDynmyc, $orgID, "", "");
+        while ($titleRow = loc_db_fetch_array($titleRslt)) {
+            $pssblItems[$i] = $titleRow[1];
+            $i++;
+        }
+    } else if ($relationType === "Job") {
+        $i = 0;
+        $pssblItems[$i] = "All";
+        $i++;
+        $brghtStr = "";
+        $isDynmyc = TRUE;
+        $titleRslt = getLovValues("%", "Both", 0, 500, $brghtStr, getLovID("Jobs"), $isDynmyc, $orgID, "", "");
+        while ($titleRow = loc_db_fetch_array($titleRslt)) {
+            $pssblItems[$i] = $titleRow[1];
+            $i++;
+        }
+    } else if ($relationType === "Position") {
+        $i = 0;
+        $pssblItems[$i] = "All";
+        $i++;
+        $brghtStr = "";
+        $isDynmyc = TRUE;
+        $titleRslt = getLovValues("%", "Both", 0, 500, $brghtStr, getLovID("Positions"), $isDynmyc, $orgID, "", "");
+        while ($titleRow = loc_db_fetch_array($titleRslt)) {
+            $pssblItems[$i] = $titleRow[1];
+            $i++;
+        }
+    } else if ($relationType === "Site/Location") {
+        $i = 0;
+        $pssblItems[$i] = "All";
+        $i++;
+        $brghtStr = "";
+        $isDynmyc = TRUE;
+        $titleRslt = getLovValues("%", "Both", 0, 500, $brghtStr, getLovID("Sites/Locations"), $isDynmyc, $orgID, "", "");
+        while ($titleRow = loc_db_fetch_array($titleRslt)) {
+            $pssblItems[$i] = $titleRow[1];
+            //getGnrlRecNm("org.org_sites_locations", "location_id", "location_code_name", ((int) $titleRow[0]));
+            $i++;
+        }
+    }
+    return $pssblItems;
+}
+
+/*CLINIC/HOSPITAL*/
+function checkLinkedPrsnExtnce($lnkd_prsn_id, $orgid)
+{
+    $cnt = 0;
+    $strSql1 = "SELECT count(*) FROM scm.scm_cstmr_suplr WHERE lnkd_prsn_id = $lnkd_prsn_id and org_id = " . $orgid;
+
+    $result1 = executeSQLNoParams($strSql1);
+
+    while ($row1 = loc_db_fetch_array($result1)) {
+        if ((int) $row1[0] > 0) {
+            $cnt += 1;
+        }
+    }
+
+
+    if ((int) $cnt > 0) {
+        return true;
+    } else {
+        return false;
+    }
+    return false;
+}
+/*CLINIC/HOSPITAL*/
 ?>

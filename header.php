@@ -15,6 +15,7 @@
         <link rel="shortcut icon" href="<?php echo $app_favicon; ?>" type="image/x-icon" /> 
         <!-- Bootstrap Core CSS -->
         <link href="cmn_scrpts/bootstrap337/css/bootstrap.min.css" rel="stylesheet">
+        <?php /*https://stackpath.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css*/?>
         <link href="cmn_scrpts/fontawesome450/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

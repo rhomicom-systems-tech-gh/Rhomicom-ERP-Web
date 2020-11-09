@@ -1,0 +1,75 @@
+<?xml version ='1.0' encoding ='UTF-8' ?>
+<definitions name='Protection'
+             targetNamespace='http://myCompany.net/Protection'
+             xmlns:tns='http://myCompany.net/Protection'
+             xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/'
+             xmlns:xsd='http://www.w3.org/2001/XMLSchema'
+             xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/'
+             xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/'
+             xmlns='http://schemas.xmlsoap.org/wsdl/'>
+
+    <message name='submitRegistration'>
+        <part name='serial_number' type='xsd:string'/>
+    </message>
+    <message name='getSubmitRegistrationResponse'>
+        <part name='Result' type='xsd:boolean'/>
+    </message>
+
+    <message name='checkRegistration'>
+        <part name='serial_number' type='xsd:string'/>
+    </message>
+    <message name='getCheckRegistrationResponse'>
+        <part name='Result' type='xsd:boolean'/>
+    </message>
+
+    <portType name='ProtectionPortType'>
+        <operation name='Register'>
+            <input message='tns:submitRegistration'/>
+            <output message='tns:getSubmitRegistrationResponse'/>
+        </operation>
+
+        <operation name='IsRegistered'>
+            <input message='tns:checkRegistration'/>
+            <output message='tns:getCheckRegistrationResponse'/>
+        </operation>
+    </portType>
+
+    <binding name='ProtectionBinding' type='tns:ProtectionPortType'>
+        <soap:binding style='rpc'
+                      transport='http://schemas.xmlsoap.org/soap/http'/>
+
+        <operation name='Register'>
+            <soap:operation soapAction='urn:myCompany_protection#Register'/>
+            <input>
+                <soap:body use='encoded' namespace='urn:myCompany_protection'
+                           encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+            </input>
+            <output>
+                <soap:body use='encoded' namespace='urn:myCompany_protection'
+                           encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+            </output>
+        </operation>
+
+        <operation name='IsRegistered'>
+            <soap:operation  
+                soapAction='urn:myCompany_protection#IsRegistered'/>
+            <input>
+                <soap:body use='encoded' namespace='urn:myCompany_protection'
+                           encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+            </input>
+            <output>
+                <soap:body use='encoded' namespace='urn:myCompany_protection'
+                           encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+            </output>
+        </operation>
+
+    </binding>
+
+    <service name='ProtectionService'>
+        <port name='ProtectionPort' binding='tns:ProtectionBinding'>
+            <soap:address location='http://localhost/~Eric/protection/ 
+protectionSoapServer.php'/>
+        </port>
+    </service>
+
+</definitions>

@@ -3,8 +3,8 @@ function prepareEvote(lnkArgs, htBody, targ, rspns)
     $(targ).html(rspns);
     $(document).ready(function () {
         $(function () {
-            /*var numelms=$('[data-toggle="tabajxgst"]').size();*/
             $('[data-toggle="tabajxsrvy"]').click(function (e) {
+                e.preventDefault();
                 var $this = $(this);
                 var targ = $this.attr('href');
                 var dttrgt = $this.attr('data-rhodata');
@@ -266,8 +266,8 @@ function getOneAllSrvyForm(pKeyID, vwtype)
     var lnkArgs = 'grp=19&typ=10&pg=2s&vtyp=' + vwtype + '&sbmtdSrvyID=' + pKeyID;
     doAjaxWthCallBck(lnkArgs, 'allSrvysDetailInfo', 'PasteDirect', '', '', '', function () {
         $(function () {
-            /*var numelms=$('[data-toggle="tabajxgst"]').size();*/
             $('[data-toggle="tabajxsrvy"]').click(function (e) {
+                e.preventDefault();
                 var $this = $(this);
                 var targ = $this.attr('href');
                 var dttrgt = $this.attr('data-rhodata');
@@ -1046,7 +1046,10 @@ function delSrvy(rowIDAttrb)
                 var dialog1 = bootbox.alert({
                     title: 'Delete Survey/Election?',
                     size: 'small',
-                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Survey/Election...Please Wait...</p>'
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Survey/Election...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
@@ -1240,7 +1243,10 @@ function delSrvyQstn(rowIDAttrb)
                 var dialog1 = bootbox.alert({
                     title: 'Delete Survey/Election Question?',
                     size: 'small',
-                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Survey/Election Question...Please Wait...</p>'
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Survey/Election Question...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
@@ -1319,7 +1325,10 @@ function delSrvyQstnAns(rowIDAttrb)
                 var dialog1 = bootbox.alert({
                     title: 'Delete Survey/Election?',
                     size: 'small',
-                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Survey/Election...Please Wait...</p>'
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Survey/Election...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
@@ -1485,7 +1494,10 @@ function delQstn(rowIDAttrb)
                 var dialog1 = bootbox.alert({
                     title: 'Delete Question?',
                     size: 'small',
-                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Question...Please Wait...</p>'
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Question...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
@@ -1654,7 +1666,10 @@ function delAns(rowIDAttrb)
                 var dialog1 = bootbox.alert({
                     title: 'Delete Question?',
                     size: 'small',
-                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Question...Please Wait...</p>'
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Question...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {

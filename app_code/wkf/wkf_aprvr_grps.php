@@ -57,7 +57,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     $inptPrsnID = getPersonID($prsnLocID);
                                     $isEnbld = cleanInputData1($crntRow[2]);
                                     $isEnbld1 = ($isEnbld == "YES") ? "1" : "0";
-                                    $oldMemberID = getGnrlRecID2("wkf.wkf_apprvr_group_members", "''||person_id", "member_id", $inptPrsnID);
+                                    $oldMemberID = getGnrlRecIDExtr1("wkf.wkf_apprvr_group_members", "''||person_id", "''||apprvr_group_id",
+                                            "member_id", $inptPrsnID, $wkfGrpID);
+                                    //getGnrlRecID("wkf.wkf_apprvr_group_members", "''||person_id", "member_id", $inptPrsnID, $wkfGrpID);
 
                                     if ($prsnLocID != "") {
                                         if ($oldMemberID <= 0 && $memberID <= 0) {
@@ -140,7 +142,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         ?>
                         <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                             <div class="input-group">
-                                <input class="form-control" id="allWkfGrpsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncWkfGrps(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                <input class="form-control" id="allWkfGrpsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%",
+                                        " ", $srchFor)); ?>" onkeyup="enterKeyFuncWkfGrps(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
                                 <input id="allWkfGrpsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getAllWkfGrps('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
                                     <span class="glyphicon glyphicon-remove"></span>
@@ -164,7 +167,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         }
                                         ?>
                                         <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
-                                    <?php } ?>
+                <?php } ?>
                                 </select>
                                 <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
                                 <select data-placeholder="Select..." class="form-control chosen-select" id="allWkfGrpsDsplySze" style="min-width:70px !important;">                            
@@ -215,7 +218,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             if ($canDelWkfGrp === true) {
                                                 ?>
                                                 <th>&nbsp;</th>
-                                            <?php } ?>
+                <?php } ?>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -237,7 +240,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                         </button>
                                                     </td>
-                                                <?php } ?>
+                                            <?php } ?>
                                             </tr>
                                             <?php
                                         }
@@ -275,7 +278,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                             <label for="wkfGrpLinkedFirm" class="control-label col-lg-4">Linked Firm:</label>
                                                             <div  class="col-lg-8">
-                                                                <?php if ($canEdtWkfGrp === true) { ?>
+                        <?php if ($canEdtWkfGrp === true) { ?>
                                                                     <div class="input-group">
                                                                         <input type="text" class="form-control" aria-label="..." id="wkfGrpLinkedFirm" value="<?php echo $row1[4]; ?>">
                                                                         <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
@@ -372,7 +375,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                 Add Approver Group Member
                                                             </button>
-                                                        <?php } ?>
+                        <?php } ?>
                                                         <table class="table table-striped table-bordered table-responsive" id="wkfGrpMmbrsTable" cellspacing="0" width="100%" style="width:100%;min-width: 600px;">
                                                             <thead>
                                                                 <tr>
@@ -383,7 +386,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     if ($canDelWkfGrp === true) {
                                                                         ?>
                                                                         <th>&nbsp;</th>
-                                                                    <?php } ?>
+                        <?php } ?>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -396,7 +399,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <tr id="wkfGrpMmbrsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
                                                                         <td class="lovtd"><span class=""><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
                                                                         <td class="lovtd">
-                                                                            <?php if ($canEdtWkfGrp === true) { ?>
+                            <?php if ($canEdtWkfGrp === true) { ?>
                                                                                 <div class="input-group" style="width:100% !important;">
                                                                                     <input type="text" class="form-control" aria-label="..." id="wkfGrpMmbrsRow<?php echo $cntr; ?>_PrsnNm" value="<?php echo $row2[2] . " (" . $row2[1] . ")"; ?>" style="width:100% !important;">
                                                                                     <input type="hidden" class="form-control" aria-label="..." id="wkfGrpMmbrsRow<?php echo $cntr; ?>_PrsnLocID" value="<?php echo $row2[1]; ?>">
@@ -426,7 +429,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 </div>
                                                                             <?php } else { ?>
                                                                                 <span class=""><?php echo $row2[3]; ?></span>
-                                                                            <?php } ?>                                                         
+                                                                        <?php } ?>                                                         
                                                                         </td>
                                                                         <?php
                                                                         if ($canDelWkfGrp === true) {
@@ -436,7 +439,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                                                 </button>
                                                                             </td>
-                                                                        <?php } ?>
+                                                                    <?php } ?>
                                                                     </tr>
                                                                     <?php
                                                                 }
@@ -489,7 +492,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="wkfGrpLinkedFirm" class="control-label col-lg-4">Linked Firm:</label>
                                         <div  class="col-lg-8">
-                                            <?php if ($canEdtWkfGrp === true) { ?>
+                        <?php if ($canEdtWkfGrp === true) { ?>
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" aria-label="..." id="wkfGrpLinkedFirm" value="<?php echo $row1[4]; ?>" readonly="true">
                                                     <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
@@ -586,7 +589,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                             Add Approver Group Member
                                         </button>
-                                    <?php } ?>
+                        <?php } ?>
                                     <table class="table table-striped table-bordered table-responsive" id="wkfGrpMmbrsTable" cellspacing="0" width="100%" style="width:100%;min-width: 600px;">
                                         <thead>
                                             <tr>
@@ -597,7 +600,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 if ($canDelWkfGrp === true) {
                                                     ?>
                                                     <th>&nbsp;</th>
-                                                <?php } ?>
+                        <?php } ?>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -610,7 +613,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <tr id="wkfGrpMmbrsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
                                                     <td class="lovtd"><span class=""><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
                                                     <td class="lovtd">
-                                                        <?php if ($canEdtWkfGrp === true) { ?>
+                            <?php if ($canEdtWkfGrp === true) { ?>
                                                             <div class="input-group" style="width:100% !important;">
                                                                 <input type="text" class="form-control" aria-label="..." id="wkfGrpMmbrsRow<?php echo $cntr; ?>_PrsnNm" value="<?php echo $row2[2] . " (" . $row2[1] . ")"; ?>" style="width:100% !important;" readonly="true">
                                                                 <input type="hidden" class="form-control" aria-label="..." id="wkfGrpMmbrsRow<?php echo $cntr; ?>_PrsnLocID" value="<?php echo $row2[1]; ?>">
@@ -640,7 +643,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             </div>
                                                         <?php } else { ?>
                                                             <span class=""><?php echo $row2[3]; ?></span>
-                                                        <?php } ?>                                                         
+                                                    <?php } ?>                                                         
                                                     </td>
                                                     <?php
                                                     if ($canDelWkfGrp === true) {
@@ -650,7 +653,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                             </button>
                                                         </td>
-                                                    <?php } ?>
+                                                <?php } ?>
                                                 </tr>
                                                 <?php
                                             }
@@ -759,7 +762,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                     Add Approver Group Member
                                 </button>
-                            <?php } ?>
+                <?php } ?>
                             <table class="table table-striped table-bordered table-responsive" id="wkfGrpMmbrsTable" cellspacing="0" width="100%" style="width:100%;min-width: 600px;">
                                 <thead>
                                     <tr>
@@ -770,7 +773,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         if ($canDelWkfGrp === true) {
                                             ?>
                                             <th>&nbsp;</th>
-                                        <?php } ?>
+                <?php } ?>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -810,7 +813,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                 </button>
                                             </td>
-                                        <?php } ?>
+                <?php } ?>
                                     </tr>
                                 </tbody>
                             </table>

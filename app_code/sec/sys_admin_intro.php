@@ -2,9 +2,9 @@
 
 $menuItems = array("Users & their Roles", "Roles & Priviledges",
     "Modules & Priviledges", "Extra Info Labels", "Security Policies", "Server Settings",
-    "Track User Logins", "Audit Trail Tables", /* "News Items/Notices", */ "Load all Modules Requirements");
+    "Track User Logins", "Audit Trail Tables", /* "News Items/Notices", */ "Load all Modules Requirements", "Standard Reports");
 $menuImages = array("reassign_users.png", "groupings.png", "Folder.png", "info_ico2.gif",
-    "login.jpg", "antenna1.png", "user-mapping.ico", "safe-icon.png", /* "notes06.gif", */ "98.png");
+    "login.jpg", "antenna1.png", "53.png", "safe-icon.png", /* "notes06.gif", */ "98.png", "report-icon-png.png");
 
 $mdlNm = "System Administration";
 $ModuleName = $mdlNm;
@@ -113,6 +113,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     continue;
                 } else if ($i == 8 && test_prmssns($dfltPrvldgs[11], $mdlNm) == FALSE) {
                     continue;
+                } else if ($i == 9 && test_prmssns($dfltPrvldgs[1], $mdlNm) == FALSE) {
+                    continue;
                 }
                 if ($grpcntr == 0) {
                     $cntent .= "<div class=\"row\">";
@@ -154,6 +156,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             require "adt_trail.php";
         } else if ($pgNo == 9) {
             loadMdlsNthrRolesNLovs();
+        } else if ($pgNo == 10) {
+            require "sec_rpts.php";
         } else {
             restricted();
         }
@@ -251,9 +255,8 @@ function get_UsersTblr($searchFor, $searchIn, $offset, $limit_size) {
     $wherecls = "";
     $strSql = "";
     if ($searchIn == "Owned By") {
-        $wherecls = " and (concat(b.sur_name, ', ', b.first_name, ' ', " +
-                "b.other_names) ilike '" .
-                loc_db_escape_string($searchFor) . "')";
+        $wherecls = " and (concat(b.title || ' ' || b.sur_name, ', ', b.first_name, ' ', " .
+                "b.other_names) ilike '" . loc_db_escape_string($searchFor) . "')";
     } else if ($searchIn == "User Name") {
         $wherecls = " and (a.user_name ilike '" .
                 loc_db_escape_string($searchFor) . "')";
@@ -271,7 +274,7 @@ function get_UsersTblr($searchFor, $searchIn, $offset, $limit_size) {
             . "and to_char(now(), 'YYYY-MM-DD HH24:MI:SS') between z.valid_start_date and z.valid_end_date) active_roles,"
             . "CASE WHEN age(now(), to_timestamp(last_pswd_chng_time, 'YYYY-MM-DD HH24:MI:SS')) " .
             ">= interval '" . get_CurPlcy_Pwd_Exp_Days() . " days' THEN '1' ELSE '0' END is_pswd_exprd , "
-            . "a.modules_needed, a.customer_id,  scm.get_cstmr_splr_name(a.customer_id) cstmr_nm,a.last_update_date  "
+            . "a.modules_needed, a.customer_id,  scm.get_cstmr_splr_name(a.customer_id) cstmr_nm, a.last_update_date  "
             . "FROM ((sec.sec_users a " .
             "LEFT OUTER JOIN prs.prsn_names_nos b ON (a.person_id = b.person_id)) LEFT OUTER JOIN " .
             "sec.sec_users_n_roles c ON a.user_id = c.user_id) LEFT OUTER JOIN sec.sec_roles d " .
@@ -287,7 +290,7 @@ function get_UsersTtl($searchFor, $searchIn) {
     $wherecls = "";
     $strSql = "";
     if ($searchIn == "Owned By") {
-        $wherecls = " and (concat(b.sur_name, ', ', b.first_name, ' ', " +
+        $wherecls = " and (concat(b.title || ' ' || b.sur_name, ', ', b.first_name, ' ', " .
                 "b.other_names) ilike '" .
                 loc_db_escape_string($searchFor) . "')";
     } else if ($searchIn == "User Name") {
@@ -344,17 +347,19 @@ function get_OneUser($pkeyID) {
     return $result;
 }
 
-function get_UserLgns($searchFor, $searchIn, $offset, $limit_size, $shw_faild, $shw_sccfl) {
+function get_UserLgns($searchFor, $searchIn, $offset, $limit_size, $shw_faild, $shw_sccfl, $shw_actv) {
     $wherecls = "";
     $strSql = "";
     $optional_str1 = "";
     $optional_str2 = "";
-    if ($shw_sccfl == false || $shw_faild == false) {
-        if ($shw_sccfl == true) {
-            $optional_str1 = " AND (a.was_lgn_atmpt_succsful = TRUE)";
-        } else {
-            $optional_str1 = " AND (a.was_lgn_atmpt_succsful = FALSE)";
-        }
+    if ($shw_sccfl === "true") {
+        $optional_str1 .= " AND (a.was_lgn_atmpt_succsful = TRUE)";
+    }
+    if ($shw_faild === "true") {
+        $optional_str1 .= " AND (a.was_lgn_atmpt_succsful = FALSE)";
+    }
+    if ($shw_actv === "true") {
+        $optional_str1 .= " AND (a.was_lgn_atmpt_succsful = TRUE AND a.logout_time='')";
     }
 
     if ($searchIn == "Login Number") {
@@ -385,7 +390,9 @@ function get_UserLgns($searchFor, $searchIn, $offset, $limit_size, $shw_faild, $
             . "CASE WHEN a.logout_time='' THEN a.logout_time ELSE to_char(to_timestamp(a.logout_time,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') END logout_time, "
             . "a.host_mach_details, " .
             "CASE WHEN a.was_lgn_atmpt_succsful THEN 'YES' ELSE 'NO' END, "
-            . "a.user_id, a.login_number "
+            . "a.user_id, a.login_number, CASE WHEN a.last_active_time='' THEN a.last_active_time "
+            . "ELSE to_char(to_timestamp(a.last_active_time,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') END last_active_time, "
+            . "a.lgn_remarks "
             . "FROM sec.sec_track_user_logins a " .
             " LEFT OUTER JOIN sec.sec_users b ON a.user_id = b.user_id " .
             "WHERE (1=1" . $wherecls . "" . $optional_str1 . "" . $optional_str2 .
@@ -396,19 +403,20 @@ function get_UserLgns($searchFor, $searchIn, $offset, $limit_size, $shw_faild, $
     return $result;
 }
 
-function get_UserLgnsTtl($searchFor, $searchIn, $shw_faild, $shw_sccfl) {
+function get_UserLgnsTtl($searchFor, $searchIn, $shw_faild, $shw_sccfl, $shw_actv) {
     $wherecls = "";
     $strSql = "";
     $optional_str1 = "";
     $optional_str2 = "";
-    if ($shw_sccfl == false || $shw_faild == false) {
-        if ($shw_sccfl == true) {
-            $optional_str1 = " AND (a.was_lgn_atmpt_succsful = TRUE)";
-        } else {
-            $optional_str1 = " AND (a.was_lgn_atmpt_succsful = FALSE)";
-        }
+    if ($shw_sccfl === "true") {
+        $optional_str1 .= " AND (a.was_lgn_atmpt_succsful = TRUE)";
     }
-
+    if ($shw_faild === "true") {
+        $optional_str1 .= " AND (a.was_lgn_atmpt_succsful = FALSE)";
+    }
+    if ($shw_actv === "true") {
+        $optional_str1 .= " AND (a.was_lgn_atmpt_succsful = TRUE AND a.logout_time='')";
+    }
     if ($searchIn == "Login Number") {
         $wherecls = " and ((''||a.login_number) ilike '" .
                 loc_db_escape_string($searchFor) . "')";
@@ -442,6 +450,24 @@ function get_UserLgnsTtl($searchFor, $searchIn, $shw_faild, $shw_sccfl) {
     return 0;
 }
 
+function forceLgOutUserLgns($userid, $inptUsrNm = "") {
+    $lgnsCnt = 0;
+    $affctd = 0;
+    if ($lgnsCnt <= 0) {
+        $insSQL = "UPDATE sec.sec_track_user_logins SET logout_time=to_char(now(), 'YYYY-MM-DD HH24:MI:SS')
+            WHERE user_id = " . $userid . " and logout_time = '' and was_lgn_atmpt_succsful = 't'";
+        $affctd += execUpdtInsSQL($insSQL, "User Name:" . $inptUsrNm);
+    }
+    if ($affctd > 0) {
+        $dsply = "Successfully Updated the ff Records-";
+        $dsply .= "<br/>$affctd User Logon(s)!";
+        return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
+    } else {
+        $dsply = "No Record Updated!";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+}
+
 function createUser($username, $ownrID, $in_strDte, $in_endDte, $pwd, $cstmrID) {
     global $usrID;
     global $smplTokenWord;
@@ -466,6 +492,241 @@ function updateUser($user_id, $username, $ownrID, $in_strDte, $in_endDte, $cstmr
     execUpdtInsSQL($insSQL);
 }
 
+function createRole($rolename, $in_strDte, $in_endDte, $canAssign) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $endDate = "4000-12-31 23:59:59";
+    if (strlen($in_strDte) < 19) {
+        $in_strDte = $dateStr;
+    } else {
+        $in_strDte = cnvrtDMYTmToYMDTm($in_strDte);
+    }
+    if (strlen($in_endDte) < 19) {
+        $in_endDte = $endDate;
+    } else {
+        $in_endDte = cnvrtDMYTmToYMDTm($in_endDte);
+    }
+    $insSQL = "INSERT INTO sec.sec_roles(role_name, valid_start_date, " .
+            "valid_end_date, created_by, creation_date, last_update_by, last_update_date, can_mini_admins_assign) " .
+            "VALUES ('" . $rolename . "', '" . $in_strDte . "', '" . $in_endDte .
+            "', " . $usrID . ", '" . $dateStr . "', " . $usrID .
+            ", '" . $dateStr . "', '" . cnvrtBoolToBitStr($canAssign) . "')";
+    return execUpdtInsSQL($insSQL);
+}
+
+function createPolicy($plcy_nm, $faild_lgns
+, $expry_days, $auto_unlck, $rqr_caps, $rqr_smll, $rqr_dgts, $rqr_wild
+, $rgrmnt_cmdntns, $is_dflt, $old_pwd_cnt, $min_pwd_len, $max_pwd_len
+, $max_no_recs, $allw_rptn, $allw_unm, $sessn_tme) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO sec.sec_security_policies(" .
+            "policy_name, max_failed_lgn_attmpts, pswd_expiry_days, " .
+            "auto_unlocking_time_mins, pswd_require_caps, pswd_require_small, " .
+            "pswd_require_dgt, pswd_require_wild, pswd_reqrmnt_combntns, is_default, " .
+            "created_by, creation_date, last_update_by, last_update_date, " .
+            "old_pswd_cnt_to_disallow, pswd_min_length, pswd_max_length, max_no_recs_to_dsply, " .
+            "allow_repeating_chars, allow_usrname_in_pswds, session_timeout) " .
+            "VALUES ('" . $plcy_nm . "', " . $faild_lgns . ", " . $expry_days . ", " .
+            "" . $auto_unlck . ", " . $rqr_caps . ", " . $rqr_smll . ", " .
+            "" . $rqr_dgts . ", " . $rqr_wild . ", '" . loc_db_escape_string($rgrmnt_cmdntns) . "', " . $is_dflt . ", " .
+            "" . $usrID . ", '" . $dateStr . "', " . $usrID . ", '" . $dateStr . "', " .
+            "" . $old_pwd_cnt . ", " . $min_pwd_len . ", " . $max_pwd_len . ", " . $max_no_recs . ", " .
+            "" . $allw_rptn . ", " . $allw_unm . ", " . $sessn_tme . ")";
+    return execUpdtInsSQL($insSQL);
+}
+
+function createEml_Svr($smtp_nm, $mail_unme
+, $mail_pwd, $port_no, $is_dflt, $actv_drctry, $ftpserver, $ftpunm, $ftppswd, $ftpport, $ftpdir, $enfc, $pgdir, $bckpdir, $comPrt, $baudRate,
+        $timeOut, $ftpHomeDir, $srvrStnSmtpIP) {
+    global $usrID;
+    global $smplTokenWord;
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO sec.sec_email_servers(" .
+            "smtp_client, mail_user_name, mail_password, " .
+            "smtp_port, is_default, actv_drctry_domain_name, " .
+            "created_by, creation_date, last_update_by, last_update_date, " .
+            "ftp_server_url, ftp_user_name, ftp_user_pswd, " .
+            "ftp_port, ftp_app_sub_directory, enforce_ftp, " .
+            "pg_dump_dir, backup_dir, com_port, baud_rate, timeout, ftp_user_start_directory, inhouse_smtp_ip) " .
+            "VALUES ('" . loc_db_escape_string($smtp_nm) . "', '" . loc_db_escape_string($mail_unme) .
+            "', '" . loc_db_escape_string(encrypt1($mail_pwd, $smplTokenWord)) . "', " .
+            "" . $port_no . ", '" . $is_dflt . "', '" . $actv_drctry . "', " .
+            "" . $usrID . ", '" . $dateStr . "', " .
+            $usrID . ", '" . $dateStr .
+            "', '" . loc_db_escape_string($ftpserver) . "', '" . loc_db_escape_string($ftpunm) .
+            "', '" . loc_db_escape_string($encrypt1($ftppswd, $smplTokenWord)) . "', " . $ftpport .
+            ", '" . loc_db_escape_string($ftpdir) . "', '" . cnvrtBoolToBitStr($enfc) . "','" . loc_db_escape_string($pgdir) .
+            "','" . loc_db_escape_string($bckpdir) . "','" . loc_db_escape_string($comPrt) .
+            "','" . loc_db_escape_string($baudRate) . "','" . loc_db_escape_string($timeOut) .
+            "','" . loc_db_escape_string($ftpHomeDir) . "','" . loc_db_escape_string($srvrStnSmtpIP) . "')";
+    return execUpdtInsSQL($insSQL);
+}
+
+function asgnPrvlgToRole($prvldg_id, $role_id, $in_strDte, $in_endDte) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $endDate = "4000-12-31 23:59:59";
+    if (strlen($in_strDte) < 19) {
+        $in_strDte = $dateStr;
+    } else {
+        $in_strDte = cnvrtDMYTmToYMDTm($in_strDte);
+    }
+    if (strlen($in_endDte) < 19) {
+        $in_endDte = $endDate;
+    } else {
+        $in_endDte = cnvrtDMYTmToYMDTm($in_endDte);
+    }
+    $insSQL = "INSERT INTO sec.sec_roles_n_prvldgs(role_id, prvldg_id, valid_start_date, valid_end_date, created_by, " .
+            "creation_date, last_update_by, last_update_date) VALUES (" . $role_id . ", " . $prvldg_id . ", '" .
+            $in_strDte . "', '" . $in_endDte . "', " . $usrID . ", '" . $dateStr .
+            "', " . $usrID . ", '" . $dateStr . "')";
+    return execUpdtInsSQL($insSQL);
+}
+
+function updateRolesPrticulrPrvldg($prvldgID, $roleID, $in_strDte, $in_endDte) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $endDate = "4000-12-31 23:59:59";
+    if (strlen($in_strDte) < 19) {
+        $in_strDte = $dateStr;
+    } else {
+        $in_strDte = cnvrtDMYTmToYMDTm($in_strDte);
+    }
+    if (strlen($in_endDte) < 19) {
+        $in_endDte = $endDate;
+    } else {
+        $in_endDte = cnvrtDMYTmToYMDTm($in_endDte);
+    }
+    $sqlStr = "UPDATE sec.sec_roles_n_prvldgs SET valid_start_date = '" .
+            $in_strDte . "', valid_end_date = '" . $in_endDte . "', last_update_by = " .
+            $usrID . ", last_update_date = '" . $dateStr . "' " .
+            "WHERE((prvldg_id = " . $prvldgID . ") AND (role_id = " . $roleID . "))";
+    //var_dump($sqlStr);
+    return execUpdtInsSQL($sqlStr);
+}
+
+function asgnMdlToPlcy($plcy_id, $mdl_id, $nwvalue, $nwactions) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO sec.sec_audit_trail_tbls_to_enbl(policy_id, module_id, action_typs_to_track, enable_tracking, created_by, " .
+            "creation_date, last_update_by, last_update_date) VALUES (" . $plcy_id . ", " . $mdl_id .
+            ", '" . loc_db_escape_string($nwactions) . "', " . $nwvalue . ", " . $usrID . ", '" . $dateStr .
+            "', " . $usrID . ", '" . $dateStr . "')";
+    return execUpdtInsSQL($insSQL);
+}
+
+function updateRole($roleID, $rolename, $in_strDte, $in_endDte, $canAssign) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $endDate = "4000-12-31 23:59:59";
+    if (strlen($in_strDte) < 19) {
+        $in_strDte = $dateStr;
+    } else {
+        $in_strDte = cnvrtDMYTmToYMDTm($in_strDte);
+    }
+    if (strlen($in_endDte) < 19) {
+        $in_endDte = $endDate;
+    } else {
+        $in_endDte = cnvrtDMYTmToYMDTm($in_endDte);
+    }
+    $insSQL = "UPDATE sec.sec_roles SET role_name = '" . loc_db_escape_string($rolename) .
+            "', valid_start_date = '" . $in_strDte . "', valid_end_date = '" . $in_endDte . "', last_update_by = " .
+            $usrID . ", last_update_date = '" . $dateStr . "', can_mini_admins_assign = '"
+            . cnvrtBoolToBitStr($canAssign) . "' " .
+            "WHERE(role_id = " . $roleID . ")";
+    return execUpdtInsSQL($insSQL);
+}
+
+function undefaultAllPlcys() {
+    global $usrID;
+    //Set is_default to false for all policies where it is true
+    $dateStr = getDB_Date_time();
+    $insSQL = "UPDATE sec.sec_security_policies SET is_default = FALSE, last_update_by = " .
+            $usrID . ", last_update_date = '" . $dateStr . "' WHERE (is_default = TRUE)";
+    return execUpdtInsSQL($insSQL);
+}
+
+function updatePlcy($plcyID, $plcy_nm, $faild_lgns
+, $expry_days, $auto_unlck, $rqr_caps, $rqr_smll, $rqr_dgts, $rqr_wild
+, $rgrmnt_cmdntns, $is_dflt, $old_pwd_cnt, $min_pwd_len, $max_pwd_len
+, $max_no_recs, $allw_rptn, $allw_unm, $sessn_tme) {
+    global $usrID;
+    //Set is_default to false for all policies where it is true
+    $dateStr = getDB_Date_time();
+    $sqlStr = "UPDATE sec.sec_security_policies " .
+            "SET policy_name='" . loc_db_escape_string($plcy_nm) . "', max_failed_lgn_attmpts=" .
+            $faild_lgns . ", pswd_expiry_days=" . $expry_days . ", " .
+            "auto_unlocking_time_mins=" . $auto_unlck . ", pswd_require_caps=" . $rqr_caps . ", pswd_require_small=" . $rqr_smll . ", " .
+            "pswd_require_dgt=" . $rqr_dgts . ", pswd_require_wild=" . $rqr_wild . ", pswd_reqrmnt_combntns='" . $rgrmnt_cmdntns . "', " .
+            "is_default=" . $is_dflt . ", last_update_by=" . $usrID . ", " .
+            "last_update_date='" . $dateStr . "', old_pswd_cnt_to_disallow=" . $old_pwd_cnt . ", pswd_min_length=" . $min_pwd_len . ", " .
+            "pswd_max_length=" . $max_pwd_len . ", max_no_recs_to_dsply=" . $max_no_recs . ", allow_repeating_chars=" . $allw_rptn . ", " .
+            "allow_usrname_in_pswds=" . $allw_unm . ", session_timeout =" . $sessn_tme .
+            " WHERE (policy_id = " . $plcyID . ")";
+    return execUpdtInsSQL($sqlStr);
+}
+
+function enbldisableTracking($plcyID, $mdlID, $nwvalue) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $sqlStr = "UPDATE sec.sec_audit_trail_tbls_to_enbl SET enable_tracking = " . $nwvalue .
+            ", last_update_by = " . $usrID .
+            ", last_update_date = '" . $dateStr . "' " .
+            "WHERE((policy_id = " . $plcyID . ") AND (module_id = " . $mdlID . "))";
+    return execUpdtInsSQL($sqlStr);
+}
+
+function updateActnsToTrack($plcyID, $mdlID, $nwvalue, $nwactions) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $sqlStr = "UPDATE sec.sec_audit_trail_tbls_to_enbl SET enable_tracking = " .
+            $nwvalue . ", action_typs_to_track = '" . loc_db_escape_string($nwactions) . "', last_update_by = " .
+            $usrID . ", last_update_date = '" . $dateStr . "' " .
+            "WHERE((policy_id = " . $plcyID . ") AND (module_id = " . $mdlID . "))";
+    return execUpdtInsSQL($sqlStr);
+}
+
+function undefaultAllEmlSvrs() {
+    global $usrID;
+    //Set is_default to false for all Email Servers where it is true
+    $dateStr = getDB_Date_time();
+    $sqlStr = "UPDATE sec.sec_email_servers SET is_default = FALSE, last_update_by = " .
+            $usrID . ", last_update_date = '" . $dateStr . "' WHERE (is_default = TRUE)";
+    return execUpdtInsSQL($sqlStr);
+}
+
+function updateEmlSvrs($svrID, $smtp_nm, $mail_unme
+, $mail_pwd, $port_no, $is_dflt, $actv_drctry, $ftpserver, $ftpunm, $ftppswd, $ftpport, $ftpdir, $enfc
+, $pgdir, $bckpdir, $comPrt, $baudRate, $timeOut, $ftpHomeDir, $srvrStnSmtpIP) {
+    global $usrID;
+    global $smplTokenWord;
+    //Update Server Info
+    $dateStr = getDB_Date_time();
+    $sqlStr = "UPDATE sec.sec_email_servers " .
+            "SET smtp_client='" . loc_db_escape_string($smtp_nm) .
+            "', mail_user_name='" . loc_db_escape_string($mail_unme) .
+            "', mail_password='" . loc_db_escape_string(encrypt1($mail_pwd, $smplTokenWord)) .
+            "', smtp_port=" . $port_no .
+            ", is_default='" . $is_dflt .
+            "', actv_drctry_domain_name = '" . loc_db_escape_string($actv_drctry) .
+            "', last_update_by=" . $usrID . ", " .
+            "last_update_date='" . $dateStr .
+            "', ftp_server_url='" . loc_db_escape_string($ftpserver) .
+            "', ftp_user_name='" . loc_db_escape_string($ftpunm) .
+            "', ftp_user_pswd='" . loc_db_escape_string(encrypt1($ftppswd, $smplTokenWord)) .
+            "', ftp_port=" . $ftpport . ", ftp_app_sub_directory = '" . loc_db_escape_string($ftpdir) .
+            "', enforce_ftp = '" . cnvrtBoolToBitStr($enfc) .
+            "', pg_dump_dir = '" . loc_db_escape_string($pgdir) .
+            "', backup_dir = '" . loc_db_escape_string($bckpdir) . "', com_port = '" . loc_db_escape_string($comPrt) .
+            "', baud_rate = '" . loc_db_escape_string($baudRate) . "', timeout = '" . loc_db_escape_string($timeOut) .
+            "', ftp_user_start_directory = '" . loc_db_escape_string($ftpHomeDir) .
+            "', inhouse_smtp_ip = '" . loc_db_escape_string($srvrStnSmtpIP) . "' WHERE (server_id = " . $svrID . ")";
+    return execUpdtInsSQL($sqlStr);
+}
+
+/**/
+
 function chngUsrLockStatus($userID, $failedAttempts, $inptUsrNm = "") {
     //Set failed_login_atmpts in sec.sec_users to 0
     $insSQL = "UPDATE sec.sec_users SET failed_login_atmpts = $failedAttempts 
@@ -481,7 +742,7 @@ function chngUsrLockStatus($userID, $failedAttempts, $inptUsrNm = "") {
     }
 }
 
-function chngUsrSuspensionStatus($userID, $nwStatus, $inptUsrNm="") {
+function chngUsrSuspensionStatus($userID, $nwStatus, $inptUsrNm = "") {
     //Set failed_login_atmpts in sec.sec_users to 0
     $insSQL = "UPDATE sec.sec_users SET is_suspended = $nwStatus 
                             WHERE (user_id = " . $userID . ")";
@@ -716,6 +977,44 @@ function get_AllSbgrpsLblsTtl($searchFor, $searchIn, $pkID) {
     return 0;
 }
 
+function doesTableHvThsExtrInfoLbl($tblID, $pssblVlID) {
+    $sqlStr = "SELECT comb_info_id FROM sec.sec_allwd_other_infos WHERE ((table_id = " .
+            $tblID . ") AND (other_info_id = " . $pssblVlID .
+            "))";
+    $result = executeSQLNoParams($sqlStr);
+    if (loc_db_num_rows($result) > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function createAllwdExtraInfos($tblID, $pssblValID, $isEnbld) {
+    global $usrID;
+    $insSQL = "INSERT INTO sec.sec_allwd_other_infos(" .
+            "table_id, other_info_id, is_enabled, created_by, " .
+            "creation_date, last_update_by, last_update_date) " .
+            "VALUES (" . $tblID . ", " . $pssblValID . ", '" .
+            cnvrtBoolToBitStr($isEnbld) . "', " . $usrID .
+            ", to_char(now(), 'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
+            ", to_char(now(), 'YYYY-MM-DD HH24:MI:SS'))";
+    return execUpdtInsSQL($insSQL);
+}
+
+function enblDsblAllwdExtraInfos($combntnID, $isEnbld) {
+    global $usrID;
+    $insSQL = "UPDATE sec.sec_allwd_other_infos " .
+            " SET is_enabled = '" . cnvrtBoolToBitStr($isEnbld) . "', last_update_by = " . $usrID .
+            ", last_update_date = to_char(now(), 'YYYY-MM-DD HH24:MI:SS') WHERE ((comb_info_id = " . $combntnID . "))";
+    return execUpdtInsSQL($insSQL);
+}
+
+function deleteAllwdExtraInfos($combntnID) {
+    $insSQL = "DELETE FROM sec.sec_allwd_other_infos " .
+            "WHERE ((comb_info_id = " . $combntnID . "))";
+    return execUpdtInsSQL($insSQL);
+}
+
 function get_Plcy_Mdls($pkID) {
     $sqlStr = "SELECT a.module_id mt, a.module_name, 
         a.audit_trail_tbl_name audit_trail_table_name, 
@@ -826,7 +1125,7 @@ function get_SrvrStngsDet($pkID) {
        CASE WHEN enforce_ftp='1' THEN 'Yes' ELSE 'No' END \"Enforce FTP?\",
        pg_dump_dir, backup_dir, com_port, baud_rate, timeout, sms_param1, 
        sms_param2, sms_param3, sms_param4, sms_param5, sms_param6, sms_param7, 
-       sms_param8, sms_param9, sms_param10, ftp_user_start_directory 
+       sms_param8, sms_param9, sms_param10, ftp_user_start_directory, inhouse_smtp_ip 
        FROM sec.sec_email_servers 
         WHERE (server_id = $pkID)";
     $result = executeSQLNoParams($sqlStr);
@@ -917,6 +1216,81 @@ function get_MdlsAdtTrlsTtls($searchWord, $searchIn, $pkID) {
         return $row[0];
     }
     return 0;
+}
+
+function getEmlSvrID($svr_name) {
+    //Example server name 'smtp.gmail.com'
+    $sqlStr = "select server_id from sec.sec_email_servers where lower(smtp_client) = lower('" .
+            loc_db_escape_string($svr_name) . "')";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return -1;
+}
+
+function getPlcyID($plcy_name) {
+    //Example policy name 'Standard ISO Password Policy'
+    $sqlStr = "select policy_id from sec.sec_security_policies where lower(policy_name) = lower('" .
+            loc_db_escape_string($plcy_name) . "')";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return -1;
+}
+
+function doesChkdRqrmntsMeetCmbntn($capsYesCheckBox, $smallYesCheckBox, $wildYesCheckBox, $digitsYesCheckBox, $combinatnsComboBox) {
+    $cntr = 0;
+    if ($capsYesCheckBox == "TRUE") {
+        $cntr += 1;
+    }
+    if ($smallYesCheckBox == "TRUE") {
+        $cntr += 1;
+    }
+    if ($wildYesCheckBox == "TRUE") {
+        $cntr += 1;
+    }
+    if ($digitsYesCheckBox == "TRUE") {
+        $cntr += 1;
+    }
+    if ($cntr == 0 && $combinatnsComboBox != "NONE") {
+        return false;
+    } else if ($cntr == 1 && $combinatnsComboBox != "ANY 1") {
+        return false;
+    } else if ($cntr == 2 && $combinatnsComboBox != "ANY 1" && $combinatnsComboBox != "ANY 2") {
+        return false;
+    } else if ($cntr == 3 && $combinatnsComboBox != "ANY 1" && $combinatnsComboBox != "ANY 2" && $combinatnsComboBox != "ANY 3") {
+        return false;
+    } else if ($cntr == 4 && $combinatnsComboBox == "NONE") {
+        return false;
+    }
+    return true;
+}
+
+function hasPlcyEvrHdThsMdl($inp_plcy_id, $inp_mdl_id) {
+    //Checks whether a given policy has a given module
+    $sqlStr = "SELECT policy_id FROM sec.sec_audit_trail_tbls_to_enbl WHERE ((policy_id = " .
+            $inp_plcy_id . ") AND (module_id = " . $inp_mdl_id . "))";
+
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return true;
+    }
+    return false;
+}
+
+function hsRoleEverHdThisPrvldg($inp_role_id, $inp_prvldg_id) {
+//Checks whether a given role 'system administrator' has a given priviledge
+    $sqlStr = "SELECT role_id FROM sec.sec_roles_n_prvldgs WHERE ((prvldg_id = " .
+            $inp_prvldg_id . ") AND (role_id = " . $inp_role_id .
+            "))";
+    $result = executeSQLNoParams($sqlStr);
+    if (loc_db_num_rows($result) > 0) {
+        return true;
+    } else {
+        return false;
+    }
 }
 ?>
                              

@@ -5,7 +5,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         <link rel="STYLESHEET" type="text/css" href="cmn_scrpts/loginStyles.css"/>
         <div class="login-panel panel panel-default login" style="max-width: 370px !important;">
             <h3 class="panel-title logintitle"><img src="cmn_images/change-password.png" style="float:left;height:40px;margin-left: 10px;"/>CHANGE ACCOUNT PASSWORD</h3>
-            <form method="post" action="javascript: return false;" style="width:100%;padding:10px;"  onSubmit="return false;">
+            <form method="post" action="javascript: return false;"  autocomplete="off" style="width:100%;padding:10px;"  onSubmit="return false;">
                 <p class="" >
                     <label id="fullName" style="color:green;margin:10px;font-size: 15px;font-weight: bold;">
                         <?php echo "Enter your " . $placeHolder1; ?>

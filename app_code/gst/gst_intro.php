@@ -1,5 +1,4 @@
 <?php
-
 $menuItems = array("LOVs Setup");
 $menuImages = array("chcklst4.png");
 
@@ -8,7 +7,7 @@ $ModuleName = $mdlNm;
 
 $dfltPrvldgs = array("View General Setup", "View Value List Names"
     /* 2 */, "View possible values", "Add Value List Names", "Edit Value List Names"
-    /* 5 */ , "Delete Value List Names", "Add Possible Values", "Edit Possible Values"
+    /* 5 */, "Delete Value List Names", "Add Possible Values", "Edit Possible Values"
     , "Delete Possible Values", "View Record History", "View SQL");
 
 $canview = test_prmssns($dfltPrvldgs[0], $mdlNm);
@@ -60,94 +59,101 @@ if ($lgn_num > 0 && $canview === true) {
     if ($qstr == "DELETE") {
         if ($actyp == 1) {
             $inptValListID = isset($_POST['pKeyID']) ? cleanInputData($_POST['pKeyID']) : -1;
-            echo deleteValListNm($inptValListID);
+            $lovNm = isset($_POST['lovNm']) ? cleanInputData($_POST['lovNm']) : "";
+            echo deleteValListNm($inptValListID, $lovNm);
         } else if ($actyp == 2) {
             $inptPssblValID = isset($_POST['pKeyID']) ? cleanInputData($_POST['pKeyID']) : -1;
-            echo deletePssblVal($inptPssblValID);
+            $psbVlNm = isset($_POST['psbVlNm']) ? cleanInputData($_POST['psbVlNm']) : "";
+            echo deletePssblVal($inptPssblValID, $psbVlNm);
         }
     } else if ($qstr == "UPDATE") {
         if ($actyp == 1) {
             //LOVs
-            var_dump($_POST);
-            exit();
-            header("content-type:application/json");
-            //categoryCombo
-            $inptValListID = isset($_POST['valListID']) ? cleanInputData($_POST['valListID']) : -1;
-            $definedByCombo = isset($_POST['definedByCombo']) ? cleanInputData($_POST['definedByCombo']) : "USR";
-            $valListName = isset($_POST['valListName']) ? cleanInputData($_POST['valListName']) : "";
-            $valListDesc = isset($_POST['valListDesc']) ? cleanInputData($_POST['valListDesc']) : "";
-            $lovSqlQuery = isset($_POST['lovSqlQuery']) ? cleanInputData($_POST['lovSqlQuery']) : "";
-            $isLovEnabled = ((isset($_POST['isLovEnabled']) ? cleanInputData($_POST['isLovEnabled']) : "off") == "on") ? "1" : "0";
-            $isLovDynamic = ((isset($_POST['isLovDynamic']) ? cleanInputData($_POST['isLovDynamic']) : "off") == "on") ? "1" : "0";
-
+            $afftctd = 0;
+            $inptValListID = isset($_POST['lovDetLovID']) ? cleanInputData($_POST['lovDetLovID']) : -1;
+            $definedByCombo = isset($_POST['lovDetDfndBy']) ? cleanInputData($_POST['lovDetDfndBy']) : "USR";
+            $valListName = isset($_POST['lovDetLovNm']) ? cleanInputData($_POST['lovDetLovNm']) : "";
+            $valListDesc = isset($_POST['lovDetLovDesc']) ? cleanInputData($_POST['lovDetLovDesc']) : "";
+            $lovSqlQuery = isset($_POST['lovDetSqlQry']) ? cleanInputData($_POST['lovDetSqlQry']) : "";
+            $isLovEnabled = ((isset($_POST['lovDetIsEnabled']) ? cleanInputData($_POST['lovDetIsEnabled']) : "NO") == "YES") ? "1" : "0";
+            $isLovDynamic = ((isset($_POST['lovDetIsDynmc']) ? cleanInputData($_POST['lovDetIsDynmc']) : "NO") == "YES") ? "1" : "0";
+            $lovDetOrdrByCls = isset($_POST['lovDetOrdrByCls']) ? cleanInputData($_POST['lovDetOrdrByCls']) : "ORDER BY 1 ASC";
             $oldValListID = getGnrlRecID2("gst.gen_stp_lov_names", "value_list_name", "value_list_id", $valListName);
 
             if ($valListName != "" && $definedByCombo != "" && ($oldValListID <= 0 || $oldValListID == $inptValListID)) {
                 if ($inptValListID <= 0) {
-                    createValListNm($valListName, $valListDesc, $isLovDynamic, $lovSqlQuery, $definedByCombo, $isLovEnabled);
+                    $afftctd += createValListNm($valListName, $valListDesc, $isLovDynamic, $lovSqlQuery, $definedByCombo, $isLovEnabled, $lovDetOrdrByCls);
                 } else {
-                    updateValListNm($inptValListID, $valListName, $valListDesc, $isLovDynamic, $lovSqlQuery, $definedByCombo, $isLovEnabled);
+                    $afftctd += updateValListNm($inptValListID, $valListName, $valListDesc, $isLovDynamic, $lovSqlQuery, $definedByCombo, $isLovEnabled, $lovDetOrdrByCls);
                 }
-                echo json_encode(array(
-                    'success' => true,
-                    'message' => 'Saved Successfully',
-                    'data' => array('src' => '<div style="float:left;"><img src="cmn_images/info.png" style="float:left;margin-right:5px;width:30px;height:30px;"/>LOV Successfully Saved!!</div>'),
-                    'total' => '1',
-                    'errors' => ''
-                ));
-                exit();
+                ?>
+                <div class="container-fluid"  style="float:none;width:100%;text-align: center;padding:0px 0px 0px 25px !important;">
+                    <div class="row" style="float:none;width:100%;text-align: center;">
+                        <span style="color:green;font-weight:bold;font-size:16px;font-style: italic;font-family: Georgia;width:100%;text-align: center;"><?php echo $afftctd; ?> LOV(s) Saved Successfully!</span>
+                    </div>
+                </div>
+                <?php
             } else {
-                echo json_encode(array(
-                    'success' => false,
-                    'message' => 'Save Failed!',
-                    'data' => array('src' => 'Failed to Save LOV!'),
-                    'total' => '0',
-                    'errors' => '<div style="float:left;"><img src="cmn_images/error.gif" style="float:left;margin-right:5px;width:30px;height:30px;"/>Either the New LOV Name is in Use <br/>or Data Supplied is Incomplete!</div>'
-                ));
-                exit();
+                ?>
+                <div class="container-fluid"  style="float:none;width:100%;text-align: center;padding:0px 0px 0px 25px !important;">
+                    <div class="row" style="float:none;width:100%;text-align: center;">
+                        <span style="color:red;font-weight:bold;font-size:16px;font-style: italic;font-family: Georgia;width:100%;text-align: center;">Failed to Save LOV!</span>
+                    </div>
+                </div>
+                <?php
             }
         } else if ($actyp == 2) {
             //Possible Values
-            var_dump($_POST);
-            exit();
-            header("content-type:application/json");
+            //var_dump($_POST);
+            //exit();
+            //header("content-type:application/json");
             //categoryCombo
-            $inptPssblLovValID = isset($_POST['pssblLovValID']) ? cleanInputData($_POST['pssblLovValID']) : -1;
-            $inptValListID = isset($_POST['valListID']) ? cleanInputData($_POST['valListID']) : -1;
-            $pssblVal = isset($_POST['pssblVal']) ? cleanInputData($_POST['pssblVal']) : "";
-            $allwdOrgIDs = isset($_POST['allwdOrgIDs']) ? cleanInputData($_POST['allwdOrgIDs']) : ",1,";
-            $pssblValDesc = isset($_POST['pssblValDesc']) ? cleanInputData($_POST['pssblValDesc']) : "";
-            $isPssblValEnabled = ((isset($_POST['isPssblValEnabled']) ? cleanInputData($_POST['isPssblValEnabled']) : "off") == "on") ? "1" : "0";
+            $afftctd = 0;
+            $inptValListID = isset($_POST['lovDetLovID']) ? cleanInputData($_POST['lovDetLovID']) : -1;
+            $slctdPsblVals = isset($_POST['slctdPsblVals']) ? cleanInputData($_POST['slctdPsblVals']) : '';
+            if (trim($slctdPsblVals, "|~") != "") {
+                //Save Possuble Values
+                $variousRows = explode("|", trim($slctdPsblVals, "|"));
+                for ($z = 0; $z < count($variousRows); $z++) {
+                    $crntRow = explode("~", $variousRows[$z]);
+                    //print_r($variousRows[$z]);
+                    //echo "COUNT::".count($crntRow)."<br/>";
+                    if (count($crntRow) == 5) {
+                        $inptPssblLovValID = (int) (cleanInputData1($crntRow[0]));
+                        $pssblVal = cleanInputData1($crntRow[1]);
+                        $allwdOrgIDs = cleanInputData1($crntRow[2]);
+                        $pssblValDesc = cleanInputData1($crntRow[3]);
+                        $isPssblValEnabled = cleanInputData1($crntRow[4]) == "Yes" ? "1" : "0";
+                        $oldPssblLovValID = getPssblValID2($pssblVal, $inptValListID, $pssblValDesc);
 
-            $oldPssblLovValID = getPssblValID2($pssblVal, $inptValListID, $pssblValDesc);
-
-            if ($pssblVal != "" && ($oldPssblLovValID <= 0 || $oldPssblLovValID == $inptPssblLovValID)) {
-                if ($inptPssblLovValID <= 0) {
-                    createPssblVals($inptValListID, $pssblVal, $pssblValDesc, $isPssblValEnabled, $allwdOrgIDs);
-                } else {
-                    updatePssblVals($inptPssblLovValID, $pssblVal, $pssblValDesc, $isPssblValEnabled, $allwdOrgIDs);
+                        if ($pssblVal != "" && ($oldPssblLovValID <= 0 || $oldPssblLovValID == $inptPssblLovValID)) {
+                            if ($inptPssblLovValID <= 0) {
+                                $afftctd += createPssblVals($inptValListID, $pssblVal, $pssblValDesc, $isPssblValEnabled, $allwdOrgIDs);
+                            } else {
+                                $afftctd += updatePssblVals($inptPssblLovValID, $pssblVal, $pssblValDesc, $isPssblValEnabled, $allwdOrgIDs);
+                            }
+                        }
+                    }
                 }
-                echo json_encode(array(
-                    'success' => true,
-                    'message' => 'Saved Successfully',
-                    'data' => array('src' => '<div style="float:left;"><img src="cmn_images/info.png" style="float:left;margin-right:5px;width:30px;height:30px;"/>Possible Value Successfully Saved!!</div>'),
-                    'total' => '1',
-                    'errors' => ''
-                ));
-                exit();
+                ?>
+                <div class="container-fluid"  style="float:none;width:100%;text-align: center;padding:0px 0px 0px 25px !important;">
+                    <div class="row" style="float:none;width:100%;text-align: center;">
+                        <span style="color:green;font-weight:bold;font-size:16px;font-style: italic;font-family: Georgia;width:100%;text-align: center;"><?php echo $afftctd; ?> Possible Value(s) Saved Successfully!</span>
+                    </div>
+                </div>
+                <?php
             } else {
-                echo json_encode(array(
-                    'success' => false,
-                    'message' => 'Save Failed!',
-                    'data' => array('src' => 'Failed to Save Possible Value!'),
-                    'total' => '0',
-                    'errors' => '<div style="float:left;"><img src="cmn_images/error.gif" style="float:left;margin-right:5px;width:30px;height:30px;"/>Either the New Possible Value Exists <br/>or Data Supplied is Incomplete!</div>'
-                ));
-                exit();
+                ?>
+                <div class="container-fluid"  style="float:none;width:100%;text-align: center;padding:0px 0px 0px 25px !important;">
+                    <div class="row" style="float:none;width:100%;text-align: center;">
+                        <span style="color:red;font-weight:bold;font-size:16px;font-style: italic;font-family: Georgia;width:100%;text-align: center;">Failed to Save Possible Value(s)!</span>
+                    </div>
+                </div>
+                <?php
             }
         }
-    } else if ($pgNo == 0) {        
-            $cntent .= "
+    } else if ($pgNo == 0) {
+        $cntent .= "
 					<li onclick=\"openATab('#allmodules', 'grp=$group&typ=$type');\">
 						<span style=\"text-decoration:none;\">Value Lists Setup Menu</span>
 					</li>
@@ -159,8 +165,8 @@ if ($lgn_num > 0 && $canview === true) {
                     font-weight:normal;\">This is where List of Possible Values for Data Fields in the Application are Captured and Managed. The module has the ff areas:</span>
                     </div>
       <p>";
-            $grpcntr = 0;
-        
+        $grpcntr = 0;
+
         for ($i = 0; $i < count($menuItems); $i++) {
             $No = $i + 1;
             if ($i == 0) {
@@ -208,7 +214,7 @@ function createPssblVals($lovID, $pssblVal, $pssblValDesc, $isEnbld, $allwd) {
             "VALUES (" . $lovID . ", '" . loc_db_escape_string($pssblVal) . "', '" . loc_db_escape_string($pssblValDesc) .
             "', " . $usrID . ", '" . $dateStr . "', " . $usrID .
             ", '" . $dateStr . "', '" . $isEnbld . "', '" . loc_db_escape_string($allwd) . "')";
-    execUpdtInsSQL($sqlStr);
+    return execUpdtInsSQL($sqlStr);
 }
 
 function updatePssblVals($pssblVlID, $pssblVal, $pssblValDesc, $isEnbld, $allwd) {
@@ -222,13 +228,13 @@ function updatePssblVals($pssblVlID, $pssblVal, $pssblValDesc, $isEnbld, $allwd)
             "', is_enabled = '" . $isEnbld . "', " .
             "allowed_org_ids ='" . loc_db_escape_string($allwd) . "' " .
             "WHERE(pssbl_value_id = " . $pssblVlID . ")";
-    execUpdtInsSQL($sqlStr);
+    return execUpdtInsSQL($sqlStr);
 }
 
-function deletePssblVal($pssblVlID) {
+function deletePssblVal($pssblVlID, $extrInfo = "") {
 
     $insSQL1 = "DELETE FROM gst.gen_stp_lov_values WHERE pssbl_value_id = " . $pssblVlID;
-    $affctd1 = execUpdtInsSQL($insSQL1);
+    $affctd1 = execUpdtInsSQL($insSQL1, "Possible Value Name:" . $extrInfo);
 
     if ($affctd1 > 0) {
         $dsply = "Successfully Deleted the ff Records-";
@@ -240,12 +246,11 @@ function deletePssblVal($pssblVlID) {
     }
 }
 
-function deleteValListNm($lovID) {
-
+function deleteValListNm($lovID, $extrInfo = "") {
     $insSQL = "DELETE FROM gst.gen_stp_lov_names WHERE value_list_id = " . $lovID;
-    $affctd = execUpdtInsSQL($insSQL);
+    $affctd = execUpdtInsSQL($insSQL, "LOV Name:" . $extrInfo);
     $insSQL1 = "DELETE FROM gst.gen_stp_lov_values WHERE value_list_id = " . $lovID;
-    $affctd1 = execUpdtInsSQL($insSQL1);
+    $affctd1 = execUpdtInsSQL($insSQL1, "LOV Name:" . $extrInfo);
 
     if ($affctd > 0) {
         $dsply = "Successfully Deleted the ff Records-";
@@ -259,13 +264,13 @@ function deleteValListNm($lovID) {
 }
 
 function createValListNm($lovNm, $lovDesc, $isDyn
-, $sqlQry, $dfndBy, $isEnbld) {
+        , $sqlQry, $dfndBy, $isEnbld, $lovDetOrdrByCls = "ORDER BY 1 ASC") {
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO gst.gen_stp_lov_names(" .
             "value_list_name, value_list_desc, is_list_dynamic, " .
             "sqlquery_if_dyn, defined_by, created_by, creation_date, last_update_by, " .
-            "last_update_date, is_enabled) " .
+            "last_update_date, is_enabled, dflt_order_by) " .
             "VALUES ('" . loc_db_escape_string($lovNm) .
             "', '" . loc_db_escape_string($lovDesc) .
             "', '" . loc_db_escape_string($isDyn) .
@@ -273,11 +278,12 @@ function createValListNm($lovNm, $lovDesc, $isDyn
             "', '" . loc_db_escape_string($dfndBy) .
             "', " . $usrID . ", '" . $dateStr .
             "', " . $usrID . ", '" . $dateStr .
-            "', '" . loc_db_escape_string($isEnbld) . "')";
-    execUpdtInsSQL($insSQL);
+            "', '" . loc_db_escape_string($isEnbld) . "','" . loc_db_escape_string($lovDetOrdrByCls) .
+            "')";
+    return execUpdtInsSQL($insSQL);
 }
 
-function updateValListNm($lovID, $lovNm, $lovDesc, $isDyn, $sqlQry, $dfndBy, $isEnbld) {
+function updateValListNm($lovID, $lovNm, $lovDesc, $isDyn, $sqlQry, $dfndBy, $isEnbld, $lovDetOrdrByCls = "ORDER BY 1 ASC") {
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "UPDATE gst.gen_stp_lov_names SET "
@@ -289,13 +295,15 @@ function updateValListNm($lovID, $lovNm, $lovDesc, $isDyn, $sqlQry, $dfndBy, $is
             "', is_enabled = '" . loc_db_escape_string($isEnbld) .
             "', last_update_by = " . $usrID .
             ", last_update_date = '" . $dateStr .
+            "', dflt_order_by = '" . loc_db_escape_string($lovDetOrdrByCls) .
             "'  WHERE(value_list_id = " . $lovID . ")";
-    execUpdtInsSQL($insSQL);
+    return execUpdtInsSQL($insSQL);
 }
 
 function get_LovsPssblVals($searchFor, $searchIn, $offset, $limit_size, $pkID) {
     $wherecls = "";
     $strSql = "";
+    global $usrID;
     if (isVlLstDynamic($pkID) == false) {
         if ($searchIn == "Description") {
             $wherecls = " and (a.pssbl_value_desc ilike '" .
@@ -317,7 +325,7 @@ function get_LovsPssblVals($searchFor, $searchIn, $offset, $limit_size, $pkID) {
             $wherecls = " and (tbl1.a ilike '" .
                     loc_db_escape_string($searchFor) . "')";
         }
-        $strSql = "SELECT -1, " . $pkID . ", tbl1.a, tbl1.b, '1', '' FROM (" . getSQLForDynamicVlLst($pkID) .
+        $strSql = "SELECT -1, " . $pkID . ", tbl1.a, tbl1.b, '1', '' FROM (" . str_replace("{:prsn_id}", getUserPrsnID($usrID), getSQLForDynamicVlLst($pkID)) .
                 ") tbl1 WHERE 1=1 " . $wherecls .
                 " ORDER BY tbl1.a LIMIT " . $limit_size .
                 " OFFSET " . abs($offset * $limit_size);
@@ -331,6 +339,7 @@ function get_LovsPssblVals($searchFor, $searchIn, $offset, $limit_size, $pkID) {
 function get_TtlLovsPssblVals($searchFor, $searchIn, $pkID) {
     $wherecls = "";
     $strSql = "";
+    global $usrID;
     if (isVlLstDynamic($pkID) == false) {
         if ($searchIn == "Description") {
             $wherecls = " and (a.pssbl_value_desc ilike '" .
@@ -350,7 +359,7 @@ function get_TtlLovsPssblVals($searchFor, $searchIn, $pkID) {
             $wherecls = " and (tbl1.a ilike '" .
                     loc_db_escape_string($searchFor) . "')";
         }
-        $strSql = "SELECT count(1) FROM (" . getSQLForDynamicVlLst($pkID) .
+        $strSql = "SELECT count(1) FROM (" . str_replace("{:prsn_id}", getUserPrsnID($usrID), getSQLForDynamicVlLst($pkID)) .
                 ") tbl1 WHERE 1=1 " . $wherecls .
                 "";
     }
@@ -375,7 +384,7 @@ function get_LovsTblr($searchFor, $searchIn, $offset, $limit_size) {
 
     $strSql = "SELECT value_list_id, value_list_name, value_list_desc, sqlquery_if_dyn, 
        defined_by, is_list_dynamic, is_enabled FROM gst.gen_stp_lov_names a " .
-            "WHERE (1=1$wherecls) ORDER BY value_list_name LIMIT 
+            "WHERE (1=1$wherecls) ORDER BY a.creation_date DESC, value_list_id DESC, value_list_name LIMIT 
 
 " . $limit_size . " OFFSET " . abs($offset * $limit_size);
 
@@ -413,7 +422,8 @@ function get_LovsDetail($valLstID) {
         sqlquery_if_dyn \"SQL Query\", 
        defined_by \"Defined By\", 
        (CASE WHEN is_list_dynamic='1' THEN 'YES' ELSE 'NO' END) \"Is List Dynamic?\", 
-       (CASE WHEN is_enabled='1' THEN 'YES' ELSE 'NO' END) \"Is Enabled?\" 
+       (CASE WHEN is_enabled='1' THEN 'YES' ELSE 'NO' END) \"Is Enabled?\",
+       dflt_order_by
        FROM gst.gen_stp_lov_names a " .
             "WHERE (value_list_id = $valLstID)";
     $result = executeSQLNoParams($strSql);
@@ -432,5 +442,4 @@ function get_LovsPssblValsDet($pssblValID) {
     $result = executeSQLNoParams($strSql);
     return $result;
 }
-
 ?>

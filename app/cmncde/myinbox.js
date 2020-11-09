@@ -89,6 +89,7 @@ function getMyInbx(actionText, slctr, linkArgs)
     var qEndDte = typeof $("#myInbxEndDate").val() === 'undefined' ? '' : $("#myInbxEndDate").val();
     var qActvOnly = $('#myInbxShwActvNtfs:checked').length > 0;
     var qNonLgn = $('#myInbxShwNonLgnNtfs:checked').length > 0;
+    var qNonAknwldg = $('#myInbxShwNonAknwNtfs:checked').length > 0;
     if (actionText == 'clear')
     {
         srchFor = "%";
@@ -102,8 +103,8 @@ function getMyInbx(actionText, slctr, linkArgs)
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn +
             "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy
-            + "&qStrtDte=" + qStrtDte + "&qEndDte=" + qEndDte + "&qActvOnly=" + qActvOnly + "&qNonLgn=" + qNonLgn;
-
+            + "&qStrtDte=" + qStrtDte + "&qEndDte=" + qEndDte + "&qActvOnly=" + qActvOnly + "&qNonLgn=" + qNonLgn + "&qNonAknwldg=" + qNonAknwldg;
+//alert(linkArgs);
     openATab(slctr, linkArgs);
 }
 
@@ -140,10 +141,11 @@ function getOneMyInbxForm(elementID, modalBodyID, titleElementID, formElementID,
 
                 $('#' + elementID).off('hidden.bs.modal');
                 $('#' + elementID).off('show.bs.modal');
-                $('#' + elementID).on('show.bs.modal', function (e) {
+                $('#' + elementID).one('show.bs.modal', function (e) {
                     $(this).find('.modal-body').css({
                         'max-height': '100%'
                     });
+                    $(e.currentTarget).unbind();
                 });
 
                 $(document).ready(function () {
@@ -173,7 +175,6 @@ function getOneMyInbxForm(elementID, modalBodyID, titleElementID, formElementID,
     });
 }
 
-
 function getAllInbx(actionText, slctr, linkArgs)
 {
     var srchFor = typeof $("#allInbxSrchFor").val() === 'undefined' ? '%' : $("#allInbxSrchFor").val();
@@ -185,6 +186,7 @@ function getAllInbx(actionText, slctr, linkArgs)
     var qEndDte = typeof $("#allInbxEndDate").val() === 'undefined' ? '' : $("#allInbxEndDate").val();
     var qActvOnly = $('#allInbxShwActvNtfs:checked').length > 0;
     var qNonLgn = $('#allInbxShwNonLgnNtfs:checked').length > 0;
+    var qNonAknwldg = $('#allInbxShwNonAknwNtfs:checked').length > 0;
     if (actionText == 'clear')
     {
         srchFor = "%";
@@ -198,7 +200,7 @@ function getAllInbx(actionText, slctr, linkArgs)
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn +
             "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy
-            + "&qStrtDte=" + qStrtDte + "&qEndDte=" + qEndDte + "&qActvOnly=" + qActvOnly + "&qNonLgn=" + qNonLgn;
+            + "&qStrtDte=" + qStrtDte + "&qEndDte=" + qEndDte + "&qActvOnly=" + qActvOnly + "&qNonLgn=" + qNonLgn + "&qNonAknwldg=" + qNonAknwldg;
 
     openATab(slctr, linkArgs);
 }
@@ -236,10 +238,11 @@ function getOneAllInbxForm(elementID, modalBodyID, titleElementID, formElementID
 
                 $('#' + elementID).off('hidden.bs.modal');
                 $('#' + elementID).off('show.bs.modal');
-                $('#' + elementID).on('show.bs.modal', function (e) {
+                $('#' + elementID).one('show.bs.modal', function (e) {
                     $(this).find('.modal-body').css({
                         'max-height': '100%'
                     });
+                    $(e.currentTarget).unbind();
                 });
 
                 $(document).ready(function () {
@@ -270,7 +273,7 @@ function getOneAllInbxForm(elementID, modalBodyID, titleElementID, formElementID
 }
 
 function actionProcess(cmpID, RoutingID, actionNm, isResDiag,
-        toPrsnLocID, toPrsNm, msgSubjct, msgDate)
+        toPrsnLocID, toPrsNm, msgSubjct, msgDate, wkfAppNm)
 {
     if (actionNm === "Reject")
     {
@@ -287,7 +290,7 @@ function actionProcess(cmpID, RoutingID, actionNm, isResDiag,
     } else
     {
         onAct(RoutingID, actionNm, isResDiag,
-                '', toPrsnLocID);
+                '', toPrsnLocID, wkfAppNm);
     }
 }
 
@@ -343,7 +346,7 @@ function onReassign(elmntID) {
     });
 }
 
-function  onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID) {
+function  onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID, wkfAppNm, wkfSlctdRoutingIDs) {
     if (actionNm === 'Open'
             || actionNm === 'Reject'
             || actionNm === 'Request for Information'
@@ -399,8 +402,9 @@ function  onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID) {
                                             dialog.find('.bootbox-body').html(result1);
                                             if (!(typeof $("#allInbxSrchFor").val() === 'undefined'))
                                             {
-                                                getAllInbx('', '#allmodules', 'grp=40&typ=2&pg=0&vtyp=2');
-                                            } else if (!(typeof $("#myInbxSrchFor").val() === 'undefined'))
+                                                getAllInbx('', '#allmodules', 'grp=40&typ=2&pg=0&vtyp=2&qMaster=1');
+                                            }
+                                            if (!(typeof $("#myInbxSrchFor").val() === 'undefined'))
                                             {
                                                 getMyInbx('', '#myinbox', 'grp=40&typ=2&pg=0&vtyp=0');
                                             }
@@ -412,31 +416,14 @@ function  onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID) {
 
                                             $('#myFormsModalLx').off('hidden.bs.modal');
                                             $('#myFormsModalLx').off('show.bs.modal');
-                                            $('#myFormsModalLx').on('show.bs.modal', function (e) {
+                                            $('#myFormsModalLx').one('show.bs.modal', function (e) {
                                                 $(this).find('.modal-body').css({
                                                     'max-height': '100%'
                                                 });
+                                                $(e.currentTarget).unbind();
                                             });
                                             $('#myFormsModalLx').modal({backdrop: 'static', keyboard: false});
-                                            /*BootstrapDialog.show({
-                                                size: BootstrapDialog.SIZE_WIDE,
-                                                type: BootstrapDialog.TYPE_DEFAULT,
-                                                title: 'Action Result!',
-                                                message: result1,
-                                                animate: true,
-                                                closable: true,
-                                                closeByBackdrop: false,
-                                                closeByKeyboard: false,
-                                                onshow: function (dialog) {
-                                                },
-                                                buttons: [{
-                                                        label: 'Close',
-                                                        icon: 'glyphicon glyphicon-ban-circle',
-                                                        action: function (dialogItself) {
-                                                            dialogItself.close();
-                                                        }
-                                                    }]
-                                            });*/
+                                            afterShowActions(wkfAppNm);
                                         }
                                     }, 500);
                                 },
@@ -446,6 +433,60 @@ function  onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID) {
                                 }
                             });
                         }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown)
+                    {
+                        /*dialog.find('.bootbox-body').html(errorThrown);*/
+                        console.warn(jqXHR.responseText);
+                    }});
+            });
+        });
+    } else if (actionNm === 'Re-Assign') {
+        var dialog = bootbox.alert({
+            title: 'Action Pending...',
+            size: 'small',
+            message: '<p><i class="fa fa-spin fa-spinner"></i> Performing Action...Please Wait...</p>',
+            callback: function () {
+                $('#myFormsModalLg').modal('hide');
+                $('#myFormsModalx').modal('hide');
+            }
+        });
+        dialog.init(function () {
+            getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                $body = $("body");
+                $body.removeClass("mdlloading");
+
+                var formData = new FormData();
+                formData.append('grp', 40);
+                formData.append('typ', 2);
+                formData.append('q', 'UPDATE');
+                formData.append('vtyp', 0);
+                formData.append('actyp', 1);
+                formData.append('RoutingID', RoutingID);
+                formData.append('actionNm', actionNm);
+                formData.append('actReason', actionReason);
+                formData.append('toPrsLocID', toPrsnLocID);
+                formData.append('wkfSlctdRoutingIDs', wkfSlctdRoutingIDs);
+                $.ajax({
+                    method: "POST",
+                    url: "index.php",
+                    data: formData,
+                    async: true,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (result) {
+                        setTimeout(function () {
+                            dialog.find('.bootbox-body').html(result);
+                            if (!(typeof $("#allInbxSrchFor").val() === 'undefined'))
+                            {
+                                getAllInbx('', '#allmodules', 'grp=40&typ=2&pg=0&vtyp=2&qMaster=1');
+                            }
+                            if (!(typeof $("#myInbxSrchFor").val() === 'undefined'))
+                            {
+                                getMyInbx('', '#myinbox', 'grp=40&typ=2&pg=0&vtyp=0');
+                            }
+                        }, 500);
                     },
                     error: function (jqXHR, textStatus, errorThrown)
                     {
@@ -523,7 +564,8 @@ function  onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID) {
                                                         if (!(typeof $("#allInbxSrchFor").val() === 'undefined'))
                                                         {
                                                             getAllInbx('', '#allmodules', 'grp=40&typ=2&pg=0&vtyp=2&qMaster=1');
-                                                        } else if (!(typeof $("#myInbxSrchFor").val() === 'undefined'))
+                                                        }
+                                                        if (!(typeof $("#myInbxSrchFor").val() === 'undefined'))
                                                         {
                                                             getMyInbx('', '#myinbox', 'grp=40&typ=2&pg=0&vtyp=0');
                                                         }
@@ -572,16 +614,24 @@ function  onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID) {
     }
 }
 
-function directApprove(rowIDAttrb)
+function directApprove(rowIDAttrb, actionsToPrfrm)
 {
     var prfxNm = rowIDAttrb.split("_")[0];
     var rndmNum = rowIDAttrb.split("_")[1];
     var RoutingID = $('#' + prfxNm + '' + rndmNum + '_RoutingID').val();
     var msgTyp = $('#' + prfxNm + '' + rndmNum + '_MsgType').val();
-    var actType = "Approve;Acknowledge";
+    var actType = "Approve;Authorize;Acknowledge";
     if (msgTyp === 'Informational')
     {
         actType = "Acknowledge";
+    } else if (actionsToPrfrm.indexOf("Approve") !== -1) {
+        actType = "Approve";
+    } else if (actionsToPrfrm.indexOf("Authorize") !== -1) {
+        actType = "Authorize";
+    } else if (actionsToPrfrm.indexOf("Acknowledge") !== -1) {
+        actType = "Acknowledge";
+    } else {
+        actType = "Approve";
     }
 
     if (RoutingID <= 0)
@@ -595,7 +645,7 @@ function directApprove(rowIDAttrb)
         });
     } else
     {
-        onAct(RoutingID, actType, 1, '', '');
+        onAct(RoutingID, actType, 1, '', '', '');
     }
 }
 
@@ -622,7 +672,6 @@ function directReject(rowIDAttrb)
     {
         rowCnt = 1;
     }
-
     if (rowCnt <= 0)
     {
         var dialog = bootbox.alert({
@@ -730,9 +779,19 @@ function be4OnAct(RoutingID, actionNm, isResDiag)
             message: errMsg});
         return false;
     }
-    if (actionNm === "Re-Assign") {
+    onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID, '', wkfSlctdRoutingIDs);
+}
 
-    } else {
-        onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID);
+function afterShowActions(wkfAppNm) {
+    if (wkfAppNm === "Banking Transactions") {
+        afterShowBNK();
+    } else if (wkfAppNm === "Vault Transactions") {
+        afterShowVMS();
+    } else if (wkfAppNm === "Personal Records Change") {
+
+    } else if (wkfAppNm === "Bulk/Batch Transactions") {
+        afterShowBulk();
+    } else if (wkfAppNm === "Transfer Transactions") {
+        afterShowTrsfr();
     }
 }

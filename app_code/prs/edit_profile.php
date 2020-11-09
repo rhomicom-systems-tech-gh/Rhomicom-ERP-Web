@@ -11,6 +11,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
     $canview = test_prmssns($dfltPrvldgs[0], $mdlNm);
     $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
     $addOrEdit = isset($_POST['addOrEdit']) ? cleanInputData($_POST['addOrEdit']) : 'VIEW';
+    $formTitle = isset($_POST['formTitle']) ? cleanInputData($_POST['formTitle']) : 'View/Edit Person Basic Profile';
     $prsnid = $_SESSION['PRSN_ID'];
     $orgID = $_SESSION['ORG_ID'];
     $lnkdFirmID = getGnrlRecNm("prs.prsn_names_nos", "person_id", "lnkd_firm_org_id", $prsnid);
@@ -39,6 +40,66 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 } else {
                     restricted();
                 }
+            }
+        } else if ($actyp == 5) {
+            /* Divisions/Groups */
+            //var_dump($_POST);
+            $pDivGrpPkeyID = isset($_POST['pDivGrpPkeyID']) ? cleanInputData($_POST['pDivGrpPkeyID']) : -1;
+            $srcForm = isset($_POST['srcForm']) ? cleanInputData($_POST['srcForm']) : -1;
+            if ($canEdtPrsn || ($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                echo deletePDivGrp($pDivGrpPkeyID);
+            } else {
+                restricted();
+            }
+        } else if ($actyp == 6) {
+            /* Sites/Locations */
+            //var_dump($_POST);
+            $pSiteLocPkeyID = isset($_POST['pSiteLocPkeyID']) ? cleanInputData($_POST['pSiteLocPkeyID']) : -1;
+            $srcForm = isset($_POST['srcForm']) ? cleanInputData($_POST['srcForm']) : -1;
+            if ($canEdtPrsn || ($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                echo deletePSiteLoc($pSiteLocPkeyID);
+            } else {
+                restricted();
+            }
+        } else if ($actyp == 7) {
+            /* Grades */
+            //var_dump($_POST);
+            $pGradePkeyID = isset($_POST['pGradePkeyID']) ? cleanInputData($_POST['pGradePkeyID']) : -1;
+            $srcForm = isset($_POST['srcForm']) ? cleanInputData($_POST['srcForm']) : -1;
+            if ($canEdtPrsn || ($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                echo deletePGrade($pGradePkeyID);
+            } else {
+                restricted();
+            }
+        } else if ($actyp == 8) {
+            /* Supervisors */
+            //var_dump($_POST);
+            $pSuprvsrPkeyID = isset($_POST['pSuprvsrPkeyID']) ? cleanInputData($_POST['pSuprvsrPkeyID']) : -1;
+            $srcForm = isset($_POST['srcForm']) ? cleanInputData($_POST['srcForm']) : -1;
+            if ($canEdtPrsn || ($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                echo deletePSuprvsr($pSuprvsrPkeyID);
+            } else {
+                restricted();
+            }
+        } else if ($actyp == 9) {
+            /* Jobs */
+            //var_dump($_POST);
+            $pJobPkeyID = isset($_POST['pJobPkeyID']) ? cleanInputData($_POST['pJobPkeyID']) : -1;
+            $srcForm = isset($_POST['srcForm']) ? cleanInputData($_POST['srcForm']) : -1;
+            if ($canEdtPrsn || ($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                echo deletePJob($pJobPkeyID);
+            } else {
+                restricted();
+            }
+        } else if ($actyp == 10) {
+            /* Positions */
+            //var_dump($_POST);
+            $pPositionPkeyID = isset($_POST['pPositionPkeyID']) ? cleanInputData($_POST['pPositionPkeyID']) : -1;
+            $srcForm = isset($_POST['srcForm']) ? cleanInputData($_POST['srcForm']) : -1;
+            if ($canEdtPrsn || ($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                echo deletePPosition($pPositionPkeyID);
+            } else {
+                restricted();
             }
         } else if ($actyp == 11) {
             $educBkgrdPkeyID = isset($_POST['educBkgrdPkeyID']) ? cleanInputData($_POST['educBkgrdPkeyID']) : -1;
@@ -238,52 +299,62 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             $addtnlPrsnDataCol50 = isset($_POST['addtnlPrsnDataCol50']) ? cleanInputData($_POST['addtnlPrsnDataCol50']) : "";
 
             $oldDaPersonID = getPersonID($daPrsnLocalID);
-            if ($daPrsnLocalID != "" &&
-                    $daTitle != "" &&
-                    $daFirstName != "" &&
-                    $daSurName != "" &&
-                    $daGender != "" &&
-                    $daMaritalStatus != "" &&
-                    $daDOB != "" &&
-                    $daNationality != "" &&
-                    ($oldDaPersonID > 0 && $oldDaPersonID == $inptDaPersonID)) {
+            /*
+                    $daTitle != "" &&*/
+            if (
+                $daPrsnLocalID != "" &&
+                $daFirstName != "" &&
+                $daSurName != "" &&
+                $daGender != "" &&
+                $daMaritalStatus != "" &&
+                $daDOB != "" &&
+                $daNationality != "" &&
+                ($oldDaPersonID > 0 && $oldDaPersonID == $inptDaPersonID)
+            ) {
                 $newLocUpdateStr = "";
 
                 if (is_numeric($daCompany)) {
                     $newLocUpdateStr = "', lnkd_firm_org_id='" . loc_db_escape_string($daCompany) .
-                            "', lnkd_firm_site_id='" . loc_db_escape_string($daCompanyLoc) . "', new_company ='', new_company_loc='";
+                        "', lnkd_firm_site_id='" . loc_db_escape_string($daCompanyLoc) . "', new_company ='', new_company_loc='";
                 } else {
                     $newLocUpdateStr = "', lnkd_firm_org_id=-1, lnkd_firm_site_id=-1, new_company ='" . loc_db_escape_string($daCompany) .
-                            "', new_company_loc='" . loc_db_escape_string($daCompanyLoc);
+                        "', new_company_loc='" . loc_db_escape_string($daCompanyLoc);
                 }
                 $dateStr = getDB_Date_time();
                 $sqlStr = "UPDATE self.self_prsn_names_nos
                 SET title='" . loc_db_escape_string($daTitle) .
-                        "',first_name='" . loc_db_escape_string($daFirstName) .
-                        "', other_names='" . loc_db_escape_string($daOtherNames) .
-                        "',sur_name='" . loc_db_escape_string($daSurName) .
-                        "', pstl_addrs='" . loc_db_escape_string($daPostalAddress) .
-                        "', email='" . loc_db_escape_string($daEmail) .
-                        "', cntct_no_tel='" . loc_db_escape_string($daTelNos) .
-                        "', gender='" . loc_db_escape_string($daGender) .
-                        "', date_of_birth='" . cnvrtDMYToYMD($daDOB) .
-                        "', place_of_birth='" . loc_db_escape_string($daPOB) .
-                        "', nationality='" . loc_db_escape_string($daNationality) .
-                        "', cntct_no_mobl='" . loc_db_escape_string($daMobileNos) .
-                        "', res_address='" . loc_db_escape_string($daResAddress) .
-                        "', marital_status='" . loc_db_escape_string($daMaritalStatus) .
-                        "', hometown='" . loc_db_escape_string($daHomeTown) . $newLocUpdateStr .
-                        "', last_update_by=" . $usrID . ", last_update_date='" . loc_db_escape_string($dateStr) . "' WHERE 1=1 AND person_id = " . $prsnid;
+                    "',first_name='" . loc_db_escape_string($daFirstName) .
+                    "', other_names='" . loc_db_escape_string($daOtherNames) .
+                    "',sur_name='" . loc_db_escape_string($daSurName) .
+                    "', pstl_addrs='" . loc_db_escape_string($daPostalAddress) .
+                    "', email='" . loc_db_escape_string($daEmail) .
+                    "', cntct_no_tel='" . loc_db_escape_string($daTelNos) .
+                    "', gender='" . loc_db_escape_string($daGender) .
+                    "', date_of_birth='" . cnvrtDMYToYMD($daDOB) .
+                    "', place_of_birth='" . loc_db_escape_string($daPOB) .
+                    "', nationality='" . loc_db_escape_string($daNationality) .
+                    "', cntct_no_mobl='" . loc_db_escape_string($daMobileNos) .
+                    "', res_address='" . loc_db_escape_string($daResAddress) .
+                    "', marital_status='" . loc_db_escape_string($daMaritalStatus) .
+                    "', hometown='" . loc_db_escape_string($daHomeTown) . $newLocUpdateStr .
+                    "', last_update_by=" . $usrID . ", last_update_date='" . loc_db_escape_string($dateStr) . "' WHERE 1=1 AND person_id = " . $prsnid;
 
                 execUpdtInsSQL($sqlStr);
                 uploadDaImageSelf($inptDaPersonID, $nwImgLoc);
 
                 $adDataExsts = 0;
-                $data_cols = array("", $addtnlPrsnDataCol1, $addtnlPrsnDataCol2, $addtnlPrsnDataCol3, $addtnlPrsnDataCol4, $addtnlPrsnDataCol5, $addtnlPrsnDataCol6, $addtnlPrsnDataCol7, $addtnlPrsnDataCol8, $addtnlPrsnDataCol9, $addtnlPrsnDataCol10,
-                    $addtnlPrsnDataCol11, $addtnlPrsnDataCol12, $addtnlPrsnDataCol13, $addtnlPrsnDataCol14, $addtnlPrsnDataCol15, $addtnlPrsnDataCol16, $addtnlPrsnDataCol17, $addtnlPrsnDataCol18, $addtnlPrsnDataCol19, $addtnlPrsnDataCol20,
-                    $addtnlPrsnDataCol21, $addtnlPrsnDataCol22, $addtnlPrsnDataCol23, $addtnlPrsnDataCol24, $addtnlPrsnDataCol25, $addtnlPrsnDataCol26, $addtnlPrsnDataCol27, $addtnlPrsnDataCol28, $addtnlPrsnDataCol29, $addtnlPrsnDataCol30,
-                    $addtnlPrsnDataCol31, $addtnlPrsnDataCol32, $addtnlPrsnDataCol33, $addtnlPrsnDataCol34, $addtnlPrsnDataCol35, $addtnlPrsnDataCol36, $addtnlPrsnDataCol37, $addtnlPrsnDataCol38, $addtnlPrsnDataCol39, $addtnlPrsnDataCol40,
-                    $addtnlPrsnDataCol41, $addtnlPrsnDataCol42, $addtnlPrsnDataCol43, $addtnlPrsnDataCol44, $addtnlPrsnDataCol45, $addtnlPrsnDataCol46, $addtnlPrsnDataCol47, $addtnlPrsnDataCol48, $addtnlPrsnDataCol49, $addtnlPrsnDataCol50);
+                $data_cols = array(
+                    "", $addtnlPrsnDataCol1, $addtnlPrsnDataCol2, $addtnlPrsnDataCol3, $addtnlPrsnDataCol4, $addtnlPrsnDataCol5,
+                    $addtnlPrsnDataCol6, $addtnlPrsnDataCol7, $addtnlPrsnDataCol8, $addtnlPrsnDataCol9, $addtnlPrsnDataCol10,
+                    $addtnlPrsnDataCol11, $addtnlPrsnDataCol12, $addtnlPrsnDataCol13, $addtnlPrsnDataCol14, $addtnlPrsnDataCol15, $addtnlPrsnDataCol16,
+                    $addtnlPrsnDataCol17, $addtnlPrsnDataCol18, $addtnlPrsnDataCol19, $addtnlPrsnDataCol20,
+                    $addtnlPrsnDataCol21, $addtnlPrsnDataCol22, $addtnlPrsnDataCol23, $addtnlPrsnDataCol24, $addtnlPrsnDataCol25, $addtnlPrsnDataCol26,
+                    $addtnlPrsnDataCol27, $addtnlPrsnDataCol28, $addtnlPrsnDataCol29, $addtnlPrsnDataCol30,
+                    $addtnlPrsnDataCol31, $addtnlPrsnDataCol32, $addtnlPrsnDataCol33, $addtnlPrsnDataCol34, $addtnlPrsnDataCol35, $addtnlPrsnDataCol36,
+                    $addtnlPrsnDataCol37, $addtnlPrsnDataCol38, $addtnlPrsnDataCol39, $addtnlPrsnDataCol40,
+                    $addtnlPrsnDataCol41, $addtnlPrsnDataCol42, $addtnlPrsnDataCol43, $addtnlPrsnDataCol44, $addtnlPrsnDataCol45, $addtnlPrsnDataCol46,
+                    $addtnlPrsnDataCol47, $addtnlPrsnDataCol48, $addtnlPrsnDataCol49, $addtnlPrsnDataCol50
+                );
                 for ($y = 0; $y < count($data_cols); $y++) {
                     if ($data_cols[$y] != "") {
                         $adDataExsts++;
@@ -323,9 +394,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             header("content-type:application/json");
             $orgid = $_SESSION['ORG_ID'];
             $nwImgLoc = "";
+            //var_dump($_POST);
             $inptDaPersonID = isset($_POST['daPersonID']) ? cleanInputData($_POST['daPersonID']) : -1;
+            $daPrsnCrntOrgID = isset($_POST['daPrsnCrntOrgID']) ? cleanInputData($_POST['daPrsnCrntOrgID']) : -1;
             if (!($canEdtPrsn || $canAddPrsn) && !($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
                 $arr_content['percent'] = 100;
+                $arr_content['daPersonID'] = $inptDaPersonID;
                 $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Permission Denied!</span>";
                 echo json_encode($arr_content);
                 exit();
@@ -413,8 +487,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                   } */
             }
             $daRelDetails = isset($_POST['daRelDetails']) ? cleanInputData($_POST['daRelDetails']) : "";
-            $daRelStartDate = isset($_POST['daRelStartDate']) ? cleanInputData($_POST['daRelStartDate']) : date("d-M-Y");
+            $daRelStartDate = isset($_POST['daRelStartDate']) ? cleanInputData($_POST['daRelStartDate']) : substr($gnrlTrnsDteDMYHMS, 0, 11);
             $daRelEndDate = isset($_POST['daRelEndDate']) ? cleanInputData($_POST['daRelEndDate']) : "31-Dec-4000";
+            //echo $daRelStartDate;
+            if ($daRelStartDate === "01-Jan-0001" || $daRelStartDate === "01-Jan-1" || trim($daRelStartDate) == "") {
+                $daRelStartDate = substr($gnrlTrnsDteDMYHMS, 0, 11);
+            }
+            if ($daRelEndDate === "01-Jan-0001" || $daRelEndDate === "01-Jan-1" || trim($daRelEndDate) == "") {
+                $daRelEndDate = "31-Dec-4000";
+            }
+            //echo $daRelStartDate . "<br/>";
             if ($daDOB != "") {
                 $daDOB = cnvrtDMYToYMD($daDOB);
             }
@@ -477,43 +559,178 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             $addtnlPrsnDataCol50 = isset($_POST['addtnlPrsnDataCol50']) ? cleanInputData($_POST['addtnlPrsnDataCol50']) : "";
 
             $oldDaPersonID = getPersonID($daPrsnLocalID);
-            if ($daPrsnLocalID != "" &&
-                    $daTitle != "" &&
-                    $daFirstName != "" &&
-                    $daSurName != "" &&
-                    $daGender != "" &&
-                    $daMaritalStatus != "" &&
-                    $daDOB != "" &&
-                    $daNationality != "" &&
-                    $daRelType != "" &&
-                    $daRelCause != "" &&
-                    ($oldDaPersonID <= 0 || $oldDaPersonID == $inptDaPersonID)) {
+            /*
+                    $daTitle != "" &&*/
+            if (
+                $daPrsnLocalID != "" &&
+                $daFirstName != "" &&
+                $daSurName != "" &&
+                $daGender != "" &&
+                $daMaritalStatus != "" &&
+                $daDOB != "" &&
+                $daNationality != "" &&
+                $daRelType != "" &&
+                $daRelCause != "" &&
+                ($oldDaPersonID <= 0 || $oldDaPersonID == $inptDaPersonID)
+            ) {
                 if ($inptDaPersonID <= 0) {
-                    createPrsnBasic($daFirstName, $daSurName, $daOtherNames, $daTitle, $daPrsnLocalID, $orgID, $daGender, $daMaritalStatus, $daDOB, $daPOB, $daReligion, $daResAddress, $daPostalAddress, $daEmail, "", $daMobileNos, $daFaxNo, $daHomeTown, $daNationality, ""
-                            , $daCompanyID, $daCompanyLocID, $daCompany, $daCompanyLoc);
+                    createPrsnBasic(
+                        $daFirstName,
+                        $daSurName,
+                        $daOtherNames,
+                        $daTitle,
+                        $daPrsnLocalID,
+                        $orgID,
+                        $daGender,
+                        $daMaritalStatus,
+                        $daDOB,
+                        $daPOB,
+                        $daReligion,
+                        $daResAddress,
+                        $daPostalAddress,
+                        $daEmail,
+                        "",
+                        $daMobileNos,
+                        $daFaxNo,
+                        $daHomeTown,
+                        $daNationality,
+                        "",
+                        $daCompanyID,
+                        $daCompanyLocID,
+                        $daCompany,
+                        $daCompanyLoc
+                    );
                     $inptDaPersonID = getPersonID($daPrsnLocalID);
                     createPrsnsType($inptDaPersonID, $daRelCause, $daRelStartDate, $daRelEndDate, $daRelDetails, $daRelType);
+					
+					/*CLINIC/HOSPITAL*/
+                    if($daRelType == 'Patient'){
+                        //CHECK EXISTENCE OF LINKED PERSON ID
+                        $lnkdPrsnExt = checkLinkedPrsnExtnce($inptDaPersonID, $orgID);
+                        if(!($lnkdPrsnExt)){
+                            //CREATE CUSTOMER
+                            $cstmrSpplrNm = trim($daTitle." ".$daSurName.", ".$daFirstName." ".$daOtherNames)." (".$daPrsnLocalID.")";
+                            $cstmrSpplrDesc = $cstmrSpplrNm;
+                            $cstmrSpplrType = "Customer";
+                            $cstmrSpplrClsfctn = "Individual";
+                            $cstmrLbltyAcntID = get_DfltPyblAcnt($orgID);
+                            $cstmrRcvblsAcntID = get_DfltRcvblAcnt($orgID);
+                            $cstmrSpplrLnkdPrsnID = $inptDaPersonID;
+                            $cstmrSpplrGender = $daGender;
+                            $cstmrSpplrDOB = $daDOB;
+                            $isCstmrEnbldVal = "1";
+                            $accbPrmSnsRstl = getAccbPgPrmssns($orgID);
+                            $fnccurid = $accbPrmSnsRstl[0];
+                            createCstmr($cstmrSpplrNm, $cstmrSpplrDesc, $cstmrSpplrClsfctn, $cstmrSpplrType, $orgID, $cstmrLbltyAcntID, $cstmrRcvblsAcntID, $cstmrSpplrLnkdPrsnID,
+                                    $cstmrSpplrGender, $cstmrSpplrDOB, $isCstmrEnbldVal, "", "", "", "", "",
+                                    "", "", "", 0, "", "");
+                            $sbmtdCstmrSpplrID = getCstmrID($cstmrSpplrNm, $orgID);
+                            $cstmrSiteCnt = (int) getGnrlRecNm("scm.scm_cstmr_suplr_sites", "cust_supplier_id", "count(cust_sup_site_id)", $sbmtdCstmrSpplrID);
+                            if ($cstmrSiteCnt <= 0) {
+                                createCstmrSite($sbmtdCstmrSpplrID, "To be Specified", "", "", "HEAD OFFICE-" . $cstmrSpplrNm, "HEAD OFFICE-" . $cstmrSpplrNm, "", "", "", -1, -1, "",
+                                        "", "", "", "", "", "", "", "", "1", "", $fnccurid);
+                            }
+
+                            execUpdtInsSQL("UPDATE prs.prsn_extra_data SET data_col6 = '$cstmrSpplrNm' WHERE person_id = $inptDaPersonID");
+                        }
+                    }
+                    /*CLINIC/HOSPITAL*/
                 } else {
-                    updatePrsnBasic($inptDaPersonID, $daFirstName, $daSurName, $daOtherNames, $daTitle, $daPrsnLocalID, $orgID, $daGender, $daMaritalStatus, $daDOB, $daPOB, $daReligion, $daResAddress, $daPostalAddress, $daEmail, "", $daMobileNos, $daFaxNo, $daHomeTown, $daNationality, $daCompanyID, $daCompanyLocID, $daCompany, $daCompanyLoc);
+                    updatePrsnBasic(
+                        $inptDaPersonID,
+                        $daFirstName,
+                        $daSurName,
+                        $daOtherNames,
+                        $daTitle,
+                        $daPrsnLocalID,
+                        $orgID,
+                        $daGender,
+                        $daMaritalStatus,
+                        $daDOB,
+                        $daPOB,
+                        $daReligion,
+                        $daResAddress,
+                        $daPostalAddress,
+                        $daEmail,
+                        "",
+                        $daMobileNos,
+                        $daFaxNo,
+                        $daHomeTown,
+                        $daNationality,
+                        $daCompanyID,
+                        $daCompanyLocID,
+                        $daCompany,
+                        $daCompanyLoc
+                    );
                     $prsntypRowID = -1;
                     if (checkPrsnType($inptDaPersonID, $daRelType, $daRelStartDate, $prsntypRowID) == false) {
+                        //echo $daRelStartDate;
                         endOldPrsnTypes($inptDaPersonID, $daRelStartDate);
                         createPrsnsType($inptDaPersonID, $daRelCause, $daRelStartDate, $daRelEndDate, $daRelDetails, $daRelType);
                     } else if ($prsntypRowID > 0) {
                         updtPrsnsType($prsntypRowID, $inptDaPersonID, $daRelCause, $daRelStartDate, $daRelEndDate, $daRelDetails, $daRelType);
                     }
+					
+					/*CLINIC/HOSPITAL*/
+                    if($daRelType == 'Patient'){
+                        $lnkdPrsnExt = checkLinkedPrsnExtnce($inptDaPersonID, $orgID);
+                        $cstmrSpplrNm = trim($daTitle." ".$daSurName.", ".$daFirstName." ".$daOtherNames)." (".$daPrsnLocalID.")";
+                            $cstmrSpplrDesc = $cstmrSpplrNm;
+                            $cstmrSpplrType = "Customer";
+                            $cstmrSpplrClsfctn = "Individual";
+                            $cstmrLbltyAcntID = get_DfltPyblAcnt($orgID);
+                            $cstmrRcvblsAcntID = get_DfltRcvblAcnt($orgID);
+                            $cstmrSpplrLnkdPrsnID = $inptDaPersonID;
+                            $cstmrSpplrGender = $daGender;
+                            $cstmrSpplrDOB = $daDOB;
+                            $isCstmrEnbldVal = "1";
+                            $accbPrmSnsRstl = getAccbPgPrmssns($orgID);
+                            $fnccurid = $accbPrmSnsRstl[0];
+                        if(!($lnkdPrsnExt)){
+                            createCstmr($cstmrSpplrNm, $cstmrSpplrDesc, $cstmrSpplrClsfctn, $cstmrSpplrType, $orgID, $cstmrLbltyAcntID, $cstmrRcvblsAcntID, $cstmrSpplrLnkdPrsnID,
+                                    $cstmrSpplrGender, $cstmrSpplrDOB, $isCstmrEnbldVal, "", "", "", "", "", "", "", "", 0, "", "");
+                            $sbmtdCstmrSpplrID = getCstmrID($cstmrSpplrNm, $orgID);
+                            $cstmrSiteCnt = (int) getGnrlRecNm("scm.scm_cstmr_suplr_sites", "cust_supplier_id", "count(cust_sup_site_id)", $sbmtdCstmrSpplrID);
+                            if ($cstmrSiteCnt <= 0) {
+                                createCstmrSite($sbmtdCstmrSpplrID, "To be Specified", "", "", "HEAD OFFICE-" . $cstmrSpplrNm, "HEAD OFFICE-" . $cstmrSpplrNm, "", "", "", -1, -1, "",
+                                        "", "", "", "", "", "", "", "", "1", "", $fnccurid);
+                            }
+
+                            execUpdtInsSQL("UPDATE prs.prsn_extra_data SET data_col6 = '$cstmrSpplrNm' WHERE person_id = $inptDaPersonID");
+                        } else {
+                            $sbmtdCstmrSpplrID = getLnkdPrsnCstmrID($inptDaPersonID, $orgid);
+                            if($sbmtdCstmrSpplrID > 0) {
+                                updateCstmr($sbmtdCstmrSpplrID, $cstmrSpplrNm, $cstmrSpplrDesc, $cstmrSpplrClsfctn, $cstmrSpplrType, $orgID, $cstmrLbltyAcntID, $cstmrRcvblsAcntID, $cstmrSpplrLnkdPrsnID,
+                                        $cstmrSpplrGender, $cstmrSpplrDOB, $isCstmrEnbldVal, "", "", "", "", "", "", "", "", 0, "", "");
+                                $cstmrSiteCnt = (int) getGnrlRecNm("scm.scm_cstmr_suplr_sites", "cust_supplier_id", "count(cust_sup_site_id)", $sbmtdCstmrSpplrID);
+                                if ($cstmrSiteCnt <= 0) {
+                                    createCstmrSite($sbmtdCstmrSpplrID, "To be Specified", "", "", "HEAD OFFICE-" . $cstmrSpplrNm, "HEAD OFFICE-" . $cstmrSpplrNm, "", "", "", -1, -1, "",
+                                            "", "", "", "", "", "", "", "", "1", "", $fnccurid);
+                                }
+
+                                execUpdtInsSQL("UPDATE prs.prsn_extra_data SET data_col6 = '$cstmrSpplrNm' WHERE person_id = $inptDaPersonID");
+                            }
+                        }
+                    }
+                    /*CLINIC/HOSPITAL*/
                 }
                 if ($inptDaPersonID > 0) {
                     if (isset($_FILES["daPrsnPicture"])) {
                         uploadDaImage($inptDaPersonID, $nwImgLoc);
                     }
-
                     $adDataExsts = 0;
-                    $data_cols = array("", $addtnlPrsnDataCol1, $addtnlPrsnDataCol2, $addtnlPrsnDataCol3, $addtnlPrsnDataCol4, $addtnlPrsnDataCol5, $addtnlPrsnDataCol6, $addtnlPrsnDataCol7, $addtnlPrsnDataCol8, $addtnlPrsnDataCol9, $addtnlPrsnDataCol10,
-                        $addtnlPrsnDataCol11, $addtnlPrsnDataCol12, $addtnlPrsnDataCol13, $addtnlPrsnDataCol14, $addtnlPrsnDataCol15, $addtnlPrsnDataCol16, $addtnlPrsnDataCol17, $addtnlPrsnDataCol18, $addtnlPrsnDataCol19, $addtnlPrsnDataCol20,
-                        $addtnlPrsnDataCol21, $addtnlPrsnDataCol22, $addtnlPrsnDataCol23, $addtnlPrsnDataCol24, $addtnlPrsnDataCol25, $addtnlPrsnDataCol26, $addtnlPrsnDataCol27, $addtnlPrsnDataCol28, $addtnlPrsnDataCol29, $addtnlPrsnDataCol30,
-                        $addtnlPrsnDataCol31, $addtnlPrsnDataCol32, $addtnlPrsnDataCol33, $addtnlPrsnDataCol34, $addtnlPrsnDataCol35, $addtnlPrsnDataCol36, $addtnlPrsnDataCol37, $addtnlPrsnDataCol38, $addtnlPrsnDataCol39, $addtnlPrsnDataCol40,
-                        $addtnlPrsnDataCol41, $addtnlPrsnDataCol42, $addtnlPrsnDataCol43, $addtnlPrsnDataCol44, $addtnlPrsnDataCol45, $addtnlPrsnDataCol46, $addtnlPrsnDataCol47, $addtnlPrsnDataCol48, $addtnlPrsnDataCol49, $addtnlPrsnDataCol50);
+                    $data_cols = array(
+                        "", $addtnlPrsnDataCol1, $addtnlPrsnDataCol2, $addtnlPrsnDataCol3, $addtnlPrsnDataCol4, $addtnlPrsnDataCol5,
+                        $addtnlPrsnDataCol6, $addtnlPrsnDataCol7, $addtnlPrsnDataCol8, $addtnlPrsnDataCol9, $addtnlPrsnDataCol10,
+                        $addtnlPrsnDataCol11, $addtnlPrsnDataCol12, $addtnlPrsnDataCol13, $addtnlPrsnDataCol14, $addtnlPrsnDataCol15,
+                        $addtnlPrsnDataCol16, $addtnlPrsnDataCol17, $addtnlPrsnDataCol18, $addtnlPrsnDataCol19, $addtnlPrsnDataCol20,
+                        $addtnlPrsnDataCol21, $addtnlPrsnDataCol22, $addtnlPrsnDataCol23, $addtnlPrsnDataCol24, $addtnlPrsnDataCol25,
+                        $addtnlPrsnDataCol26, $addtnlPrsnDataCol27, $addtnlPrsnDataCol28, $addtnlPrsnDataCol29, $addtnlPrsnDataCol30,
+                        $addtnlPrsnDataCol31, $addtnlPrsnDataCol32, $addtnlPrsnDataCol33, $addtnlPrsnDataCol34, $addtnlPrsnDataCol35,
+                        $addtnlPrsnDataCol36, $addtnlPrsnDataCol37, $addtnlPrsnDataCol38, $addtnlPrsnDataCol39, $addtnlPrsnDataCol40,
+                        $addtnlPrsnDataCol41, $addtnlPrsnDataCol42, $addtnlPrsnDataCol43, $addtnlPrsnDataCol44, $addtnlPrsnDataCol45,
+                        $addtnlPrsnDataCol46, $addtnlPrsnDataCol47, $addtnlPrsnDataCol48, $addtnlPrsnDataCol49, $addtnlPrsnDataCol50
+                    );
                     for ($y = 0; $y < count($data_cols); $y++) {
                         if ($data_cols[$y] != "") {
                             $adDataExsts++;
@@ -532,19 +749,25 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             createPrsnExtrData($inptDaPersonID, $data_cols);
                         }
                     }
+                    if ($daPrsnCrntOrgID > 0) {
+                        $updtSQL = "UPDATE prs.prsn_names_nos SET org_id=" . $daPrsnCrntOrgID . " WHERE person_id=" . $inptDaPersonID;
+                        //echo $updtSQL;
+                        execUpdtInsSQL($updtSQL);
+                    }
                 }
                 $arr_content['percent'] = 100;
+                $arr_content['daPersonID'] = $inptDaPersonID;
                 $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>Person Records Successfully Saved!";
                 echo json_encode($arr_content);
                 exit();
             } else {
                 $arr_content['percent'] = 100;
+                $arr_content['daPersonID'] = $inptDaPersonID;
                 $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Either the New Person ID No. is in Use <br/>or Data Supplied is Incomplete!<br/>" . $nwImgLoc . "!</span>";
                 echo json_encode($arr_content);
                 exit();
             }
         } else if ($actyp == 3) {
-
             $ntnlIDpKey = isset($_POST['ntnlIDpKey']) ? cleanInputData($_POST['ntnlIDpKey']) : -1;
             $srcForm = isset($_POST['srcForm']) ? cleanInputData($_POST['srcForm']) : -1;
             $ntnlIDPersonID = isset($_POST['ntnlIDPersonID']) ? cleanInputData($_POST['ntnlIDPersonID']) : -1;
@@ -594,13 +817,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 insert_ChangeRequest($prsnid);
                             }
                         }
-                        ?>
+?>
                         <tr id="ntnlIDCardsRow_<?php echo $cntrRndm; ?>">
                             <td class="lovtd">
                                 <button type="button" class="btn btn-default btn-sm" onclick="getNtnlIDForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'ntnlIDCardsForm', 'ntnlIDCardsRow_<?php echo $cntrRndm; ?>', 'Add/Edit National ID', 11, 'EDIT', <?php echo $ntnlIDpKey; ?>, <?php echo $ntnlIDPersonID; ?>);" style="padding:2px !important;">
                                     <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                 </button>
-                                <input type="hidden" value="<?php echo $ntnlIDpKey; ?>" id="ntnlIDCardsRow<?php echo $cntrRndm; ?>_NtnlIDpKey"/>                                
+                                <input type="hidden" value="<?php echo $ntnlIDpKey; ?>" id="ntnlIDCardsRow<?php echo $cntrRndm; ?>_NtnlIDpKey" />
                             </td>
                             <td class="lovtd"><?php echo $ntnlIDCardsCountry; ?>
                             </td>
@@ -617,7 +840,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </button>
                             </td>
                         </tr>
-                        <?php
+                    <?php
                     } else {
                         echo "Failed to Save any Data!";
                     }
@@ -628,29 +851,407 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 echo "Invalid or Incomplete Data!";
             }
         } else if ($actyp == 4) {
-            $addtnlPrsPkey = isset($_POST['addtnlPrsPkey']) ? cleanInputData($_POST['addtnlPrsPkey']) : -1;
-            $extDtColNum = isset($_POST['extDtColNum']) ? cleanInputData($_POST['extDtColNum']) : -1;
-            $pipeSprtdFieldIDs = isset($_POST['pipeSprtdFieldIDs']) ? cleanInputData($_POST['pipeSprtdFieldIDs']) : -1;
-            var_dump($_POST);
+            $addtnlPrsPkey = isset($_POST['addtnlPrsPkey']) ? (float) cleanInputData($_POST['addtnlPrsPkey']) : -1;
+            $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? (float) cleanInputData($_POST['sbmtdPersonID']) : -1;
+            $extDtColNum = isset($_POST['extDtColNum']) ? (int) cleanInputData($_POST['extDtColNum']) : -1;
+            $pipeSprtdFieldIDs = isset($_POST['allTblValues']) ? cleanInputData($_POST['allTblValues']) : -1;
+            //var_dump($_POST);
             echo "<button onclick=\"$('#myFormsModal').modal('hide');\">Close</button>";
         } else if ($actyp == 5) {
             /* Divisions/Groups */
-            var_dump($_POST);
+            //var_dump($_POST);
+            $pDivGrpPkeyID = isset($_POST['pDivGrpPkeyID']) ? cleanInputData($_POST['pDivGrpPkeyID']) : -1;
+            $srcForm = isset($_POST['srcForm']) ? cleanInputData($_POST['srcForm']) : -1;
+            $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+            if ($srcForm <= 0) {
+                echo restricted();
+                exit();
+            } else {
+                if (!($canEdtPrsn || $canAddPrsn) && !($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                    echo restricted();
+                    exit();
+                }
+            }
+            $pDivGrpName = isset($_POST['pDivGrpName']) ? cleanInputData($_POST['pDivGrpName']) : "";
+            $pDivGrpType = isset($_POST['pDivGrpType']) ? cleanInputData($_POST['pDivGrpType']) : "";
+            $pDivGrpDivID = isset($_POST['pDivGrpDivID']) ? (int) cleanInputData($_POST['pDivGrpDivID']) : -1;
+            $pDivGrpStartDate = isset($_POST['pDivGrpStartDate']) ? cleanInputData($_POST['pDivGrpStartDate']) : "";
+            $pDivGrpEndDate = isset($_POST['pDivGrpEndDate']) ? cleanInputData($_POST['pDivGrpEndDate']) : "31-Dec-4000";
+            if ($pDivGrpEndDate == "") {
+                $pDivGrpEndDate = "31-Dec-4000";
+            }
+            if (trim($pDivGrpType) == "") {
+                $pDivGrpType = getGnrlRecNm("org.org_divs_groups", "div_id", "gst.get_pssbl_val(div_typ_id)", $pDivGrpDivID);
+            }
+            $cntrRndm = getRandomNum(5000, 9999);
+            $affctRws = 0;
+            if ($sbmtdPersonID > 0 && $pDivGrpDivID > 0 && $pDivGrpStartDate != "" && ($srcForm > 0 || $sbmtdPersonID == $prsnid)) {
+                if (($srcForm <= 0 && $sbmtdPersonID == $prsnid) || ($srcForm > 0)) {
+                    $oldPKey = getPDivGrpID($sbmtdPersonID, $pDivGrpDivID);
+                    if ($pDivGrpPkeyID > 0 && ($oldPKey == $pDivGrpPkeyID || $oldPKey <= 0)) {
+                        $affctRws += updatePDivGrp($pDivGrpPkeyID, $pDivGrpDivID, $pDivGrpStartDate, $pDivGrpEndDate);
+                    } else {
+                        $affctRws += createPDivGrp($sbmtdPersonID, $pDivGrpDivID, $pDivGrpStartDate, $pDivGrpEndDate);
+                        $pDivGrpPkeyID = getPDivGrpID($sbmtdPersonID, $pDivGrpDivID);
+                    }
+
+                    if ($affctRws > 0) {
+                    ?>
+                        <tr id="pDivGrpRow_<?php echo $cntrRndm; ?>">
+                            <td class="lovtd">
+                                <button type="button" class="btn btn-default btn-sm" onclick="getPDivGrpForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'pDivGrpForm', 'pDivGrpRow_<?php echo $cntrRndm; ?>', 'Edit Division/Group', 13, 'EDIT', <?php echo $pDivGrpPkeyID; ?>, <?php echo $sbmtdPersonID; ?>);" style="padding:2px !important;">
+                                    <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                </button>
+                                <input type="hidden" value="<?php echo $pDivGrpPkeyID; ?>" id="pDivGrpRow<?php echo $cntrRndm; ?>_PKeyID" />
+                                <input type="hidden" value="<?php echo $pDivGrpDivID; ?>" id="pDivGrpRow<?php echo $cntrRndm; ?>_DivID" />
+                            </td>
+                            <td class="lovtd"><?php echo $pDivGrpName; ?></td>
+                            <td class="lovtd"><?php echo $pDivGrpType; ?></td>
+                            <td class="lovtd"><?php echo $pDivGrpStartDate; ?></td>
+                            <td class="lovtd"><?php echo $pDivGrpEndDate; ?></td>
+                            <td class="lovtd">
+                                <button type="button" class="btn btn-default btn-sm" onclick="delPDivGrpID('pDivGrpRow_<?php echo $cntrRndm; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Division/Group" style="padding:2px !important;" style="padding:2px !important;">
+                                    <img src="cmn_images/no.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                </button>
+                            </td>
+                        </tr>
+                    <?php
+                    } else {
+                        echo "Error:Failed to Save any Data!";
+                    }
+                } else {
+                    echo "Error:Invalid or Incomplete Data!";
+                }
+            } else {
+                echo "Error:Invalid or Incomplete Data!";
+            }
         } else if ($actyp == 6) {
             /* Sites/Locations */
-            var_dump($_POST);
+            //var_dump($_POST);
+            $pSiteLocPkeyID = isset($_POST['pSiteLocPkeyID']) ? cleanInputData($_POST['pSiteLocPkeyID']) : -1;
+            $srcForm = isset($_POST['srcForm']) ? cleanInputData($_POST['srcForm']) : -1;
+            $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+            if ($srcForm <= 0) {
+                echo restricted();
+                exit();
+            } else {
+                if (!($canEdtPrsn || $canAddPrsn) && !($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                    echo restricted();
+                    exit();
+                }
+            }
+            $pSiteLocName = isset($_POST['pSiteLocName']) ? cleanInputData($_POST['pSiteLocName']) : "";
+            $pSiteLocType = isset($_POST['pSiteLocType']) ? cleanInputData($_POST['pSiteLocType']) : "";
+            $pSiteLocID = isset($_POST['pSiteLocID']) ? (int) cleanInputData($_POST['pSiteLocID']) : -1;
+            $pSiteLocStartDate = isset($_POST['pSiteLocStartDate']) ? cleanInputData($_POST['pSiteLocStartDate']) : "";
+            $pSiteLocEndDate = isset($_POST['pSiteLocEndDate']) ? cleanInputData($_POST['pSiteLocEndDate']) : "31-Dec-4000";
+            //var_dump($_POST);
+            if ($pSiteLocEndDate == "") {
+                $pSiteLocEndDate = "31-Dec-4000";
+            }
+            if (trim($pSiteLocType) == "") {
+                $pSiteLocType = getGnrlRecNm("org.org_sites_locations", "location_id", "gst.get_pssbl_val(site_type_id)", $pSiteLocID);
+            }
+            $cntrRndm = getRandomNum(5000, 9999);
+            $affctRws = 0;
+            if ($sbmtdPersonID > 0 && $pSiteLocID > 0 && $pSiteLocStartDate != "" && ($srcForm > 0 || $sbmtdPersonID == $prsnid)) {
+                if (($srcForm <= 0 && $sbmtdPersonID == $prsnid) || ($srcForm > 0)) {
+                    $oldPKey = getPSiteLocID($sbmtdPersonID, $pSiteLocID);
+                    if ($pSiteLocPkeyID > 0 && ($oldPKey == $pSiteLocPkeyID || $oldPKey <= 0)) {
+                        $affctRws += updatePSiteLoc($pSiteLocPkeyID, $pSiteLocID, $pSiteLocStartDate, $pSiteLocEndDate);
+                    } else {
+                        $affctRws += createPSiteLoc($sbmtdPersonID, $pSiteLocID, $pSiteLocStartDate, $pSiteLocEndDate);
+                        $pSiteLocPkeyID = getPSiteLocID($sbmtdPersonID, $pSiteLocID);
+                    }
+
+                    if ($affctRws > 0) {
+                    ?>
+                        <tr id="pSiteLocRow_<?php echo $cntrRndm; ?>">
+                            <td class="lovtd">
+                                <button type="button" class="btn btn-default btn-sm" onclick="getPSiteLocForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'pSiteLocForm', 'pSiteLocRow_<?php echo $cntrRndm; ?>', 'Edit Site/Location', 14, 'EDIT', <?php echo $pSiteLocPkeyID; ?>, <?php echo $sbmtdPersonID; ?>);" style="padding:2px !important;">
+                                    <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                </button>
+                                <input type="hidden" value="<?php echo $pSiteLocPkeyID; ?>" id="pSiteLocRow<?php echo $cntrRndm; ?>_PKeyID" />
+                                <input type="hidden" value="<?php echo $pSiteLocID; ?>" id="pSiteLocRow<?php echo $cntrRndm; ?>_SiteLocID" />
+                            </td>
+                            <td class="lovtd"><?php echo $pSiteLocName; ?></td>
+                            <td class="lovtd"><?php echo $pSiteLocType; ?></td>
+                            <td class="lovtd"><?php echo $pSiteLocStartDate; ?></td>
+                            <td class="lovtd"><?php echo $pSiteLocEndDate; ?></td>
+                            <td class="lovtd">
+                                <button type="button" class="btn btn-default btn-sm" onclick="delPSiteLocID('pSiteLocRow_<?php echo $cntrRndm; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Site/Location" style="padding:2px !important;" style="padding:2px !important;">
+                                    <img src="cmn_images/no.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                </button>
+                            </td>
+                        </tr>
+                    <?php
+                    } else {
+                        echo "Error:Failed to Save any Data!";
+                    }
+                } else {
+                    echo "Error:Invalid or Incomplete Data!";
+                }
+            } else {
+                echo "Error:Invalid or Incomplete Data!";
+            }
         } else if ($actyp == 7) {
             /* Grades */
-            var_dump($_POST);
+            //var_dump($_POST);
+            $pGradePkeyID = isset($_POST['pGradePkeyID']) ? cleanInputData($_POST['pGradePkeyID']) : -1;
+            $srcForm = isset($_POST['srcForm']) ? cleanInputData($_POST['srcForm']) : -1;
+            $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+            if ($srcForm <= 0) {
+                echo restricted();
+                exit();
+            } else {
+                if (!($canEdtPrsn || $canAddPrsn) && !($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                    echo restricted();
+                    exit();
+                }
+            }
+            $pGradeName = isset($_POST['pGradeName']) ? cleanInputData($_POST['pGradeName']) : "";
+            $pGradeType = isset($_POST['pGradeType']) ? cleanInputData($_POST['pGradeType']) : "";
+            $pGradeID = isset($_POST['pGradeID']) ? (int) cleanInputData($_POST['pGradeID']) : -1;
+            $pGradeStartDate = isset($_POST['pGradeStartDate']) ? cleanInputData($_POST['pGradeStartDate']) : "";
+            $pGradeEndDate = isset($_POST['pGradeEndDate']) ? cleanInputData($_POST['pGradeEndDate']) : "31-Dec-4000";
+            if ($pGradeEndDate == "") {
+                $pGradeEndDate = "31-Dec-4000";
+            }
+            $cntrRndm = getRandomNum(5000, 9999);
+            $affctRws = 0;
+            if ($sbmtdPersonID > 0 && $pGradeID > 0 && $pGradeStartDate != "" && ($srcForm > 0 || $sbmtdPersonID == $prsnid)) {
+                if (($srcForm <= 0 && $sbmtdPersonID == $prsnid) || ($srcForm > 0)) {
+                    $oldPKey = getPGradeID($sbmtdPersonID, $pGradeID);
+                    if ($pGradePkeyID > 0 && ($oldPKey == $pGradePkeyID || $oldPKey <= 0)) {
+                        $affctRws += updatePGrade($pGradePkeyID, $pGradeID, $pGradeStartDate, $pGradeEndDate);
+                    } else {
+                        $affctRws += createPGrade($sbmtdPersonID, $pGradeID, $pGradeStartDate, $pGradeEndDate);
+                        $pGradePkeyID = getPGradeID($sbmtdPersonID, $pGradeID);
+                    }
+
+                    if ($affctRws > 0) {
+                    ?>
+                        <tr id="pGradeRow_<?php echo $cntrRndm; ?>">
+                            <td class="lovtd">
+                                <button type="button" class="btn btn-default btn-sm" onclick="getPGradeForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'pGradeForm', 'pGradeRow_<?php echo $cntrRndm; ?>', 'Edit Grade', 15, 'EDIT', <?php echo $pGradePkeyID; ?>, <?php echo $sbmtdPersonID; ?>);" style="padding:2px !important;">
+                                    <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                </button>
+                                <input type="hidden" value="<?php echo $pGradePkeyID; ?>" id="pGradeRow<?php echo $cntrRndm; ?>_PKeyID" />
+                                <input type="hidden" value="<?php echo $pGradeID; ?>" id="pGradeRow<?php echo $cntrRndm; ?>_GradeID" />
+                            </td>
+                            <td class="lovtd"><?php echo $pGradeName; ?></td>
+                            <td class="lovtd"><?php echo $pGradeStartDate; ?></td>
+                            <td class="lovtd"><?php echo $pGradeEndDate; ?></td>
+                            <td class="lovtd">
+                                <button type="button" class="btn btn-default btn-sm" onclick="delPGradeID('pGradeRow_<?php echo $cntrRndm; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Grade" style="padding:2px !important;" style="padding:2px !important;">
+                                    <img src="cmn_images/no.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                </button>
+                            </td>
+                        </tr>
+                    <?php
+                    } else {
+                        echo "Error:Failed to Save any Data!";
+                    }
+                } else {
+                    echo "Error:Invalid or Incomplete Data!";
+                }
+            } else {
+                echo "Error:Invalid or Incomplete Data!";
+            }
         } else if ($actyp == 8) {
             /* Supervisors */
-            var_dump($_POST);
+            //var_dump($_POST);
+            $pSuprvsrPkeyID = isset($_POST['pSuprvsrPkeyID']) ? cleanInputData($_POST['pSuprvsrPkeyID']) : -1;
+            $srcForm = isset($_POST['srcForm']) ? cleanInputData($_POST['srcForm']) : -1;
+            $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+            if ($srcForm <= 0) {
+                echo restricted();
+                exit();
+            } else {
+                if (!($canEdtPrsn || $canAddPrsn) && !($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                    echo restricted();
+                    exit();
+                }
+            }
+            $pSuprvsrName = isset($_POST['pSuprvsrName']) ? cleanInputData($_POST['pSuprvsrName']) : "";
+            $pSuprvsrType = isset($_POST['pSuprvsrType']) ? cleanInputData($_POST['pSuprvsrType']) : "";
+            $pSuprvsrID = isset($_POST['pSuprvsrID']) ? (int) cleanInputData($_POST['pSuprvsrID']) : -1;
+            $pSuprvsrStartDate = isset($_POST['pSuprvsrStartDate']) ? cleanInputData($_POST['pSuprvsrStartDate']) : "";
+            $pSuprvsrEndDate = isset($_POST['pSuprvsrEndDate']) ? cleanInputData($_POST['pSuprvsrEndDate']) : "31-Dec-4000";
+            if ($pSuprvsrEndDate == "") {
+                $pSuprvsrEndDate = "31-Dec-4000";
+            }
+            $cntrRndm = getRandomNum(5000, 9999);
+            $affctRws = 0;
+            if ($sbmtdPersonID > 0 && $pSuprvsrID > 0 && $pSuprvsrStartDate != "" && ($srcForm > 0 || $sbmtdPersonID == $prsnid)) {
+                if (($srcForm <= 0 && $sbmtdPersonID == $prsnid) || ($srcForm > 0)) {
+                    $oldPKey = getPSuprvsrID($sbmtdPersonID, $pSuprvsrID);
+                    if ($pSuprvsrPkeyID > 0 && ($oldPKey == $pSuprvsrPkeyID || $oldPKey <= 0)) {
+                        $affctRws += updatePSuprvsr($pSuprvsrPkeyID, $pSuprvsrID, $pSuprvsrStartDate, $pSuprvsrEndDate);
+                    } else {
+                        $affctRws += createPSuprvsr($sbmtdPersonID, $pSuprvsrID, $pSuprvsrStartDate, $pSuprvsrEndDate);
+                        $pSuprvsrPkeyID = getPSuprvsrID($sbmtdPersonID, $pSuprvsrID);
+                    }
+
+                    if ($affctRws > 0) {
+                    ?>
+                        <tr id="pSuprvsrRow_<?php echo $cntrRndm; ?>">
+                            <td class="lovtd">
+                                <button type="button" class="btn btn-default btn-sm" onclick="getPSuprvsrForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'pSuprvsrForm', 'pSuprvsrRow_<?php echo $cntrRndm; ?>', 'Edit Supervisor', 16, 'EDIT', <?php echo $pSuprvsrPkeyID; ?>, <?php echo $sbmtdPersonID; ?>);" style="padding:2px !important;">
+                                    <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                </button>
+                                <input type="hidden" value="<?php echo $pSuprvsrPkeyID; ?>" id="pSuprvsrRow<?php echo $cntrRndm; ?>_PKeyID" />
+                                <input type="hidden" value="<?php echo $pSuprvsrID; ?>" id="pSuprvsrRow<?php echo $cntrRndm; ?>_SuprvsrID" />
+                            </td>
+                            <td class="lovtd"><?php echo $pSuprvsrName; ?></td>
+                            <td class="lovtd"><?php echo $pSuprvsrStartDate; ?></td>
+                            <td class="lovtd"><?php echo $pSuprvsrEndDate; ?></td>
+                            <td class="lovtd">
+                                <button type="button" class="btn btn-default btn-sm" onclick="delPSuprvsrID('pSuprvsrRow_<?php echo $cntrRndm; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Supervisor" style="padding:2px !important;" style="padding:2px !important;">
+                                    <img src="cmn_images/no.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                </button>
+                            </td>
+                        </tr>
+                    <?php
+                    } else {
+                        echo "Error:Failed to Save any Data!";
+                    }
+                } else {
+                    echo "Error:Invalid or Incomplete Data!";
+                }
+            } else {
+                echo "Error:Invalid or Incomplete Data!";
+            }
         } else if ($actyp == 9) {
             /* Jobs */
-            var_dump($_POST);
+            //var_dump($_POST);
+            $pJobPkeyID = isset($_POST['pJobPkeyID']) ? cleanInputData($_POST['pJobPkeyID']) : -1;
+            $srcForm = isset($_POST['srcForm']) ? cleanInputData($_POST['srcForm']) : -1;
+            $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+            if ($srcForm <= 0) {
+                echo restricted();
+                exit();
+            } else {
+                if (!($canEdtPrsn || $canAddPrsn) && !($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                    echo restricted();
+                    exit();
+                }
+            }
+            $pJobName = isset($_POST['pJobName']) ? cleanInputData($_POST['pJobName']) : "";
+            $pJobType = isset($_POST['pJobType']) ? cleanInputData($_POST['pJobType']) : "";
+            $pJobID = isset($_POST['pJobID']) ? (int) cleanInputData($_POST['pJobID']) : -1;
+            $pJobStartDate = isset($_POST['pJobStartDate']) ? cleanInputData($_POST['pJobStartDate']) : "";
+            $pJobEndDate = isset($_POST['pJobEndDate']) ? cleanInputData($_POST['pJobEndDate']) : "31-Dec-4000";
+            if ($pJobEndDate == "") {
+                $pJobEndDate = "31-Dec-4000";
+            }
+            $cntrRndm = getRandomNum(5000, 9999);
+            $affctRws = 0;
+            if ($sbmtdPersonID > 0 && $pJobID > 0 && $pJobStartDate != "" && ($srcForm > 0 || $sbmtdPersonID == $prsnid)) {
+                if (($srcForm <= 0 && $sbmtdPersonID == $prsnid) || ($srcForm > 0)) {
+                    $oldPKey = getPJobID($sbmtdPersonID, $pJobID);
+                    if ($pJobPkeyID > 0 && ($oldPKey == $pJobPkeyID || $oldPKey <= 0)) {
+                        $affctRws += updatePJob($pJobPkeyID, $pJobID, $pJobStartDate, $pJobEndDate);
+                    } else {
+                        $affctRws += createPJob($sbmtdPersonID, $pJobID, $pJobStartDate, $pJobEndDate);
+                        $pJobPkeyID = getPJobID($sbmtdPersonID, $pJobID);
+                    }
+                    if ($affctRws > 0) {
+                    ?>
+                        <tr id="pJobRow_<?php echo $cntrRndm; ?>">
+                            <td class="lovtd">
+                                <button type="button" class="btn btn-default btn-sm" onclick="getPJobForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'pJobForm', 'pJobRow_<?php echo $cntrRndm; ?>', 'Edit Job', 17, 'EDIT', <?php echo $pJobPkeyID; ?>, <?php echo $sbmtdPersonID; ?>);" style="padding:2px !important;">
+                                    <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                </button>
+                                <input type="hidden" value="<?php echo $pJobPkeyID; ?>" id="pJobRow<?php echo $cntrRndm; ?>_PKeyID" />
+                                <input type="hidden" value="<?php echo $pJobID; ?>" id="pJobRow<?php echo $cntrRndm; ?>_JobID" />
+                            </td>
+                            <td class="lovtd"><?php echo $pJobName; ?></td>
+                            <td class="lovtd"><?php echo $pJobStartDate; ?></td>
+                            <td class="lovtd"><?php echo $pJobEndDate; ?></td>
+                            <td class="lovtd">
+                                <button type="button" class="btn btn-default btn-sm" onclick="delPJobID('pJobRow_<?php echo $cntrRndm; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Job" style="padding:2px !important;" style="padding:2px !important;">
+                                    <img src="cmn_images/no.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                </button>
+                            </td>
+                        </tr>
+                    <?php
+                    } else {
+                        echo "Error:Failed to Save any Data!";
+                    }
+                } else {
+                    echo "Error:Invalid or Incomplete Data!";
+                }
+            } else {
+                echo "Error:Invalid or Incomplete Data!";
+            }
         } else if ($actyp == 10) {
             /* Positions */
-            var_dump($_POST);
+            //var_dump($_POST);
+            $pPositionPkeyID = isset($_POST['pPositionPkeyID']) ? cleanInputData($_POST['pPositionPkeyID']) : -1;
+            $srcForm = isset($_POST['srcForm']) ? cleanInputData($_POST['srcForm']) : -1;
+            $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+            if ($srcForm <= 0) {
+                echo restricted();
+                exit();
+            } else {
+                if (!($canEdtPrsn || $canAddPrsn) && !($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                    echo restricted();
+                    exit();
+                }
+            }
+            $pPositionName = isset($_POST['pPositionName']) ? cleanInputData($_POST['pPositionName']) : "";
+            $pPositionDivNm = isset($_POST['pPositionDivNm']) ? cleanInputData($_POST['pPositionDivNm']) : "";
+            $pPositionID = isset($_POST['pPositionID']) ? (int) cleanInputData($_POST['pPositionID']) : -1;
+            $pPositionDivID = isset($_POST['pPositionDivID']) ? (int) cleanInputData($_POST['pPositionDivID']) : -1;
+            $pPositionStartDate = isset($_POST['pPositionStartDate']) ? cleanInputData($_POST['pPositionStartDate']) : "";
+            $pPositionEndDate = isset($_POST['pPositionEndDate']) ? cleanInputData($_POST['pPositionEndDate']) : "31-Dec-4000";
+            if ($pPositionEndDate == "") {
+                $pPositionEndDate = "31-Dec-4000";
+            }
+            $cntrRndm = getRandomNum(5000, 9999);
+            $affctRws = 0;
+            if ($sbmtdPersonID > 0 && $pPositionID > 0 && $pPositionStartDate != "" && ($srcForm > 0 || $sbmtdPersonID == $prsnid)) {
+                if (($srcForm <= 0 && $sbmtdPersonID == $prsnid) || ($srcForm > 0)) {
+                    $oldPKey = getPPositionID($sbmtdPersonID, $pPositionID, $pPositionDivID);
+                    if ($pPositionPkeyID > 0 && ($oldPKey == $pPositionPkeyID || $oldPKey <= 0)) {
+                        $affctRws += updatePPosition($pPositionPkeyID, $pPositionID, $pPositionStartDate, $pPositionEndDate, $pPositionDivID);
+                    } else {
+                        $affctRws += createPPosition($sbmtdPersonID, $pPositionID, $pPositionStartDate, $pPositionEndDate, $pPositionDivID);
+                        $pPositionPkeyID = getPPositionID($sbmtdPersonID, $pPositionID, $pPositionDivID);
+                    }
+
+                    if ($affctRws > 0) {
+                    ?>
+                        <tr id="pPositionRow_<?php echo $cntrRndm; ?>">
+                            <td class="lovtd">
+                                <button type="button" class="btn btn-default btn-sm" onclick="getPPositionForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'pPositionForm', 'pPositionRow_<?php echo $cntrRndm; ?>', 'Edit Position', 18, 'EDIT', <?php echo $pPositionPkeyID; ?>, <?php echo $sbmtdPersonID; ?>);" style="padding:2px !important;">
+                                    <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                </button>
+                                <input type="hidden" value="<?php echo $pPositionPkeyID; ?>" id="pPositionRow<?php echo $cntrRndm; ?>_PKeyID" />
+                                <input type="hidden" value="<?php echo $pPositionID; ?>" id="pPositionRow<?php echo $cntrRndm; ?>_PositionID" />
+                                <input type="hidden" value="<?php echo $pPositionDivID; ?>" id="pPositionRow<?php echo $cntrRndm; ?>_PositionDivID" />
+                            </td>
+                            <td class="lovtd"><?php echo $pPositionName; ?></td>
+                            <td class="lovtd"><?php echo $pPositionDivNm; ?></td>
+                            <td class="lovtd"><?php echo $pPositionStartDate; ?></td>
+                            <td class="lovtd"><?php echo $pPositionEndDate; ?></td>
+                            <td class="lovtd">
+                                <button type="button" class="btn btn-default btn-sm" onclick="delPPositionID('pPositionRow_<?php echo $cntrRndm; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Position" style="padding:2px !important;" style="padding:2px !important;">
+                                    <img src="cmn_images/no.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                </button>
+                            </td>
+                        </tr>
+                    <?php
+                    } else {
+                        echo "Error:Failed to Save any Data!";
+                    }
+                } else {
+                    echo "Error:Invalid or Incomplete Data!";
+                }
+            } else {
+                echo "Error:Invalid or Incomplete Data!";
+            }
         } else if ($actyp == 11) {
             /* Educational Background */
             $educBkgrdPkeyID = isset($_POST['educBkgrdPkeyID']) ? cleanInputData($_POST['educBkgrdPkeyID']) : -1;
@@ -685,17 +1286,57 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     if ($srcForm <= 0) {
                         $oldPKey = getEducSelfID($sbmtdPersonID, $educBkgrdCourseName, $educBkgrdSchool);
                         if ($educBkgrdPkeyID > 0 && ($oldPKey == $educBkgrdPkeyID || $oldPKey <= 0)) {
-                            $affctRws += updateEducSelf($educBkgrdPkeyID, $educBkgrdCourseName, $educBkgrdSchool, $educBkgrdLoc, $educBkgrdCertObtnd, $educBkgrdStartDate, $educBkgrdEndDate, $educBkgrdDateAwrded, $educBkgrdCertTyp);
+                            $affctRws += updateEducSelf(
+                                $educBkgrdPkeyID,
+                                $educBkgrdCourseName,
+                                $educBkgrdSchool,
+                                $educBkgrdLoc,
+                                $educBkgrdCertObtnd,
+                                $educBkgrdStartDate,
+                                $educBkgrdEndDate,
+                                $educBkgrdDateAwrded,
+                                $educBkgrdCertTyp
+                            );
                         } else {
-                            $affctRws += createEducSelf($sbmtdPersonID, $educBkgrdCourseName, $educBkgrdSchool, $educBkgrdLoc, $educBkgrdCertObtnd, $educBkgrdStartDate, $educBkgrdEndDate, $educBkgrdDateAwrded, $educBkgrdCertTyp);
+                            $affctRws += createEducSelf(
+                                $sbmtdPersonID,
+                                $educBkgrdCourseName,
+                                $educBkgrdSchool,
+                                $educBkgrdLoc,
+                                $educBkgrdCertObtnd,
+                                $educBkgrdStartDate,
+                                $educBkgrdEndDate,
+                                $educBkgrdDateAwrded,
+                                $educBkgrdCertTyp
+                            );
                             $educBkgrdPkeyID = getEducSelfID($sbmtdPersonID, $educBkgrdCourseName, $educBkgrdSchool);
                         }
                     } else {
                         $oldPKey = getEducID($sbmtdPersonID, $educBkgrdCourseName, $educBkgrdSchool);
                         if ($educBkgrdPkeyID > 0 && ($oldPKey == $educBkgrdPkeyID || $oldPKey <= 0)) {
-                            $affctRws += updateEduc($educBkgrdPkeyID, $educBkgrdCourseName, $educBkgrdSchool, $educBkgrdLoc, $educBkgrdCertObtnd, $educBkgrdStartDate, $educBkgrdEndDate, $educBkgrdDateAwrded, $educBkgrdCertTyp);
+                            $affctRws += updateEduc(
+                                $educBkgrdPkeyID,
+                                $educBkgrdCourseName,
+                                $educBkgrdSchool,
+                                $educBkgrdLoc,
+                                $educBkgrdCertObtnd,
+                                $educBkgrdStartDate,
+                                $educBkgrdEndDate,
+                                $educBkgrdDateAwrded,
+                                $educBkgrdCertTyp
+                            );
                         } else {
-                            $affctRws += createEduc($sbmtdPersonID, $educBkgrdCourseName, $educBkgrdSchool, $educBkgrdLoc, $educBkgrdCertObtnd, $educBkgrdStartDate, $educBkgrdEndDate, $educBkgrdDateAwrded, $educBkgrdCertTyp);
+                            $affctRws += createEduc(
+                                $sbmtdPersonID,
+                                $educBkgrdCourseName,
+                                $educBkgrdSchool,
+                                $educBkgrdLoc,
+                                $educBkgrdCertObtnd,
+                                $educBkgrdStartDate,
+                                $educBkgrdEndDate,
+                                $educBkgrdDateAwrded,
+                                $educBkgrdCertTyp
+                            );
                             $educBkgrdPkeyID = getEducID($sbmtdPersonID, $educBkgrdCourseName, $educBkgrdSchool);
                         }
                     }
@@ -707,13 +1348,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 insert_ChangeRequest($prsnid);
                             }
                         }
-                        ?>
+                    ?>
                         <tr id="educBkgrdRow_<?php echo $cntrRndm; ?>">
                             <td class="lovtd">
                                 <button type="button" class="btn btn-default btn-sm" onclick="getEducBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'educBkgrdForm', 'educBkgrdRow_<?php echo $cntrRndm; ?>', 'Add/Edit Educational Background', 20, 'EDIT', <?php echo $educBkgrdPkeyID; ?>, <?php echo $sbmtdPersonID; ?>);" style="padding:2px !important;">
                                     <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                 </button>
-                                <input type="hidden" value="<?php echo $educBkgrdPkeyID; ?>" id="educBkgrdRow<?php echo $cntrRndm; ?>_PKeyID"/>                                
+                                <input type="hidden" value="<?php echo $educBkgrdPkeyID; ?>" id="educBkgrdRow<?php echo $cntrRndm; ?>_PKeyID" />
                             </td>
                             <td class="lovtd"><?php echo $educBkgrdCourseName; ?></td>
                             <td class="lovtd"><?php echo $educBkgrdSchool; ?></td>
@@ -729,7 +1370,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </button>
                             </td>
                         </tr>
-                        <?php
+                    <?php
                     } else {
                         echo "Error:Failed to Save any Data!";
                     }
@@ -774,15 +1415,42 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         if ($workBkgrdPkeyID > 0 && ($oldPKey == $workBkgrdPkeyID || $oldPKey <= 0)) {
                             $affctRws += updateWorkSelf($pkeyID, $workBkgrdJobName, $workBkgrdInstitution, $workBkgrdLoc, $workBkgrdStartDate, $workBkgrdEndDate, $workBkgrdJobDesc, $workBkgrdAchvmnts);
                         } else {
-                            $affctRws += createWorkSelf($sbmtdPersonID, $workBkgrdJobName, $workBkgrdInstitution, $workBkgrdLoc, $workBkgrdStartDate, $workBkgrdEndDate, $workBkgrdJobDesc, $workBkgrdAchvmnts);
+                            $affctRws += createWorkSelf(
+                                $sbmtdPersonID,
+                                $workBkgrdJobName,
+                                $workBkgrdInstitution,
+                                $workBkgrdLoc,
+                                $workBkgrdStartDate,
+                                $workBkgrdEndDate,
+                                $workBkgrdJobDesc,
+                                $workBkgrdAchvmnts
+                            );
                             $workBkgrdPkeyID = getWorkSelfID($sbmtdPersonID, $workBkgrdJobName, $workBkgrdInstitution);
                         }
                     } else {
                         $oldPKey = getWorkID($sbmtdPersonID, $workBkgrdJobName, $workBkgrdInstitution);
                         if ($workBkgrdPkeyID > 0 && ($oldPKey == $workBkgrdPkeyID || $oldPKey <= 0)) {
-                            $affctRws += updateWork($workBkgrdPkeyID, $workBkgrdJobName, $workBkgrdInstitution, $workBkgrdLoc, $workBkgrdStartDate, $workBkgrdEndDate, $workBkgrdJobDesc, $workBkgrdAchvmnts);
+                            $affctRws += updateWork(
+                                $workBkgrdPkeyID,
+                                $workBkgrdJobName,
+                                $workBkgrdInstitution,
+                                $workBkgrdLoc,
+                                $workBkgrdStartDate,
+                                $workBkgrdEndDate,
+                                $workBkgrdJobDesc,
+                                $workBkgrdAchvmnts
+                            );
                         } else {
-                            $affctRws += createWork($sbmtdPersonID, $workBkgrdJobName, $workBkgrdInstitution, $workBkgrdLoc, $workBkgrdStartDate, $workBkgrdEndDate, $workBkgrdJobDesc, $workBkgrdAchvmnts);
+                            $affctRws += createWork(
+                                $sbmtdPersonID,
+                                $workBkgrdJobName,
+                                $workBkgrdInstitution,
+                                $workBkgrdLoc,
+                                $workBkgrdStartDate,
+                                $workBkgrdEndDate,
+                                $workBkgrdJobDesc,
+                                $workBkgrdAchvmnts
+                            );
                             $workBkgrdPkeyID = getWorkID($sbmtdPersonID, $workBkgrdJobName, $workBkgrdInstitution);
                         }
                     }
@@ -794,13 +1462,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 insert_ChangeRequest($prsnid);
                             }
                         }
-                        ?>
+                    ?>
                         <tr id="workBkgrdRow_<?php echo $cntrRndm; ?>">
                             <td class="lovtd">
                                 <button type="button" class="btn btn-default btn-sm" onclick="getWorkBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'workBkgrdForm', 'workBkgrdRow_<?php echo $cntrRndm; ?>', 'Add/Edit Work Experience', 21, 'EDIT', <?php echo $workBkgrdPkeyID; ?>, <?php echo $sbmtdPersonID; ?>);" style="padding:2px !important;">
                                     <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                 </button>
-                                <input type="hidden" value="<?php echo $workBkgrdPkeyID; ?>" id="workBkgrdRow<?php echo $cntrRndm; ?>_PKeyID"/>                                
+                                <input type="hidden" value="<?php echo $workBkgrdPkeyID; ?>" id="workBkgrdRow<?php echo $cntrRndm; ?>_PKeyID" />
                             </td>
                             <td class="lovtd"><?php echo $workBkgrdJobName; ?></td>
                             <td class="lovtd"><?php echo $workBkgrdInstitution; ?></td>
@@ -815,7 +1483,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </button>
                             </td>
                         </tr>
-                        <?php
+                    <?php
                     } else {
                         echo "Failed to Save any Data!";
                     }
@@ -880,13 +1548,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 insert_ChangeRequest($prsnid);
                             }
                         }
-                        ?>
+                    ?>
                         <tr id="skillsTblRow_<?php echo $cntrRndm; ?>">
                             <td class="lovtd">
                                 <button type="button" class="btn btn-default btn-sm" onclick="getSkillsForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'skillsForm', 'skillsTblRow_<?php echo $cntrRndm; ?>', 'Add/Edit Skills/Nature', 22, 'EDIT', <?php echo $skillsPkeyID; ?>, <?php echo $sbmtdPersonID; ?>);" style="padding:2px !important;">
                                     <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                 </button>
-                                <input type="hidden" value="<?php echo $skillsPkeyID; ?>" id="workBkgrdRow<?php echo $cntrRndm; ?>_PKeyID"/>                                
+                                <input type="hidden" value="<?php echo $skillsPkeyID; ?>" id="workBkgrdRow<?php echo $cntrRndm; ?>_PKeyID" />
                             </td>
                             <td class="lovtd"><?php echo $skillsLanguages; ?></td>
                             <td class="lovtd"><?php echo $skillsHobbies; ?></td>
@@ -901,7 +1569,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </button>
                             </td>
                         </tr>
-                        <?php
+                <?php
                     } else {
                         echo "Failed to Save any Data!";
                     }
@@ -1025,40 +1693,54 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
     } else if ($vwtyp == "0") {
         if ($sbmtdPersonID <= 0 && $addOrEdit == "VIEW") {
             echo $cntent . "<li>
-						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
-                                                <span style=\"text-decoration:none;\">Data Change Requests</span>
-					</li>
-                                       </ul>
-                                     </div>";
+                                <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+                                <span style=\"text-decoration:none;\">Data Change Requests</span>
+                            </li>
+                           </ul>
+                         </div>";
         }
+        $daPrsnCrntOrgID = $orgID;
         if ($sbmtdPersonID <= 0) {
             $pkID = $prsnid;
         } else {
             $pkID = $sbmtdPersonID;
         }
+        $orgType = getPssblValNm((int) (getGnrlRecNm(
+            "org.org_details",
+            "org_id",
+            "org_typ_id",
+            $orgID
+        )));
+        $daReligionLbl = "Religion:";
+        if (strtoupper($orgType) == "CHURCH") {
+            $daReligionLbl = "Place of Worship / Name of Service:";
+        }
         $rcrdExst = prsn_Record_Exist($pkID);
         $chngRqstExst = prsn_ChngRqst_Exist($pkID);
         if ($pkID > 0) {
+            $result = null;
             if ($sbmtdPersonID <= 0) {
                 $result = get_SelfPrsnDet($pkID);
             } else {
                 $result = get_PrsnDet($pkID);
             }
-
             while ($row = loc_db_fetch_array($result)) {
                 $nwFileName = "";
                 $temp = explode(".", $row[2]);
                 $extension = end($temp);
-                $nwFileName = encrypt1($row[2], $smplTokenWord1) . "." . $extension;
+                if (trim($extension) == "") {
+                    $extension = "png";
+                }
+                $ecnptDFlNm = encrypt1($row[2], $smplTokenWord1);
+                $nwFileName = $ecnptDFlNm . "." . $extension;
                 $ftp_src = "";
                 if ($sbmtdPersonID <= 0) {
-                    if ($rcrdExst == true && $chngRqstExst > 0) {
-                        $ftp_src = $ftp_base_db_fldr . "/Person/Request/" . $row[2];
-                    } else {
-                        $ftp_src = $ftp_base_db_fldr . "/Person/" . $row[2];
+                    $ftp_src = $ftp_base_db_fldr . "/Person/Request/" . $pkID . "." . $extension;
+                    if (!($rcrdExst == true && $chngRqstExst > 0 && file_exists($ftp_src))) {
+                        $ftp_src = $ftp_base_db_fldr . "/Person/" . $pkID . "." . $extension;
                     }
                 } else {
-                    $ftp_src = $ftp_base_db_fldr . "/Person/" . $row[2];
+                    $ftp_src = $ftp_base_db_fldr . "/Person/" . $pkID . "." . $extension;
                 }
                 $fullPemDest = $fldrPrfx . $tmpDest . $nwFileName;
                 if (file_exists($ftp_src)) {
@@ -1068,47 +1750,119 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     copy("$ftp_src", "$fullPemDest");
                 }
                 $nwFileName = $tmpDest . $nwFileName;
+                if (((int)$row[29]) > 0) {
+                    $daPrsnCrntOrgID = (int)$row[29];
+                    $crntOrgName = $row[7];
+                }
+                // QR CODE data 
+                $name = str_replace("  ", " ", $row[3] . " " . $row[4] . " " . $row[6] . " " . $row[5]);
+                $sortName = $row[5] . ';' . $row[4];
+                $phone = $row[16];
+                $phonePrivate = '';
+                $phoneCell = $row[17];
+                $orgName = $row[21];
+
+                $email = $row[15];
+                // if not used - leave blank! 
+                $addressLabel = 'Address';
+                $addressPobox = preg_replace("/[\r\n]+/", " ", $row[14]);
+
+                $addressExt = '';
+                $addressStreet = '';
+                $addressTown = '';
+                $addressRegion = '';
+                $addressPostCode = '';
+                $addressCountry = 'GH';
+                // we building raw data 
+                $codeContents = 'BEGIN:VCARD' . "\n";
+                $codeContents .= 'VERSION:2.1' . "\n";
+                $codeContents .= 'N:' . $sortName . "\n";
+                $codeContents .= 'FN:' . $name . "\n";
+                $codeContents .= 'ORG:' . $orgName . "\n";
+                $codeContents .= 'TEL;WORK;VOICE:' . $phone . "\n";
+                $codeContents .= 'TEL;HOME;VOICE:' . $phonePrivate . "\n";
+                $codeContents .= 'TEL;TYPE=cell:' . $phoneCell . "\n";
+                $codeContents .= 'ADR;TYPE=work;' .
+                    'LABEL="' . $addressLabel . '":'
+                    . $addressPobox . ';'
+                    . $addressExt . ';'
+                    . $addressStreet . ';'
+                    . $addressTown . ';'
+                    . $addressPostCode . ';'
+                    . $addressCountry
+                    . "\n";
+                $codeContents .= 'EMAIL:' . $email . "\n";
+                $codeContents .= 'END:VCARD';
                 ?>
-
                 <div class="row" style="margin: 0px 0px 10px 0px !important;">
-                    <div class="col-md-12" style="padding:0px 0px 0px 15px !important;">
-                        <div class="" style="padding:0px 0px 0px 0px;float:right !important;">
-                            <?php
-                            $rqStatus = get_RqstStatus($prsnid);
-                            $rqstID = get_RqstID($prsnid);
-                            $rqstatusColor = "red";
-                            if ($rqStatus == "Approved") {
-                                $rqstatusColor = "green";
-                            }
-                            if ($sbmtdPersonID <= 0) {
-                                $actType = 1;
-                            } else {
-                                $actType = 2;
-                            }
-                            if ($sbmtdPersonID <= 0) {
-                                ?>
-                                <button type="button" class="btn btn-default btn-sm" style="" id="mySelfStatusBtn"><span style="font-weight:bold;">Status: </span><span style="color:<?php echo $rqstatusColor; ?>;font-weight: bold;"><?php echo $rqStatus; ?></span></button>
-                            <?php } ?>
-                            <button type="button" class="btn btn-default btn-sm" style="" onclick="saveBasicPrsnData(<?php echo $actType; ?>, 0);"><img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Save for Later&nbsp;</button>
-                            <?php
-                            if ($sbmtdPersonID <= 0) {
-                                if ($rqStatus == "Requires Approval" || $rqStatus == "Withdrawn" || $rqStatus == "Rejected" || $rqStatus == "Approved") {
-                                    ?>
-                                    <button type="button" class="btn btn-default btn-sm" style="" onclick="saveBasicPrsnData(<?php echo $actType; ?>, 1);"><img src="cmn_images/Emailcon.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Submit for Approval&nbsp;</button>
-                                    <?php
-                                } else if ($rqStatus != "Approved") {
-                                    ?>                                    
-                                    <button type="button" class="btn btn-default btn-sm" style="" onclick="wthdrwRqst();"><img src="cmn_images/withdraw_rqst.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Withdraw from Approvers&nbsp;</button>                                
-                                    <?php
-                                }
-                            }
-                            ?>
+                    <div class="col-md-12" style="padding:0px 0px 0px 0px !important;">
+                        <div class="col-md-6" style="padding:0px 0px 0px 0px;float:left !important;">
+                            <div class="form-group form-group-sm">
+                                <label for="crntOrgName" class="control-label col-md-4" style="padding:0px 0px 0px 0px;">Current Organisation:</label>
+                                <div class="col-md-8" style="padding:0px 0px 0px 0px;">
+                                    <!--<span><?php echo $crntOrgName; ?></span>-->
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" aria-label="..." id="crntOrgName" value="<?php echo $crntOrgName; ?>">
+                                        <input type="hidden" id="daPrsnCrntOrgID" value="<?php echo $daPrsnCrntOrgID; ?>">
+                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Organisations', '', '', '', 'radio', true, '<?php echo $orgID; ?>', 'daPrsnCrntOrgID', 'crntOrgName', 'clear', 1, '');">
+                                            <span class="glyphicon glyphicon-th-list"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>                    
-                </div>
+                        <div class="col-md-6" style="padding:0px 0px 0px 0px;float:right !important;">
 
+                            <div class="" style="padding:0px 0px 0px 0px;float:right !important;">
+                                <?php
+                                $rqStatus = get_RqstStatus($prsnid);
+                                $rqstID = get_RqstID($prsnid);
+                                $rqstatusColor = "red";
+                                if ($rqStatus == "Approved") {
+                                    $rqstatusColor = "green";
+                                }
+                                if ($sbmtdPersonID <= 0) {
+                                    $actType = 1;
+                                } else {
+                                    $actType = 2;
+                                }
+                                if ($sbmtdPersonID <= 0) {
+                                ?>
+                                    <button type="button" class="btn btn-default btn-sm" style="margin-bottom: 1px;height:30px;" id="mySelfStatusBtn"><span style="font-weight:bold;">Status: </span><span style="color:<?php echo $rqstatusColor; ?>;font-weight: bold;"><?php echo $rqStatus; ?></span></button>
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="openATab('#allmodules', 'grp=8&typ=1&pg=2&vtyp=0');">
+                                        <img src="cmn_images/refresh.bmp" style="left: 0.5%; padding-right: 0px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-sm" style="margin-bottom: 1px;height:30px;" onclick="saveBasicPrsnData(<?php echo $actType; ?>, 0);">
+                                        <img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Save for Later&nbsp;
+                                    </button>
+                                <?php } else { ?>
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getBscProfileForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', '<?php echo $formTitle; ?>', <?php echo $sbmtdPersonID; ?>, 0, 2, '<?php echo $addOrEdit; ?>', 'ReloadDialog');">
+                                        <img src="cmn_images/refresh.bmp" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-sm" style="margin-bottom: 1px;height:30px;" onclick="saveBasicPrsnData(<?php echo $actType; ?>, 0, 'myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', '<?php echo $formTitle; ?>', 0, 2, '<?php echo $addOrEdit; ?>', 'ReloadDialog');">
+                                        <img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Save for Later&nbsp;
+                                    </button>
+                                <?php } ?>
+                                <button type="button" class="btn btn-default btn-sm" style="margin-bottom: 1px;height:30px;" onclick="getPrsnProfilePDF(<?php echo $pkID; ?>);"><img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;"> GET PDF</button>
+                                <?php
+                                if ($sbmtdPersonID <= 0) {
+                                    if ($rqStatus == "Requires Approval" || $rqStatus == "Withdrawn" || $rqStatus == "Rejected" || $rqStatus == "Approved") {
+                                ?>
+                                        <button type="button" class="btn btn-default btn-sm" style="margin-bottom: 1px;height:30px;" onclick="saveBasicPrsnData(<?php echo $actType; ?>, 1);"><img src="cmn_images/Emailcon.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Submit for Approval&nbsp;</button>
+                                    <?php
+                                    } else if ($rqStatus != "Approved") {
+                                    ?>
+                                        <button type="button" class="btn btn-default btn-sm" style="margin-bottom: 1px;height:30px;" onclick="wthdrwRqst();"><img src="cmn_images/withdraw_rqst.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Withdraw from Approvers&nbsp;</button>
+                                <?php
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <?php if ($addOrEdit != "ADD") {
-                    ?>
+                ?>
                     <div class="row" style="margin: 0px 0px 10px 0px !important;">
                         <div class="col-md-12" style="padding:0px 0px 0px 0px !important;">
                             <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#allmodules', 'grp=8&typ=1&pg=2&vtyp=0');">Basic Data</button>
@@ -1121,59 +1875,66 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <?php } ?>
                 <div class="">
                     <?php if ($addOrEdit != "ADD") {
-                        ?>
+                    ?>
                         <ul class="nav nav-tabs rho-hideable-tabs" style="margin-top:-10px !important;">
-                            <li class="active"><a data-toggle="tab" data-rhodata="&pg=2&vtyp=0&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflHomeEDT" id="prflHomeEDTtab">Basic Data</a></li>
+                            <li class="active"><a data-toggle="tabajxprfledt" data-rhodata="&pg=2&vtyp=0&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflHomeEDT" id="prflHomeEDTtab">Basic Data</a></li>
                             <li><a data-toggle="tabajxprfledt" data-rhodata="&pg=2&vtyp=1&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflAddPrsnDataEDT" id="prflAddPrsnDataEDTtab">Additional Data</a></li>
                             <li><a data-toggle="tabajxprfledt" data-rhodata="&pg=2&vtyp=2&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflOrgAsgnEDT" id="prflOrgAsgnEDTtab">Organisational Assignments</a></li>
                             <li><a data-toggle="tabajxprfledt" data-rhodata="&pg=2&vtyp=3&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflCVEDT" id="prflCVEDTtab">CV</a></li>
                             <li><a data-toggle="tabajxprfledt" data-rhodata="&pg=2&vtyp=4&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflOthrInfoEDT" id="prflOthrInfoEDTtab">Attached Documents</a></li>
                         </ul>
                     <?php } ?>
-
-                    <div class="row">                  
+                    <div class="row">
                         <div class="col-md-12">
-                            <div class="custDiv"> 
+                            <div class="custDiv">
                                 <div class="tab-content">
-                                    <div id="prflHomeEDT" class="tab-pane fadein active" style="border:none !important;">                          
+                                    <div id="prflAddPrsnDataEDT" class="tab-pane fade hideNotice" style="border:none !important;"></div>
+                                    <div id="prflOrgAsgnEDT" class="tab-pane fade hideNotice" style="border:none !important;padding:0px !important;"></div>
+                                    <div id="prflCVEDT" class="tab-pane fade hideNotice" style="border:none !important;"></div>
+                                    <div id="prflOthrInfoEDT" class="tab-pane fade hideNotice" style="border:none !important;"></div>
+                                    <div id="prflHomeEDT" class="tab-pane fadein active" style="border:none !important;">
                                         <form class="form-horizontal" id="bscPrsnPrflForm">
                                             <div class="row">
                                                 <div class="col-lg-4">
-                                                    <fieldset class="basic_person_fs1"><legend class="basic_person_lg">Person's Picture</legend>
+                                                    <fieldset class="basic_person_fs1">
+                                                        <legend class="basic_person_lg">Person's Picture</legend>
                                                         <div style="margin-bottom: 10px;">
-                                                            <img src="<?php echo $nwFileName; ?>" alt="..." id="img1Test" class="img-rounded center-block img-responsive" style="height: 195px !important; width: auto !important;">                                            
+                                                            <img src="<?php echo $nwFileName; ?>" alt="..." id="img1Test" class="img-rounded center-block img-responsive" style="height: 195px !important; width: auto !important;">
                                                         </div>
                                                         <div class="form-group form-group-sm">
                                                             <div class="col-md-12">
                                                                 <div class="input-group">
                                                                     <label class="btn btn-primary btn-file input-group-addon">
-                                                                        Browse... <input type="file" id="daPrsnPicture" name="daPrsnPicture" onchange="changeImgSrc(this, '#img1Test', '#img1SrcLoc');" class="btn btn-default"  style="display: none;">
+                                                                        Browse... <input type="file" id="daPrsnPicture" name="daPrsnPicture" onchange="changeImgSrc(this, '#img1Test', '#img1SrcLoc');" class="btn btn-default" style="display: none;">
                                                                     </label>
-                                                                    <input type="text" class="form-control" aria-label="..." id="img1SrcLoc" value="">                                                        
-                                                                </div>                                                    
-                                                            </div>                                            
-                                                        </div>                                        
+                                                                    <input type="text" class="form-control" aria-label="..." id="img1SrcLoc" value="">
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </fieldset>
-                                                </div>                                
+                                                </div>
                                                 <div class="col-lg-4">
-                                                    <fieldset class="basic_person_fs1"><legend class="basic_person_lg">Names</legend>
+                                                    <fieldset class="basic_person_fs1">
+                                                        <legend class="basic_person_lg">Names</legend>
                                                         <div class="form-group form-group-sm">
                                                             <label for="daPrsnLocalID" class="control-label col-md-4">ID No:</label>
                                                             <div class="col-md-8">
-                                                                <?php if ($sbmtdPersonID <= 0) { ?>
+                                                                <?php
+                                                                if ($sbmtdPersonID <= 0) {
+                                                                ?>
                                                                     <span><?php echo $row[1]; ?></span>
-                                                                    <input id="daPrsnLocalID" name="daPrsnLocalID" type = "hidden" value="<?php echo $row[1]; ?>"/>                                                                
+                                                                    <input id="daPrsnLocalID" name="daPrsnLocalID" type="hidden" value="<?php echo $row[1]; ?>" />
                                                                 <?php } else { ?>
-                                                                    <input class="form-control rqrdFld" id="daPrsnLocalID" name="daPrsnLocalID" type = "text" placeholder="ID No" value="<?php echo $row[1]; ?>"/>
+                                                                    <input class="form-control rqrdFld" id="daPrsnLocalID" name="daPrsnLocalID" type="text" placeholder="ID No" value="<?php echo $row[1]; ?>" />
                                                                 <?php } ?>
-                                                                <input type="hidden" id="daPersonID" name="daPersonID" value="<?php echo $row[0]; ?>"/>
-                                                                <input type="hidden" id="daChngRqstID" name="daChngRqstID" value="<?php echo $rqstID; ?>"/>
+                                                                <input type="hidden" id="daPersonID" name="daPersonID" value="<?php echo $row[0]; ?>" />
+                                                                <input type="hidden" id="daChngRqstID" name="daChngRqstID" value="<?php echo $rqstID; ?>" />
                                                             </div>
-                                                        </div> 
+                                                        </div>
                                                         <div class="form-group form-group-sm">
                                                             <label for="daTitle" class="control-label col-md-4">Title:</label>
-                                                            <div  class="col-md-8">
-                                                                <select class="form-control rqrdFld" id="daTitle" name="daTitle">
+                                                            <div class="col-md-8">
+                                                                <select class="form-control" id="daTitle" name="daTitle">
                                                                     <?php
                                                                     $brghtStr = "";
                                                                     $isDynmyc = FALSE;
@@ -1183,35 +1944,35 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         if ($titleRow[0] == $row[3]) {
                                                                             $selectedTxt = "selected";
                                                                         }
-                                                                        ?>
+                                                                    ?>
                                                                         <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                                                        <?php
+                                                                    <?php
                                                                     }
                                                                     ?>
                                                                 </select>
                                                             </div>
-                                                        </div>  
+                                                        </div>
                                                         <div class="form-group form-group-sm">
                                                             <label for="daFirstName" class="control-label col-md-4">First Name:</label>
-                                                            <div  class="col-md-8">
-                                                                <input class="form-control rqrdFld" id="daFirstName" name="daFirstName" type = "text" placeholder="First Name" value="<?php echo $row[4]; ?>"/>
+                                                            <div class="col-md-8">
+                                                                <input class="form-control rqrdFld" id="daFirstName" name="daFirstName" type="text" placeholder="First Name" value="<?php echo $row[4]; ?>" />
                                                             </div>
-                                                        </div> 
+                                                        </div>
                                                         <div class="form-group form-group-sm">
                                                             <label for="daSurName" class="control-label col-md-4">Surname:</label>
-                                                            <div  class="col-md-8">
-                                                                <input class="form-control rqrdFld" id="daSurName" name="daSurName" type = "text" placeholder="Surname" value="<?php echo $row[5]; ?>"/>
+                                                            <div class="col-md-8">
+                                                                <input class="form-control rqrdFld" id="daSurName" name="daSurName" type="text" placeholder="Surname" value="<?php echo $row[5]; ?>" />
                                                             </div>
-                                                        </div>     
+                                                        </div>
                                                         <div class="form-group form-group-sm">
                                                             <label for="daOtherNames" class="control-label col-md-4">Other Names:</label>
-                                                            <div  class="col-md-8">
+                                                            <div class="col-md-8">
                                                                 <textarea class="form-control" id="daOtherNames" name="daOtherNames" cols="2" placeholder="Other Names" rows="3"><?php echo $row[6]; ?></textarea>
                                                             </div>
                                                         </div>
                                                         <div class="form-group form-group-sm">
                                                             <label for="daGender" class="control-label col-md-4">Gender:</label>
-                                                            <div  class="col-md-8">
+                                                            <div class="col-md-8">
                                                                 <select class="form-control rqrdFld" id="daGender" name="daGender">
                                                                     <?php
                                                                     $brghtStr = "";
@@ -1222,21 +1983,22 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         if ($titleRow[0] == $row[8]) {
                                                                             $selectedTxt = "selected";
                                                                         }
-                                                                        ?>
+                                                                    ?>
                                                                         <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                                                        <?php
+                                                                    <?php
                                                                     }
                                                                     ?>
                                                                 </select>
                                                             </div>
-                                                        </div> 
+                                                        </div>
                                                     </fieldset>
                                                 </div>
-                                                <div class="col-lg-4"> 
-                                                    <fieldset class="basic_person_fs1"><legend class="basic_person_lg">Personal Data</legend>
+                                                <div class="col-lg-4">
+                                                    <fieldset class="basic_person_fs1">
+                                                        <legend class="basic_person_lg">Personal Data</legend>
                                                         <div class="form-group form-group-sm">
                                                             <label for="daMaritalStatus" class="control-label col-md-4">Marital Status:</label>
-                                                            <div  class="col-md-8">
+                                                            <div class="col-md-8">
                                                                 <select class="form-control rqrdFld" id="daMaritalStatus" name="daMaritalStatus">
                                                                     <?php
                                                                     $brghtStr = "";
@@ -1247,30 +2009,30 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         if ($titleRow[0] == $row[9]) {
                                                                             $selectedTxt = "selected";
                                                                         }
-                                                                        ?>
+                                                                    ?>
                                                                         <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                                                        <?php
+                                                                    <?php
                                                                     }
                                                                     ?>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                         <div class="form-group form-group-sm">
-                                                            <label for="daDOB" class="control-label col-md-4">Date of Birth</label>
+                                                            <label for="daDOB" class="control-label col-md-4">Date of Birth (DD-MMM-YYYY):</label>
                                                             <div class="col-md-8">
-                                                                <div class="input-group date form_date rqrdFld" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                                                                    <input class="form-control" size="16" type="text" id="daDOB" name="daDOB" value="<?php echo $row[10]; ?>" readonly="">
+                                                                <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                                                                    <input class="form-control rqrdFld" size="16" type="text" id="daDOB" name="daDOB" value="<?php echo $row[10]; ?>">
                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                                                 </div>
                                                             </div>
-                                                        </div> 
+                                                        </div>
                                                         <div class="form-group form-group-sm">
                                                             <label for="daPOB" class="control-label col-md-4">Place of Birth:</label>
-                                                            <div  class="col-md-8">
+                                                            <div class="col-md-8">
                                                                 <textarea class="form-control" id="daPOB" name="daPOB" cols="2" placeholder="Place of Birth" rows="2"><?php echo $row[11]; ?></textarea>
                                                             </div>
-                                                        </div> 
+                                                        </div>
                                                         <div class="form-group form-group-sm">
                                                             <label for="daNationality" class="control-label col-md-4">Nationality:</label>
                                                             <div class="col-md-8">
@@ -1284,42 +2046,44 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         if ($titleRow[0] == $row[20]) {
                                                                             $selectedTxt = "selected";
                                                                         }
-                                                                        ?>
+                                                                    ?>
                                                                         <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                                                        <?php
+                                                                    <?php
                                                                     }
                                                                     ?>
                                                                 </select>
                                                             </div>
-                                                        </div>  
+                                                        </div>
                                                         <div class="form-group form-group-sm">
                                                             <label for="daHomeTown" class="control-label col-md-4">Home Town:</label>
-                                                            <div  class="col-md-8">
+                                                            <div class="col-md-8">
                                                                 <textarea class="form-control" id="daHomeTown" name="daHomeTown" cols="2" placeholder="Home Town" rows="1"><?php echo $row[19]; ?></textarea>
                                                             </div>
-                                                        </div> 
+                                                        </div>
                                                         <div class="form-group form-group-sm">
-                                                            <label for="daReligion" class="control-label col-md-4">Religion:</label>
-                                                            <div  class="col-md-8">
-                                                                <input class="form-control" id="daReligion" name="daReligion" type = "text" placeholder="Religion" value="<?php echo $row[12]; ?>"/>
+                                                            <label for="daReligion" class="control-label col-md-4"><?php echo $daReligionLbl; ?></label>
+                                                            <div class="col-md-8">
+                                                                <input class="form-control" id="daReligion" name="daReligion" type="text" placeholder="Religion" value="<?php echo $row[12]; ?>" />
                                                             </div>
-                                                        </div>                                              
-                                                    </fieldset>   
+                                                        </div>
+                                                    </fieldset>
                                                 </div>
-                                            </div>    
+                                            </div>
                                             <div class="row">
                                                 <div class="col-lg-4">
-                                                    <fieldset class="basic_person_fs2"><legend class="basic_person_lg">QR Code</legend>
+                                                    <fieldset class="basic_person_fs2">
+                                                        <legend class="basic_person_lg">QR Code</legend>
                                                         <div>
-                                                            <img src="cmn_images/no_image.png" alt="..." id="imgQrCode" class="img-thumbnail center-block img-responsive" style="height: 200px !important; width: auto !important;">                                            
-                                                        </div>                                       
+                                                            <img src="<?php echo getQRCodeUrl($codeContents, $ecnptDFlNm . "_QR"); ?>" alt="..." id="imgQrCode" class="img-thumbnail center-block img-responsive" style="height: 200px !important; width: auto !important;">
+                                                        </div>
                                                     </fieldset>
-                                                </div>                                
+                                                </div>
                                                 <div class="col-lg-4">
-                                                    <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Contact Information</legend>
+                                                    <fieldset class="basic_person_fs2">
+                                                        <legend class="basic_person_lg">Contact Information</legend>
                                                         <div class="form-group form-group-sm">
                                                             <label for="daCompany" class="control-label col-md-4">Workplace:</label>
-                                                            <div  class="col-md-8">
+                                                            <div class="col-md-8">
                                                                 <div class="input-group">
                                                                     <input type="text" class="form-control" aria-label="..." id="daCompany" name="daCompany" value="<?php echo $row[21]; ?>">
                                                                     <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
@@ -1332,57 +2096,61 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         </div>
                                                         <div class="form-group form-group-sm">
                                                             <label for="daCompanyLoc" class="control-label col-md-4">Site/Branch:</label>
-                                                            <div  class="col-md-8">
+                                                            <div class="col-md-8">
                                                                 <div class="input-group">
-                                                                    <input type="text" class="form-control" aria-label="..." id="daCompanyLoc" name="daCompanyLoc" value="<?php echo $row[22]; ?>">  
+                                                                    <input type="text" class="form-control" aria-label="..." id="daCompanyLoc" name="daCompanyLoc" value="<?php echo $row[22]; ?>">
                                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Customer/Supplier Sites', 'daCompanyID', '', '', 'radio', true, '<?php echo $row[21]; ?>', '', 'daCompanyLoc', 'clear', 1, '');">
-                                                                        <span class="glyphicon glyphicon-th-list"></span>                                                                            
+                                                                        <span class="glyphicon glyphicon-th-list"></span>
                                                                     </label>
                                                                 </div>
                                                             </div>
-                                                        </div>  
+                                                        </div>
                                                         <div class="form-group form-group-sm">
                                                             <label for="daEmail" class="control-label col-md-4">Email:</label>
-                                                            <div  class="col-md-8">
-                                                                <input class="form-control rqrdFld" id="daEmail" name="daEmail" type = "email" placeholder="<?php echo $admin_email; ?>" value="<?php echo $row[15]; ?>"/>
+                                                            <div class="col-md-8">
+                                                                <input class="form-control rqrdFld" id="daEmail" name="daEmail" type="email" placeholder="<?php echo $admin_email; ?>" value="<?php echo $row[15]; ?>" />
                                                             </div>
-                                                        </div> 
+                                                        </div>
                                                         <div class="form-group form-group-sm">
                                                             <label for="daTelNos" class="control-label col-md-4">Contact Nos:</label>
-                                                            <div  class="col-md-8">
-                                                                <input class="form-control" id="daTelNos" name="daTelNos" type = "text" placeholder="Telephone" value="<?php echo $row[16]; ?>"/>
-                                                                <input class="form-control rqrdFld" id="daMobileNos" name="daMobileNos" type = "text" placeholder="Mobile" value="<?php echo $row[17]; ?>"/>                                       
+                                                            <div class="col-md-8">
+                                                                <input class="form-control" id="daTelNos" name="daTelNos" type="text" placeholder="Telephone" value="<?php echo $row[16]; ?>" />
+                                                                <input class="form-control rqrdFld" id="daMobileNos" name="daMobileNos" type="text" placeholder="Mobile" value="<?php echo $row[17]; ?>" />
                                                             </div>
-                                                        </div>     
+                                                        </div>
                                                         <div class="form-group form-group-sm">
                                                             <label for="daFaxNo" class="control-label col-md-4">Fax:</label>
-                                                            <div  class="col-md-8">
-                                                                <input class="form-control" id="daFaxNo" name="daFaxNo" type = "text" placeholder="Fax" value="<?php echo $row[18]; ?>"/>
+                                                            <div class="col-md-8">
+                                                                <input class="form-control" id="daFaxNo" name="daFaxNo" type="text" placeholder="Fax" value="<?php echo $row[18]; ?>" />
                                                             </div>
-                                                        </div> 
-                                                    </fieldset>                                                
+                                                        </div>
+                                                    </fieldset>
                                                 </div>
                                                 <div class="col-lg-4">
-                                                    <?php if ($sbmtdPersonID <= 0) { ?>
-                                                        <fieldset class="basic_person_fs3"><legend class="basic_person_lg">Address</legend> 
+                                                    <?php
+                                                    if ($sbmtdPersonID <= 0) {
+                                                    ?>
+                                                        <fieldset class="basic_person_fs3">
+                                                            <legend class="basic_person_lg">Address</legend>
                                                             <div class="form-group form-group-sm">
                                                                 <label for="daPostalAddress" class="control-label col-md-4">Postal Address:</label>
-                                                                <div  class="col-md-8">
+                                                                <div class="col-md-8">
                                                                     <textarea class="form-control" id="daPostalAddress" name="daPostalAddress" cols="2" placeholder="Postal Address" rows="4"><?php echo $row[14]; ?></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group form-group-sm">
                                                                 <label for="daResAddress" class="control-label col-md-4">Residential Address:</label>
-                                                                <div  class="col-md-8">
+                                                                <div class="col-md-8">
                                                                     <textarea class="form-control" id="daResAddress" name="daResAddress" cols="2" placeholder="Residential Address" rows="4"><?php echo $row[13]; ?></textarea>
                                                                 </div>
-                                                            </div> 
-                                                        </fieldset>  
+                                                            </div>
+                                                        </fieldset>
                                                     <?php } else { ?>
-                                                        <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Relationship Type</legend>                                    
+                                                        <fieldset class="basic_person_fs2">
+                                                            <legend class="basic_person_lg">Relationship Type</legend>
                                                             <div class="form-group form-group-sm">
                                                                 <label for="daRelType" class="control-label col-md-4">Relation:</label>
-                                                                <div  class="col-md-8">
+                                                                <div class="col-md-8">
                                                                     <select class="form-control" id="daRelType" name="daRelType">
                                                                         <?php
                                                                         $brghtStr = "";
@@ -1393,17 +2161,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             if ($titleRow[0] == $row[23]) {
                                                                                 $selectedTxt = "selected";
                                                                             }
-                                                                            ?>
+                                                                        ?>
                                                                             <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                                                            <?php
+                                                                        <?php
                                                                         }
                                                                         ?>
                                                                     </select>
                                                                 </div>
-                                                            </div>                                            
+                                                            </div>
                                                             <div class="form-group form-group-sm">
                                                                 <label for="daRelCause" class="control-label col-md-4">Cause of Relation:</label>
-                                                                <div  class="col-md-8">
+                                                                <div class="col-md-8">
                                                                     <select class="form-control" id="daRelCause" name="daRelCause">
                                                                         <?php
                                                                         $brghtStr = "";
@@ -1414,9 +2182,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             if ($titleRow[0] == $row[24]) {
                                                                                 $selectedTxt = "selected";
                                                                             }
-                                                                            ?>
+                                                                        ?>
                                                                             <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                                                            <?php
+                                                                        <?php
                                                                         }
                                                                         ?>
                                                                     </select>
@@ -1424,7 +2192,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             </div>
                                                             <div class="form-group form-group-sm">
                                                                 <label for="daRelDetails" class="control-label col-md-4">Further Details:</label>
-                                                                <div  class="col-md-8">
+                                                                <div class="col-md-8">
                                                                     <div class="input-group">
                                                                         <textarea class="form-control" aria-label="..." id="daRelDetails" name="daRelDetails"><?php echo $row[25]; ?></textarea>
                                                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Person Types-Further Details', '', '', '', 'radio', true, '<?php echo $row[25]; ?>', '', 'daRelDetails', 'clear', 1, '');">
@@ -1432,60 +2200,62 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         </label>
                                                                     </div>
                                                                 </div>
-                                                            </div>  
+                                                            </div>
                                                             <div class="form-group form-group-sm">
                                                                 <label for="daRelStartDate" class="control-label col-md-4">Start Date:</label>
-                                                                <div  class="col-md-8">
+                                                                <div class="col-md-8">
                                                                     <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input3" data-link-format="yyyy-mm-dd">
                                                                         <input class="form-control" size="16" type="text" id="daRelStartDate" name="daRelStartDate" value="<?php echo $row[26]; ?>" readonly="">
                                                                         <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                                                     </div>
                                                                 </div>
-                                                            </div>      
+                                                            </div>
                                                             <div class="form-group form-group-sm">
                                                                 <label for="daRelEndDate" class="control-label col-md-4">End Date:</label>
-                                                                <div  class="col-md-8">
+                                                                <div class="col-md-8">
                                                                     <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input4" data-link-format="yyyy-mm-dd">
                                                                         <input class="form-control" size="16" type="text" id="daRelEndDate" name="daRelEndDate" value="<?php echo $row[27]; ?>" readonly="">
                                                                         <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                                                     </div>
                                                                 </div>
-                                                            </div>  
+                                                            </div>
                                                         </fieldset>
                                                     <?php } ?>
                                                 </div>
-                                            </div> 
+                                            </div>
                                             <div class="row">
                                                 <?php if ($sbmtdPersonID > 0) { ?>
-                                                    <div class="col-lg-4">  
-                                                        <fieldset class="basic_person_fs3"><legend class="basic_person_lg">Address</legend> 
+                                                    <div class="col-lg-4">
+                                                        <fieldset class="basic_person_fs3">
+                                                            <legend class="basic_person_lg">Address</legend>
                                                             <div class="form-group form-group-sm">
                                                                 <label for="daPostalAddress" class="control-label col-md-4">Postal Address:</label>
-                                                                <div  class="col-md-8">
+                                                                <div class="col-md-8">
                                                                     <textarea class="form-control" id="daPostalAddress" name="daPostalAddress" cols="2" placeholder="Postal Address" rows="4"><?php echo $row[14]; ?></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group form-group-sm">
                                                                 <label for="daResAddress" class="control-label col-md-4">Residential Address:</label>
-                                                                <div  class="col-md-8">
+                                                                <div class="col-md-8">
                                                                     <textarea class="form-control" id="daResAddress" name="daResAddress" cols="2" placeholder="Residential Address" rows="4"><?php echo $row[13]; ?></textarea>
                                                                 </div>
-                                                            </div> 
-                                                        </fieldset> 
+                                                            </div>
+                                                        </fieldset>
                                                     </div>
                                                 <?php } ?>
 
-                                                <?php if ($sbmtdPersonID <= 0) { ?>
-                                                    <div class="col-lg-12">  
-                                                    <?php } else { ?>                                                    
-                                                        <div class="col-lg-8"> 
+                                                <?php if ($sbmtdPersonID <= 0) {
+                                                ?>
+                                                    <div class="col-lg-12">
+                                                    <?php } else { ?>
+                                                        <div class="col-lg-8">
                                                         <?php } ?>
                                                         <fieldset class="basic_person_fs3" style="padding: 1px 10px 1px 10px !important;">
-                                                            <legend class="basic_person_lg">National ID Cards</legend> 
-                                                            <div  class="col-md-12">
-                                                                <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getNtnlIDForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'ntnlIDCardsForm', '', 'Add/Edit National ID', 11, 'ADD', -1, <?php echo $prsnid; ?>);">
+                                                            <legend class="basic_person_lg">National ID Cards</legend>
+                                                            <div class="col-md-12">
+                                                                <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getNtnlIDForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'ntnlIDCardsForm', '', 'Add/Edit National ID', 11, 'ADD', -1, <?php echo $pkID; ?>);">
                                                                     <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                     Add National ID Card
                                                                 </button>
@@ -1512,14 +2282,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         $cntr = 0;
                                                                         while ($row1 = loc_db_fetch_array($result1)) {
                                                                             $cntr++;
-                                                                            ?>
+                                                                        ?>
                                                                             <tr id="ntnlIDCardsRow_<?php echo $cntr; ?>">
                                                                                 <td class="lovtd">
                                                                                     <button type="button" class="btn btn-default btn-sm" onclick="getNtnlIDForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'ntnlIDCardsForm', 'ntnlIDCardsRow_<?php echo $cntr; ?>', 'Add/Edit National ID', 11, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $pkID; ?>);" style="padding:2px !important;">
                                                                                         <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                                                         <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                                     </button>
-                                                                                    <input type="hidden" value="<?php echo $row1[0]; ?>" id="ntnlIDCardsRow<?php echo $cntr; ?>_NtnlIDpKey"/>
+                                                                                    <input type="hidden" value="<?php echo $row1[0]; ?>" id="ntnlIDCardsRow<?php echo $cntr; ?>_NtnlIDpKey" />
                                                                                 </td>
                                                                                 <td class="lovtd">
                                                                                     <?php echo $row1[1]; ?>
@@ -1531,7 +2301,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 <td class="lovtd"><?php echo $row1[4]; ?></td>
                                                                                 <td class="lovtd"><?php echo $row1[5]; ?></td>
                                                                                 <td class="lovtd"><?php echo $row1[6]; ?></td>
-                                                                                <td class="lovtd">                                                                                    
+                                                                                <td class="lovtd">
                                                                                     <button type="button" class="btn btn-default btn-sm" onclick="delNtnlID('ntnlIDCardsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete ID" style="padding:2px !important;" style="padding:2px !important;">
                                                                                         <img src="cmn_images/no.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                                     </button>
@@ -1540,22 +2310,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         <?php } ?>
                                                                     </tbody>
                                                                 </table>
-                                                            </div> 
+                                                            </div>
                                                         </fieldset>
+                                                        </div>
                                                     </div>
-                                                </div>  
-                                        </form>  
+                                            </div>
+                                        </form>
                                     </div>
-                                    <div id="prflAddPrsnDataEDT" class="tab-pane fade" style="border:none !important;"></div>
-                                    <div id="prflOrgAsgnEDT" class="tab-pane fade" style="border:none !important;"></div>    
-                                    <div id="prflCVEDT" class="tab-pane fade" style="border:none !important;"></div>    
-                                    <div id="prflOthrInfoEDT" class="tab-pane fade" style="border:none !important;"></div>   
-                                </div>                        
-                            </div>                         
-                        </div>                
-                    </div>          
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <?php
+            <?php
             }
         }
     } else if ($vwtyp == 1) {
@@ -1576,7 +2343,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             <form class="form-horizontal" id="adtnlPrsnDataForm">
                 <?php
                 while ($row = loc_db_fetch_array($result)) {
-                    ?>
+                ?>
                     <div class="row">
                         <div class="col-md-12">
                             <fieldset class="basic_person_fs4">
@@ -1604,39 +2371,42 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 $vrsFieldIDs .= "prsExtrTblrDtCol_" . $i . "|";
                                             }
                                         }
-                                        ?>
+                                        $fldVal = "";
+                                        if ($sbmtdPersonID <= 0) {
+                                            $fldVal = get_PrsExtrData_Self($pkID, $row1[1]);
+                                        } else {
+                                            $fldVal = get_PrsExtrData($pkID, $row1[1]);
+                                        }
+                                ?>
                                         <div class="row">
-                                            <div  class="col-md-12">
+                                            <div class="col-md-12">
                                                 <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getAddtnlDataForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'addtnlPrsnTblrDataForm', '', 'Add/Edit Data', 12, 'ADD', -1, '<?php echo $vrsFieldIDs; ?>', <?php echo $row1[1]; ?>, 'extDataTblCol_<?php echo $row1[1]; ?>');">
                                                     <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                     Add Data
                                                 </button>
-                                                <table id="extDataTblCol_<?php echo $row1[1]; ?>" class="table table-striped table-bordered table-responsive extPrsnDataTblEDT"  cellspacing="0" width="100%" style="width:100%;"><thead><th>&nbsp;&nbsp;...</th>
-                                                    <?php
-                                                    $fieldHdngs = $row1[11];
-                                                    $arry1 = explode(",", $fieldHdngs);
-                                                    $cntr = count($arry1);
-                                                    for ($i = 0; $i < $row1[9]; $i++) {
-                                                        if ($i <= $cntr - 1) {
-                                                            ?>
-                                                            <th><?php echo $arry1[$i]; ?></th>
+                                                <input class="form-control" id="addtnlPrsnDataCol<?php echo $row1[1]; ?>" type="hidden" placeholder="" value="<?php echo $fldVal; ?>" />
+                                                <table id="extDataTblCol_<?php echo $row1[1]; ?>" class="table table-striped table-bordered table-responsive extPrsnDataTblEDT" cellspacing="0" width="100%" style="width:100%;">
+                                                    <thead>
+                                                        <th>&nbsp;&nbsp;...</th>
+                                                        <?php
+                                                        $fieldHdngs = $row1[11];
+                                                        $arry1 = explode(",", $fieldHdngs);
+                                                        $cntr = count($arry1);
+                                                        for ($i = 0; $i < $row1[9]; $i++) {
+                                                            if ($i <= $cntr - 1) {
+                                                        ?>
+                                                                <th><?php echo $arry1[$i]; ?></th>
                                                             <?php
-                                                        } else {
+                                                            } else {
                                                             ?>
-                                                            <th>&nbsp;</th>
-                                                            <?php
+                                                                <th>&nbsp;</th>
+                                                        <?php
+                                                            }
                                                         }
-                                                    }
-                                                    ?>
+                                                        ?>
                                                     </thead>
                                                     <tbody>
                                                         <?php
-                                                        if ($sbmtdPersonID <= 0) {
-                                                            $fldVal = get_PrsExtrData_Self($pkID, $row1[1]);
-                                                        } else {
-                                                            $fldVal = get_PrsExtrData($pkID, $row1[1]);
-                                                        }
-
                                                         $arry3 = explode("|", $fldVal);
                                                         $cntr3 = count($arry3);
                                                         $maxsze = (int) 320 / $row1[9];
@@ -1647,7 +2417,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             if (trim(str_replace("~", "", $arry3[$j])) == "") {
                                                                 continue;
                                                             }
-                                                            ?>
+                                                        ?>
                                                             <tr id="prsExtrTblrDtCol_<?php echo $row1[1]; ?>_Row<?php echo $j; ?>">
                                                                 <td>
                                                                     <button type="button" class="btn btn-default btn-sm" onclick="getAddtnlDataForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'addtnlPrsnTblrDataForm', 'prsExtrTblrDtCol_<?php echo $row1[1]; ?>_Row<?php echo $j; ?>', 'Add/Edit Data', 12, 'EDIT', <?php echo $pkID; ?>, '<?php echo $vrsFieldIDs; ?>', <?php echo $row1[1]; ?>, 'extDataTblCol_<?php echo $row1[1]; ?>');" style="padding:2px !important;">
@@ -1660,16 +2430,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 $cntr2 = count($arry2);
                                                                 for ($i = 0; $i < $row1[9]; $i++) {
                                                                     if ($i <= $cntr2 - 1) {
-                                                                        ?>
+                                                                ?>
                                                                         <td><?php echo $arry2[$i]; ?></td>
                                                                     <?php } else { ?>
                                                                         <td>&nbsp;</td>
-                                                                        <?php
+                                                                <?php
                                                                     }
                                                                 }
                                                                 ?>
                                                             </tr>
-                                                            <?php
+                                                        <?php
                                                         }
                                                         ?>
                                                     </tbody>
@@ -1682,15 +2452,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $gcntr1 += 1;
                                         }
                                         if (($cntr1 % 2) == 0) {
-                                            ?> 
-                                            <div class="row"> 
-                                                <?php
-                                            }
+                                        ?>
+                                            <div class="row">
+                                            <?php
+                                        }
                                             ?>
-                                            <div class="col-md-6"> 
-                                                <div class="form-group form-group-sm"> 
+                                            <div class="col-md-6">
+                                                <div class="form-group form-group-sm">
                                                     <label class="control-label col-md-4"><?php echo $row1[2]; ?>:</label>
-                                                    <div  class="col-md-8">
+                                                    <div class="col-md-8">
                                                         <?php
                                                         $prsnDValPulld = "";
                                                         if ($sbmtdPersonID <= 0) {
@@ -1698,48 +2468,68 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         } else {
                                                             $prsnDValPulld = get_PrsExtrData($pkID, $row1[1]);
                                                         }
+                                                        $isRqrdFld = ($row1[12] === "1") ? "rqrdFld" : "";
                                                         if ($row1[4] == "Date") {
-                                                            ?>                                                        
+                                                        ?>
                                                             <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                                                                <input class="form-control" size="16" type="text" id="addtnlPrsnDataCol<?php echo $row1[1]; ?>" value="<?php echo $prsnDValPulld; ?>" readonly="">
+                                                                <input class="form-control <?php echo $isRqrdFld; ?>" size="16" type="text" id="addtnlPrsnDataCol<?php echo $row1[1]; ?>" value="<?php echo $prsnDValPulld; ?>">
                                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                                             </div>
-                                                            <?php
+                                                        <?php
                                                         } else if ($row1[4] == "Number") {
-                                                            ?>
-                                                            <input class="form-control" id="addtnlPrsnDataCol<?php echo $row1[1]; ?>" type = "text" placeholder="" value="<?php echo $prsnDValPulld; ?>"/>
+                                                        ?>
+                                                            <input class="form-control <?php echo $isRqrdFld; ?>" id="addtnlPrsnDataCol<?php echo $row1[1]; ?>" type="text" placeholder="" value="<?php echo $prsnDValPulld; ?>" />
                                                             <?php
                                                         } else {
                                                             if ($row1[3] == "") {
-                                                                if ($row1[6] < 200) {
-                                                                    ?>
-                                                                    <input class="form-control" id="addtnlPrsnDataCol<?php echo $row1[1]; ?>" type = "text" placeholder="" value="<?php echo $prsnDValPulld; ?>"/>
-                                                                    <?php
+                                                                if ($row1[6] <= 200) {
+                                                            ?>
+                                                                    <input class="form-control <?php echo $isRqrdFld; ?>" id="addtnlPrsnDataCol<?php echo $row1[1]; ?>" type="text" placeholder="" value="<?php echo $prsnDValPulld; ?>" />
+                                                                <?php
                                                                 } else {
-                                                                    ?>
-                                                                    <textarea class="form-control" id="addtnlPrsnDataCol<?php echo $row1[1]; ?>" cols="2" placeholder="" rows="2"><?php echo $prsnDValPulld; ?></textarea>
-                                                                    <?php
+                                                                ?>
+                                                                    <textarea class="form-control <?php echo $isRqrdFld; ?>" id="addtnlPrsnDataCol<?php echo $row1[1]; ?>" cols="2" placeholder="" rows="2"><?php echo $prsnDValPulld; ?></textarea>
+                                                                <?php
                                                                 }
                                                             } else {
-                                                                if ($row1[6] < 200) {
-                                                                    ?>
+                                                                $brghtStr = "";
+                                                                $isDynmyc = FALSE;
+                                                                $lovID = getLovID($row1[3]);
+                                                                $titleCnt = getTtlLovValues("%", "Both", $brghtStr, $lovID, $isDynmyc, -1, "", "");
+                                                                if ($titleCnt <= 100 && $row1[6] <= 200) {
+                                                                ?>
+                                                                    <select class="form-control <?php echo $isRqrdFld; ?>" id="addtnlPrsnDataCol<?php echo $row1[1]; ?>">
+                                                                        <?php
+                                                                        $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, $lovID, $isDynmyc, -1, "", "");
+                                                                        while ($titleRow = loc_db_fetch_array($titleRslt)) {
+                                                                            $selectedTxt = "";
+                                                                            if ($titleRow[0] == $prsnDValPulld) {
+                                                                                $selectedTxt = "selected";
+                                                                            }
+                                                                        ?>
+                                                                            <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
+                                                                        <?php
+                                                                        }
+                                                                        ?>
+                                                                    </select>
+                                                                <?php } else if ($titleCnt > 100 && $row1[6] <= 200) {
+                                                                ?>
                                                                     <div class="input-group">
-                                                                        <input type="text" class="form-control" aria-label="..." id="addtnlPrsnDataCol<?php echo $row1[1]; ?>" value="<?php echo $prsnDValPulld; ?>">  
+                                                                        <input type="text" class="form-control <?php echo $isRqrdFld; ?>" aria-label="..." id="addtnlPrsnDataCol<?php echo $row1[1]; ?>" value="<?php echo $prsnDValPulld; ?>">
                                                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', '<?php echo $row1[3]; ?>', '', '', '', 'radio', true, '<?php echo $prsnDValPulld; ?>', 'valueElmntID', 'addtnlPrsnDataCol<?php echo $row1[1]; ?>', 'clear', 1, '');">
-                                                                            <span class="glyphicon glyphicon-th-list"></span>                                                                            
+                                                                            <span class="glyphicon glyphicon-th-list"></span>
                                                                         </label>
                                                                     </div>
-                                                                    <?php
-                                                                } else {
-                                                                    ?>
+                                                                <?php } else {
+                                                                ?>
                                                                     <div class="input-group">
-                                                                        <textarea class="form-control" id="addtnlPrsnDataCol<?php echo $row1[1]; ?>" cols="2" placeholder="" rows="2"><?php echo $prsnDValPulld; ?></textarea>
+                                                                        <textarea class="form-control <?php echo $isRqrdFld; ?>" id="addtnlPrsnDataCol<?php echo $row1[1]; ?>" cols="2" placeholder="" rows="2"><?php echo $prsnDValPulld; ?></textarea>
                                                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', '<?php echo $row1[3]; ?>', '', '', '', 'radio', true, '<?php echo $prsnDValPulld; ?>', 'valueElmntID', 'addtnlPrsnDataCol<?php echo $row1[1]; ?>', 'clear', 1, '');">
-                                                                            <span class="glyphicon glyphicon-th-list"></span>                                                                            
+                                                                            <span class="glyphicon glyphicon-th-list"></span>
                                                                         </label>
-                                                                    </div>                                                                    
-                                                                    <?php
+                                                                    </div>
+                                                        <?php
                                                                 }
                                                             }
                                                         }
@@ -1751,26 +2541,26 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $cntr1 += 1;
                                             if (($cntr1 % 2) == 0 || $cntr1 == ($cntr1Ttl)) {
                                                 $cntr1 = 0;
-                                                ?>
+                                            ?>
                                             </div>
-                                            <?php
+                                <?php
+                                            }
                                         }
                                     }
-                                }
-                                if ($gcntr1 == 1) {
-                                    $gcntr1 = 0;
-                                }
+                                    if ($gcntr1 == 1) {
+                                        $gcntr1 = 0;
+                                    }
                                 ?>
                             </fieldset>
                         </div>
                         <?php ?>
                     </div>
-                    <?php
+                <?php
                 }
-            }
-            ?>
-        </form>
+                ?>
+            </form>
         <?php
+        }
     } else if ($vwtyp == "2") {
         /* Org Assignments */
         if ($sbmtdPersonID <= 0) {
@@ -1779,19 +2569,25 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             $pkID = $sbmtdPersonID;
         }
         $cntr = 0;
-        ?> 
+        ?>
         <div class="row">
-            <div class="col-lg-6"> 
-                <fieldset class="basic_person_fs4"><legend class="basic_person_lg">DIVISIONS/GROUPS</legend> 
-                    <div  class="col-md-12">
-                        <table id="divsGroupsEDT" class="table table-striped table-bordered table-responsive orgAsgnmentsTblsEDT" cellspacing="0" width="100%" style="width:100%;">
+            <div class="col-lg-6">
+                <fieldset>
+                    <legend class="basic_person_lg">DIVISIONS/GROUPS</legend>
+                    <div class="col-md-12" style="padding:0px 0px 0px 0px;">
+                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getPDivGrpForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'pDivGrpForm', '', 'Add/Edit Division/Group', 13, 'ADD', -1, <?php echo $pkID; ?>);">
+                            <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                            Add Division/Group
+                        </button>
+                        <table id="pDivGrpTable" class="table table-striped table-bordered table-responsive orgAsgnmentsTblsEDT" cellspacing="0" width="100%" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th>No.</th>
+                                    <th>...</th>
                                     <th>Group Name</th>
                                     <th>Group Type</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
+                                    <th>...</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1800,109 +2596,158 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     $result1 = get_DivsGrps($pkID);
                                     while ($row1 = loc_db_fetch_array($result1)) {
                                         $cntr += 1;
-                                        ?>
-                                        <tr>
-                                            <td><?php echo $cntr; ?></td>
-                                            <td><?php echo $row1[2]; ?></td>
-                                            <td><?php echo $row1[6]; ?></td>
-                                            <td><?php echo $row1[3]; ?></td>
-                                            <td><?php echo $row1[4]; ?></td>
+                                ?>
+                                        <tr id="pDivGrpRow_<?php echo $cntr; ?>">
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default btn-sm" onclick="getPDivGrpForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'pDivGrpForm', 'pDivGrpRow_<?php echo $cntr; ?>', 'Edit Division/Group', 13, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $sbmtdPersonID; ?>);" style="padding:2px !important;">
+                                                    <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                                <input type="hidden" id="pDivGrpRow<?php echo $cntr; ?>_PKeyID" value="<?php echo $row1[0]; ?>">
+                                                <input type="hidden" id="pDivGrpRow<?php echo $cntr; ?>_DivID" value="<?php echo $row1[1]; ?>">
+                                            </td>
+                                            <td class="lovtd"><?php echo $row1[2]; ?></td>
+                                            <td class="lovtd"><?php echo $row1[6]; ?></td>
+                                            <td class="lovtd"><?php echo $row1[3]; ?></td>
+                                            <td class="lovtd"><?php echo $row1[4]; ?></td>
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default btn-sm" onclick="delPDivGrpID('pDivGrpRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Division/Group" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <img src="cmn_images/no.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
                                         </tr>
-                                        <?php
+                                <?php
                                     }
                                 }
                                 ?>
                             </tbody>
                         </table>
-                    </div> 
+                    </div>
                 </fieldset>
             </div>
-            <div class="col-lg-6"> 
-                <fieldset class="basic_person_fs4"><legend class="basic_person_lg">IMMEDIATE SUPERVISORS</legend> 
-                    <div  class="col-md-12">
-                        <table id="immdteSprvsrsEDT" class="table table-striped table-bordered table-responsive orgAsgnmentsTblsEDT" cellspacing="0" width="100%" style="width:100%;">
+            <div class="col-lg-6">
+                <fieldset class="">
+                    <legend class="basic_person_lg">IMMEDIATE SUPERVISORS</legend>
+                    <div class="col-md-12" style="padding:0px 0px 0px 0px;">
+                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getPSuprvsrForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'pSuprvsrForm', '', 'Add/Edit Supervisor', 16, 'ADD', -1, <?php echo $pkID; ?>);">
+                            <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                            Add Supervisor
+                        </button>
+                        <table id="pSuprvsrTable" class="table table-striped table-bordered table-responsive orgAsgnmentsTblsEDT" cellspacing="0" width="100%" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th>No.</th>
-                                    <th>ID No. of Supervisor</th>
-                                    <th>Name of Supervisor</th>
+                                    <th>...</th>
+                                    <th>ID/Name of Supervisor</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
+                                    <th>...</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                 if ($pkID > 0) {
                                     $cntr = 0;
-
                                     $result1 = get_Spvsrs($pkID);
                                     while ($row1 = loc_db_fetch_array($result1)) {
                                         $cntr += 1;
-                                        ?>
-                                        <tr>
-                                            <td><?php echo $cntr; ?></td>
-                                            <td><?php echo $row1[2]; ?></td>
-                                            <td><?php echo $row1[3]; ?></td>
-                                            <td><?php echo $row1[4]; ?></td>
-                                            <td><?php echo $row1[5]; ?></td>
+                                ?>
+                                        <tr id="pSuprvsrRow_<?php echo $cntr; ?>">
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default btn-sm" onclick="getPSuprvsrForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'pSuprvsrForm', 'pSuprvsrRow_<?php echo $cntr; ?>', 'Edit Supervisor', 16, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $sbmtdPersonID; ?>);" style="padding:2px !important;">
+                                                    <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                                <input type="hidden" id="pSuprvsrRow<?php echo $cntr; ?>_PKeyID" value="<?php echo $row1[0]; ?>">
+                                                <input type="hidden" id="pSuprvsrRow<?php echo $cntr; ?>_SuprvsrID" value="<?php echo $row1[1]; ?>">
+                                            </td>
+                                            <td class="lovtd"><?php echo $row1[3] . " (" . $row1[2] . ")"; ?></td>
+                                            <td class="lovtd"><?php echo $row1[4]; ?></td>
+                                            <td class="lovtd"><?php echo $row1[5]; ?></td>
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default btn-sm" onclick="delPSuprvsrID('pSuprvsrRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Supervisor" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <img src="cmn_images/no.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
                                         </tr>
-                                        <?php
+                                <?php
                                     }
                                 }
                                 ?>
                             </tbody>
                         </table>
-                    </div> 
+                    </div>
                 </fieldset>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-6">
-                <fieldset class="basic_person_fs4"><legend class="basic_person_lg">SITES/LOCATIONS</legend> 
-                    <div  class="col-md-12">
-                        <table id="sitesLocsEDT" class="table table-striped table-bordered table-responsive orgAsgnmentsTblsEDT" cellspacing="0" width="100%" style="width:100%;">
+                <fieldset class="">
+                    <legend class="basic_person_lg">SITES/LOCATIONS</legend>
+                    <div class="col-md-12" style="padding:0px 0px 0px 0px;">
+                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getPSiteLocForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'pSiteLocForm', '', 'Add/Edit Site/Location', 14, 'ADD', -1, <?php echo $pkID; ?>);">
+                            <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                            Add Sites/Location
+                        </button>
+                        <table id="pSiteLocTable" class="table table-striped table-bordered table-responsive orgAsgnmentsTblsEDT" cellspacing="0" width="100%" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th>No.</th>
+                                    <th>...</th>
                                     <th>Site/Branch Name</th>
+                                    <th>Type</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
+                                    <th>...</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                 if ($pkID > 0) {
                                     $cntr = 0;
-
                                     $result1 = get_SitesLocs($pkID);
                                     while ($row1 = loc_db_fetch_array($result1)) {
                                         $cntr += 1;
-                                        ?>
-                                        <tr>
-                                            <td><?php echo $cntr; ?></td>
-                                            <td><?php echo $row1[2]; ?></td>
-                                            <td><?php echo $row1[3]; ?></td>
-                                            <td><?php echo $row1[4]; ?></td>
+                                ?>
+                                        <tr id="pSiteLocRow_<?php echo $cntr; ?>">
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default btn-sm" onclick="getPSiteLocForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'pSiteLocForm', 'pSiteLocRow_<?php echo $cntr; ?>', 'Edit Site/Location', 14, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $sbmtdPersonID; ?>);" style="padding:2px !important;">
+                                                    <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                                <input type="hidden" id="pSiteLocRow<?php echo $cntr; ?>_PKeyID" value="<?php echo $row1[0]; ?>">
+                                                <input type="hidden" id="pSiteLocRow<?php echo $cntr; ?>_SiteLocID" value="<?php echo $row1[1]; ?>">
+                                            </td>
+                                            <td class="lovtd"><?php echo $row1[2]; ?></td>
+                                            <td class="lovtd"><?php echo $row1[5]; ?></td>
+                                            <td class="lovtd"><?php echo $row1[3]; ?></td>
+                                            <td class="lovtd"><?php echo $row1[4]; ?></td>
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default btn-sm" onclick="delPSiteLocID('pSiteLocRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Site/Location" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <img src="cmn_images/no.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
                                         </tr>
-                                        <?php
+                                <?php
                                     }
                                 }
                                 ?>
                             </tbody>
                         </table>
-                    </div> 
+                    </div>
                 </fieldset>
             </div>
             <div class="col-lg-6">
-                <fieldset class="basic_person_fs4"><legend class="basic_person_lg">JOBS</legend> 
-                    <div  class="col-md-12">
-                        <table id="jobsEDT" class="table table-striped table-bordered table-responsive orgAsgnmentsTblsEDT" cellspacing="0" width="100%" style="width:100%;">
+                <fieldset class="">
+                    <legend class="basic_person_lg">JOBS</legend>
+                    <div class="col-md-12" style="padding:0px 0px 0px 0px;">
+                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getPJobForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'pJobForm', '', 'Add/Edit Job', 17, 'ADD', -1, <?php echo $pkID; ?>);">
+                            <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                            Add Job
+                        </button>
+                        <table id="pJobTable" class="table table-striped table-bordered table-responsive orgAsgnmentsTblsEDT" cellspacing="0" width="100%" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th>No.</th>
+                                    <th>...</th>
                                     <th>Job Name</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
+                                    <th>...</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1913,70 +2758,104 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     $result1 = get_Jobs($pkID);
                                     while ($row1 = loc_db_fetch_array($result1)) {
                                         $cntr += 1;
-                                        ?>
-                                        <tr>
-                                            <td><?php echo $cntr; ?></td>
-                                            <td><?php echo $row1[2]; ?></td>
-                                            <td><?php echo $row1[3]; ?></td>
-                                            <td><?php echo $row1[4]; ?></td>
+                                ?>
+                                        <tr id="pJobRow_<?php echo $cntr; ?>">
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default btn-sm" onclick="getPJobForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'pJobForm', 'pJobRow_<?php echo $cntr; ?>', 'Edit Job', 17, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $sbmtdPersonID; ?>);" style="padding:2px !important;">
+                                                    <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                                <input type="hidden" id="pJobRow<?php echo $cntr; ?>_PKeyID" value="<?php echo $row1[0]; ?>">
+                                                <input type="hidden" id="pJobRow<?php echo $cntr; ?>_JobID" value="<?php echo $row1[1]; ?>">
+                                            </td>
+                                            <td class="lovtd"><?php echo $row1[2]; ?></td>
+                                            <td class="lovtd"><?php echo $row1[3]; ?></td>
+                                            <td class="lovtd"><?php echo $row1[4]; ?></td>
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default btn-sm" onclick="delPJobID('pJobRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Job" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <img src="cmn_images/no.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
                                         </tr>
-                                        <?php
+                                <?php
                                     }
                                 }
                                 ?>
                             </tbody>
                         </table>
-                    </div> 
+                    </div>
                 </fieldset>
-            </div>                                        
+            </div>
         </div>
         <div class="row">
             <div class="col-lg-6">
-                <fieldset class="basic_person_fs4"><legend class="basic_person_lg">GRADES</legend> 
-                    <div  class="col-md-12">
-                        <table id="gradesEDT" class="table table-striped table-bordered table-responsive orgAsgnmentsTblsEDT" cellspacing="0" width="100%" style="width:100%;">
+                <fieldset class="">
+                    <legend class="basic_person_lg">GRADES</legend>
+                    <div class="col-md-12" style="padding:0px 0px 0px 0px;">
+                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getPGradeForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'pGradeForm', '', 'Add/Edit Grade', 15, 'ADD', -1, <?php echo $pkID; ?>);">
+                            <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                            Add Grade
+                        </button>
+                        <table id="pGradeTable" class="table table-striped table-bordered table-responsive orgAsgnmentsTblsEDT" cellspacing="0" width="100%" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th>No.</th>
+                                    <th>...</th>
                                     <th>Grade Name</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
+                                    <th>...</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                 if ($pkID > 0) {
                                     $cntr = 0;
-
                                     $result1 = get_Grades($pkID);
                                     while ($row1 = loc_db_fetch_array($result1)) {
                                         $cntr += 1;
-                                        ?>
-                                        <tr>
-                                            <td><?php echo $cntr; ?></td>
-                                            <td><?php echo $row1[2]; ?></td>
-                                            <td><?php echo $row1[3]; ?></td>
-                                            <td><?php echo $row1[4]; ?></td>
+                                ?>
+                                        <tr id="pGradeRow_<?php echo $cntr; ?>">
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default btn-sm" onclick="getPGradeForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'pGradeForm', 'pGradeRow_<?php echo $cntr; ?>', 'Edit Grade', 15, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $sbmtdPersonID; ?>);" style="padding:2px !important;">
+                                                    <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                                <input type="hidden" id="pGradeRow<?php echo $cntr; ?>_PKeyID" value="<?php echo $row1[0]; ?>">
+                                                <input type="hidden" id="pGradeRow<?php echo $cntr; ?>_GradeID" value="<?php echo $row1[1]; ?>">
+                                            </td>
+                                            <td class="lovtd"><?php echo $row1[2]; ?></td>
+                                            <td class="lovtd"><?php echo $row1[3]; ?></td>
+                                            <td class="lovtd"><?php echo $row1[4]; ?></td>
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default btn-sm" onclick="delPGradeID('pGradeRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Grade" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <img src="cmn_images/no.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
                                         </tr>
-                                        <?php
+                                <?php
                                     }
                                 }
                                 ?>
                             </tbody>
                         </table>
-                    </div> 
+                    </div>
                 </fieldset>
             </div>
             <div class="col-lg-6">
-                <fieldset class="basic_person_fs4"><legend class="basic_person_lg">POSITIONS</legend> 
-                    <div  class="col-md-12">
-                        <table id="positionsEDT" class="table table-striped table-bordered table-responsive orgAsgnmentsTblsEDT" cellspacing="0" width="100%" style="width:100%;">
+                <fieldset class="">
+                    <legend class="basic_person_lg">POSITIONS</legend>
+                    <div class="col-md-12" style="padding:0px 0px 0px 0px;">
+                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getPGradeForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'pPositionForm', '', 'Add/Edit Position', 18, 'ADD', -1, <?php echo $pkID; ?>);">
+                            <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                            Add Position
+                        </button>
+                        <table id="pPositionTable" class="table table-striped table-bordered table-responsive orgAsgnmentsTblsEDT" cellspacing="0" width="100%" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th>No.</th>
+                                    <th>...</th>
                                     <th>Position Name</th>
+                                    <th>Division/Group</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
+                                    <th>...</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1986,24 +2865,37 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     $result1 = get_Pos($pkID);
                                     while ($row1 = loc_db_fetch_array($result1)) {
                                         $cntr += 1;
-                                        ?>
-                                        <tr>
-                                            <td><?php echo $cntr; ?></td>
-                                            <td><?php echo $row1[2]; ?></td>
-                                            <td><?php echo $row1[3]; ?></td>
-                                            <td><?php echo $row1[4]; ?></td>
+                                ?>
+                                        <tr id="pPositionRow_<?php echo $cntr; ?>">
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default btn-sm" onclick="getPPositionForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'pPositionForm', 'pPositionRow_<?php echo $cntr; ?>', 'Edit Position', 18, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $sbmtdPersonID; ?>);" style="padding:2px !important;">
+                                                    <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                                <input type="hidden" id="pPositionRow<?php echo $cntr; ?>_PKeyID" value="<?php echo $row1[0]; ?>">
+                                                <input type="hidden" id="pPositionRow<?php echo $cntr; ?>_PositionID" value="<?php echo $row1[1]; ?>">
+                                                <input type="hidden" id="pPositionRow<?php echo $cntr; ?>_PositionDivID" value="<?php echo $row1[5]; ?>">
+                                            </td>
+                                            <td class="lovtd"><?php echo $row1[2]; ?></td>
+                                            <td class="lovtd"><?php echo $row1[6]; ?></td>
+                                            <td class="lovtd"><?php echo $row1[3]; ?></td>
+                                            <td class="lovtd"><?php echo $row1[4]; ?></td>
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default btn-sm" onclick="delPPositionID('pPositionRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Position" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <img src="cmn_images/no.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
                                         </tr>
-                                        <?php
+                                <?php
                                     }
                                 }
                                 ?>
                             </tbody>
                         </table>
-                    </div> 
+                    </div>
                 </fieldset>
-            </div>                                        
+            </div>
         </div>
-        <?php
+    <?php
     } else if ($vwtyp == "3") {
         /* Curiculumn Vitae */
         if ($sbmtdPersonID <= 0) {
@@ -2012,11 +2904,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             $pkID = $sbmtdPersonID;
         }
         $cntr = 0;
-        ?> 
+    ?>
         <div class="row">
-            <div class="col-md-12"> 
-                <fieldset class="basic_person_fs4"><legend class="basic_person_lg">EDUCATIONAL BACKGROUND</legend> 
-                    <div  class="col-md-12">
+            <div class="col-md-12">
+                <fieldset class="basic_person_fs4">
+                    <legend class="basic_person_lg">EDUCATIONAL BACKGROUND</legend>
+                    <div class="col-md-12">
                         <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getEducBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'educBkgrdForm', '', 'Add/Edit Educational Background', 20, 'ADD', -1, <?php echo $pkID; ?>);">
                             <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                             Add Educational Background
@@ -2024,7 +2917,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <table class="table table-striped table-bordered table-responsive cvTblsEDT" id="educBkgrdTable" cellspacing="0" width="100%" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th>&nbsp;</th>		
+                                    <th>&nbsp;</th>
                                     <th>Course Name</th>
                                     <th>School/Institution</th>
                                     <th>School Location</th>
@@ -2033,7 +2926,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <th>Certificate Obtained</th>
                                     <th>Certificate Type</th>
                                     <th>Date Awarded</th>
-                                    <th>&nbsp;</th>	
+                                    <th>&nbsp;</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2047,14 +2940,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     }
                                     while ($row1 = loc_db_fetch_array($result1)) {
                                         $cntr += 1;
-                                        ?>
+                                ?>
                                         <tr id="educBkgrdRow_<?php echo $cntr; ?>">
                                             <td class="lovtd">
                                                 <button type="button" class="btn btn-default btn-sm" onclick="getEducBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'educBkgrdForm', 'educBkgrdRow_<?php echo $cntr; ?>', 'Add/Edit Educational Background', 20, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $pkID; ?>);" style="padding:2px !important;" style="padding:2px !important;">
                                                     <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                     <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 </button>
-                                                <input type="hidden" value="<?php echo $row1[0]; ?>" id="educBkgrdRow<?php echo $cntr; ?>_PKeyID"/> 
+                                                <input type="hidden" value="<?php echo $row1[0]; ?>" id="educBkgrdRow<?php echo $cntr; ?>_PKeyID" />
                                             </td>
                                             <td class="lovtd"><?php echo $row1[1]; ?></td>
                                             <td class="lovtd"><?php echo $row1[2]; ?></td>
@@ -2070,26 +2963,27 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </button>
                                             </td>
                                         </tr>
-                                        <?php
+                                <?php
                                     }
                                 }
                                 ?>
                             </tbody>
                         </table>
-                    </div> 
+                    </div>
                 </fieldset>
             </div>
-            <div class="col-md-12"> 
-                <fieldset class="basic_person_fs4"><legend class="basic_person_lg">WORKING EXPERIENCE</legend> 
-                    <div  class="col-md-12">                        
+            <div class="col-md-12">
+                <fieldset class="basic_person_fs4">
+                    <legend class="basic_person_lg">WORKING EXPERIENCE</legend>
+                    <div class="col-md-12">
                         <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getWorkBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'workBkgrdForm', '', 'Add/Edit Work Experience', 21, 'ADD', -1, <?php echo $pkID; ?>);">
                             <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                             Add Work Experience
                         </button>
-                        <table class="table table-striped table-bordered table-responsive cvTblsEDT"  id="workBkgrdTable" cellspacing="0" width="100%" style="width:100%;">
+                        <table class="table table-striped table-bordered table-responsive cvTblsEDT" id="workBkgrdTable" cellspacing="0" width="100%" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th>&nbsp;</th>		
+                                    <th>&nbsp;</th>
                                     <th>Job Name/Title</th>
                                     <th>Institution Name</th>
                                     <th>Job Location</th>
@@ -2111,14 +3005,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     }
                                     while ($row1 = loc_db_fetch_array($result1)) {
                                         $cntr += 1;
-                                        ?>
+                                ?>
                                         <tr id="workBkgrdRow_<?php echo $cntr; ?>">
                                             <td class="lovtd">
                                                 <button type="button" class="btn btn-default btn-sm" onclick="getWorkBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'workBkgrdForm', 'workBkgrdRow_<?php echo $cntr; ?>', 'Add/Edit Work Experience', 21, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $pkID; ?>);" style="padding:2px !important;" style="padding:2px !important;">
                                                     <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                     <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 </button>
-                                                <input type="hidden" value="<?php echo $row1[0]; ?>" id="workBkgrdRow<?php echo $cntr; ?>_PKeyID"/> 
+                                                <input type="hidden" value="<?php echo $row1[0]; ?>" id="workBkgrdRow<?php echo $cntr; ?>_PKeyID" />
                                             </td>
                                             <td class="lovtd"><?php echo $row1[1]; ?></td>
                                             <td class="lovtd"><?php echo $row1[2]; ?></td>
@@ -2133,18 +3027,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </button>
                                             </td>
                                         </tr>
-                                        <?php
+                                <?php
                                     }
                                 }
                                 ?>
                             </tbody>
                         </table>
-                    </div> 
+                    </div>
                 </fieldset>
             </div>
-            <div class="col-md-12"> 
-                <fieldset class="basic_person_fs4"><legend class="basic_person_lg">SKILLS/NATURE</legend> 
-                    <div  class="col-md-12">                                                
+            <div class="col-md-12">
+                <fieldset class="basic_person_fs4">
+                    <legend class="basic_person_lg">SKILLS/NATURE</legend>
+                    <div class="col-md-12">
                         <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getSkillsForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'skillsForm', '', 'Add/Edit Skills/Nature', 22, 'ADD', -1, <?php echo $pkID; ?>);">
                             <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                             Add Skills/Nature
@@ -2152,7 +3047,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <table class="table table-striped table-bordered table-responsive cvTblsEDT" id="skillsTable" cellspacing="0" width="100%" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th>&nbsp;</th>		
+                                    <th>&nbsp;</th>
                                     <th>Languages</th>
                                     <th>Hobbies</th>
                                     <th>Interests</th>
@@ -2174,14 +3069,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     }
                                     while ($row1 = loc_db_fetch_array($result1)) {
                                         $cntr += 1;
-                                        ?>
+                                ?>
                                         <tr id="skillsTblRow_<?php echo $cntr; ?>">
                                             <td class="lovtd">
                                                 <button type="button" class="btn btn-default btn-sm" onclick="getSkillsForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'skillsForm', 'skillsTblRow_<?php echo $cntr; ?>', 'Add/Edit Skills/Nature', 22, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $pkID; ?>);" style="padding:2px !important;" style="padding:2px !important;">
                                                     <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                     <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 </button>
-                                                <input type="hidden" value="<?php echo $row1[0]; ?>" id="skillsTblRow<?php echo $cntr; ?>_PKeyID"/> 
+                                                <input type="hidden" value="<?php echo $row1[0]; ?>" id="skillsTblRow<?php echo $cntr; ?>_PKeyID" />
                                             </td>
                                             <td class="lovtd"><?php echo $row1[1]; ?></td>
                                             <td class="lovtd"><?php echo $row1[2]; ?></td>
@@ -2196,17 +3091,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </button>
                                             </td>
                                         </tr>
-                                        <?php
+                                <?php
                                     }
                                 }
                                 ?>
                             </tbody>
                         </table>
-                    </div> 
+                    </div>
                 </fieldset>
             </div>
         </div>
-        <?php
+    <?php
     } else if ($vwtyp == "4") {
         /* All Attached Documents */
         if ($sbmtdPersonID <= 0) {
@@ -2238,17 +3133,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         $colClassType2 = "col-lg-3";
         $colClassType3 = "col-lg-4";
         $vwtyp = 5;
-        ?>                    
+    ?>
         <div class="row">
             <div class="col-md-12">
-                <div  id="attchdDocsList">
+                <div id="attchdDocsList">
                     <fieldset class="" style="padding:10px 0px 5px 0px !important;">
                         <form class="" id="attchdDocsTblForm">
                             <div class="row">
                                 <?php
                                 $nwRowHtml = urlencode("<tr id=\"attchdDocsRow__WWW123WWW\">"
-                                        . "<td class=\"lovtd\"><span>New</span></td>"
-                                        . "<td class=\"lovtd\">
+                                    . "<td class=\"lovtd\"><span>New</span></td>"
+                                    . "<td class=\"lovtd\">
                                               <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
                                               <div class=\"input-group\" style=\"width:100% !important;\">
                                                 <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"attchdDocsRow_WWW123WWW_DocCtgryNm\" value=\"\" readonly=\"true\">
@@ -2271,8 +3166,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </button>
                                           </td>
                                         </tr>");
-                                ?> 
-                                <div class="<?php echo $colClassType3; ?>" style="padding:0px 1px 0px 1px !important;"> 
+                                ?>
+                                <div class="<?php echo $colClassType3; ?>" style="padding:0px 1px 0px 1px !important;">
                                     <div class="col-md-12">
                                         <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('attchdDocsTable', 0, '<?php echo $nwRowHtml; ?>');" style="width:100% !important;">
                                             <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
@@ -2282,14 +3177,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </div>
                                 <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                                     <div class="input-group">
-                                        <input class="form-control" id="attchdDocsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAttchdDocs(event, '', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
-                                        <input id="attchdDocsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                                        <input class="form-control" id="attchdDocsSrchFor" type="text" placeholder="Search For" value="<?php
+                                                                                                                                        echo trim(str_replace("%", " ", $srchFor));
+                                                                                                                                        ?>" onkeyup="enterKeyFuncAttchdDocs(event, '', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
+                                        <input id="attchdDocsPageNo" type="hidden" value="<?php echo $pageNo; ?>">
                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdDocs('clear', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
                                             <span class="glyphicon glyphicon-remove"></span>
                                         </label>
                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdDocs('', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
                                             <span class="glyphicon glyphicon-search"></span>
-                                        </label> 
+                                        </label>
                                     </div>
                                 </div>
                                 <div class="<?php echo $colClassType2; ?>">
@@ -2297,7 +3194,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
 
                                         <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
-                                        <select data-placeholder="Select..." class="form-control chosen-select" id="attchdDocsDsplySze" style="min-width:70px !important;">                            
+                                        <select data-placeholder="Select..." class="form-control chosen-select" id="attchdDocsDsplySze" style="min-width:70px !important;">
                                             <?php
                                             $valslctdArry = array("", "", "", "", "", "", "", "");
                                             $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
@@ -2307,9 +3204,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 } else {
                                                     $valslctdArry[$y] = "";
                                                 }
-                                                ?>
-                                                <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
-                                                <?php
+                                            ?>
+                                                <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>
+                                            <?php
                                             }
                                             ?>
                                         </select>
@@ -2332,7 +3229,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </nav>
                                 </div>
                             </div>
-                            <div class="row"> 
+                            <div class="row">
                                 <div class="col-md-12">
                                     <table class="table table-striped table-bordered table-responsive" id="attchdDocsTable" cellspacing="0" width="100%" style="width:100%;min-width: 400px !important;">
                                         <thead>
@@ -2384,25 +3281,25 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         $doc_src_encrpt = "None";
                                                     }
                                                 }
-                                                ?>
-                                                <tr id="attchdDocsRow_<?php echo $cntr; ?>">                                    
+                                            ?>
+                                                <tr id="attchdDocsRow_<?php echo $cntr; ?>">
                                                     <td class="lovtd"><span><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
-                                                    <td class="lovtd">                                                                   
+                                                    <td class="lovtd">
                                                         <span><?php echo $row2[2]; ?></span>
-                                                        <input type="hidden" class="form-control" aria-label="..." id="attchdDocsRow<?php echo $cntr; ?>_AttchdDocsID" value="<?php echo $row2[0]; ?>" style="width:100% !important;">                                              
+                                                        <input type="hidden" class="form-control" aria-label="..." id="attchdDocsRow<?php echo $cntr; ?>_AttchdDocsID" value="<?php echo $row2[0]; ?>" style="width:100% !important;">
                                                     </td>
                                                     <td class="lovtd">
                                                         <?php
                                                         if ($doc_src_encrpt == "None") {
-                                                            ?>
+                                                        ?>
                                                             <span style="font-weight: bold;color:#FF0000;">
                                                                 <?php
                                                                 echo "File Not Found!";
                                                                 ?>
                                                             </span>
-                                                            <?php
+                                                        <?php
                                                         } else {
-                                                            ?>
+                                                        ?>
                                                             <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="doAjax('grp=1&typ=11&q=Download&fnm=<?php echo $doc_src_encrpt; ?>', '', 'Redirect', '', '', '');" data-toggle="tooltip" data-placement="bottom" title="Download Document">
                                                                 <img src="cmn_images/dwldicon.png" style="height:15px; width:auto; position: relative; vertical-align: middle;"> Download
                                                             </button>
@@ -2414,12 +3311,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         </button>
                                                     </td>
                                                 </tr>
-                                                <?php
+                                            <?php
                                             }
                                             ?>
                                         </tbody>
                                     </table>
-                                </div>                     
+                                </div>
                             </div>
                         </form>
                     </fieldset>
@@ -2436,7 +3333,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         ?>
         <hr style="border-top:1px dashed #ddd !important;">
         <div class="row" style="margin-top:30px !important;">
-            <div  class="col-md-12">
+            <div class="col-md-12">
                 <fieldset class="" style="padding:10px 0px 5px cccc//px !important;">
                     <legend class="basic_person_lg">Other Information</legend>
                     <form class="form-horizontal" id="OtherInfoTblForm">
@@ -2456,14 +3353,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     $result1 = getAllwdExtInfosNVals("%", "Extra Info Label", 0, 1000000000, $brghtsqlStr, $table_id, $row_pk_id, $ext_inf_tbl_name, $orgID);
                                     while ($row1 = loc_db_fetch_array($result1)) {
                                         $cntr += 1;
-                                        ?>
+                                ?>
                                         <tr>
                                             <!--<td><?php echo $cntr; ?></td>-->
                                             <td><?php echo $row1[0]; ?></td>
                                             <td><?php echo $row1[1]; ?></td>
-                                            <td><input class="form-control" id="otherInfoTblRow_<?php echo $cntr; ?>" type = "text" placeholder="" value="<?php echo $row1[2]; ?>"/></td>
+                                            <td><input class="form-control" id="otherInfoTblRow_<?php echo $cntr; ?>" type="text" placeholder="" value="<?php echo $row1[2]; ?>" /></td>
                                         </tr>
-                                        <?php
+                                <?php
                                     }
                                 }
                                 ?>
@@ -2473,7 +3370,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 </fieldset>
             </div>
         </div>
-        <?php
+    <?php
     } else if ($vwtyp == "5") {
         /* All Attached Documents */
         if ($sbmtdPersonID <= 0) {
@@ -2505,14 +3402,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         $colClassType2 = "col-lg-3";
         $colClassType3 = "col-lg-4";
         $vwtyp = 5;
-        ?>       
+    ?>
         <fieldset class="" style="padding:10px 0px 5px 0px !important;">
             <form class="" id="attchdDocsTblForm">
                 <div class="row">
                     <?php
                     $nwRowHtml = urlencode("<tr id=\"attchdDocsRow__WWW123WWW\">"
-                            . "<td class=\"lovtd\"><span>New</span></td>"
-                            . "<td class=\"lovtd\">
+                        . "<td class=\"lovtd\"><span>New</span></td>"
+                        . "<td class=\"lovtd\">
                                               <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
                                               <div class=\"input-group\" style=\"width:100% !important;\">
                                                 <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"attchdDocsRow_WWW123WWW_DocCtgryNm\" value=\"\" readonly=\"true\">
@@ -2535,8 +3432,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </button>
                                           </td>
                                         </tr>");
-                    ?> 
-                    <div class="<?php echo $colClassType3; ?>" style="padding:0px 1px 0px 1px !important;"> 
+                    ?>
+                    <div class="<?php echo $colClassType3; ?>" style="padding:0px 1px 0px 1px !important;">
                         <div class="col-md-12">
                             <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('attchdDocsTable', 0, '<?php echo $nwRowHtml; ?>');" style="width:100% !important;">
                                 <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
@@ -2546,14 +3443,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     </div>
                     <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                         <div class="input-group">
-                            <input class="form-control" id="attchdDocsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAttchdDocs(event, '', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
-                            <input id="attchdDocsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                            <input class="form-control" id="attchdDocsSrchFor" type="text" placeholder="Search For" value="<?php
+                                                                                                                            echo trim(str_replace("%", " ", $srchFor));
+                                                                                                                            ?>" onkeyup="enterKeyFuncAttchdDocs(event, '', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
+                            <input id="attchdDocsPageNo" type="hidden" value="<?php echo $pageNo; ?>">
                             <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdDocs('clear', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
                                 <span class="glyphicon glyphicon-remove"></span>
                             </label>
                             <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdDocs('', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
                                 <span class="glyphicon glyphicon-search"></span>
-                            </label> 
+                            </label>
                         </div>
                     </div>
                     <div class="<?php echo $colClassType2; ?>">
@@ -2561,7 +3460,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
 
                             <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
-                            <select data-placeholder="Select..." class="form-control chosen-select" id="attchdDocsDsplySze" style="min-width:70px !important;">                            
+                            <select data-placeholder="Select..." class="form-control chosen-select" id="attchdDocsDsplySze" style="min-width:70px !important;">
                                 <?php
                                 $valslctdArry = array("", "", "", "", "", "", "", "");
                                 $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
@@ -2571,9 +3470,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     } else {
                                         $valslctdArry[$y] = "";
                                     }
-                                    ?>
-                                    <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
-                                    <?php
+                                ?>
+                                    <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>
+                                <?php
                                 }
                                 ?>
                             </select>
@@ -2596,7 +3495,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </nav>
                     </div>
                 </div>
-                <div class="row"> 
+                <div class="row">
                     <div class="col-md-12">
                         <table class="table table-striped table-bordered table-responsive" id="attchdDocsTable" cellspacing="0" width="100%" style="width:100%;min-width: 400px !important;">
                             <thead>
@@ -2648,25 +3547,25 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $doc_src_encrpt = "None";
                                         }
                                     }
-                                    ?>
-                                    <tr id="attchdDocsRow_<?php echo $cntr; ?>">                                    
+                                ?>
+                                    <tr id="attchdDocsRow_<?php echo $cntr; ?>">
                                         <td class="lovtd"><span><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
-                                        <td class="lovtd">                                                                   
+                                        <td class="lovtd">
                                             <span><?php echo $row2[2]; ?></span>
-                                            <input type="hidden" class="form-control" aria-label="..." id="attchdDocsRow<?php echo $cntr; ?>_AttchdDocsID" value="<?php echo $row2[0]; ?>" style="width:100% !important;">                                              
+                                            <input type="hidden" class="form-control" aria-label="..." id="attchdDocsRow<?php echo $cntr; ?>_AttchdDocsID" value="<?php echo $row2[0]; ?>" style="width:100% !important;">
                                         </td>
                                         <td class="lovtd">
                                             <?php
                                             if ($doc_src_encrpt == "None") {
-                                                ?>
+                                            ?>
                                                 <span style="font-weight: bold;color:#FF0000;">
                                                     <?php
                                                     echo "File Not Found!";
                                                     ?>
                                                 </span>
-                                                <?php
+                                            <?php
                                             } else {
-                                                ?>
+                                            ?>
                                                 <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="doAjax('grp=1&typ=11&q=Download&fnm=<?php echo $doc_src_encrpt; ?>', '', 'Redirect', '', '', '');" data-toggle="tooltip" data-placement="bottom" title="Download Document">
                                                     <img src="cmn_images/dwldicon.png" style="height:15px; width:auto; position: relative; vertical-align: middle;"> Download
                                                 </button>
@@ -2678,22 +3577,22 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </button>
                                         </td>
                                     </tr>
-                                    <?php
+                                <?php
                                 }
                                 ?>
                             </tbody>
                         </table>
-                    </div>                     
+                    </div>
                 </div>
             </form>
-        </fieldset>         
-        <?php
+        </fieldset>
+    <?php
     } else if ($vwtyp == "11") {
         /* Add National ID Form */
         $ntnlIDpKey = isset($_POST['ntnlIDpKey']) ? cleanInputData($_POST['ntnlIDpKey']) : -1;
         $ntnlIDPersonID = isset($_POST['ntnlIDPersonID']) ? cleanInputData($_POST['ntnlIDPersonID']) : -1;
         $tRowElmntNm = isset($_POST['tRowElmntNm']) ? cleanInputData($_POST['tRowElmntNm']) : "";
-        ?>
+    ?>
         <form class="form-horizontal" id="ntnlIDCardsForm" style="padding:5px 20px 5px 20px;">
             <div class="row">
                 <div class="form-group form-group-sm">
@@ -2708,18 +3607,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("Countries"), $isDynmyc, -1, "", "");
                             while ($titleRow = loc_db_fetch_array($titleRslt)) {
                                 $selectedTxt = "";
-                                ?>
+                            ?>
                                 <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                <?php
+                            <?php
                             }
                             ?>
                         </select>
                     </div>
-                </div> 
+                </div>
                 <div class="form-group form-group-sm">
                     <label for="ntnlIDCardsIDTyp" class="control-label col-md-4">ID Type:</label>
                     <div class="col-md-8">
-                        <select class="form-control selectpicker rqrdFld" id="ntnlIDCardsIDTyp">  
+                        <select class="form-control selectpicker rqrdFld" id="ntnlIDCardsIDTyp">
                             <option value="" selected disabled>Please Select...</option>
                             <?php
                             $brghtStr = "";
@@ -2727,9 +3626,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("National ID Types"), $isDynmyc, -1, "", "");
                             while ($titleRow = loc_db_fetch_array($titleRslt)) {
                                 $selectedTxt = "";
-                                ?>
+                            ?>
                                 <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                <?php
+                            <?php
                             }
                             ?>
                         </select>
@@ -2738,7 +3637,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <div class="form-group form-group-sm">
                     <label for="ntnlIDCardsIDNo" class="control-label col-md-4">ID No:</label>
                     <div class="col-md-8">
-                        <input class="form-control rqrdFld" id="ntnlIDCardsIDNo" type = "text" placeholder="ID No." value=""/>
+                        <input class="form-control rqrdFld" id="ntnlIDCardsIDNo" type="text" placeholder="ID No." value="" />
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
@@ -2773,7 +3672,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <button type="button" class="btn btn-primary" onclick="saveNtnlIDForm('myFormsModal', '<?php echo $tRowElmntNm; ?>', <?php echo $ntnlIDpKey; ?>, <?php echo $ntnlIDPersonID; ?>);">Save Changes</button>
             </div>
         </form>
-        <?php
+    <?php
     } else if ($vwtyp == "12") {
         /* Add Extra Data Form */
         $addtnlPrsPkey = isset($_POST['addtnlPrsPkey']) ? cleanInputData($_POST['addtnlPrsPkey']) : -1;
@@ -2783,9 +3682,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         $tRowElementID = isset($_POST['tRowElementID']) ? cleanInputData($_POST['tRowElementID']) : "";
         $addOrEdit = isset($_POST['addOrEdit']) ? cleanInputData($_POST['addOrEdit']) : "";
         $result1 = get_PrsExtrDataGrpCols1($extDtColNum, $orgID);
-        ?>
+    ?>
         <form class="form-horizontal" id="addtnlPrsnTblrDataForm" style="padding:5px 20px 5px 20px;">
-            <div class="row">  
+            <div class="row">
                 <?php
                 while ($row1 = loc_db_fetch_array($result1)) {
                     $fieldHdngs = $row1[11];
@@ -2793,23 +3692,23 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $cntr = count($arry1);
                     for ($i = 0; $i < $row1[9]; $i++) {
                         if ($i <= $cntr - 1) {
-                            ?>
+                ?>
                             <div class="form-group form-group-sm">
                                 <label for="prsExtrTblrDtCol_<?php echo $i; ?>" class="control-label col-md-4"><?php echo $arry1[$i]; ?>:</label>
                                 <div class="col-md-8">
-                                    <input class="form-control" id="prsExtrTblrDtCol_<?php echo $i; ?>" type = "text" placeholder="" value=""/>
+                                    <input class="form-control" id="prsExtrTblrDtCol_<?php echo $i; ?>" type="text" placeholder="" value="" />
                                 </div>
                             </div>
-                            <?php
+                        <?php
                         } else {
-                            ?>
+                        ?>
                             <div class="form-group form-group-sm">
                                 <label for="prsExtrTblrDtCol_<?php echo $i; ?>" class="control-label col-md-4">&nbsp;:</label>
                                 <div class="col-md-8">
-                                    <input class="form-control" id="prsExtrTblrDtCol_<?php echo $i; ?>" type = "text" placeholder="" value=""/>
+                                    <input class="form-control" id="prsExtrTblrDtCol_<?php echo $i; ?>" type="text" placeholder="" value="" />
                                 </div>
                             </div>
-                            <?php
+                <?php
                         }
                     }
                 }
@@ -2820,30 +3719,331 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <button type="button" class="btn btn-primary" onclick="saveAddtnlDataForm('myFormsModalBody', '<?php echo $addtnlPrsPkey; ?>', '<?php echo $pipeSprtdFieldIDs; ?>',<?php echo $extDtColNum; ?>, '<?php echo $tableElmntID; ?>', '<?php echo $tRowElementID; ?>', '<?php echo $addOrEdit; ?>');">Save Changes</button>
             </div>
         </form>
-        <?php
+    <?php
     } else if ($vwtyp == "13") {
         /* Add Divisions/Groups Form */
+        $pDivGrpPkeyID = isset($_POST['pDivGrpPkeyID']) ? cleanInputData($_POST['pDivGrpPkeyID']) : -1;
+        $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+        $tRowElmntNm = isset($_POST['tRowElmntNm']) ? cleanInputData($_POST['tRowElmntNm']) : "";
+    ?>
+        <form class="form-horizontal" id="pDivGrpForm" style="padding:5px 20px 5px 20px;">
+            <div class="row">
+                <div class="form-group form-group-sm">
+                    <label for="pDivGrpName" class="control-label col-md-4">Division/Group Name:</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control rqrdFld" aria-label="..." id="pDivGrpName" value="">
+                            <input type="hidden" id="pDivGrpPKeyID" value="-1">
+                            <input type="hidden" id="pDivGrpDivID" value="-1">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Divisions/Groups', 'allOtherInputOrgID', '', '', 'radio', true, '', 'pDivGrpDivID', 'pDivGrpName', 'clear', 1, '');">
+                                <span class="glyphicon glyphicon-th-list"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="pDivGrpType" class="control-label col-md-4">Division/Group Type:</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" aria-label="..." id="pDivGrpType" value="" readonly="true">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="pDivGrpStartDate" class="control-label col-md-4">Start Date:</label>
+                    <div class="col-md-8">
+                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control rqrdFld" size="16" type="text" id="pDivGrpStartDate" value="" readonly="">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="pDivGrpEndDate" class="control-label col-md-4">End Date:</label>
+                    <div class="col-md-8">
+                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" type="text" id="pDivGrpEndDate" value="" readonly="">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="float:right;padding-right: 1px;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="savePDivGrpForm('myFormsModal', '<?php echo $pDivGrpPkeyID; ?>',<?php echo $sbmtdPersonID; ?>, '<?php echo $tRowElmntNm; ?>');">Save Changes</button>
+            </div>
+        </form>
+    <?php
     } else if ($vwtyp == "14") {
         /* Add Sites/Locations Form */
+        $pSiteLocPkeyID = isset($_POST['pSiteLocPkeyID']) ? cleanInputData($_POST['pSiteLocPkeyID']) : -1;
+        $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+        $tRowElmntNm = isset($_POST['tRowElmntNm']) ? cleanInputData($_POST['tRowElmntNm']) : "";
+    ?>
+        <form class="form-horizontal" id="pSiteLocForm" style="padding:5px 20px 5px 20px;">
+            <div class="row">
+                <div class="form-group form-group-sm">
+                    <label for="pSiteLocName" class="control-label col-md-4">Site/Location Name:</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control rqrdFld" aria-label="..." id="pSiteLocName" value="">
+                            <input type="hidden" id="pSiteLocPKeyID" value="-1">
+                            <input type="hidden" id="pSiteLocID" value="-1">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Sites/Locations', 'allOtherInputOrgID', '', '', 'radio', true, '', 'pSiteLocID', 'pSiteLocName', 'clear', 1, '');">
+                                <span class="glyphicon glyphicon-th-list"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="pSiteLocType" class="control-label col-md-4">Site/Location Type:</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" aria-label="..." id="pSiteLocType" value="" readonly="true">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="pSiteLocStartDate" class="control-label col-md-4">Start Date:</label>
+                    <div class="col-md-8">
+                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control rqrdFld" size="16" type="text" id="pSiteLocStartDate" value="" readonly="">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="pSiteLocEndDate" class="control-label col-md-4">End Date:</label>
+                    <div class="col-md-8">
+                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" type="text" id="pSiteLocEndDate" value="" readonly="">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="float:right;padding-right: 1px;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="savePSiteLocForm('myFormsModal', '<?php echo $pSiteLocPkeyID; ?>',<?php echo $sbmtdPersonID; ?>, '<?php echo $tRowElmntNm; ?>');">Save Changes</button>
+            </div>
+        </form>
+    <?php
     } else if ($vwtyp == "15") {
         /* Add Grades Form */
+        $pGradePkeyID = isset($_POST['pGradePkeyID']) ? cleanInputData($_POST['pGradePkeyID']) : -1;
+        $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+        $tRowElmntNm = isset($_POST['tRowElmntNm']) ? cleanInputData($_POST['tRowElmntNm']) : "";
+    ?>
+        <form class="form-horizontal" id="pGradeForm" style="padding:5px 20px 5px 20px;">
+            <div class="row">
+                <div class="form-group form-group-sm">
+                    <label for="pGradeName" class="control-label col-md-4">Grade Name:</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control rqrdFld" aria-label="..." id="pGradeName" value="">
+                            <input type="hidden" id="pGradePKeyID" value="-1">
+                            <input type="hidden" id="pGradeID" value="-1">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Grades', 'allOtherInputOrgID', '', '', 'radio', true, '', 'pGradeID', 'pGradeName', 'clear', 1, '');">
+                                <span class="glyphicon glyphicon-th-list"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="pGradeStartDate" class="control-label col-md-4">Start Date:</label>
+                    <div class="col-md-8">
+                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control rqrdFld" size="16" type="text" id="pGradeStartDate" value="" readonly="">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="pGradeEndDate" class="control-label col-md-4">End Date:</label>
+                    <div class="col-md-8">
+                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" type="text" id="pGradeEndDate" value="" readonly="">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="float:right;padding-right: 1px;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="savePGradeForm('myFormsModal', '<?php echo $pGradePkeyID; ?>',<?php echo $sbmtdPersonID; ?>, '<?php echo $tRowElmntNm; ?>');">Save Changes</button>
+            </div>
+        </form>
+    <?php
     } else if ($vwtyp == "16") {
         /* Add Supervisors Form */
+        $pSuprvsrPkeyID = isset($_POST['pSuprvsrPkeyID']) ? cleanInputData($_POST['pSuprvsrPkeyID']) : -1;
+        $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+        $tRowElmntNm = isset($_POST['tRowElmntNm']) ? cleanInputData($_POST['tRowElmntNm']) : "";
+        //var_dump($_POST);
+    ?>
+        <form class="form-horizontal" id="pSuprvsrForm" style="padding:5px 20px 5px 20px;">
+            <div class="row">
+                <div class="form-group form-group-sm">
+                    <label for="pSuprvsrName" class="control-label col-md-4">Supervisor Name:</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control rqrdFld" aria-label="..." id="pSuprvsrName" value="">
+                            <input type="hidden" id="pSuprvsrPKeyID" value="-1">
+                            <input type="hidden" id="pSuprvsrID" value="-1">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Person IDs', 'allOtherInputOrgID', '', '', 'radio', true, '', 'pSuprvsrID', 'pSuprvsrName', 'clear', 1, '');">
+                                <span class="glyphicon glyphicon-th-list"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="pSuprvsrStartDate" class="control-label col-md-4">Start Date:</label>
+                    <div class="col-md-8">
+                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control rqrdFld" size="16" type="text" id="pSuprvsrStartDate" value="" readonly="">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="pSuprvsrEndDate" class="control-label col-md-4">End Date:</label>
+                    <div class="col-md-8">
+                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" type="text" id="pSuprvsrEndDate" value="" readonly="">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="float:right;padding-right: 1px;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="savePSuprvsrForm('myFormsModal', '<?php echo $pSuprvsrPkeyID; ?>',<?php echo $sbmtdPersonID; ?>, '<?php echo $tRowElmntNm; ?>');">Save Changes</button>
+            </div>
+        </form>
+    <?php
     } else if ($vwtyp == "17") {
         /* Add Jobs Form */
+        $pJobPkeyID = isset($_POST['pJobPkeyID']) ? cleanInputData($_POST['pJobPkeyID']) : -1;
+        $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+        $tRowElmntNm = isset($_POST['tRowElmntNm']) ? cleanInputData($_POST['tRowElmntNm']) : "";
+    ?>
+        <form class="form-horizontal" id="pJobForm" style="padding:5px 20px 5px 20px;">
+            <div class="row">
+                <div class="form-group form-group-sm">
+                    <label for="pJobName" class="control-label col-md-4">Job Name:</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control rqrdFld" aria-label="..." id="pJobName" value="">
+                            <input type="hidden" id="pJobPKeyID" value="-1">
+                            <input type="hidden" id="pJobID" value="-1">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Jobs', 'allOtherInputOrgID', '', '', 'radio', true, '', 'pJobID', 'pJobName', 'clear', 1, '');">
+                                <span class="glyphicon glyphicon-th-list"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="pJobStartDate" class="control-label col-md-4">Start Date:</label>
+                    <div class="col-md-8">
+                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control rqrdFld" size="16" type="text" id="pJobStartDate" value="" readonly="">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="pJobEndDate" class="control-label col-md-4">End Date:</label>
+                    <div class="col-md-8">
+                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" type="text" id="pJobEndDate" value="" readonly="">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="float:right;padding-right: 1px;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="savePJobForm('myFormsModal', '<?php echo $pJobPkeyID; ?>',<?php echo $sbmtdPersonID; ?>, '<?php echo $tRowElmntNm; ?>');">Save Changes</button>
+            </div>
+        </form>
+    <?php
     } else if ($vwtyp == "18") {
         /* Add Positions Form */
+        $pPositionPkeyID = isset($_POST['pPositionPkeyID']) ? cleanInputData($_POST['pPositionPkeyID']) : -1;
+        $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+        $tRowElmntNm = isset($_POST['tRowElmntNm']) ? cleanInputData($_POST['tRowElmntNm']) : "";
+    ?>
+        <form class="form-horizontal" id="pPositionForm" style="padding:5px 20px 5px 20px;">
+            <div class="row">
+                <div class="form-group form-group-sm">
+                    <label for="pPositionName" class="control-label col-md-4">Position Name:</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control rqrdFld" aria-label="..." id="pPositionName" value="">
+                            <input type="hidden" id="pPositionPKeyID" value="-1">
+                            <input type="hidden" id="pPositionID" value="-1">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Positions', 'allOtherInputOrgID', '', '', 'radio', true, '', 'pPositionID', 'pPositionName', 'clear', 1, '');">
+                                <span class="glyphicon glyphicon-th-list"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="pPositionDivNm" class="control-label col-md-4">Division/Group:</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control rqrdFld" aria-label="..." id="pPositionDivNm" value="">
+                            <input type="hidden" id="pPositionDivID" value="-1">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Divisions/Groups', 'allOtherInputOrgID', '', '', 'radio', true, '', 'pPositionDivID', 'pPositionDivNm', 'clear', 1, '');">
+                                <span class="glyphicon glyphicon-th-list"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="pPositionStartDate" class="control-label col-md-4">Start Date:</label>
+                    <div class="col-md-8">
+                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control rqrdFld" size="16" type="text" id="pPositionStartDate" value="" readonly="">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="pPositionEndDate" class="control-label col-md-4">End Date:</label>
+                    <div class="col-md-8">
+                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" type="text" id="pPositionEndDate" value="" readonly="">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="float:right;padding-right: 1px;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="savePPositionForm('myFormsModal', '<?php echo $pPositionPkeyID; ?>',<?php echo $sbmtdPersonID; ?>, '<?php echo $tRowElmntNm; ?>');">Save Changes</button>
+            </div>
+        </form>
+    <?php
     } else if ($vwtyp == "20") {
         /* Add Educational Background Form */
         $educBkgrdPkeyID = isset($_POST['educBkgrdPkeyID']) ? cleanInputData($_POST['educBkgrdPkeyID']) : -1;
         $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
         $tRowElmntNm = isset($_POST['tRowElmntNm']) ? cleanInputData($_POST['tRowElmntNm']) : "";
-        ?>
+    ?>
         <form class="form-horizontal" id="educBkgrdForm" style="padding:5px 20px 5px 20px;">
             <div class="row">
                 <div class="form-group form-group-sm">
                     <label for="educBkgrdCourseName" class="control-label col-md-4">Course Name:</label>
-                    <div  class="col-md-8">
+                    <div class="col-md-8">
                         <div class="input-group">
                             <input type="text" class="form-control rqrdFld" aria-label="..." id="educBkgrdCourseName" value="">
                             <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'CV Courses', '', '', '', 'radio', true, '', 'educBkgrdCourseName', '', 'clear', 1, '');">
@@ -2854,7 +4054,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 </div>
                 <div class="form-group form-group-sm">
                     <label for="educBkgrdSchool" class="control-label col-md-4">School / Institution:</label>
-                    <div  class="col-md-8">
+                    <div class="col-md-8">
                         <div class="input-group">
                             <input type="text" class="form-control rqrdFld" aria-label="..." id="educBkgrdSchool" value="">
                             <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Schools/Organisations/Institutions', '', '', '', 'radio', true, '', 'educBkgrdSchool', '', 'clear', 1, '');">
@@ -2865,7 +4065,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 </div>
                 <div class="form-group form-group-sm">
                     <label for="educBkgrdLoc" class="control-label col-md-4">Location:</label>
-                    <div  class="col-md-8">
+                    <div class="col-md-8">
                         <div class="input-group">
                             <input type="text" class="form-control rqrdFld" aria-label="..." id="educBkgrdLoc" value="">
                             <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Other Locations', '', '', '', 'radio', true, '', 'educBkgrdLoc', '', 'clear', 1, '');">
@@ -2873,7 +4073,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             </label>
                         </div>
                     </div>
-                </div>                
+                </div>
                 <div class="form-group form-group-sm">
                     <label for="educBkgrdStartDate" class="control-label col-md-4">Start Date:</label>
                     <div class="col-md-8">
@@ -2893,11 +4093,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
                     </div>
-                </div>                
+                </div>
                 <div class="form-group form-group-sm">
                     <label for="educBkgrdCertObtnd" class="control-label col-md-4">Certificate Obtained:</label>
                     <div class="col-md-8">
-                        <select class="form-control selectpicker" id="educBkgrdCertObtnd">  
+                        <select class="form-control selectpicker" id="educBkgrdCertObtnd">
                             <option value="" selected disabled>Please Select...</option>
                             <?php
                             $brghtStr = "";
@@ -2905,18 +4105,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("Certificate Names"), $isDynmyc, -1, "", "");
                             while ($titleRow = loc_db_fetch_array($titleRslt)) {
                                 $selectedTxt = "";
-                                ?>
+                            ?>
                                 <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                <?php
+                            <?php
                             }
                             ?>
                         </select>
                     </div>
-                </div>                
+                </div>
                 <div class="form-group form-group-sm">
                     <label for="educBkgrdCertTyp" class="control-label col-md-4">Certificate Type:</label>
                     <div class="col-md-8">
-                        <select class="form-control selectpicker" id="educBkgrdCertTyp">  
+                        <select class="form-control selectpicker" id="educBkgrdCertTyp">
                             <option value="" selected disabled>Please Select...</option>
                             <?php
                             $brghtStr = "";
@@ -2924,9 +4124,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("Qualification Types"), $isDynmyc, -1, "", "");
                             while ($titleRow = loc_db_fetch_array($titleRslt)) {
                                 $selectedTxt = "";
-                                ?>
+                            ?>
                                 <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                <?php
+                            <?php
                             }
                             ?>
                         </select>
@@ -2948,18 +4148,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <button type="button" class="btn btn-primary" onclick="saveEducBkgrdForm('myFormsModal', '<?php echo $educBkgrdPkeyID; ?>',<?php echo $sbmtdPersonID; ?>, '<?php echo $tRowElmntNm; ?>');">Save Changes</button>
             </div>
         </form>
-        <?php
+    <?php
     } else if ($vwtyp == "21") {
         /* Add Work Experience Form */
         $workBkgrdPkeyID = isset($_POST['workBkgrdPkeyID']) ? cleanInputData($_POST['workBkgrdPkeyID']) : -1;
         $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
         $tRowElmntNm = isset($_POST['tRowElmntNm']) ? cleanInputData($_POST['tRowElmntNm']) : "";
-        ?>
+    ?>
         <form class="form-horizontal" id="workBkgrdForm" style="padding:5px 20px 5px 20px;">
             <div class="row">
                 <div class="form-group form-group-sm">
                     <label for="workBkgrdJobName" class="control-label col-md-4">Job Name / Title:</label>
-                    <div  class="col-md-8">
+                    <div class="col-md-8">
                         <div class="input-group">
                             <input type="text" class="form-control rqrdFld" aria-label="..." id="workBkgrdJobName" value="">
                             <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Jobs/Professions/Occupations', '', '', '', 'radio', true, '', 'workBkgrdJobName', '', 'clear', 1, '');">
@@ -2970,7 +4170,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 </div>
                 <div class="form-group form-group-sm">
                     <label for="workBkgrdInstitution" class="control-label col-md-4">Institution:</label>
-                    <div  class="col-md-8">
+                    <div class="col-md-8">
                         <div class="input-group">
                             <input type="text" class="form-control rqrdFld" aria-label="..." id="workBkgrdInstitution" value="">
                             <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Schools/Organisations/Institutions', '', '', '', 'radio', true, '', 'workBkgrdInstitution', '', 'clear', 1, '');">
@@ -2981,7 +4181,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 </div>
                 <div class="form-group form-group-sm">
                     <label for="workBkgrdLoc" class="control-label col-md-4">Location:</label>
-                    <div  class="col-md-8">
+                    <div class="col-md-8">
                         <div class="input-group">
                             <input type="text" class="form-control rqrdFld" aria-label="..." id="workBkgrdLoc" value="">
                             <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Other Locations', '', '', '', 'radio', true, '', 'workBkgrdLoc', '', 'clear', 1, '');">
@@ -2989,7 +4189,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             </label>
                         </div>
                     </div>
-                </div>                
+                </div>
                 <div class="form-group form-group-sm">
                     <label for="workBkgrdStartDate" class="control-label col-md-4">Start Date:</label>
                     <div class="col-md-8">
@@ -3009,13 +4209,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
                     </div>
-                </div>                
+                </div>
                 <div class="form-group form-group-sm">
                     <label for="workBkgrdJobDesc" class="control-label col-md-4">Job Description:</label>
                     <div class="col-md-8">
                         <textarea class="form-control" id="workBkgrdJobDesc" cols="2" rows="2" placeholder="Job Description" rows="2"></textarea>
                     </div>
-                </div>                
+                </div>
                 <div class="form-group form-group-sm">
                     <label for="workBkgrdAchvmnts" class="control-label col-md-4">Feats / Achievements:</label>
                     <div class="col-md-8">
@@ -3028,18 +4228,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <button type="button" class="btn btn-primary" onclick="saveWorkBkgrdForm('myFormsModal', '<?php echo $workBkgrdPkeyID; ?>',<?php echo $sbmtdPersonID; ?>, '<?php echo $tRowElmntNm; ?>');">Save Changes</button>
             </div>
         </form>
-        <?php
+    <?php
     } else if ($vwtyp == "22") {
         /* Add Skills/Nature Form */
         $skillsPkeyID = isset($_POST['skillsPkeyID']) ? cleanInputData($_POST['skillsPkeyID']) : -1;
         $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
         $tRowElmntNm = isset($_POST['tRowElmntNm']) ? cleanInputData($_POST['tRowElmntNm']) : "";
-        ?>
+    ?>
         <form class="form-horizontal" id="skillsForm" style="padding:5px 20px 5px 20px;">
             <div class="row">
                 <div class="form-group form-group-sm">
                     <label for="skillsLanguages" class="control-label col-md-4">Languages:</label>
-                    <div  class="col-md-8">
+                    <div class="col-md-8">
                         <div class="input-group">
                             <input type="text" class="form-control" aria-label="..." id="skillsLanguages" value="">
                             <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Languages', '', '', '', 'check', true, '', 'skillsLanguages', '', 'clear', 1, '');">
@@ -3050,7 +4250,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 </div>
                 <div class="form-group form-group-sm">
                     <label for="skillsHobbies" class="control-label col-md-4">Hobbies:</label>
-                    <div  class="col-md-8">
+                    <div class="col-md-8">
                         <div class="input-group">
                             <input type="text" class="form-control" aria-label="..." id="skillsHobbies" value="">
                             <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Hobbies', '', '', '', 'check', true, '', 'skillsHobbies', '', 'clear', 1, '');">
@@ -3061,7 +4261,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 </div>
                 <div class="form-group form-group-sm">
                     <label for="skillsInterests" class="control-label col-md-4">Interests:</label>
-                    <div  class="col-md-8">
+                    <div class="col-md-8">
                         <div class="input-group">
                             <input type="text" class="form-control" aria-label="..." id="skillsInterests" value="">
                             <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Interests', '', '', '', 'check', true, '', 'skillsInterests', '', 'clear', 1, '');">
@@ -3072,7 +4272,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 </div>
                 <div class="form-group form-group-sm">
                     <label for="skillsConduct" class="control-label col-md-4">Conduct:</label>
-                    <div  class="col-md-8">
+                    <div class="col-md-8">
                         <div class="input-group">
                             <input type="text" class="form-control" aria-label="..." id="skillsConduct" value="">
                             <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Conduct', '', '', '', 'check', true, '', 'skillsConduct', '', 'clear', 1, '');">
@@ -3083,7 +4283,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 </div>
                 <div class="form-group form-group-sm">
                     <label for="skillsAttitudes" class="control-label col-md-4">Attitudes:</label>
-                    <div  class="col-md-8">
+                    <div class="col-md-8">
                         <div class="input-group">
                             <input type="text" class="form-control" aria-label="..." id="skillsAttitudes" value="">
                             <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Attitudes', '', '', '', 'check', true, '', 'skillsAttitudes', '', 'clear', 1, '');">
@@ -3091,7 +4291,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             </label>
                         </div>
                     </div>
-                </div>                
+                </div>
                 <div class="form-group form-group-sm">
                     <label for="skillsStartDate" class="control-label col-md-4">Start Date:</label>
                     <div class="col-md-8">
@@ -3118,53 +4318,78 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <button type="button" class="btn btn-primary" onclick="saveSkillsForm('myFormsModal', '<?php echo $skillsPkeyID; ?>',<?php echo $sbmtdPersonID; ?>, '<?php echo $tRowElmntNm; ?>');">Save Changes</button>
             </div>
         </form>
-        <?php
+    <?php
     } else if ($vwtyp == 23) {
         /* Add Basic Person Form */
-        ?>   
-        <div class="row"row style="margin: 0px 0px 10px 0px !important;">
+        $daGender = isset($_POST['daGender']) ? cleanInputData($_POST['daGender']) : "";
+        $daNationality = isset($_POST['daNationality']) ? cleanInputData($_POST['daNationality']) : "";
+        $daReligion = isset($_POST['daReligion']) ? cleanInputData($_POST['daReligion']) : "";
+        $daRelType = isset($_POST['daRelType']) ? cleanInputData($_POST['daRelType']) : "";
+        $daRelCause = isset($_POST['daRelCause']) ? cleanInputData($_POST['daRelCause']) : "";
+        $iDPrfxComboBox = isset($_POST['iDPrfxComboBox']) ? cleanInputData($_POST['iDPrfxComboBox']) : "";
+        $daPrsnLocalID = getNewLocIDNumber("", $iDPrfxComboBox);
+        //echo "daPrsnLocalID::".$daPrsnLocalID;
+        $orgType = getPssblValNm((int) (getGnrlRecNm(
+            "org.org_details",
+            "org_id",
+            "org_typ_id",
+            $orgID
+        )));
+        $daReligionLbl = "Religion:";
+        if (strtoupper($orgType) == "CHURCH") {
+            $daReligionLbl = "Place of Worship / Name of Service:";
+        }
+    ?>
+        <div class="row" row style="margin: 0px 0px 10px 0px !important;">
             <div class="col-md-12" style="padding:0px 0px 0px 15px !important;">
                 <div class="" style="padding:0px 0px 0px 0px;float:right !important;">
                     <?php
                     $actType = 2;
                     ?>
-                    <button type="button" class="btn btn-default btn-sm" style="" onclick="saveBasicPrsnData(<?php echo $actType; ?>);"><img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">SAVE</button>
+                    <button type="button" class="btn btn-default btn-sm" style="margin-bottom: 1px;height:30px;" onclick="saveBasicPrsnData(<?php echo $actType; ?>, 0, 'myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', '<?php echo $formTitle; ?>', 0, 2, '<?php echo $addOrEdit; ?>', 'ReloadDialog');">
+                        <img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">SAVE&nbsp;
+                    </button>
+                    <!--<button type="button" class="btn btn-default btn-sm" style="" onclick="saveBasicPrsnData(<?php echo $actType; ?>,0);">
+            <img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">SAVE
+            </button>-->
                 </div>
-            </div>                    
+            </div>
         </div>
-        <div class = "row">
-            <div class = "col-md-12">
-                <form class = "form-horizontal" id="bscPrsnPrflForm">
-                    <div class = "row">
-                        <div class = "col-lg-4">
-                            <fieldset class = "basic_person_fs1"><legend class = "basic_person_lg">Person's Picture</legend>
+        <div class="row">
+            <div class="col-md-12">
+                <form class="form-horizontal" id="bscPrsnPrflForm">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <fieldset class="basic_person_fs1">
+                                <legend class="basic_person_lg">Person's Picture</legend>
                                 <div style="margin-bottom: 10px;">
-                                    <img src="cmn_images/image_up.png" alt="..." id="img1Test" class="img-rounded center-block img-responsive" style="height: 195px !important; width: auto !important;">                                            
+                                    <img src="cmn_images/image_up.png" alt="..." id="img1Test" class="img-rounded center-block img-responsive" style="height: 195px !important; width: auto !important;">
                                 </div>
                                 <div class="form-group form-group-sm">
                                     <div class="col-md-12">
                                         <div class="input-group">
                                             <label class="btn btn-primary btn-file input-group-addon">
-                                                Browse... <input type="file" id="daPrsnPicture" name="input1Test" onchange="changeImgSrc(this, '#img1Test', '#img1SrcLoc');" class="btn btn-default"  style="display: none;">
+                                                Browse... <input type="file" id="daPrsnPicture" name="input1Test" onchange="changeImgSrc(this, '#img1Test', '#img1SrcLoc');" class="btn btn-default" style="display: none;">
                                             </label>
-                                            <input type = "text" class = "form-control" aria-label = "..." id = "img1SrcLoc" value = "">
+                                            <input type="text" class="form-control" aria-label="..." id="img1SrcLoc" value="">
                                         </div>
                                     </div>
                                 </div>
                             </fieldset>
                         </div>
-                        <div class = "col-lg-4">
-                            <fieldset class = "basic_person_fs1"><legend class = "basic_person_lg">Names</legend>
-                                <div class = "form-group form-group-sm">
-                                    <label for = "daPrsnLocalID" class = "control-label col-md-4">ID No:</label>
-                                    <div class = "col-md-8">
-                                        <input class="form-control rqrdFld" id="daPrsnLocalID" type = "text" placeholder="ID No" value=""/>
+                        <div class="col-lg-4">
+                            <fieldset class="basic_person_fs1">
+                                <legend class="basic_person_lg">Names</legend>
+                                <div class="form-group form-group-sm">
+                                    <label for="daPrsnLocalID" class="control-label col-md-4">ID No:</label>
+                                    <div class="col-md-8">
+                                        <input class="form-control rqrdFld" id="daPrsnLocalID" type="text" placeholder="ID No" value="<?php echo $daPrsnLocalID; ?>" />
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daTitle" class="control-label col-md-4">Title:</label>
-                                    <div  class="col-md-8">
-                                        <select class="form-control rqrdFld" id="daTitle" >
+                                    <div class="col-md-8">
+                                        <select class="form-control" id="daTitle">
                                             <option value="">&nbsp;</option>
                                             <?php
                                             $brghtStr = "";
@@ -3172,36 +4397,36 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("Person Titles"), $isDynmyc, -1, "", "");
                                             while ($titleRow = loc_db_fetch_array($titleRslt)) {
                                                 $selectedTxt = "";
-                                                ?>
+                                            ?>
                                                 <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                                <?php
+                                            <?php
                                             }
                                             ?>
                                         </select>
                                     </div>
-                                </div>  
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daFirstName" class="control-label col-md-4">First Name:</label>
-                                    <div  class="col-md-8">
-                                        <input class="form-control rqrdFld" id="daFirstName" type = "text" placeholder="First Name" value=""/>
+                                    <div class="col-md-8">
+                                        <input class="form-control rqrdFld" id="daFirstName" type="text" placeholder="First Name" value="" />
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daSurName" class="control-label col-md-4">Surname:</label>
-                                    <div  class="col-md-8">
-                                        <input class="form-control rqrdFld" id="daSurName" type = "text" placeholder="Surname" value=""/>
+                                    <div class="col-md-8">
+                                        <input class="form-control rqrdFld" id="daSurName" type="text" placeholder="Surname" value="" />
                                     </div>
-                                </div>     
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daOtherNames" class="control-label col-md-4">Other Names:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <textarea class="form-control" id="daOtherNames" cols="2" placeholder="Other Names" rows="3"></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daGender" class="control-label col-md-4">Gender:</label>
-                                    <div  class="col-md-8">
-                                        <select class="form-control rqrdFld" id="daGender" >
+                                    <div class="col-md-8">
+                                        <select class="form-control rqrdFld" id="daGender">
                                             <option value="">&nbsp;</option>
                                             <?php
                                             $brghtStr = "";
@@ -3209,22 +4434,26 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("Gender"), $isDynmyc, -1, "", "");
                                             while ($titleRow = loc_db_fetch_array($titleRslt)) {
                                                 $selectedTxt = "";
-                                                ?>
+                                                if ($daGender == $titleRow[0]) {
+                                                    $selectedTxt = "selected";
+                                                }
+                                            ?>
                                                 <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                                <?php
+                                            <?php
                                             }
                                             ?>
                                         </select>
                                     </div>
-                                </div> 
+                                </div>
                             </fieldset>
                         </div>
-                        <div class="col-lg-4"> 
-                            <fieldset class="basic_person_fs1"><legend class="basic_person_lg">Personal Data</legend>
+                        <div class="col-lg-4">
+                            <fieldset class="basic_person_fs1">
+                                <legend class="basic_person_lg">Personal Data</legend>
                                 <div class="form-group form-group-sm">
                                     <label for="daMaritalStatus" class="control-label col-md-4">Marital Status:</label>
-                                    <div  class="col-md-8">
-                                        <select class="form-control rqrdFld" id="daMaritalStatus" >
+                                    <div class="col-md-8">
+                                        <select class="form-control rqrdFld" id="daMaritalStatus">
                                             <option value="">&nbsp;</option>
                                             <?php
                                             $brghtStr = "";
@@ -3232,34 +4461,34 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("Marital Status"), $isDynmyc, -1, "", "");
                                             while ($titleRow = loc_db_fetch_array($titleRslt)) {
                                                 $selectedTxt = "";
-                                                ?>
+                                            ?>
                                                 <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                                <?php
+                                            <?php
                                             }
                                             ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group form-group-sm">
-                                    <label for="daDOB" class="control-label col-md-4">Date of Birth</label>
+                                    <label for="daDOB" class="control-label col-md-4">Date of Birth (DD-MMM-YYYY):</label>
                                     <div class="col-md-8">
-                                        <div class="input-group date form_date rqrdFld" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                                            <input class="form-control" size="16" type="text" id="daDOB" value="" readonly="">
+                                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                                            <input class="form-control rqrdFld" size="16" type="text" id="daDOB" value="">
                                             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                         </div>
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daPOB" class="control-label col-md-4">Place of Birth:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <textarea class="form-control" id="daPOB" cols="2" placeholder="Place of Birth" rows="2"></textarea>
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daNationality" class="control-label col-md-4">Nationality:</label>
                                     <div class="col-md-8">
-                                        <select class="form-control rqrdFld" id="daNationality" >
+                                        <select class="form-control rqrdFld" id="daNationality">
                                             <option value="">&nbsp;</option>
                                             <?php
                                             $brghtStr = "";
@@ -3267,51 +4496,57 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("Nationalities"), $isDynmyc, -1, "", "");
                                             while ($titleRow = loc_db_fetch_array($titleRslt)) {
                                                 $selectedTxt = "";
-                                                ?>
+                                                if ($daNationality == $titleRow[0]) {
+                                                    $selectedTxt = "selected";
+                                                }
+                                            ?>
                                                 <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                                <?php
+                                            <?php
                                             }
                                             ?>
                                         </select>
                                     </div>
-                                </div>  
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daHomeTown" class="control-label col-md-4">Home Town:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <textarea class="form-control" id="daHomeTown" cols="2" placeholder="Home Town" rows="1"></textarea>
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="form-group form-group-sm">
-                                    <label for="daReligion" class="control-label col-md-4">Religion:</label>
-                                    <div  class="col-md-8">
-                                        <input class="form-control" id="daReligion" type = "text" placeholder="Religion" value=""/>
+                                    <label for="daReligion" class="control-label col-md-4"><?php echo $daReligionLbl; ?></label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" id="daReligion" type="text" placeholder="Religion" value="<?php echo $daReligion; ?>" />
                                     </div>
-                                </div>                                              
-                            </fieldset>   
+                                </div>
+                            </fieldset>
                         </div>
-                    </div>    
-                    <div class="row"><!-- ROW 1 -->
+                    </div>
+                    <div class="row">
+                        <!-- ROW 1 -->
                         <div class="col-lg-4">
-                            <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Address</legend> 
+                            <fieldset class="basic_person_fs2">
+                                <legend class="basic_person_lg">Address</legend>
                                 <div class="form-group form-group-sm">
                                     <label for="daPostalAddress" class="control-label col-md-4">Postal Address:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <textarea class="form-control" id="daPostalAddress" cols="2" placeholder="Postal Address" rows="5"></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daResAddress" class="control-label col-md-4">Residential Address:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <textarea class="form-control" id="daResAddress" cols="2" placeholder="Residential Address" rows="5"></textarea>
                                     </div>
-                                </div> 
+                                </div>
                             </fieldset>
-                        </div>                                
+                        </div>
                         <div class="col-lg-4">
-                            <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Contact Information</legend>
+                            <fieldset class="basic_person_fs2">
+                                <legend class="basic_person_lg">Contact Information</legend>
                                 <div class="form-group form-group-sm">
                                     <label for="daCompany" class="control-label col-md-4">Workplace:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <div class="input-group">
                                             <input type="text" class="form-control" aria-label="..." id="daCompany" value="">
                                             <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
@@ -3324,42 +4559,43 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daCompanyLoc" class="control-label col-md-4">Site/Branch:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <div class="input-group">
-                                            <input type="text" class="form-control" aria-label="..." id="daCompanyLoc" value="">  
+                                            <input type="text" class="form-control" aria-label="..." id="daCompanyLoc" value="">
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Customer/Supplier Sites', 'daCompanyID', '', '', 'radio', true, '', 'valueElmntID', 'daCompanyLoc', 'clear', 1, '');">
-                                                <span class="glyphicon glyphicon-th-list"></span>                                                                            
+                                                <span class="glyphicon glyphicon-th-list"></span>
                                             </label>
                                         </div>
                                     </div>
-                                </div>  
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daEmail" class="control-label col-md-4">Email:</label>
-                                    <div  class="col-md-8">
-                                        <input class="form-control rqrdFld" id="daEmail" type = "email" placeholder="<?php echo $admin_email; ?>" value=""/>
+                                    <div class="col-md-8">
+                                        <input class="form-control rqrdFld" id="daEmail" type="email" placeholder="<?php echo $admin_email; ?>" value="<?php echo $admin_email; ?>" />
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daTelNos" class="control-label col-md-4">Contact Nos:</label>
-                                    <div  class="col-md-8">
-                                        <input class="form-control" id="daTelNos" type = "text" placeholder="Telephone" value=""/>
-                                        <input class="form-control rqrdFld" id="daMobileNos" type = "text" placeholder="Mobile" value=""/>                                       
+                                    <div class="col-md-8">
+                                        <input class="form-control" id="daTelNos" type="text" placeholder="Telephone" value="" />
+                                        <input class="form-control rqrdFld" id="daMobileNos" type="text" placeholder="Mobile" value="" />
                                     </div>
-                                </div>     
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daFaxNo" class="control-label col-md-4">Fax:</label>
-                                    <div  class="col-md-8">
-                                        <input class="form-control" id="daFaxNo" type = "text" placeholder="Fax" value=""/>
+                                    <div class="col-md-8">
+                                        <input class="form-control" id="daFaxNo" type="text" placeholder="Fax" value="" />
                                     </div>
-                                </div> 
-                            </fieldset>                                                
+                                </div>
+                            </fieldset>
                         </div>
                         <div class="col-lg-4">
-                            <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Relationship Type</legend>                                    
+                            <fieldset class="basic_person_fs2">
+                                <legend class="basic_person_lg">Relationship Type</legend>
                                 <div class="form-group form-group-sm">
                                     <label for="daRelType" class="control-label col-md-4">Relation:</label>
                                     <div class="col-md-8">
-                                        <select class="form-control rqrdFld" id="daRelType" >
+                                        <select class="form-control rqrdFld" id="daRelType">
                                             <option value="">&nbsp;</option>
                                             <?php
                                             $brghtStr = "";
@@ -3367,18 +4603,21 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("Person Types"), $isDynmyc, -1, "", "");
                                             while ($titleRow = loc_db_fetch_array($titleRslt)) {
                                                 $selectedTxt = "";
-                                                ?>
+                                                if ($daRelType == $titleRow[0]) {
+                                                    $selectedTxt = "selected";
+                                                }
+                                            ?>
                                                 <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                                <?php
+                                            <?php
                                             }
                                             ?>
                                         </select>
                                     </div>
-                                </div>                                            
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daRelCause" class="control-label col-md-4">Cause of Relation:</label>
-                                    <div  class="col-md-8">
-                                        <select class="form-control rqrdFld" id="daRelCause" >
+                                    <div class="col-md-8">
+                                        <select class="form-control rqrdFld" id="daRelCause">
                                             <option value="">&nbsp;</option>
                                             <?php
                                             $brghtStr = "";
@@ -3386,9 +4625,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("Person Type Change Reasons"), $isDynmyc, -1, "", "");
                                             while ($titleRow = loc_db_fetch_array($titleRslt)) {
                                                 $selectedTxt = "";
-                                                ?>
+                                                if ($daRelCause == $titleRow[0]) {
+                                                    $selectedTxt = "selected";
+                                                }
+                                            ?>
                                                 <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                                <?php
+                                            <?php
                                             }
                                             ?>
                                         </select>
@@ -3396,7 +4638,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daRelDetails" class="control-label col-md-4">Further Details:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <div class="input-group">
                                             <textarea class="form-control" aria-label="..." id="daRelDetails"></textarea>
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Person Types-Further Details', '', '', '', 'radio', true, '', '', 'relationDetails', 'clear', 1, '');">
@@ -3404,82 +4646,106 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </label>
                                         </div>
                                     </div>
-                                </div>  
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daRelStartDate" class="control-label col-md-4">Start Date:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <div class="input-group date form_date rqrdFld" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input3" data-link-format="yyyy-mm-dd">
                                             <input class="form-control" size="16" type="text" id="daRelStartDate" value="" readonly="">
                                             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                         </div>
                                     </div>
-                                </div>      
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daRelEndDate" class="control-label col-md-4">End Date:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <div class="input-group date form_date rqrdFld" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input4" data-link-format="yyyy-mm-dd">
                                             <input class="form-control" size="16" type="text" id="daRelEndDate" value="" readonly="">
                                             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                         </div>
                                     </div>
-                                </div>  
-                            </fieldset>                                                
+                                </div>
+                            </fieldset>
                         </div>
-                    </div> 
+                    </div>
                 </form>
-            </div>                
-        </div> 
-        <?php
+            </div>
+        </div>
+    <?php
     } else if ($vwtyp == 24) {
         /* Add Basic Person Form for My Institution */
+        $daGender = isset($_POST['daGender']) ? cleanInputData($_POST['daGender']) : "";
+        $daNationality = isset($_POST['daNationality']) ? cleanInputData($_POST['daNationality']) : "";
+        $daReligion = isset($_POST['daReligion']) ? cleanInputData($_POST['daReligion']) : "";
+        $daRelType = isset($_POST['daRelType']) ? cleanInputData($_POST['daRelType']) : "";
+        $daRelCause = isset($_POST['daRelCause']) ? cleanInputData($_POST['daRelCause']) : "";
+        $iDPrfxComboBox = isset($_POST['iDPrfxComboBox']) ? cleanInputData($_POST['iDPrfxComboBox']) : "";
+        $daPrsnLocalID = getNewLocIDNumber("", $iDPrfxComboBox);
         $lnkdFirmName = getGnrlRecNm("scm.scm_cstmr_suplr", "cust_sup_id", "cust_sup_name", $lnkdFirmID);
         $lnkdFirmSiteName = getGnrlRecNm("scm.scm_cstmr_suplr_sites", "cust_sup_site_id", "site_name", $lnkdFirmSiteID);
-        ?>   
+        $orgType = getPssblValNm((int) (getGnrlRecNm(
+            "org.org_details",
+            "org_id",
+            "org_typ_id",
+            $orgID
+        )));
+        $daReligionLbl = "Religion:";
+        if (strtoupper($orgType) == "CHURCH") {
+            $daReligionLbl = "Place of Worship / Name of Service:";
+        }
+    ?>
         <div class="row" style="margin: 0px 0px 10px 0px !important;">
             <div class="col-md-12" style="padding:0px 0px 0px 15px !important;">
                 <div class="" style="padding:0px 0px 0px 0px;float:right !important;">
                     <?php
                     $actType = 2;
                     ?>
-                    <button type="button" class="btn btn-default btn-sm" style="" onclick="saveBasicPrsnData(<?php echo $actType; ?>);"><img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">SAVE</button>
+                    <button type="button" class="btn btn-default btn-sm" style="margin-bottom: 1px;height:30px;" onclick="saveBasicPrsnData(<?php echo $actType; ?>, 0, 'myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', '<?php echo $formTitle; ?>', 0, 2, '<?php echo $addOrEdit; ?>', 'ReloadDialog');">
+                        <img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">SAVE&nbsp;
+                    </button>
+                    <!--<button type="button" class="btn btn-default btn-sm" style="" onclick="saveBasicPrsnData(<?php echo $actType; ?>, 0);">
+                        <img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">SAVE
+                    </button>-->
                 </div>
-            </div>                    
+            </div>
         </div>
-        <div class = "row">
-            <div class = "col-md-12">
-                <form class = "form-horizontal" id="bscPrsnPrflForm">
-                    <div class = "row">
-                        <div class = "col-lg-4">
-                            <fieldset class = "basic_person_fs1"><legend class = "basic_person_lg">Person's Picture</legend>
+        <div class="row">
+            <div class="col-md-12">
+                <form class="form-horizontal" id="bscPrsnPrflForm">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <fieldset class="basic_person_fs1">
+                                <legend class="basic_person_lg">Person's Picture</legend>
                                 <div style="margin-bottom: 10px;">
-                                    <img src="cmn_images/image_up.png" alt="..." id="img1Test" class="img-rounded center-block img-responsive" style="height: 195px !important; width: auto !important;">                                            
+                                    <img src="cmn_images/image_up.png" alt="..." id="img1Test" class="img-rounded center-block img-responsive" style="height: 195px !important; width: auto !important;">
                                 </div>
                                 <div class="form-group form-group-sm">
                                     <div class="col-md-12">
                                         <div class="input-group">
                                             <label class="btn btn-primary btn-file input-group-addon">
-                                                Browse... <input type="file" id="daPrsnPicture" name="daPrsnPicture" onchange="changeImgSrc(this, '#img1Test', '#img1SrcLoc');" class="btn btn-default"  style="display: none;">
+                                                Browse... <input type="file" id="daPrsnPicture" name="daPrsnPicture" onchange="changeImgSrc(this, '#img1Test', '#img1SrcLoc');" class="btn btn-default" style="display: none;">
                                             </label>
-                                            <input type = "text" class = "form-control" aria-label = "..." id = "img1SrcLoc" value = "">
+                                            <input type="text" class="form-control" aria-label="..." id="img1SrcLoc" value="">
                                         </div>
                                     </div>
                                 </div>
                             </fieldset>
                         </div>
-                        <div class = "col-lg-4">
-                            <fieldset class = "basic_person_fs1"><legend class = "basic_person_lg">Names</legend>
-                                <div class = "form-group form-group-sm">
-                                    <label for = "daPrsnLocalID" class = "control-label col-md-4">ID No:</label>
-                                    <div class = "col-md-8">
-                                        <input class="form-control rqrdFld" id="daPrsnLocalID" type = "text" placeholder="ID No" value=""/>
+                        <div class="col-lg-4">
+                            <fieldset class="basic_person_fs1">
+                                <legend class="basic_person_lg">Names</legend>
+                                <div class="form-group form-group-sm">
+                                    <label for="daPrsnLocalID" class="control-label col-md-4">ID No:</label>
+                                    <div class="col-md-8">
+                                        <input class="form-control rqrdFld" id="daPrsnLocalID" type="text" placeholder="ID No" value="<?php echo $daPrsnLocalID; ?>" />
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daTitle" class="control-label col-md-4">Title:</label>
-                                    <div  class="col-md-8">
-                                        <select class="form-control rqrdFld" id="daTitle" >
+                                    <div class="col-md-8">
+                                        <select class="form-control" id="daTitle">
                                             <option value="">&nbsp;</option>
                                             <?php
                                             $brghtStr = "";
@@ -3487,36 +4753,36 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("Person Titles"), $isDynmyc, -1, "", "");
                                             while ($titleRow = loc_db_fetch_array($titleRslt)) {
                                                 $selectedTxt = "";
-                                                ?>
+                                            ?>
                                                 <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                                <?php
+                                            <?php
                                             }
                                             ?>
                                         </select>
                                     </div>
-                                </div>  
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daFirstName" class="control-label col-md-4">First Name:</label>
-                                    <div  class="col-md-8">
-                                        <input class="form-control rqrdFld" id="daFirstName" type = "text" placeholder="First Name" value=""/>
+                                    <div class="col-md-8">
+                                        <input class="form-control rqrdFld" id="daFirstName" type="text" placeholder="First Name" value="" />
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daSurName" class="control-label col-md-4">Surname:</label>
-                                    <div  class="col-md-8">
-                                        <input class="form-control rqrdFld" id="daSurName" type = "text" placeholder="Surname" value=""/>
+                                    <div class="col-md-8">
+                                        <input class="form-control rqrdFld" id="daSurName" type="text" placeholder="Surname" value="" />
                                     </div>
-                                </div>     
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daOtherNames" class="control-label col-md-4">Other Names:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <textarea class="form-control" id="daOtherNames" cols="2" placeholder="Other Names" rows="3"></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daGender" class="control-label col-md-4">Gender:</label>
-                                    <div  class="col-md-8">
-                                        <select class="form-control rqrdFld" id="daGender" >
+                                    <div class="col-md-8">
+                                        <select class="form-control rqrdFld" id="daGender">
                                             <option value="">&nbsp;</option>
                                             <?php
                                             $brghtStr = "";
@@ -3524,22 +4790,26 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("Gender"), $isDynmyc, -1, "", "");
                                             while ($titleRow = loc_db_fetch_array($titleRslt)) {
                                                 $selectedTxt = "";
-                                                ?>
+                                                if ($daGender == $titleRow[0]) {
+                                                    $selectedTxt = "selected";
+                                                }
+                                            ?>
                                                 <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                                <?php
+                                            <?php
                                             }
                                             ?>
                                         </select>
                                     </div>
-                                </div> 
+                                </div>
                             </fieldset>
                         </div>
-                        <div class="col-lg-4"> 
-                            <fieldset class="basic_person_fs1"><legend class="basic_person_lg">Personal Data</legend>
+                        <div class="col-lg-4">
+                            <fieldset class="basic_person_fs1">
+                                <legend class="basic_person_lg">Personal Data</legend>
                                 <div class="form-group form-group-sm">
                                     <label for="daMaritalStatus" class="control-label col-md-4">Marital Status:</label>
-                                    <div  class="col-md-8">
-                                        <select class="form-control rqrdFld" id="daMaritalStatus" >
+                                    <div class="col-md-8">
+                                        <select class="form-control rqrdFld" id="daMaritalStatus">
                                             <option value="">&nbsp;</option>
                                             <?php
                                             $brghtStr = "";
@@ -3547,34 +4817,34 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("Marital Status"), $isDynmyc, -1, "", "");
                                             while ($titleRow = loc_db_fetch_array($titleRslt)) {
                                                 $selectedTxt = "";
-                                                ?>
+                                            ?>
                                                 <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                                <?php
+                                            <?php
                                             }
                                             ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group form-group-sm">
-                                    <label for="daDOB" class="control-label col-md-4">Date of Birth</label>
+                                    <label for="daDOB" class="control-label col-md-4">Date of Birth (DD-MMM-YYYY):</label>
                                     <div class="col-md-8">
-                                        <div class="input-group date form_date rqrdFld" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                                            <input class="form-control" size="16" type="text" id="daDOB" value="" readonly="">
+                                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                                            <input class="form-control rqrdFld" size="16" type="text" id="daDOB" value="">
                                             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                         </div>
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daPOB" class="control-label col-md-4">Place of Birth:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <textarea class="form-control" id="daPOB" cols="2" placeholder="Place of Birth" rows="2"></textarea>
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daNationality" class="control-label col-md-4">Nationality:</label>
                                     <div class="col-md-8">
-                                        <select class="form-control" id="daNationality" >
+                                        <select class="form-control" id="daNationality">
                                             <option value="">&nbsp;</option>
                                             <?php
                                             $brghtStr = "";
@@ -3582,51 +4852,56 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("Nationalities"), $isDynmyc, -1, "", "");
                                             while ($titleRow = loc_db_fetch_array($titleRslt)) {
                                                 $selectedTxt = "";
-                                                ?>
+                                                if ($daNationality == $titleRow[0]) {
+                                                    $selectedTxt = "selected";
+                                                }
+                                            ?>
                                                 <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
-                                                <?php
+                                            <?php
                                             }
                                             ?>
                                         </select>
                                     </div>
-                                </div>  
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daHomeTown" class="control-label col-md-4">Home Town:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <textarea class="form-control" id="daHomeTown" cols="2" placeholder="Home Town" rows="1"></textarea>
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="form-group form-group-sm">
-                                    <label for="daReligion" class="control-label col-md-4">Religion:</label>
-                                    <div  class="col-md-8">
-                                        <input class="form-control" id="daReligion" type = "text" placeholder="Religion" value=""/>
+                                    <label for="daReligion" class="control-label col-md-4"><?php echo $daReligionLbl; ?></label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" id="daReligion" type="text" placeholder="Religion" value="<?php echo $daReligion; ?>" />
                                     </div>
-                                </div>                                              
-                            </fieldset>   
+                                </div>
+                            </fieldset>
                         </div>
-                    </div>    
+                    </div>
                     <div class="row">
                         <div class="col-lg-4">
-                            <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Address</legend> 
+                            <fieldset class="basic_person_fs2">
+                                <legend class="basic_person_lg">Address</legend>
                                 <div class="form-group form-group-sm">
                                     <label for="daPostalAddress" class="control-label col-md-4">Postal Address:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <textarea class="form-control" id="daPostalAddress" cols="2" placeholder="Postal Address" rows="5"></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daResAddress" class="control-label col-md-4">Residential Address:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <textarea class="form-control" id="daResAddress" cols="2" placeholder="Residential Address" rows="5"></textarea>
                                     </div>
-                                </div> 
+                                </div>
                             </fieldset>
-                        </div>                                
+                        </div>
                         <div class="col-lg-4">
-                            <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Contact Information</legend>
+                            <fieldset class="basic_person_fs2">
+                                <legend class="basic_person_lg">Contact Information</legend>
                                 <div class="form-group form-group-sm">
                                     <label for="daCompany" class="control-label col-md-4">Workplace:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <div class="input-group">
                                             <input type="text" class="form-control" aria-label="..." id="daCompany" value="<?php echo $lnkdFirmName; ?>" readonly="">
                                             <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
@@ -3639,35 +4914,35 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daCompanyLoc" class="control-label col-md-4">Site/Branch:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <div class="input-group">
-                                            <input type="text" class="form-control" aria-label="..." id="daCompanyLoc" value="<?php echo $lnkdFirmSiteName; ?>">  
+                                            <input type="text" class="form-control" aria-label="..." id="daCompanyLoc" value="<?php echo $lnkdFirmSiteName; ?>">
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Customer/Supplier Sites', 'daCompanyID', '', '', 'radio', true, '<?php echo $lnkdFirmSiteID; ?>', 'valueElmntID', 'daCompanyLoc', 'clear', 1, '');">
-                                                <span class="glyphicon glyphicon-th-list"></span>                                                                            
+                                                <span class="glyphicon glyphicon-th-list"></span>
                                             </label>
                                         </div>
                                     </div>
-                                </div>  
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daEmail" class="control-label col-md-4">Email:</label>
-                                    <div  class="col-md-8">
-                                        <input class="form-control rqrdFld" id="daEmail" type = "email" placeholder="<?php echo $admin_email; ?>" value=""/>
+                                    <div class="col-md-8">
+                                        <input class="form-control rqrdFld" id="daEmail" type="email" placeholder="<?php echo $admin_email; ?>" value="<?php echo $admin_email; ?>" />
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daTelNos" class="control-label col-md-4">Contact Nos:</label>
-                                    <div  class="col-md-8">
-                                        <input class="form-control" id="daTelNos" type = "text" placeholder="Telephone" value=""/>
-                                        <input class="form-control rqrdFld" id="daMobileNos" type = "text" placeholder="Mobile" value=""/>                                       
+                                    <div class="col-md-8">
+                                        <input class="form-control" id="daTelNos" type="text" placeholder="Telephone" value="" />
+                                        <input class="form-control rqrdFld" id="daMobileNos" type="text" placeholder="Mobile" value="" />
                                     </div>
-                                </div>     
+                                </div>
                                 <div class="form-group form-group-sm">
                                     <label for="daFaxNo" class="control-label col-md-4">Fax:</label>
-                                    <div  class="col-md-8">
-                                        <input class="form-control" id="daFaxNo" type = "text" placeholder="Fax" value=""/>
+                                    <div class="col-md-8">
+                                        <input class="form-control" id="daFaxNo" type="text" placeholder="Fax" value="" />
                                     </div>
-                                </div> 
-                            </fieldset>                                                
+                                </div>
+                            </fieldset>
                         </div>
                         <!--<div class="col-lg-4">
                             <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Relationship Type</legend>                                    
@@ -3682,11 +4957,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("Person Types"), $isDynmyc, -1, "", "");
                         while ($titleRow = loc_db_fetch_array($titleRslt)) {
                             $selectedTxt = "";
-                            ?>
+                        ?>
                                                                                                                                                                                                                     <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
                             <?php
                         }
-                        ?>
+                            ?>
                                         </select>
                                     </div>
                                 </div>                                            
@@ -3701,11 +4976,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("Person Type Change Reasons"), $isDynmyc, -1, "", "");
                         while ($titleRow = loc_db_fetch_array($titleRslt)) {
                             $selectedTxt = "";
-                            ?>
+                        ?>
                                                                                                                                                                                                                     <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
                             <?php
                         }
-                        ?>
+                            ?>
                                         </select>
                                     </div>
                                 </div>
@@ -3742,11 +5017,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </div>  
                             </fieldset>                                                
                         </div>-->
-                    </div> 
+                    </div>
                 </form>
-            </div>                
-        </div> 
-        <?php
+            </div>
+        </div>
+<?php
     }
 }
 ?>

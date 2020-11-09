@@ -14,7 +14,64 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {
-                
+                //var_dump($_POST);
+                $srvrStnSmtpClnt = isset($_POST['srvrStnSmtpClnt']) ? cleanInputData($_POST['srvrStnSmtpClnt']) : "";
+                $srvrStnSmtpClntID = isset($_POST['srvrStnSmtpClntID']) ? (int) cleanInputData($_POST['srvrStnSmtpClntID']) : -1;
+                $srvrStnIsDflt = isset($_POST['srvrStnIsDflt']) ? cleanInputData($_POST['srvrStnIsDflt']) : "NO";
+                $is_dflt = ($srvrStnIsDflt == "YES") ? "t" : "f";
+                $srvrStnSndrsEmail = isset($_POST['srvrStnSndrsEmail']) ? cleanInputData($_POST['srvrStnSndrsEmail']) : "";
+                $srvrStnSndrsPswd = isset($_POST['srvrStnSndrsPswd']) ? cleanInputData($_POST['srvrStnSndrsPswd']) : "";
+                $srvrStnSmtPort = isset($_POST['srvrStnSmtPort']) ? (int) cleanInputData($_POST['srvrStnSmtPort']) : 0;
+                $srvrStnDomainNm = isset($_POST['srvrStnDomainNm']) ? cleanInputData($_POST['srvrStnDomainNm']) : "";
+                $srvrStnFTPUrl = isset($_POST['srvrStnFTPUrl']) ? cleanInputData($_POST['srvrStnFTPUrl']) : "";
+                $srvrStnFTPUsrNm = isset($_POST['srvrStnFTPUsrNm']) ? cleanInputData($_POST['srvrStnFTPUsrNm']) : "";
+                $srvrStnFTPPswd = isset($_POST['srvrStnFTPPswd']) ? cleanInputData($_POST['srvrStnFTPPswd']) : "";
+                $srvrStnFTPPort = isset($_POST['srvrStnFTPPort']) ? (int) cleanInputData($_POST['srvrStnFTPPort']) : 0;
+                $srvrStnFTPStrtDir = isset($_POST['srvrStnFTPStrtDir']) ? cleanInputData($_POST['srvrStnFTPStrtDir']) : "";
+                $srvrStnFTPBaseDir = isset($_POST['srvrStnFTPBaseDir']) ? cleanInputData($_POST['srvrStnFTPBaseDir']) : "";
+                $srvrStnEnforceFTP = isset($_POST['srvrStnEnforceFTP']) ? cleanInputData($_POST['srvrStnEnforceFTP']) : "NO";
+                $enfc = ($srvrStnEnforceFTP == "YES") ? true : false;
+                $srvrStnComPort = isset($_POST['srvrStnComPort']) ? (int) cleanInputData($_POST['srvrStnComPort']) : "";
+                $srvrStnBaudRate = isset($_POST['srvrStnBaudRate']) ? (int) cleanInputData($_POST['srvrStnBaudRate']) : "";
+                $srvrStnTimeout = isset($_POST['srvrStnTimeout']) ? (int) cleanInputData($_POST['srvrStnTimeout']) : "";
+                $srvrStnPGDumpDir = isset($_POST['srvrStnPGDumpDir']) ? cleanInputData($_POST['srvrStnPGDumpDir']) : "";
+                $srvrStnBkpDir = isset($_POST['srvrStnBkpDir']) ? cleanInputData($_POST['srvrStnBkpDir']) : "";
+                $srvrStnSmtpIP = isset($_POST['srvrStnSmtpIP']) ? cleanInputData($_POST['srvrStnSmtpIP']) : "";
+                $slctdApiVals = isset($_POST['slctdApiVals']) ? cleanInputData($_POST['slctdApiVals']) : "";
+
+                $oldID = getEmlSvrID($srvrStnSmtpClnt);
+                if ($srvrStnSmtpClnt != "" && $srvrStnSmtpIP != "" && $srvrStnSndrsEmail != "" && $srvrStnSndrsPswd != "" && $srvrStnSmtPort != 0 && ($oldID <= 0 || $oldID == $srvrStnSmtpClntID)) {
+                    if ($srvrStnIsDflt == "YES") {
+                        undefaultAllEmlSvrs();
+                    }
+                    if ($srvrStnSmtpClntID <= 0) {
+                        createEml_Svr($srvrStnSmtpClnt, $srvrStnSndrsEmail, $srvrStnSndrsPswd, $srvrStnSmtPort, $is_dflt, $srvrStnDomainNm, $srvrStnFTPUrl, $srvrStnFTPUsrNm, $srvrStnFTPPswd, $srvrStnFTPPort, $srvrStnFTPBaseDir, $enfc, $srvrStnPGDumpDir, $srvrStnBkpDir, $srvrStnComPort, $srvrStnBaudRate, $srvrStnTimeout, $srvrStnFTPStrtDir, $srvrStnSmtpIP);
+                        $srvrStnSmtpClntID = getEmlSvrID($srvrStnSmtpClnt);
+                    } else {
+                        updateEmlSvrs($srvrStnSmtpClntID, $srvrStnSmtpClnt, $srvrStnSndrsEmail, $srvrStnSndrsPswd, $srvrStnSmtPort, $is_dflt, $srvrStnDomainNm, $srvrStnFTPUrl, $srvrStnFTPUsrNm, $srvrStnFTPPswd, $srvrStnFTPPort, $srvrStnFTPBaseDir, $enfc, $srvrStnPGDumpDir, $srvrStnBkpDir, $srvrStnComPort, $srvrStnBaudRate, $srvrStnTimeout, $srvrStnFTPStrtDir, $srvrStnSmtpIP);
+                    }
+
+                    $affctdRws = 0;
+                    if (trim($slctdApiVals, "|~") != "") {
+                        //Save Question Answers
+                        $variousRows = explode("|", trim($slctdApiVals, "|"));
+                        for ($z = 0; $z < count($variousRows); $z++) {
+                            $crntRow = explode("~", $variousRows[$z]);
+                            if (count($crntRow) == 2) {
+                                $inptParam = (cleanInputData1($crntRow[0]));
+                                $inptParamVal = (cleanInputData1($crntRow[1]));
+                                $updstr = "UPDATE sec.sec_email_servers SET sms_param" . ($z + 1) .
+                                        "='" . loc_db_escape_string($inptParam . "|" . $inptParamVal) . "' WHERE server_id = " . $srvrStnSmtpClntID;
+                                $affctdRws += execUpdtInsSQL($updstr);
+                            }
+                        }
+                    }
+                    echo ("<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>Server Setting Successfully Saved!<br/>" . $affctdRws . "Parameter(s) Saved!");
+                    exit();
+                } else {
+                    echo ("<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Either the New Server Name is in Use <br/>or Data Supplied is Incomplete!</span>");
+                    exit();
+                }
             } else if ($actyp == 2) {
                 
             }
@@ -150,8 +207,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $cntr += 1;
                                             ?>
                                             <tr id="allSrvrStngsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                                <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                                <td><?php echo $row[1]; ?><input type="hidden" class="form-control" aria-label="..." id="allSrvrStngsRow<?php echo $cntr; ?>_SrvrID" value="<?php echo $row[0]; ?>"></td>
+                                                <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                                <td class="lovtd"><?php echo $row[1]; ?><input type="hidden" class="form-control" aria-label="..." id="allSrvrStngsRow<?php echo $cntr; ?>_SrvrID" value="<?php echo $row[0]; ?>"></td>
                                             </tr>
                                             <?php
                                         }
@@ -160,7 +217,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </table>                        
                             </fieldset>
                         </div>                        
-                        <div  class="col-md-9" style="padding:0px 1px 0px 1px !important">
+                        <div  class="col-md-9" style="padding:0px 15px 0px 1px !important">
                             <fieldset class="basic_person_fs" style="padding-top:10px !important;">
                                 <legend class = "basic_person_lg">Server Details</legend>
                                 <div class="container-fluid" id="srvrStngsDetailInfo">
@@ -203,23 +260,33 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="srvrStnSndrsPswd" class="control-label col-lg-4">Password:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtSrvrStng === true) { ?>
-                                                                    <input type="password" class="form-control" aria-label="..." id="srvrStnSndrsPswd" name="srvrStnSndrsPswd" value="<?php echo $row1[3]; ?>" style="width:100%;">
+                                                                    <input type="password" class="form-control" aria-label="..." id="srvrStnSndrsPswd" name="srvrStnSndrsPswd" value="<?php echo decrypt($row1[3], $smplTokenWord); ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
-                                                                    <span><?php echo $row1[3]; ?></span>
+                                                                    <span><?php echo decrypt($row1[3], $smplTokenWord); ?></span>
                                                                     <?php
                                                                 }
                                                                 ?>
                                                             </div>
                                                         </div>
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
-                                                            <label for="srvrStnSmtPort" class="control-label col-lg-8">Smtp Port No.:</label>
-                                                            <div  class="col-lg-4">
+                                                            <label for="srvrStnSmtPort" class="control-label col-lg-4">Smtp Port No.:</label>
+                                                            <div  class="col-lg-3">
                                                                 <?php if ($canEdtSrvrStng === true) { ?>
                                                                     <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="srvrStnSmtPort" name="srvrStnSmtPort" value="<?php echo $row1[4]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[4]; ?></span>
+                                                                    <?php
+                                                                }
+                                                                ?>
+                                                            </div>
+                                                            <div  class="col-lg-5">
+                                                                <?php if ($canEdtSrvrStng === true) { ?>
+                                                                    <input type="text" class="form-control" aria-label="..." id="srvrStnSmtpIP" name="srvrStnSmtpIP" value="<?php echo $row1[29]; ?>" style="width:100%;">
+                                                                <?php } else {
+                                                                    ?>
+                                                                    <span><?php echo $row1[29]; ?></span>
                                                                     <?php
                                                                 }
                                                                 ?>
@@ -294,10 +361,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="srvrStnFTPPswd" class="control-label col-lg-4">Password:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtSrvrStng === true) { ?>
-                                                                    <input type="password" class="form-control" aria-label="..." id="srvrStnFTPPswd" name="srvrStnFTPPswd" value="<?php echo $row1[9]; ?>" style="width:100%;">
+                                                                    <input type="password" class="form-control" aria-label="..." id="srvrStnFTPPswd" name="srvrStnFTPPswd" value="<?php echo decrypt($row1[9], $smplTokenWord); ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
-                                                                    <span><?php echo $row1[9]; ?></span>
+                                                                    <span><?php echo decrypt($row1[9], $smplTokenWord); ?></span>
                                                                     <?php
                                                                 }
                                                                 ?>
@@ -439,10 +506,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 ?>
                                                             </div>
                                                         </div> 
-                                                        <div class="" style="float:right;padding-right:15px !important;">
+                                                        <!--<div class="" style="float:right;padding-right:15px !important;">
                                                             <button type="button" class="btn btn-primary" onclick="">Backup Database</button>
                                                             <button type="button" class="btn btn-primary" onclick="">Restore Database</button>
-                                                        </div>
+                                                        </div>-->
                                                     </fieldset>
                                                 </div>                                    
                                             </div>
@@ -465,8 +532,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     $cntr += 1;
                                                                     ?>
                                                                     <tr id="srvrStngSmsApiRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                                                        <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                                                        <td>
+                                                                        <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                                                        <td class="lovtd">
                                                                             <?php if ($canEdtSrvrStng === true) { ?>
                                                                                 <input type="text" class="form-control" aria-label="..." id="srvrStngSmsApiRow<?php echo $cntr; ?>_Param" name="srvrStngSmsApiRow<?php echo $cntr; ?>_Param" value="<?php echo str_replace('"', '&quot;', $arry1[0]); ?>" style="width:100%;">
 
@@ -477,7 +544,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             }
                                                                             ?>
                                                                         </td>
-                                                                        <td>
+                                                                        <td class="lovtd">
                                                                             <?php if ($canEdtSrvrStng === true) { ?>
                                                                                 <input type="text" class="form-control" aria-label="..." id="srvrStngSmsApiRow<?php echo $cntr; ?>_Value" name="srvrStngSmsApiRow<?php echo $cntr; ?>_Value" value="<?php echo str_replace('"', '&quot;', $arry1[1]); ?>" style="width:100%;">
                                                                             <?php } else {
@@ -511,7 +578,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 </form>
                 <?php
             } else if ($vwtyp == 1) {
-                $curIdx=0; 
+                $curIdx = 0;
                 $pkID = isset($_POST['sbmtdSrvrStngID']) ? $_POST['sbmtdSrvrStngID'] : -1;
                 ?>
                 <?php
@@ -553,23 +620,33 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="srvrStnSndrsPswd" class="control-label col-lg-4">Password:</label>
                                         <div  class="col-lg-8">
                                             <?php if ($canEdtSrvrStng === true) { ?>
-                                                <input type="password" class="form-control" aria-label="..." id="srvrStnSndrsPswd" name="srvrStnSndrsPswd" value="<?php echo $row1[3]; ?>" style="width:100%;">
+                                                <input type="password" class="form-control" aria-label="..." id="srvrStnSndrsPswd" name="srvrStnSndrsPswd" value="<?php echo decrypt($row1[3], $smplTokenWord); ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
-                                                <span><?php echo $row1[3]; ?></span>
+                                                <span><?php echo decrypt($row1[3], $smplTokenWord); ?></span>
                                                 <?php
                                             }
                                             ?>
                                         </div>
                                     </div>
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
-                                        <label for="srvrStnSmtPort" class="control-label col-lg-8">Smtp Port No.:</label>
-                                        <div  class="col-lg-4">
+                                        <label for="srvrStnSmtPort" class="control-label col-lg-4">Smtp Port No./IP:</label>
+                                        <div  class="col-lg-3">
                                             <?php if ($canEdtSrvrStng === true) { ?>
                                                 <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="srvrStnSmtPort" name="srvrStnSmtPort" value="<?php echo $row1[4]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[4]; ?></span>
+                                                <?php
+                                            }
+                                            ?>
+                                        </div>
+                                        <div  class="col-lg-5">
+                                            <?php if ($canEdtSrvrStng === true) { ?>
+                                                <input type="text" class="form-control" aria-label="..." id="srvrStnSmtpIP" name="srvrStnSmtpIP" value="<?php echo $row1[29]; ?>" style="width:100%;">
+                                            <?php } else {
+                                                ?>
+                                                <span><?php echo $row1[29]; ?></span>
                                                 <?php
                                             }
                                             ?>
@@ -644,10 +721,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="srvrStnFTPPswd" class="control-label col-lg-4">Password:</label>
                                         <div  class="col-lg-8">
                                             <?php if ($canEdtSrvrStng === true) { ?>
-                                                <input type="password" class="form-control" aria-label="..." id="srvrStnFTPPswd" name="srvrStnFTPPswd" value="<?php echo $row1[9]; ?>" style="width:100%;">
+                                                <input type="password" class="form-control" aria-label="..." id="srvrStnFTPPswd" name="srvrStnFTPPswd" value="<?php echo decrypt($row1[9], $smplTokenWord); ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
-                                                <span><?php echo $row1[9]; ?></span>
+                                                <span><?php echo decrypt($row1[9], $smplTokenWord); ?></span>
                                                 <?php
                                             }
                                             ?>
@@ -789,10 +866,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             ?>
                                         </div>
                                     </div> 
-                                    <div class="" style="float:right;padding-right:15px !important;">
+                                    <!--<div class="" style="float:right;padding-right:15px !important;">
                                         <button type="button" class="btn btn-primary" onclick="">Backup Database</button>
                                         <button type="button" class="btn btn-primary" onclick="">Restore Database</button>
-                                    </div>
+                                    </div>-->
                                 </fieldset>
                             </div>                                    
                         </div>
@@ -815,8 +892,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 $cntr += 1;
                                                 ?>
                                                 <tr id="srvrStngSmsApiRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                                    <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                                    <td>
+                                                    <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                                    <td class="lovtd">
                                                         <?php if ($canEdtSrvrStng === true) { ?>
                                                             <input type="text" class="form-control" aria-label="..." id="srvrStngSmsApiRow<?php echo $cntr; ?>_Param" name="srvrStngSmsApiRow<?php echo $cntr; ?>_Param" value="<?php echo str_replace('"', '&quot;', $arry1[0]); ?>" style="width:100%;">
 
@@ -827,7 +904,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         }
                                                         ?>
                                                     </td>
-                                                    <td>
+                                                    <td class="lovtd">
                                                         <?php if ($canEdtSrvrStng === true) { ?>
                                                             <input type="text" class="form-control" aria-label="..." id="srvrStngSmsApiRow<?php echo $cntr; ?>_Value" name="srvrStngSmsApiRow<?php echo $cntr; ?>_Value" value="<?php echo str_replace('"', '&quot;', $arry1[1]); ?>" style="width:100%;">
                                                         <?php } else {
@@ -854,7 +931,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <?php
                 }
             } else if ($vwtyp == 2) {
-                $curIdx=0; 
+                $curIdx = 0;
                 $pkID = -1;
                 if ($canAddSrvrStng === true) {
                     
@@ -885,9 +962,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </div>
                             </div>
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
-                                <label for="srvrStnSmtPort" class="control-label col-lg-8">Smtp Port No.:</label>
-                                <div  class="col-lg-4">
+                                <label for="srvrStnSmtPort" class="control-label col-lg-4">Smtp Port No./IP:</label>
+                                <div  class="col-lg-3">
                                     <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="srvrStnSmtPort" name="srvrStnSmtPort" value="" style="width:100%;">
+                                </div>
+                                <div  class="col-lg-5">
+                                    <input type="text" class="form-control" aria-label="..." id="srvrStnSmtpIP" name="srvrStnSmtpIP" value="" style="width:100%;">
                                 </div>
                             </div>
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
@@ -1019,11 +1099,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         $cntr += 1;
                                         ?>
                                         <tr id="srvrStngSmsApiRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                            <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                            <td>
+                                            <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                            <td class="lovtd">
                                                 <input type="text" class="form-control" aria-label="..." id="srvrStngSmsApiRow<?php echo $cntr; ?>_Param" name="srvrStngSmsApiRow<?php echo $cntr; ?>_Param" value="" style="width:100%;">
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <input type="text" class="form-control" aria-label="..." id="srvrStngSmsApiRow<?php echo $cntr; ?>_Value" name="srvrStngSmsApiRow<?php echo $cntr; ?>_Value" value="" style="width:100%;">
                                             </td>
                                         </tr>

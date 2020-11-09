@@ -76,7 +76,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             } else if ($msgTyp == "SMS") {
                                 $toTextBox .= str_replace(",", ";", getPrsnMobile($prsnID)) . ";";
                             } else {
-                                $toTextBox .= $prsnIDs[$a] + ";";
+                                $toTextBox .= $prsnIDs[$a] . ";";
                             }
                             $percent = round((($a + 1) / $total) * 100, 2);
                             $arr_content['percent'] = $percent;
@@ -105,7 +105,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
                     $obj = json_decode($text);
                     if ($obj->percent >= 100) {
-                        unlink($file);
+                        //$rs = file_exists($file) ? unlink($file) : TRUE;
                     }
                 } else {
                     echo json_encode(array("percent" => null, "message" => null));
@@ -129,7 +129,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 }
                 if ($mailTo == "") {
                     $dtaVld = FALSE;
-                    $errMsg = "Receipient Addresses cannot be Empty!";
+                    $errMsg = "Recipient Addresses cannot be Empty!";
                 }
                 if ($mailSubject == "") {
                     $dtaVld = FALSE;
@@ -143,7 +143,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $mailCc = str_replace(",", ";", str_replace("\r\n", "", $mailCc));
                 $mailBcc = str_replace(",", ";", str_replace("\r\n", "", $mailBcc));
                 $mailAttchmnts = str_replace(",", ";", str_replace("\r\n", "", $mailAttchmnts));
-
                 if ($dtaVld === TRUE) {
                     $toEmails = explode(";", $mailTo);
                     $cntrnLmt = 0;
@@ -165,11 +164,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         }
                         $mailLst .= trim($toEmails[$i], ";, ") . ";";
                         $cntrnLmt++;
-                        if (($cntrnLmt == 50 || $i == $total - 1 || $sndMsgOneByOne == "YES") && $msgType != "SMS") {
-                            createMessageQueue($msgBatchID, trim($mailLst, ";, "), trim($mailCc, ";, "), trim($mailBcc, ";, "), $bulkMessageBody, $mailSubject, trim($mailAttchmnts, ";, "), $msgType);
+                        if (($cntrnLmt == 50 || $i == $total - 1 || $sndMsgOneByOne == "YES") && $msgType == "Email") {
+                            createMessageQueue($msgBatchID, trim($mailLst, ";, "), trim($mailCc, ";, "), trim($mailBcc, ";, "),
+                                    $bulkMessageBody, $mailSubject, trim($mailAttchmnts, ";, "), $msgType);
                             $cntrnLmt = 0;
                         } else if (($cntrnLmt == 1000 || $i == $total - 1) && $msgType == "SMS") {
-                            createMessageQueue($msgBatchID, trim($mailLst, ";, "), trim($mailCc, ";, "), trim($mailBcc, ";, "), $bulkMessageBody, $mailSubject, trim($mailAttchmnts, ";, "), $msgType);
+                            createMessageQueue($msgBatchID, trim($mailLst, ";, "), trim($mailCc, ";, "), trim($mailBcc, ";, "),
+                                    $bulkMessageBody, $mailSubject, trim($mailAttchmnts, ";, "), $msgType);
+                            $cntrnLmt = 0;
+                        } else if ($msgType == "System Inbox") {
+                            createSysInboxMsg((float) trim($mailLst, ";, "), $mailSubject, $bulkMessageBody, trim($mailAttchmnts, ";, "),
+                                    trim($mailAttchmnts, ";, "));
                             $cntrnLmt = 0;
                         }
                         $percent = round((($i + 1) / $total) * 100, 2);
@@ -181,7 +186,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $arr_content['message'] = "<i class=\"fa fa-spin fa-spinner\"></i> Queuing Messages...Please Wait..." . ($i + 1) . " out of " . $total . " Messages(es) queued.";
                         }
                         file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_msgque_progress.rho", json_encode($arr_content));
-                        if ($i <= 0) {
+                        if ($i <= 0 && $msgType != "System Inbox") {
                             generateReportRun($rptID, $paramRepsNVals, -1);
                         }
                     }
@@ -202,215 +207,215 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
                     $obj = json_decode($text);
                     if ($obj->percent >= 100) {
-                        unlink($file);
+                        //$rs = file_exists($file) ? unlink($file) : TRUE;
                     }
                 } else {
                     echo json_encode(array("percent" => null, "message" => null));
                 }
             }
         } else {
+            //Get Default Values
+            $msgType = isset($_POST['msgType']) ? cleanInputData($_POST['msgType']) : "";
+            $mailTo = isset($_POST['mailTo']) ? trim(cleanInputData($_POST['mailTo']), ";, ") : "";
+            $mailSubject = isset($_POST['mailSubject']) ? trim(cleanInputData($_POST['mailSubject']), ";, ") : "";
+            $bulkMessageBody = isset($_POST['bulkMessageBody']) ? cleanInputData($_POST['bulkMessageBody']) : "";
+            $mailCc = isset($_POST['mailCc']) ? trim(cleanInputData($_POST['mailCc']), ";, ") : "";
+            $mailAttchmnts = isset($_POST['mailAttchmnts']) ? trim(cleanInputData($_POST['mailAttchmnts']), ";, ") : "";
             ?>
-            <div class="modal fade" id="sndBlkMsgForm" tabindex="-1" role="dialog" aria-labelledby="sndBlkMsgFormTitle">
-                <div class="modal-dialog" role="document"  style="width:90% !important;">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="sndBlkMsgFormTitle">Send Bulk Email/SMS</h4>
-                        </div>
-                        <div class="modal-body" id="sndBlkMsgFormBody" style="border-bottom: none !important;">
-                            <div class="">
-                                <div class="row">                  
-                                    <div class="col-md-12">
-                                        <!--<div class="custDiv">-->                          
-                                        <form class="form-horizontal">
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <fieldset class="" style="min-height:240px !important;margin-bottom:5px;">
-                                                                <legend class="basic_person_lg">Destination Group</legend>
-                                                                <div class="row">                                                        
-                                                                    <div class="col-md-7">
-                                                                        <div class="form-group form-group-sm">
-                                                                            <label for="msgType" class="control-label col-md-5" style="padding:0px 0px 0px 15px !important;">Message Type:</label>
-                                                                            <div  class="col-md-7">
-                                                                                <select class="form-control" id="msgType" style="min-width:75px !important;">
-                                                                                    <option value="Email">Email</option>                                            
-                                                                                    <option value="SMS">SMS</option>
-                                                                                    <option value="Inbox">System Inbox</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-5">
-                                                                        <div class="form-check" style="font-size: 12px !important;">
-                                                                            <label class="form-check-label">
-                                                                                <input type="checkbox" class="form-check-input" id="sndMsgOneByOne" name="sndMsgOneByOne" checked="true">
-                                                                                Send Individually
-                                                                            </label>
-                                                                        </div>
-                                                                    </div> 
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-md-12">
-                                                                        <div class="form-group form-group-sm">
-                                                                            <label for="grpType" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Group Type:</label>
-                                                                            <div  class="col-md-9">
-                                                                                <select class="form-control" id="grpType" onchange="grpTypNoticesChange();">
-                                                                                    <option value="Everyone">Everyone</option>                                            
-                                                                                    <option value="Divisions/Groups">Divisions/Groups</option>
-                                                                                    <option value="Grade">Grade</option>
-                                                                                    <option value="Job">Job</option>
-                                                                                    <option value="Position">Position</option>
-                                                                                    <option value="Site/Location">Site/Location</option>
-                                                                                    <option value="Person Type">Person Type</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>  
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-md-12">
-                                                                        <div class="form-group form-group-sm">
-                                                                            <label for="groupName" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Group Name:</label>
-                                                                            <div  class="col-md-9">
-                                                                                <div class="input-group">
-                                                                                    <input type="text" class="form-control" aria-label="..." id="groupName" value="" readonly="">
-                                                                                    <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
-                                                                                    <input type="hidden" id="groupID" value="-1">
-                                                                                    <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'groupID', 'groupName', 'clear', 1, '');">
-                                                                                        <span class="glyphicon glyphicon-th-list"></span>
-                                                                                    </label>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">                                                              
-                                                                    <div class="col-md-12">
-                                                                        <div class="form-group form-group-sm">
-                                                                            <label for="workPlaceName" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Workplace Name:</label>
-                                                                            <div  class="col-md-9">
-                                                                                <div class="input-group">
-                                                                                    <input type="text" class="form-control" aria-label="..." id="workPlaceName" value="" readonly="">
-                                                                                    <input type="hidden" id="workPlaceID" value="-1">
-                                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'workPlaceID', 'workPlaceName', 'clear', 1, '');">
-                                                                                        <span class="glyphicon glyphicon-th-list"></span>
-                                                                                    </label>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div> 
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">                                                              
-                                                                    <div class="col-md-12">
-                                                                        <div class="form-group form-group-sm">
-                                                                            <label for="workPlaceSiteName" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Site:</label>
-                                                                            <div  class="col-md-9">
-                                                                                <div class="input-group">
-                                                                                    <input type="text" class="form-control" aria-label="..." id="workPlaceSiteName" value="" readonly="">
-                                                                                    <input type="hidden" id="workPlaceSiteID" value="-1">
-                                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Customer/Supplier Sites', 'workPlaceID', '', '', 'radio', true, '', 'workPlaceSiteID', 'workPlaceSiteName', 'clear', 1, '');">
-                                                                                        <span class="glyphicon glyphicon-th-list"></span>
-                                                                                    </label>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div> 
-                                                                    </div>
-                                                                </div>
-                                                                <button type="button" class="btn btn-primary" style="float:right;" onclick="autoLoadAddresses();">Auto-Load E-mails</button>
-                                                            </fieldset>
+            <div class="">
+                <div class="row">                  
+                    <div class="col-md-12">
+                        <!--<div class="custDiv">-->                          
+                        <form class="form-horizontal">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <fieldset class="" style="min-height:240px !important;margin-bottom:5px;">
+                                                <legend class="basic_person_lg">Destination Group</legend>
+                                                <div class="row">                                                        
+                                                    <div class="col-md-7">
+                                                        <div class="form-group form-group-sm">
+                                                            <label for="msgType" class="control-label col-md-5" style="padding:0px 0px 0px 15px !important;">Message Type:</label>
+                                                            <div  class="col-md-7">
+                                                                <select class="form-control" id="msgType" style="min-width:75px !important;">
+                                                                    <?php
+                                                                    $valslctdArry = array("", "", "");
+                                                                    $srchInsArrys = array("Email", "SMS", "System Inbox");
+                                                                    for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                                        if ($msgType == $srchInsArrys[$z]) {
+                                                                            $valslctdArry[$z] = "selected";
+                                                                        }
+                                                                        ?>
+                                                                        <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                                    <?php } ?>
+                                                                </select>
+                                                            </div>
                                                         </div>
-                                                    </div>                                               
-                                                    <div class="row">                                          
-                                                        <div class="col-md-12">
-                                                            <fieldset class="">
-                                                                <legend class="basic_person_lg">Message Parameters</legend>
-                                                                <div class="form-group form-group-sm">
-                                                                    <label for="mailTo" class="control-label col-md-2">To:</label>
-                                                                    <div  class="col-md-10">
-                                                                        <div  class="col-xs-10" style="padding:0px 1px 0px 0px !important;">
-                                                                            <textarea class="form-control" id="mailTo" cols="2" placeholder="To" rows="4"></textarea>
-                                                                        </div>
-                                                                        <div  class="col-xs-2" style="padding:0px 1px 0px 5px !important;">
-                                                                            <button type="button" class="btn btn-default btn-sm" style="float:right;"><span class="glyphicon glyphicon-th-list"></span></button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>                                         
-                                                                <div class="form-group form-group-sm">
-                                                                    <label for="mailCc" class="control-label col-md-2">Cc:</label>
-                                                                    <div  class="col-md-10">
-                                                                        <div  class="col-xs-10" style="padding:0px 1px 0px 0px !important;">
-                                                                            <input class="form-control" id="mailCc" type = "text" placeholder="Cc"/>
-                                                                        </div>
-                                                                        <div  class="col-xs-2" style="padding:0px 1px 0px 5px !important;">
-                                                                            <button type="button" class="btn btn-default btn-sm" style="float:right;"><span class="glyphicon glyphicon-th-list"></span></button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div> 
-                                                                <div class="form-group form-group-sm">
-                                                                    <label for="mailBcc" class="control-label col-md-2">Bcc:</label>
-                                                                    <div  class="col-md-10">
-                                                                        <div  class="col-xs-10" style="padding:0px 1px 0px 0px !important;">
-                                                                            <input class="form-control" id="mailBcc" type = "text" placeholder="Bcc"/>
-                                                                        </div>
-                                                                        <div  class="col-xs-2" style="padding:0px 1px 0px 5px !important;">
-                                                                            <button type="button" class="btn btn-default btn-sm" style="float:right;"><span class="glyphicon glyphicon-th-list"></span></button>
-                                                                        </div>
-                                                                    </div>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <div class="form-check" style="font-size: 12px !important;">
+                                                            <label class="form-check-label">
+                                                                <input type="checkbox" class="form-check-input" id="sndMsgOneByOne" name="sndMsgOneByOne" checked="true">
+                                                                Send Individually
+                                                            </label>
+                                                        </div>
+                                                    </div> 
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group form-group-sm">
+                                                            <label for="grpType" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Group Type:</label>
+                                                            <div  class="col-md-9">
+                                                                <select class="form-control" id="grpType" onchange="grpTypNoticesChange();">
+                                                                    <option value="Everyone">Everyone</option>                                            
+                                                                    <option value="Divisions/Groups">Divisions/Groups</option>
+                                                                    <option value="Grade">Grade</option>
+                                                                    <option value="Job">Job</option>
+                                                                    <option value="Position">Position</option>
+                                                                    <option value="Site/Location">Site/Location</option>
+                                                                    <option value="Person Type">Person Type</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>  
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group form-group-sm">
+                                                            <label for="groupName" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Group Name:</label>
+                                                            <div  class="col-md-9">
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" aria-label="..." id="groupName" value="" readonly="">
+                                                                    <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
+                                                                    <input type="hidden" id="groupID" value="-1">
+                                                                    <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'groupID', 'groupName', 'clear', 1, '');">
+                                                                        <span class="glyphicon glyphicon-th-list"></span>
+                                                                    </label>
                                                                 </div>
-                                                                <div class="form-group form-group-sm">
-                                                                    <label for="mailAttchmnts" class="control-label col-md-2">Attached Files <span class="glyphicon glyphicon-paperclip"></span>:</label>
-                                                                    <div  class="col-md-10">
-                                                                        <div  class="col-xs-10" style="padding:0px 1px 0px 0px !important;">
-                                                                            <textarea class="form-control" id="mailAttchmnts" cols="2" placeholder="Attachments" rows="3"></textarea>
-                                                                        </div>
-                                                                        <div  class="col-xs-2" style="padding:0px 1px 0px 5px !important;">
-                                                                            <button type="button" class="btn btn-default btn-sm" style="float:right;" onclick="attchFileToMsg();"><span class="glyphicon glyphicon-th-list"></span></button>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div> 
-                                                            </fieldset>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">                                                              
+                                                    <div class="col-md-12">
+                                                        <div class="form-group form-group-sm">
+                                                            <label for="workPlaceName" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Workplace Name:</label>
+                                                            <div  class="col-md-9">
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" aria-label="..." id="workPlaceName" value="" readonly="">
+                                                                    <input type="hidden" id="workPlaceID" value="-1">
+                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'workPlaceID', 'workPlaceName', 'clear', 1, '');">
+                                                                        <span class="glyphicon glyphicon-th-list"></span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div> 
+                                                    </div>
+                                                </div>
+                                                <div class="row">                                                              
+                                                    <div class="col-md-12">
+                                                        <div class="form-group form-group-sm">
+                                                            <label for="workPlaceSiteName" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Site:</label>
+                                                            <div  class="col-md-9">
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" aria-label="..." id="workPlaceSiteName" value="" readonly="">
+                                                                    <input type="hidden" id="workPlaceSiteID" value="-1">
+                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Customer/Supplier Sites', 'workPlaceID', '', '', 'radio', true, '', 'workPlaceSiteID', 'workPlaceSiteName', 'clear', 1, '');">
+                                                                        <span class="glyphicon glyphicon-th-list"></span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div> 
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-primary" style="float:right;" onclick="autoLoadAddresses();">Auto-Load E-mails</button>
+                                            </fieldset>
+                                        </div>
+                                    </div>                                               
+                                    <div class="row">                                          
+                                        <div class="col-md-12">
+                                            <fieldset class="">
+                                                <legend class="basic_person_lg">Message Parameters</legend>
+                                                <div class="form-group form-group-sm">
+                                                    <label for="mailTo" class="control-label col-md-2">To:</label>
+                                                    <div  class="col-md-10">
+                                                        <div  class="col-xs-10" style="padding:0px 1px 0px 0px !important;">
+                                                            <textarea class="form-control" id="mailTo" cols="2" placeholder="To" rows="4"><?php echo urlencode($mailTo); ?></textarea>
+                                                        </div>
+                                                        <div  class="col-xs-2" style="padding:0px 1px 0px 5px !important;">
+                                                            <button type="button" class="btn btn-default btn-sm" style="float:right;"><span class="glyphicon glyphicon-th-list"></span></button>
                                                         </div>
                                                     </div>
                                                 </div>                                         
-                                                <div class="col-md-8">
-                                                    <fieldset class=""><legend class="basic_person_lg">Message Body</legend>
-                                                        <div class="row" style="margin: 1px 0px 0px 0px !important;padding:0px 15px 0px 15px !important;"> 
-                                                            <div class="form-group form-group-sm">
-                                                                <label for="mailSubject" class="control-label col-md-2">Subject:</label>
-                                                                <div  class="col-md-10" style="padding:0px 1px 0px 15px !important;">
-                                                                    <input class="form-control" id="mailSubject" type = "text" placeholder="Subject"/>
-                                                                </div>
-                                                            </div>
+                                                <div class="form-group form-group-sm">
+                                                    <label for="mailCc" class="control-label col-md-2">Cc:</label>
+                                                    <div  class="col-md-10">
+                                                        <div  class="col-xs-10" style="padding:0px 1px 0px 0px !important;">
+                                                            <input class="form-control" id="mailCc" type = "text" placeholder="Cc" value="<?php echo urlencode($mailCc); ?>"/>
                                                         </div>
-                                                        <div class="row" style="padding:0px 15px 0px 15px !important;">
-                                                            <div id="bulkMessageBody"></div> 
-                                                        </div> 
-                                                        <div class="row" style="margin: -5px 0px 0px 0px !important;"> 
-                                                            <div class="col-md-12" style="padding:0px 0px 0px 0px">
-                                                                <div class="" style="padding:0px 1px 0px 1px !important;float:right !important;">
-                                                                    <button type="button" class="btn btn-default btn-sm" style="" onclick="clearMsgForm();"><img src="cmn_images/reload.png" style="left: 0.05%; padding-right: 2px; height:20px; width:auto; position: relative; vertical-align: middle;">RESET</button>
-                                                                    <button type="button" class="btn btn-default btn-sm" style="" onclick="autoQueueMsgs();"><img src="cmn_images/Emailcon.png" style="left: 0.05%; padding-right: 2px; height:20px; width:auto; position: relative; vertical-align: middle;">SEND MESSAGE</button>
-                                                                </div>
-                                                            </div>
+                                                        <div  class="col-xs-2" style="padding:0px 1px 0px 5px !important;">
+                                                            <button type="button" class="btn btn-default btn-sm" style="float:right;"><span class="glyphicon glyphicon-th-list"></span></button>
                                                         </div>
-                                                    </fieldset>
-
+                                                    </div>
+                                                </div> 
+                                                <div class="form-group form-group-sm">
+                                                    <label for="mailBcc" class="control-label col-md-2">Bcc:</label>
+                                                    <div  class="col-md-10">
+                                                        <div  class="col-xs-10" style="padding:0px 1px 0px 0px !important;">
+                                                            <input class="form-control" id="mailBcc" type = "text" placeholder="Bcc"/>
+                                                        </div>
+                                                        <div  class="col-xs-2" style="padding:0px 1px 0px 5px !important;">
+                                                            <button type="button" class="btn btn-default btn-sm" style="float:right;"><span class="glyphicon glyphicon-th-list"></span></button>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>   
-                                        </form>                           
-                                        <!--</div>-->                         
-                                    </div>                
-                                </div>          
-                            </div>                                          
-                        </div>
-                        <div class="modal-footer" style="border-top: none !important;">
-                        </div>
-                    </div>
-                </div>
-            </div> 
+                                                <div class="form-group form-group-sm">
+                                                    <label for="mailAttchmnts" class="control-label col-md-2">Attached Files <span class="glyphicon glyphicon-paperclip"></span>:</label>
+                                                    <div  class="col-md-10">
+                                                        <div  class="col-xs-10" style="padding:0px 1px 0px 0px !important;">
+                                                            <textarea class="form-control" id="mailAttchmnts" cols="2" placeholder="Attachments" rows="3"><?php echo $mailAttchmnts; ?></textarea>
+                                                        </div>
+                                                        <div  class="col-xs-2" style="padding:0px 1px 0px 5px !important;">
+                                                            <button type="button" class="btn btn-default btn-sm" style="float:right;" onclick="attchFileToMsg();"><span class="glyphicon glyphicon-th-list"></span></button>
+                                                        </div>
+                                                    </div>
+
+                                                </div> 
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>                                         
+                                <div class="col-md-8">
+                                    <fieldset class=""><legend class="basic_person_lg">Message Body</legend>
+                                        <div class="row" style="margin: 1px 0px 0px 0px !important;padding:0px 15px 0px 15px !important;"> 
+                                            <div class="form-group form-group-sm">
+                                                <label for="mailSubject" class="control-label col-md-2">Subject:</label>
+                                                <div  class="col-md-10" style="padding:0px 1px 0px 15px !important;">
+                                                    <input class="form-control" id="mailSubject" type = "text" placeholder="Subject" value="<?php echo urlencode($mailSubject); ?>"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding:0px 15px 0px 15px !important;">
+                                            <div id="bulkMessageBody"></div> 
+                                        </div> 
+                                        <div class="row" style="margin: -5px 0px 0px 0px !important;"> 
+                                            <div class="col-md-12" style="padding:0px 0px 0px 0px">
+                                                <div class="" style="padding:0px 1px 0px 1px !important;float:right !important;">
+                                                    <button type="button" class="btn btn-default btn-sm" style="" onclick="clearMsgForm();"><img src="cmn_images/reload.png" style="left: 0.05%; padding-right: 2px; height:20px; width:auto; position: relative; vertical-align: middle;">RESET</button>
+                                                    <button type="button" class="btn btn-default btn-sm" style="" onclick="autoQueueMsgs();"><img src="cmn_images/Emailcon.png" style="left: 0.05%; padding-right: 2px; height:20px; width:auto; position: relative; vertical-align: middle;">SEND MESSAGE</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                </div>
+                            </div>   
+                        </form>                           
+                        <!--</div>-->                         
+                    </div>                
+                </div>          
+            </div>
             <?php
         }
     }

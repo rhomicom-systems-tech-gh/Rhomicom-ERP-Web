@@ -12,7 +12,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
     $addOrEdit = isset($_POST['addOrEdit']) ? cleanInputData($_POST['addOrEdit']) : 'VIEW';
     $prsnid = $_SESSION['PRSN_ID'];
     $orgID = $_SESSION['ORG_ID'];
-    if (($canAddPrsn === true && $addOrEdit == "ADD") || ($canEdtPrsn === true && $addOrEdit == "EDIT") || ($canview === true && $addOrEdit == "VIEW")) {
+    if (($canAddPrsn === true && $addOrEdit == "ADD") || ($canEdtPrsn === true && $addOrEdit == "EDIT") || ($canview === true && $addOrEdit
+            == "VIEW")) {
         $dsplyMode = $addOrEdit;
     } else {
         $sbmtdPersonID = -1;
@@ -44,17 +45,23 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $nwFileName = "";
                 $temp = explode(".", $row[2]);
                 $extension = end($temp);
-                $nwFileName = encrypt1($row[2], $smplTokenWord1) . "." . $extension;
+                if (trim($extension) == "") {
+                    $extension = "png";
+                }
+                $ecnptDFlNm = encrypt1($row[2], $smplTokenWord1);
+                $nwFileName = $ecnptDFlNm . "." . $extension;
                 $ftp_src = "";
                 if ($sbmtdPersonID <= 0) {
-                    if ($rcrdExst == true && $chngRqstExst > 0) {
-                        $ftp_src = $ftp_base_db_fldr . "/Person/Request/" . $row[2];
-                    } else {
-                        $ftp_src = $ftp_base_db_fldr . "/Person/" . $row[2];
+                    $ftp_src = $ftp_base_db_fldr . "/Person/Request/" . $pkID . "." . $extension;
+                    if (!($rcrdExst == true && $chngRqstExst > 0 && file_exists($ftp_src))) {
+                        $ftp_src = $ftp_base_db_fldr . "/Person/" . $pkID . "." . $extension;
                     }
                 } else {
-                    $ftp_src = $ftp_base_db_fldr . "/Person/" . $row[2];
+                    $ftp_src = $ftp_base_db_fldr . "/Person/" . $pkID . "." . $extension;
                 }
+                //echo $row[2];
+                //echo $ftp_src;
+                ///home/rhoportal/ecng/Person/cLSKLnmKKLSmRFTNnYBvuJQBKnALQJKZKXVXucWKmTcRLTc.png
                 $fullPemDest = $fldrPrfx . $tmpDest . $nwFileName;
                 if (file_exists($ftp_src)) {
                     copy("$ftp_src", "$fullPemDest");
@@ -63,6 +70,45 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     copy("$ftp_src", "$fullPemDest");
                 }
                 $nwFileName = $tmpDest . $nwFileName;
+
+                // QR CODE data 
+                $name = str_replace("  ", " ", $row[3] . " " . $row[4] . " " . $row[6] . " " . $row[5]);
+                $sortName = $row[5] . ';' . $row[4];
+                $phone = $row[16];
+                $phonePrivate = '';
+                $phoneCell = $row[17];
+                $orgName = $row[21];
+
+                $email = $row[15];
+                // if not used - leave blank! 
+                $addressLabel = 'Address';
+                $addressPobox = preg_replace("/[\r\n]+/", " ", $row[14]);
+                $addressExt = '';
+                $addressStreet = '';
+                $addressTown = '';
+                $addressRegion = '';
+                $addressPostCode = '';
+                $addressCountry = 'GH';
+                // we building raw data 
+                $codeContents = 'BEGIN:VCARD' . "\n";
+                $codeContents .= 'VERSION:2.1' . "\n";
+                $codeContents .= 'N:' . $sortName . "\n";
+                $codeContents .= 'FN:' . $name . "\n";
+                $codeContents .= 'ORG:' . $orgName . "\n";
+                $codeContents .= 'TEL;WORK;VOICE:' . $phone . "\n";
+                $codeContents .= 'TEL;HOME;VOICE:' . $phonePrivate . "\n";
+                $codeContents .= 'TEL;TYPE=cell:' . $phoneCell . "\n";
+                $codeContents .= 'ADR;TYPE=work;' .
+                        'LABEL="' . $addressLabel . '":'
+                        . $addressPobox . ';'
+                        . $addressExt . ';'
+                        . $addressStreet . ';'
+                        . $addressTown . ';'
+                        . $addressPostCode . ';'
+                        . $addressCountry
+                        . "\n";
+                $codeContents .= 'EMAIL:' . $email . "\n";
+                $codeContents .= 'END:VCARD';
                 ?>
                 <div class="row" style="margin: 0px 0px 10px 0px !important;"> 
                     <div class="col-md-12" style="padding:0px 0px 0px 15px !important;">
@@ -74,13 +120,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 $rqstatusColor = "green";
                             }
                             ?>
-                            <button type="button" class="btn btn-default btn-sm" style=""><span style="font-weight:bold;">Status: </span><span style="color:<?php echo $rqstatusColor; ?>;font-weight: bold;"><?php echo $rqStatus; ?></span></button>                            
+                            <button type="button" class="btn btn-default btn-sm" style="margin-bottom: 1px;height:30px;"><span style="font-weight:bold;">Status: </span><span style="color:<?php echo $rqstatusColor; ?>;font-weight: bold;"><?php echo $rqStatus; ?></span></button>                            
                             <?php if ($sbmtdPersonID <= 0) { ?>
-                                <button type="button" class="btn btn-default btn-sm"  style="" onclick="openATab('#allmodules', 'grp=8&typ=1&pg=2&vtyp=0');"><img src="cmn_images/edit32.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;"> EDIT</button>
+                                <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="openATab('#allmodules', 'grp=8&typ=1&pg=1&vtyp=0');">
+                                    <img src="cmn_images/refresh.bmp" style="left: 0.5%; padding-right: 0px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                </button>
+                                <button type="button" class="btn btn-default btn-sm"  style="margin-bottom: 1px;height:30px;" onclick="openATab('#allmodules', 'grp=8&typ=1&pg=2&vtyp=0');">
+                                    <img src="cmn_images/edit32.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;"> EDIT</button>
                             <?php } else { ?>
-                                <button type="button" class="btn btn-default btn-sm"  style="" onclick="getBscProfileForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', 'View/Edit Person Basic Profile', <?php echo $sbmtdPersonID; ?>, 0, 2, 'EDIT');"><img src="cmn_images/edit32.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;"> EDIT</button>
+                                <button type="button" class="btn btn-default btn-sm"  style="margin-bottom: 1px;height:30px;" onclick="getBscProfileForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', 'View/Edit Person Basic Profile', <?php echo $sbmtdPersonID; ?>, 0, 2, 'EDIT');"><img src="cmn_images/edit32.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;"> EDIT</button>
                             <?php } ?>
-                            <button type="button" class="btn btn-default btn-sm" style=""><img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;"> GET PDF</button>
+                                <button type="button" class="btn btn-default btn-sm" style="margin-bottom: 1px;height:30px;" onclick="getPrsnProfilePDF(<?php echo $pkID; ?>);"><img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;"> GET PDF</button>
                         </div>
                     </div>                    
                 </div>
@@ -105,6 +155,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <div class="col-md-12">
                             <div class="custDiv"> 
                                 <div class="tab-content">
+                                    <div id="prflAddPrsnDataRO" class="tab-pane fadein" style="border:none !important;"></div>
+                                    <div id="prflOrgAsgnRO" class="tab-pane fadein" style="border:none !important;"></div>    
+                                    <div id="prflCVRO" class="tab-pane fadein" style="border:none !important;"></div>     
+                                    <div id="prflOthrInfoRO" class="tab-pane fadein" style="border:none !important;"></div>   
                                     <div id="prflHomeRO" class="tab-pane fadein active" style="border:none !important;">                          
                                         <form class="form-horizontal">
                                             <div class="row">
@@ -200,7 +254,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="col-lg-4">
                                                     <fieldset class="basic_person_fs2"><legend class="basic_person_lg">QR Code</legend>
                                                         <div>
-                                                            <img src="cmn_images/no_image.png" alt="..." id="imgQrCode" class="img-thumbnail center-block img-responsive" style="height: 200px !important; width: auto !important;">                                            
+                                                            <img src="<?php echo getQRCodeUrl($codeContents, $ecnptDFlNm . "_QR"); ?>" alt="..." id="imgQrCode" class="img-thumbnail center-block img-responsive" style="height: 200px !important; width: auto !important;">                                            
                                                         </div>                                       
                                                     </fieldset>
                                                 </div>                                
@@ -340,10 +394,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </div>  
                                         </form>  
                                     </div>
-                                    <div id="prflAddPrsnDataRO" class="tab-pane fadein" style="border:none !important;"></div>
-                                    <div id="prflOrgAsgnRO" class="tab-pane fadein" style="border:none !important;"></div>    
-                                    <div id="prflCVRO" class="tab-pane fadein" style="border:none !important;"></div>     
-                                    <div id="prflOthrInfoRO" class="tab-pane fadein" style="border:none !important;"></div>   
                                 </div>                        
                             </div>                         
                         </div>                
@@ -370,7 +420,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     ?>
                     <div class="row">
                         <div class="col-md-12">
-                            <fieldset class="basic_person_fs4"><legend class="basic_person_lg"><?php echo $row[0]; ?></legend>
+                            <fieldset class="basic_person_fs4">
+                                <legend class="basic_person_lg"><?php echo $row[0]; ?></legend>
                                 <?php
                                 $result1 = get_PrsExtrDataGrpCols($row[0], $orgID);
                                 $cntr1 = 0;
@@ -389,7 +440,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         ?>
                                         <div class="row">
                                             <div  class="col-md-12">
-                                                <table id="extDataTblCol<?php echo $row1[1]; ?>" class="table table-striped table-bordered table-responsive extPrsnDataTblRO"  cellspacing="0" width="100%" style="width:100%;"><thead><th>No.</th>
+                                                <table id="extDataTblCol<?php echo $row1[1]; ?>" class="table table-striped table-bordered table-responsive extPrsnDataTblRO" cellspacing="0" width="100%" style="width:100%;"><thead><th>No.</th>
                                                     <?php
                                                     $fieldHdngs = $row1[11];
                                                     $arry1 = explode(",", $fieldHdngs);
@@ -487,7 +538,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 ?>
                             </fieldset>
                         </div>
-
                         <?php ?>
                     </div>
                     <?php
@@ -559,7 +609,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <?php
                                 if ($pkID > 0) {
                                     $cntr = 0;
-
                                     $result1 = get_Spvsrs($pkID);
                                     while ($row1 = loc_db_fetch_array($result1)) {
                                         $cntr += 1;
@@ -924,7 +973,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="row">
                                 <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                                     <div class="input-group">
-                                        <input class="form-control" id="attchdDocsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAttchdDocs(event, '', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
+                                        <input class="form-control" id="attchdDocsSrchFor" type = "text" placeholder="Search For" value="<?php
+                                        echo trim(str_replace("%", " ", $srchFor));
+                                        ?>" onkeyup="enterKeyFuncAttchdDocs(event, '', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
                                         <input id="attchdDocsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdDocs('clear', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
                                             <span class="glyphicon glyphicon-remove"></span>
@@ -1089,7 +1140,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <?php
                                 if ($pkID > 0) {
                                     $brghtsqlStr = "";
-                                    $result1 = getAllwdExtInfosNVals("%", "Extra Info Label", 0, 1000000000, $brghtsqlStr, $table_id, $row_pk_id, $ext_inf_tbl_name, $orgID);
+                                    $result1 = getAllwdExtInfosNVals("%", "Extra Info Label", 0, 1000000000, $brghtsqlStr,
+                                            $table_id, $row_pk_id, $ext_inf_tbl_name, $orgID);
                                     while ($row1 = loc_db_fetch_array($result1)) {
                                         $cntr += 1;
                                         ?>
@@ -1147,7 +1199,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <div class="row">
                     <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                         <div class="input-group">
-                            <input class="form-control" id="attchdDocsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAttchdDocs(event, '', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
+                            <input class="form-control" id="attchdDocsSrchFor" type = "text" placeholder="Search For" value="<?php
+                            echo trim(str_replace("%", " ", $srchFor));
+                            ?>" onkeyup="enterKeyFuncAttchdDocs(event, '', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
                             <input id="attchdDocsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                             <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdDocs('clear', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
                                 <span class="glyphicon glyphicon-remove"></span>

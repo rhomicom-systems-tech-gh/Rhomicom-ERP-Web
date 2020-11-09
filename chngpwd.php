@@ -29,7 +29,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
     <script type="text/javascript">
         function showHint(str, destElmntID, linkArgs)
         {
-    <?php echo $ignoreHint; ?>
+            <?php echo $ignoreHint; ?>
             var xmlhttp;
             //alert(str);
             if (str.length === 0)
@@ -67,13 +67,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             }
         }
 
-        function enterKeyFuncSL(e)
-        {
-            var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
-            if (charCode == 13) {
-                chngePswdPage1('send_link');
-            }
-        }
         function chngePswdPage(str_Cmd)
         {
             //alert("test" + myCountry() + myIP());
@@ -123,7 +116,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 lnkArgs = "grp=1&typ=7&username=" + usrNm + "&oldpassword=" +
                         old_pswd + "&newpassword=" + new_pswd + "&rptpassword="
                         + cnfm_pswd + "&q=" + str_Cmd + "&machdet=" + machdet + "&screenwdth=" + screen.width;
-                ;
             } else if (str_Cmd == 'send_link')
             {
                 lnkArgs = "grp=1&typ=11&q=SendPswdLnk&in_val=" + usrNm;
@@ -148,14 +140,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     document.getElementById("fullName").innerHTML = rspns;
                     if (document.getElementById("usrnm").readOnly
                             && rspns.indexOf("Successfully") >= 0) {
-                        window.location = "index.php";
+                        if (rspns.indexOf('self') > -1)
+                        {
+                            window.location = 'self/index.php';
+                        } else {
+                            window.location = "index.php";
+                        }
                     }
                 } else
                 {
                     document.getElementById("fullName").innerHTML = "Changing Password...Please Wait...";
                 }
-            }
-            ;
+            };
 
             xmlhttp.open("POST", "index.php", true);
             xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -181,7 +177,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <div class="center-block" id="loginDiv">
                         <div class="login-panel panel panel-default login" style="max-width: 370px !important;">
                             <h3 class="panel-title logintitle"><img src="cmn_images/change-password.png" style="float:left;height:40px;margin-left: 10px;"/>CHANGE ACCOUNT PASSWORD</h3>
-                            <form method="post" action="" style="width:100%;padding:10px;"  onSubmit="return false;">
+                            <form method="post" action="" onSubmit="return false;" style="width:100%;padding:10px;" autocomplete="off">
                                 <p class="">
                                     <label id="fullName" style="color:green;margin-left:10px;font-size: 15px;font-weight: bold;">
                                         <?php echo $sPrsnNm; ?>
@@ -191,7 +187,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <div class="form-group">
                                     <div class="input-group margin-bottom-sm">
                                         <span class="input-group-addon"><i class="fa fa-user fa-fw fa-border"></i></span>
-                                        <input class="form-control" type="text" id="usrnm" name="usrnm" value="<?php echo $sUNAME; ?>" placeholder="<?php echo $placeHolder1; ?>" <?php echo $rdonly; ?>
+                                        <input class="form-control"  autocomplete="off" type="text" id="usrnm" name="usrnm" value="<?php echo $sUNAME; ?>" placeholder="<?php echo $placeHolder1; ?>" <?php echo $rdonly; ?>
                                                onchange="showHint(this.value, 'fullName', 'grp=1&typ=11&q=Users Full Name');"
                                                onkeyup="showHint(this.value, 'fullName', 'grp=1&typ=11&q=Users Full Name');"
                                                onblur="showHint(this.value, 'fullName', 'grp=1&typ=11&q=Users Full Name');" />
@@ -201,6 +197,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 if ($lgn_num > 0) {
                                     if (test_prmssns($dfltPrvldgs[17], "System Administration")) {
                                         ?>
+                                        <p class="others">
+                                            <button type="button" name="sendLink" class="btn btn-md btn-default btn-block otherButton" onclick="window.location = 'index.php?cp=2';">Show Configuration File</button>
+                                        </p>
                                         <p class="others">
                                             <button type="button" name="sendLink" class="btn btn-md btn-default btn-block otherButton" onclick="chngePswdPage('send_link');">Send Password Reset Link</button>
                                         </p>
@@ -281,5 +280,5 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         <script src="cmn_scrpts/bootstrap337/js/bootstrap.min.js"></script>
     </body>
     </html>
-    <?php
-}?>
+    <?php }
+?>

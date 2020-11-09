@@ -6,6 +6,7 @@ The company behind this project is Rhomicom Systems Tech. Ltd.(http://rhomicom.c
 The software can be used to manage both backend and front-end operations of all kinds of institutions and organisations.
 The sample is currently hosted on https://portal.rhomicom.com
 
+=======================================
 Various Modules being worked on are
 =======================================
 1. Accounting
@@ -21,6 +22,7 @@ Various Modules being worked on are
 11. e-Voting
 12. Chat Rooms/Forums
 
+=========================================
 Typical Target institutions/organisations
 =========================================
 1. Hotels/Restaurants/Coffee shops
@@ -29,16 +31,19 @@ Typical Target institutions/organisations
 4. Construction Firms
 5. Academic Institutions
 
+=======================
 Sofware Requirements
 =======================
 1. All Operating Systems
 2. PostgreSQL Database 9.3 or later (Can be hosted on any Operating System)
 3. Java 1.6 or later
 
+=====================
 Hardware Requirements
 =====================
 Same hardware requirements for above Sofware requirements
 
+==================================================
 Technologies/Tools Used (Credits/Acknowledgements)
 ==================================================
 1. Java 1.8-(Netbeans 8.1)

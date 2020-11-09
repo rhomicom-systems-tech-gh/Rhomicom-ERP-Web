@@ -7,6 +7,13 @@ $usrID = isset($_SESSION['USRID']) ? $_SESSION['USRID'] : -1;
 $nwUID = -1;
 $lgInName = isset($_SESSION['UNAME']) ? $_SESSION['UNAME'] : '';
 $uname = isset($_POST['username']) ? $_POST['username'] : '';
+if ($lgInName == "GUEST") {
+    $_SESSION['UNAME'] = "";
+    $_SESSION['USRID'] = -1;
+    $usrID = -1;
+    $lgInName = '';  /**/
+}
+//echo $lgInName."XXX";
 $newpswd = isset($_POST['newpassword']) ? $_POST['newpassword'] : '';
 /* if (array_key_exists('lgn_num', get_defined_vars())) {
   if ($lgn_num > 0) { */
@@ -83,7 +90,7 @@ if (($usrID > 0 && $newpswd != $smplPwd) || ($uname != '' && $newpswd != '' && $
                             $result1 = get_Users_Roles($uID, "%", "Role Name", 0, 10000000);
                             $selectedRoles = "";
                             while ($row = loc_db_fetch_array($result1)) {
-                                $selectedRoles.= $row[0] . ";";
+                                $selectedRoles .= $row[0] . ";";
                             }
 
                             $in_org_nm = getOrgName($in_org_id);

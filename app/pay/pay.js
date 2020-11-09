@@ -156,7 +156,7 @@ function preparePay(lnkArgs, htBody, targ, rspns)
                         }
                     });
         } else {
-            loadScript("app/pay/pay_admin.js?v=110", function () {
+            loadScript("app/pay/pay_admin.js?v=" + jsFilesVrsn, function () {
                 if (lnkArgs.indexOf("&pg=4&vtyp=0") !== -1)
                 {
                     prepareQckPay();
@@ -166,12 +166,143 @@ function preparePay(lnkArgs, htBody, targ, rspns)
                 } else if (lnkArgs.indexOf("&pg=4&vtyp=4") !== -1)
                 {
                     preparePrsAcnts();
+                } else if (lnkArgs.indexOf("&pg=5&vtyp=0") !== -1)
+                {
+                    prepareItemSets();
+                } else if (lnkArgs.indexOf("&pg=5&vtyp=1") !== -1)
+                {
+                    prepareItemSetItms();
                 } else if (lnkArgs.indexOf("&pg=6&vtyp=0") !== -1)
                 {
                     preparePrsSets();
                 } else if (lnkArgs.indexOf("&pg=6&vtyp=1") !== -1)
                 {
                     preparePrsSetPrsns();
+                } else if (lnkArgs.indexOf("&pg=7&vtyp=") !== -1)
+                {
+                    prepareMassPay();
+                } else if (lnkArgs.indexOf("&pg=8&vtyp=0") !== -1)
+                {
+                    var table1 = $('#allPayRnTrnsHdrsTable').DataTable({
+                        "paging": false,
+                        "ordering": false,
+                        "info": false,
+                        "bFilter": false,
+                        "scrollX": false
+                    });
+                    $('#allPayRnTrnsHdrsTable').wrap('<div class="dataTables_scroll"/>');
+                    $('#allPayRnTrnsForm').submit(function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+                    $('.form_date').datetimepicker({
+                        format: "dd-M-yyyy",
+                        language: 'en',
+                        weekStart: 0,
+                        todayBtn: true,
+                        autoclose: true,
+                        todayHighlight: true,
+                        keyboardNavigation: true,
+                        startView: 2,
+                        minView: 2,
+                        maxView: 4,
+                        forceParse: true
+                    });
+                } else if (lnkArgs.indexOf("&pg=9&vtyp=0") !== -1)
+                {
+                    var table1 = $('#allPayGLIntrfcsHdrsTable').DataTable({
+                        "paging": false,
+                        "ordering": false,
+                        "info": false,
+                        "bFilter": false,
+                        "scrollX": false
+                    });
+                    $('#allPayGLIntrfcsHdrsTable').wrap('<div class="dataTables_scroll"/>');
+                    $('#allPayGLIntrfcsForm').submit(function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+                    $('.form_date').datetimepicker({
+                        format: "dd-M-yyyy",
+                        language: 'en',
+                        weekStart: 0,
+                        todayBtn: true,
+                        autoclose: true,
+                        todayHighlight: true,
+                        keyboardNavigation: true,
+                        startView: 2,
+                        minView: 2,
+                        maxView: 4,
+                        forceParse: true
+                    });
+                } else if (lnkArgs.indexOf("&pg=10&vtyp=0") !== -1)
+                {
+                    preparePayItems();
+                } else if (lnkArgs.indexOf("&pg=11&vtyp=0") !== -1 || lnkArgs.indexOf("&pg=11") !== -1)
+                {
+                    prepareGlobalVals();
+                } else if (lnkArgs.indexOf("&pg=12&vtyp=0") !== -1)
+                {
+                    if (!$.fn.DataTable.isDataTable('#allPayeRatesTable')) {
+                        var table1 = $('#allPayeRatesTable').DataTable({
+                            "paging": false,
+                            "ordering": false,
+                            "info": false,
+                            "bFilter": false,
+                            "scrollX": false
+                        });
+                        $('#allPayeRatesTable').wrap('<div class="dataTables_scroll"/>');
+                    }
+                    $('#allPayeRatesForm').submit(function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+                } else if (lnkArgs.indexOf("&pg=13&vtyp=0") !== -1)
+                {
+                    if (!$.fn.DataTable.isDataTable('#payTrnsRqstsHdrsTable')) {
+                        var table1 = $('#payTrnsRqstsHdrsTable').DataTable({
+                            "paging": false,
+                            "ordering": false,
+                            "info": false,
+                            "bFilter": false,
+                            "scrollX": false
+                        });
+                        $('#payTrnsRqstsHdrsTable').wrap('<div class="dataTables_scroll"/>');
+                    }
+                    $('#payTrnsRqstsForm').submit(function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+                } else if (lnkArgs.indexOf("&pg=14&vtyp=0") !== -1)
+                {
+                    if (!$.fn.DataTable.isDataTable('#payInvstTransHdrsTable')) {
+                        var table1 = $('#payInvstTransHdrsTable').DataTable({
+                            "paging": false,
+                            "ordering": false,
+                            "info": false,
+                            "bFilter": false,
+                            "scrollX": false
+                        });
+                        $('#payInvstTransHdrsTable').wrap('<div class="dataTables_scroll"/>');
+                    }
+                    $('#payInvstTransForm').submit(function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+                } else if (lnkArgs.indexOf("&pg=15&vtyp=0") !== -1)
+                {
+                    var table1 = $('#payTransTypsHdrsTable').DataTable({
+                        "paging": false,
+                        "ordering": false,
+                        "info": false,
+                        "bFilter": false,
+                        "scrollX": false
+                    });
+                    $('#payTransTypsHdrsTable').wrap('<div class="dataTables_scroll"/>');
+                    $('#payTransTypsForm').submit(function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
                 }
             });
         }
@@ -226,6 +357,9 @@ function getOneMyPyRnsForm(pKeyID, pKeyID1, vwtype)
 
 }
 
+function saveMyPayRnyForm() {
+    var a = 1;
+}
 
 function getMyRcvblInvcs(actionText, slctr, linkArgs)
 {

@@ -24,7 +24,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
                 echo $cntent . "<li>
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
-                                                <span style=\"text-decoration:none;\">My Events Attended</span>
+                                                <span style=\"text-decoration:none;\">My Events</span>
 					</li>
                                        </ul>
                                      </div>";
@@ -51,7 +51,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                         <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                             <div class="input-group">
-                                <input class="form-control" id="myEvntsAtndSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncMyEvntsAtnd(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                <input class="form-control" id="myEvntsAtndSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%",
+                                " ", $srchFor)); ?>" onkeyup="enterKeyFuncMyEvntsAtnd(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
                                 <input id="myEvntsAtndPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getMyEvntsAtnd('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
                                     <span class="glyphicon glyphicon-remove"></span>
@@ -75,7 +76,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         }
                                         ?>
                                         <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
-                                    <?php } ?>
+                <?php } ?>
                                 </select>
                                 <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
                                 <select data-placeholder="Select..." class="form-control chosen-select" id="myEvntsAtndDsplySze" style="min-width:70px !important;">                            
@@ -121,6 +122,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <th>No.</th>
                                         <th>Event No.</th>
                                         <th>Event Name / Description</th>
+                                        <th style="text-align: center;">Present?</th>
                                         <th>From</th>
                                         <th>To</th>
                                         <th>Sponsor</th>
@@ -135,10 +137,26 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     while ($row = loc_db_fetch_array($result)) {
                                         $cntr += 1;
                                         ?>
-                                        <tr id="myEvntsAtndRow<?php echo $cntr; ?>">                                    
+                                        <tr id="myEvntsAtndRow_<?php echo $cntr; ?>">                                    
                                             <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
                                             <td class="lovtd"><?php echo $row[2]; ?></td>
                                             <td class="lovtd"><?php echo $row[3]; ?></td>
+
+                                            <td class="lovtd" style="text-align:center;">
+                                                <?php
+                                                $isChkd = "";
+                                                if ($row[11] == "1") {
+                                                    $isChkd = "checked=\"true\"";
+                                                }
+                                                ?>
+                                                <div class="form-group form-group-sm">
+                                                    <div class="form-check" style="font-size: 12px !important;">
+                                                        <label class="form-check-label">
+                                                            <input type="checkbox" class="form-check-input" id="myEvntsAtndRow<?php echo $cntr; ?>_IsPresent" name="myEvntsAtndRow<?php echo $cntr; ?>_IsPresent" <?php echo $isChkd ?> disabled="true">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </td>
                                             <td class="lovtd"><?php echo $row[4]; ?></td>
                                             <td class="lovtd"><?php echo $row[5]; ?></td>
                                             <!--<td><?php echo ($row[11] == '1' ? "YES" : "NO"); ?></td>-->
@@ -153,8 +171,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 $spnColor4 = "#FF9191";
                                             }
                                             ?>
-                                            <td class="lovtd" style="background-color:<?php echo $spnColor4;?>;"><?php echo number_format($row[24], 2, '.', ','); ?></td>
-                                            <td class="lovtd" style="background-color:<?php echo $spnColor4;?>;"><?php echo number_format($row[25], 2, '.', ','); ?></td>
+                                            <td class="lovtd" style="background-color:<?php echo $spnColor4; ?>;"><?php echo number_format($row[24], 2, '.',
+                                                    ','); ?></td>
+                                            <td class="lovtd" style="background-color:<?php echo $spnColor4; ?>;"><?php echo number_format($row[25], 2, '.',
+                                                    ','); ?></td>
                                             <td class="lovtd">
                                                 <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Details" onclick="" style="padding:2px !important;" style="padding:2px !important;">
                                                     <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
@@ -162,9 +182,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </button>
                                             </td>
                                         </tr>
-                                        <?php
-                                    }
-                                    ?>
+                    <?php
+                }
+                ?>
                                 </tbody>
                             </table>
                         </div>                     

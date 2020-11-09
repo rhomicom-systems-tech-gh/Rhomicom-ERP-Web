@@ -1,5 +1,12 @@
 <?php
 if (array_key_exists('lgn_num', get_defined_vars())) {
+    $canLgn = isset($_GET['LGN']) ? $_GET['LGN'] : '000';
+    /* if ($canLgn != '911') {
+      echo "<div style=\"padding:100px 50px 100px 50px;text-align:center;vertical-align: middle;min-height:500px;\"><span style=\"font-weight:bold;font-size:36px;color:red;\">DELIBERATELY SHUT DOWN TO PREPARE FOR FINAL PHASE OF DATALOAD FROM TEKSOL THIS WEEKEND!</span>"
+      . "<br/><span style=\"color:green;font-weight:bold;font-size:20px;\">NB: Rhomicom takes over from Teksol completely on Monday!<br/>All requested changes will be available on Monday!!<br/>Thank you for your cooperation so far!!!</span>"
+      . "<br/><a style=\"color:blue;font-weight:bold;font-size:12px;\" href=\"https://banking.yilostargh.com?LGN=911\">Want to Login Still?</a></div>";
+      exit();
+      } */
     if ($lgn_num <= 0) {  //echo $lgn_num."-LGN_NUM-".$error;
         ?>
         <link rel="STYLESHEET" type="text/css" href="cmn_scrpts/loginStyles.css?v=<?php echo $radomNo; ?>" />
@@ -8,16 +15,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             {
                 //Worker Supported
                 /*document.addEventListener('contextmenu', function (e) {
-                    e.preventDefault();
-                });
-                document.addEventListener('keydown', function (e) {
-                    //alert(e.which);
-                    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
-                    if (charCode >= 112 && charCode <= 123) {
-                        e.preventDefault();
-                        return false;
-                    }
-                });*/
+                 e.preventDefault();
+                 });
+                 document.addEventListener('keydown', function (e) {
+                 //alert(e.which);
+                 var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                 if (charCode >= 112 && charCode <= 123) {
+                 e.preventDefault();
+                 return false;
+                 }
+                 });*/
             } else
             {
                 window.location = 'notsupported.php';
@@ -79,6 +86,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 || rspns.indexOf('select role') > -1)
                         {
                             window.location = 'index.php';
+                        } else if (rspns.indexOf('select self') > -1)
+                        {
+                            window.location = 'self/index.php';
                         } else
                         {
                             document.getElementById("msgArea").innerHTML = "<span class=\"wordwrap3\" style=\"color:red;font-size:12px;text-align: center;margin-top:0px;\">&nbsp;" + rspns + "</span>";
@@ -122,6 +132,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 xmlhttp.open("POST", "index.php", true);
                 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xmlhttp.send(lnkArgs); //+ "&machdetls=" + machDet
+            }
+
+            function enterKeyFuncSL(e)
+            {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    chngePswdPage1('send_link');
+                }
             }
 
             function enterKeyFunc1(e)
@@ -192,7 +210,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             <div class="container-fluid">
                 <div class="row" style="min-height:65px;height: 100%;border-bottom:0px solid #bbb;padding:0px;background-color: rgba(0,0,0,0.32);">
                     <div class="col-md-6">
-                        <div style="max-width:25%;float:left;"><img src="cmn_images/<?php echo $app_image1; ?>" style="left: 0.5%; margin:2px; padding-right: 1em; height:60px; width:auto; position: relative; vertical-align: middle;"></div>
+                        <div style="max-width:25%;float:left;"><img src="<?php echo $app_image1; ?>" style="left: 0.5%; margin:2px; padding-right: 1em; height:60px; width:auto; position: relative; vertical-align: middle;"></div>
                         <div class="hdrDiv" style="max-width:90%;color:#FFF;text-align:center;float:none;">
                             <span class="h4 wordwrap1"><?php echo $app_name; ?></span><br/>
                             <span class="h6"><?php echo $app_slogan; ?></span>
@@ -201,10 +219,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <div class="col-md-6" >
                         <ul class="lgnMenu">
                             <li><a class="active" href="index.php">Home</a></li>
-                            <li><a href="#contact">Applicants</a></li>
-                            <li><a href="#contact">Contact</a></li>
+                            <!--<li><a>&nbsp;|&nbsp;</a></li>-->
+                            <li><a href="self/">Self-Service</a></li>
+                            <li><a href="self/">Register</a></li>
+                            <li><a href="self/">Search</a></li>
                             <li><a href="#contact">About</a></li>
-                            <li><a href="#contact">Search</a></li>
                         </ul>
                     </div>
                 </div>
@@ -216,31 +235,34 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <h3 class="panel-title logintitle"><?php echo $loginTitle; ?></h3>
                                 <div class="panel-body">
                                     <div class="loginPgForm">
-                                        <form role="form">
+                                        <form role="form" autocomplete="off">
                                             <fieldset>
                                                 <div class="form-group">
                                                     <div class="input-group">
                                                         <span class="input-group-addon" id="basic-addon1">
                                                             <i class="fa fa-user fa-fw fa-border"></i></span>
-                                                        <input type="text" class="form-control" placeholder="<?php echo $placeHolder1; ?>" aria-describedby="basic-addon1" id="usrnm" name="usrnm"  onkeyup="enterKeyFunc(event);" autofocus>
+                                                        <input type="text"  autocomplete="off" class="form-control" placeholder="<?php echo $placeHolder1; ?>" aria-describedby="basic-addon1" id="usrnm" name="usrnm"  onkeyup="enterKeyFunc(event);" autofocus>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="input-group">
                                                         <span class="input-group-addon" id="basic-addon1"><i class="fa fa-key fa-fw fa-border"></i></span>
-                                                        <input class="form-control" placeholder="Password" id="pwd" name="pwd" type="password" value=""  onkeyup="enterKeyFunc(event);">
+                                                        <input class="form-control"  autocomplete="off" placeholder="Password" id="pwd" name="pwd" type="password" value=""  onkeyup="enterKeyFunc(event);">
                                                         <input type="hidden" id="machdet" name="machdet" value="Unknown">
                                                     </div>
                                                 </div>
                                                 <p class="label" id="msgArea">
+                                                    <label style="color:blue;font-size:12px;text-align: center;">
+                                                        <i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;Enter Logon Credentials
+                                                    </label>
                                                     <label style="color:red;font-size:12px;text-align: center;">
                                                         &nbsp;<?php echo str_replace('%21%0A', ' ', urldecode($error)); ?>
                                                     </label>
                                                 </p>
-                                                <button type="button" onclick="homePage();" class="btn btn-md btn-default btn-block otherButton">Login</button>
-                                                <button type="button"  onclick="forgotPwd();" class="btn btn-md btn-default btn-block otherButton">Request for New Password</button>
-                                                <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="window.open('<?php echo $app_cstmr_url; ?>', '_blank');">
-                                                    <img src="cmn_images/<?php echo $app_image1; ?>" style="left: 0.5%; padding-right: 1em; height:60px; width:auto; position: relative; vertical-align: middle;">
+                                                <button type="button" onclick="homePage();" class="btn btn-md btn-default btn-block otherButton"><i class="fa fa-sign-in" aria-hidden="true"></i>&nbsp;&nbsp;Login</button>
+                                                <button type="button"  onclick="forgotPwd();" class="btn btn-md btn-default btn-block otherButton"><i class="fa fa-key" aria-hidden="true"></i>&nbsp;&nbsp;Request for New Password</button>
+                                                <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="window.open('<?php echo $app_cstmr_url; ?>', '_blank');" style="">
+                                                    <img src="<?php echo $app_image1; ?>" style="left: 0.5%; padding-right: 1em; height:60px; width:auto; position: relative; vertical-align: middle;">
                                                     <br/><?php echo $website_btn_txt; ?>
                                                 </button>
                                             </fieldset>

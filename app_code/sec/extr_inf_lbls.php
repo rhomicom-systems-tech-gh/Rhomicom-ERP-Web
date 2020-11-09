@@ -50,7 +50,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                         <div class="col-md-3" style="padding:0px 15px 0px 15px !important;">
                             <div class="input-group">
-                                <input class="form-control" id="allSbgrpsSrchFor" name="allSbgrpsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAllSbgrps(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
+                                <input class="form-control" id="allSbgrpsSrchFor" name="allSbgrpsSrchFor" type = "text" placeholder="Search For" value="<?php
+                                echo trim(str_replace("%", " ", $srchFor));
+                                ?>" onkeyup="enterKeyFuncAllSbgrps(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
                                 <input id="allSbgrpsPageNo" name="allSbgrpsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getAllSbgrps('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
                                     <span class="glyphicon glyphicon-remove"></span>
@@ -65,15 +67,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
                                 <!--<select data-placeholder="Select..." class="form-control chosen-select" id="allSbgrpsSrchIn">
                                 <?php
-                                $valslctdArry = array("", "", "");
-                                $srchInsArrys = array("Role Name", "Priviledge Name", "Owner Module");
+                                $valslctdArry = array("");
+                                $srchInsArrys = array("Module Name");
 
                                 for ($z = 0; $z < count($srchInsArrys); $z++) {
                                     if ($srchIn == $srchInsArrys[$z]) {
                                         $valslctdArry[$z] = "selected";
                                     }
                                     ?>
-                                                                                                                <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                                                                                                                        <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                 <?php } ?>
                                 </select>-->
                                 <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
@@ -159,20 +161,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         $cntr += 1;
                                         ?>
                                         <tr id="allSbgrpsEdtRow_<?php echo $cntr; ?>">                                    
-                                            <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                            <td>
+                                            <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                            <td class="lovtd">
                                                 <span><?php echo $row[0]; ?></span>                                                         
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <span><?php echo $row[1]; ?></span>                                                         
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <span><?php echo $row[2]; ?></span>                                                        
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <span><?php echo $row[3]; ?></span>                                                       
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Details" onclick="getOneSbgrpForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'sbgrpsLblsForm', 'View/Edit Priviledges for Module (<?php echo $row[0]; ?>)', <?php echo $row[4]; ?>, 1, <?php echo $pgNo; ?>, 'clear');" style="padding:2px !important;" style="padding:2px !important;">
                                                     <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                     <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
@@ -209,14 +211,21 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <fieldset class=""><!--<legend class="basic_person_lg">Priviledges for Role</legend>-->
                             <div class="row">
                                 <div class="col-md-3" style="padding:0px 1px 0px 15px !important;">                    
-                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="">
+                                    <input id="sbmtdTblID" type = "hidden" value="<?php echo $pkID; ?>">
+                                    <input id="sbgrpsLblsSlctdLabels" type = "hidden" value="">
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Extra Information Labels', '', '', '', 'check', true, '', '', '', 'clear', 1,
+                                                    '', function () {
+                                                        afterOneSbgrpLblSlctn();
+                                                    }, 'sbgrpsLblsSlctdLabels');">
                                         <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                         Add Label
                                     </button>
                                 </div>
                                 <div class="col-md-3" style="padding:0px 15px 0px 15px !important;">
                                     <div class="input-group">
-                                        <input class="form-control" id="sbgrpsLblsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncOneSbgrp(event, 'myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'sbgrpsLblsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>, '');">
+                                        <input class="form-control" id="sbgrpsLblsSrchFor" type = "text" placeholder="Search For" value="<?php
+                                        echo trim(str_replace("%", " ", $srchFor));
+                                        ?>" onkeyup="enterKeyFuncOneSbgrp(event, 'myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'sbgrpsLblsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>, '');">
                                         <input id="sbgrpsLblsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getOneSbgrpForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'sbgrpsLblsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>, 'clear');">
                                             <span class="glyphicon glyphicon-remove"></span>
@@ -288,7 +297,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <thead>
                                             <tr>
                                                 <th>No.</th>
-                                                <th>Priviledge Name</th>
+                                                <th>Label Name</th>
                                                 <th>Enable/Disable</th>
                                                 <th>Delete</th>
                                             </tr>
@@ -300,13 +309,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 $cntr += 1;
                                                 ?>
                                                 <tr id="sbgrpsLblsEdtRow_<?php echo $cntr; ?>">                                    
-                                                    <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                                    <td><span><?php echo $row1[0]; ?></span></td>
+                                                    <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                                    <td class="lovtd"><span><?php echo $row1[0]; ?></span></td>
                                                     <?php
                                                     if ($row1[1] == 1) {
                                                         ?>
-                                                        <td>
-                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Click to Disable" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                                        <td class="lovtd">
+                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Click to Disable" onclick="enblDsblSbgrpLblSlctn(<?php echo $row1[4];?>, 0);" style="padding:2px !important;" style="padding:2px !important;">
                                                                 <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                                 <img src="cmn_images/90.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                 <span>DISABLE&nbsp;&nbsp;</span>
@@ -314,8 +323,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         </td>
                                                     <?php } else {
                                                         ?>
-                                                        <td>
-                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Click to Enable" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                                        <td class="lovtd">
+                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Click to Enable" onclick="enblDsblSbgrpLblSlctn(<?php echo $row1[4];?>, 1);" style="padding:2px !important;" style="padding:2px !important;">
                                                                 <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                                 <img src="cmn_images/success.gif" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                 <span>ENABLE&nbsp;&nbsp;</span>
@@ -323,8 +332,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         </td>
                                                     <?php }
                                                     ?>
-                                                    <td>
-                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Click to Delete" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <td class="lovtd">
+                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Click to Delete" onclick="deleteSbgrpLblSlctn(<?php echo $row1[4];?>);" style="padding:2px !important;" style="padding:2px !important;">
                                                             <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                             <img src="cmn_images/delete.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             <span>DELETE&nbsp;&nbsp;</span>
@@ -343,11 +352,60 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 </form>
                 <?php
             } else if ($vwtyp == 2) {
-                
+                //Save Selected Labels
+                header("content-type:application/json");
+                $sbmtdTblID = isset($_POST['sbmtdTblID']) ? cleanInputData($_POST['sbmtdTblID']) : -1;
+                $sbgrpsLblsSlctdLabels = isset($_POST['sbgrpsLblsSlctdLabels']) ? cleanInputData($_POST['sbgrpsLblsSlctdLabels']) : "";
+
+                if (trim($sbgrpsLblsSlctdLabels, ",") != "") {
+                    $variousRows1 = explode(",", trim($sbgrpsLblsSlctdLabels, ","));
+                    for ($z = 0; $z < count($variousRows1); $z++) {
+                        $ln_LableLnID = (float) (cleanInputData1($variousRows1[$z]));
+                        if ($ln_LableLnID > 0) {
+                            if (doesTableHvThsExtrInfoLbl($sbmtdTblID, $ln_LableLnID) == false) {
+                                createAllwdExtraInfos($sbmtdTblID, $ln_LableLnID, true);
+                            }
+                        }
+                    }
+                }
+
+                $errMsg = "Success";
+                $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>" . $errMsg;
+                //var_dump($_POST);
+                //var_dump($arr_content);
+                echo json_encode($arr_content);
+                exit();
             } else if ($vwtyp == 3) {
-                
+                //Enable Disable Selected Labels
+                header("content-type:application/json");
+                $sbmtdCmbntnID = isset($_POST['sbmtdCmbntnID']) ? cleanInputData($_POST['sbmtdCmbntnID']) : -1;
+                $enableDsbl = isset($_POST['enableDsbl']) ? cleanInputData($_POST['enableDsbl']) : "0";
+
+                if ($enableDsbl == "1") {
+                    enblDsblAllwdExtraInfos($sbmtdCmbntnID, true);
+                } else {
+                    enblDsblAllwdExtraInfos($sbmtdCmbntnID, false);
+                }
+
+                $errMsg = "Success";
+                $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>" . $errMsg;
+                //var_dump($_POST);
+                //var_dump($arr_content);
+                echo json_encode($arr_content);
+                exit();
             } else if ($vwtyp == 4) {
-                
+                //Delete Selected Labels
+                header("content-type:application/json");
+                $sbmtdCmbntnID = isset($_POST['sbmtdCmbntnID']) ? cleanInputData($_POST['sbmtdCmbntnID']) : -1;
+
+                deleteAllwdExtraInfos($sbmtdCmbntnID);
+
+                $errMsg = "Success";
+                $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>" . $errMsg;
+                //var_dump($_POST);
+                //var_dump($arr_content);
+                echo json_encode($arr_content);
+                exit();
             }
         }
     }

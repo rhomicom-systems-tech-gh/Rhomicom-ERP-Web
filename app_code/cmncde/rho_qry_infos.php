@@ -7,21 +7,22 @@ $id_col_nm1 = isset($_POST['id_col_nm']) ? $_POST['id_col_nm'] : "";
 $qryNm = isset($_POST['q']) ? $_POST['q'] : "";
 
 function get_Gnrl_Rec_Hstry($rowID, $tblnm, $id_col_nm) {
-    $strSQL = "SELECT a.created_by, 
+    $strSQL = "SELECT sec.get_usr_name(a.created_by)||' ('||prs.get_prsn_name(sec.get_usr_prsn_id(a.created_by))||')' created_by, 
 to_char(to_timestamp(a.creation_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS'), 
-a.last_update_by, 
+sec.get_usr_name(a.last_update_by)||' ('||prs.get_prsn_name(sec.get_usr_prsn_id(a.last_update_by))||')' last_update_by, 
 to_char(to_timestamp(a.last_update_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') 
 FROM " . $tblnm . " a WHERE(a." . $id_col_nm . " = " . $rowID . ")";
     $fnl_str = "";
     $result = executeSQLNoParams($strSQL);
     while ($row = loc_db_fetch_array($result)) {
-        $fnl_str = "<p> CREATED BY: " . getUserName($row[0]) .
-                "<br/>CREATION DATE: " . $row[1] . "<br/>LAST UPDATE BY:" .
-                getUserName($row[2]) .
-                "<br/>LAST UPDATE DATE: " . $row[3] . "</p>";
+        $fnl_str = "<table style=\"font-size:10px;font-family: Verdana;font-weight:bold;border:none;\"><tbody>"
+                . "<tr><td style=\"border-bottom:1px solid #ddd;min-width:84px;width:84px;\" class=\"lovtd\">Created By:</td><td style=\"border-bottom:1px solid #ddd;border-left:1px solid #ddd;\" class=\"lovtd\"><span style=\"color:green;font-weight:bold;font-style: normal;font-family: Georgia;font-size:12px;\">" . ($row[0]) .
+                "</span></td></tr><tr><td style=\"border-bottom:1px solid #ddd;min-width:84px;width:84px;\" class=\"lovtd\">On:</td><td style=\"border-bottom:1px solid #ddd;border-left:1px solid #ddd;\" class=\"lovtd\"><span style=\"color:black;font-weight:bold;font-style: normal;font-family: Georgia;font-size:12px;\">" . $row[1] .
+                "</span></td></tr><tr><td style=\"border-bottom:1px solid #ddd;min-width:84px;width:84px;\" class=\"lovtd\">Updated By:</td><td style=\"border-bottom:1px solid #ddd;border-left:1px solid #ddd;\" class=\"lovtd\"><span style=\"color:green;font-weight:bold;font-style: normal;font-family: Georgia;font-size:12px;\">" . ($row[2]) .
+                "</span></td></tr><tr><td style=\"border:none;min-width:84px;width:84px;\" class=\"lovtd\">On:</td><td style=\"border-left:1px solid #ddd;\" class=\"lovtd\"><span style=\"color:black;font-weight:bold;font-style: normal;font-family: Georgia;font-size:12px;\">" . $row[3] . "</td></tr></tbody></table>";
         return $fnl_str;
     }
-    return "";
+    return "<span style=\"color:red;font-weight:bold;\">Record History not available here!</span>";
 }
 
 function get_Gnrl_Create_Hstry($rowID, $tblnm, $id_col_nm) {
@@ -51,8 +52,12 @@ function sendPswdResetLink($UNM) {
     }
     echo "<div style=\"background-color:#e3e3e3;border: 1px solid #999;padding:10px;\" class=\"rho-postcontent rho-postcontent-0 clearfix\"> ";
     $errMsg = "";
-    checkNCreateUser($UNM, $errMsg);
-    echo $errMsg;
+    $isSelfRgstrAllwdID = getEnbldPssblValID("Allow User Account Self-Registration", getLovID("All Other General Setups"));
+    $isSelfRgstrAllwd = getPssblValDesc($isSelfRgstrAllwdID);
+    if (strtoupper($isSelfRgstrAllwd) === "YES" && $isSelfRgstrAllwdID > 0) {
+        checkNCreateUser($UNM, $errMsg);
+        echo $errMsg;
+    }
     $inUsrID = getUserID($UNM);
     if ($inUsrID > 0) {
         $numChars = rand(10, 25);
@@ -92,6 +97,9 @@ function sendPswdResetLink($UNM) {
 function changePswdAuto($UNM) {
     global $dfltPrvldgs;
     global $app_name;
+    /*$ssnUnm = $_SESSION['UNAME'];
+    echo "SSN".$ssnUnm;
+    echo "UN".$UNM;$ssnUnm != $UNM && */
     if (test_prmssns($dfltPrvldgs[17], 'System Administration') == false) {
         echo "You don't have permission to perform" .
         " this action!\nContact your System Administrator!";
@@ -132,12 +140,35 @@ function getDivGrpTyp($divID) {
 }
 
 function getLogMsg($msgid, $logTblNm) {
-    $sqlStr = "select log_messages from $logTblNm where msg_id = $msgid";
-    $result = executeSQLNoParams($sqlStr);
-    while ($row = loc_db_fetch_array($result)) {
-        return "$row[0]";
+    global $ftp_base_db_fldr;
+    //chmod($ftp_base_db_fldr . "/bin/log_files/prcs_logs", 0777);
+    $v_procsid = -1;
+    $v_procstyp = "";
+    $sqlQry = "SELECT process_typ, process_id FROM $logTblNm WHERE msg_id =$msgid";
+    $qRslt = executeSQLNoParams($sqlQry);
+    while ($rw = loc_db_fetch_array($qRslt)) {
+        $v_procsid = (float) $rw[1];
+        $v_procstyp = $rw[0];
     }
-    return "";
+    $file = $ftp_base_db_fldr . "/bin/log_files/prcs_logs/" . $msgid . "_" . $v_procsid . "_" . str_replace(" ", "-", $v_procstyp) . ".rho";
+    //echo $file . "<br/>";
+    if (file_exists($file)) {
+        //$cmd = "sudo chmod -R 777 " . $ftp_base_db_fldr . "/bin/log_files/prcs_logs";
+        $cmd = "sudo chmod -R 777 " . $file;
+        execInBackground($cmd);
+        sleep(1);
+        execInBackground($cmd);
+        //sleep(1);
+        $text = file_get_contents($file);
+        return str_replace("\\", "", str_replace("\\r", "", str_replace("\\n", "", str_replace(PHP_EOL, "<br/>", str_replace("\\r\\n", "<br/>", $text)))));
+    } else {
+        $sqlStr = "select log_messages from $logTblNm where msg_id = $msgid";
+        $result = executeSQLNoParams($sqlStr);
+        while ($row = loc_db_fetch_array($result)) {
+            return $row[0];
+        }
+    }
+    return "File not Found!";
 }
 
 function getQualfyngAddress($grpTyp, $grpNm, $grpID, $wrkplcID, $wrkplcSiteID, $msgTyp, &$errMsg) {
@@ -262,8 +293,24 @@ function getPrsnsInvolved($cstmrID, $siteID, $grpTyp, $grpNm, $grpID) {
 
 if ($usrID > 0) {
     if ($qryNm == "Record History") {
-        echo get_Gnrl_Rec_Hstry($rowID1, $tblnm1, $id_col_nm1);
+        $encdMsg = isset($_POST['encdMsg']) ? urldecode($_POST['encdMsg']) : "";
+        if ($encdMsg != "") {
+            $encdMsg = decrypt($encdMsg, $smplTokenWord1);
+        }
+        if ($encdMsg != "") {
+            $arry1 = explode("|", $encdMsg);
+            if (count($arry1) == 3) {
+                $rowID1 = $arry1[0];
+                $tblnm1 = $arry1[1];
+                $id_col_nm1 = $arry1[2];
+                echo get_Gnrl_Rec_Hstry($rowID1, $tblnm1, $id_col_nm1);
+                exit();
+            }
+        }
+        echo "<span style=\"color:red;font-weight:bold;\">INVALID PARAMETERS!!!</span>";
     } else if ($qryNm == "Record History1") {
+        echo get_Gnrl_Rec_Hstry($rowID1, $tblnm1, $id_col_nm1);
+    } else if ($qryNm == "Record History2") {
         echo get_Gnrl_Create_Hstry($rowID1, $tblnm1, $id_col_nm1);
     } else if ($qryNm == "Check Session") {
         echo 1;
@@ -327,7 +374,8 @@ if ($usrID > 0) {
             if ($cntrnLmt == 50 || $i == count($toEmails) - 1 || $sendIndvdl == true || $msgTyp != "Email") {
                 if ($msgTyp == "Email") {
                     $emlRes = sendEmail(
-                            trim($mailLst, ","), trim($mailLst, ","), $subjectDetails, $messageBody, $errMsg, $ccAddresses, $bccAddresses, $attachments);
+                            trim($mailLst, ","), trim($mailLst, ","), $subjectDetails, $messageBody, $errMsg, $ccAddresses, $bccAddresses,
+                            $attachments);
                 } else if ($msgTyp == "SMS") {
                     $emlRes = sendSMS(cleanOutputData($messageBody), trim($mailLst, ","), $errMsg);
                 } else {
@@ -402,7 +450,8 @@ if ($usrID > 0) {
             if ($cntrnLmt == 50 || $i == count($toEmails) - 1 || $sendIndvdl == true || $msgTyp != "Email") {
                 if ($msgTyp == "Email") {
                     $emlRes = sendEmail(
-                            trim($mailLst, ","), trim($mailLst, ","), $subjectDetails, $messageBody, $errMsg, $ccAddresses, $bccAddresses, $attachments, $namefrom);
+                            trim($mailLst, ","), trim($mailLst, ","), $subjectDetails, $messageBody, $errMsg, $ccAddresses, $bccAddresses,
+                            $attachments, $namefrom);
                 } else if ($msgTyp == "SMS") {
                     $emlRes = sendSMS(cleanOutputData($messageBody), trim($mailLst, ","), $errMsg);
                 } else {
@@ -580,7 +629,8 @@ if ($usrID > 0) {
         </div>
         <?php
         if (test_prmssns("View Runs from Others", "Reports And Processes") && test_prmssns("Edit Report/Process", "Reports And Processes")) {
-            echo "<div class=\"row\" style=\"min-width:100px;\" ><code style=\"font-weight:regular;font-size:14px;font-family:'Courier New';color: #333;background-color: #fff;\" >" . str_replace("\r\n", "<br/>", getLogMsg(getLogMsgID("rpt.rpt_run_msgs", "Process Run", $in_val), "rpt.rpt_run_msgs")) . "</code></div>";
+            echo "<div class=\"row\" style=\"min-width:100px;\" ><code style=\"font-weight:regular;font-size:14px;font-family:'Courier New';color: #333;background-color: #fff;\" >" . str_replace("\r\n",
+                    "<br/>", getLogMsg(getLogMsgID("rpt.rpt_run_msgs", "Process Run", $in_val), "rpt.rpt_run_msgs")) . "</code></div>";
         }
     } else if ($qryNm == "Report Run Output") {
         $in_val = isset($_POST['run_id']) ? $_POST['run_id'] : "-1";
@@ -595,7 +645,8 @@ if ($usrID > 0) {
             $rptmsg = "No Output File";
             $rpt_src1 = str_replace("\\", "/", $ftp_base_db_fldr . "/Rpts");
             $rpt_dest1 = "";
-            if ($outptUsd == "HTML" || $outptUsd == "COLUMN CHART" || $outptUsd == "SIMPLE COLUMN CHART" || $outptUsd == "BAR CHART" || $outptUsd == "PIE CHART" || $outptUsd == "LINE CHART") {
+            if ($outptUsd == "HTML" || $outptUsd == "COLUMN CHART" || $outptUsd == "SIMPLE COLUMN CHART" || $outptUsd == "BAR CHART" || $outptUsd == "PIE CHART" ||
+                    $outptUsd == "LINE CHART") {
                 $rpt_src1 .= "/amcharts_2100/images/";
                 $rpt_dest1 = $fldrPrfx . "dwnlds/amcharts_2100/images/";
                 $rpt_src .= "/amcharts_2100/samples/$in_val.html";

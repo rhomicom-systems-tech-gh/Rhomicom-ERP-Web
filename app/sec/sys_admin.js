@@ -482,10 +482,9 @@ function enterKeyFuncAllRoles(e, actionText, slctr, linkArgs)
     }
 }
 
-
 function saveAllRolesForm()
 {
-    var lnkArgs = "grp=3&typ=1&q=UPDATE&actyp=6";
+    var lnkArgs = "grp=3&typ=1&pg=2&q=UPDATE&actyp=1";
     var slctdRoles = "";
     $('#allRolesTable').find('tr').each(function (i, el) {
         if (i > 0)
@@ -558,15 +557,16 @@ function getOneRoleForm(elementID, modalBodyID, titleElementID, formElementID,
                 /*$('.modal-dialog').draggable();*/
                 if (vtyp == 1)
                 {
-                    var table1 = $('#rolePrvldgsTable').DataTable({
-                        "paging": false,
-                        "ordering": false,
-                        "info": false,
-                        "bFilter": false,
-                        "scrollX": false
-                    });
-                    $('#rolePrvldgsTable').wrap('<div class="dataTables_scroll" />');
-
+                    if (!$.fn.DataTable.isDataTable('#rolePrvldgsTable')) {
+                        var table1 = $('#rolePrvldgsTable').DataTable({
+                            "paging": false,
+                            "ordering": false,
+                            "info": false,
+                            "bFilter": false,
+                            "scrollX": false
+                        });
+                        $('#rolePrvldgsTable').wrap('<div class="dataTables_scroll" />');
+                    }
                     $('#rolePrvldgsForm').submit(function (e) {
                         e.preventDefault();
                         return false;
@@ -587,7 +587,7 @@ function getOneRoleForm(elementID, modalBodyID, titleElementID, formElementID,
                         forceParse: true
                     });
                 });
-
+                $('#' + elementID).off('hidden.bs.modal');
                 $('#' + elementID).on('show.bs.modal', function (e) {
                     $(this).find('.modal-body').css({
                         'max-height': '100%'
@@ -609,31 +609,42 @@ function getOneRoleForm(elementID, modalBodyID, titleElementID, formElementID,
     });
 }
 
-
 function saveRolesPrvldgsForm()
 {
-    var lnkArgs = "grp=3&typ=1&q=UPDATE&actyp=7";
+    var lnkArgs = "grp=3&typ=1&pg=2&q=UPDATE&actyp=2";
+    var rlPrvldgSbmtdRoleID = typeof $("#rlPrvldgSbmtdRoleID").val() === 'undefined' ? -1 : $("#rlPrvldgSbmtdRoleID").val();
     var slctdRolesPrvldgs = "";
     $('#rolePrvldgsTable').find('tr').each(function (i, el) {
         if (i > 0)
         {
-            var rndmNum = $(el).attr('id').split("_")[1];
-            var curPrvldgNm = typeof $('#rolePrvldgsEdtRow' + rndmNum + '_PrvldgNm').val() === 'undefined' ? '%' : $('#rolePrvldgsEdtRow' + rndmNum + '_PrvldgNm').val();
-
-            if (curPrvldgNm === "" || curPrvldgNm === null)
+            if (typeof $(el).attr('id') === 'undefined')
             {
-                /*$('#modal-7 .modal-body').html('Role Name cannot be empty!');
-                 $('#modal-7').modal('show', {backdrop: 'static'});
-                 return false;*/
+                /*Do Nothing*/
             } else {
-                slctdRolesPrvldgs = slctdRolesPrvldgs + $('#rolePrvldgsEdtRow' + rndmNum + '_PrvldgID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
-                        + curPrvldgNm.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
-                        + $('#rolePrvldgsEdtRow' + rndmNum + '_StrtDte').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
-                        + $('#rolePrvldgsEdtRow' + rndmNum + '_EndDte').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                var rndmNum = $(el).attr('id').split("_")[1];
+                var curPrvldgNm = typeof $('#rolePrvldgsEdtRow' + rndmNum + '_PrvldgNm').val() === 'undefined' ? '%' : $('#rolePrvldgsEdtRow' + rndmNum + '_PrvldgNm').val();
+
+                if (curPrvldgNm === "" || curPrvldgNm === null)
+                {
+                    /*$('#modal-7 .modal-body').html('Role Name cannot be empty!');
+                     $('#modal-7').modal('show', {backdrop: 'static'});
+                     return false;*/
+                } else {
+                    slctdRolesPrvldgs = slctdRolesPrvldgs + $('#rolePrvldgsEdtRow' + rndmNum + '_PrvldgID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                            + curPrvldgNm.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                            + $('#rolePrvldgsEdtRow' + rndmNum + '_StrtDte').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                            + $('#rolePrvldgsEdtRow' + rndmNum + '_EndDte').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                }
             }
         }
     });
-    lnkArgs = lnkArgs + "&slctdRolesPrvldgs=" + slctdRolesPrvldgs.slice(0, -1);
+    if (slctdRolesPrvldgs.trim() === "" || rlPrvldgSbmtdRoleID <= 0)
+    {
+        $('#modal-7 .modal-body').html('Linked Role or List of Priviledges cannot be empty!');
+        $('#modal-7').modal('show', {backdrop: 'static'});
+        return false;
+    }
+    lnkArgs = lnkArgs + "&slctdRolesPrvldgs=" + slctdRolesPrvldgs.slice(0, -1) + "&rlPrvldgSbmtdRoleID=" + rlPrvldgSbmtdRoleID;
     doAjax(lnkArgs, 'myFormsModal', 'ShowDialog', 'System Alert!', 'myFormsModalTitle', 'myFormsModalBody');
 }
 
@@ -677,7 +688,6 @@ function enterKeyFuncAllMdls(e, actionText, slctr, linkArgs)
         getAllMdls(actionText, slctr, linkArgs);
     }
 }
-
 
 function getOneMdlForm(elementID, modalBodyID, titleElementID, formElementID,
         formTitle, mdlID, vtyp, pgNo, actionText)
@@ -740,7 +750,7 @@ function getOneMdlForm(elementID, modalBodyID, titleElementID, formElementID,
                         return false;
                     });
                 }
-
+                $('#' + elementID).off('hidden.bs.modal');
                 $('#' + elementID).on('show.bs.modal', function (e) {
                     $(this).find('.modal-body').css({
                         'max-height': '100%'
@@ -865,7 +875,7 @@ function getOneSbgrpForm(elementID, modalBodyID, titleElementID, formElementID,
                         return false;
                     });
                 }
-
+                $('#' + elementID).off('hidden.bs.modal');
                 $('#' + elementID).on('show.bs.modal', function (e) {
                     $(this).find('.modal-body').css({
                         'max-height': '100%'
@@ -895,6 +905,139 @@ function enterKeyFuncOneSbgrp(e, elementID, modalBodyID, titleElementID, formEle
         getOneSbgrpForm(elementID, modalBodyID, titleElementID, formElementID,
                 formTitle, tblID, vtyp, pgNo, actionText);
     }
+}
+function afterOneSbgrpLblSlctn()
+{
+    var sbmtdTblID = typeof $("#sbmtdTblID").val() === 'undefined' ? '-1' : $("#sbmtdTblID").val();
+    var sbgrpsLblsSlctdLabels = typeof $("#sbgrpsLblsSlctdLabels").val() === 'undefined' ? '-1' : $("#sbgrpsLblsSlctdLabels").val();
+    if (sbmtdTblID > 0) {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+            $body = $("body");
+            $body.removeClass("mdlloadingDiag");
+            $body.removeClass("mdlloading");
+            var obj;
+            var formData = new FormData();
+            formData.append('grp', 3);
+            formData.append('typ', 1);
+            formData.append('pg', 4);
+            formData.append('q', 'VIEW');
+            formData.append('vtyp', 2);
+            formData.append('sbmtdTblID', sbmtdTblID);
+            formData.append('sbgrpsLblsSlctdLabels', sbgrpsLblsSlctdLabels);
+            $.ajax({
+                url: 'index.php',
+                method: 'POST',
+                data: formData,
+                async: true,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data.message.indexOf("Success") !== -1) {
+                        getOneSbgrpForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'sbgrpsLblsForm', '', sbmtdTblID, 1, 4, '');
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.warn(jqXHR.responseText);
+                }
+            });
+        });
+    }
+}
+
+function enblDsblSbgrpLblSlctn(sbmtdCmbntnID, enableDsbl)
+{
+    var sbmtdTblID = typeof $("#sbmtdTblID").val() === 'undefined' ? '-1' : $("#sbmtdTblID").val();
+    if (sbmtdCmbntnID > 0) {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+            $body = $("body");
+            $body.removeClass("mdlloadingDiag");
+            $body.removeClass("mdlloading");
+            var obj;
+            var formData = new FormData();
+            formData.append('grp', 3);
+            formData.append('typ', 1);
+            formData.append('pg', 4);
+            formData.append('q', 'VIEW');
+            formData.append('vtyp', 3);
+            formData.append('sbmtdCmbntnID', sbmtdCmbntnID);
+            formData.append('enableDsbl', enableDsbl);
+            $.ajax({
+                url: 'index.php',
+                method: 'POST',
+                data: formData,
+                async: true,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data.message.indexOf("Success") !== -1) {
+                        getOneSbgrpForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'sbgrpsLblsForm', '', sbmtdTblID, 1, 4, '');
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.warn(jqXHR.responseText);
+                }
+            });
+        });
+    }
+}
+function deleteSbgrpLblSlctn(sbmtdCmbntnID)
+{
+    var msgPrt = "Extra Info Label";
+    var dialog = bootbox.confirm({
+        title: 'Delete ' + msgPrt + '?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">DELETE</span> this ' + msgPrt + '?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true)
+            {
+                var sbmtdTblID = typeof $("#sbmtdTblID").val() === 'undefined' ? '-1' : $("#sbmtdTblID").val();
+                if (sbmtdCmbntnID > 0) {
+                    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        $body = $("body");
+                        $body.removeClass("mdlloadingDiag");
+                        $body.removeClass("mdlloading");
+                        var obj;
+                        var formData = new FormData();
+                        formData.append('grp', 3);
+                        formData.append('typ', 1);
+                        formData.append('pg', 4);
+                        formData.append('q', 'VIEW');
+                        formData.append('vtyp', 4);
+                        formData.append('sbmtdCmbntnID', sbmtdCmbntnID);
+                        $.ajax({
+                            url: 'index.php',
+                            method: 'POST',
+                            data: formData,
+                            async: true,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                if (data.message.indexOf("Success") !== -1) {
+                                    getOneSbgrpForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'sbgrpsLblsForm', '', sbmtdTblID, 1, 4, '');
+                                }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                console.warn(jqXHR.responseText);
+                            }
+                        });
+                    });
+                }
+            }
+        }
+    });
 }
 
 function getAllSecPlcys(actionText, slctr, linkArgs)
@@ -968,7 +1111,7 @@ function saveSecPlcyForm()
         $('#modal-7').modal('show', {backdrop: 'static'});
         return false;
     }
-    lnkArgs = "grp=3&typ=1&q=UPDATE&actyp=2" +
+    lnkArgs = "grp=3&typ=1&pg=5&q=UPDATE&actyp=1" +
             "&scPlcysPlcyID=" + scPlcysPlcyID +
             "&scPlcysPlcyNm=" + scPlcysPlcyNm +
             "&scPlcysIsDflt=" + scPlcysIsDflt +
@@ -1061,10 +1204,11 @@ function saveSrvrStngForm()
     var srvrStnTimeout = typeof $("#srvrStnTimeout").val() === 'undefined' ? '' : $("#srvrStnTimeout").val();
     var srvrStnPGDumpDir = typeof $("#srvrStnPGDumpDir").val() === 'undefined' ? '' : $("#srvrStnPGDumpDir").val();
     var srvrStnBkpDir = typeof $("#srvrStnBkpDir").val() === 'undefined' ? '' : $("#srvrStnBkpDir").val();
+    var srvrStnSmtpIP = typeof $("#srvrStnSmtpIP").val() === 'undefined' ? '' : $("#srvrStnSmtpIP").val();
 
-    if (srvrStnSmtpClnt === "" || srvrStnSmtpClnt === null)
+    if (srvrStnSmtpClnt === "" || srvrStnSmtpClnt === null || srvrStnSmtpIP === "" || srvrStnSmtpIP === null)
     {
-        $('#modal-7 .modal-body').html('SMTP Client cannot be empty!');
+        $('#modal-7 .modal-body').html('SMTP Client and SMTP IP cannot be empty!');
         $('#modal-7').modal('show', {backdrop: 'static'});
         return false;
     }
@@ -1074,7 +1218,7 @@ function saveSrvrStngForm()
         $('#modal-7').modal('show', {backdrop: 'static'});
         return false;
     }
-    lnkArgs = "grp=3&typ=1&q=UPDATE&actyp=11" +
+    lnkArgs = "grp=3&typ=1&pg=6&q=UPDATE&actyp=1" +
             "&srvrStnSmtpClntID=" + srvrStnSmtpClntID +
             "&srvrStnSmtpClnt=" + srvrStnSmtpClnt +
             "&srvrStnIsDflt=" + srvrStnIsDflt +
@@ -1092,7 +1236,9 @@ function saveSrvrStngForm()
             "&srvrStnComPort=" + srvrStnComPort +
             "&srvrStnBaudRate=" + srvrStnBaudRate +
             "&srvrStnTimeout=" + srvrStnTimeout +
-            "&srvrStnPGDumpDir=" + srvrStnPGDumpDir;
+            "&srvrStnPGDumpDir=" + srvrStnPGDumpDir +
+            "&srvrStnBkpDir=" + srvrStnBkpDir +
+            "&srvrStnSmtpIP=" + srvrStnSmtpIP;
     var slctdApiVals = "";
     $('#srvrStngSmsApiTable').find('tr').each(function (i, el) {
         if (i > 0)
@@ -1113,10 +1259,16 @@ function getTrckUsrLgns(actionText, slctr, linkArgs)
     var pageNo = typeof $("#trckUsrLgnsPageNo").val() === 'undefined' ? 1 : $("#trckUsrLgnsPageNo").val();
     var limitSze = typeof $("#trckUsrLgnsDsplySze").val() === 'undefined' ? 10 : $("#trckUsrLgnsDsplySze").val();
     var sortBy = typeof $("#trckUsrLgnsSortBy").val() === 'undefined' ? '' : $("#trckUsrLgnsSortBy").val();
+    var qShwFailedOnly = $('#trckUsrLgnsFailedOnly:checked').length > 0;
+    var qShwSccflOnly = $('#trckUsrLgnsSccflOnly:checked').length > 0;
+    var qShwActvOnly = $('#trckUsrLgnsActvOnly:checked').length > 0;
     if (actionText == 'clear')
     {
         srchFor = "%";
         pageNo = 1;
+        qShwFailedOnly = "false";
+        qShwSccflOnly = "false";
+        qShwActvOnly = "false";
     } else if (actionText == 'next')
     {
         pageNo = parseInt(pageNo) + 1;
@@ -1125,7 +1277,8 @@ function getTrckUsrLgns(actionText, slctr, linkArgs)
         pageNo = parseInt(pageNo) - 1;
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn +
-            "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
+            "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy
+            + "&qShwFailedOnly=" + qShwFailedOnly + "&qShwSccflOnly=" + qShwSccflOnly + "&qShwActvOnly=" + qShwActvOnly;
     openATab(slctr, linkArgs);
 }
 
@@ -1137,10 +1290,89 @@ function enterKeyFuncTrckUsrLgns(e, actionText, slctr, linkArgs)
     }
 }
 
-function getOneUsrLgnDet(pKeyID, lnkArgs)
+function getOneUsrLgnDet(pKeyID, lnkArgs, actionTxt)
 {
+    if (typeof actionTxt === 'undefined' || actionTxt === null)
+    {
+        actionTxt = 'ShowDialog';
+    }
     lnkArgs = lnkArgs + '&sbmtdLgnNum=' + pKeyID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalLg', 'ShowDialog', 'User Logon Activity Logs (ID:' + pKeyID + ')', 'myFormsModalTitleLg', 'myFormsModalBodyLg', function () {});
+    doAjaxWthCallBck(lnkArgs, 'myFormsModalLg', actionTxt, 'User Logon Activity Logs (ID:' + pKeyID + ')', 'myFormsModalTitleLg', 'myFormsModalBodyLg', function () {});
+    $('#myFormsModalLg').off('hidden.bs.modal');
+}
+
+function forceUsrLgout(pKeyID)
+{
+    if (pKeyID <= 0) {
+        bootbox.alert({
+            title: 'System Alert!',
+            size: 'small',
+            message: 'Please select an Active Login First!'});
+        return false;
+    }
+    var dialog = bootbox.confirm({
+        title: 'Force Logout?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">FORCE LOGOUT</span> this LOGON?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true)
+            {
+                var dialog1 = bootbox.alert({
+                    title: 'Force Logout?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Logging Out Selected Logon...Please Wait...</p>',
+                    callback: function () {
+                        getTrckUsrLgns('', '#allmodules', 'grp=3&typ=1&pg=7&vtyp=0');
+                    }
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 3,
+                                    typ: 1,
+                                    pg: 7,
+                                    actyp: 1,
+                                    q: 'DELETE',
+                                    lgnUserID: pKeyID
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1)
+                                {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                }
+                            });
+                        });
+                    } else
+                    {
+                        setTimeout(function () {
+                            dialog1.find('.bootbox-body').html('<span style="color:red;">Nothing to Withdraw!</span>');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
+
 }
 
 function getAdtTrails(actionText, slctr, linkArgs)
@@ -1375,7 +1607,10 @@ function delUser(rowIDAttrb)
                 var dialog1 = bootbox.alert({
                     title: 'Delete Survey/Election?',
                     size: 'small',
-                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Survey/Election...Please Wait...</p>'
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Survey/Election...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {

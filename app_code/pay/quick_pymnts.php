@@ -9,29 +9,152 @@ $canview = test_prmssns($dfltPrvldgs[1], $mdlNm);
 $canAddQckPay = test_prmssns($dfltPrvldgs[9], $mdlNm);
 $canRvrsQckPay = test_prmssns($dfltPrvldgs[10], $mdlNm);
 $canVwOthrsQckPay = test_prmssns($dfltPrvldgs[38], $mdlNm);
+$canAddItm = test_prmssns($dfltPrvldgs[31], $mdlNm);
+$canEdtItm = test_prmssns($dfltPrvldgs[32], $mdlNm);
+$canDelItm = test_prmssns($dfltPrvldgs[33], $mdlNm);
 
 if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($lgn_num > 0 && $canview === true) {
         if ($qstr == "DELETE") {
             if ($actyp == 1) {
-                
+                //"Removing Set Person Item...";  
+                if ($canDelItm === FALSE) {
+                    ?>
+                    <div class="container-fluid"  style="float:none;width:100%;text-align: center;padding:0px 0px 0px 25px !important;">
+                        <div class="row" style="float:none;width:100%;text-align: center;">
+                            <span style="color:red;font-weight:bold;font-size:16px;font-style: italic;font-family: Georgia;width:100%;text-align: center;">Deletion Failed! Permission Denied!</span>
+                        </div>
+                    </div>
+                    <?php
+                    exit();
+                }
+                $prsnLocID = isset($_POST['prsnLocID']) ? cleanInputData($_POST['prsnLocID']) : -1;
+                $pKeyID = isset($_POST['pKeyID']) ? cleanInputData($_POST['pKeyID']) : -1;
+                echo deletePayItmPrs($prsnSetDetID, $prsnLocID);
+            } else if ($actyp == 2) {
+                //"Removing Set Person Account...";  
+                if ($canDelItm === FALSE) {
+                    ?>
+                    <div class="container-fluid"  style="float:none;width:100%;text-align: center;padding:0px 0px 0px 25px !important;">
+                        <div class="row" style="float:none;width:100%;text-align: center;">
+                            <span style="color:red;font-weight:bold;font-size:16px;font-style: italic;font-family: Georgia;width:100%;text-align: center;">Deletion Failed! Permission Denied!</span>
+                        </div>
+                    </div>
+                    <?php
+                    exit();
+                }
+                $prsnLocID = isset($_POST['prsnLocID']) ? cleanInputData($_POST['prsnLocID']) : -1;
+                $pKeyID = isset($_POST['pKeyID']) ? cleanInputData($_POST['pKeyID']) : -1;
+                echo deleteAccount($prsnSetDetID, $prsnLocID);
             }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {
-                
+                //"Saving Person Items...";
+                $sbmtdPrsnSetMmbrID = isset($_POST['sbmtdPrsnSetMmbrID']) ? cleanInputData($_POST['sbmtdPrsnSetMmbrID']) : '';
+                $slctdPrsnItems = isset($_POST['slctdPrsnItems']) ? cleanInputData($_POST['slctdPrsnItems']) : '';
+
+                if (trim($slctdPrsnItems, "|~") != "" && $sbmtdPrsnSetMmbrID > 0) {
+                    //Save Persons
+                    $variousRows = explode("|", trim($slctdPrsnItems, "|"));
+                    for ($z = 0; $z < count($variousRows); $z++) {
+                        $crntRow = explode("~", $variousRows[$z]);
+                        if (count($crntRow) == 5) {
+                            $ln_PKeyID = (float) cleanInputData1($crntRow[0]);
+                            $ln_PrsItmID = (float) cleanInputData1($crntRow[1]);
+                            $ln_PrsItmValID = (float) cleanInputData1($crntRow[2]);
+                            $ln_StrtDte = cleanInputData1($crntRow[3]);
+                            $ln_EndDte = cleanInputData1($crntRow[4]);
+                            if ($ln_StrtDte == "") {
+                                $ln_StrtDte = $gnrlTrnsDteDMY;
+                            }
+                            if ($ln_EndDte == "") {
+                                $ln_EndDte = "31-Dec-4000";
+                            }
+                            if ($ln_PKeyID <= 0 && $ln_PrsItmID > 0 && $ln_PrsItmValID > 0) {
+                                createBnftsPrs($sbmtdPrsnSetMmbrID, $ln_PrsItmID, $ln_PrsItmValID, $ln_StrtDte, $ln_EndDte);
+                            } else if ($ln_PrsItmID > 0 && $ln_PrsItmValID > 0) {
+                                updateBnftsPrs($sbmtdPrsnSetMmbrID, $ln_PKeyID, $ln_PrsItmValID, $ln_StrtDte, $ln_EndDte);
+                            }
+                        }
+                    }
+                    ?>
+                    <div class="container-fluid"  style="float:none;width:100%;text-align: center;padding:0px 0px 0px 25px !important;">
+                        <div class="row" style="float:none;width:100%;text-align: center;">
+                            <span style="color:green;font-weight:bold;font-size:16px;font-style: italic;font-family: Georgia;width:100%;text-align: center;">Person Item(s) Added Successfully!</span>
+                        </div>
+                    </div>
+                    <?php
+                } else {
+                    ?>
+                    <div class="container-fluid"  style="float:none;width:100%;text-align: center;padding:0px 0px 0px 25px !important;">
+                        <div class="row" style="float:none;width:100%;text-align: center;">
+                            <span style="color:red;font-weight:bold;font-size:16px;font-style: italic;font-family: Georgia;width:100%;text-align: center;">Failed to Add Person Item(s)!</span>
+                        </div>
+                    </div>
+                    <?php
+                }
             } else if ($actyp == 2) {
-                
+                //"Saving Person Items...";
+                $sbmtdPrsnSetMmbrID = isset($_POST['sbmtdPrsnSetMmbrID']) ? cleanInputData($_POST['sbmtdPrsnSetMmbrID']) : '';
+                $slctdPrsnAccount = isset($_POST['slctdPrsnAccount']) ? cleanInputData($_POST['slctdPrsnAccount']) : '';
+
+                $errMsg = "";
+                $affctd = 0;
+                if (trim($slctdPrsnAccount, "|~") != "" && $sbmtdPrsnSetMmbrID > 0) {
+                    //Save Accounts
+                    $variousRows = explode("|", trim($slctdPrsnAccount, "|"));
+                    for ($z = 0; $z < count($variousRows); $z++) {
+                        $crntRow = explode("~", $variousRows[$z]);
+                        if (count($crntRow) == 8) {
+                            $ln_PKeyID = (float) cleanInputData1($crntRow[0]);
+                            $ln_BankNm = cleanInputData1($crntRow[1]);
+                            $ln_BankBrnchs = cleanInputData1($crntRow[2]);
+                            $ln_AcntNm = cleanInputData1($crntRow[3]);
+                            $ln_AcntNum = cleanInputData1($crntRow[4]);
+                            $ln_AcntTyp = cleanInputData1($crntRow[5]);
+                            $ln_NetPrtn = (float) cleanInputData1($crntRow[6]);
+                            $ln_PrtnUOM = cleanInputData1($crntRow[7]);
+                            if ($ln_PrtnUOM != "Percent" && $ln_PrtnUOM != $fnccurnm) {
+                                $errMsg .= "<br/>Row (" . ($z + 1) . "): Portion's UOM can Only be '" . $fnccurnm . "' or 'Percent'!";
+                            }
+                            if (strtolower($ln_PrtnUOM) == "percent" && $ln_NetPrtn > 100) {
+                                $errMsg .= "<br/>Row (" . ($z + 1) . "): Net Pay Portion cannot be greater than 100 if UOM is Percent!";
+                            }
+                            if ($ln_PKeyID <= 0 && $errMsg == "") {
+                                $affctd += createBank($sbmtdPrsnSetMmbrID, $ln_BankBrnchs, $ln_BankNm, $ln_AcntNm, $ln_AcntNum, $ln_AcntTyp, $ln_NetPrtn, $ln_PrtnUOM);
+                            } else if ($errMsg == "") {
+                                $affctd += updateAccount($sbmtdPrsnSetMmbrID, $ln_PKeyID, $ln_BankBrnchs, $ln_BankNm, $ln_AcntNm, $ln_AcntNum, $ln_AcntTyp, $ln_NetPrtn, $ln_PrtnUOM);
+                            }
+                        }
+                    }
+                    ?>
+                    <div class="container-fluid"  style="float:none;width:100%;text-align: center;padding:0px 0px 0px 25px !important;">
+                        <div class="row" style="float:none;width:100%;text-align: center;">
+                            <span style="color:green;font-weight:bold;font-size:16px;font-style: italic;font-family: Georgia;width:100%;text-align: center;"><?php echo $affctd; ?> Person Account(s) Added Successfully!</span>
+                            <span style="color:red;font-weight:bold;font-size:16px;font-style: italic;font-family: Georgia;width:100%;text-align: center;"><?php echo $errMsg; ?></span>
+                        </div>
+                    </div>
+                    <?php
+                } else {
+                    ?>
+                    <div class="container-fluid"  style="float:none;width:100%;text-align: center;padding:0px 0px 0px 25px !important;">
+                        <div class="row" style="float:none;width:100%;text-align: center;">
+                            <span style="color:red;font-weight:bold;font-size:16px;font-style: italic;font-family: Georgia;width:100%;text-align: center;">Failed to Add Person Account(s)!</span>
+                        </div>
+                    </div>
+                    <?php
+                }
             }
         } else {
             $prsnid = $_SESSION['PRSN_ID'];
             $dfltStoreID = getUserStoreID($usrID, $orgID);
             $dfltStoreNm = getGnrlRecNm("inv.inv_itm_subinventories", "subinv_id", "subinv_name", $dfltStoreID);
             if ($vwtyp == 0) {
-                $sbmtdPrsnSetID = isset($_POST['sbmtdPrsnSetID']) ? $_POST['sbmtdPrsnSetID'] : -1;
-                $sbmtdItmSetID = isset($_POST['sbmtdItmSetID']) ? $_POST['sbmtdItmSetID'] : -1;
-                $sbmtdPrsnSetMmbrID = isset($_POST['sbmtdPrsnSetMmbrID']) ? $_POST['sbmtdPrsnSetMmbrID'] : -1;
-                $sbmtdPrsnSetNm = "";
-                $sbmtdItmSetNm = "";
+                $sbmtdPrsnSetID = isset($_POST['sbmtdPrsnSetID']) ? (int) $_POST['sbmtdPrsnSetID'] : -1;
+                $sbmtdItmSetID = isset($_POST['sbmtdItmSetID']) ? (int) $_POST['sbmtdItmSetID'] : -1;
+                $sbmtdPrsnSetMmbrID = isset($_POST['sbmtdPrsnSetMmbrID']) ? (int) $_POST['sbmtdPrsnSetMmbrID'] : -1;
+                $sbmtdPrsnSetNm = getPrsStName($sbmtdPrsnSetID);
+                $sbmtdItmSetNm = getItmStName($sbmtdItmSetID);
                 echo $cntent . "<li>
                                     <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
                                     <span style=\"text-decoration:none;\">Person Payments & Setups</span>
@@ -66,7 +189,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <div class="row rhoRowMargin">
                         <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                             <div class="input-group">
-                                <input class="form-control" id="qckPayPrsnsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncQckPayPrsns(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                <input class="form-control" id="qckPayPrsnsSrchFor" type = "text" placeholder="Search For" value="<?php
+                                echo trim(str_replace("%", " ", $srchFor));
+                                ?>" onkeyup="enterKeyFuncQckPayPrsns(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
                                 <input id="qckPayPrsnsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getQckPayPrsns('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
                                     <span class="glyphicon glyphicon-remove"></span>
@@ -138,8 +263,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <input type="hidden" class="form-control" aria-label="..." id="qckPayPrsnSetID" name="qckPayPrsnSetID" value="<?php echo $sbmtdPrsnSetID; ?>">
                                         <input type="hidden" class="form-control" aria-label="..." id="qckPayOrgID" name="qckPayOrgID" value="<?php echo $orgID; ?>">
                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Person Sets for Payments(Enabled)', 'qckPayOrgID', '', '', 'radio', true, '<?php echo $sbmtdPrsnSetID; ?>', 'qckPayPrsnSetID', 'qckPayPrsnSetNm', 'clear', 0, '', function () {
-                                                    reloadPrsnsInSet();
-                                                });">
+                                                                    rfrshQckPayPrsns();
+                                                                });">
                                             <span class="glyphicon glyphicon-th-list"></span>
                                         </label>
                                     </div>
@@ -156,11 +281,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </div>
                             </div>
                             <div class="col-lg-6" style="padding:0px 15px 0px 15px !important;">
-                                <button type="button" class="btn btn-default btn-sm" onclick="">
+                                <button type="button" class="btn btn-default btn-sm" onclick="getOnePayMassPyDiag(-1, 1, 'YES');">
                                     <img src="cmn_images/pay.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                     New Bill/Payment
                                 </button>
-                                <button type="button" class="btn btn-default btn-sm" onclick="">
+                                <button type="button" class="btn btn-default btn-sm" onclick="getOneScmSalesInvcForm(-1, 3, 'ShowDialog', 'Sales Invoice', 'YES', 'QUICK_PAY');">
                                     <img src="cmn_images/payment_256.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                     New Invoice
                                 </button>
@@ -252,6 +377,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             <label for="idNo" class="control-label col-md-4">ID No:</label>
                                                                             <div class="col-md-8">
                                                                                 <span><?php echo $row1[1]; ?></span>
+                                                                                <input type="hidden" id="qckPayPrsns_PrsnID" value="<?php echo $sbmtdPrsnSetMmbrID; ?>"/>
                                                                             </div>
                                                                         </div> 
                                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
@@ -331,7 +457,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             $lmtSze = 10;
                                                             $srchFor = "%";
                                                             $srchIn = "Name/Number";
-                                                            $total = get_MyPyRnsTtl($srchFor, $srchIn, $sbmtdPrsnSetMmbrID);
+                                                            $total = get_MyPyRnsTtl($srchFor, $srchIn, $sbmtdPrsnSetMmbrID, 1);
                                                             if ($pageNo > ceil($total / $lmtSze)) {
                                                                 $pageNo = 1;
                                                             } else if ($pageNo < 1) {
@@ -339,7 +465,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             }
 
                                                             $curIdx = $pageNo - 1;
-                                                            $result2 = get_MyPyRnsTblr($srchFor, $srchIn, $curIdx, $lmtSze, $sbmtdPrsnSetMmbrID);
+                                                            $result2 = get_MyPyRnsTblr($srchFor, $srchIn, $curIdx, $lmtSze, $sbmtdPrsnSetMmbrID, 1);
                                                             $colClassType1 = "col-lg-2";
                                                             $colClassType3 = "col-lg-5";
                                                             $vwtyp = 2;
@@ -348,7 +474,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <div class="row">
                                                                     <div class="<?php echo $colClassType3; ?>" style="padding:0px 15px 0px 15px !important;">
                                                                         <div class="input-group">
-                                                                            <input class="form-control" id="prsnPyHstrysSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncPrsnPyHstrys(event, '', '#prsnPyHstrysList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdPrsnSetMmbrID=<?php echo $sbmtdPrsnSetMmbrID; ?>');">
+                                                                            <input class="form-control" id="prsnPyHstrysSrchFor" type = "text" placeholder="Search For" value="<?php
+                                                                            echo trim(str_replace("%", " ", $srchFor));
+                                                                            ?>" onkeyup="enterKeyFuncPrsnPyHstrys(event, '', '#prsnPyHstrysList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdPrsnSetMmbrID=<?php echo $sbmtdPrsnSetMmbrID; ?>');">
                                                                             <input id="prsnPyHstrysPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="getPrsnPyHstrys('clear', '#prsnPyHstrysList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdPrsnSetMmbrID=<?php echo $sbmtdPrsnSetMmbrID; ?>');">
                                                                                 <span class="glyphicon glyphicon-remove"></span>
@@ -420,8 +548,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     <th>Description</th>
                                                                                     <th>Person Set</th>
                                                                                     <th>Item Set</th>
-                                                                                    <th>Has Been Run?</th>
-                                                                                    <th>Sent to GL?</th>
+                                                                                    <th style="text-align:center;">Has Been Run?</th>
+                                                                                    <th style="text-align:center;">Sent to GL?</th>
                                                                                     <th>&nbsp;</th>
                                                                                 </tr>
                                                                             </thead>
@@ -447,7 +575,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                         <td class="lovtd">
                                                                                             <span><?php echo $row2[11]; ?></span>                                                       
                                                                                         </td>
-                                                                                        <td class="lovtd">
+                                                                                        <td class="lovtd" style="text-align:center;">
                                                                                             <?php
                                                                                             $isChkd = "";
                                                                                             if ($row2[12] == "1") {
@@ -462,7 +590,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                                 </div>
                                                                                             </div>
                                                                                         </td>
-                                                                                        <td class="lovtd">
+                                                                                        <td class="lovtd" style="text-align:center;">
                                                                                             <?php
                                                                                             $isChkd = "";
                                                                                             if ($row2[13] == "1") {
@@ -478,9 +606,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                             </div>
                                                                                         </td>
                                                                                         <td class="lovtd">
-                                                                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="getOnePrsnPyHstrysForm(<?php echo $row2[1]; ?>, <?php echo $row2[0]; ?>, 1, <?php echo $sbmtdPrsnSetMmbrID; ?>, '<?php echo $row2[2]; ?>');" data-toggle="tooltip" data-placement="bottom" title="View Details">
-                                                                                                <img src="cmn_images/kghostview.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
-                                                                                            </button>
+                                                                                            <?php if ($row2[12] == "1" || $row2[1] <= 0) { ?>
+                                                                                                <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="getOnePrsnPyHstrysForm(<?php echo $row2[1]; ?>, <?php echo $row2[0]; ?>, 1, <?php echo $sbmtdPrsnSetMmbrID; ?>, '<?php echo $row2[2]; ?>');" data-toggle="tooltip" data-placement="bottom" title="View Details">
+                                                                                                    <img src="cmn_images/kghostview.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                                                                </button>
+                                                                                            <?php } else { ?>
+                                                                                                <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="getOnePayMassPyDiag(<?php echo $row2[1]; ?>, 1, 'YES');" data-toggle="tooltip" data-placement="bottom" title="View Details">
+                                                                                                    <img src="cmn_images/edit32.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                                                                </button>
+                                                                                            <?php } ?>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <?php
@@ -563,6 +697,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="idNo" class="control-label col-md-4">ID No:</label>
                                                             <div class="col-md-8">
                                                                 <span><?php echo $row1[1]; ?></span>
+                                                                <input type="hidden" id="qckPayPrsns_PrsnID" value="<?php echo $sbmtdPrsnSetMmbrID; ?>"/>
                                                             </div>
                                                         </div> 
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
@@ -642,7 +777,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $lmtSze = 10;
                                             $srchFor = "%";
                                             $srchIn = "Name/Number";
-                                            $total = get_MyPyRnsTtl($srchFor, $srchIn, $sbmtdPrsnSetMmbrID);
+                                            $total = get_MyPyRnsTtl($srchFor, $srchIn, $sbmtdPrsnSetMmbrID, 1);
                                             if ($pageNo > ceil($total / $lmtSze)) {
                                                 $pageNo = 1;
                                             } else if ($pageNo < 1) {
@@ -650,7 +785,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             }
 
                                             $curIdx = $pageNo - 1;
-                                            $result2 = get_MyPyRnsTblr($srchFor, $srchIn, $curIdx, $lmtSze, $sbmtdPrsnSetMmbrID);
+                                            $result2 = get_MyPyRnsTblr($srchFor, $srchIn, $curIdx, $lmtSze, $sbmtdPrsnSetMmbrID, 1);
                                             $colClassType1 = "col-lg-2";
                                             $colClassType3 = "col-lg-5";
                                             $vwtyp = 2;
@@ -659,7 +794,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="row">
                                                     <div class="<?php echo $colClassType3; ?>" style="padding:0px 15px 0px 15px !important;">
                                                         <div class="input-group">
-                                                            <input class="form-control" id="prsnPyHstrysSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncPrsnPyHstrys(event, '', '#prsnPyHstrysList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdPrsnSetMmbrID=<?php echo $sbmtdPrsnSetMmbrID; ?>');">
+                                                            <input class="form-control" id="prsnPyHstrysSrchFor" type = "text" placeholder="Search For" value="<?php
+                                                            echo trim(str_replace("%", " ", $srchFor));
+                                                            ?>" onkeyup="enterKeyFuncPrsnPyHstrys(event, '', '#prsnPyHstrysList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdPrsnSetMmbrID=<?php echo $sbmtdPrsnSetMmbrID; ?>');">
                                                             <input id="prsnPyHstrysPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="getPrsnPyHstrys('clear', '#prsnPyHstrysList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdPrsnSetMmbrID=<?php echo $sbmtdPrsnSetMmbrID; ?>');">
                                                                 <span class="glyphicon glyphicon-remove"></span>
@@ -789,9 +926,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             </div>
                                                                         </td>
                                                                         <td class="lovtd">
-                                                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="getOnePrsnPyHstrysForm(<?php echo $row2[1]; ?>, <?php echo $row2[0]; ?>, 1, <?php echo $sbmtdPrsnSetMmbrID; ?>, '<?php echo $row2[2]; ?>');" data-toggle="tooltip" data-placement="bottom" title="View Details">
-                                                                                <img src="cmn_images/kghostview.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
-                                                                            </button>
+                                                                            <?php if ($row2[12] == "1" || $row2[1] <= 0) { ?>
+                                                                                <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="getOnePrsnPyHstrysForm(<?php echo $row2[1]; ?>, <?php echo $row2[0]; ?>, 1, <?php echo $sbmtdPrsnSetMmbrID; ?>, '<?php echo $row2[2]; ?>');" data-toggle="tooltip" data-placement="bottom" title="View Details">
+                                                                                    <img src="cmn_images/kghostview.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                                                </button>
+                                                                            <?php } else { ?>
+                                                                                <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="getOnePayMassPyDiag(<?php echo $row2[1]; ?>, 1, 'YES');" data-toggle="tooltip" data-placement="bottom" title="View Details">
+                                                                                    <img src="cmn_images/edit32.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                                                </button>
+                                                                            <?php } ?>
                                                                         </td>
                                                                     </tr>
                                                                     <?php
@@ -818,7 +961,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 }
             } else if ($vwtyp == 2) {
                 $sbmtdPrsnSetMmbrID = isset($_POST['sbmtdPrsnSetMmbrID']) ? $_POST['sbmtdPrsnSetMmbrID'] : -1;
-                $total = get_MyPyRnsTtl($srchFor, $srchIn, $sbmtdPrsnSetMmbrID);
+                $total = get_MyPyRnsTtl($srchFor, $srchIn, $sbmtdPrsnSetMmbrID, 1);
                 if ($pageNo > ceil($total / $lmtSze)) {
                     $pageNo = 1;
                 } else if ($pageNo < 1) {
@@ -826,7 +969,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 }
 
                 $curIdx = $pageNo - 1;
-                $result2 = get_MyPyRnsTblr($srchFor, $srchIn, $curIdx, $lmtSze, $sbmtdPrsnSetMmbrID);
+                $result2 = get_MyPyRnsTblr($srchFor, $srchIn, $curIdx, $lmtSze, $sbmtdPrsnSetMmbrID, 1);
                 $colClassType1 = "col-lg-2";
                 $colClassType3 = "col-lg-5";
                 $vwtyp = 2;
@@ -834,7 +977,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <div class="row">
                     <div class="<?php echo $colClassType3; ?>" style="padding:0px 15px 0px 15px !important;">
                         <div class="input-group">
-                            <input class="form-control" id="prsnPyHstrysSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncPrsnPyHstrys(event, '', '#prsnPyHstrysList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdPrsnSetMmbrID=<?php echo $sbmtdPrsnSetMmbrID; ?>');">
+                            <input class="form-control" id="prsnPyHstrysSrchFor" type = "text" placeholder="Search For" value="<?php
+                            echo trim(str_replace("%", " ", $srchFor));
+                            ?>" onkeyup="enterKeyFuncPrsnPyHstrys(event, '', '#prsnPyHstrysList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdPrsnSetMmbrID=<?php echo $sbmtdPrsnSetMmbrID; ?>');">
                             <input id="prsnPyHstrysPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                             <label class="btn btn-primary btn-file input-group-addon" onclick="getPrsnPyHstrys('clear', '#prsnPyHstrysList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdPrsnSetMmbrID=<?php echo $sbmtdPrsnSetMmbrID; ?>');">
                                 <span class="glyphicon glyphicon-remove"></span>
@@ -964,9 +1109,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </div>
                                         </td>
                                         <td class="lovtd">
-                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="getOnePrsnPyHstrysForm(<?php echo $row2[1]; ?>, <?php echo $row2[0]; ?>, 1, <?php echo $sbmtdPrsnSetMmbrID; ?>, '<?php echo $row2[2]; ?>');" data-toggle="tooltip" data-placement="bottom" title="View Details">
-                                                <img src="cmn_images/kghostview.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
-                                            </button>
+                                            <?php if ($row2[12] == "1" || $row2[1] <= 0) { ?>
+                                                <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="getOnePrsnPyHstrysForm(<?php echo $row2[1]; ?>, <?php echo $row2[0]; ?>, 1, <?php echo $sbmtdPrsnSetMmbrID; ?>, '<?php echo $row2[2]; ?>');" data-toggle="tooltip" data-placement="bottom" title="View Details">
+                                                    <img src="cmn_images/kghostview.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            <?php } else { ?>
+                                                <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="getOnePayMassPyDiag(<?php echo $row2[1]; ?>, 1, 'YES');" data-toggle="tooltip" data-placement="bottom" title="View Details">
+                                                    <img src="cmn_images/edit32.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            <?php } ?>
                                         </td>
                                     </tr>
                                     <?php
@@ -1008,6 +1159,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         . "<td class=\"lovtd\">
                                               <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
                                                             <div class=\"input-group\"  style=\"width:100%;\">
+                                                                <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"prsnItmsRow_WWW123WWW_PKeyID\" value=\"-1\">
                                                                 <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"prsnItmsRow_WWW123WWW_PrsItmNm\" value=\"\">
                                                                 <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"prsnItmsRow_WWW123WWW_PrsItmID\" value=\"-1\">
                                                                 <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Pay Items', '', '', '', 'radio', true, '', 'prsnItmsRow_WWW123WWW_PrsItmID', 'prsnItmsRow_WWW123WWW_PrsItmNm', 'clear', 0, '');\">
@@ -1045,7 +1197,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             </td>";
                                 if ($canDelPrsItm === true) {
                                     $nwRowHtml .= "<td class=\"lovtd\">
-                                                        <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Person Item\">
+                                                        <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delPrsnItem('prsnItmsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Person Item\">
                                                             <img src=\"cmn_images/no.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
                                                         </button>
                                                     </td>";
@@ -1073,7 +1225,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             ?>
                             <div class="<?php echo $colClassType3; ?>" style="padding:0px 10px 0px 10px !important;">
                                 <div class="input-group">
-                                    <input class="form-control" id="prsnItmsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncPrsnItms(event, '', '#prsnPyItmsAsgndPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdPrsnSetMmbrID=<?php echo $sbmtdPrsnSetMmbrID; ?>');">
+                                    <input class="form-control" id="prsnItmsSrchFor" type = "text" placeholder="Search For" value="<?php
+                                    echo trim(str_replace("%", " ", $srchFor));
+                                    ?>" onkeyup="enterKeyFuncPrsnItms(event, '', '#prsnPyItmsAsgndPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdPrsnSetMmbrID=<?php echo $sbmtdPrsnSetMmbrID; ?>');">
                                     <input id="prsnItmsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getAllPrsnItms('clear', '#prsnPyItmsAsgndPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdPrsnSetMmbrID=<?php echo $sbmtdPrsnSetMmbrID; ?>');">
                                         <span class="glyphicon glyphicon-remove"></span>
@@ -1158,6 +1312,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <td class="lovtd"><span class="normaltd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
                                                 <td class="lovtd">
                                                     <span><?php echo $itmName; ?></span>
+                                                    <input type="hidden" class="form-control" aria-label="..." id="prsnItmsRow<?php echo $cntr; ?>_PKeyID" value="<?php echo $row1[4]; ?>">
                                                     <input type="hidden" class="form-control" aria-label="..." id="prsnItmsRow<?php echo $cntr; ?>_PrsItmID" value="<?php echo $row1[0]; ?>">   
                                                     <input type="hidden" class="form-control" aria-label="..." id="prsnItmsRow<?php echo $cntr; ?>_PrsItmValID" value="<?php echo $row1[1]; ?>">                                                       
                                                 </td>   
@@ -1208,7 +1363,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 if ($canDelPrsItm === true) {
                                                     ?>
                                                     <td class="lovtd">
-                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="" data-toggle="tooltip" data-placement="bottom" title="Delete Person Item">
+                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delPrsnItem('prsnItmsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Person Item">
                                                             <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                         </button>
                                                     </td>
@@ -1243,46 +1398,62 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 $nwRowHtml = "<tr id=\"prsnBanksRow__WWW123WWW\">"
                                         . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
                                         . "<td class=\"lovtd\">
-                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                        <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
                                                             <div class=\"input-group\"  style=\"width:100%;\">
-                                                                <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"prsnBanksRow_WWW123WWW_PrsItmNm\" value=\"\">
-                                                                <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"prsnBanksRow_WWW123WWW_PrsItmID\" value=\"-1\">
-                                                                <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Pay Items', '', '', '', 'radio', true, '', 'prsnBanksRow_WWW123WWW_PrsItmID', 'prsnBanksRow_WWW123WWW_PrsItmNm', 'clear', 0, '');\">
+                                                                <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"prsnBanksRow_WWW123WWW_PKeyID\" value=\"-1\">
+                                                                <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"prsnBanksRow_WWW123WWW_BankNm\" value=\"\">
+                                                                <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Banks', '', '', '', 'radio', true, '', 'prsnBanksRow_WWW123WWW_BankNm', '', 'clear', 0, '');\">
                                                                     <span class=\"glyphicon glyphicon-th-list\"></span>
                                                                 </label>
                                                             </div>
-                                              </div>
-                                          </td>
-                                          <td class=\"lovtd\">
-                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                        </div>
+                                                </td>   
+                                                <td class=\"lovtd\">
+                                                        <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
                                                             <div class=\"input-group\"  style=\"width:100%;\">
-                                                                <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"prsnBanksRow_WWW123WWW_PrsItmValNm\" value=\"\">   
-                                                                <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"prsnBanksRow_WWW123WWW_PrsItmValID\" value=\"-1\">
-                                                                <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Pay Item Values', 'prsnBanksRow_WWW123WWW_PrsItmID', '', '', 'radio', true, '', 'prsnBanksRow_WWW123WWW_PrsItmValID', 'prsnBanksRow_WWW123WWW_PrsItmValNm', 'clear', 0, '');\">
+                                                                <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"prsnBanksRow_WWW123WWW_BankBrnchs\" value=\"\">
+                                                                <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Bank Branches', '', '', '', 'radio', true, '', 'prsnBanksRow_WWW123WWW_BankBrnchs', '', 'clear', 0, '');\">
                                                                     <span class=\"glyphicon glyphicon-th-list\"></span>
                                                                 </label>
                                                             </div>
-                                              </div>
-                                          </td>
-                                          <td class=\"lovtd\">&nbsp;</td>
-                                           <td class=\"lovtd\"><div class=\"form-group form-group-sm col-md-12\" style=\"padding:1px 1px 0px 1px !important;\">
-                                                                <div class=\"input-group date form_date\" data-date=\"\" data-date-format=\"dd-M-yyyy\" data-link-field=\"dtp_input2\" data-link-format=\"yyyy-mm-dd\" style=\"width:100%\">
-                                                                    <input class=\"form-control\" size=\"16\" type=\"text\" id=\"prsnBanksRow_WWW123WWW_StrtDte\" name=\"prsnBanksRow_WWW123WWW_StrtDte\" value=\"\" readonly=\"\">
-                                                                    <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-remove\"></span></span>
-                                                                    <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-calendar\"></span></span>
-                                                                </div>                                                                
-                                                            </div></td>"
-                                        . "<td class=\"lovtd\"><div class=\"form-group form-group-sm col-md-12\" style=\"padding:1px 1px 0px 1px !important;\">
-                                                                <div class=\"input-group date form_date\" data-date=\"\" data-date-format=\"dd-M-yyyy\" data-link-field=\"dtp_input2\" data-link-format=\"yyyy-mm-dd\" style=\"width:100%\">
-                                                                    <input class=\"form-control\" size=\"16\" type=\"text\" id=\"prsnBanksRow_WWW123WWW_EndDte\" name=\"prsnBanksRow_WWW123WWW_EndDte\" value=\"\" readonly=\"\">
-                                                                    <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-remove\"></span></span>
-                                                                    <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-calendar\"></span></span>
-                                                                </div>                                                                
+                                                        </div>  
+                                                </td>
+                                                <td class=\"lovtd\">
+                                                        <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                            <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"prsnBanksRow_WWW123WWW_AcntNm\" value=\"\">
+                                                        </div>                                                           
+                                                </td>                                                
+                                                <td class=\"lovtd\">
+                                                        <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                            <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"prsnBanksRow_WWW123WWW_AcntNum\" value=\"\">
+                                                        </div>                                                       
+                                                </td>
+                                                <td class=\"lovtd\">
+                                                        <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                            <div class=\"input-group\"  style=\"width:100%;\">
+                                                                <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"prsnBanksRow_WWW123WWW_AcntTyp\" value=\"\">
+                                                                <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Bank Account Types', '', '', '', 'radio', true, '', 'prsnBanksRow_WWW123WWW_AcntTyp', '', 'clear', 0, '');\">
+                                                                    <span class=\"glyphicon glyphicon-th-list\"></span>
+                                                                </label>
                                                             </div>
-                                                            </td>";
+                                                        </div>                                                         
+                                                </td>                                                
+                                                <td class=\"lovtd\"  style=\"text-align: right;max-width:50px !important;width:50px !important;\">
+                                                        <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                            <input style=\"text-align: right;max-width:50px !important;width:50px !important;\" type=\"number\" class=\"form-control\" aria-label=\"...\" id=\"prsnBanksRow_WWW123WWW_NetPrtn\" value=\"100\">
+                                                        </div>                                                          
+                                                </td>                                                
+                                                <td class=\"lovtd\">
+                                                        <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">                                                            
+                                                            <select data-placeholder=\"Select...\" class=\"form-control chosen-select\" id=\"prsnBanksRow_WWW123WWW_PrtnUOM\" name=\"prsnBanksRow_WWW123WWW_PrtnUOM\">
+                                                                    <option value=\"Percent\" selected>Percent</option>
+                                                                    <option value=\"Money\">Money</option>
+                                                            </select>
+                                                        </div>                                                      
+                                                </td>";
                                 if ($canDelPrsItm === true) {
                                     $nwRowHtml .= "<td class=\"lovtd\">
-                                                        <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Account\">
+                                                        <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delPrsnAccount('prsnBanksRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Account\">
                                                             <img src=\"cmn_images/no.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
                                                         </button>
                                                     </td>";
@@ -1294,7 +1465,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('prsnBanksTable', 0, '<?php echo $nwRowHtml; ?>');" data-toggle="tooltip" data-placement="bottom" title="New Personal Account">
                                         <img src="cmn_images/add1-64.png" style="height:20px; width:auto; position: relative; vertical-align: middle;"> New Bank Account 
                                     </button>
-                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="savePrsnItmsForm();" data-toggle="tooltip" data-placement="bottom" title="Save Personal Accounts">
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="savePrsnAccountForm();" data-toggle="tooltip" data-placement="bottom" title="Save Personal Accounts">
                                         <img src="cmn_images/FloppyDisk.png" style="height:20px; width:auto; position: relative; vertical-align: middle;"> Save Accounts 
                                     </button>
                                 </div>
@@ -1310,12 +1481,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <thead>
                                         <tr>
                                             <th>No.</th>
-                                            <th>Bank Name</th>
-                                            <th>Bank Branch</th>
-                                            <th>Account Name</th>
-                                            <th>Account Number</th>
-                                            <th>Account Type</th>
-                                            <th style="text-align: right;">Net Pay Portion to Transfer</th>
+                                            <th style="min-width:100px;">Bank Name</th>
+                                            <th style="min-width:100px;">Bank Branch</th>
+                                            <th style="min-width:100px;">Account Name</th>
+                                            <th style="min-width:100px;">Account Number</th>
+                                            <th style="min-width:100px;">Account Type</th>
+                                            <th style="text-align: right;max-width:50px !important;width:50px !important;">Portion to Transfer</th>
                                             <th>Portion's UOM</th>
                                             <?php
                                             if ($canDelPrsItm === true) {
@@ -1338,6 +1509,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="form-group form-group-sm" style="width:100% !important;">
                                                             <div class="input-group"  style="width:100%;">
                                                                 <input type="text" class="form-control" aria-label="..." id="prsnBanksRow<?php echo $cntr; ?>_BankNm" value="<?php echo $row1[0]; ?>">
+                                                                <input type="hidden" class="form-control" aria-label="..." id="prsnBanksRow<?php echo $cntr; ?>_PKeyID" value="<?php echo $row1[7]; ?>">
                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Banks', '', '', '', 'radio', true, '<?php echo $row1[0]; ?>', 'prsnBanksRow<?php echo $cntr; ?>_BankNm', '', 'clear', 0, '');">
                                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                                 </label>
@@ -1393,10 +1565,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <span><?php echo $row1[4]; ?></span>
                                                     <?php } ?>                                                           
                                                 </td>                                                
-                                                <td class="lovtd" style="text-align: right;">
+                                                <td class="lovtd"  style="text-align: right;max-width:50px !important;width:50px !important;">
                                                     <?php if ($canEdtPrsItm === true) { ?>
                                                         <div class="form-group form-group-sm" style="width:100% !important;">
-                                                            <input type="number" class="form-control" aria-label="..." id="prsnBanksRow<?php echo $cntr; ?>_NetPrtn" value="<?php echo $row1[5]; ?>">
+                                                            <input style="text-align: right;max-width:50px !important;width:50px !important;" type="number" class="form-control" aria-label="..." id="prsnBanksRow<?php echo $cntr; ?>_NetPrtn" value="<?php echo $row1[5]; ?>">
                                                         </div>
                                                     <?php } else { ?>
                                                         <span><?php echo $row1[5]; ?></span>
@@ -1426,7 +1598,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 if ($canDelPrsItm === true) {
                                                     ?> 
                                                     <td class="lovtd">
-                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="" data-toggle="tooltip" data-placement="bottom" title="Delete Account">
+                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delPrsnAccount('prsnBanksRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Account">
                                                             <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                         </button>
                                                     </td>

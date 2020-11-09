@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<definitions name="BookService" 
+             targetNamespace="http://www.cleverbuilder.com/BookService/"
+             xmlns:tns="http://www.cleverbuilder.com/BookService/"   
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+             xmlns="http://schemas.xmlsoap.org/wsdl/">
+    <documentation>Definition for a web service called BookService,
+        which can be used to add or retrieve books from a collection.
+    </documentation>
+
+    <!--
+           The `types` element defines the data types (XML elements)
+           that are used by the web service.
+    -->
+    <types>
+        <xsd:schema targetNamespace="http://www.cleverbuilder.com/BookService/">
+            <xsd:element name="GetBook">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="ID" type="xsd:string" />
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="GetBookResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="ID" type="xsd:string"></xsd:element>
+                        <xsd:element name="Title" type="xsd:string"></xsd:element>
+                        <xsd:element name="Author" type="xsd:string"></xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="AddBook">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="Title" type="xsd:string"></xsd:element>
+                        <xsd:element name="Author" type="xsd:string"></xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="AddBookResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="ID" type="xsd:string"></xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="GetAllBooks">
+                <xsd:complexType />
+            </xsd:element>
+            <xsd:element name="GetAllBooksResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="Book" minOccurs="0" maxOccurs="unbounded">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="ID" type="xsd:string"></xsd:element>
+                                    <xsd:element name="Title" type="xsd:string"></xsd:element>
+                                    <xsd:element name="Author" type="xsd:string"></xsd:element>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </types>
+
+
+    <!--
+           A wsdl `message` element is used to define a message
+           exchanged between a web service, consisting of zero
+           or more `part`s.
+    -->
+
+    <message name="GetBookRequest">
+        <part element="tns:GetBook" name="parameters" />
+    </message>
+    <message name="GetBookResponse">
+        <part element="tns:GetBookResponse" name="parameters" />
+    </message>
+    <message name="AddBookRequest">
+        <part name="parameters" element="tns:AddBook"></part>
+    </message>
+    <message name="AddBookResponse">
+        <part name="parameters" element="tns:AddBookResponse"></part>
+    </message>
+    <message name="GetAllBooksRequest">
+        <part name="parameters" element="tns:GetAllBooks"></part>
+    </message>
+    <message name="GetAllBooksResponse">
+        <part name="parameters" element="tns:GetAllBooksResponse"></part>
+    </message>
+
+    <!--
+           A WSDL `portType` is used to combine multiple `message`s
+           (e.g. input, output) into a single operation.
+
+           Here we define three synchronous (input/output) operations
+           and the `message`s that must be used for each.
+    -->
+    <portType name="BookService">
+        <operation name="GetBook">
+            <input message="tns:GetBookRequest" />
+            <output message="tns:GetBookResponse" />
+        </operation>
+        <operation name="AddBook">
+            <input message="tns:AddBookRequest"></input>
+            <output message="tns:AddBookResponse"></output>
+        </operation>
+        <operation name="GetAllBooks">
+            <input message="tns:GetAllBooksRequest"></input>
+            <output message="tns:GetAllBooksResponse"></output>
+        </operation>
+    </portType>
+
+    <!--
+           The `binding` element defines exactly how each
+           `operation` will take place over the network.
+           In this case, we are using SOAP.
+    -->
+    <binding name="BookServiceSOAP" type="tns:BookService">
+        <soap:binding style="document"
+                      transport="http://schemas.xmlsoap.org/soap/http" />
+        <operation name="GetBook">
+            <soap:operation soapAction="http://www.cleverbuilder.com/BookService/GetBook" />
+            <input>
+                <soap:body use="literal" />
+            </input>
+            <output>
+                <soap:body use="literal" />
+            </output>
+        </operation>
+        <operation name="AddBook">
+            <soap:operation soapAction="http://www.cleverbuilder.com/BookService/AddBook" />
+            <input>
+                <soap:body use="literal" />
+            </input>
+            <output>
+                <soap:body use="literal" />
+            </output>
+        </operation>
+        <operation name="GetAllBooks">
+            <soap:operation
+                soapAction="http://www.cleverbuilder.com/BookService/GetAllBooks" />
+            <input>
+                <soap:body use="literal" />
+            </input>
+            <output>
+                <soap:body use="literal" />
+            </output>
+        </operation>
+    </binding>
+
+    <!--
+           The `service` element finally says where the service
+           can be accessed from - in other words, its endpoint.
+    -->
+    <service name="BookService">
+        <port binding="tns:BookServiceSOAP" name="BookServiceSOAP">
+            <soap:address location="http://www.example.org/BookService" />
+        </port>
+    </service>
+</definitions>

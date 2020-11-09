@@ -2,7 +2,13 @@ Number.prototype.padLeft = function (base, chr) {
     var len = (String(base || 10).length - String(this).length) + 1;
     return len > 0 ? new Array(len).join(chr || '0') + this : this;
 };
-var jsFilesVrsn = '20170305';
+$(document).on("hidden.bs.modal", ".bootbox.modal", function (e) {
+    $("body").css("padding", "0px 0px 0px 0px");
+});
+$(document).on("change", ".form_date input", function (e) {
+    $("body").css("overflow", "auto");
+});
+
 function isMyScriptLoaded(url) {
     var scripts = document.getElementsByTagName('script');
     for (var i = scripts.length; i--; ) {
@@ -46,2249 +52,78 @@ function isEmailValid(email) {
      return re.test(email);*/
 }
 
-function loadScript(url, callback) {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    if (script.readyState) {
-        script.onreadystatechange = function () {
-            if (script.readyState == "loaded" ||
-                    script.readyState == "complete") {
-                script.onreadystatechange = null;
-                callback();
-            }
-        };
-    } else {
-        script.onload = function () {
-            callback();
-        };
-    }
-
-    script.src = url;
-    document.getElementsByTagName("head")[0].appendChild(script);
-}
-
-function loadCss(url, callback) {
-    var script = document.createElement("link");
-    script.type = "text/css";
-    script.rel = "stylesheet";
-    if (script.readyState) {
-        script.onreadystatechange = function () {
-            if (script.readyState == "loaded" ||
-                    script.readyState == "complete") {
-                script.onreadystatechange = null;
-                callback();
-            }
-        };
-    } else {
-        script.onload = function () {
-            callback();
-        };
-    }
-    script.href = url;
-    document.getElementsByTagName("head")[0].appendChild(script);
-}
-
-function showRoles()
+function getTtlRows(tblID)
 {
-    openATab('#profile', 'grp=3&typ=1&pg=1&vtyp=4');
+    var cntr = 0;
+    $('#' + tblID).find('tr').each(function (i, el) {
+        if (i > 0)
+        {
+            cntr++;
+        }
+    });
+    return cntr;
 }
 
-function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
-        criteriaID2, criteriaID3, chkOrRadio, mustSelSth,
-        selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere, callBackFunc)
+function clearTblRows(tblID)
 {
-    if (typeof callBackFunc === 'undefined' || callBackFunc === null)
-    {
-        callBackFunc = function () {
-            var tstabcd = 1;
-        };
-    }
-    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
-        $body = $("body");
-        $body.addClass("mdlloadingDiag");
-        if (criteriaID == '')
+    var cntr = 0;
+    $('#' + tblID).find('tr').each(function (i, el) {
+        if (i > 0)
         {
-            criteriaID = "RhoUndefined";
+            /*var rowIDAttrb = $(el).attr('id');
+             $("#" + rowIDAttrb).remove();*/
+            $(el).remove();
         }
-        if (criteriaID2 == '')
-        {
-            criteriaID2 = "RhoUndefined";
-        }
-        if (criteriaID3 == '')
-        {
-            criteriaID3 = "RhoUndefined";
-        }
-        var srchFor = typeof $("#lovSrchFor").val() === 'undefined' ? '%' : $("#lovSrchFor").val();
-        var srchIn = typeof $("#lovSrchIn").val() === 'undefined' ? 'Both' : $("#lovSrchIn").val();
-        var pageNo = typeof $("#lovPageNo").val() === 'undefined' ? 1 : $("#lovPageNo").val();
-        var limitSze = typeof $("#lovDsplySze").val() === 'undefined' ? 10 : $("#lovDsplySze").val();
+    });
+}
 
-        var criteriaIDVal = typeof $("#" + criteriaID).val() === 'undefined' ? -1 : $("#" + criteriaID).val();
-        var criteriaID2Val = typeof $("#" + criteriaID2).val() === 'undefined' ? '' : $("#" + criteriaID2).val();
-        var criteriaID3Val = typeof $("#" + criteriaID3).val() === 'undefined' ? '' : $("#" + criteriaID3).val();
-        if (colNoForChkBxCmprsn == 1)
+function getRowIndx(rowIDAttrb, tblID)
+{
+    var indx = 0;
+    $('#' + tblID).find('tr').each(function (i, el) {
+        if (i > 0 && $(el).attr('id') === rowIDAttrb)
         {
-            /*Match by Description:Set both Value and Desc Element IDs*/
-            selVals = typeof $("#" + descElemntID).val() === 'undefined' ? selVals : $("#" + descElemntID).val();
+            indx = i;
         }
-        {
-            /* Match using Possible Value itself*/
-            /* For Dynamic LOVs use 0 and set both value and descElement IDs */
-            /* For Static LOVs use 0 and set only valueElement ID */
-            selVals = typeof $("#" + valueElmntID).val() === 'undefined' ? selVals : $("#" + valueElmntID).val();
-        }
-        if (actionText == 'clear')
-        {
-            srchFor = "%";
-            pageNo = 1;
-        } else if (actionText == 'next')
-        {
-            pageNo = parseInt(pageNo) + 1;
-        } else if (actionText == 'previous')
-        {
-            pageNo = parseInt(pageNo) - 1;
-        }
+    });
+    return indx;
+}
 
-        var xmlhttp;
-        if (window.XMLHttpRequest)
+function getFreeRowNum(freePKeyRowSffx, tblID)
+{
+    var indx = 0;
+    var rwNumber = "";
+    $('#' + tblID).find('tr').each(function (i, el) {
+        if (i > 0)
         {
-            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
-            xmlhttp = new XMLHttpRequest();
-        } else
-        {
-            /*code for IE6, IE5*/
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xmlhttp.onreadystatechange = function ()
-        {
-            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            if (typeof $(el).attr('id') === 'undefined')
             {
-                $('#' + titleElementID).html(lovNm);
-
-                $('#' + modalBodyID).html(xmlhttp.responseText);
-                $('#myLovModalDiag').draggable();
-                $('#' + elementID).off('show.bs.modal');
-                $('#' + elementID).off('hidden.bs.modal');
-                $('#' + elementID).on('show.bs.modal', function (e) {
-                    $(this).find('.modal-body').css({
-                        'max-height': '100%'
-                    });
-                });
-                $body.removeClass("mdlloadingDiag");
-                $('#' + elementID).modal({backdrop: 'static', keyboard: false});
-                $body.removeClass("mdlloading");
-                $(document).ready(function () {
-                    $("#lovForm").submit(function (e) {
-                        e.preventDefault();
-                        return false;
-                    });
-                    var cntr = 0;
-                    var table = $('#lovTblRO').DataTable({
-                        retrieve: true,
-                        "paging": false,
-                        "ordering": false,
-                        "info": false,
-                        "bFilter": false,
-                        "scrollX": false
-                    });
-                    $('#lovTblRO').wrap('<div class="dataTables_scroll"/>');
-                    $('#lovTblRO tbody').on('dblclick', 'tr', function () {
-
-                        table.$('tr.selected').removeClass('selected');
-                        $(this).addClass('selected');
-
-                        $checkedBoxes = $(this).find('input[type=checkbox]');
-                        $checkedBoxes.each(function (i, checkbox) {
-                            checkbox.checked = true;
-                        });
-                        $radioBoxes = $(this).find('input[type=radio]');
-                        $radioBoxes.each(function (i, radio) {
-                            radio.checked = true;
-                        });
-                        applySlctdLov(elementID, 'lovForm', valueElmntID, descElemntID, callBackFunc);
-                    });
-
-                    $('#lovTblRO tbody').on('click', 'tr', function () {
-                        if ($(this).hasClass('selected')) {
-                            $(this).removeClass('selected');
-                            $checkedBoxes = $(this).find('input[type=checkbox]');
-                            $checkedBoxes.each(function (i, checkbox) {
-                                checkbox.checked = false;
-                            });
-                            $radioBoxes = $(this).find('input[type=radio]');
-                            $radioBoxes.each(function (i, radio) {
-                                radio.checked = false;
-                            });
-                        } else {
-                            table.$('tr.selected').removeClass('selected');
-                            $(this).addClass('selected');
-
-                            $checkedBoxes = $(this).find('input[type=checkbox]');
-                            $checkedBoxes.each(function (i, checkbox) {
-                                checkbox.checked = true;
-                            });
-                            $radioBoxes = $(this).find('input[type=radio]');
-                            $radioBoxes.each(function (i, radio) {
-                                radio.checked = true;
-                            });
-                        }
-                    });
-                    $('#lovTblRO tbody')
-                            .on('mouseenter', 'tr', function () {
-                                if ($(this).hasClass('highlight')) {
-                                    $(this).removeClass('highlight');
-                                } else {
-                                    table.$('tr.highlight').removeClass('highlight');
-                                    $(this).addClass('highlight');
-                                }
-                            });
-                });
-            }
-        };
-        xmlhttp.open("POST", "index.php", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        //alert(criteriaIDVal);
-        xmlhttp.send("grp=2&typ=1&lovNm=" + lovNm +
-                "&criteriaID=" + criteriaID + "&criteriaID2=" + criteriaID2 +
-                "&criteriaID3=" + criteriaID3 + "&criteriaIDVal=" + criteriaIDVal + "&criteriaID2Val=" + criteriaID2Val +
-                "&criteriaID3Val=" + criteriaID3Val + "&chkOrRadio=" + chkOrRadio +
-                "&mustSelSth=" + mustSelSth + "&selvals=" + selVals +
-                "&valElmntID=" + valueElmntID + "&descElmntID=" + descElemntID +
-                "&modalElementID=" + elementID + "&lovModalBody=" + modalBodyID +
-                "&lovModalTitle=" + titleElementID + "&searchfor=" + srchFor + "&searchin=" + srchIn +
-                "&pageNo=" + pageNo + "&limitSze=" + limitSze +
-                "&colNoForChkBxCmprsn=" + colNoForChkBxCmprsn +
-                "&addtnlWhere=" + addtnlWhere + "&callBackFunc=" + callBackFunc);
-    });
-
-}
-
-function enterKeyFuncLov(e, elementID, titleElementID, modalBodyID, lovNm, criteriaID,
-        criteriaID2, criteriaID3, chkOrRadio, mustSelSth,
-        selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere, callBackFunc)
-{
-    if (typeof callBackFunc === 'undefined' || callBackFunc === null)
-    {
-        callBackFunc = function () {
-            var tstabcd = 1;
-        };
-    }
-    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
-    if (charCode == 13) {
-        getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
-                criteriaID2, criteriaID3, chkOrRadio, mustSelSth,
-                selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere, callBackFunc);
-    }
-}
-
-function applySlctdLov(modalElementID, formElmntID, valueElmntID, descElemntID, callBackFunc) {
-    if (typeof callBackFunc === 'undefined' || callBackFunc === null)
-    {
-        callBackFunc = function () {
-            var tstabcd = 1;
-        };
-    }
-    var form = document.getElementById(formElmntID);
-    var cbResults = '';
-    var radioResults = '';
-    var fnl_res = '';
-    for (var i = 0; i < form.elements.length; i++) {
-        if (form.elements[i].type === 'checkbox') {
-            if (form.elements[i].checked === true) {
-                cbResults += form.elements[i].value + '|';
-            }
-        }
-        if (form.elements[i].type === 'radio') {
-            if (form.elements[i].checked === true) {
-                radioResults += form.elements[i].value + '|';
-            }
-        }
-    }
-    if (cbResults.length > 1)
-    {
-        fnl_res = cbResults.slice(0, -1);
-    }
-    if (radioResults.length > 1)
-    {
-        fnl_res = radioResults.slice(0, -1);
-    }
-    var bigArry = [];
-    var tempArry = [];
-    bigArry = fnl_res.split("|");
-    var i = 0;
-    var descValue = "";
-    var valValue = "";
-
-    for (i = 0; i < bigArry.length; i++) {
-        tempArry = bigArry[i].split(";");
-        if (tempArry.length > 1)
-        {
-            if (cbResults.length > 1)
-            {
-                descValue = descValue + tempArry[2] + ",";
-                valValue = valValue + tempArry[1] + ",";
-            } else
-            {
-                descValue = tempArry[2];
-                valValue = tempArry[1];
-            }
-        }
-    }
-    if (cbResults.length > 1)
-    {
-        descValue = descValue.slice(0, -1);
-        valValue = valValue.slice(0, -1);
-    }
-    if (typeof ($('#' + descElemntID).val()) !== 'undefined')
-    {
-        document.getElementById(descElemntID).value = descValue;
-    }
-    if (typeof ($('#' + valueElmntID).val()) !== 'undefined')
-    {
-        document.getElementById(valueElmntID).value = valValue;
-    }
-    $('#' + modalElementID).modal('hide');
-    callBackFunc();
-}
-
-function doAjax(linkArgs, elementID, actionAfter, titleMsg, titleElementID, modalBodyID)
-{
-    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
-        $body = $("body");
-
-        $body.addClass("mdlloading");
-        var xmlhttp;
-        if (window.XMLHttpRequest)
-        {
-            xmlhttp = new XMLHttpRequest();
-        } else
-        {
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-
-        xmlhttp.onreadystatechange = function ()
-        {
-            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-            {
-                if (actionAfter == 'Redirect')
-                {
-                    $body.removeClass("mdlloading");
-                    window.open(xmlhttp.responseText, '_blank');
-                } else if (actionAfter == 'ShowDialog')
-                {
-                    $body.removeClass("mdlloading");
-                    $('#' + titleElementID).html(titleMsg);
-                    $('#' + modalBodyID).html(xmlhttp.responseText);
-                    $('#' + elementID).off('show.bs.modal');
-                    $('#' + elementID).off('hidden.bs.modal');
-                    $('#' + elementID).on('show.bs.modal', function (e) {
-                        /*console.debug('modal shown!');*/
-                        $(this).find('.modal-body').css({
-                            'max-height': '100%'
-                        });
-                    });
-                    $('#' + elementID).modal({backdrop: 'static', keyboard: false});
-                } else
-                {
-                    document.getElementById(elementID).innerHTML = xmlhttp.responseText;
-                    $body.removeClass("mdlloading");
-                }
-            }
-        };
-        xmlhttp.open("POST", "index.php", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlhttp.send(linkArgs.trim());
-    });
-}
-
-
-function doAjaxWthCallBck(linkArgs, elementID, actionAfter, titleMsg, titleElementID, modalBodyID, rqstdCallBack)
-{
-    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
-        $body = $("body");
-
-        $body.addClass("mdlloading");
-        var xmlhttp;
-        if (window.XMLHttpRequest)
-        {
-            xmlhttp = new XMLHttpRequest();
-        } else
-        {
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-
-        xmlhttp.onreadystatechange = function ()
-        {
-            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-            {
-                if (actionAfter == 'Redirect')
-                {
-                    $body.removeClass("mdlloading");
-                    window.open(xmlhttp.responseText, '_blank');
-                    rqstdCallBack();
-                } else if (actionAfter == 'ShowDialog')
-                {
-                    $body.removeClass("mdlloading");
-                    $('#' + titleElementID).html(titleMsg);
-                    $('#' + modalBodyID).html(xmlhttp.responseText);
-                    $('#' + elementID).off('show.bs.modal');
-                    $('#' + elementID).off('hidden.bs.modal');
-                    $('#' + elementID).on('show.bs.modal', function (e) {
-                        /*console.debug('modal shown!');*/
-                        $(this).find('.modal-body').css({
-                            'max-height': '100%'
-                        });
-                    });
-                    $('#' + elementID).modal({backdrop: 'static', keyboard: false});
-
-                    $('#' + elementID).off('shown.bs.modal');
-                    $('#' + elementID).on('shown.bs.modal', function () {
-                        rqstdCallBack();
-                    });
-                } else
-                {
-                    document.getElementById(elementID).innerHTML = xmlhttp.responseText;
-                    $body.removeClass("mdlloading");
-                    rqstdCallBack();
-                }
-            }
-        };
-        xmlhttp.open("POST", "index.php", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlhttp.send(linkArgs.trim());
-    });
-}
-
-function openATab(slctr, linkArgs)
-{
-    $body = $("body");
-    var $this = $(slctr + 'tab');
-    var targ = slctr;
-
-    if ($.trim($(targ).text()) !== ""
-            && (slctr.match("^#prfl")
-                    || slctr.match("^#profile")))
-    {
-        $this.tab('show');
-        $body.removeClass("mdlloading");
-    } else {
-        getMsgAsync('grp=1&typ=11&q=Check Session', function () {
-            $body = $("body");
-            var $this = $(slctr + 'tab');
-            var targ = slctr;
-            var xmlhttp;
-            if (window.XMLHttpRequest)
-            {
-                xmlhttp = new XMLHttpRequest();
-            } else
-            {
-                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-            }
-            xmlhttp.onreadystatechange = function ()
-            {
-                if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-                {
-                    if (linkArgs.indexOf("grp=40&typ=2") !== -1)
-                    {
-                        loadScript("app/cmncde/myinbox.js?v=" + jsFilesVrsn, function () {
-                            $this.tab('show');
-                            prepareInbox(linkArgs, $body, targ, xmlhttp.responseText);
-                        });
-                    } else if (linkArgs.indexOf("grp=8&typ=1") !== -1)
-                    {
-                        loadScript("app/prs/prsn.js?v=" + jsFilesVrsn, function () {
-                            $this.tab('show');
-                            prepareProfile(linkArgs, $body, targ, xmlhttp.responseText);
-                        });
-                    } else if (linkArgs.indexOf("grp=40&typ=3") !== -1)
-                    {
-                        $this.tab('show');
-                        prepareNotices(linkArgs, $body, targ, xmlhttp.responseText);
-                    } else if (linkArgs.indexOf("grp=3&typ=1") !== -1)
-                    {
-                        if (linkArgs.indexOf("pg=1&vtyp=4") !== -1)
-                        {
-                            $this.tab('show');
-                            prepareUsrPrfl(linkArgs, $body, targ, xmlhttp.responseText);
-                        } else {
-                            loadScript("app/sec/sys_admin.js?v=" + jsFilesVrsn, function () {
-                                $this.tab('show');
-                                prepareSysAdmin(linkArgs, $body, targ, xmlhttp.responseText);
-                            });
-                        }
-                    } else if (linkArgs.indexOf("grp=4&typ=1") !== -1)
-                    {
-                        loadScript("app/gst/gst_admin.js?v=" + jsFilesVrsn, function () {
-                            $this.tab('show');
-                            prepareGstAdmin(linkArgs, $body, targ, xmlhttp.responseText);
-                        });
-                    } else if (linkArgs.indexOf("grp=5&typ=1") !== -1)
-                    {
-                        loadScript("app/org/org_admin.js?v=" + jsFilesVrsn, function () {
-                            $this.tab('show');
-                            prepareOrgAdmin(linkArgs, $body, targ, xmlhttp.responseText);
-                        });
-                    } else if (linkArgs.indexOf("grp=11&typ=1") !== -1)
-                    {
-                        loadScript("app/wkf/wkf_admin.js?v=" + jsFilesVrsn, function () {
-                            $this.tab('show');
-                            prepareWkfAdmin(linkArgs, $body, targ, xmlhttp.responseText);
-                        });
-                    } else if (linkArgs.indexOf("grp=7&typ=1") !== -1)
-                    {
-                        loadScript("app/pay/pay.js?v=" + jsFilesVrsn, function () {
-                            $this.tab('show');
-                            preparePay(linkArgs, $body, targ, xmlhttp.responseText);
-                        });
-                    } else if (linkArgs.indexOf("grp=9&typ=1") !== -1)
-                    {
-                        loadScript("app/rpt/rpt.js?v=" + jsFilesVrsn, function () {
-                            $this.tab('show');
-                            prepareRpts(linkArgs, $body, targ, xmlhttp.responseText);
-                        });
-                    } else if (linkArgs.indexOf("grp=16&typ=1") !== -1)
-                    {
-                        loadScript("app/attn/attn.js?v=" + jsFilesVrsn, function () {
-                            $this.tab('show');
-                            prepareAttn(linkArgs, $body, targ, xmlhttp.responseText);
-                        });
-                    } else if (linkArgs.indexOf("grp=19&typ=10") !== -1)
-                    {
-                        loadScript("app/evote/evote.js?v=" + jsFilesVrsn, function () {
-                            $this.tab('show');
-                            prepareEvote(linkArgs, $body, targ, xmlhttp.responseText);
-                        });
-                    } else
-                    {
-                        $(targ).html(xmlhttp.responseText);
-                        $this.tab('show');
-                        $body.removeClass("mdlloading");
-                    }
-                }
-            };
-            xmlhttp.open("POST", "index.php", true);
-            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xmlhttp.send(linkArgs.trim());
-        });
-    }
-}
-
-function openATab1(slctr, linkArgs)
-{
-    $body = $("body");
-    var $this = $(slctr + 'tab');
-    var targ = slctr;
-    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
-        $body = $("body");
-        var $this = $(slctr + 'tab');
-        var targ = slctr;
-        var xmlhttp;
-        if (window.XMLHttpRequest)
-        {
-            xmlhttp = new XMLHttpRequest();
-        } else
-        {
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xmlhttp.onreadystatechange = function ()
-        {
-            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-            {
-                if (linkArgs.indexOf("grp=40&typ=2") !== -1)
-                {
-                    loadScript("app/cmncde/myinbox.js?v=" + jsFilesVrsn, function () {
-                        $this.tab('show');
-                        prepareInbox(linkArgs, $body, targ, xmlhttp.responseText);
-                    });
-                } else if (linkArgs.indexOf("grp=8&typ=1") !== -1)
-                {
-                    loadScript("app/prs/prsn.js?v=" + jsFilesVrsn, function () {
-                        $this.tab('show');
-                        prepareProfile(linkArgs, $body, targ, xmlhttp.responseText);
-                    });
-                } else if (linkArgs.indexOf("grp=40&typ=3") !== -1)
-                {
-                    $this.tab('show');
-                    prepareNotices(linkArgs, $body, targ, xmlhttp.responseText);
-                } else if (linkArgs.indexOf("grp=3&typ=1") !== -1)
-                {
-                    if (linkArgs.indexOf("pg=1&vtyp=4") !== -1)
-                    {
-                        $this.tab('show');
-                        prepareUsrPrfl(linkArgs, $body, targ, xmlhttp.responseText);
-                    } else {
-                        loadScript("app/sec/sys_admin.js?v=" + jsFilesVrsn, function () {
-                            $this.tab('show');
-                            prepareSysAdmin(linkArgs, $body, targ, xmlhttp.responseText);
-                        });
-                    }
-                } else
-                {
-                    $(targ).html(xmlhttp.responseText);
-                    $this.tab('show');
-                    $body.removeClass("mdlloading");
-                }
-            }
-        };
-        xmlhttp.open("POST", "index.php", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlhttp.send(linkArgs.trim());
-    });
-
-}
-
-function prepareUsrPrfl(lnkArgs, htBody, targ, rspns)
-{
-    $(targ).html(rspns);
-    $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-        if (lnkArgs.indexOf("&vtyp=4") !== -1)
-        {
-            var table1 = $('#usrPrflTable').DataTable({
-                "paging": false,
-                "ordering": false,
-                "info": false,
-                "bFilter": false,
-                "scrollX": false
-            });
-            $('#usrPrflTable').wrap('<div class="dataTables_scroll" />');
-
-            $('#usrPrflForm').submit(function (e) {
-                e.preventDefault();
-                return false;
-            });
-        }
-        htBody.removeClass("mdlloading");
-    });
-}
-
-function getUsrPrfl(actionText, slctr, linkArgs)
-{
-    var srchFor = typeof $("#usrPrflSrchFor").val() === 'undefined' ? '%' : $("#usrPrflSrchFor").val();
-    var srchIn = 'Role Name';
-    var pageNo = typeof $("#usrPrflPageNo").val() === 'undefined' ? 1 : $("#usrPrflPageNo").val();
-    var limitSze = typeof $("#usrPrflDsplySze").val() === 'undefined' ? 10 : $("#usrPrflDsplySze").val();
-    var sortBy = typeof $("#usrPrflSortBy").val() === 'undefined' ? '' : $("#usrPrflSortBy").val();
-    if (actionText == 'clear')
-    {
-        srchFor = "%";
-        pageNo = 1;
-    } else if (actionText == 'next')
-    {
-        pageNo = parseInt(pageNo) + 1;
-    } else if (actionText == 'previous')
-    {
-        pageNo = parseInt(pageNo) - 1;
-    }
-    linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    openATab1(slctr, linkArgs);
-}
-
-function enterKeyFuncUsrPrfl(e, actionText, slctr, linkArgs)
-{
-    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
-    if (charCode == 13) {
-        getUsrPrfl(actionText, slctr, linkArgs);
-    }
-}
-
-function prepareNotices(lnkArgs, htBody, targ, rspns)
-{
-    $(targ).html(rspns);
-    $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-        if (lnkArgs.indexOf("&vtyp=1") !== -1)
-        {
-            var table1 = $('#allnoticesTable').DataTable({
-                "paging": false,
-                "ordering": false,
-                "info": false,
-                "bFilter": false,
-                "scrollX": false
-            });
-            $('#allnoticesTable').wrap('<div class="dataTables_scroll"/>');
-            $('#allnoticesForm').submit(function (e) {
-                e.preventDefault();
-                return false;
-            });
-        } else if (lnkArgs.indexOf("&vtyp=5") !== -1)
-        {
-            var fileLink = function (context) {
-                var ui = $.summernote.ui;
-                var button = ui.button({
-                    contents: '<i class="fa fa-file"/> Upload',
-                    tooltip: 'Upload File',
-                    click: function () {
-                        $(function () {
-                            $("#allOtherFileInput1").change(function () {
-                                var fileName = $(this).val();
-                                var input = document.getElementById('allOtherFileInput1');
-                                sendNoticesFile(input.files[0], "", "", "OTHERS", function () {
-                                    var inptUrl = $("#allOtherInputData1").val();
-                                    var inptText = $("#allOtherInputData2").val();
-                                    var inptNwWndw = $("#allOtherInputData2").val();
-                                    if (inptText === "")
-                                    {
-                                        inptText = "Read More...";
-                                    }
-                                    if (inptNwWndw === "")
-                                    {
-                                        inptNwWndw = true;
-                                    }
-                                    $('#fdbckMsgBody').summernote('createLink', {
-                                        text: inptText,
-                                        url: inptUrl,
-                                        newWindow: inptNwWndw
-                                    });
-                                });
-                            });
-                        });
-                        performFileClick('allOtherFileInput1');
-                    }
-                });
-                return button.render();
-            };
-            $('#fdbckMsgBody').summernote({
-                minHeight: 350,
-                focus: true,
-                disableDragAndDrop: false,
-                dialogsInBody: true,
-                toolbar: [
-                    ['style', ['style']],
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough', 'superscript', 'subscript']],
-                    ['fontsize', ['fontsize']],
-                    ['fontname', ['fontname']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph', 'height']],
-                    ['height', ['height']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video', 'hr']],
-                    ['view', ['fullscreen']],
-                    ['help', ['help']],
-                    ['misc', ['print']],
-                    ['mybutton', ['upload']]
-                ],
-                buttons: {
-                    upload: fileLink
-                },
-                callbacks:
-                        {
-                            onImageUpload: function (file, editor, welEditable)
-                            {
-                                sendNoticesFile(file[0], editor, welEditable, "IMAGES", function () {
-                                    var inptUrl = $("#allOtherInputData1").val();
-                                    $('#fdbckMsgBody').summernote("insertImage", inptUrl, 'filename');
-                                });
-                            }
-                        }
-            });
-            $('.note-editable').trigger('focus');
-            $('#cmntsFdbckForm').submit(function (e) {
-                e.preventDefault();
-                return false;
-            });
-        } else if (lnkArgs.indexOf("&vtyp=6") !== -1)
-        {
-            var table1 = $('#allForumsTable').DataTable({
-                "paging": false,
-                "ordering": false,
-                "info": false,
-                "bFilter": false,
-                "scrollX": false
-            });
-            $('#allForumsTable').wrap('<div class="dataTables_scroll"/>');
-        } else if (lnkArgs.indexOf("&vtyp=7") !== -1)
-        {
-            var fileLink = function (context) {
-                var ui = $.summernote.ui;
-                var button = ui.button({
-                    contents: '<i class="fa fa-file"/> Upload',
-                    tooltip: 'Upload File',
-                    click: function () {
-                        $(function () {
-                            $("#allOtherFileInput1").change(function () {
-                                var fileName = $(this).val();
-                                var input = document.getElementById('allOtherFileInput1');
-                                sendNoticesFile(input.files[0], "", "", "OTHERS", function () {
-                                    var inptUrl = $("#allOtherInputData1").val();
-                                    var inptText = $("#allOtherInputData2").val();
-                                    var inptNwWndw = $("#allOtherInputData2").val();
-                                    if (inptText === "")
-                                    {
-                                        inptText = "Read More...";
-                                    }
-                                    if (inptNwWndw === "")
-                                    {
-                                        inptNwWndw = true;
-                                    }
-                                    $('#articleNwCmmntsMsg').summernote('createLink', {
-                                        text: inptText,
-                                        url: inptUrl,
-                                        newWindow: inptNwWndw
-                                    });
-                                });
-                            });
-                        });
-                        performFileClick('allOtherFileInput1');
-                    }
-                });
-                return button.render();
-            };
-            $('#articleNwCmmntsMsg').summernote({
-                minHeight: 100,
-                focus: true,
-                disableDragAndDrop: false,
-                dialogsInBody: true,
-                toolbar: [
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough', 'superscript', 'subscript']],
-                    ['fontsize', ['fontsize']],
-                    ['fontname', ['fontname']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph', 'height']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video', 'hr']],
-                    ['mybutton', ['upload']]
-                ],
-                buttons: {
-                    upload: fileLink
-                },
-                callbacks:
-                        {
-                            onImageUpload: function (file, editor, welEditable)
-                            {
-                                sendNoticesFile(file[0], editor, welEditable, "IMAGES", function () {
-                                    var inptUrl = $("#allOtherInputData1").val();
-                                    $('#articleNwCmmntsMsg').summernote("insertImage", inptUrl, 'filename');
-                                });
-                            }
-                        }
-            });
-            $('#articleNwCmmntsMsg').summernote('reset');
-        } else if (lnkArgs.indexOf("&vtyp=8") !== -1)
-        {
-            var fileLink = function (context) {
-                var ui = $.summernote.ui;
-                var button = ui.button({
-                    contents: '<i class="fa fa-file"/> Upload',
-                    tooltip: 'Upload File',
-                    click: function () {
-                        $(function () {
-                            $("#allOtherFileInput1").change(function () {
-                                var fileName = $(this).val();
-                                var input = document.getElementById('allOtherFileInput1');
-                                sendNoticesFile(input.files[0], "", "", "OTHERS", function () {
-                                    var inptUrl = $("#allOtherInputData1").val();
-                                    var inptText = $("#allOtherInputData2").val();
-                                    var inptNwWndw = $("#allOtherInputData2").val();
-                                    if (inptText === "")
-                                    {
-                                        inptText = "Read More...";
-                                    }
-                                    if (inptNwWndw === "")
-                                    {
-                                        inptNwWndw = true;
-                                    }
-                                    $('#articleNwCmmntsMsg').summernote('createLink', {
-                                        text: inptText,
-                                        url: inptUrl,
-                                        newWindow: inptNwWndw
-                                    });
-                                });
-                            });
-                        });
-                        performFileClick('allOtherFileInput1');
-                    }
-                });
-                return button.render();
-            };
-            $('#articleNwCmmntsMsg').summernote({
-                minHeight: 100,
-                focus: true,
-                disableDragAndDrop: false,
-                dialogsInBody: true,
-                toolbar: [
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough', 'superscript', 'subscript']],
-                    ['fontsize', ['fontsize']],
-                    ['fontname', ['fontname']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph', 'height']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video', 'hr']],
-                    ['mybutton', ['upload']]
-                ],
-                buttons: {
-                    upload: fileLink
-                },
-                callbacks:
-                        {
-                            onImageUpload: function (file, editor, welEditable)
-                            {
-                                sendNoticesFile(file[0], editor, welEditable, "IMAGES", function () {
-                                    var inptUrl = $("#allOtherInputData1").val();
-                                    $('#articleNwCmmntsMsg').summernote("insertImage", inptUrl, 'filename');
-                                });
-                            }
-                        }
-            });
-        } else if (lnkArgs.indexOf("&vtyp=10") !== -1
-                || lnkArgs.indexOf("&vtyp=11") !== -1)
-        {
-            $('#articleNwCmmntsMsg').summernote('reset');
-        }
-        htBody.removeClass("mdlloading");
-    });
-}
-
-function getAllNotices(actionText, slctr, linkArgs)
-{
-    var srchFor = typeof $("#allnoticesSrchFor").val() === 'undefined' ? '%' : $("#allnoticesSrchFor").val();
-    /*var srchIn = typeof $("#allnoticesSrchIn").val() === 'undefined' ? 'Both' : $("#allnoticesSrchIn").val();*/
-    var pageNo = typeof $("#allnoticesPageNo").val() === 'undefined' ? 1 : $("#allnoticesPageNo").val();
-    var limitSze = typeof $("#allnoticesDsplySze").val() === 'undefined' ? 10 : $("#allnoticesDsplySze").val();
-    var sortBy = typeof $("#allnoticesSortBy").val() === 'undefined' ? 'Date Published' : $("#allnoticesSortBy").val();
-    if (actionText == 'clear')
-    {
-        srchFor = "%";
-        pageNo = 1;
-    } else if (actionText == 'next')
-    {
-        pageNo = parseInt(pageNo) + 1;
-    } else if (actionText == 'previous')
-    {
-        pageNo = parseInt(pageNo) - 1;
-    }
-    linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=All&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    openATab(slctr, linkArgs);
-}
-
-function enterKeyFuncNotices(e, actionText, slctr, linkArgs)
-{
-    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
-    if (charCode == 13) {
-        getAllNotices(actionText, slctr, linkArgs);
-    }
-}
-
-function getAllComments(actionText, slctr, linkArgs, ttlCmnts, srcBtn)
-{
-    var srchFor = '%';
-    var srchIn = 'All';
-    var pageNo = typeof $("#allcommentsPageNo1").val() === 'undefined' ? 1 : $("#allcommentsPageNo1").val();
-    var sbmtdNoticeID = typeof $("#allcommentsArticleID").val() === 'undefined' ? 1 : $("#allcommentsArticleID").val();
-    var limitSze = 10;
-    var sortBy = "";
-    if (actionText == 'clear')
-    {
-        srchFor = "%";
-        pageNo = 1;
-    } else if (actionText == 'next')
-    {
-        pageNo = parseInt(pageNo) + 1;
-    } else if (actionText == 'previous')
-    {
-        pageNo = parseInt(pageNo) - 1;
-    }
-    var shwHide = $('#shwCmmntsBtn').html();
-    if (srcBtn <= 1)
-    {
-        if (shwHide.indexOf('Show') !== -1)
-        {
-            $('#cmmntsNavBtns').removeClass('hideNotice');
-            $('#cmmntsDetailMsgsCntnr').removeClass('hideNotice');
-            $('#shwCmmntsRfrshBtn').removeClass('hideNotice');
-            $('#nwCmmntsBtn').removeClass('hideNotice');
-            $('#shwCmmntsBtn').html(' « Hide Comments');
-        } else
-        {
-            $('#cmmntsNavBtns').addClass('hideNotice');
-            $('#cmmntsDetailMsgsCntnr').addClass('hideNotice');
-            $('#shwCmmntsRfrshBtn').addClass('hideNotice');
-            $('#nwCmmntsBtn').addClass('hideNotice');
-            $('#shwCmmntsBtn').html('Show Comments (<span style="color:whitesmoke;">' + ttlCmnts + '</span>) »');
-            return false;
-        }
-    }
-    linkArgs = linkArgs + "&sbmtdNoticeID=" + sbmtdNoticeID + "&searchfor=" + srchFor + "&searchin=All&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    openATab(slctr, linkArgs);
-}
-
-function getMoreComments(actionText, slctr, linkArgs)
-{
-    var srchFor = '%';
-    var srchIn = 'All';
-    var pageNo = typeof $("#onenoticesPageNo1").val() === 'undefined' ? 1 : $("#onenoticesPageNo1").val();
-    var sbmtdNoticeID = typeof $("#allcommentsArticleID").val() === 'undefined' ? 1 : $("#allcommentsArticleID").val();
-    var prntCmmntID = typeof $("#onenoticesCmntID1").val() === 'undefined' ? 1 : $("#onenoticesCmntID1").val();
-    var limitSze = 10;
-    var sortBy = "";
-    pageNo = parseInt(pageNo) + 1;
-    linkArgs = linkArgs + "&prntCmmntID=" + prntCmmntID + "&sbmtdNoticeID=" + sbmtdNoticeID + "&searchfor1=" + srchFor + "&searchin1=All&pageNo1=" + pageNo + "&limitSze1=" + limitSze + "&sortBy1=" + sortBy;
-    openATab(slctr, linkArgs);
-}
-
-function getMoreComments1(actionText, slctr, linkArgs)
-{
-    var srchFor = '%';
-    var srchIn = 'All';
-    var pageNo = typeof $("#onenoticesPageNo1").val() === 'undefined' ? 1 : $("#onenoticesPageNo1").val();
-    var sbmtdNoticeID = typeof $("#allcommentsArticleID").val() === 'undefined' ? 1 : $("#allcommentsArticleID").val();
-    var limitSze = 10;
-    var sortBy = "";
-    pageNo = parseInt(pageNo) + 1;
-    linkArgs = linkArgs + "&sbmtdNoticeID=" + sbmtdNoticeID + "&searchfor1=" + srchFor + "&searchin1=All&pageNo1=" + pageNo + "&limitSze1=" + limitSze + "&sortBy1=" + sortBy;
-    openATab(slctr, linkArgs);
-}
-
-function newComments(crntPrnCmntID)
-{
-    $("#crntPrnCmntID").val(crntPrnCmntID);
-    $('#cmmntsNewMsgs').removeClass('hideNotice');
-}
-
-function getOneNotice(actionText, slctr, linkArgs, srcBtn, srcBtnNo)
-{
-    var srchFor = '%'
-    var srchIn = 'All';
-    var pageNo = 1;
-    var limitSze = 1;
-    var sortBy = "";
-    if (srcBtn <= 0)
-    {
-        srchFor = typeof $("#allnoticesSrchFor").val() === 'undefined' ? '%' : $("#allnoticesSrchFor").val();
-        srchIn = 'All';
-        pageNo = srcBtnNo;
-        limitSze = 1;
-        sortBy = typeof $("#allnoticesSortBy").val() === 'undefined' ? '' : $("#allnoticesSortBy").val();
-    } else
-    {
-        srchFor = typeof $("#onenoticesSrchFor").val() === 'undefined' ? '%' : $("#onenoticesSrchFor").val();
-        srchIn = 'All';
-        pageNo = typeof $("#onenoticesPageNo").val() === 'undefined' ? 1 : $("#onenoticesPageNo").val();
-        limitSze = 1;
-        sortBy = typeof $("#onenoticesSortBy").val() === 'undefined' ? '' : $("#onenoticesSortBy").val();
-    }
-    if (actionText == 'clear')
-    {
-        srchFor = "%";
-        pageNo = 1;
-    } else if (actionText == 'next')
-    {
-        pageNo = parseInt(pageNo) + 1;
-    } else if (actionText == 'previous')
-    {
-        pageNo = parseInt(pageNo) - 1;
-    }
-    linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    openATab(slctr, linkArgs);
-}
-
-function getOneNoticeForm(elementID, modalBodyID, titleElementID, formElementID,
-        formTitle, articleID, vtyp, pgNo)
-{
-    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
-        $body = $("body");
-
-        $body.addClass("mdlloadingDiag");
-        var xmlhttp;
-        if (window.XMLHttpRequest)
-        {
-            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
-            xmlhttp = new XMLHttpRequest();
-        } else
-        {
-            /*code for IE6, IE5*/
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xmlhttp.onreadystatechange = function ()
-        {
-            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-            {
-                $('#' + titleElementID).html(formTitle);
-                $('#' + modalBodyID).html(xmlhttp.responseText);
-                $(function () {
-                    $('.form_date').datetimepicker({
-                        format: "dd-M-yyyy hh:ii:ss",
-                        language: 'en',
-                        weekStart: 0,
-                        todayBtn: true,
-                        autoclose: true,
-                        todayHighlight: true,
-                        keyboardNavigation: true,
-                        startView: 2,
-                        minView: 0,
-                        maxView: 4,
-                        forceParse: true
-                    });
-                });
-
-                $('#articleIntroMsg').summernote({
-                    minHeight: 145,
-                    focus: true,
-                    disableDragAndDrop: false,
-                    dialogsInBody: true,
-                    toolbar: [
-                        ['style', ['style']],
-                        ['style', ['bold', 'italic', 'underline', 'clear']],
-                        ['font', ['strikethrough', 'superscript', 'subscript']],
-                        ['fontsize', ['fontsize']],
-                        ['fontname', ['fontname']],
-                        ['color', ['color']],
-                        ['para', ['ul', 'ol', 'paragraph', 'height']],
-                        ['table', ['table']],
-                        ['insert', ['link', 'picture', 'hr']],
-                        ['view', ['fullscreen', 'codeview']]
-                    ],
-                    callbacks:
-                            {
-                                onImageUpload: function (file, editor, welEditable)
-                                {
-                                    sendNoticesFile(file[0], editor, welEditable, "IMAGES", function () {
-                                        var inptUrl = $("#allOtherInputData1").val();
-                                        $('#articleIntroMsg').summernote("insertImage", inptUrl, 'filename');
-                                    });
-                                }
-                            }
-                });
-                var fileLink = function (context) {
-                    var ui = $.summernote.ui;
-                    var button = ui.button({
-                        contents: '<i class="fa fa-file"/> Upload',
-                        tooltip: 'Upload File',
-                        click: function () {
-                            $(function () {
-                                $("#allOtherFileInput1").change(function () {
-                                    var fileName = $(this).val();
-                                    var input = document.getElementById('allOtherFileInput1');
-                                    sendNoticesFile(input.files[0], "", "", "OTHERS", function () {
-                                        var inptUrl = $("#allOtherInputData1").val();
-                                        var inptText = $("#allOtherInputData2").val();
-                                        var inptNwWndw = $("#allOtherInputData2").val();
-                                        if (inptText === "")
-                                        {
-                                            inptText = "Read More...";
-                                        }
-                                        if (inptNwWndw === "")
-                                        {
-                                            inptNwWndw = true;
-                                        }
-                                        $('#articleBodyText').summernote('createLink', {
-                                            text: inptText,
-                                            url: inptUrl,
-                                            newWindow: inptNwWndw
-                                        });
-                                    });
-                                });
-                            });
-                            performFileClick('allOtherFileInput1');
-                        }
-                    });
-                    return button.render();
-                };
-                $('#articleBodyText').summernote({
-                    minHeight: 270,
-                    focus: true,
-                    disableDragAndDrop: false,
-                    dialogsInBody: true,
-                    toolbar: [
-                        ['style', ['style']],
-                        ['style', ['bold', 'italic', 'underline', 'clear']],
-                        ['font', ['strikethrough', 'superscript', 'subscript']],
-                        ['fontsize', ['fontsize']],
-                        ['fontname', ['fontname']],
-                        ['color', ['color']],
-                        ['para', ['ul', 'ol', 'paragraph', 'height']],
-                        ['height', ['height']],
-                        ['table', ['table']],
-                        ['insert', ['link', 'picture', 'video', 'hr']],
-                        ['view', ['fullscreen', 'codeview']],
-                        ['help', ['help']],
-                        ['misc', ['print']],
-                        ['mybutton', ['upload']]
-                    ],
-                    buttons: {
-                        upload: fileLink
-                    },
-                    callbacks:
-                            {
-                                onImageUpload: function (file, editor, welEditable)
-                                {
-                                    sendNoticesFile(file[0], editor, welEditable, "IMAGES", function () {
-                                        var inptUrl = $("#allOtherInputData1").val();
-                                        $('#articleBodyText').summernote("insertImage", inptUrl, 'filename');
-                                    });
-                                }
-                            }
-                });
-                if (vtyp != 3)
-                {
-                    /*Do Nothing*/
-                } else {
-                    var markupStr1 = typeof $("#articleIntroMsgDecoded").val() === 'undefined' ? '' : $("#articleIntroMsgDecoded").val();
-                    var markupStr2 = typeof $("#articleBodyTextDecoded").val() === 'undefined' ? '' : $("#articleBodyTextDecoded").val();
-                    $('#articleIntroMsg').summernote('code', urldecode(markupStr1));
-                    $('#articleBodyText').summernote('code', urldecode(markupStr2));
-                }
-                $('.note-editable').trigger('focus');
-                $body.removeClass("mdlloadingDiag");
-                $('#' + elementID).modal({backdrop: 'static', keyboard: false});
-                $body.removeClass("mdlloading");
-                $(document).ready(function () {
-                    $('#' + formElementID).submit(function (e) {
-                        e.preventDefault();
-                        return false;
-                    });
-
-                });
-            }
-        };
-        xmlhttp.open("POST", "index.php", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlhttp.send("grp=40&typ=3&pg=" + pgNo + "&vtyp=" + vtyp + "&sbmtdNoticeID=" + articleID);
-    });
-}
-
-function performFileClick(elemId) {
-    var elem = document.getElementById(elemId);
-    if (elem && document.createEvent) {
-        var evt = document.createEvent("MouseEvents");
-        evt.initEvent("click", true, false);
-        elem.dispatchEvent(evt);
-    }
-}
-
-function sendNoticesFile(file, editor, welEditable, fileTypes, callBackFunc) {
-    var data1 = new FormData();
-    data1.append("file", file);
-    if (fileTypes !== "IMAGES")
-    {
-        $.ajax({
-            url: "dwnlds/uploader1.php",
-            data: data1,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            success: function (data) {
-                $("#allOtherInputData1").val(data);
-                callBackFunc();
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(textStatus + " " + errorThrown);
-            }
-        });
-    } else
-    {
-        $.ajax({
-            url: "dwnlds/uploader.php",
-            data: data1,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            success: function (data) {
-                $("#allOtherInputData1").val(data);
-                callBackFunc();
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(textStatus + " " + errorThrown);
-            }
-        });
-    }
-}
-
-function grpTypNoticesChange()
-{
-    var lovChkngElementVal = typeof $("#grpType").val() === 'undefined' ? '' : $("#grpType").val();
-    lovNm = "";
-    if (lovChkngElementVal === "Everyone")
-    {
-        $('#groupName').attr("disabled", "true");
-        $('#groupName').val("");
-        $('#groupNameLbl').attr("disabled", "true");
-    } else
-    {
-        $('#groupName').removeAttr("disabled");
-        $('#groupName').val("");
-        $('#groupNameLbl').removeAttr("disabled");
-    }
-}
-
-function getNoticeLovs(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
-        criteriaID2, criteriaID3, chkOrRadio, mustSelSth,
-        selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere, callBackFunc)
-{
-    var lovChkngElementVal = typeof $("#grpType").val() === 'undefined' ? 10 : $("#grpType").val();
-    lovNm = "";
-    if (lovChkngElementVal === "Divisions/Groups")
-    {
-        lovNm = "Divisions/Groups";
-    } else if (lovChkngElementVal === "Grade")
-    {
-        lovNm = "Grades";
-    } else if (lovChkngElementVal === "Job")
-    {
-        lovNm = "Jobs";
-    } else if (lovChkngElementVal === "Position")
-    {
-        lovNm = "Positions";
-    } else if (lovChkngElementVal === "Site/Location")
-    {
-        lovNm = "Sites/Locations";
-    } else if (lovChkngElementVal === "Person Type")
-    {
-        lovNm = "Person Types";
-    } else
-    {
-        return false;
-    }
-    getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
-            criteriaID2, criteriaID3, chkOrRadio, mustSelSth,
-            selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere, callBackFunc)
-}
-
-function saveOneNoticeForm(actionText, slctr, linkArgs)
-{
-    var articleCategory = typeof $("#articleCategory").val() === 'undefined' ? '' : $("#articleCategory").val();
-    var articleLoclClsfctn = typeof $("#articleLoclClsfctn").val() === 'undefined' ? '' : $("#articleLoclClsfctn").val();
-    var grpType = typeof $("#grpType").val() === 'undefined' ? '' : $("#grpType").val();
-    var groupID = typeof $("#groupID").val() === 'undefined' ? '' : $("#groupID").val();
-    var datePublished = typeof $("#datePublished").val() === 'undefined' ? '' : $("#datePublished").val();
-    var articleTitle = typeof $("#articleTitle").val() === 'undefined' ? '' : $("#articleTitle").val();
-    var articleIntroMsg = typeof $("#articleIntroMsg").val() === 'undefined' ? '' : ($('#articleIntroMsg').summernote('code'));
-    var articleBodyText = typeof $("#articleBodyText").val() === 'undefined' ? '' : ($('#articleBodyText').summernote('code'));
-    var articleID = typeof $("#articleID").val() === 'undefined' ? -1 : $("#articleID").val();
-    /*urlencode*/
-    if (articleCategory === "")
-    {
-        bootbox.alert({
-            title: 'System Alert!',
-            size: 'small',
-            message: '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
-                    'font-weight:bold;">Category cannot be empty!</span></p>'});
-        return false;
-    }
-    if (articleLoclClsfctn === '')
-    {
-        bootbox.alert({
-            title: 'System Alert!',
-            size: 'small',
-            message: '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
-                    'font-weight:bold;">Classification cannot be empty!</span></p>'});
-        return false;
-    }
-    if (articleTitle === '')
-    {
-        bootbox.alert({
-            title: 'System Alert!',
-            size: 'small',
-            message: '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
-                    'font-weight:bold;">Title cannot be empty!</span></p>'});
-        return false;
-    }
-    if (articleIntroMsg === '')
-    {
-        bootbox.alert({
-            title: 'System Alert!',
-            size: 'small',
-            message: '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
-                    'font-weight:bold;">Intro Message cannot be empty!</span></p>'});
-        return false;
-    }
-    var dialog = bootbox.alert({
-        title: 'Save Forum/Notice',
-        size: 'small',
-        message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Forum/Notice...Please Wait...</p>',
-        callback: function () {
-            getAllNotices(actionText, slctr, linkArgs);
-        }
-    });
-    dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
-            $body = $("body");
-            $body.removeClass("mdlloading");
-            $.ajax({
-                method: "POST",
-                url: "index.php",
-                data: {
-                    grp: 40,
-                    typ: 3,
-                    pg: 0,
-                    q: 'UPDATE',
-                    actyp: 1,
-                    articleID: articleID,
-                    articleCategory: articleCategory,
-                    articleLoclClsfctn: articleLoclClsfctn,
-                    grpType: grpType,
-                    groupID: groupID,
-                    datePublished: datePublished,
-                    articleTitle: articleTitle,
-                    articleIntroMsg: articleIntroMsg,
-                    articleBodyText: articleBodyText
-                },
-                success: function (result) {
-                    setTimeout(function () {
-                        dialog.find('.bootbox-body').html(result);
-                    }, 500);
-                },
-                error: function (jqXHR, textStatus, errorThrown)
-                {
-                    /*dialog.find('.bootbox-body').html(errorThrown);*/
-                    console.warn(jqXHR.responseText);
-                }
-            });
-        });
-    });
-}
-
-function closeNoticeForm(actionText, slctr, linkArgs)
-{
-    $('#myFormsModalLg').modal('hide');
-    /*$('#myFormsModalLg').html("");
-     $('#modal').modal('toggle');*/
-    getAllNotices(actionText, slctr, linkArgs);
-}
-
-function delOneNotice(rowIDAttrb)
-{
-    var rndmNum = rowIDAttrb.split("_")[1];
-    var pKeyID = -1;
-    if (typeof $('#allnoticesRow' + rndmNum + '_ArticleID').val() === 'undefined')
-    {
-        /*Do Nothing allnoticesRow<?php echo $cntr; ?> */
-    } else {
-        pKeyID = $('#allnoticesRow' + rndmNum + '_ArticleID').val();
-    }
-    var dialog = bootbox.confirm({
-        title: 'Delete Notice?',
-        size: 'small',
-        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">DELETE</span> this Notice?<br/>Action cannot be Undone!</p>',
-        buttons: {
-            confirm: {
-                label: '<i class="fa fa-check"></i> Yes',
-                className: 'btn-success'
-            },
-            cancel: {
-                label: '<i class="fa fa-times"></i> No',
-                className: 'btn-danger'
-            }
-        },
-        callback: function (result) {
-            if (result === true)
-            {
-                var dialog1 = bootbox.alert({
-                    title: 'Delete Notice?',
-                    size: 'small',
-                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Notice...Please Wait...</p>'
-                });
-                dialog1.init(function () {
-                    if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
-                            $body = $("body");
-                            $body.removeClass("mdlloading");
-                            $.ajax({
-                                method: "POST",
-                                url: "index.php",
-                                data: {
-                                    grp: 40,
-                                    typ: 3,
-                                    pg: 0,
-                                    q: 'DELETE',
-                                    actyp: 1,
-                                    articleID: pKeyID
-                                },
-                                success: function (result1) {
-                                    setTimeout(function () {
-                                        dialog1.find('.bootbox-body').html(result1);
-                                        if (result1.indexOf("Success") !== -1) {
-                                            $("#" + rowIDAttrb).remove();
-                                        }
-                                    }, 500);
-                                },
-                                error: function (jqXHR1, textStatus1, errorThrown1)
-                                {
-                                    dialog1.find('.bootbox-body').html(errorThrown1);
-                                }
-                            });
-                        });
-                    } else
-                    {
-                        setTimeout(function () {
-                            $("#" + rowIDAttrb).remove();
-                            dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
-                    }
-                });
-            }
-        }
-    });
-}
-
-function pblshUnplsh(rowIDAttrb, action, actionText, slctr, linkArgs)
-{
-    var rndmNum = rowIDAttrb.split("_")[1];
-    var pKeyID = -1;
-    if (typeof $('#allnoticesRow' + rndmNum + '_ArticleID').val() === 'undefined')
-    {
-        /*Do Nothing allnoticesRow<?php echo $cntr; ?> */
-    } else {
-        pKeyID = $('#allnoticesRow' + rndmNum + '_ArticleID').val();
-    }
-    var msgTxt = action + " Notice";
-    var dialog = bootbox.confirm({
-        title: msgTxt + '?',
-        size: 'small',
-        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;font-family:georgia, times;">' + msgTxt + '</span>?<br/></p>',
-        buttons: {
-            confirm: {
-                label: '<i class="fa fa-check"></i> Yes',
-                className: 'btn-success'
-            },
-            cancel: {
-                label: '<i class="fa fa-times"></i> No',
-                className: 'btn-danger'
-            }
-        },
-        callback: function (result) {
-            if (result === true)
-            {
-                var dialog1 = bootbox.alert({
-                    title: msgTxt + '?',
-                    size: 'small',
-                    message: '<p><i class="fa fa-spin fa-spinner"></i> Working...Please Wait...</p>'
-                });
-                dialog1.init(function () {
-                    if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
-                            $body = $("body");
-                            $body.removeClass("mdlloading");
-                            $.ajax({
-                                method: "POST",
-                                url: "index.php",
-                                data: {
-                                    grp: 40,
-                                    typ: 3,
-                                    pg: 0,
-                                    q: 'UPDATE',
-                                    actyp: 2,
-                                    articleID: pKeyID,
-                                    actionNtice: action
-                                },
-                                success: function (result1) {
-                                    setTimeout(function () {
-                                        dialog1.find('.bootbox-body').html(result1);
-                                        if (result1.indexOf("Success") !== -1) {
-                                            getAllNotices(actionText, slctr, linkArgs);
-                                            dialog1.modal('hide');
-                                        }
-                                    }, 500);
-                                },
-                                error: function (jqXHR1, textStatus1, errorThrown1)
-                                {
-                                    dialog1.find('.bootbox-body').html(errorThrown1);
-                                    dialog1.modal('hide');
-                                }
-                            });
-                        });
-                    } else
-                    {
-                        setTimeout(function () {
-                            getAllNotices(actionText, slctr, linkArgs);
-                            dialog1.modal('hide');
-                        }, 500);
-                    }
-                });
-            }
-        }
-    });
-}
-
-function sendComment(actionText, slctr, linkArgs)
-{
-    var articleNwCmmntsMsg = typeof $("#articleNwCmmntsMsg").val() === 'undefined' ? '' : ($('#articleNwCmmntsMsg').summernote('code'));
-    var allcommentsArticleID = typeof $("#allcommentsArticleID").val() === 'undefined' ? -1 : $("#allcommentsArticleID").val();
-    var prntCmntID = typeof $("#crntPrnCmntID").val() === 'undefined' ? -1 : $("#crntPrnCmntID").val();
-    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
-        $body = $("body");
-        $body.removeClass("mdlloading");
-        $.ajax({
-            method: "POST",
-            url: "index.php",
-            data: {
-                grp: 40,
-                typ: 3,
-                pg: 0,
-                q: 'UPDATE',
-                actyp: 3,
-                articleID: allcommentsArticleID,
-                prntCmntID: prntCmntID,
-                articleComment: articleNwCmmntsMsg
-            },
-            success: function (result1) {
-                getAllComments(actionText, slctr, linkArgs, 3);
-                $('#articleNwCmmntsMsg').summernote('reset');
-            },
-            error: function (jqXHR1, textStatus1, errorThrown1)
-            {
-                console.log(errorThrown1);
-            }
-        });
-    });
-}
-function showArticleDetails(sbmtdNoticeID, ctgry)
-{
-    openATab('#allnotices', 'grp=40&typ=3&pg=0&vtyp=4&sbmtdNoticeID=' + sbmtdNoticeID);
-}
-
-function autoQueueFdbck()
-{
-    var mailCc = typeof $("#fdbckMailCc").val() === 'undefined' ? '' : $("#fdbckMailCc").val();
-    var mailAttchmnts = typeof $("#fdbckMailAttchmnts").val() === 'undefined' ? '' : $("#fdbckMailAttchmnts").val();
-    var mailSubject = typeof $("#fdbckSubject").val() === 'undefined' ? '' : $("#fdbckSubject").val();
-
-    var bulkMessageBody = typeof $("#fdbckMsgBody").val() === 'undefined' ? '' : ($('#fdbckMsgBody').summernote('code'));
-
-    if (mailSubject.trim() === '')
-    {
-        bootbox.alert({
-            title: 'System Alert!',
-            size: 'small',
-            message: '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
-                    'font-weight:bold;">Subject cannot be empty!</span></p>'
-        });
-        return false;
-    }
-    if (bulkMessageBody.trim() === '')
-    {
-        bootbox.alert({
-            title: 'System Alert!',
-            size: 'small',
-            message: '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
-                    'font-weight:bold;">Message Body cannot be empty!</span></p>'});
-        return false;
-    }
-    var dialog1 = bootbox.confirm({
-        title: 'Send Feedback?',
-        size: 'small',
-        message: '<p style="text-align:center;">Are you sure you want to <span style="color:green;font-weight:bold;font-style:italic;">SEND THIS MESSAGE</span> to the Portal Administrator?<br/>Action cannot be Undone!</p>',
-        buttons: {
-            confirm: {
-                label: '<i class="fa fa-check"></i> Yes',
-                className: 'btn-success'
-            },
-            cancel: {
-                label: '<i class="fa fa-times"></i> No',
-                className: 'btn-danger'
-            }
-        },
-        callback: function (result) {
-            if (result === true)
-            {
-                var dialog = bootbox.alert({
-                    title: 'Sending Feedback',
-                    size: 'small',
-                    message: '<div id="myProgress"><div id="myBar"></div></div><div id="myInformation"><i class="fa fa-spin fa-spinner"></i> Sending Messages...Please Wait...</div>',
-                    callback: function () {
-
-                    }
-                });
-                dialog.init(function () {
-                    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
-                        $body = $("body");
-                        $body.removeClass("mdlloading");
-
-                        $.ajax({
-                            method: "POST",
-                            url: "index.php",
-                            data: {
-                                grp: 40,
-                                typ: 3,
-                                pg: 0,
-                                q: 'UPDATE',
-                                actyp: 4,
-                                mailCc: mailCc,
-                                mailAttchmnts: mailAttchmnts,
-                                mailSubject: mailSubject,
-                                bulkMessageBody: bulkMessageBody
-                            },
-                            success: function (data) {
-                                var elem = document.getElementById('myBar');
-                                elem.style.width = data.percent + '%';
-                                $("#myInformation").html(data.message);
-                            },
-                            error: function (jqXHR, textStatus, errorThrown) {
-                                console.log(textStatus + " " + errorThrown);
-                                console.warn(jqXHR.responseText);
-                            }
-                        });
-                    });
-                });
-            }
-        }
-    });
-}
-
-function clearFdbckForm()
-{
-    var dialog = bootbox.confirm({
-        title: 'Clear Form?',
-        size: 'small',
-        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">CLEAR</span> this Form?<br/>Action cannot be Undone!</p>',
-        buttons: {
-            confirm: {
-                label: '<i class="fa fa-check"></i> Yes',
-                className: 'btn-success'
-            },
-            cancel: {
-                label: '<i class="fa fa-times"></i> No',
-                className: 'btn-danger'
-            }
-        },
-        callback: function (result) {
-            if (result === true)
-            {
-                $("#fdbckMailCc").val('');
-                $("#fdbckMailAttchmnts").val('');
-                $("#fdbckSubject").val('');
-                $('#fdbckMsgBody').summernote('code', '<p></p>');
-            }
-        }
-    });
-}
-
-function attchFileToFdbck()
-{
-    var crntAttchMnts = $("#fdbckMailAttchmnts").val();
-    $("#allOtherFileInput2").change(function () {
-        var fileName = $(this).val();
-        var input = document.getElementById('allOtherFileInput2');
-        sendFdbckFile(input.files[0], function () {
-            var inptUrl = $("#allOtherInputData2").val();
-            crntAttchMnts = crntAttchMnts + ";" + inptUrl;
-            $("#fdbckMailAttchmnts").val(crntAttchMnts);
-        });
-    });
-    performFileClick('allOtherFileInput2');
-}
-
-function sendFdbckFile(file, callBackFunc) {
-    var data1 = new FormData();
-    data1.append("file", file);
-    $.ajax({
-        url: "dwnlds/uploader1.php",
-        data: data1,
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: 'POST',
-        success: function (data) {
-            $("#allOtherInputData2").val(data);
-            callBackFunc();
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.log(textStatus + " " + errorThrown);
-        }
-    });
-}
-
-function insertNewRowBe4(tableElmntID, position, inptHtml)
-{
-    var nwRndm = Math.floor((Math.random() * 9999999) + 1000000);
-    var nwInptHtml = urldecode(inptHtml.replace(/(_WWW123WWW_)+/g, nwRndm + "_").replace(/(_WWW123WWW)+/g, nwRndm));
-    if ($('#' + tableElmntID + ' > tbody > tr').length <= 0)
-    {
-        $('#' + tableElmntID).append(nwInptHtml);
-    } else {
-        $('#' + tableElmntID + ' > tbody > tr').eq(position).before(nwInptHtml);
-    }
-    $(function () {
-        $('.form_date_tme').datetimepicker({
-            format: "dd-M-yyyy hh:ii:ss",
-            language: 'en',
-            weekStart: 0,
-            todayBtn: true,
-            autoclose: true,
-            todayHighlight: true,
-            keyboardNavigation: true,
-            startView: 2,
-            minView: 0,
-            maxView: 4,
-            forceParse: true
-        });
-        $('.form_date').datetimepicker({
-            format: "dd-M-yyyy",
-            language: 'en',
-            weekStart: 0,
-            todayBtn: true,
-            autoclose: true,
-            todayHighlight: true,
-            keyboardNavigation: true,
-            startView: 2,
-            minView: 2,
-            maxView: 4,
-            forceParse: true
-        });
-    });
-}
-
-function urldecode(str) {
-    return unescape(decodeURIComponent(str.replace(/\+/g, ' ')));
-}
-function urlencode(str) {
-    return escape(encodeURIComponent(str.replace(/\+/g, ' ')));
-}
-function logOutFunc()
-{
-    BootstrapDialog.show({
-        size: BootstrapDialog.SIZE_SMALL,
-        type: BootstrapDialog.TYPE_DEFAULT,
-        title: 'System Alert!',
-        message: 'Are you sure you want to Logout?',
-        animate: true,
-        closable: true,
-        closeByBackdrop: false,
-        closeByKeyboard: false,
-        onshow: function (dialog) {
-        },
-        buttons: [{
-                label: 'Cancel',
-                icon: 'glyphicon glyphicon-ban-circle',
-                action: function (dialogItself) {
-                    dialogItself.close();
-                }
-            }, {
-                label: 'Logout',
-                icon: 'glyphicon glyphicon-menu-left',
-                cssClass: 'btn-primary',
-                action: function (dialogItself) {
-                    var $button = this;
-                    $button.disable();
-                    $button.spin();
-                    dialogItself.setClosable(false);
-                    $.ajax({
-                        method: "POST",
-                        url: "index.php",
-                        data: {q: 'logout'},
-                        success: function (result) {
-                            window.location = "index.php";
-                        }});
-                }
-            }]
-    });
-}
-var isLgnSccfl = 0;
-var curDialogItself = null;
-var lgnBtnSsn = null;
-var curCallBack = null;
-function getMsgAsync(linkArgs, callback) {
-    $body = $("body");
-    $body.addClass("mdlloading");
-    var xmlhttp;
-    if (window.XMLHttpRequest)
-    {
-        xmlhttp = new XMLHttpRequest();
-    } else
-    {
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-
-    xmlhttp.onreadystatechange = function ()
-    {
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-        {
-            var sessionvld = xmlhttp.responseText;
-            if (sessionvld != 1
-                    || sessionvld == ''
-                    || (typeof sessionvld === 'undefined'))
-            {
-                sessionvld = '<div class="login"><form role="form">' +
-                        '<fieldset>' +
-                        '<div class="form-group" style="margin-bottom:10px !important;">' +
-                        '<div class="input-group">' +
-                        '<span class="input-group-addon" id="basic-addon1">' +
-                        '<i class="fa fa-user fa-fw fa-border"></i></span>' +
-                        '<input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1" id="usrnm" name="usrnm" onkeyup="enterKeyFuncLgn(event);" autofocus>' +
-                        '</div>' +
-                        '</div>' +
-                        '<div class="form-group" style="margin-bottom:10px !important;">' +
-                        '<div class="input-group">' +
-                        '<span class="input-group-addon" id="basic-addon1"><i class="fa fa-key fa-fw fa-border"></i></span>' +
-                        '<input class="form-control" placeholder="Password" id="pwd" name="pwd" type="password" value=""  onkeyup="enterKeyFuncLgn(event);">' +
-                        '<input type="hidden" id="machdet" name="machdet" value="Unknown">' +
-                        '</div>' +
-                        '</div>' +
-                        '<p class="label" id="msgArea">' +
-                        '<label style="color:red;font-size:12px;text-align: center;">' +
-                        '&nbsp;' +
-                        '</label>' +
-                        '</p>' +
-                        '</fieldset>' +
-                        '</form></div>';
-            }
-
-            if (sessionvld != 1)
-            {
-                $body.removeClass("mdlloading");
-                BootstrapDialog.show({
-                    size: BootstrapDialog.SIZE_SMALL,
-                    type: BootstrapDialog.TYPE_DEFAULT,
-                    title: 'Session Expired!',
-                    message: sessionvld,
-                    animate: true,
-                    closable: true,
-                    closeByBackdrop: false,
-                    closeByKeyboard: false,
-                    onshow: function (dialogItself) {
-                        curDialogItself = dialogItself;
-                        curCallBack = callback;
-                        lgnBtnSsn = dialogItself.getButton('lgnBtnSsn');
-                    },
-                    onshown: function (dialogItself) {
-                        $('#usrnm').focus();
-                        lgnBtnSsn = dialogItself.getButton('lgnBtnSsn');
-                    },
-                    buttons: [{
-                            label: 'Logout',
-                            icon: 'glyphicon glyphicon-menu-left',
-                            cssClass: 'btn-default',
-                            action: function (dialogItself) {
-                                var $button = this;
-                                $button.disable();
-                                $button.spin();
-                                dialogItself.setClosable(false);
-                                $.ajax({
-                                    method: "POST",
-                                    url: "index.php",
-                                    data: {q: 'logout'},
-                                    success: function (result) {
-                                        window.location = "index.php";
-                                    }});
-                            }
-                        }, {
-                            id: 'lgnBtnSsn',
-                            label: 'Login',
-                            icon: 'glyphicon glyphicon-menu-right',
-                            cssClass: 'btn-primary',
-                            action: function (dialogItself) {
-                                curDialogItself = dialogItself;
-                                curCallBack = callback;
-                                var $button = this;
-                                $button.disable();
-                                $button.spin();
-                                dialogItself.setClosable(false);
-                                homePageLgn(dialogItself, callback);
-                            }
-                        }]
-                });
+                /*Do Nothing*/
             } else {
-                callback();
+                var prfx = $(el).attr('id').split("_")[0];
+                var rndmNum = $(el).attr('id').split("_")[1];
+                var ln_TrnsLnID = typeof $('#' + prfx + rndmNum + freePKeyRowSffx).val() === 'undefined' ? '-1' : $('#' + prfx + rndmNum + freePKeyRowSffx).val();
+                if (Number(ln_TrnsLnID.replace(/[^-?0-9\.]/g, '')) <= 0) {
+                    indx = i;
+                    rwNumber = rndmNum;
+                }
             }
-        } else
-        {
-
         }
-    };
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.send(linkArgs.trim());
-}
-
-function getMsgAsyncSilent(linkArgs, callback) {
-    $body = $("body");
-    var xmlhttp;
-    if (window.XMLHttpRequest)
-    {
-        xmlhttp = new XMLHttpRequest();
-    } else
-    {
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-
-    xmlhttp.onreadystatechange = function ()
-    {
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-        {
-            var sessionvld = xmlhttp.responseText;
-            if (sessionvld != 1
-                    || sessionvld == ''
-                    || (typeof sessionvld === 'undefined'))
-            {
-                sessionvld = '<div class="login"><form role="form">' +
-                        '<fieldset>' +
-                        '<div class="form-group" style="margin-bottom:10px !important;">' +
-                        '<div class="input-group">' +
-                        '<span class="input-group-addon" id="basic-addon1">' +
-                        '<i class="fa fa-user fa-fw fa-border"></i></span>' +
-                        '<input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1" id="usrnm" name="usrnm" onkeyup="enterKeyFuncLgn(event);" autofocus>' +
-                        '</div>' +
-                        '</div>' +
-                        '<div class="form-group" style="margin-bottom:10px !important;">' +
-                        '<div class="input-group">' +
-                        '<span class="input-group-addon" id="basic-addon1"><i class="fa fa-key fa-fw fa-border"></i></span>' +
-                        '<input class="form-control" placeholder="Password" id="pwd" name="pwd" type="password" value=""  onkeyup="enterKeyFuncLgn(event);">' +
-                        '<input type="hidden" id="machdet" name="machdet" value="Unknown">' +
-                        '</div>' +
-                        '</div>' +
-                        '<p class="label" id="msgArea">' +
-                        '<label style="color:red;font-size:12px;text-align: center;">' +
-                        '&nbsp;' +
-                        '</label>' +
-                        '</p>' +
-                        '</fieldset>' +
-                        '</form></div>';
-            }
-
-            if (sessionvld != 1)
-            {
-                BootstrapDialog.show({
-                    size: BootstrapDialog.SIZE_SMALL,
-                    type: BootstrapDialog.TYPE_DEFAULT,
-                    title: 'Session Expired!',
-                    message: sessionvld,
-                    animate: true,
-                    closable: true,
-                    closeByBackdrop: false,
-                    closeByKeyboard: false,
-                    onshow: function (dialogItself) {
-                        curDialogItself = dialogItself;
-                        curCallBack = callback;
-                        lgnBtnSsn = dialogItself.getButton('lgnBtnSsn');
-                    },
-                    onshown: function (dialogItself) {
-                        $('#usrnm').focus();
-                        lgnBtnSsn = dialogItself.getButton('lgnBtnSsn');
-                    },
-                    buttons: [{
-                            label: 'Logout',
-                            icon: 'glyphicon glyphicon-menu-left',
-                            cssClass: 'btn-default',
-                            action: function (dialogItself) {
-                                var $button = this;
-                                $button.disable();
-                                $button.spin();
-                                dialogItself.setClosable(false);
-                                $.ajax({
-                                    method: "POST",
-                                    url: "index.php",
-                                    data: {q: 'logout'},
-                                    success: function (result) {
-                                        window.location = "index.php";
-                                    }});
-                            }
-                        }, {
-                            id: 'lgnBtnSsn',
-                            label: 'Login',
-                            icon: 'glyphicon glyphicon-menu-right',
-                            cssClass: 'btn-primary',
-                            action: function (dialogItself) {
-                                curDialogItself = dialogItself;
-                                curCallBack = callback;
-                                var $button = this;
-                                $button.disable();
-                                $button.spin();
-                                dialogItself.setClosable(false);
-                                homePageLgn(dialogItself, callback);
-                            }
-                        }]
-                });
-            } else {
-                callback();
-            }
-        } else
-        {
-
-        }
-    };
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.send(linkArgs.trim());
-}
-
-function enterKeyFuncLgn(e)
-{
-    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
-    if (charCode == 13) {
-        lgnBtnSsn.disable();
-        lgnBtnSsn.spin();
-        curDialogItself.setClosable(false);
-        homePageLgn(curDialogItself, curCallBack);
-    }
-    //return false;
-}
-
-function homePageLgn(dialogItself, callback)
-{
-    //alert("test" + myCountry() + myIP());
-    var xmlhttp;
-    var usrNm = "";
-    var old_pswd = "";
-    var lnkArgs = "";
-    var machdet = "";
-    usrNm = document.getElementById("usrnm").value;
-    old_pswd = document.getElementById("pwd").value;
-    machdet = document.getElementById("machdet").value;
-
-    if (usrNm === "" || usrNm === null)
-    {
-        $('#modal-7 .modal-body').html('User Name cannot be empty!');
-        $('#modal-7').modal('show', {backdrop: 'static'});
-        return false;
-    }
-    if (old_pswd === "" || old_pswd === null)
-    {
-        $('#modal-7 .modal-body').html('Password cannot be empty!');
-        $('#modal-7').modal('show', {backdrop: 'static'});
-        return false;
-    }
-    lnkArgs = "usrnm=" + usrNm + "&pwd=" + old_pswd + "&machdet=" + machdet + "&screenwdth=" + screen.width;
-
-    if (window.XMLHttpRequest)
-    {
-        // code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp = new XMLHttpRequest();
-    } else
-    {
-        // code for IE6, IE5
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-
-    xmlhttp.onreadystatechange = function ()
-    {
-        //var newDoc = document.open("text/html", "replace");
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-        {
-            //newDoc.close();
-            var rspns = xmlhttp.responseText;
-            if (rspns.indexOf('change password') > -1
-                    || rspns.indexOf('select role') > -1)
-            {
-                dialogItself.setClosable(true);
-                isLgnSccfl = 1;
-                dialogItself.close();
-                $body = $("body");
-                $body.addClass("mdlloading");
-                callback();
-            } else
-            {
-                lgnBtnSsn.enable();
-                lgnBtnSsn.stopSpin();
-                dialogItself.setClosable(true);
-                isLgnSccfl = 0;
-                document.getElementById("msgArea").innerHTML = "<span style=\"color:red;font-size:12px;text-align: center;margin-top:0px;\">&nbsp;" + rspns + "</span>";
-            }
-        } else
-        {
-            isLgnSccfl = 0;
-            document.getElementById("msgArea").innerHTML = "<img style=\"width:105px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;\" src='cmn_images/ajax-loader2.gif'/><span style=\"color:blue;font-size:11px;text-align: center;margin-top:0px;\">Loading...Please Wait...</span>";
-        }
-    };
-
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.send(lnkArgs);//+ "&machdetls=" + machDet
-}
-
-function dwnldAjxCall(linkArgs, elemtnID) {
-    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
-        var xmlhttp;
-        if (window.XMLHttpRequest)
-        {
-            xmlhttp = new XMLHttpRequest();
-        } else
-        {
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xmlhttp.onreadystatechange = function ()
-        {
-            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-            {
-                $body = $("body");
-                $body.removeClass("mdlloading");
-                document.getElementById(elemtnID).innerHTML = "&nbsp;";
-                window.open(xmlhttp.responseText, '_blank');
-            } else
-            {
-                document.getElementById(elemtnID).innerHTML = "<p><img style=\"width:80px;height:25px;display:inline;float:left;margin-right:5px;clear: left;\" src='cmn_images/animated_loading.gif'/>Loading...Please Wait...</p>";
-            }
-        };
-        xmlhttp.open("POST", "index.php", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlhttp.send(linkArgs.trim());
     });
+    return rwNumber;
 }
 
-function myIP() {
-    var xmlhttp;
-    if (window.XMLHttpRequest)
-    {
-        xmlhttp = new XMLHttpRequest();
-    } else
-    {
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+function addCommas(nStr)
+{
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(-?\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
     }
-
-    xmlhttp.open("GET", "http://api.hostip.info/get_html.php", false);
-    var res = "";
-    var hostipInfo, ipAddress;
-    var t = setTimeout(function () {
-        xmlhttp.abort();
-        xmlhttp = null;
-        res = "Unknown";
-    }, 3000);
-    xmlhttp.send();
-    if (res === "Unknown")
-    {
-        return res;
-    } else if (xmlhttp.readyState === 4)
-    {
-        var i = 0;
-        hostipInfo = xmlhttp.responseText.split("\n");
-        for (i = 0; hostipInfo.length >= i; i++) {
-            ipAddress = hostipInfo[i].split(":");
-            if (ipAddress[0] === "IP")
-            {
-                return ipAddress[1];
-            }
-        }
-    }
-}
-
-function myCountry() {
-    var res = "";
-    var xmlhttp;
-    var hostipInfo, ipAddress;
-    if (window.XMLHttpRequest)
-    {
-        xmlhttp = new XMLHttpRequest();
-    } else
-    {
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-
-    xmlhttp.open("GET", "http://api.hostip.info/get_html.php", false);
-    var t = setTimeout(function () {
-        xmlhttp.abort();
-        xmlhttp = null;
-        res = "Unknown";
-    }, 3000);
-    xmlhttp.send();
-    if (res === "Unknown")
-    {
-        return res;
-    } else if (xmlhttp.readyState === 4)
-    {
-        var i;
-        hostipInfo = xmlhttp.responseText.split("\n");
-        for (i = 0; hostipInfo.length >= i; i++) {
-            ipAddress = hostipInfo[i].split(":");
-            if (ipAddress[0] === "Country")
-            {
-                return ipAddress[1];
-            }
-        }
-    }
+    return x1 + x2;
 }
 
 function checkAllBtns(elmntID) {
@@ -2324,14 +159,17 @@ function changeImgSrc(input, imgId, imgSrcLocID) {
         reader.readAsDataURL(input.files[0]);
     }
 }
+
 function setFileLoc(input, nwSrcLocElmnt) {
     if (input.files && input.files[0]) {
         $(nwSrcLocElmnt).attr('value', $(input).val());
     }
 }
+
 function scrollTo(hash) {
     location.hash = "#" + hash;
 }
+
 function rhotrim(s, mask) {
     while (~mask.indexOf(s[0])) {
         s = s.slice(1);
@@ -2393,6 +231,1649 @@ function isReaderAPIAvlbl() {
         return false;
     }
 }
+
 function isNumber(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
+
+function isInt(n) {
+    return Number(n) === n && n % 1 === 0;
+}
+
+function isFloat(n) {
+    return Number(n) === n && n % 1 !== 0;
+}
+
+function fmtAsNumber(elementID)
+{
+    var num = $("#" + elementID).val();
+    $("#" + elementID).val(addCommas(Number(num.replace(/[^-?0-9\.]/g, '')).toFixed(2)));
+    return Number(num.replace(/[^-?0-9\.]/g, ''));
+}
+
+function fmtAsNumber2(elementID)
+{
+    var num = $("#" + elementID).val();
+    $("#" + elementID).val(addCommas(Number(num.replace(/[^-?0-9\.]/g, '')).toFixed(4)));
+    return Number(num.replace(/[^-?0-9\.]/g, ''));
+}
+
+function newLoanRequestOpenATab(slctr, linkArgs) {
+    openATab(slctr, linkArgs + "&lnprflFctrId=" + $("#lnprflFctrId").val() + "&lnRqstID=" + $("#lnRqstID").val() +
+            "&optn=" + $("#optn").val() + "&status=" + $("#status").val() + "&assmntCmnts=" + $("#assmntCmnts").val());
+}
+
+function ClearAllIntervals() {
+    for (var i = 1; i < 99999; i++)
+        window.clearInterval(i);
+}
+
+function gnrlFldKeyPress(event, elementIDAttrb, sbmtdTblRowID, classNm)
+{
+    if (event.which === 13) {
+        var nextItem;
+        var nextItemVal = 0;
+        var curItemVal = 0;
+        var indx = 0;
+        var ttlElmnts = 0;
+        $('#' + sbmtdTblRowID + ' .' + classNm).each(function (i, el) {
+            ttlElmnts++;
+            if ($(el).attr('id') === elementIDAttrb)
+            {
+                indx = i;
+            }
+        });
+        curItemVal = indx + 1;
+        if (curItemVal >= ttlElmnts) {
+            nextItem = $('#' + sbmtdTblRowID + ' .' + classNm).eq(0);
+        } else {
+            nextItemVal = Number(curItemVal);
+            nextItem = $('#' + sbmtdTblRowID + ' .' + classNm).eq(nextItemVal);
+        }
+        nextItem.focus();
+    }
+}
+
+function disableBtnFunc(btnElementID) {
+    document.getElementById(btnElementID).disabled = 'true';
+}
+function enableBtnFunc(btnElementID) {
+    document.getElementById(btnElementID).disabled = 'false';
+}
+
+function changeElmntTitleFunc(htmElementID) {
+    //$('body').tooltip('dispose');
+    $('[data-toggle="tooltip"]').tooltip('destroy');
+    var titleTxt = $("#" + htmElementID).val();
+    document.getElementById(htmElementID).title = titleTxt;
+    //$('[data-toggle="tooltip"]').tooltip();
+
+    $("body").tooltip({selector: '[data-toggle=tooltip]'});
+}
+
+function changeBtnTitleFunc(htmElementID, btnElementID) {
+    //$('body').tooltip('dispose');
+    $('[data-toggle="tooltip"]').tooltip('destroy');
+    var titleTxt = $("#" + htmElementID).val();
+    document.getElementById(btnElementID).title = titleTxt;
+    //$('[data-toggle="tooltip"]').tooltip();
+
+    $("body").tooltip({selector: '[data-toggle=tooltip]'});
+}
+
+function startDashBoardRpts()
+{
+    var linkArgs = 'grp=40&typ=401';
+
+    $body = $("body");
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+    {
+        xmlhttp = new XMLHttpRequest();
+    } else
+    {
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+
+    xmlhttp.onreadystatechange = function ()
+    {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+        {
+            console.log("Report Run Finished");
+        }
+    };
+    xmlhttp.open("POST", "index.php", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send(linkArgs.trim());
+    console.log("Report Run Started");
+    quickStartMainRunner();
+}
+
+function funcHtmlToExcel(tableid) {
+// Opera 8.0+
+    var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+// Firefox 1.0+
+    var isFirefox = typeof InstallTrigger !== 'undefined' || navigator.userAgent.indexOf(' Firefox/') >= 0;
+// Safari 3.0+ "[object HTMLElementConstructor]" 
+    var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) {
+        return p.toString() === "[object SafariRemoteNotification]";
+    })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification)) || (navigator.userAgent.indexOf(' Safari/') >= 0 && navigator.vendor.indexOf('Apple') >= 0);
+// Internet Explorer 6-11
+    var isIE = /*@cc_on!@*/false || !!document.documentMode || navigator.userAgent.indexOf(' Trident/') >= 0;
+// Edge 20+
+    var isEdge = (!isIE && !!window.StyleMedia) || navigator.userAgent.indexOf(' Edge/') >= 0;
+// Chrome 1+
+    var isChrome = (!!window.chrome) || (navigator.userAgent.indexOf(' Chrome/') >= 0 && navigator.vendor.indexOf('Google') >= 0);
+    // && !!window.chrome.webstore
+    //alert(navigator.userAgent.indexOf(' Chrome/') + ':HH:' + navigator.vendor.indexOf('Google'));
+// Blink engine detection
+    var isBlink = (isChrome || isOpera) && !!window.CSS;
+    //getting values of current time for generating the file name
+    var dt = new Date();
+    var day = dt.getDate();
+    var month = dt.getMonth() + 1;
+    var year = dt.getFullYear();
+    var hour = dt.getHours();
+    var mins = dt.getMinutes();
+    var secns = dt.getSeconds();
+    var postfix = day + "." + month + "." + year + "_" + hour + "." + mins + "." + secns + "_" + getRandomInt2(100, 999);
+    var myURL = window.URL || window.webkitURL;
+    //alert(navigator.userAgent + ':HH:' + navigator.vendor);
+    if (isChrome || isFirefox || isEdge || isBlink) {
+        //alert('Here1');
+        //creating a temporary HTML link element (they support setting file names)
+
+        var a = document.getElementById('allOtherATag1');
+        //getting data from our div that contains the HTML table
+        var data_type = 'data:application/vnd.ms-excel';
+
+        var table_div = document.getElementById(tableid);
+        var cptnTxt = $("caption").text();
+        var tab_text = "<table border='2px'><caption style=\"font-weight:bold;font-size: 18px;\">" + cptnTxt + "</caption><tr bgcolor='#87AFC6'>";
+        var textRange;
+        var j = 0;
+        tab = document.getElementById(tableid); // id of table
+
+
+        for (j = 0; j < tab.rows.length; j++)
+        {
+            if (j === 0) {
+                tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+            } else {
+                tab_text = tab_text + "<tr>" + tab.rows[j].innerHTML + "</tr>";
+            }
+            //tab_text=tab_text+"</tr>";
+        }
+
+        tab_text = tab_text + "</table>";
+        tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+        tab_text = tab_text.replace(/<a[^>]*>|<\/a>/g, "").replace(/Â»/g, "");//remove if u want links in your table
+        tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+        tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+        var binaryData = [];
+        /*table_div.outerHTML*/
+        binaryData.push(tab_text);
+        var url = myURL.createObjectURL(new Blob(binaryData, {type: "data:application/vnd.ms-excel"}));
+        var table_html = url;
+        a.href = table_html;
+        //setting the file name
+        a.download = 'exported_table_' + postfix + '.xls';
+        //triggering the function
+        a.click();
+    } else {
+        //alert('Here2');
+        fnExcelReport(tableid, 'exported_table_' + postfix);
+    }
+    return false;
+}
+
+function fnExcelReport(tableid, fileNm)
+{
+    var x = document.getElementById('allOtherIframe1');
+    var frame = (x.contentWindow || x.contentDocument);
+    var cptnTxt = $("caption").text();
+    var tab_text = "<table border='2px'><caption style=\"font-weight:bold;font-size: 18px;\">" + cptnTxt + "</caption><tr bgcolor='#87AFC6'>";
+    var textRange;
+    var j = 0;
+    tab = document.getElementById(tableid); // id of table
+
+    for (j = 0; j < tab.rows.length; j++)
+    {
+        if (j === 0) {
+            tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+        } else {
+            tab_text = tab_text + "<tr>" + tab.rows[j].innerHTML + "</tr>";
+        }
+    }
+
+    tab_text = tab_text + "</table>";
+    tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+    tab_text = tab_text.replace(/<a[^>]*>|<\/a>/g, "").replace(/Â»/g, "");//remove if u want links in your table
+    tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+    tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+    var ua = window.navigator.userAgent;
+    var msie = ua.indexOf("MSIE ");
+    /*if (event.data.browser !== 'IE') {
+     $.util.open('data:application/vnd.ms-excel,' + event.data.content);
+     } else {
+     // The iframe already has to be included in the HTML, or you'll get a 'no access error'.
+     frame.document.open("txt/html", "replace");
+     frame.document.write(event.data.content);
+     frame.document.close();
+     frame.focus();
+     command = frame.document.execCommand("SaveAs", true, "data_table.xls");
+     }*/
+    /**/
+    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./) || navigator.userAgent.indexOf(' Trident/') >= 0 || navigator.userAgent.indexOf(' Edge/') >= 0)      // If Internet Explorer
+    {
+        frame.document.open("txt/html", "replace");
+        frame.document.write(tab_text);
+        frame.document.close();
+        frame.focus();
+        sa = frame.document.execCommand("SaveAs", true, fileNm + ".xls");
+        /*// IE10+ : (has Blob, but not a[download] or URL)
+         if (navigator.msSaveBlob) {
+         return navigator.msSaveBlob(blob, fileName);
+         }*/
+    } else {
+        //other browser not tested on IE 11
+        sa = generateHtmlExcel(tableid);
+    }
+    return (sa);
+}
+
+function generateHtmlExcel(tableid) {
+    var cptnTxt = $("caption").text();
+    var tab_text = "<table border='2px'><caption style=\"font-weight:bold;font-size: 18px;\">" + cptnTxt + "</caption><tr bgcolor='#87AFC6'>";
+    var textRange;
+    var j = 0;
+    tab = document.getElementById(tableid); // id of table
+
+
+    for (j = 0; j < tab.rows.length; j++)
+    {
+        if (j === 0) {
+            tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+        } else {
+            tab_text = tab_text + "<tr>" + tab.rows[j].innerHTML + "</tr>";
+        }
+    }
+
+    tab_text = tab_text + "</table>";
+    tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+    tab_text = tab_text.replace(/<a[^>]*>|<\/a>/g, "").replace(/Â»/g, "");//remove if u want links in your table
+    tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+    tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+    /*table.outerHTML*/
+    var myURL = window.URL || window.webkitURL;
+    var table = document.getElementById(tableid);
+    var html = tab_text;
+    var binaryData = [];
+    binaryData.push(html);
+    var url = myURL.createObjectURL(new Blob(binaryData, {type: "data:application/vnd.ms-excel"}));
+    return window.open(url);
+}
+
+function getRandomInt1(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+}
+
+function getRandomInt2(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+}
+
+function rhovoid() {
+    return false;
+}
+
+function escapeRegExp(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+}
+
+function tickUntickChckBx(chckBxElmnt) {
+    $("input[name='" + chckBxElmnt + "']").trigger("click");
+}
+
+String.prototype.replaceAll = function (search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(escapeRegExp(search), 'g'), replacement);
+};
+
+// Numeric only control handler
+jQuery.fn.ForceNumericOnly =
+        function ()
+        {
+            return this.each(function ()
+            {
+                $(this).keydown(function (e)
+                {
+                    var key = e.charCode || e.keyCode || 0;
+                    // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
+                    // home, end, period, and numpad decimal
+                    return (
+                            key == 8 ||
+                            key == 9 ||
+                            key == 13 ||
+                            key == 46 ||
+                            key == 110 ||
+                            key == 190 ||
+                            (key >= 35 && key <= 40) ||
+                            (key >= 48 && key <= 57) ||
+                            (key >= 96 && key <= 105));
+                });
+            });
+        };
+
+
+        /*
+    PDFObject v2.1.1
+    https://github.com/pipwerks/PDFObject
+    Copyright (c) 2008-2018 Philip Hutchison
+    MIT-style license: http://pipwerks.mit-license.org/
+    UMD module pattern from https://github.com/umdjs/umd/blob/master/templates/returnExports.js
+*/
+
+(function(root,factory){if(typeof define==='function'&&define.amd){define([],factory);}else if(typeof module==='object'&&module.exports){module.exports=factory();}else{root.PDFObject=factory();}}(this,function(){"use strict";if(typeof window==="undefined"||typeof navigator==="undefined"){return false;}
+var pdfobjectversion="2.1.1",ua=window.navigator.userAgent,supportsPDFs,isIE,supportsPdfMimeType=(typeof navigator.mimeTypes['application/pdf']!=="undefined"),supportsPdfActiveX,isModernBrowser=(function(){return(typeof window.Promise!=="undefined");})(),isFirefox=(function(){return(ua.indexOf("irefox")!==-1);})(),isFirefoxWithPDFJS=(function(){if(!isFirefox){return false;}
+return(parseInt(ua.split("rv:")[1].split(".")[0],10)>18);})(),isIOS=(function(){return(/iphone|ipad|ipod/i.test(ua.toLowerCase()));})(),createAXO,buildFragmentString,log,embedError,embed,getTargetElement,generatePDFJSiframe,generateEmbedElement;createAXO=function(type){var ax;try{ax=new ActiveXObject(type);}catch(e){ax=null;}
+return ax;};isIE=function(){return!!(window.ActiveXObject||"ActiveXObject"in window);};supportsPdfActiveX=function(){return!!(createAXO("AcroPDF.PDF")||createAXO("PDF.PdfCtrl"));};supportsPDFs=(!isIOS&&(isFirefoxWithPDFJS||supportsPdfMimeType||(isIE()&&supportsPdfActiveX())));buildFragmentString=function(pdfParams){var string="",prop;if(pdfParams){for(prop in pdfParams){if(pdfParams.hasOwnProperty(prop)){string+=encodeURIComponent(prop)+"="+encodeURIComponent(pdfParams[prop])+"&";}}
+if(string){string="#"+string;string=string.slice(0,string.length-1);}}
+return string;};log=function(msg){if(typeof console!=="undefined"&&console.log){console.log("[PDFObject] "+msg);}};embedError=function(msg){log(msg);return false;};getTargetElement=function(targetSelector){var targetNode=document.body;if(typeof targetSelector==="string"){targetNode=document.querySelector(targetSelector);}else if(typeof jQuery!=="undefined"&&targetSelector instanceof jQuery&&targetSelector.length){targetNode=targetSelector.get(0);}else if(typeof targetSelector.nodeType!=="undefined"&&targetSelector.nodeType===1){targetNode=targetSelector;}
+return targetNode;};generatePDFJSiframe=function(targetNode,url,pdfOpenFragment,PDFJS_URL,id){var fullURL=PDFJS_URL+"?file="+encodeURIComponent(url)+pdfOpenFragment;var scrollfix=(isIOS)?"-webkit-overflow-scrolling: touch; overflow-y: scroll; ":"overflow: hidden; ";var iframe="<div style='"+scrollfix+"position: absolute; top: 0; right: 0; bottom: 0; left: 0;'><iframe  "+id+" src='"+fullURL+"' style='border: none; width: 100%; height: 100%;' frameborder='0'></iframe></div>";targetNode.className+=" pdfobject-container";targetNode.style.position="relative";targetNode.style.overflow="auto";targetNode.innerHTML=iframe;return targetNode.getElementsByTagName("iframe")[0];};generateEmbedElement=function(targetNode,targetSelector,url,pdfOpenFragment,width,height,id){var style="";if(targetSelector&&targetSelector!==document.body){style="width: "+width+"; height: "+height+";";}else{style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;";}
+targetNode.className+=" pdfobject-container";targetNode.innerHTML="<embed "+id+" class='pdfobject' src='"+url+pdfOpenFragment+"' type='application/pdf' style='overflow: auto; "+style+"'/>";return targetNode.getElementsByTagName("embed")[0];};embed=function(url,targetSelector,options){if(typeof url!=="string"){return embedError("URL is not valid");}
+targetSelector=(typeof targetSelector!=="undefined")?targetSelector:false;options=(typeof options!=="undefined")?options:{};var id=(options.id&&typeof options.id==="string")?"id='"+options.id+"'":"",page=(options.page)?options.page:false,pdfOpenParams=(options.pdfOpenParams)?options.pdfOpenParams:{},fallbackLink=(typeof options.fallbackLink!=="undefined")?options.fallbackLink:true,width=(options.width)?options.width:"100%",height=(options.height)?options.height:"100%",assumptionMode=(typeof options.assumptionMode==="boolean")?options.assumptionMode:true,forcePDFJS=(typeof options.forcePDFJS==="boolean")?options.forcePDFJS:false,PDFJS_URL=(options.PDFJS_URL)?options.PDFJS_URL:false,targetNode=getTargetElement(targetSelector),fallbackHTML="",pdfOpenFragment="",fallbackHTML_default="<p>This browser does not support inline PDFs. Please download the PDF to view it: <a href='[url]'>Download PDF</a></p>";if(!targetNode){return embedError("Target element cannot be determined");}
+if(page){pdfOpenParams.page=page;}
+pdfOpenFragment=buildFragmentString(pdfOpenParams);if(forcePDFJS&&PDFJS_URL){return generatePDFJSiframe(targetNode,url,pdfOpenFragment,PDFJS_URL,id);}else if(supportsPDFs||(assumptionMode&&isModernBrowser&&!isIOS)){return generateEmbedElement(targetNode,targetSelector,url,pdfOpenFragment,width,height,id);}else if(PDFJS_URL){return generatePDFJSiframe(targetNode,url,pdfOpenFragment,PDFJS_URL,id);}else{if(fallbackLink){fallbackHTML=(typeof fallbackLink==="string")?fallbackLink:fallbackHTML_default;targetNode.innerHTML=fallbackHTML.replace(/\[url\]/g,url);}
+return embedError("This browser does not support embedded PDFs");}};return{embed:function(a,b,c){return embed(a,b,c);},pdfobjectversion:(function(){return pdfobjectversion;})(),supportsPDFs:(function(){return supportsPDFs;})()};}));
+
+
+
+/**
+ * jQuery-csv (jQuery Plugin)
+ * version: 0.70 (2012-11-04)
+ *
+ * This document is licensed as free software under the terms of the
+ * MIT License: http://www.opensource.org/licenses/mit-license.php
+ *
+ * Acknowledgements:
+ * The original design and influence to implement this library as a jquery
+ * plugin is influenced by jquery-json (http://code.google.com/p/jquery-json/).
+ * If you're looking to use native JSON.Stringify but want additional backwards
+ * compatibility for browsers that don't support it, I highly recommend you
+ * check it out.
+ *
+ * A special thanks goes out to rwk@acm.org for providing a lot of valuable
+ * feedback to the project including the core for the new FSM
+ * (Finite State Machine) parsers. If you're looking for a stable TSV parser
+ * be sure to take a look at jquery-tsv (http://code.google.com/p/jquery-tsv/).
+
+ * For legal purposes I'll include the "NO WARRANTY EXPRESSED OR IMPLIED.
+ * USE AT YOUR OWN RISK.". Which, in 'layman's terms' means, by using this
+ * library you are accepting responsibility if it breaks your code.
+ *
+ * Legal jargon aside, I will do my best to provide a useful and stable core
+ * that can effectively be built on.
+ *
+ * Copyrighted 2012 by Evan Plaice.
+ */
+
+RegExp.escape= function(s) {
+    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+};
+
+(function (undefined) {
+  'use strict';
+
+  var $;
+
+  // to keep backwards compatibility
+  if (typeof jQuery !== 'undefined' && jQuery) {
+    $ = jQuery;
+  } else {
+    $ = {};
+  }
+
+
+  /**
+   * jQuery.csv.defaults
+   * Encapsulates the method paramater defaults for the CSV plugin module.
+   */
+
+  $.csv = {
+    defaults: {
+      separator:',',
+      delimiter:'"',
+      headers:true
+    },
+
+    hooks: {
+      castToScalar: function(value, state) {
+        var hasDot = /\./;
+        if (isNaN(value)) {
+          return value;
+        } else {
+          if (hasDot.test(value)) {
+            return parseFloat(value);
+          } else {
+            var integer = parseInt(value);
+            if(isNaN(integer)) {
+              return null;
+            } else {
+              return integer;
+            }
+          }
+        }
+      }
+    },
+
+    parsers: {
+      parse: function(csv, options) {
+        // cache settings
+        var separator = options.separator;
+        var delimiter = options.delimiter;
+
+        // set initial state if it's missing
+        if(!options.state.rowNum) {
+          options.state.rowNum = 1;
+        }
+        if(!options.state.colNum) {
+          options.state.colNum = 1;
+        }
+
+        // clear initial state
+        var data = [];
+        var entry = [];
+        var state = 0;
+        var value = '';
+        var exit = false;
+
+        function endOfEntry() {
+          // reset the state
+          state = 0;
+          value = '';
+
+          // if 'start' hasn't been met, don't output
+          if(options.start && options.state.rowNum < options.start) {
+            // update global state
+            entry = [];
+            options.state.rowNum++;
+            options.state.colNum = 1;
+            return;
+          }
+          
+          if(options.onParseEntry === undefined) {
+            // onParseEntry hook not set
+            data.push(entry);
+          } else {
+            var hookVal = options.onParseEntry(entry, options.state); // onParseEntry Hook
+            // false skips the row, configurable through a hook
+            if(hookVal !== false) {
+              data.push(hookVal);
+            }
+          }
+          //console.log('entry:' + entry);
+          
+          // cleanup
+          entry = [];
+
+          // if 'end' is met, stop parsing
+          if(options.end && options.state.rowNum >= options.end) {
+            exit = true;
+          }
+          
+          // update global state
+          options.state.rowNum++;
+          options.state.colNum = 1;
+        }
+
+        function endOfValue() {
+          if(options.onParseValue === undefined) {
+            // onParseValue hook not set
+            entry.push(value);
+          } else {
+            var hook = options.onParseValue(value, options.state); // onParseValue Hook
+            // false skips the row, configurable through a hook
+            if(hook !== false) {
+              entry.push(hook);
+            }
+          }
+          //console.log('value:' + value);
+          // reset the state
+          value = '';
+          state = 0;
+          // update global state
+          options.state.colNum++;
+        }
+
+        // escape regex-specific control chars
+        var escSeparator = RegExp.escape(separator);
+        var escDelimiter = RegExp.escape(delimiter);
+
+        // compile the regEx str using the custom delimiter/separator
+        var match = /(D|S|\r\n|\n|\r|[^DS\r\n]+)/;
+        var matchSrc = match.source;
+        matchSrc = matchSrc.replace(/S/g, escSeparator);
+        matchSrc = matchSrc.replace(/D/g, escDelimiter);
+        match = new RegExp(matchSrc, 'gm');
+
+        // put on your fancy pants...
+        // process control chars individually, use look-ahead on non-control chars
+        csv.replace(match, function (m0) {
+          if(exit) {
+            return;
+          }
+          switch (state) {
+            // the start of a value
+            case 0:
+              // null last value
+              if (m0 === separator) {
+                value += '';
+                endOfValue();
+                break;
+              }
+              // opening delimiter
+              if (m0 === delimiter) {
+                state = 1;
+                break;
+              }
+              // null last value
+              if (/^(\r\n|\n|\r)$/.test(m0)) {
+                endOfValue();
+                endOfEntry();
+                break;
+              }
+              // un-delimited value
+              value += m0;
+              state = 3;
+              break;
+
+            // delimited input
+            case 1:
+              // second delimiter? check further
+              if (m0 === delimiter) {
+                state = 2;
+                break;
+              }
+              // delimited data
+              value += m0;
+              state = 1;
+              break;
+
+            // delimiter found in delimited input
+            case 2:
+              // escaped delimiter?
+              if (m0 === delimiter) {
+                value += m0;
+                state = 1;
+                break;
+              }
+              // null value
+              if (m0 === separator) {
+                endOfValue();
+                break;
+              }
+              // end of entry
+              if (/^(\r\n|\n|\r)$/.test(m0)) {
+                endOfValue();
+                endOfEntry();
+                break;
+              }
+              // broken paser?
+              throw new Error('CSVDataError: Illegal State [Row:' + options.state.rowNum + '][Col:' + options.state.colNum + ']');
+
+            // un-delimited input
+            case 3:
+              // null last value
+              if (m0 === separator) {
+                endOfValue();
+                break;
+              }
+              // end of entry
+              if (/^(\r\n|\n|\r)$/.test(m0)) {
+                endOfValue();
+                endOfEntry();
+                break;
+              }
+              if (m0 === delimiter) {
+              // non-compliant data
+                throw new Error('CSVDataError: Illegal Quote [Row:' + options.state.rowNum + '][Col:' + options.state.colNum + ']');
+              }
+              // broken parser?
+              throw new Error('CSVDataError: Illegal Data [Row:' + options.state.rowNum + '][Col:' + options.state.colNum + ']');
+            default:
+              // shenanigans
+              throw new Error('CSVDataError: Unknown State [Row:' + options.state.rowNum + '][Col:' + options.state.colNum + ']');
+          }
+          //console.log('val:' + m0 + ' state:' + state);
+        });
+
+        // submit the last entry
+        // ignore null last line
+        if(entry.length !== 0) {
+          endOfValue();
+          endOfEntry();
+        }
+
+        return data;
+      },
+
+      // a csv-specific line splitter
+      splitLines: function(csv, options) {
+        // cache settings
+        var separator = options.separator;
+        var delimiter = options.delimiter;
+
+        // set initial state if it's missing
+        if(!options.state.rowNum) {
+          options.state.rowNum = 1;
+        }
+
+        // clear initial state
+        var entries = [];
+        var state = 0;
+        var entry = '';
+        var exit = false;
+
+        function endOfLine() {          
+          // reset the state
+          state = 0;
+          
+          // if 'start' hasn't been met, don't output
+          if(options.start && options.state.rowNum < options.start) {
+            // update global state
+            entry = '';
+            options.state.rowNum++;
+            return;
+          }
+          
+          if(options.onParseEntry === undefined) {
+            // onParseEntry hook not set
+            entries.push(entry);
+          } else {
+            var hookVal = options.onParseEntry(entry, options.state); // onParseEntry Hook
+            // false skips the row, configurable through a hook
+            if(hookVal !== false) {
+              entries.push(hookVal);
+            }
+          }
+
+          // cleanup
+          entry = '';
+
+          // if 'end' is met, stop parsing
+          if(options.end && options.state.rowNum >= options.end) {
+            exit = true;
+          }
+          
+          // update global state
+          options.state.rowNum++;
+        }
+
+        // escape regex-specific control chars
+        var escSeparator = RegExp.escape(separator);
+        var escDelimiter = RegExp.escape(delimiter);
+
+        // compile the regEx str using the custom delimiter/separator
+        var match = /(D|S|\n|\r|[^DS\r\n]+)/;
+        var matchSrc = match.source;
+        matchSrc = matchSrc.replace(/S/g, escSeparator);
+        matchSrc = matchSrc.replace(/D/g, escDelimiter);
+        match = new RegExp(matchSrc, 'gm');
+
+        // put on your fancy pants...
+        // process control chars individually, use look-ahead on non-control chars
+        csv.replace(match, function (m0) {
+          if(exit) {
+            return;
+          }
+          switch (state) {
+            // the start of a value/entry
+            case 0:
+              // null value
+              if (m0 === separator) {
+                entry += m0;
+                state = 0;
+                break;
+              }
+              // opening delimiter
+              if (m0 === delimiter) {
+                entry += m0;
+                state = 1;
+                break;
+              }
+              // end of line
+              if (m0 === '\n') {
+                endOfLine();
+                break;
+              }
+              // phantom carriage return
+              if (/^\r$/.test(m0)) {
+                break;
+              }
+              // un-delimit value
+              entry += m0;
+              state = 3;
+              break;
+
+            // delimited input
+            case 1:
+              // second delimiter? check further
+              if (m0 === delimiter) {
+                entry += m0;
+                state = 2;
+                break;
+              }
+              // delimited data
+              entry += m0;
+              state = 1;
+              break;
+
+            // delimiter found in delimited input
+            case 2:
+              // escaped delimiter?
+              var prevChar = entry.substr(entry.length - 1);
+              if (m0 === delimiter && prevChar === delimiter) {
+                entry += m0;
+                state = 1;
+                break;
+              }
+              // end of value
+              if (m0 === separator) {
+                entry += m0;
+                state = 0;
+                break;
+              }
+              // end of line
+              if (m0 === '\n') {
+                endOfLine();
+                break;
+              }
+              // phantom carriage return
+              if (m0 === '\r') {
+                break;
+              }
+              // broken paser?
+              throw new Error('CSVDataError: Illegal state [Row:' + options.state.rowNum + ']');
+
+            // un-delimited input
+            case 3:
+              // null value
+              if (m0 === separator) {
+                entry += m0;
+                state = 0;
+                break;
+              }
+              // end of line
+              if (m0 === '\n') {
+                endOfLine();
+                break;
+              }
+              // phantom carriage return
+              if (m0 === '\r') {
+                break;
+              }
+              // non-compliant data
+              if (m0 === delimiter) {
+                throw new Error('CSVDataError: Illegal quote [Row:' + options.state.rowNum + ']');
+              }
+              // broken parser?
+              throw new Error('CSVDataError: Illegal state [Row:' + options.state.rowNum + ']');
+            default:
+              // shenanigans
+              throw new Error('CSVDataError: Unknown state [Row:' + options.state.rowNum + ']');
+          }
+          //console.log('val:' + m0 + ' state:' + state);
+        });
+
+        // submit the last entry
+        // ignore null last line
+        if(entry !== '') {
+          endOfLine();
+        }
+
+        return entries;
+      },
+
+      // a csv entry parser
+      parseEntry: function(csv, options) {
+        // cache settings
+        var separator = options.separator;
+        var delimiter = options.delimiter;
+        
+        // set initial state if it's missing
+        if(!options.state.rowNum) {
+          options.state.rowNum = 1;
+        }
+        if(!options.state.colNum) {
+          options.state.colNum = 1;
+        }
+
+        // clear initial state
+        var entry = [];
+        var state = 0;
+        var value = '';
+
+        function endOfValue() {
+          if(options.onParseValue === undefined) {
+            // onParseValue hook not set
+            entry.push(value);
+          } else {
+            var hook = options.onParseValue(value, options.state); // onParseValue Hook
+            // false skips the value, configurable through a hook
+            if(hook !== false) {
+              entry.push(hook);
+            }
+          }
+          // reset the state
+          value = '';
+          state = 0;
+          // update global state
+          options.state.colNum++;
+        }
+
+        // checked for a cached regEx first
+        if(!options.match) {
+          // escape regex-specific control chars
+          var escSeparator = RegExp.escape(separator);
+          var escDelimiter = RegExp.escape(delimiter);
+          
+          // compile the regEx str using the custom delimiter/separator
+          var match = /(D|S|\n|\r|[^DS\r\n]+)/;
+          var matchSrc = match.source;
+          matchSrc = matchSrc.replace(/S/g, escSeparator);
+          matchSrc = matchSrc.replace(/D/g, escDelimiter);
+          options.match = new RegExp(matchSrc, 'gm');
+        }
+
+        // put on your fancy pants...
+        // process control chars individually, use look-ahead on non-control chars
+        csv.replace(options.match, function (m0) {
+          switch (state) {
+            // the start of a value
+            case 0:
+              // null last value
+              if (m0 === separator) {
+                value += '';
+                endOfValue();
+                break;
+              }
+              // opening delimiter
+              if (m0 === delimiter) {
+                state = 1;
+                break;
+              }
+              // skip un-delimited new-lines
+              if (m0 === '\n' || m0 === '\r') {
+                break;
+              }
+              // un-delimited value
+              value += m0;
+              state = 3;
+              break;
+
+            // delimited input
+            case 1:
+              // second delimiter? check further
+              if (m0 === delimiter) {
+                state = 2;
+                break;
+              }
+              // delimited data
+              value += m0;
+              state = 1;
+              break;
+
+            // delimiter found in delimited input
+            case 2:
+              // escaped delimiter?
+              if (m0 === delimiter) {
+                value += m0;
+                state = 1;
+                break;
+              }
+              // null value
+              if (m0 === separator) {
+                endOfValue();
+                break;
+              }
+              // skip un-delimited new-lines
+              if (m0 === '\n' || m0 === '\r') {
+                break;
+              }
+              // broken paser?
+              throw new Error('CSVDataError: Illegal State [Row:' + options.state.rowNum + '][Col:' + options.state.colNum + ']');
+
+            // un-delimited input
+            case 3:
+              // null last value
+              if (m0 === separator) {
+                endOfValue();
+                break;
+              }
+              // skip un-delimited new-lines
+              if (m0 === '\n' || m0 === '\r') {
+                break;
+              }
+              // non-compliant data
+              if (m0 === delimiter) {
+                throw new Error('CSVDataError: Illegal Quote [Row:' + options.state.rowNum + '][Col:' + options.state.colNum + ']');
+              }
+              // broken parser?
+              throw new Error('CSVDataError: Illegal Data [Row:' + options.state.rowNum + '][Col:' + options.state.colNum + ']');
+            default:
+              // shenanigans
+              throw new Error('CSVDataError: Unknown State [Row:' + options.state.rowNum + '][Col:' + options.state.colNum + ']');
+          }
+          //console.log('val:' + m0 + ' state:' + state);
+        });
+
+        // submit the last value
+        endOfValue();
+
+        return entry;
+      }
+    },
+
+    helpers: {
+
+      /**
+       * $.csv.helpers.collectPropertyNames(objectsArray)
+       * Collects all unique property names from all passed objects.
+       *
+       * @param {Array} objects Objects to collect properties from.
+       *
+       * Returns an array of property names (array will be empty,
+       * if objects have no own properties).
+       */
+      collectPropertyNames: function (objects) {
+
+        var o, propName, props = [];
+        for (o in objects) {
+          for (propName in objects[o]) {
+            if ((objects[o].hasOwnProperty(propName)) &&
+                (props.indexOf(propName) < 0) && 
+                (typeof objects[o][propName] !== 'function')) {
+
+              props.push(propName);
+            }
+          }
+        }
+        return props;
+      }
+    },
+
+    /**
+     * $.csv.toArray(csv)
+     * Converts a CSV entry string to a javascript array.
+     *
+     * @param {Array} csv The string containing the CSV data.
+     * @param {Object} [options] An object containing user-defined options.
+     * @param {Character} [separator] An override for the separator character. Defaults to a comma(,).
+     * @param {Character} [delimiter] An override for the delimiter character. Defaults to a double-quote(").
+     *
+     * This method deals with simple CSV strings only. It's useful if you only
+     * need to parse a single entry. If you need to parse more than one line,
+     * use $.csv2Array instead.
+     */
+    toArray: function(csv, options, callback) {
+      options = (options !== undefined ? options : {});
+      var config = {};
+      config.callback = ((callback !== undefined && typeof(callback) === 'function') ? callback : false);
+      config.separator = 'separator' in options ? options.separator : $.csv.defaults.separator;
+      config.delimiter = 'delimiter' in options ? options.delimiter : $.csv.defaults.delimiter;
+      var state = (options.state !== undefined ? options.state : {});
+
+      // setup
+      options = {
+        delimiter: config.delimiter,
+        separator: config.separator,
+        onParseEntry: options.onParseEntry,
+        onParseValue: options.onParseValue,
+        state: state
+      };
+
+      var entry = $.csv.parsers.parseEntry(csv, options);
+
+      // push the value to a callback if one is defined
+      if(!config.callback) {
+        return entry;
+      } else {
+        config.callback('', entry);
+      }
+    },
+
+    /**
+     * $.csv.toArrays(csv)
+     * Converts a CSV string to a javascript array.
+     *
+     * @param {String} csv The string containing the raw CSV data.
+     * @param {Object} [options] An object containing user-defined options.
+     * @param {Character} [separator] An override for the separator character. Defaults to a comma(,).
+     * @param {Character} [delimiter] An override for the delimiter character. Defaults to a double-quote(").
+     *
+     * This method deals with multi-line CSV. The breakdown is simple. The first
+     * dimension of the array represents the line (or entry/row) while the second
+     * dimension contains the values (or values/columns).
+     */
+    toArrays: function(csv, options, callback) {
+      options = (options !== undefined ? options : {});
+      var config = {};
+      config.callback = ((callback !== undefined && typeof(callback) === 'function') ? callback : false);
+      config.separator = 'separator' in options ? options.separator : $.csv.defaults.separator;
+      config.delimiter = 'delimiter' in options ? options.delimiter : $.csv.defaults.delimiter;
+
+      // setup
+      var data = [];
+      options = {
+        delimiter: config.delimiter,
+        separator: config.separator,
+        onPreParse: options.onPreParse,
+        onParseEntry: options.onParseEntry,
+        onParseValue: options.onParseValue,
+        onPostParse: options.onPostParse,
+        start: options.start,
+        end: options.end,
+        state: {
+          rowNum: 1,
+          colNum: 1
+        }
+      };
+
+      // onPreParse hook
+      if(options.onPreParse !== undefined) {
+        options.onPreParse(csv, options.state);
+      }
+
+      // parse the data
+      data = $.csv.parsers.parse(csv, options);
+
+      // onPostParse hook
+      if(options.onPostParse !== undefined) {
+        options.onPostParse(data, options.state);
+      }
+
+      // push the value to a callback if one is defined
+      if(!config.callback) {
+        return data;
+      } else {
+        config.callback('', data);
+      }
+    },
+
+    /**
+     * $.csv.toObjects(csv)
+     * Converts a CSV string to a javascript object.
+     * @param {String} csv The string containing the raw CSV data.
+     * @param {Object} [options] An object containing user-defined options.
+     * @param {Character} [separator] An override for the separator character. Defaults to a comma(,).
+     * @param {Character} [delimiter] An override for the delimiter character. Defaults to a double-quote(").
+     * @param {Boolean} [headers] Indicates whether the data contains a header line. Defaults to true.
+     *
+     * This method deals with multi-line CSV strings. Where the headers line is
+     * used as the key for each value per entry.
+     */
+    toObjects: function(csv, options, callback) {
+      options = (options !== undefined ? options : {});
+      var config = {};
+      config.callback = ((callback !== undefined && typeof(callback) === 'function') ? callback : false);
+      config.separator = 'separator' in options ? options.separator : $.csv.defaults.separator;
+      config.delimiter = 'delimiter' in options ? options.delimiter : $.csv.defaults.delimiter;
+      config.headers = 'headers' in options ? options.headers : $.csv.defaults.headers;
+      options.start = 'start' in options ? options.start : 1;
+      
+      // account for headers
+      if(config.headers) {
+        options.start++;
+      }
+      if(options.end && config.headers) {
+        options.end++;
+      }
+
+      // setup
+      var lines = [];
+      var data = [];
+
+      options = {
+        delimiter: config.delimiter,
+        separator: config.separator,
+        onPreParse: options.onPreParse,
+        onParseEntry: options.onParseEntry,
+        onParseValue: options.onParseValue,
+        onPostParse: options.onPostParse,
+        start: options.start,
+        end: options.end,
+        state: {
+          rowNum: 1,
+          colNum: 1
+        },
+        match: false,
+        transform: options.transform
+      };
+
+      // fetch the headers
+      var headerOptions = {
+        delimiter: config.delimiter,
+        separator: config.separator,
+        start: 1,
+        end: 1,
+        state: {
+          rowNum:1,
+          colNum:1
+        }
+      };
+
+      // onPreParse hook
+      if(options.onPreParse !== undefined) {
+        options.onPreParse(csv, options.state);
+      }
+
+      // parse the csv
+      var headerLine = $.csv.parsers.splitLines(csv, headerOptions);
+      var headers = $.csv.toArray(headerLine[0], options);
+
+      // fetch the data
+      lines = $.csv.parsers.splitLines(csv, options);
+
+      // reset the state for re-use
+      options.state.colNum = 1;
+      if(headers){
+        options.state.rowNum = 2;
+      } else {
+        options.state.rowNum = 1;
+      }
+      
+      // convert data to objects
+      for(var i=0, len=lines.length; i<len; i++) {
+        var entry = $.csv.toArray(lines[i], options);
+        var object = {};
+        for(var j=0; j <headers.length; j++) {
+          object[headers[j]] = entry[j];
+        }
+        if (options.transform !== undefined) {
+          data.push(options.transform.call(undefined, object));
+        } else {
+          data.push(object);
+        }
+        
+        // update row state
+        options.state.rowNum++;
+      }
+
+      // onPostParse hook
+      if(options.onPostParse !== undefined) {
+        options.onPostParse(data, options.state);
+      }
+
+      // push the value to a callback if one is defined
+      if(!config.callback) {
+        return data;
+      } else {
+        config.callback('', data);
+      }
+    },
+
+     /**
+     * $.csv.fromArrays(arrays)
+     * Converts a javascript array to a CSV String.
+     *
+     * @param {Array} arrays An array containing an array of CSV entries.
+     * @param {Object} [options] An object containing user-defined options.
+     * @param {Character} [separator] An override for the separator character. Defaults to a comma(,).
+     * @param {Character} [delimiter] An override for the delimiter character. Defaults to a double-quote(").
+     *
+     * This method generates a CSV file from an array of arrays (representing entries).
+     */
+    fromArrays: function(arrays, options, callback) {
+      options = (options !== undefined ? options : {});
+      var config = {};
+      config.callback = ((callback !== undefined && typeof(callback) === 'function') ? callback : false);
+      config.separator = 'separator' in options ? options.separator : $.csv.defaults.separator;
+      config.delimiter = 'delimiter' in options ? options.delimiter : $.csv.defaults.delimiter;
+
+      var output = '',
+          line,
+          lineValues,
+          i, j;
+
+      for (i = 0; i < arrays.length; i++) {
+        line = arrays[i];
+        lineValues = [];
+        for (j = 0; j < line.length; j++) {
+          var strValue = (line[j] === undefined || line[j] === null) ? '' : line[j].toString();
+          if (strValue.indexOf(config.delimiter) > -1) {
+            strValue = strValue.replace(config.delimiter, config.delimiter + config.delimiter);
+          }
+
+          var escMatcher = '\n|\r|S|D';
+          escMatcher = escMatcher.replace('S', config.separator);
+          escMatcher = escMatcher.replace('D', config.delimiter);
+
+          if (strValue.search(escMatcher) > -1) {
+            strValue = config.delimiter + strValue + config.delimiter;
+          }
+          lineValues.push(strValue);
+        }
+        output += lineValues.join(config.separator) + '\r\n';
+      }
+
+      // push the value to a callback if one is defined
+      if(!config.callback) {
+        return output;
+      } else {
+        config.callback('', output);
+      }
+    },
+
+    /**jquery.csv.js
+     * $.csv.fromObjects(objects)
+     * Converts a javascript dictionary to a CSV string.
+     *
+     * @param {Object} objects An array of objects containing the data.
+     * @param {Object} [options] An object containing user-defined options.
+     * @param {Character} [separator] An override for the separator character. Defaults to a comma(,).
+     * @param {Character} [delimiter] An override for the delimiter character. Defaults to a double-quote(").
+     * @param {Character} [sortOrder] Sort order of columns (named after
+     *   object properties). Use 'alpha' for alphabetic. Default is 'declare',
+     *   which means, that properties will _probably_ appear in order they were
+     *   declared for the object. But without any guarantee.
+     * @param {Character or Array} [manualOrder] Manually order columns. May be
+     * a strin in a same csv format as an output or an array of header names
+     * (array items won't be parsed). All the properties, not present in
+     * `manualOrder` will be appended to the end in accordance with `sortOrder`
+     * option. So the `manualOrder` always takes preference, if present.
+     *
+     * This method generates a CSV file from an array of objects (name:value pairs).
+     * It starts by detecting the headers and adding them as the first line of
+     * the CSV file, followed by a structured dump of the data.
+     */
+    fromObjects: function(objects, options, callback) {
+      options = (options !== undefined ? options : {});
+      var config = {};
+      config.callback = ((callback !== undefined && typeof(callback) === 'function') ? callback : false);
+      config.separator = 'separator' in options ? options.separator : $.csv.defaults.separator;
+      config.delimiter = 'delimiter' in options ? options.delimiter : $.csv.defaults.delimiter;
+      config.headers = 'headers' in options ? options.headers : $.csv.defaults.headers;
+      config.sortOrder = 'sortOrder' in options ? options.sortOrder : 'declare';
+      config.manualOrder = 'manualOrder' in options ? options.manualOrder : [];
+      config.transform = options.transform;
+
+      if (typeof config.manualOrder === 'string') {
+        config.manualOrder = $.csv.toArray(config.manualOrder, config);
+      }
+
+      if (config.transform !== undefined) {
+        var origObjects = objects;
+        objects = [];
+
+        var i;
+        for (i = 0; i < origObjects.length; i++) {
+          objects.push(config.transform.call(undefined, origObjects[i]));
+        }
+      }
+
+      var props = $.csv.helpers.collectPropertyNames(objects);
+
+      if (config.sortOrder === 'alpha') {
+        props.sort();
+      } // else {} - nothing to do for 'declare' order
+
+      if (config.manualOrder.length > 0) {
+
+        var propsManual = [].concat(config.manualOrder);
+        var p;
+        for (p = 0; p < props.length; p++) {
+          if (propsManual.indexOf( props[p] ) < 0) {
+            propsManual.push( props[p] );
+          }
+        }
+        props = propsManual;
+      }
+
+      var o, p, line, output = [], propName;
+      if (config.headers) {
+        output.push(props);
+      }
+
+      for (o = 0; o < objects.length; o++) {
+        line = [];
+        for (p = 0; p < props.length; p++) {
+          propName = props[p];
+          if (propName in objects[o] && typeof objects[o][propName] !== 'function') {
+            line.push(objects[o][propName]);
+          } else {
+            line.push('');
+          }
+        }
+        output.push(line);
+      }
+
+      // push the value to a callback if one is defined
+      return $.csv.fromArrays(output, options, config.callback);
+    }
+  };
+
+  // Maintenance code to maintain backward-compatibility
+  // Will be removed in release 1.0
+  $.csvEntry2Array = $.csv.toArray;
+  $.csv2Array = $.csv.toArrays;
+  $.csv2Dictionary = $.csv.toObjects;
+
+  // CommonJS module is defined
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = $.csv;
+  }
+
+}).call( this );
+
+/*!
+ * jScrollPane - v2.0.23 - 2016-01-28
+ * http://jscrollpane.kelvinluck.com/
+ *
+ * Copyright (c) 2014 Kelvin Luck
+ * Dual licensed under the MIT or GPL licenses.
+ */
+!function(a){"function"==typeof define&&define.amd?define(["jquery"],a):"object"==typeof exports?module.exports=a(require("jquery")):a(jQuery)}(function(a){a.fn.jScrollPane=function(b){function c(b,c){function d(c){var f,h,j,k,l,o,p=!1,q=!1;if(N=c,void 0===O)l=b.scrollTop(),o=b.scrollLeft(),b.css({overflow:"hidden",padding:0}),P=b.innerWidth()+rb,Q=b.innerHeight(),b.width(P),O=a('<div class="jspPane" />').css("padding",qb).append(b.children()),R=a('<div class="jspContainer" />').css({width:P+"px",height:Q+"px"}).append(O).appendTo(b);else{if(b.css("width",""),p=N.stickToBottom&&A(),q=N.stickToRight&&B(),k=b.innerWidth()+rb!=P||b.outerHeight()!=Q,k&&(P=b.innerWidth()+rb,Q=b.innerHeight(),R.css({width:P+"px",height:Q+"px"})),!k&&sb==S&&O.outerHeight()==T)return void b.width(P);sb=S,O.css("width",""),b.width(P),R.find(">.jspVerticalBar,>.jspHorizontalBar").remove().end()}O.css("overflow","auto"),S=c.contentWidth?c.contentWidth:O[0].scrollWidth,T=O[0].scrollHeight,O.css("overflow",""),U=S/P,V=T/Q,W=V>1,X=U>1,X||W?(b.addClass("jspScrollable"),f=N.maintainPosition&&($||bb),f&&(h=y(),j=z()),e(),g(),i(),f&&(w(q?S-P:h,!1),v(p?T-Q:j,!1)),F(),C(),L(),N.enableKeyboardNavigation&&H(),N.clickOnTrack&&m(),J(),N.hijackInternalLinks&&K()):(b.removeClass("jspScrollable"),O.css({top:0,left:0,width:R.width()-rb}),D(),G(),I(),n()),N.autoReinitialise&&!pb?pb=setInterval(function(){d(N)},N.autoReinitialiseDelay):!N.autoReinitialise&&pb&&clearInterval(pb),l&&b.scrollTop(0)&&v(l,!1),o&&b.scrollLeft(0)&&w(o,!1),b.trigger("jsp-initialised",[X||W])}function e(){W&&(R.append(a('<div class="jspVerticalBar" />').append(a('<div class="jspCap jspCapTop" />'),a('<div class="jspTrack" />').append(a('<div class="jspDrag" />').append(a('<div class="jspDragTop" />'),a('<div class="jspDragBottom" />'))),a('<div class="jspCap jspCapBottom" />'))),cb=R.find(">.jspVerticalBar"),db=cb.find(">.jspTrack"),Y=db.find(">.jspDrag"),N.showArrows&&(hb=a('<a class="jspArrow jspArrowUp" />').bind("mousedown.jsp",k(0,-1)).bind("click.jsp",E),ib=a('<a class="jspArrow jspArrowDown" />').bind("mousedown.jsp",k(0,1)).bind("click.jsp",E),N.arrowScrollOnHover&&(hb.bind("mouseover.jsp",k(0,-1,hb)),ib.bind("mouseover.jsp",k(0,1,ib))),j(db,N.verticalArrowPositions,hb,ib)),fb=Q,R.find(">.jspVerticalBar>.jspCap:visible,>.jspVerticalBar>.jspArrow").each(function(){fb-=a(this).outerHeight()}),Y.hover(function(){Y.addClass("jspHover")},function(){Y.removeClass("jspHover")}).bind("mousedown.jsp",function(b){a("html").bind("dragstart.jsp selectstart.jsp",E),Y.addClass("jspActive");var c=b.pageY-Y.position().top;return a("html").bind("mousemove.jsp",function(a){p(a.pageY-c,!1)}).bind("mouseup.jsp mouseleave.jsp",o),!1}),f())}function f(){db.height(fb+"px"),$=0,eb=N.verticalGutter+db.outerWidth(),O.width(P-eb-rb);try{0===cb.position().left&&O.css("margin-left",eb+"px")}catch(a){}}function g(){X&&(R.append(a('<div class="jspHorizontalBar" />').append(a('<div class="jspCap jspCapLeft" />'),a('<div class="jspTrack" />').append(a('<div class="jspDrag" />').append(a('<div class="jspDragLeft" />'),a('<div class="jspDragRight" />'))),a('<div class="jspCap jspCapRight" />'))),jb=R.find(">.jspHorizontalBar"),kb=jb.find(">.jspTrack"),_=kb.find(">.jspDrag"),N.showArrows&&(nb=a('<a class="jspArrow jspArrowLeft" />').bind("mousedown.jsp",k(-1,0)).bind("click.jsp",E),ob=a('<a class="jspArrow jspArrowRight" />').bind("mousedown.jsp",k(1,0)).bind("click.jsp",E),N.arrowScrollOnHover&&(nb.bind("mouseover.jsp",k(-1,0,nb)),ob.bind("mouseover.jsp",k(1,0,ob))),j(kb,N.horizontalArrowPositions,nb,ob)),_.hover(function(){_.addClass("jspHover")},function(){_.removeClass("jspHover")}).bind("mousedown.jsp",function(b){a("html").bind("dragstart.jsp selectstart.jsp",E),_.addClass("jspActive");var c=b.pageX-_.position().left;return a("html").bind("mousemove.jsp",function(a){r(a.pageX-c,!1)}).bind("mouseup.jsp mouseleave.jsp",o),!1}),lb=R.innerWidth(),h())}function h(){R.find(">.jspHorizontalBar>.jspCap:visible,>.jspHorizontalBar>.jspArrow").each(function(){lb-=a(this).outerWidth()}),kb.width(lb+"px"),bb=0}function i(){if(X&&W){var b=kb.outerHeight(),c=db.outerWidth();fb-=b,a(jb).find(">.jspCap:visible,>.jspArrow").each(function(){lb+=a(this).outerWidth()}),lb-=c,Q-=c,P-=b,kb.parent().append(a('<div class="jspCorner" />').css("width",b+"px")),f(),h()}X&&O.width(R.outerWidth()-rb+"px"),T=O.outerHeight(),V=T/Q,X&&(mb=Math.ceil(1/U*lb),mb>N.horizontalDragMaxWidth?mb=N.horizontalDragMaxWidth:mb<N.horizontalDragMinWidth&&(mb=N.horizontalDragMinWidth),_.width(mb+"px"),ab=lb-mb,s(bb)),W&&(gb=Math.ceil(1/V*fb),gb>N.verticalDragMaxHeight?gb=N.verticalDragMaxHeight:gb<N.verticalDragMinHeight&&(gb=N.verticalDragMinHeight),Y.height(gb+"px"),Z=fb-gb,q($))}function j(a,b,c,d){var e,f="before",g="after";"os"==b&&(b=/Mac/.test(navigator.platform)?"after":"split"),b==f?g=b:b==g&&(f=b,e=c,c=d,d=e),a[f](c)[g](d)}function k(a,b,c){return function(){return l(a,b,this,c),this.blur(),!1}}function l(b,c,d,e){d=a(d).addClass("jspActive");var f,g,h=!0,i=function(){0!==b&&tb.scrollByX(b*N.arrowButtonSpeed),0!==c&&tb.scrollByY(c*N.arrowButtonSpeed),g=setTimeout(i,h?N.initialDelay:N.arrowRepeatFreq),h=!1};i(),f=e?"mouseout.jsp":"mouseup.jsp",e=e||a("html"),e.bind(f,function(){d.removeClass("jspActive"),g&&clearTimeout(g),g=null,e.unbind(f)})}function m(){n(),W&&db.bind("mousedown.jsp",function(b){if(void 0===b.originalTarget||b.originalTarget==b.currentTarget){var c,d=a(this),e=d.offset(),f=b.pageY-e.top-$,g=!0,h=function(){var a=d.offset(),e=b.pageY-a.top-gb/2,j=Q*N.scrollPagePercent,k=Z*j/(T-Q);if(0>f)$-k>e?tb.scrollByY(-j):p(e);else{if(!(f>0))return void i();e>$+k?tb.scrollByY(j):p(e)}c=setTimeout(h,g?N.initialDelay:N.trackClickRepeatFreq),g=!1},i=function(){c&&clearTimeout(c),c=null,a(document).unbind("mouseup.jsp",i)};return h(),a(document).bind("mouseup.jsp",i),!1}}),X&&kb.bind("mousedown.jsp",function(b){if(void 0===b.originalTarget||b.originalTarget==b.currentTarget){var c,d=a(this),e=d.offset(),f=b.pageX-e.left-bb,g=!0,h=function(){var a=d.offset(),e=b.pageX-a.left-mb/2,j=P*N.scrollPagePercent,k=ab*j/(S-P);if(0>f)bb-k>e?tb.scrollByX(-j):r(e);else{if(!(f>0))return void i();e>bb+k?tb.scrollByX(j):r(e)}c=setTimeout(h,g?N.initialDelay:N.trackClickRepeatFreq),g=!1},i=function(){c&&clearTimeout(c),c=null,a(document).unbind("mouseup.jsp",i)};return h(),a(document).bind("mouseup.jsp",i),!1}})}function n(){kb&&kb.unbind("mousedown.jsp"),db&&db.unbind("mousedown.jsp")}function o(){a("html").unbind("dragstart.jsp selectstart.jsp mousemove.jsp mouseup.jsp mouseleave.jsp"),Y&&Y.removeClass("jspActive"),_&&_.removeClass("jspActive")}function p(c,d){if(W){0>c?c=0:c>Z&&(c=Z);var e=new a.Event("jsp-will-scroll-y");if(b.trigger(e,[c]),!e.isDefaultPrevented()){var f=c||0,g=0===f,h=f==Z,i=c/Z,j=-i*(T-Q);void 0===d&&(d=N.animateScroll),d?tb.animate(Y,"top",c,q,function(){b.trigger("jsp-user-scroll-y",[-j,g,h])}):(Y.css("top",c),q(c),b.trigger("jsp-user-scroll-y",[-j,g,h]))}}}function q(a){void 0===a&&(a=Y.position().top),R.scrollTop(0),$=a||0;var c=0===$,d=$==Z,e=a/Z,f=-e*(T-Q);(ub!=c||wb!=d)&&(ub=c,wb=d,b.trigger("jsp-arrow-change",[ub,wb,vb,xb])),t(c,d),O.css("top",f),b.trigger("jsp-scroll-y",[-f,c,d]).trigger("scroll")}function r(c,d){if(X){0>c?c=0:c>ab&&(c=ab);var e=new a.Event("jsp-will-scroll-x");if(b.trigger(e,[c]),!e.isDefaultPrevented()){var f=c||0,g=0===f,h=f==ab,i=c/ab,j=-i*(S-P);void 0===d&&(d=N.animateScroll),d?tb.animate(_,"left",c,s,function(){b.trigger("jsp-user-scroll-x",[-j,g,h])}):(_.css("left",c),s(c),b.trigger("jsp-user-scroll-x",[-j,g,h]))}}}function s(a){void 0===a&&(a=_.position().left),R.scrollTop(0),bb=a||0;var c=0===bb,d=bb==ab,e=a/ab,f=-e*(S-P);(vb!=c||xb!=d)&&(vb=c,xb=d,b.trigger("jsp-arrow-change",[ub,wb,vb,xb])),u(c,d),O.css("left",f),b.trigger("jsp-scroll-x",[-f,c,d]).trigger("scroll")}function t(a,b){N.showArrows&&(hb[a?"addClass":"removeClass"]("jspDisabled"),ib[b?"addClass":"removeClass"]("jspDisabled"))}function u(a,b){N.showArrows&&(nb[a?"addClass":"removeClass"]("jspDisabled"),ob[b?"addClass":"removeClass"]("jspDisabled"))}function v(a,b){var c=a/(T-Q);p(c*Z,b)}function w(a,b){var c=a/(S-P);r(c*ab,b)}function x(b,c,d){var e,f,g,h,i,j,k,l,m,n=0,o=0;try{e=a(b)}catch(p){return}for(f=e.outerHeight(),g=e.outerWidth(),R.scrollTop(0),R.scrollLeft(0);!e.is(".jspPane");)if(n+=e.position().top,o+=e.position().left,e=e.offsetParent(),/^body|html$/i.test(e[0].nodeName))return;h=z(),j=h+Q,h>n||c?l=n-N.horizontalGutter:n+f>j&&(l=n-Q+f+N.horizontalGutter),isNaN(l)||v(l,d),i=y(),k=i+P,i>o||c?m=o-N.horizontalGutter:o+g>k&&(m=o-P+g+N.horizontalGutter),isNaN(m)||w(m,d)}function y(){return-O.position().left}function z(){return-O.position().top}function A(){var a=T-Q;return a>20&&a-z()<10}function B(){var a=S-P;return a>20&&a-y()<10}function C(){R.unbind(zb).bind(zb,function(a,b,c,d){bb||(bb=0),$||($=0);var e=bb,f=$,g=a.deltaFactor||N.mouseWheelSpeed;return tb.scrollBy(c*g,-d*g,!1),e==bb&&f==$})}function D(){R.unbind(zb)}function E(){return!1}function F(){O.find(":input,a").unbind("focus.jsp").bind("focus.jsp",function(a){x(a.target,!1)})}function G(){O.find(":input,a").unbind("focus.jsp")}function H(){function c(){var a=bb,b=$;switch(d){case 40:tb.scrollByY(N.keyboardSpeed,!1);break;case 38:tb.scrollByY(-N.keyboardSpeed,!1);break;case 34:case 32:tb.scrollByY(Q*N.scrollPagePercent,!1);break;case 33:tb.scrollByY(-Q*N.scrollPagePercent,!1);break;case 39:tb.scrollByX(N.keyboardSpeed,!1);break;case 37:tb.scrollByX(-N.keyboardSpeed,!1)}return e=a!=bb||b!=$}var d,e,f=[];X&&f.push(jb[0]),W&&f.push(cb[0]),O.bind("focus.jsp",function(){b.focus()}),b.attr("tabindex",0).unbind("keydown.jsp keypress.jsp").bind("keydown.jsp",function(b){if(b.target===this||f.length&&a(b.target).closest(f).length){var g=bb,h=$;switch(b.keyCode){case 40:case 38:case 34:case 32:case 33:case 39:case 37:d=b.keyCode,c();break;case 35:v(T-Q),d=null;break;case 36:v(0),d=null}return e=b.keyCode==d&&g!=bb||h!=$,!e}}).bind("keypress.jsp",function(b){return b.keyCode==d&&c(),b.target===this||f.length&&a(b.target).closest(f).length?!e:void 0}),N.hideFocus?(b.css("outline","none"),"hideFocus"in R[0]&&b.attr("hideFocus",!0)):(b.css("outline",""),"hideFocus"in R[0]&&b.attr("hideFocus",!1))}function I(){b.attr("tabindex","-1").removeAttr("tabindex").unbind("keydown.jsp keypress.jsp"),O.unbind(".jsp")}function J(){if(location.hash&&location.hash.length>1){var b,c,d=escape(location.hash.substr(1));try{b=a("#"+d+', a[name="'+d+'"]')}catch(e){return}b.length&&O.find(d)&&(0===R.scrollTop()?c=setInterval(function(){R.scrollTop()>0&&(x(b,!0),a(document).scrollTop(R.position().top),clearInterval(c))},50):(x(b,!0),a(document).scrollTop(R.position().top)))}}function K(){a(document.body).data("jspHijack")||(a(document.body).data("jspHijack",!0),a(document.body).delegate('a[href*="#"]',"click",function(b){var c,d,e,f,g,h,i=this.href.substr(0,this.href.indexOf("#")),j=location.href;if(-1!==location.href.indexOf("#")&&(j=location.href.substr(0,location.href.indexOf("#"))),i===j){c=escape(this.href.substr(this.href.indexOf("#")+1));try{d=a("#"+c+', a[name="'+c+'"]')}catch(k){return}d.length&&(e=d.closest(".jspScrollable"),f=e.data("jsp"),f.scrollToElement(d,!0),e[0].scrollIntoView&&(g=a(window).scrollTop(),h=d.offset().top,(g>h||h>g+a(window).height())&&e[0].scrollIntoView()),b.preventDefault())}}))}function L(){var a,b,c,d,e,f=!1;R.unbind("touchstart.jsp touchmove.jsp touchend.jsp click.jsp-touchclick").bind("touchstart.jsp",function(g){var h=g.originalEvent.touches[0];a=y(),b=z(),c=h.pageX,d=h.pageY,e=!1,f=!0}).bind("touchmove.jsp",function(g){if(f){var h=g.originalEvent.touches[0],i=bb,j=$;return tb.scrollTo(a+c-h.pageX,b+d-h.pageY),e=e||Math.abs(c-h.pageX)>5||Math.abs(d-h.pageY)>5,i==bb&&j==$}}).bind("touchend.jsp",function(){f=!1}).bind("click.jsp-touchclick",function(){return e?(e=!1,!1):void 0})}function M(){var a=z(),c=y();b.removeClass("jspScrollable").unbind(".jsp"),O.unbind(".jsp"),b.replaceWith(yb.append(O.children())),yb.scrollTop(a),yb.scrollLeft(c),pb&&clearInterval(pb)}var N,O,P,Q,R,S,T,U,V,W,X,Y,Z,$,_,ab,bb,cb,db,eb,fb,gb,hb,ib,jb,kb,lb,mb,nb,ob,pb,qb,rb,sb,tb=this,ub=!0,vb=!0,wb=!1,xb=!1,yb=b.clone(!1,!1).empty(),zb=a.fn.mwheelIntent?"mwheelIntent.jsp":"mousewheel.jsp";"border-box"===b.css("box-sizing")?(qb=0,rb=0):(qb=b.css("paddingTop")+" "+b.css("paddingRight")+" "+b.css("paddingBottom")+" "+b.css("paddingLeft"),rb=(parseInt(b.css("paddingLeft"),10)||0)+(parseInt(b.css("paddingRight"),10)||0)),a.extend(tb,{reinitialise:function(b){b=a.extend({},N,b),d(b)},scrollToElement:function(a,b,c){x(a,b,c)},scrollTo:function(a,b,c){w(a,c),v(b,c)},scrollToX:function(a,b){w(a,b)},scrollToY:function(a,b){v(a,b)},scrollToPercentX:function(a,b){w(a*(S-P),b)},scrollToPercentY:function(a,b){v(a*(T-Q),b)},scrollBy:function(a,b,c){tb.scrollByX(a,c),tb.scrollByY(b,c)},scrollByX:function(a,b){var c=y()+Math[0>a?"floor":"ceil"](a),d=c/(S-P);r(d*ab,b)},scrollByY:function(a,b){var c=z()+Math[0>a?"floor":"ceil"](a),d=c/(T-Q);p(d*Z,b)},positionDragX:function(a,b){r(a,b)},positionDragY:function(a,b){p(a,b)},animate:function(a,b,c,d,e){var f={};f[b]=c,a.animate(f,{duration:N.animateDuration,easing:N.animateEase,queue:!1,step:d,complete:e})},getContentPositionX:function(){return y()},getContentPositionY:function(){return z()},getContentWidth:function(){return S},getContentHeight:function(){return T},getPercentScrolledX:function(){return y()/(S-P)},getPercentScrolledY:function(){return z()/(T-Q)},getIsScrollableH:function(){return X},getIsScrollableV:function(){return W},getContentPane:function(){return O},scrollToBottom:function(a){p(Z,a)},hijackInternalLinks:a.noop,destroy:function(){M()}}),d(c)}return b=a.extend({},a.fn.jScrollPane.defaults,b),a.each(["arrowButtonSpeed","trackClickSpeed","keyboardSpeed"],function(){b[this]=b[this]||b.speed}),this.each(function(){var d=a(this),e=d.data("jsp");e?e.reinitialise(b):(a("script",d).filter('[type="text/javascript"],:not([type])').remove(),e=new c(d,b),d.data("jsp",e))})},a.fn.jScrollPane.defaults={showArrows:!1,maintainPosition:!0,stickToBottom:!1,stickToRight:!1,clickOnTrack:!0,autoReinitialise:!1,autoReinitialiseDelay:500,verticalDragMinHeight:0,verticalDragMaxHeight:99999,horizontalDragMinWidth:0,horizontalDragMaxWidth:99999,contentWidth:void 0,animateScroll:!1,animateDuration:300,animateEase:"linear",hijackInternalLinks:!1,verticalGutter:4,horizontalGutter:4,mouseWheelSpeed:3,arrowButtonSpeed:0,arrowRepeatFreq:50,arrowScrollOnHover:!1,trackClickSpeed:0,trackClickRepeatFreq:70,verticalArrowPositions:"split",horizontalArrowPositions:"split",enableKeyboardNavigation:!0,hideFocus:!1,keyboardSpeed:0,initialDelay:300,speed:30,scrollPagePercent:.8}});
+
+/**mwheelIntent.js
+ * @author trixta
+ * @version 1.2
+ */
+(function($){
+
+    var mwheelI = {
+                pos: [-260, -260]
+            },
+        minDif 	= 3,
+        doc 	= document,
+        root 	= doc.documentElement,
+        body 	= doc.body,
+        longDelay, shortDelay
+    ;
+    
+    function unsetPos(){
+        if(this === mwheelI.elem){
+            mwheelI.pos = [-260, -260];
+            mwheelI.elem = false;
+            minDif = 3;
+        }
+    }
+    
+    $.event.special.mwheelIntent = {
+        setup: function(){
+            var jElm = $(this).bind('mousewheel', $.event.special.mwheelIntent.handler);
+            if( this !== doc && this !== root && this !== body ){
+                jElm.bind('mouseleave', unsetPos);
+            }
+            jElm = null;
+            return true;
+        },
+        teardown: function(){
+            $(this)
+                .unbind('mousewheel', $.event.special.mwheelIntent.handler)
+                .unbind('mouseleave', unsetPos)
+            ;
+            return true;
+        },
+        handler: function(e, d){
+            var pos = [e.clientX, e.clientY];
+            if( this === mwheelI.elem || Math.abs(mwheelI.pos[0] - pos[0]) > minDif || Math.abs(mwheelI.pos[1] - pos[1]) > minDif ){
+                mwheelI.elem = this;
+                mwheelI.pos = pos;
+                minDif = 250;
+                
+                clearTimeout(shortDelay);
+                shortDelay = setTimeout(function(){
+                    minDif = 10;
+                }, 200);
+                clearTimeout(longDelay);
+                longDelay = setTimeout(function(){
+                    minDif = 3;
+                }, 1500);
+                e = $.extend({}, e, {type: 'mwheelIntent'});
+                return ($.event.dispatch || $.event.handle).apply(this, arguments);
+            }
+        }
+    };
+    $.fn.extend({
+        mwheelIntent: function(fn) {
+            return fn ? this.bind("mwheelIntent", fn) : this.trigger("mwheelIntent");
+        },
+        
+        unmwheelIntent: function(fn) {
+            return this.unbind("mwheelIntent", fn);
+        }
+    });
+    
+    $(function(){
+        body = doc.body;
+        //assume that document is always scrollable, doesn't hurt if not
+        $(doc).bind('mwheelIntent.mwheelIntentDefault', $.noop);
+    });
+    })(jQuery);   
+  
+    /*//jquery.mousewheel.js
+    !
+ * jQuery Mousewheel 3.1.12
+ *
+ * Copyright 2014 jQuery Foundation and other contributors
+ * Released under the MIT license.
+ * http://jquery.org/license
+ */
+
+(function (factory) {
+    if ( typeof define === 'function' && define.amd ) {
+        // AMD. Register as an anonymous module.
+        define(['jquery'], factory);
+    } else if (typeof exports === 'object') {
+        // Node/CommonJS style for Browserify
+        module.exports = factory;
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+}(function ($) {
+
+    var toFix  = ['wheel', 'mousewheel', 'DOMMouseScroll', 'MozMousePixelScroll'],
+        toBind = ( 'onwheel' in document || document.documentMode >= 9 ) ?
+                    ['wheel'] : ['mousewheel', 'DomMouseScroll', 'MozMousePixelScroll'],
+        slice  = Array.prototype.slice,
+        nullLowestDeltaTimeout, lowestDelta;
+
+    if ( $.event.fixHooks ) {
+        for ( var i = toFix.length; i; ) {
+            $.event.fixHooks[ toFix[--i] ] = $.event.mouseHooks;
+        }
+    }
+
+    var special = $.event.special.mousewheel = {
+        version: '3.1.12',
+
+        setup: function() {
+            if ( this.addEventListener ) {
+                for ( var i = toBind.length; i; ) {
+                    this.addEventListener( toBind[--i], handler, false );
+                }
+            } else {
+                this.onmousewheel = handler;
+            }
+            // Store the line height and page height for this particular element
+            $.data(this, 'mousewheel-line-height', special.getLineHeight(this));
+            $.data(this, 'mousewheel-page-height', special.getPageHeight(this));
+        },
+
+        teardown: function() {
+            if ( this.removeEventListener ) {
+                for ( var i = toBind.length; i; ) {
+                    this.removeEventListener( toBind[--i], handler, false );
+                }
+            } else {
+                this.onmousewheel = null;
+            }
+            // Clean up the data we added to the element
+            $.removeData(this, 'mousewheel-line-height');
+            $.removeData(this, 'mousewheel-page-height');
+        },
+
+        getLineHeight: function(elem) {
+            var $elem = $(elem),
+                $parent = $elem['offsetParent' in $.fn ? 'offsetParent' : 'parent']();
+            if (!$parent.length) {
+                $parent = $('body');
+            }
+            return parseInt($parent.css('fontSize'), 10) || parseInt($elem.css('fontSize'), 10) || 16;
+        },
+
+        getPageHeight: function(elem) {
+            return $(elem).height();
+        },
+
+        settings: {
+            adjustOldDeltas: true, // see shouldAdjustOldDeltas() below
+            normalizeOffset: true  // calls getBoundingClientRect for each event
+        }
+    };
+
+    $.fn.extend({
+        mousewheel: function(fn) {
+            return fn ? this.bind('mousewheel', fn) : this.trigger('mousewheel');
+        },
+
+        unmousewheel: function(fn) {
+            return this.unbind('mousewheel', fn);
+        }
+    });
+
+
+    function handler(event) {
+        var orgEvent   = event || window.event,
+            args       = slice.call(arguments, 1),
+            delta      = 0,
+            deltaX     = 0,
+            deltaY     = 0,
+            absDelta   = 0,
+            offsetX    = 0,
+            offsetY    = 0;
+        event = $.event.fix(orgEvent);
+        event.type = 'mousewheel';
+
+        // Old school scrollwheel delta
+        if ( 'detail'      in orgEvent ) { deltaY = orgEvent.detail * -1;      }
+        if ( 'wheelDelta'  in orgEvent ) { deltaY = orgEvent.wheelDelta;       }
+        if ( 'wheelDeltaY' in orgEvent ) { deltaY = orgEvent.wheelDeltaY;      }
+        if ( 'wheelDeltaX' in orgEvent ) { deltaX = orgEvent.wheelDeltaX * -1; }
+
+        // Firefox < 17 horizontal scrolling related to DOMMouseScroll event
+        if ( 'axis' in orgEvent && orgEvent.axis === orgEvent.HORIZONTAL_AXIS ) {
+            deltaX = deltaY * -1;
+            deltaY = 0;
+        }
+
+        // Set delta to be deltaY or deltaX if deltaY is 0 for backwards compatabilitiy
+        delta = deltaY === 0 ? deltaX : deltaY;
+
+        // New school wheel delta (wheel event)
+        if ( 'deltaY' in orgEvent ) {
+            deltaY = orgEvent.deltaY * -1;
+            delta  = deltaY;
+        }
+        if ( 'deltaX' in orgEvent ) {
+            deltaX = orgEvent.deltaX;
+            if ( deltaY === 0 ) { delta  = deltaX * -1; }
+        }
+
+        // No change actually happened, no reason to go any further
+        if ( deltaY === 0 && deltaX === 0 ) { return; }
+
+        // Need to convert lines and pages to pixels if we aren't already in pixels
+        // There are three delta modes:
+        //   * deltaMode 0 is by pixels, nothing to do
+        //   * deltaMode 1 is by lines
+        //   * deltaMode 2 is by pages
+        if ( orgEvent.deltaMode === 1 ) {
+            var lineHeight = $.data(this, 'mousewheel-line-height');
+            delta  *= lineHeight;
+            deltaY *= lineHeight;
+            deltaX *= lineHeight;
+        } else if ( orgEvent.deltaMode === 2 ) {
+            var pageHeight = $.data(this, 'mousewheel-page-height');
+            delta  *= pageHeight;
+            deltaY *= pageHeight;
+            deltaX *= pageHeight;
+        }
+
+        // Store lowest absolute delta to normalize the delta values
+        absDelta = Math.max( Math.abs(deltaY), Math.abs(deltaX) );
+
+        if ( !lowestDelta || absDelta < lowestDelta ) {
+            lowestDelta = absDelta;
+
+            // Adjust older deltas if necessary
+            if ( shouldAdjustOldDeltas(orgEvent, absDelta) ) {
+                lowestDelta /= 40;
+            }
+        }
+
+        // Adjust older deltas if necessary
+        if ( shouldAdjustOldDeltas(orgEvent, absDelta) ) {
+            // Divide all the things by 40!
+            delta  /= 40;
+            deltaX /= 40;
+            deltaY /= 40;
+        }
+
+        // Get a whole, normalized value for the deltas
+        delta  = Math[ delta  >= 1 ? 'floor' : 'ceil' ](delta  / lowestDelta);
+        deltaX = Math[ deltaX >= 1 ? 'floor' : 'ceil' ](deltaX / lowestDelta);
+        deltaY = Math[ deltaY >= 1 ? 'floor' : 'ceil' ](deltaY / lowestDelta);
+
+        // Normalise offsetX and offsetY properties
+        if ( special.settings.normalizeOffset && this.getBoundingClientRect ) {
+            var boundingRect = this.getBoundingClientRect();
+            offsetX = event.clientX - boundingRect.left;
+            offsetY = event.clientY - boundingRect.top;
+        }
+
+        // Add information to the event object
+        event.deltaX = deltaX;
+        event.deltaY = deltaY;
+        event.deltaFactor = lowestDelta;
+        event.offsetX = offsetX;
+        event.offsetY = offsetY;
+        // Go ahead and set deltaMode to 0 since we converted to pixels
+        // Although this is a little odd since we overwrite the deltaX/Y
+        // properties with normalized deltas.
+        event.deltaMode = 0;
+
+        // Add event and delta to the front of the arguments
+        args.unshift(event, delta, deltaX, deltaY);
+
+        // Clearout lowestDelta after sometime to better
+        // handle multiple device types that give different
+        // a different lowestDelta
+        // Ex: trackpad = 3 and mouse wheel = 120
+        if (nullLowestDeltaTimeout) { clearTimeout(nullLowestDeltaTimeout); }
+        nullLowestDeltaTimeout = setTimeout(nullLowestDelta, 200);
+
+        return ($.event.dispatch || $.event.handle).apply(this, args);
+    }
+
+    function nullLowestDelta() {
+        lowestDelta = null;
+    }
+
+    function shouldAdjustOldDeltas(orgEvent, absDelta) {
+        // If this is an older event and the delta is divisable by 120,
+        // then we are assuming that the browser is treating this as an
+        // older mouse wheel event and that we should divide the deltas
+        // by 40 to try and get a more usable deltaFactor.
+        // Side note, this actually impacts the reported scroll distance
+        // in older browsers and can cause scrolling to be slower than native.
+        // Turn this off by setting $.event.special.mousewheel.settings.adjustOldDeltas to false.
+        return special.settings.adjustOldDeltas && orgEvent.type === 'mousewheel' && absDelta % 120 === 0;
+    }
+
+}));

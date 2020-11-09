@@ -14,7 +14,81 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {
-                
+                //var_dump($_POST);
+                $scPlcysPlcyNm = isset($_POST['scPlcysPlcyNm']) ? cleanInputData($_POST['scPlcysPlcyNm']) : "";
+                $scPlcysPlcyID = isset($_POST['scPlcysPlcyID']) ? (int) cleanInputData($_POST['scPlcysPlcyID']) : -1;
+                $scPlcysIsDflt = isset($_POST['scPlcysIsDflt']) ? cleanInputData($_POST['scPlcysIsDflt']) : "NO";
+                $scPlcysIsDflt_B = ($scPlcysIsDflt == "YES") ? "TRUE" : "FALSE";
+                $scPlcysPwdExpryDys = isset($_POST['scPlcysPwdExpryDys']) ? (int) cleanInputData($_POST['scPlcysPwdExpryDys']) : 0;
+                $scPlcysNoOfRecs = isset($_POST['scPlcysNoOfRecs']) ? (int) cleanInputData($_POST['scPlcysNoOfRecs']) : 0;
+                $scPlcysPwdMinLen = isset($_POST['scPlcysPwdMinLen']) ? (int) cleanInputData($_POST['scPlcysPwdMinLen']) : 0;
+                $scPlcysPwdMaxLen = isset($_POST['scPlcysPwdMaxLen']) ? (int) cleanInputData($_POST['scPlcysPwdMaxLen']) : 0;
+                $scPlcysPwdOldAlwd = isset($_POST['scPlcysPwdOldAlwd']) ? (int) cleanInputData($_POST['scPlcysPwdOldAlwd']) : 0;
+                $scPlcysPwdUnmAlwd = isset($_POST['scPlcysPwdUnmAlwd']) ? cleanInputData($_POST['scPlcysPwdUnmAlwd']) : "NO";
+                $scPlcysPwdUnmAlwd_B = ($scPlcysPwdUnmAlwd == "YES") ? "TRUE" : "FALSE";
+                $scPlcysPwdRptngChars = isset($_POST['scPlcysPwdRptngChars']) ? cleanInputData($_POST['scPlcysPwdRptngChars']) : "NO";
+                $scPlcysPwdRptngChars_B = ($scPlcysPwdRptngChars == "YES") ? "TRUE" : "FALSE";
+                $scPlcysAlwdFailedLgs = isset($_POST['scPlcysAlwdFailedLgs']) ? (int) cleanInputData($_POST['scPlcysAlwdFailedLgs']) : 0;
+                $scPlcysAutoUnlkTme = isset($_POST['scPlcysAutoUnlkTme']) ? (int) cleanInputData($_POST['scPlcysAutoUnlkTme']) : 0;
+                $scPlcysChckBlkLtrs = isset($_POST['scPlcysChckBlkLtrs']) ? cleanInputData($_POST['scPlcysChckBlkLtrs']) : "NO";
+                $scPlcysChckBlkLtrs_B = ($scPlcysChckBlkLtrs == "YES") ? "TRUE" : "FALSE";
+                $scPlcysChkSmllLtrs = isset($_POST['scPlcysChkSmllLtrs']) ? cleanInputData($_POST['scPlcysChkSmllLtrs']) : "NO";
+                $scPlcysChkSmllLtrs_B = ($scPlcysChkSmllLtrs == "YES") ? "TRUE" : "FALSE";
+                $scPlcysChkDgts = isset($_POST['scPlcysChkDgts']) ? cleanInputData($_POST['scPlcysChkDgts']) : "NO";
+                $scPlcysChkDgts_B = ($scPlcysChkDgts == "YES") ? "TRUE" : "FALSE";
+                $scPlcysChkWild = isset($_POST['scPlcysChkWild']) ? cleanInputData($_POST['scPlcysChkWild']) : "NO";
+                $scPlcysChkWild_B = ($scPlcysChkDgts == "YES") ? "TRUE" : "FALSE";
+                $scPlcysCombinations = isset($_POST['scPlcysCombinations']) ? cleanInputData($_POST['scPlcysCombinations']) : "NONE";
+                $scPlcysSesnTmeOut = isset($_POST['scPlcysSesnTmeOut']) ? (int) cleanInputData($_POST['scPlcysSesnTmeOut']) : 0;
+                $slctdAdtTbls = isset($_POST['slctdAdtTbls']) ? cleanInputData($_POST['slctdAdtTbls']) : "";
+
+                $oldID = getPlcyID($scPlcysPlcyNm);
+                if (doesChkdRqrmntsMeetCmbntn($scPlcysChckBlkLtrs_B, $scPlcysChkSmllLtrs_B, $scPlcysChkWild_B, $scPlcysChkDgts_B, $scPlcysCombinations) == false) {
+                    echo "The selected requirement combination '" . $scPlcysCombinations . "' does not match the checked boxes above it!";
+                    exit();
+                }
+                if ($scPlcysPlcyNm != "" && ($oldID <= 0 || $oldID == $scPlcysPlcyID)) {
+                    if ($scPlcysIsDflt == "YES") {
+                        undefaultAllPlcys();
+                    }
+                    if ($scPlcysPlcyID <= 0) {
+                        createPolicy($scPlcysPlcyNm, $scPlcysAlwdFailedLgs
+                                , $scPlcysPwdExpryDys, $scPlcysAutoUnlkTme, $scPlcysChckBlkLtrs_B, $scPlcysChkSmllLtrs_B, $scPlcysChkDgts_B, $scPlcysChkWild_B
+                                , $scPlcysCombinations, $scPlcysIsDflt_B, $scPlcysPwdOldAlwd, $scPlcysPwdMinLen, $scPlcysPwdMaxLen
+                                , $scPlcysNoOfRecs, $scPlcysPwdRptngChars_B, $scPlcysPwdUnmAlwd_B, $scPlcysSesnTmeOut);
+                        $scPlcysPlcyID = getPlcyID($scPlcysPlcyNm);
+                    } else {
+                        updatePlcy($scPlcysPlcyID, $scPlcysPlcyNm, $scPlcysAlwdFailedLgs
+                                , $scPlcysPwdExpryDys, $scPlcysAutoUnlkTme, $scPlcysChckBlkLtrs_B, $scPlcysChkSmllLtrs_B, $scPlcysChkDgts_B, $scPlcysChkWild_B
+                                , $scPlcysCombinations, $scPlcysIsDflt_B, $scPlcysPwdOldAlwd, $scPlcysPwdMinLen, $scPlcysPwdMaxLen
+                                , $scPlcysNoOfRecs, $scPlcysPwdRptngChars_B, $scPlcysPwdUnmAlwd_B, $scPlcysSesnTmeOut);
+                    }
+                    $affctdRws = 0;
+                    if (trim($slctdAdtTbls, "|~") != "") {
+                        //Save Question Answers
+                        $variousRows = explode("|", trim($slctdAdtTbls, "|"));
+                        for ($z = 0; $z < count($variousRows); $z++) {
+                            $crntRow = explode("~", $variousRows[$z]);
+                            if (count($crntRow) == 4) {
+                                $enblTrckng = (cleanInputData1($crntRow[0]));
+                                $enblTrckng_B = ($enblTrckng == "YES") ? "TRUE" : "FALSE";
+                                $actnsToTrck = (cleanInputData1($crntRow[1]));
+                                $inptMdlID = (int) (cleanInputData1($crntRow[2]));
+                                $inptRowID = (int) (cleanInputData1($crntRow[3]));
+                                if (hasPlcyEvrHdThsMdl($scPlcysPlcyID, $inptMdlID) == true) {
+                                    $affctdRws += updateActnsToTrack($scPlcysPlcyID, $inptMdlID, $enblTrckng_B, $actnsToTrck);
+                                } else {
+                                    $affctdRws += asgnMdlToPlcy($scPlcysPlcyID, $inptMdlID, $enblTrckng_B, $actnsToTrck);
+                                }
+                            }
+                        }
+                    }
+                    echo ("<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>Security Policy Successfully Saved!<br/>" . $affctdRws . "Audit Trial Information Saved!");
+                    exit();
+                } else {
+                    echo ("<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Either the New Policy Name is in Use <br/>or Data Supplied is Incomplete!</span>");
+                    exit();
+                }
             } else if ($actyp == 2) {
                 
             }
@@ -43,9 +117,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 ?>
                 <form id='allSecPlcysForm' action='' method='post' accept-charset='UTF-8'>
                     <div class="row rhoRowMargin">
-                        <?php
-                        if ($canAddScPlcy === true) {
-                            ?> 
+                <?php
+                if ($canAddScPlcy === true) {
+                    ?> 
                             <div class="<?php echo $colClassType2; ?>" style="padding:0px 1px 0px 1px !important;"> 
                                 <div class="col-md-6">
                                     <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneSecPlcyForm(-1, 2);" style="width:100% !important;">
@@ -60,12 +134,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </button>
                                 </div>
                             </div>
-                            <?php
-                        } else {
-                            $colClassType1 = "col-lg-2";
-                            $colClassType2 = "col-lg-5";
-                        }
-                        ?>
+                    <?php
+                } else {
+                    $colClassType1 = "col-lg-2";
+                    $colClassType2 = "col-lg-5";
+                }
+                ?>
                         <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                             <div class="input-group">
                                 <input class="form-control" id="allSecPlcysSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAllSecPlcys(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
@@ -82,15 +156,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="input-group">
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
                                 <select data-placeholder="Select..." class="form-control chosen-select" id="allSecPlcysSrchIn">
-                                    <?php
-                                    $valslctdArry = array("");
-                                    $srchInsArrys = array("Policy Name");
+                <?php
+                $valslctdArry = array("");
+                $srchInsArrys = array("Policy Name");
 
-                                    for ($z = 0; $z < count($srchInsArrys); $z++) {
-                                        if ($srchIn == $srchInsArrys[$z]) {
-                                            $valslctdArry[$z] = "selected";
-                                        }
-                                        ?>
+                for ($z = 0; $z < count($srchInsArrys); $z++) {
+                    if ($srchIn == $srchInsArrys[$z]) {
+                        $valslctdArry[$z] = "selected";
+                    }
+                    ?>
                                         <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                     <?php } ?>
                                 </select>
@@ -142,16 +216,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                        while ($row = loc_db_fetch_array($result)) {
-                                            if ($pkID <= 0 && $cntr <= 0) {
-                                                $pkID = $row[0];
-                                            }
-                                            $cntr += 1;
-                                            ?>
+                <?php
+                while ($row = loc_db_fetch_array($result)) {
+                    if ($pkID <= 0 && $cntr <= 0) {
+                        $pkID = $row[0];
+                    }
+                    $cntr += 1;
+                    ?>
                                             <tr id="allSecPlcysRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                                <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                                <td><?php echo $row[1]; ?><input type="hidden" class="form-control" aria-label="..." id="allSecPlcysRow<?php echo $cntr; ?>_PlcyID" value="<?php echo $row[0]; ?>"></td>
+                                                <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                                <td class="lovtd"><?php echo $row[1]; ?><input type="hidden" class="form-control" aria-label="..." id="allSecPlcysRow<?php echo $cntr; ?>_PlcyID" value="<?php echo $row[0]; ?>"></td>
                                             </tr>
                                             <?php
                                         }
@@ -160,52 +234,52 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </table>                        
                             </fieldset>
                         </div>                        
-                        <div  class="col-md-9" style="padding:0px 1px 0px 1px !important">
+                        <div  class="col-md-9" style="padding:0px 15px 0px 1px !important">
                             <fieldset class="basic_person_fs" style="padding-top:10px !important;">
                                 <legend class = "basic_person_lg">Policy Details</legend>
                                 <div class="container-fluid" id="secPlcsDetailInfo">
-                                    <?php
-                                    if ($pkID > 0) {
-                                        $result1 = get_SecPlcysDet($pkID);
-                                        while ($row1 = loc_db_fetch_array($result1)) {
-                                            ?>
+                <?php
+                if ($pkID > 0) {
+                    $result1 = get_SecPlcysDet($pkID);
+                    while ($row1 = loc_db_fetch_array($result1)) {
+                        ?>
                                             <div class="row">
                                                 <div  class="col-md-6" style="padding:0px 3px 0px 3px !important;">
                                                     <fieldset class="basic_person_fs" style="padding-top:10px !important;"> 
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                             <label for="scPlcysPlcyNm" class="control-label col-lg-4">Policy Name:</label>
                                                             <div  class="col-lg-8">
-                                                                <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                                     <input type="text" class="form-control" aria-label="..." id="scPlcysPlcyNm" name="scPlcysPlcyNm" value="<?php echo $row1[1]; ?>" style="width:100%;">
                                                                     <input type="hidden" class="form-control" aria-label="..." id="scPlcysPlcyID" name="scPlcysPlcyID" value="<?php echo $row1[0]; ?>">
-                                                                <?php } else {
-                                                                    ?>
+                        <?php } else {
+                            ?>
                                                                     <span><?php echo $row1[1]; ?></span>
-                                                                    <?php
-                                                                }
-                                                                ?>
+                            <?php
+                        }
+                        ?>
                                                             </div>
                                                         </div>
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                             <label for="scPlcysIsDflt" class="control-label col-lg-6">Is Default?:</label>
                                                             <div  class="col-lg-6">
-                                                                <?php
-                                                                $chkdYes = "";
-                                                                $chkdNo = "checked=\"\"";
-                                                                if ($row1[10] == "TRUE") {
-                                                                    $chkdNo = "";
-                                                                    $chkdYes = "checked=\"\"";
-                                                                }
-                                                                ?>
+                        <?php
+                        $chkdYes = "";
+                        $chkdNo = "checked=\"\"";
+                        if ($row1[10] == "TRUE") {
+                            $chkdNo = "";
+                            $chkdYes = "checked=\"\"";
+                        }
+                        ?>
                                                                 <?php if ($canEdtScPlcy === true) { ?>
                                                                     <label class="radio-inline"><input type="radio" name="scPlcysIsDflt" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                                                     <label class="radio-inline"><input type="radio" name="scPlcysIsDflt" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo ($row1[10] == "TRUE" ? "YES" : "NO"); ?></span>
-                                                                    <?php
-                                                                }
-                                                                ?>
+                            <?php
+                        }
+                        ?>
                                                             </div>
                                                         </div>
                                                     </fieldset>
@@ -215,10 +289,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                             <label for="scPlcysPwdExpryDys" class="control-label col-lg-8">Password Expiry Days:</label>
                                                             <div  class="col-lg-4">
-                                                                <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                                     <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdExpryDys" name="scPlcysPwdExpryDys" value="<?php echo $row1[3]; ?>" style="width:100%;">
-                                                                <?php } else {
-                                                                    ?>
+                        <?php } else {
+                            ?>
                                                                     <span><?php echo $row1[3]; ?></span>
                                                                     <?php
                                                                 }
@@ -228,10 +302,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                             <label for="scPlcysNoOfRecs" class="control-label col-lg-8">No. of Displayed Records:</label>
                                                             <div  class="col-lg-4">
-                                                                <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                                     <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysNoOfRecs" name="scPlcysNoOfRecs" value="<?php echo $row1[14]; ?>" style="width:100%;">
-                                                                <?php } else {
-                                                                    ?>
+                        <?php } else {
+                            ?>
                                                                     <span><?php echo $row1[14]; ?></span>
                                                                     <?php
                                                                 }
@@ -247,10 +321,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                             <label for="scPlcysPwdMinLen" class="control-label col-lg-8">Minimum Length of Passwords:</label>
                                                             <div  class="col-lg-4">
-                                                                <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                                     <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdMinLen" name="scPlcysPwdMinLen" value="<?php echo $row1[12]; ?>" style="width:100%;">
-                                                                <?php } else {
-                                                                    ?>
+                        <?php } else {
+                            ?>
                                                                     <span><?php echo $row1[12]; ?></span>
                                                                     <?php
                                                                 }
@@ -260,10 +334,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                             <label for="scPlcysPwdMaxLen" class="control-label col-lg-8">Maximum Length of Passwords:</label>
                                                             <div  class="col-lg-4">
-                                                                <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                                     <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdMaxLen" name="scPlcysPwdMaxLen" value="<?php echo $row1[13]; ?>" style="width:100%;">
-                                                                <?php } else {
-                                                                    ?>
+                        <?php } else {
+                            ?>
                                                                     <span><?php echo $row1[13]; ?></span>
                                                                     <?php
                                                                 }
@@ -274,10 +348,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                             <label for="scPlcysPwdOldAlwd" class="control-label col-lg-8">Blocked Old Passwords:</label>
                                                             <div  class="col-lg-4">
-                                                                <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                                     <input type="number" min="0" max="9999" class="form-control" aria-label="..." id="scPlcysPwdOldAlwd" name="scPlcysPwdOldAlwd" value="<?php echo $row1[11]; ?>" style="width:100%;">
-                                                                <?php } else {
-                                                                    ?>
+                        <?php } else {
+                            ?>
                                                                     <span><?php echo $row1[11]; ?></span>
                                                                     <?php
                                                                 }
@@ -287,54 +361,54 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                             <label for="scPlcysPwdUnmAlwd" class="control-label col-lg-6">User Names in Passwords?:</label>
                                                             <div  class="col-lg-6">
-                                                                <?php
-                                                                $chkdYes = "";
-                                                                $chkdNo = "checked=\"\"";
-                                                                if ($row1[16] == "TRUE") {
-                                                                    $chkdNo = "";
-                                                                    $chkdYes = "checked=\"\"";
-                                                                }
-                                                                ?>
+                        <?php
+                        $chkdYes = "";
+                        $chkdNo = "checked=\"\"";
+                        if ($row1[16] == "TRUE") {
+                            $chkdNo = "";
+                            $chkdYes = "checked=\"\"";
+                        }
+                        ?>
                                                                 <?php if ($canEdtScPlcy === true) { ?>
                                                                     <label class="radio-inline"><input type="radio" name="scPlcysPwdUnmAlwd" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                                                     <label class="radio-inline"><input type="radio" name="scPlcysPwdUnmAlwd" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[16]; ?></span>
-                                                                    <?php
-                                                                }
-                                                                ?>
+                            <?php
+                        }
+                        ?>
                                                             </div>
                                                         </div>
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                             <label for="scPlcysPwdRptngChars" class="control-label col-lg-6">Same sequential characters in Pswds?:</label>
                                                             <div  class="col-lg-6">
-                                                                <?php
-                                                                $chkdYes = "";
-                                                                $chkdNo = "checked=\"\"";
-                                                                if ($row1[15] == "TRUE") {
-                                                                    $chkdNo = "";
-                                                                    $chkdYes = "checked=\"\"";
-                                                                }
-                                                                ?>
+                        <?php
+                        $chkdYes = "";
+                        $chkdNo = "checked=\"\"";
+                        if ($row1[15] == "TRUE") {
+                            $chkdNo = "";
+                            $chkdYes = "checked=\"\"";
+                        }
+                        ?>
                                                                 <?php if ($canEdtScPlcy === true) { ?>
                                                                     <label class="radio-inline"><input type="radio" name="scPlcysPwdRptngChars" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                                                     <label class="radio-inline"><input type="radio" name="scPlcysPwdRptngChars" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[15]; ?></span>
-                                                                    <?php
-                                                                }
-                                                                ?>
+                            <?php
+                        }
+                        ?>
                                                             </div>
                                                         </div>
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                             <label for="scPlcysAlwdFailedLgs" class="control-label col-lg-8">Max. Failed Login Attempts:</label>
                                                             <div  class="col-lg-4">
-                                                                <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                                     <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysAlwdFailedLgs" name="scPlcysAlwdFailedLgs" value="<?php echo $row1[2]; ?>" style="width:100%;">
-                                                                <?php } else {
-                                                                    ?>
+                        <?php } else {
+                            ?>
                                                                     <span><?php echo $row1[2]; ?></span>
                                                                     <?php
                                                                 }
@@ -344,10 +418,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                             <label for="scPlcysAutoUnlkTme" class="control-label col-md-8">Time (mins) to unlock a User:</label>
                                                             <div  class="col-lg-4">
-                                                                <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                                     <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysAutoUnlkTme" name="scPlcysAutoUnlkTme" value="<?php echo $row1[4]; ?>" style="width:100%;">
-                                                                <?php } else {
-                                                                    ?>
+                        <?php } else {
+                            ?>
                                                                     <span><?php echo $row1[4]; ?></span>
                                                                     <?php
                                                                 }
@@ -361,122 +435,122 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                             <label for="scPlcysChckBlkLtrs" class="control-label col-lg-6">Require Block Letters in Pswds?:</label>
                                                             <div  class="col-lg-6">
-                                                                <?php
-                                                                $chkdYes = "";
-                                                                $chkdNo = "checked=\"\"";
-                                                                if ($row1[5] == "TRUE") {
-                                                                    $chkdNo = "";
-                                                                    $chkdYes = "checked=\"\"";
-                                                                }
-                                                                ?>
+                        <?php
+                        $chkdYes = "";
+                        $chkdNo = "checked=\"\"";
+                        if ($row1[5] == "TRUE") {
+                            $chkdNo = "";
+                            $chkdYes = "checked=\"\"";
+                        }
+                        ?>
                                                                 <?php if ($canEdtScPlcy === true) { ?>
                                                                     <label class="radio-inline"><input type="radio" name="scPlcysChckBlkLtrs" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                                                     <label class="radio-inline"><input type="radio" name="scPlcysChckBlkLtrs" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[5]; ?></span>
-                                                                    <?php
-                                                                }
-                                                                ?>
+                            <?php
+                        }
+                        ?>
                                                             </div>
                                                         </div>
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                             <label for="scPlcysChkSmllLtrs" class="control-label col-lg-6">Require Small Letters in Pswds?:</label>
                                                             <div  class="col-lg-6">
-                                                                <?php
-                                                                $chkdYes = "";
-                                                                $chkdNo = "checked=\"\"";
-                                                                if ($row1[6] == "TRUE") {
-                                                                    $chkdNo = "";
-                                                                    $chkdYes = "checked=\"\"";
-                                                                }
-                                                                ?>
+                        <?php
+                        $chkdYes = "";
+                        $chkdNo = "checked=\"\"";
+                        if ($row1[6] == "TRUE") {
+                            $chkdNo = "";
+                            $chkdYes = "checked=\"\"";
+                        }
+                        ?>
                                                                 <?php if ($canEdtScPlcy === true) { ?>
                                                                     <label class="radio-inline"><input type="radio" name="scPlcysChkSmllLtrs" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                                                     <label class="radio-inline"><input type="radio" name="scPlcysChkSmllLtrs" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[6]; ?></span>
-                                                                    <?php
-                                                                }
-                                                                ?>
+                            <?php
+                        }
+                        ?>
                                                             </div>
                                                         </div>
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                             <label for="scPlcysChkDgts" class="control-label col-lg-6">Require Digits in Pswds?:</label>
                                                             <div  class="col-lg-6">
-                                                                <?php
-                                                                $chkdYes = "";
-                                                                $chkdNo = "checked=\"\"";
-                                                                if ($row1[7] == "TRUE") {
-                                                                    $chkdNo = "";
-                                                                    $chkdYes = "checked=\"\"";
-                                                                }
-                                                                ?>
+                        <?php
+                        $chkdYes = "";
+                        $chkdNo = "checked=\"\"";
+                        if ($row1[7] == "TRUE") {
+                            $chkdNo = "";
+                            $chkdYes = "checked=\"\"";
+                        }
+                        ?>
                                                                 <?php if ($canEdtScPlcy === true) { ?>
                                                                     <label class="radio-inline"><input type="radio" name="scPlcysChkDgts" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                                                     <label class="radio-inline"><input type="radio" name="scPlcysChkDgts" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[7]; ?></span>
-                                                                    <?php
-                                                                }
-                                                                ?>
+                            <?php
+                        }
+                        ?>
                                                             </div>
                                                         </div>
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                             <label for="scPlcysChkWild" class="control-label col-lg-6">Require Wild Characters in Pswds?:</label>
                                                             <div  class="col-lg-6">
-                                                                <?php
-                                                                $chkdYes = "";
-                                                                $chkdNo = "checked=\"\"";
-                                                                if ($row1[8] == "TRUE") {
-                                                                    $chkdNo = "";
-                                                                    $chkdYes = "checked=\"\"";
-                                                                }
-                                                                ?>
+                        <?php
+                        $chkdYes = "";
+                        $chkdNo = "checked=\"\"";
+                        if ($row1[8] == "TRUE") {
+                            $chkdNo = "";
+                            $chkdYes = "checked=\"\"";
+                        }
+                        ?>
                                                                 <?php if ($canEdtScPlcy === true) { ?>
                                                                     <label class="radio-inline"><input type="radio" name="scPlcysChkWild" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                                                     <label class="radio-inline"><input type="radio" name="scPlcysChkWild" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[8]; ?></span>
-                                                                    <?php
-                                                                }
-                                                                ?>
+                            <?php
+                        }
+                        ?>
                                                             </div>
                                                         </div>
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                             <label for="scPlcysCombinations" class="control-label col-lg-8">Combinations to Insist?:</label>
                                                             <div class="col-lg-4">
-                                                                <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                                     <select data-placeholder="Select..." class="form-control chosen-select" id="scPlcysCombinations" name="scPlcysCombinations">
-                                                                        <?php
-                                                                        $valslctdArry = array("", "", "", "", "");
-                                                                        $srchInsArrys = array("NONE", "ALL 4", "ANY 3", "ANY 2", "ANY 1");
-                                                                        for ($z = 0; $z < count($srchInsArrys); $z++) {
-                                                                            if ($row1[9] == $srchInsArrys[$z]) {
-                                                                                $valslctdArry[$z] = "selected";
-                                                                            }
-                                                                            ?>
+                            <?php
+                            $valslctdArry = array("", "", "", "", "");
+                            $srchInsArrys = array("NONE", "ALL 4", "ANY 3", "ANY 2", "ANY 1");
+                            for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                if ($row1[9] == $srchInsArrys[$z]) {
+                                    $valslctdArry[$z] = "selected";
+                                }
+                                ?>
                                                                             <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                                                         <?php } ?>
                                                                     </select>
-                                                                <?php } else {
-                                                                    ?>
+                                                                    <?php } else {
+                                                                        ?>
                                                                     <span><?php echo $row1[9]; ?></span>
-                                                                    <?php
-                                                                }
-                                                                ?>
+                                                                        <?php
+                                                                    }
+                                                                    ?>
                                                             </div>
                                                         </div>
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                             <label for="scPlcysSesnTmeOut" class="control-label col-md-8">Session Timeout (Seconds):</label>
                                                             <div  class="col-md-4">
-                                                                <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                                     <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysSesnTmeOut" name="scPlcysSesnTmeOut" value="<?php echo $row1[17]; ?>" style="width:100%;">
-                                                                <?php } else {
-                                                                    ?>
+                        <?php } else {
+                            ?>
                                                                     <span><?php echo $row1[17]; ?></span>
                                                                     <?php
                                                                 }
@@ -501,38 +575,38 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <?php
-                                                                $result2 = get_Plcy_Mdls($pkID);
-                                                                $cntr = 0;
-                                                                while ($row2 = loc_db_fetch_array($result2)) {
-                                                                    $cntr += 1;
-                                                                    ?>
+                        <?php
+                        $result2 = get_Plcy_Mdls($pkID);
+                        $cntr = 0;
+                        while ($row2 = loc_db_fetch_array($result2)) {
+                            $cntr += 1;
+                            ?>
                                                                     <tr id="secPlcyAdtTblsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                                                        <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                                                        <td><?php echo $row2[1]; ?></td>
-                                                                        <td><?php echo $row2[2]; ?></td>
-                                                                        <td>
-                                                                            <?php if ($canEdtScPlcy === true) { ?>
+                                                                        <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                                                        <td class="lovtd"><?php echo $row2[1]; ?></td>
+                                                                        <td class="lovtd"><?php echo $row2[2]; ?></td>
+                                                                        <td class="lovtd">
+                            <?php if ($canEdtScPlcy === true) { ?>
                                                                                 <select data-placeholder="Select..." class="form-control chosen-select" id="secPlcyAdtTblsRow<?php echo $cntr; ?>_EnblTrckng" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_EnblTrckng">
-                                                                                    <?php
-                                                                                    $valslctdArry = array("", "");
-                                                                                    $srchInsArrys = array("YES", "NO");
-                                                                                    for ($z = 0; $z < count($srchInsArrys); $z++) {
-                                                                                        if (($row2[3] == "TRUE" ? "YES" : "NO") == $srchInsArrys[$z]) {
-                                                                                            $valslctdArry[$z] = "selected";
-                                                                                        }
-                                                                                        ?>
+                                <?php
+                                $valslctdArry = array("", "");
+                                $srchInsArrys = array("YES", "NO");
+                                for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                    if (($row2[3] == "TRUE" ? "YES" : "NO") == $srchInsArrys[$z]) {
+                                        $valslctdArry[$z] = "selected";
+                                    }
+                                    ?>
                                                                                         <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                                                                     <?php } ?>
                                                                                 </select>
-                                                                            <?php } else {
-                                                                                ?>
+                                                                                <?php } else {
+                                                                                    ?>
                                                                                 <span><?php echo $row2[3]; ?></span>
-                                                                                <?php
-                                                                            }
-                                                                            ?>
+                                                                                    <?php
+                                                                                }
+                                                                                ?>
                                                                         </td>
-                                                                        <td>
+                                                                        <td class="lovtd">
                                                                             <?php if ($canEdtScPlcy === true) { ?>
                                                                                 <div class="input-group">
                                                                                     <input type="text" class="form-control" aria-label="..." id="secPlcyAdtTblsRow<?php echo $cntr; ?>_ActnsToTrck" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_ActnsToTrck" value="<?php echo $row2[4]; ?>">
@@ -542,25 +616,25 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                                                     </label>
                                                                                 </div><?php } else {
-                                                                                ?>
+                                                ?>
                                                                                 <span><?php echo $row2[4]; ?></span>
-                                                                                <?php
-                                                                            }
-                                                                            ?>
+                                <?php
+                            }
+                            ?>
                                                                         </td>
                                                                     </tr>
-                                                                    <?php
-                                                                }
-                                                                ?>
+                                                                            <?php
+                                                                        }
+                                                                        ?>
                                                             </tbody>
                                                         </table>
                                                     </fieldset>
                                                 </div>
                                             </div>
-                                            <?php
-                                        }
-                                    } else {
-                                        ?>
+                        <?php
+                    }
+                } else {
+                    ?>
                                         <span>No Results Found</span>
 
                                         <?php
@@ -586,37 +660,37 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="scPlcysPlcyNm" class="control-label col-lg-4">Policy Name:</label>
                                         <div  class="col-lg-8">
-                                            <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                 <input type="text" class="form-control" aria-label="..." id="scPlcysPlcyNm" name="scPlcysPlcyNm" value="<?php echo $row1[1]; ?>" style="width:100%;">
                                                 <input type="hidden" class="form-control" aria-label="..." id="scPlcysPlcyID" name="scPlcysPlcyID" value="<?php echo $row1[0]; ?>">
-                                            <?php } else {
-                                                ?>
+                        <?php } else {
+                            ?>
                                                 <span><?php echo $row1[1]; ?></span>
-                                                <?php
-                                            }
-                                            ?>
+                            <?php
+                        }
+                        ?>
                                         </div>
                                     </div>
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="scPlcysIsDflt" class="control-label col-lg-6">Is Default?:</label>
                                         <div  class="col-lg-6">
-                                            <?php
-                                            $chkdYes = "";
-                                            $chkdNo = "checked=\"\"";
-                                            if ($row1[10] == "TRUE") {
-                                                $chkdNo = "";
-                                                $chkdYes = "checked=\"\"";
-                                            }
-                                            ?>
+                        <?php
+                        $chkdYes = "";
+                        $chkdNo = "checked=\"\"";
+                        if ($row1[10] == "TRUE") {
+                            $chkdNo = "";
+                            $chkdYes = "checked=\"\"";
+                        }
+                        ?>
                                             <?php if ($canEdtScPlcy === true) { ?>
                                                 <label class="radio-inline"><input type="radio" name="scPlcysIsDflt" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                                 <label class="radio-inline"><input type="radio" name="scPlcysIsDflt" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo ($row1[10] == "TRUE" ? "YES" : "NO"); ?></span>
-                                                <?php
-                                            }
-                                            ?>
+                            <?php
+                        }
+                        ?>
                                         </div>
                                     </div>
                                 </fieldset>
@@ -626,10 +700,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="scPlcysPwdExpryDys" class="control-label col-lg-8">Password Expiry Days:</label>
                                         <div  class="col-lg-4">
-                                            <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                 <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdExpryDys" name="scPlcysPwdExpryDys" value="<?php echo $row1[3]; ?>" style="width:100%;">
-                                            <?php } else {
-                                                ?>
+                        <?php } else {
+                            ?>
                                                 <span><?php echo $row1[3]; ?></span>
                                                 <?php
                                             }
@@ -639,10 +713,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="scPlcysNoOfRecs" class="control-label col-lg-8">No. of Displayed Records:</label>
                                         <div  class="col-lg-4">
-                                            <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                 <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysNoOfRecs" name="scPlcysNoOfRecs" value="<?php echo $row1[14]; ?>" style="width:100%;">
-                                            <?php } else {
-                                                ?>
+                        <?php } else {
+                            ?>
                                                 <span><?php echo $row1[14]; ?></span>
                                                 <?php
                                             }
@@ -658,10 +732,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="scPlcysPwdMinLen" class="control-label col-lg-8">Minimum Length of Passwords:</label>
                                         <div  class="col-lg-4">
-                                            <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                 <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdMinLen" name="scPlcysPwdMinLen" value="<?php echo $row1[12]; ?>" style="width:100%;">
-                                            <?php } else {
-                                                ?>
+                        <?php } else {
+                            ?>
                                                 <span><?php echo $row1[12]; ?></span>
                                                 <?php
                                             }
@@ -671,10 +745,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="scPlcysPwdMaxLen" class="control-label col-lg-8">Maximum Length of Passwords:</label>
                                         <div  class="col-lg-4">
-                                            <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                 <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdMaxLen" name="scPlcysPwdMaxLen" value="<?php echo $row1[13]; ?>" style="width:100%;">
-                                            <?php } else {
-                                                ?>
+                        <?php } else {
+                            ?>
                                                 <span><?php echo $row1[13]; ?></span>
                                                 <?php
                                             }
@@ -685,10 +759,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="scPlcysPwdOldAlwd" class="control-label col-lg-8">Blocked Old Passwords:</label>
                                         <div  class="col-lg-4">
-                                            <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                 <input type="number" min="0" max="9999" class="form-control" aria-label="..." id="scPlcysPwdOldAlwd" name="scPlcysPwdOldAlwd" value="<?php echo $row1[11]; ?>" style="width:100%;">
-                                            <?php } else {
-                                                ?>
+                        <?php } else {
+                            ?>
                                                 <span><?php echo $row1[11]; ?></span>
                                                 <?php
                                             }
@@ -698,54 +772,54 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="scPlcysPwdUnmAlwd" class="control-label col-lg-6">User Names in Passwords?:</label>
                                         <div  class="col-lg-6">
-                                            <?php
-                                            $chkdYes = "";
-                                            $chkdNo = "checked=\"\"";
-                                            if ($row1[16] == "TRUE") {
-                                                $chkdNo = "";
-                                                $chkdYes = "checked=\"\"";
-                                            }
-                                            ?>
+                        <?php
+                        $chkdYes = "";
+                        $chkdNo = "checked=\"\"";
+                        if ($row1[16] == "TRUE") {
+                            $chkdNo = "";
+                            $chkdYes = "checked=\"\"";
+                        }
+                        ?>
                                             <?php if ($canEdtScPlcy === true) { ?>
                                                 <label class="radio-inline"><input type="radio" name="scPlcysPwdUnmAlwd" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                                 <label class="radio-inline"><input type="radio" name="scPlcysPwdUnmAlwd" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[16]; ?></span>
-                                                <?php
-                                            }
-                                            ?>
+                            <?php
+                        }
+                        ?>
                                         </div>
                                     </div>
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="scPlcysPwdRptngChars" class="control-label col-lg-6">Same sequential characters in Pswds?:</label>
                                         <div  class="col-lg-6">
-                                            <?php
-                                            $chkdYes = "";
-                                            $chkdNo = "checked=\"\"";
-                                            if ($row1[15] == "TRUE") {
-                                                $chkdNo = "";
-                                                $chkdYes = "checked=\"\"";
-                                            }
-                                            ?>
+                        <?php
+                        $chkdYes = "";
+                        $chkdNo = "checked=\"\"";
+                        if ($row1[15] == "TRUE") {
+                            $chkdNo = "";
+                            $chkdYes = "checked=\"\"";
+                        }
+                        ?>
                                             <?php if ($canEdtScPlcy === true) { ?>
                                                 <label class="radio-inline"><input type="radio" name="scPlcysPwdRptngChars" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                                 <label class="radio-inline"><input type="radio" name="scPlcysPwdRptngChars" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[15]; ?></span>
-                                                <?php
-                                            }
-                                            ?>
+                            <?php
+                        }
+                        ?>
                                         </div>
                                     </div>
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="scPlcysAlwdFailedLgs" class="control-label col-lg-8">Max. Failed Login Attempts:</label>
                                         <div  class="col-lg-4">
-                                            <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                 <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysAlwdFailedLgs" name="scPlcysAlwdFailedLgs" value="<?php echo $row1[2]; ?>" style="width:100%;">
-                                            <?php } else {
-                                                ?>
+                        <?php } else {
+                            ?>
                                                 <span><?php echo $row1[2]; ?></span>
                                                 <?php
                                             }
@@ -755,10 +829,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="scPlcysAutoUnlkTme" class="control-label col-md-8">Time (mins) to unlock a User:</label>
                                         <div  class="col-lg-4">
-                                            <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                 <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysAutoUnlkTme" name="scPlcysAutoUnlkTme" value="<?php echo $row1[4]; ?>" style="width:100%;">
-                                            <?php } else {
-                                                ?>
+                        <?php } else {
+                            ?>
                                                 <span><?php echo $row1[4]; ?></span>
                                                 <?php
                                             }
@@ -772,122 +846,122 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="scPlcysChckBlkLtrs" class="control-label col-lg-6">Require Block Letters in Pswds?:</label>
                                         <div  class="col-lg-6">
-                                            <?php
-                                            $chkdYes = "";
-                                            $chkdNo = "checked=\"\"";
-                                            if ($row1[5] == "TRUE") {
-                                                $chkdNo = "";
-                                                $chkdYes = "checked=\"\"";
-                                            }
-                                            ?>
+                        <?php
+                        $chkdYes = "";
+                        $chkdNo = "checked=\"\"";
+                        if ($row1[5] == "TRUE") {
+                            $chkdNo = "";
+                            $chkdYes = "checked=\"\"";
+                        }
+                        ?>
                                             <?php if ($canEdtScPlcy === true) { ?>
                                                 <label class="radio-inline"><input type="radio" name="scPlcysChckBlkLtrs" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                                 <label class="radio-inline"><input type="radio" name="scPlcysChckBlkLtrs" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[5]; ?></span>
-                                                <?php
-                                            }
-                                            ?>
+                            <?php
+                        }
+                        ?>
                                         </div>
                                     </div>
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="scPlcysChkSmllLtrs" class="control-label col-lg-6">Require Small Letters in Pswds?:</label>
                                         <div  class="col-lg-6">
-                                            <?php
-                                            $chkdYes = "";
-                                            $chkdNo = "checked=\"\"";
-                                            if ($row1[6] == "TRUE") {
-                                                $chkdNo = "";
-                                                $chkdYes = "checked=\"\"";
-                                            }
-                                            ?>
+                        <?php
+                        $chkdYes = "";
+                        $chkdNo = "checked=\"\"";
+                        if ($row1[6] == "TRUE") {
+                            $chkdNo = "";
+                            $chkdYes = "checked=\"\"";
+                        }
+                        ?>
                                             <?php if ($canEdtScPlcy === true) { ?>
                                                 <label class="radio-inline"><input type="radio" name="scPlcysChkSmllLtrs" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                                 <label class="radio-inline"><input type="radio" name="scPlcysChkSmllLtrs" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[6]; ?></span>
-                                                <?php
-                                            }
-                                            ?>
+                            <?php
+                        }
+                        ?>
                                         </div>
                                     </div>
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="scPlcysChkDgts" class="control-label col-lg-6">Require Digits in Pswds?:</label>
                                         <div  class="col-lg-6">
-                                            <?php
-                                            $chkdYes = "";
-                                            $chkdNo = "checked=\"\"";
-                                            if ($row1[7] == "TRUE") {
-                                                $chkdNo = "";
-                                                $chkdYes = "checked=\"\"";
-                                            }
-                                            ?>
+                        <?php
+                        $chkdYes = "";
+                        $chkdNo = "checked=\"\"";
+                        if ($row1[7] == "TRUE") {
+                            $chkdNo = "";
+                            $chkdYes = "checked=\"\"";
+                        }
+                        ?>
                                             <?php if ($canEdtScPlcy === true) { ?>
                                                 <label class="radio-inline"><input type="radio" name="scPlcysChkDgts" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                                 <label class="radio-inline"><input type="radio" name="scPlcysChkDgts" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[7]; ?></span>
-                                                <?php
-                                            }
-                                            ?>
+                            <?php
+                        }
+                        ?>
                                         </div>
                                     </div>
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="scPlcysChkWild" class="control-label col-lg-6">Require Wild Characters in Pswds?:</label>
                                         <div  class="col-lg-6">
-                                            <?php
-                                            $chkdYes = "";
-                                            $chkdNo = "checked=\"\"";
-                                            if ($row1[8] == "TRUE") {
-                                                $chkdNo = "";
-                                                $chkdYes = "checked=\"\"";
-                                            }
-                                            ?>
+                        <?php
+                        $chkdYes = "";
+                        $chkdNo = "checked=\"\"";
+                        if ($row1[8] == "TRUE") {
+                            $chkdNo = "";
+                            $chkdYes = "checked=\"\"";
+                        }
+                        ?>
                                             <?php if ($canEdtScPlcy === true) { ?>
                                                 <label class="radio-inline"><input type="radio" name="scPlcysChkWild" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                                 <label class="radio-inline"><input type="radio" name="scPlcysChkWild" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[8]; ?></span>
-                                                <?php
-                                            }
-                                            ?>
+                            <?php
+                        }
+                        ?>
                                         </div>
                                     </div>
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="scPlcysCombinations" class="control-label col-lg-8">Combinations to Insist?:</label>
                                         <div class="col-lg-4">
-                                            <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                 <select data-placeholder="Select..." class="form-control chosen-select" id="scPlcysCombinations" name="scPlcysCombinations">
-                                                    <?php
-                                                    $valslctdArry = array("", "", "", "", "");
-                                                    $srchInsArrys = array("NONE", "ALL 4", "ANY 3", "ANY 2", "ANY 1");
-                                                    for ($z = 0; $z < count($srchInsArrys); $z++) {
-                                                        if ($row1[9] == $srchInsArrys[$z]) {
-                                                            $valslctdArry[$z] = "selected";
-                                                        }
-                                                        ?>
+                            <?php
+                            $valslctdArry = array("", "", "", "", "");
+                            $srchInsArrys = array("NONE", "ALL 4", "ANY 3", "ANY 2", "ANY 1");
+                            for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                if ($row1[9] == $srchInsArrys[$z]) {
+                                    $valslctdArry[$z] = "selected";
+                                }
+                                ?>
                                                         <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                                     <?php } ?>
                                                 </select>
-                                            <?php } else {
-                                                ?>
+                                                <?php } else {
+                                                    ?>
                                                 <span><?php echo $row1[9]; ?></span>
-                                                <?php
-                                            }
-                                            ?>
+                                                    <?php
+                                                }
+                                                ?>
                                         </div>
                                     </div>
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="scPlcysSesnTmeOut" class="control-label col-md-8">Session Timeout (Seconds):</label>
                                         <div  class="col-md-4">
-                                            <?php if ($canEdtScPlcy === true) { ?>
+                        <?php if ($canEdtScPlcy === true) { ?>
                                                 <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysSesnTmeOut" name="scPlcysSesnTmeOut" value="<?php echo $row1[17]; ?>" style="width:100%;">
-                                            <?php } else {
-                                                ?>
+                        <?php } else {
+                            ?>
                                                 <span><?php echo $row1[17]; ?></span>
                                                 <?php
                                             }
@@ -912,39 +986,39 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php
-                                            $result2 = get_Plcy_Mdls($pkID);
-                                            $cntr = 0;
-                                            $curIdx = 0;
-                                            while ($row2 = loc_db_fetch_array($result2)) {
-                                                $cntr += 1;
-                                                ?>
+                        <?php
+                        $result2 = get_Plcy_Mdls($pkID);
+                        $cntr = 0;
+                        $curIdx = 0;
+                        while ($row2 = loc_db_fetch_array($result2)) {
+                            $cntr += 1;
+                            ?>
                                                 <tr id="secPlcyAdtTblsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                                    <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                                    <td><?php echo $row2[1]; ?></td>
-                                                    <td><?php echo $row2[2]; ?></td>
-                                                    <td>
-                                                        <?php if ($canEdtScPlcy === true) { ?>
+                                                    <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                                    <td class="lovtd"><?php echo $row2[1]; ?></td>
+                                                    <td class="lovtd"><?php echo $row2[2]; ?></td>
+                                                    <td class="lovtd">
+                            <?php if ($canEdtScPlcy === true) { ?>
                                                             <select data-placeholder="Select..." class="form-control chosen-select" id="secPlcyAdtTblsRow<?php echo $cntr; ?>_EnblTrckng" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_EnblTrckng">
-                                                                <?php
-                                                                $valslctdArry = array("", "");
-                                                                $srchInsArrys = array("YES", "NO");
-                                                                for ($z = 0; $z < count($srchInsArrys); $z++) {
-                                                                    if (($row2[3] == "TRUE" ? "YES" : "NO") == $srchInsArrys[$z]) {
-                                                                        $valslctdArry[$z] = "selected";
-                                                                    }
-                                                                    ?>
+                                <?php
+                                $valslctdArry = array("", "");
+                                $srchInsArrys = array("YES", "NO");
+                                for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                    if (($row2[3] == "TRUE" ? "YES" : "NO") == $srchInsArrys[$z]) {
+                                        $valslctdArry[$z] = "selected";
+                                    }
+                                    ?>
                                                                     <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                                                 <?php } ?>
                                                             </select>
-                                                        <?php } else {
-                                                            ?>
+                                                            <?php } else {
+                                                                ?>
                                                             <span><?php echo $row2[3]; ?></span>
-                                                            <?php
-                                                        }
-                                                        ?>
+                                                                <?php
+                                                            }
+                                                            ?>
                                                     </td>
-                                                    <td>
+                                                    <td class="lovtd">
                                                         <?php if ($canEdtScPlcy === true) { ?>
                                                             <div class="input-group">
                                                                 <input type="text" class="form-control" aria-label="..." id="secPlcyAdtTblsRow<?php echo $cntr; ?>_ActnsToTrck" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_ActnsToTrck" value="<?php echo $row2[4]; ?>">
@@ -954,16 +1028,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                                 </label>
                                                             </div><?php } else {
-                                                            ?>
+                                ?>
                                                             <span><?php echo $row2[4]; ?></span>
-                                                            <?php
-                                                        }
-                                                        ?>
+                                <?php
+                            }
+                            ?>
                                                     </td>
                                                 </tr>
-                                                <?php
-                                            }
-                                            ?>
+                                                        <?php
+                                                    }
+                                                    ?>
                                         </tbody>
                                     </table>
                                 </fieldset>
@@ -997,10 +1071,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="scPlcysIsDflt" class="control-label col-lg-6">Is Default?:</label>
                                 <div  class="col-lg-6">
-                                    <?php
-                                    $chkdYes = "";
-                                    $chkdNo = "checked=\"\"";
-                                    ?>                                    
+                <?php
+                $chkdYes = "";
+                $chkdNo = "checked=\"\"";
+                ?>                                    
                                     <label class="radio-inline"><input type="radio" name="scPlcysIsDflt" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                     <label class="radio-inline"><input type="radio" name="scPlcysIsDflt" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                 </div>
@@ -1049,10 +1123,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="scPlcysPwdUnmAlwd" class="control-label col-lg-6">User Names in Passwords?:</label>
                                 <div  class="col-lg-6">
-                                    <?php
-                                    $chkdYes = "";
-                                    $chkdNo = "checked=\"\"";
-                                    ?>
+                <?php
+                $chkdYes = "";
+                $chkdNo = "checked=\"\"";
+                ?>
                                     <label class="radio-inline"><input type="radio" name="scPlcysPwdUnmAlwd" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                     <label class="radio-inline"><input type="radio" name="scPlcysPwdUnmAlwd" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                 </div>
@@ -1060,10 +1134,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="scPlcysPwdRptngChars" class="control-label col-lg-6">Same sequential characters in Pswds?:</label>
                                 <div  class="col-lg-6">
-                                    <?php
-                                    $chkdYes = "";
-                                    $chkdNo = "checked=\"\"";
-                                    ?>
+                <?php
+                $chkdYes = "";
+                $chkdNo = "checked=\"\"";
+                ?>
                                     <label class="radio-inline"><input type="radio" name="scPlcysPwdRptngChars" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                     <label class="radio-inline"><input type="radio" name="scPlcysPwdRptngChars" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                 </div>
@@ -1087,10 +1161,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="scPlcysChckBlkLtrs" class="control-label col-lg-6">Require Block Letters in Pswds?:</label>
                                 <div  class="col-lg-6">
-                                    <?php
-                                    $chkdYes = "";
-                                    $chkdNo = "checked=\"\"";
-                                    ?>
+                <?php
+                $chkdYes = "";
+                $chkdNo = "checked=\"\"";
+                ?>
                                     <label class="radio-inline"><input type="radio" name="scPlcysChckBlkLtrs" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                     <label class="radio-inline"><input type="radio" name="scPlcysChckBlkLtrs" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                 </div>
@@ -1098,10 +1172,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="scPlcysChkSmllLtrs" class="control-label col-lg-6">Require Small Letters in Pswds?:</label>
                                 <div  class="col-lg-6">
-                                    <?php
-                                    $chkdYes = "";
-                                    $chkdNo = "checked=\"\"";
-                                    ?>
+                <?php
+                $chkdYes = "";
+                $chkdNo = "checked=\"\"";
+                ?>
                                     <label class="radio-inline"><input type="radio" name="scPlcysChkSmllLtrs" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                     <label class="radio-inline"><input type="radio" name="scPlcysChkSmllLtrs" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                 </div>
@@ -1109,10 +1183,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="scPlcysChkDgts" class="control-label col-lg-6">Require Digits in Pswds?:</label>
                                 <div  class="col-lg-6">
-                                    <?php
-                                    $chkdYes = "";
-                                    $chkdNo = "checked=\"\"";
-                                    ?>
+                <?php
+                $chkdYes = "";
+                $chkdNo = "checked=\"\"";
+                ?>
                                     <label class="radio-inline"><input type="radio" name="scPlcysChkDgts" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                     <label class="radio-inline"><input type="radio" name="scPlcysChkDgts" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                 </div>
@@ -1120,10 +1194,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="scPlcysChkWild" class="control-label col-lg-6">Require Wild Characters in Pswds?:</label>
                                 <div  class="col-lg-6">
-                                    <?php
-                                    $chkdYes = "";
-                                    $chkdNo = "checked=\"\"";
-                                    ?>
+                <?php
+                $chkdYes = "";
+                $chkdNo = "checked=\"\"";
+                ?>
                                     <label class="radio-inline"><input type="radio" name="scPlcysChkWild" value="YES" <?php echo $chkdYes; ?>>YES</label>
                                     <label class="radio-inline"><input type="radio" name="scPlcysChkWild" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                 </div>
@@ -1132,11 +1206,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <label for="scPlcysCombinations" class="control-label col-lg-8">Combinations to Insist?:</label>
                                 <div class="col-lg-4">
                                     <select data-placeholder="Select..." class="form-control chosen-select" id="scPlcysCombinations" name="scPlcysCombinations">
-                                        <?php
-                                        $valslctdArry = array("", "", "", "", "");
-                                        $srchInsArrys = array("NONE", "ALL 4", "ANY 3", "ANY 2", "ANY 1");
-                                        for ($z = 0; $z < count($srchInsArrys); $z++) {
-                                            ?>
+                <?php
+                $valslctdArry = array("", "", "", "", "");
+                $srchInsArrys = array("NONE", "ALL 4", "ANY 3", "ANY 2", "ANY 1");
+                for ($z = 0; $z < count($srchInsArrys); $z++) {
+                    ?>
                                             <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                         <?php } ?>
                                     </select>
@@ -1166,32 +1240,32 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    $result2 = get_Plcy_Mdls($pkID);
-                                    $cntr = 0;
-                                    $curIdx = 0;
-                                    while ($row2 = loc_db_fetch_array($result2)) {
-                                        $cntr += 1;
-                                        ?>
+                <?php
+                $result2 = get_Plcy_Mdls($pkID);
+                $cntr = 0;
+                $curIdx = 0;
+                while ($row2 = loc_db_fetch_array($result2)) {
+                    $cntr += 1;
+                    ?>
                                         <tr id="secPlcyAdtTblsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                            <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                            <td><?php echo $row2[1]; ?></td>
-                                            <td><?php echo $row2[2]; ?></td>
-                                            <td>
+                                            <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                            <td class="lovtd"><?php echo $row2[1]; ?></td>
+                                            <td class="lovtd"><?php echo $row2[2]; ?></td>
+                                            <td class="lovtd">
                                                 <select data-placeholder="Select..." class="form-control chosen-select" id="secPlcyAdtTblsRow<?php echo $cntr; ?>_EnblTrckng" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_EnblTrckng">
-                                                    <?php
-                                                    $valslctdArry = array("", "");
-                                                    $srchInsArrys = array("YES", "NO");
-                                                    for ($z = 0; $z < count($srchInsArrys); $z++) {
-                                                        if (($row2[3] == "TRUE" ? "YES" : "NO") == $srchInsArrys[$z]) {
-                                                            $valslctdArry[$z] = "selected";
-                                                        }
-                                                        ?>
+                    <?php
+                    $valslctdArry = array("", "");
+                    $srchInsArrys = array("YES", "NO");
+                    for ($z = 0; $z < count($srchInsArrys); $z++) {
+                        if (($row2[3] == "TRUE" ? "YES" : "NO") == $srchInsArrys[$z]) {
+                            $valslctdArry[$z] = "selected";
+                        }
+                        ?>
                                                         <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                                     <?php } ?>
                                                 </select>
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" aria-label="..." id="secPlcyAdtTblsRow<?php echo $cntr; ?>_ActnsToTrck" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_ActnsToTrck" value="<?php echo $row2[4]; ?>">
                                                     <input type="hidden" class="form-control" aria-label="..." id="secPlcyAdtTblsRow<?php echo $cntr; ?>_MdlID" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_MdlID" value="<?php echo $row2[0]; ?>">
@@ -1202,9 +1276,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </div
                                             </td>
                                         </tr>
-                                        <?php
-                                    }
-                                    ?>
+                    <?php
+                }
+                ?>
                                 </tbody>
                             </table>
                         </fieldset>

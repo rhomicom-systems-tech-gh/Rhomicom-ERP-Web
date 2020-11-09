@@ -12,8 +12,8 @@ VALUES (md5('" . loc_db_escape_string(encrypt("admin", $smplTokenWord)) . "'), -
     executeSQLNoParams($sqlStr);
 
     $uID = getUserID("admin");
-
     $pID = getPersonID("RHO0002012");
+
     if ($pID <= 0) {
         $createUnkwnPrsn1 = "INSERT INTO prs.prsn_names_nos(local_id_no, first_name, sur_name, other_names, title, 
             created_by, creation_date, last_update_by, last_update_date)
@@ -22,11 +22,22 @@ VALUES (md5('" . loc_db_escape_string(encrypt("admin", $smplTokenWord)) . "'), -
         $pID = getPersonID("RHO0002012");
     }
 
-//Update userID
+    //Update userID
     $updtUsr = "UPDATE sec.sec_users SET 
             person_id = " . $pID . ", created_by = " . $uID . ", last_update_by = " . $uID .
             " WHERE (user_id = " . $uID . ")";
     executeSQLNoParams($updtUsr);
+    $pID1 = getPersonID("RHO0002017");
+
+    if ($pID1 <= 0) {
+        $createUnkwnPrsn1 = "INSERT INTO prs.prsn_names_nos(local_id_no, first_name, sur_name, other_names, title, 
+            created_by, creation_date, last_update_by, last_update_date)
+    VALUES ('RHO0002017', 'SYSTEM', 'AUTHORIZER', 'TRANSACTIONS', 'Mr.', " . $uID . ", '" . $dateStr . "', " . $uID . ", '" . $dateStr . "')";
+        executeSQLNoParams($createUnkwnPrsn1);
+        $pID1 = getPersonID("RHO0002017");
+    }
+    $updtSQL = "UPDATE prs.prsn_names_nos SET org_id=-1 WHERE local_id_no IN ('RHO0002012','RHO0002017');";
+    executeSQLNoParams($updtSQL);
 }
 
 function createAdminRole() {
@@ -63,17 +74,17 @@ function doesUserHaveThisRole($username, $rolename) {
 }
 
 function checkB4LgnRequireMents() {
-    global $smplTokenWord;
+    //global $smplTokenWord;
     $lvid = getLovID("Security Keys");
     $apKey = getEnbldPssblValDesc(
             "AppKey", $lvid);
     if ($apKey != "" && $lvid > 0) {
-        $smplTokenWord = $apKey;
+        //$smplTokenWord = $apKey;
     } else if ($lvid <= 0) {
         $apKey = "ROMeRRTRREMhbnsdGeneral KeyZzfor Rhomi|com Systems "
                 . "Tech. !Ltd Enterpise/Organization @763542ERPorbjkSOFTWARE"
                 . "asdbhi68103weuikTESTfjnsdfRSTLU../";
-        $smplTokenWord = $apKey;
+        //$smplTokenWord = $apKey;
         createLovNm("Security Keys", "Security Keys", false, "", "SYS", true);
         $lvid = getLovID("Security Keys");
         if ($lvid > 0) {
@@ -122,17 +133,19 @@ function chcAftrScsflLgnRqnt($usrNm, $pswd, &$msg) {
 
     $in_org_id = getUserOrgID($usrNm);
     $uID = getUserID($usrNm);
-
+    if ($in_org_id <= 0) {
+        $in_org_id = getMinOrgID();
+        //Update person Org ID
+        $updtUsr = "UPDATE prs.prsn_names_nos SET org_id = " . $in_org_id . " WHERE (person_id = " . getUserPrsnID($usrNm) . ")";
+        executeSQLNoParams($updtUsr);
+    }
     selfAssignSSRoles($uID);
-
-    if ($_SESSION['ROLE_SET_IDS'] == "" && $in_org_id > 0) {
-
+    if ($_SESSION['ROLE_SET_IDS'] == "") {
         $result1 = get_Users_Roles($uID, "%", "Role Name", 0, 10000000);
         $selectedRoles = "";
         while ($row = loc_db_fetch_array($result1)) {
             $selectedRoles .= $row[0] . ";";
         }
-
         $in_org_nm = getOrgName($in_org_id);
         $_SESSION['ROLE_SET_IDS'] = rtrim($selectedRoles, ";");
         $_SESSION['ORG_NAME'] = $in_org_nm;
@@ -140,6 +153,9 @@ function chcAftrScsflLgnRqnt($usrNm, $pswd, &$msg) {
         //echo "Load Inbox";
     }
     $_SESSION['MUST_CHNG_PWD'] = "0";
+    if (is_User_SelfOnly($uID) === true) {
+        return "select self";
+    }
     return "select role";
 }
 
@@ -261,6 +277,24 @@ function get_login_number($username, $login_time, $mach_details) {
     return -1;
 }
 
+function chckNUpdateStaleLgns($userid) {
+    $sqlStr = "UPDATE sec.sec_track_user_logins SET  logout_time=last_active_time 
+            WHERE user_id = " . $userid . " and  age(now(), to_timestamp((CASE WHEN last_active_time ='' THEN " .
+            "to_char(now(),'YYYY-MM-DD HH24:MI:SS') ELSE last_active_time END), 'YYYY-MM-DD HH24:MI:SS')) " .
+            ">= interval '" . get_CurPlcy_SessnTime() . " second' and  logout_time='' and last_active_time!='' and was_lgn_atmpt_succsful='t'";
+    execUpdtInsSQL($sqlStr);
+    $sqlStr = "UPDATE sec.sec_track_user_logins SET  logout_time=to_char(now(), 'YYYY-MM-DD HH24:MI:SS'),
+last_active_time=to_char(now(), 'YYYY-MM-DD HH24:MI:SS')
+            WHERE user_id = " . $userid . " and logout_time='' and last_active_time ='' and was_lgn_atmpt_succsful='t'";
+    execUpdtInsSQL($sqlStr);
+}
+
+function adminForceLogoutLgns($userid) {
+    $sqlStr = "UPDATE sec.sec_track_user_logins SET  logout_time=to_char(now(), 'YYYY-MM-DD HH24:MI:SS')
+            WHERE user_id = " . $userid . " and logout_time='' and was_lgn_atmpt_succsful='t'";
+    execUpdtInsSQL($sqlStr);
+}
+
 function recordSuccflLogin($username, $machdet) {
     global $app_version;
     global $ftp_base_db_fldr;
@@ -268,25 +302,54 @@ function recordSuccflLogin($username, $machdet) {
     global $lgn_num;
     $dateStr = getDB_Date_time();
     $mach_details = $machdet;
-    $sqlStr = "INSERT INTO sec.sec_track_user_logins(user_id, 
-                            login_time, logout_time, host_mach_details, was_lgn_atmpt_succsful, app_vrsn) " .
-            "VALUES (" . getUserID($username) . ", '" . $dateStr . "', '', '" .
-            loc_db_escape_string($mach_details) . "', TRUE, '" . $app_version . "')";
-    executeSQLNoParams($sqlStr);
-    updtLastLgnAttmpTme($username, $dateStr);
-    $prsnid = getUserPrsnID($username);
-    $lgn_num = get_login_number($username, $dateStr, $mach_details);
-    $fullnm = getPrsnFullNm($prsnid) . " (" . getPersonLocID($prsnid) . ")";
-    $_SESSION['UNAME'] = $username;
-    $_SESSION['USRID'] = getUserID($username);
-    $_SESSION['LGN_NUM'] = $lgn_num;
-    $_SESSION['ORG_ID'] = getUserOrgID($username);
-    $_SESSION['PRSN_ID'] = $prsnid;
-    $_SESSION['PRSN_FNAME'] = $fullnm;
-    recopyPrflPic($username, $lgn_num);
-    $txt = "Username:" . $username . "|Login Number:" . $lgn_num . "|Person:" . $fullnm;
-    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", $txt . $logNxtLine, FILE_APPEND | LOCK_EX);
-    createWelcomeMsg($username);
+    $ssnID = session_id();
+    $userid = getUserID($username);
+    chckNUpdateStaleLgns($userid);
+    $lgnExst = doesActiveLgnExist($userid);
+    if ($lgnExst > 0) {
+        recordFailedLogin($username, $machdet, "Attempted Multiple Simultaneous Logons");
+        return FALSE;
+    } else {
+        $sqlStr = "INSERT INTO sec.sec_track_user_logins(user_id, 
+                            login_time, logout_time, host_mach_details, was_lgn_atmpt_succsful, app_vrsn, web_session_id, last_active_time, lgn_remarks) " .
+                "VALUES (" . $userid . ", '" . $dateStr . "', '', '" .
+                loc_db_escape_string($mach_details) . "', TRUE, '" . $app_version .
+                "', '" . loc_db_escape_string($ssnID) . "', '" . loc_db_escape_string($dateStr) . "', '')";
+        executeSQLNoParams($sqlStr);
+        updtLastLgnAttmpTme($username, $dateStr);
+        $prsnid = getUserPrsnID($username);
+        $lgn_num = get_login_number($username, $dateStr, $mach_details);
+        $fullnm = getPrsnFullNm($prsnid) . " (" . getPersonLocID($prsnid) . ")";
+        $_SESSION['UNAME'] = $username;
+        $_SESSION['USRID'] = getUserID($username);
+        $_SESSION['LGN_NUM'] = $lgn_num;
+        $_SESSION['ORG_ID'] = getUserOrgID($username);
+        $_SESSION['PRSN_ID'] = $prsnid;
+        $_SESSION['PRSN_FNAME'] = $fullnm;
+        recopyPrflPic($username, $lgn_num);
+        $txt = "Username:" . $username . "|Login Number:" . $lgn_num . "|Person:" . $fullnm;
+        file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", $txt . $logNxtLine, FILE_APPEND | LOCK_EX);
+        createWelcomeMsg($username);
+        return TRUE;
+    }
+}
+
+function doesActiveLgnExist($userid) {
+    $isMltplAllwdID = getEnbldPssblValID("Allow Multiple Same User Logons", getLovID("All Other General Setups"));
+    $isMltplAllwd = getPssblValDesc($isMltplAllwdID);
+    if (strtoupper($isMltplAllwd) != "YES" && $isMltplAllwdID > 0) {
+        $sqlStr = "SELECT login_number FROM sec.sec_track_user_logins WHERE ((user_id = " .
+                $userid . " and was_lgn_atmpt_succsful='t') AND (now() between to_timestamp(login_time,'YYYY-MM-DD HH24:MI:SS') "
+                . "and to_timestamp((CASE WHEN logout_time='' THEN '4000-12-31 23:59:59' ELSE logout_time END), 'YYYY-MM-DD HH24:MI:SS')))";
+        //echo $sqlStr;
+        $result = executeSQLNoParams($sqlStr);
+        while ($row = loc_db_fetch_array($result)) {
+            return (float) $row[0];
+        }
+        return -1;
+    } else {
+        return -1;
+    }
 }
 
 function recopyPrflPic($username, $lgn_num) {
@@ -300,72 +363,124 @@ function recopyPrflPic($username, $lgn_num) {
     $prsnid = getUserPrsnID($username);
     $strlFileNm = getPersonImg($prsnid);
     $extnsn = "png";
-    if ($strlFileNm != "") {
+    if (trim($strlFileNm) != "") {
         $temp = explode(".", $strlFileNm);
         $extnsn = end($temp);
     }
     $nwFileName = encrypt1($prsnid . session_id() . $lgn_num, $smplTokenWord1) . '.' . $extnsn;
     $fullTmpDest = $fldrPrfx . $tmpDest . $nwFileName;
     $ftp_src = $ftp_base_db_fldr . "/Person/$prsnid" . '.' . $extnsn;
+    $txt = ""; // "Source:" . $ftp_src . "|Dest:" . $fullTmpDest."<br/>";
     if (file_exists($ftp_src) && !file_exists($fullTmpDest)) {
         copy("$ftp_src", "$fullTmpDest");
+        //$txt .= "<br/>HAS";
     } else if (!file_exists($fullTmpDest)) {
         $ftp_src = $fldrPrfx . 'cmn_images/image_up.png';
         copy("$ftp_src", "$fullTmpDest");
+        /* if (!copy("$ftp_src", "$fullTmpDest")) {
+          $errors = error_get_last();
+          echo "COPY ERROR: " . $errors['type'];
+          echo "<br />\n" . $errors['message'];
+          echo $fullTmpDest . "<br/>ERROR COPYING";
+          echo $ftp_src . "<br/>";
+          } */
+        //$txt .= "<br/>HAS NOT";
     }
     $myImgFileName = $nwFileName;
     $_SESSION['FILES_NAME_PRFX'] = $myImgFileName;
-    $txt = "Username:" . $username . "|Login Number:" . $lgn_num . "|myImgFileName:" . $myImgFileName . "|strlFileNm:" . $strlFileNm . "|extnsn:" . $extnsn;
+    $txt .= "Username:" . $username . "|Login Number:" . $lgn_num . "|myImgFileName:" . $myImgFileName . "|strlFileNm11:" . trim($strlFileNm) . "|extnsn:" . $extnsn;
     file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", $txt . $logNxtLine, FILE_APPEND | LOCK_EX);
 }
 
-function recordFailedLogin($username, $machdet) {
+function recopyOrgLogo($orgid, $lgn_num) {
+    global $ftp_base_db_fldr;
+    global $logNxtLine;
+    global $smplTokenWord1;
+    global $orgLogoFileName;
+    global $fullTmpDest;
+    global $fldrPrfx;
+    global $tmpDest;
+    global $app_image1;
+    $strlFileNm = getOrgLogo($orgid);
+    $extnsn = "png";
+    if (trim($strlFileNm) != "") {
+        $temp = explode(".", $strlFileNm);
+        $extnsn = end($temp);
+    }else{
+        $strlFileNm = $orgid . ".png";
+    }
+    $nwFileName = encrypt1($strlFileNm . session_id(), $smplTokenWord1) . '.' . $extnsn;
+    $fullTmpDest = $fldrPrfx . $tmpDest . $nwFileName;
+    $ftp_src = $ftp_base_db_fldr . "/Org/" . $strlFileNm;
+    $txt = "";     
+    $orgLogoFileName=  $app_image1;
+    if (file_exists($ftp_src) && !file_exists($fullTmpDest)) {
+        copy("$ftp_src", "$fullTmpDest");
+        $orgLogoFileName = $tmpDest .$nwFileName;
+    } 
+    $_SESSION['ORG_LOGO_FILE_NAME'] = $orgLogoFileName;
+    $txt .= "orgLogoFileName:" . $orgLogoFileName . "|strlFileNm11:" . trim($strlFileNm) . "|extnsn:" . $extnsn;
+    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", $txt . $logNxtLine, FILE_APPEND | LOCK_EX);
+}
+
+function recordFailedLogin($username, $machdet, $msg = "") {
+    global $app_version;
     $dateStr = getDB_Date_time();
     $mach_details = $machdet;
+    $ssnID = session_id();
     $sqlStr = "INSERT INTO sec.sec_track_user_logins(user_id, login_time, 
-    logout_time, host_mach_details, was_lgn_atmpt_succsful, app_vrsn) " .
+    logout_time, host_mach_details, was_lgn_atmpt_succsful, app_vrsn, web_session_id, last_active_time, lgn_remarks) " .
             "VALUES (" . getUserID($username) . ", '" . $dateStr . "', '', '" .
-            loc_db_escape_string($mach_details) . "', FALSE, 'V1 P11')";
-    $result = executeSQLNoParams($sqlStr);
-    updtFailedLgnCnt($username);
+            loc_db_escape_string($mach_details) . "', FALSE, '" . $app_version .
+            "', '" . loc_db_escape_string($ssnID) . "', '" . loc_db_escape_string($dateStr) .
+            "', '" . loc_db_escape_string($msg) . "')";
+    executeSQLNoParams($sqlStr);
+    if (strpos($msg, "Simultaneous") === FALSE) {
+        updtFailedLgnCnt($username);
+    }
     updtLastLgnAttmpTme($username, $dateStr);
 }
 
 function checkLogin($unm, $paswd, $machdet, &$msg) {
-    if (getUserID($unm) <= 0) {
+    $inUsrID = getUserID($unm);
+    $inUnm = getUserName($inUsrID);
+    if ($inUsrID <= 0) {
         return "Invalid Username or Password!";
     }
-    if (isAccntSuspended($unm) === true) {
+    if (isAccntSuspended($inUnm) === true) {
         return "This account has been suspended!\nContact your System Administrator!";
     }
-    if (isUserAccntLckd($unm) === true &&
-            shdUnlckAccnt($unm) === false) {
+    if (isUserAccntLckd($inUnm) === true &&
+            shdUnlckAccnt($inUnm) === false) {
         return "Your account has been Locked!\nContact your System Administrator!";
     }
-    if (isLoginInfoCorrct($unm, $paswd)) {
-//Update successful logins table
-        recordSuccflLogin($unm, $machdet);
-        return chcAftrScsflLgnRqnt($unm, $paswd, $msg);
+    if (isLoginInfoCorrct($inUnm, $paswd)) {
+        //Update successful logins table
+        $lgnScfl = recordSuccflLogin($inUnm, $machdet);
+        if ($lgnScfl === TRUE) {
+            return chcAftrScsflLgnRqnt($inUnm, $paswd, $msg);
+        } else {
+            return "Simultaneous Logons not Permitted!";
+        }
     } else {
-//Update failed logins table
-        recordFailedLogin($unm, $machdet);
+        //Update failed logins table
+        recordFailedLogin($inUnm, $machdet, "Invalid Username or Password!");
         return "Invalid Username or Password!";
     }
 }
 
 function kh_getUserIP() {
-    $client = @$_SERVER['HTTP_CLIENT_IP'];
-    $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+    //$client = @$_SERVER['HTTP_CLIENT_IP'];
+    //$forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
     $remote = @$_SERVER['REMOTE_ADDR'];
-    $remtHst = @$_SERVER['REMOTE_HOST'];
-    if (filter_var($client, FILTER_VALIDATE_IP)) {
-        $ip = $client;
-    } elseif (filter_var($forward, FILTER_VALIDATE_IP)) {
-        $ip = $forward;
-    } else {
-        $ip = $remote;
-    }
-    return "IP:" . $ip . '/Name:' . $remtHst;
+    $remtHst = ""; // @$_SERVER['REMOTE_HOST'];
+    /* if (filter_var($client, FILTER_VALIDATE_IP)) {
+      $ip = $client;
+      } elseif (filter_var($forward, FILTER_VALIDATE_IP)) {
+      $ip = $forward;
+      } else {
+      $ip = $remote;
+      } */
+    $ip = $remote;
+    return "IP:" . $ip; // . '/Name:' . $remtHst;
 }
-
-?>

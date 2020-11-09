@@ -1,5 +1,4 @@
 <?php
-
 require 'app_code/cmncde/globals.php';
 $brwsr = getBrowser();
 $notAllowed = "Browser (Name:" . $brwsr['name'] . " Version: " . $brwsr['version'] . ")";
@@ -18,4 +17,8 @@ echo "<html>
                     <li><a href=\"index.php\">Or You can click here to Try Again!</a></li>
                     </ul>
                     </div></div></body><html>";
+
+
+                
+            
 ?>

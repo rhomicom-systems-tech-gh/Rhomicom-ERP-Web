@@ -40,7 +40,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <div class="row rhoRowMargin">
                         <div class="col-md-5" style="padding:0px 15px 0px 15px !important;">
                             <div class="input-group">
-                                <input class="form-control" id="allMdlsSrchFor" name="allMdlsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAllMdls(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
+                                <input class="form-control" id="allMdlsSrchFor" name="allMdlsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%",
+                                " ", $srchFor)); ?>" onkeyup="enterKeyFuncAllMdls(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
                                 <input id="allMdlsPageNo" name="allMdlsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getAllMdls('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
                                     <span class="glyphicon glyphicon-remove"></span>
@@ -63,8 +64,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         $valslctdArry[$z] = "selected";
                                     }
                                     ?>
-                                                                            <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
-                                <?php } ?>
+                                                                                <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                <?php } ?>
                                 </select>-->
                                 <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
                                 <select data-placeholder="Select..." class="form-control chosen-select" id="allMdlsDsplySze" name="allMdlsDsplySze" style="min-width:70px !important;">                            
@@ -99,7 +100,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         }
                                         ?>
                                         <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
-                                    <?php } ?>
+                <?php } ?>
                                 </select> 
                             </div>
                         </div>
@@ -139,20 +140,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         $cntr += 1;
                                         ?>
                                         <tr id="allMdlsEdtRow_<?php echo $cntr; ?>">                                    
-                                            <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                            <td>
+                                            <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                            <td class="lovtd">
                                                 <span><?php echo $row[1]; ?></span>                                                         
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <span><?php echo $row[2]; ?></span>                                                         
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <span><?php echo $row[3]; ?></span>                                                        
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <span><?php echo $row[4]; ?></span>                                                       
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Details" onclick="getOneMdlForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'mdlPrvldgsForm', 'View/Edit Priviledges for Module (<?php echo $row[1]; ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo; ?>, 'clear');" style="padding:2px !important;" style="padding:2px !important;">
                                                     <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                     <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
@@ -190,7 +191,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="row">
                                 <div class="col-md-5" style="padding:0px 15px 0px 15px !important;">
                                     <div class="input-group">
-                                        <input class="form-control" id="mdlPrvldgsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncOneMdl(event, 'myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'mdlPrvldgsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>, '');">
+                                        <input class="form-control" id="mdlPrvldgsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%",
+                                    " ", $srchFor)); ?>" onkeyup="enterKeyFuncOneMdl(event, 'myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'mdlPrvldgsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>, '');">
                                         <input id="mdlPrvldgsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getOneMdlForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'mdlPrvldgsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>, 'clear');">
                                             <span class="glyphicon glyphicon-remove"></span>
@@ -235,7 +237,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 }
                                                 ?>
                                                 <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
-                                            <?php } ?>
+                <?php } ?>
                                         </select> 
                                     </div>
                                 </div>
@@ -272,8 +274,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 $cntr += 1;
                                                 ?>
                                                 <tr id="mdlPrvldgsEdtRow_<?php echo $cntr; ?>">                                    
-                                                    <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                                    <td><span><?php echo $row1[0]; ?></span></td>
+                                                    <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                                    <td class="lovtd"><span><?php echo $row1[0]; ?></span></td>
                                                 </tr>
                                                 <?php
                                             }
