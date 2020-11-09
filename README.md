@@ -54,7 +54,6 @@ Hardware Requirements
 =====================
 Same hardware requirements for above Sofware requirements
 
-==================================================
 Technologies/Tools Used (Credits/Acknowledgements)
 ==================================================
 1. Java 1.8-(Netbeans 8.1) or later
@@ -62,3 +61,20 @@ Technologies/Tools Used (Credits/Acknowledgements)
 3. HTML/CSS/javascript (Bootstrap, Datatables Plugin, Bootstrap Dialog, SummerNote,jQuery, fontawesome 4)
 4. TIBCO JasperSoft Studio 6.2.0
 5. PostgreSQL Database 9.3 or later
+
+# TODO
+1. Projects Management Module
+2. Help Desk Module
+
+# Issues
+
+If you have any problems with or questions about this image, please contact us through a GitHub issue.
+
+# Contributing
+
+You are invited to contribute new features, fixes, or updates, large or small; we are always thrilled to receive pull requests, and do our best to process them as fast as we can.
+
+Before you start to code, we recommend discussing your plans through a GitHub issue, especially for more ambitious contributions. This gives other contributors a chance to point you in the right direction, give you feedback on your design, and help you find out if someone else is working on the same thing.
+
+# License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
