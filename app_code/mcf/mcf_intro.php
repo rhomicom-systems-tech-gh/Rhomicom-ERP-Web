@@ -10713,11 +10713,12 @@ if ($lgn_num > 0 && $canview === true) {
                     if($payBackAcctIDType == "Savings"){
                         $strSql = "SELECT lqdtn_id, a.amount, /*1*/
                             org.get_accnt_id_brnch_eqv(f.branch_id, e.invstmnt_liability_accnt_id) invstmnt_liability_accnt_id, 'D', /*3*/
-                            org.get_accnt_id_brnch_eqv(f.branch_id, e.interest_payment_crdt_accnt_id) customer_gl_liability_1, 'I', /*5*/
+                            /*org.get_accnt_id_brnch_eqv(f.branch_id, e.interest_payment_crdt_accnt_id)*/
+                            mcf.invstmnt_cstmr_liablty_accntid(a.invstmnt_id) customer_gl_liability_1, 'I', /*5*/
                             org.get_accnt_id_brnch_eqv(f.branch_id, e.accrued_interest_dbt_accnt_id) interest_expense_account_id, 'I', /*7*/
-                            org.get_accnt_id_brnch_eqv(f.branch_id, e.interest_payment_crdt_accnt_id) customer_gl_liability_2, 'I', /*9*/
+                            mcf.invstmnt_cstmr_liablty_accntid(a.invstmnt_id) customer_gl_liability_2, 'I', /*9*/
                             coalesce(nullif(c.invstmnt_charge_fees,''),'No Fee') invstmnt_charge_fees, c.invstmnt_fees_flat, c.invstmnt_fees_percent, /*12*/
-                            org.get_accnt_id_brnch_eqv(f.branch_id, e.interest_payment_crdt_accnt_id) customer_gl_liability_1, 'D', /*14*/
+                            mcf.invstmnt_cstmr_liablty_accntid(a.invstmnt_id) customer_gl_liability_1, 'D', /*14*/
                             org.get_accnt_id_brnch_eqv(f.branch_id, e.invstmnt_fee_crdt_accnt_id) invstmnt_fee_crdt_accnt_id, 'I', /*16*/
                             d.crncy_id, b.current_interest_value, /*18*/
                             'Investment Liquidation '||b.lqdtn_trnsctn_no||' for Investment No. '||a.trnsctn_no||' for Customer '||mcf.get_customer_name(a.cust_type, a.cust_id), /*19*/
@@ -10726,7 +10727,8 @@ if ($lgn_num > 0 && $canview === true) {
                             mcf.mcf_prdt_savings_stdevnt_accntn e,
                             mcf.mcf_accounts f WHERE a.invstmnt_id = b.invstmnt_id AND f.product_type_id = c.svngs_product_id
                             AND c.currency_id = d.crncy_id AND c.svngs_product_id = e.svngs_product_id
-                            AND b.status = 'Authorized' AND a.pymnt_dbt_acct_id = f.account_id
+                            AND b.status = 'Authorized' AND a.account_id = f.account_id
+                            --AND a.pymnt_dbt_acct_id = f.account_id
                             /*AND b.lqdtn_invstmnt_status = '$invstmntSts'*/
                           AND lqdtn_id = $lqdtnId";
                     }
