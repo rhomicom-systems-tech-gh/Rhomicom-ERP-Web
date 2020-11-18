@@ -210,6 +210,7 @@ if ($lgn_num > 0 && $canview === true) {
     } else if ($pgNo == 12) {
         require "paye_tax_rates.php";
     } else if ($pgNo == 13) {
+        require $fldrPrfx . "app_code/accb/accb_funcs.php";
         require "loan_requests.php";
     } else if ($pgNo == 14) {
         require $fldrPrfx . "app_code/accb/accb_funcs.php";
@@ -4585,7 +4586,7 @@ function updtTrnsRqstsDocHdr($hdrID, $rqstPrsnID, $rqstTyp, $itmTypID, $rqstRsn,
 function deleteTrnsRqsts($valLnid, $docNum)
 {
     $strSql = "SELECT count(1) FROM pay.pay_loan_pymnt_rqsts a WHERE(a.pay_request_id = " . $valLnid .
-        " and a.request_status IN ('Validated', 'Approved', 'Cancelled','Initiated','Reviewed'))";
+        " and a.is_processed='1' and a.request_status IN ('Validated', 'Approved', 'Cancelled','Initiated','Reviewed'))";
     $result1 = executeSQLNoParams($strSql);
     $trnsCnt1 = 0;
     while ($row = loc_db_fetch_array($result1)) {

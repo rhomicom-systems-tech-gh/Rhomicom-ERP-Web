@@ -1334,14 +1334,20 @@ function generateReportRun($rptID, $slctdParams, $alrtID)
         logSessionErrs(str_replace($db_pwd, "***************", $cmd));
         //return -1;
         $logfilenm = $ftp_base_db_fldr . "/Logs/cmnd_line_logs_" . $rptRunID . "_" . getDB_Date_timeYYMDHMS() . ".txt";
-        $rslt = rhoPOSTToAPI(
-            $rhoAPIUrl . '/startJavaRunner',
-            array(
-                'rnnrPrcsFile' => $rnnrPrcsFile,
-                'strArgs' => $strArgs
-            )
-        );
-        //sexecInBackground($cmd, $logfilenm);
+
+        $rhoAPIhost = parse_url($rhoAPIUrl, PHP_URL_HOST);
+        $rhoAPIport = parse_url($rhoAPIUrl, PHP_URL_PORT);
+        if (fsockopen($rhoAPIhost, $rhoAPIport)) {
+            $rslt = rhoPOSTToAPI(
+                $rhoAPIUrl . '/startJavaRunner',
+                array(
+                    'rnnrPrcsFile' => $rnnrPrcsFile,
+                    'strArgs' => $strArgs
+                )
+            );
+        } else {
+            execInBackground($cmd, $logfilenm);
+        }
     } else {
         echo "Invalid Parameters";
     }
@@ -1357,6 +1363,7 @@ function reRunReport($rptID, $rptRunID)
     global $postgre_db_pwd;
     global $database;
     global $app_url;
+    global $rhoAPIUrl;
     $db_usr = "postgres";
     $db_pwd = $postgre_db_pwd;
     $outputUsd = "HTML";
@@ -1390,7 +1397,20 @@ function reRunReport($rptID, $rptRunID)
     $cmd = "java -jar " . $rnnrPrcsFile . " " . $strArgs;
     logSessionErrs(str_replace($db_pwd, "***************", $cmd));
     $logfilenm = $ftp_base_db_fldr . "/Logs/cmnd_line_logs_" . $rptRunID . "_" . getDB_Date_timeYYMDHMS() . ".txt";
-    execInBackground($cmd, $logfilenm);
+    
+    $rhoAPIhost = parse_url($rhoAPIUrl, PHP_URL_HOST);
+    $rhoAPIport = parse_url($rhoAPIUrl, PHP_URL_PORT);
+    if (fsockopen($rhoAPIhost, $rhoAPIport)) {
+        $rslt = rhoPOSTToAPI(
+            $rhoAPIUrl . '/startJavaRunner',
+            array(
+                'rnnrPrcsFile' => $rnnrPrcsFile,
+                'strArgs' => $strArgs
+            )
+        );
+    } else {
+        execInBackground($cmd, $logfilenm);
+    }
     return $rptRunID;
 }
 

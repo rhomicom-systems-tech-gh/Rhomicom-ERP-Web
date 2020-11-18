@@ -1,5 +1,5 @@
 <?php
-
+$allMdlslovID = getLovID("All Enabled Modules");
 $dfltPrvldgs = array(
     /* 0 */
     "View System Administration", "View Users & their Roles",
@@ -2584,6 +2584,7 @@ function loadAccntngMdl()
     //For Accounting
     global $orgID;
     global $usrID;
+    global $allMdlslovID;
     $DefaultPrvldgs =  array(
         "View Accounting", "View Chart of Accounts",
         /* 2 */ "View Account Transactions", "View Transactions Search",
@@ -2643,22 +2644,23 @@ function loadAccntngMdl()
     checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
     createAcctngRqrdLOVs();
     createAcctngRqrdLOVs1();
-    if ($orgID <= 0) {
-        $orgID = getPrsnOrgID($usrID);
-    }
-    if ($orgID > 0) {
-        $fnccurid = getOrgFuncCurID($orgID);
-        updtOrgAccntCurrID($orgID, $fnccurid);
-        execUpdtInsSQL("Update accb.accb_budget_details SET entrd_curr_id=" . $fnccurid .
-            ", entrd_amount=COALESCE(limit_amount,0)" .
-            ", func_curr_rate=1.0000 WHERE entrd_curr_id<=0");
-    }
-    execUpdtInsSQL("UPDATE accb.accb_payments 
+    if (getEnbldPssblValID($myName, $allMdlslovID) > 0) {
+        if ($orgID <= 0) {
+            $orgID = getPrsnOrgID($usrID);
+        }
+        if ($orgID > 0) {
+            $fnccurid = getOrgFuncCurID($orgID);
+            updtOrgAccntCurrID($orgID, $fnccurid);
+            execUpdtInsSQL("Update accb.accb_budget_details SET entrd_curr_id=" . $fnccurid .
+                ", entrd_amount=COALESCE(limit_amount,0)" .
+                ", func_curr_rate=1.0000 WHERE entrd_curr_id<=0");
+        }
+        execUpdtInsSQL("UPDATE accb.accb_payments 
 SET amount_given=(CASE WHEN (amount_paid>0 and change_or_balance>=0) or (amount_paid<0 and change_or_balance<=0) THEN amount_paid 
             ELSE (amount_paid / abs(amount_paid)) * abs(amount_paid - change_or_balance) END)
 					 WHERE amount_given = 0 and amount_paid != 0");
 
-    execUpdtInsSQL("UPDATE accb.accb_payments_batches a SET pymnt_date=last_update_date, 
+        execUpdtInsSQL("UPDATE accb.accb_payments_batches a SET pymnt_date=last_update_date, 
 	incrs_dcrs1=(select max(CASE WHEN Coalesce(b.incrs_dcrs1,'D')='D' THEN 'Decrease' ELSE 'Increase' END) from accb.accb_payments b where a.pymnt_batch_id=b.pymnt_batch_id), 
         rcvbl_lblty_accnt_id=(select max(b.rcvbl_lblty_accnt_id) from accb.accb_payments b where a.pymnt_batch_id=b.pymnt_batch_id), 
         incrs_dcrs2=(select max(CASE WHEN Coalesce(b.incrs_dcrs2,'I')='I' THEN 'Increase'ELSE 'Decrease' END) from accb.accb_payments b where a.pymnt_batch_id=b.pymnt_batch_id), 
@@ -2678,6 +2680,7 @@ SET amount_given=(CASE WHEN (amount_paid>0 and change_or_balance>=0) or (amount_
         sign_code=(select max(b.sign_code) from accb.accb_payments b where a.pymnt_batch_id=b.pymnt_batch_id), 
         gl_batch_id=(select min(b.gl_batch_id) from accb.accb_payments b where a.pymnt_batch_id=b.pymnt_batch_id)
         WHERE (gl_batch_id<=0 OR gl_batch_id IS NULL) AND (select count(b.pymnt_id) from accb.accb_payments b where a.pymnt_batch_id=b.pymnt_batch_id)>0");
+    }
 }
 
 function createAcctngRqrdLOVs()
@@ -3102,6 +3105,7 @@ function loadGenericMdl()
 function loadIntPymntsMdl()
 {
     global $orgID;
+    global $allMdlslovID;
     $DefaultPrvldgs = array(
         "View Internal Payments",
         /* 1 */ "View Manual Payments", "View Pay Item Sets", "View Person Sets",
@@ -3134,14 +3138,16 @@ function loadIntPymntsMdl()
     $smplRoleName = "Internal Payments Administrator";
     checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
 
-    $updtSql = "UPDATE pay.pay_mass_pay_run_hdr
+    if (getEnbldPssblValID($myName, $allMdlslovID) > 0) {
+        $updtSql = "UPDATE pay.pay_mass_pay_run_hdr
                     SET entered_amt_crncy_id=org.get_orgfunc_crncy_id(" . $orgID . ")
                  WHERE entered_amt_crncy_id <= 0";
-    execUpdtInsSQL($updtSql);
-    $updtSql1 = "UPDATE pay.pay_mass_pay_run_hdr
+        execUpdtInsSQL($updtSql);
+        $updtSql1 = "UPDATE pay.pay_mass_pay_run_hdr
                     SET is_quick_pay='1'
                  WHERE mass_pay_name ILIKE 'Quick%'";
-    execUpdtInsSQL($updtSql1);
+        execUpdtInsSQL($updtSql1);
+    }
     createPayRqrdLOVs();
 }
 
@@ -3476,8 +3482,10 @@ function loadELearnMdl()
     checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
 }
 
-function loadHospMdl() {
-    $DefaultPrvldgs = array(/* 0 */ "View Visits and Appointments",
+function loadHospMdl()
+{
+    $DefaultPrvldgs = array(/* 0 */
+        "View Visits and Appointments",
         /* 1 */ "View Visits/Appointments", "View Appointments Data", "View Service Providers",
         "View Services Offered",
         /* 5 */ "View SQL", "View Record History",
@@ -3487,7 +3495,8 @@ function loadHospMdl() {
         /* 16 */ "Add Service Providers", "Edit Service Providers", "Delete Service Providers",
         /* 19 */ "View only Self-Created Sales", "Cancel Documents", "Take Payments",
         /* 22 */ "Apply Adhoc Discounts", "Apply Pre-defined Discounts",
-        /* 24 */ "Can Edit Unit Price", "View Other Provider's Data");
+        /* 24 */ "Can Edit Unit Price", "View Other Provider's Data"
+    );
 
 
     $subGrpNames = "";
@@ -3498,23 +3507,25 @@ function loadHospMdl() {
     $audit_tbl_name = "hosp.hosp_audit_trail_tbl";
     $smplRoleName = "Visits and Appointments Administrator";
 
-    $DefaultPrvldgs1 = array(/* 0 */ "View Clinic/Hospital",
-        /* 1 */ "View Visits/Appointments", "View Appointments Data", "View Services Offered", "View Services Providers", 
-    /* 5 */ "View Diagnosis List", "View Investigations List", "View Dashboard",
-    /* 8 */ "Add Visits/Appointments", "Edit Visits/Appointments", "Delete Visits/Appointments",
-    /* 11 */ "Add Appointment Data", "Edit Appointment Data", "Delete Appointment Data",
-    /* 14 */ "Add Services Offered", "Edit Services Offered", "Delete Services Offered",
-    /* 17 */ "Add Service Providers", "Edit Service Providers", "Delete Service Providers",
-    /* 20 */ "Add Diagnosis List", "Edit Diagnosis List", "Delete Diagnosis List",  
-    /* 23 */ "Add Investigations List", "Edit Investigations List", "Delete Investigations List",
-    /* 26 */ "Close Visit", "View Appointment Data Items",
-    /* 28 */ "Add Appointment Data Items", "Edit Appointment Data Items", "Delete Appointment Data Items",
-    /* 31 */ "Generate Sales Invoice", "Cancel Appointment", "Setup Extra Service Data", "View Sales Invoice",
-    /* 35 */ "Add Consultation Data", "Edit Consultation Data", "Delete Consultation Data",
-    /* 38 */ "Add Presciptions", "Edit Presciptions", "Delete Presciptions",
-    /* 41 */ "Add Vitals", "Edit Vitals", "Delete Vitals",
-    /* 44 */ "Add Recommended Service", "Edit Recommended Service", "Delete Recommended Service");
-    
+    $DefaultPrvldgs1 = array(/* 0 */
+        "View Clinic/Hospital",
+        /* 1 */ "View Visits/Appointments", "View Appointments Data", "View Services Offered", "View Services Providers",
+        /* 5 */ "View Diagnosis List", "View Investigations List", "View Dashboard",
+        /* 8 */ "Add Visits/Appointments", "Edit Visits/Appointments", "Delete Visits/Appointments",
+        /* 11 */ "Add Appointment Data", "Edit Appointment Data", "Delete Appointment Data",
+        /* 14 */ "Add Services Offered", "Edit Services Offered", "Delete Services Offered",
+        /* 17 */ "Add Service Providers", "Edit Service Providers", "Delete Service Providers",
+        /* 20 */ "Add Diagnosis List", "Edit Diagnosis List", "Delete Diagnosis List",
+        /* 23 */ "Add Investigations List", "Edit Investigations List", "Delete Investigations List",
+        /* 26 */ "Close Visit", "View Appointment Data Items",
+        /* 28 */ "Add Appointment Data Items", "Edit Appointment Data Items", "Delete Appointment Data Items",
+        /* 31 */ "Generate Sales Invoice", "Cancel Appointment", "Setup Extra Service Data", "View Sales Invoice",
+        /* 35 */ "Add Consultation Data", "Edit Consultation Data", "Delete Consultation Data",
+        /* 38 */ "Add Presciptions", "Edit Presciptions", "Delete Presciptions",
+        /* 41 */ "Add Vitals", "Edit Vitals", "Delete Vitals",
+        /* 44 */ "Add Recommended Service", "Edit Recommended Service", "Delete Recommended Service"
+    );
+
     $smplRoleName1 = "Clinic/Hospital Administrator";
     $myName1 = "Clinic/Hospital";
     $myDesc1 = "This module helps you to manage your Clinic/Hospital's Appointments Scheduling and Data Capturing!";
@@ -3522,14 +3533,30 @@ function loadHospMdl() {
     $lovID = getLovID("All Enabled Modules");
     createSysLovsPssblVals1($myName, $lovID);
     if (getEnbldPssblValID($myName, $lovID) > 0) {
-        checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames,
-                $keyColumnNames);
+        checkNAssignReqrmnts(
+            $myName,
+            $myDesc,
+            $audit_tbl_name,
+            $smplRoleName,
+            $DefaultPrvldgs,
+            $subGrpNames,
+            $mainTableNames,
+            $keyColumnNames
+        );
         $cntr++;
     }
     createSysLovsPssblVals1($myName1, $lovID);
     if (getEnbldPssblValID($myName1, $lovID) > 0) {
-        checkNAssignReqrmnts($myName1, $myDesc1, $audit_tbl_name, $smplRoleName1, $DefaultPrvldgs1, $subGrpNames, $mainTableNames,
-                $keyColumnNames);
+        checkNAssignReqrmnts(
+            $myName1,
+            $myDesc1,
+            $audit_tbl_name,
+            $smplRoleName1,
+            $DefaultPrvldgs1,
+            $subGrpNames,
+            $mainTableNames,
+            $keyColumnNames
+        );
         $cntr++;
     }
     if ($cntr > 0) {
@@ -3537,55 +3564,73 @@ function loadHospMdl() {
     }
 }
 
-
-function createRqrdHospLOVs() {
+function createRqrdHospLOVs()
+{
 
     $sysLovs = array(
-        /**0**/"Service Types", "Service Providers", "Provider Groups", "Dosage Methods", 
-        /**4**/"Inventory Services" ,"Diagnosis Types", "Investigation Types", "Laboratory Locations", 
-        /**8**/ "Inventory Items", "Recommended Services", "Service Provider Groups", "Item UOM",
-        /**12**/ "Pharmacy Items", "Hospital Patients", "Hospital Staff"
+        /**0**/
+        "Service Types", "Service Providers", "Provider Groups", "Dosage Methods",
+        /**4**/
+        "Inventory Services", "Diagnosis Types", "Investigation Types", "Laboratory Locations",
+        /**8**/
+        "Inventory Items", "Recommended Services", "Service Provider Groups", "Item UOM",
+        /**12**/
+        "Pharmacy Items", "Hospital Patients", "Hospital Staff"
     );
+
     $sysLovsDesc = array(
-        /**0**/"Service Types", "Service Providers", "Provider Groups",  "Dosage Methods", 
-        /**4**/"Inventory Services", "Diagnosis Types", "Investigation Types", "Laboratory Locations", 
-        /**8**/"Inventory Items","Recommended Services", "Service Provider Groups", "Item UOM", 
-        /**12**/"Pharmacy Items", "Hospital Patients", "Hospital Staff"
+        /**0**/
+        "Service Types", "Service Providers", "Provider Groups",  "Dosage Methods",
+        /**4**/
+        "Inventory Services", "Diagnosis Types", "Investigation Types", "Laboratory Locations",
+        /**8**/
+        "Inventory Items", "Recommended Services", "Service Provider Groups", "Item UOM",
+        /**12**/
+        "Pharmacy Items", "Hospital Patients", "Hospital Staff"
     );
     $sysLovsDynQrys = array(
-        /**0**/ "select distinct trim(to_char(type_id,'999999999999999999999999999999')) a, trim(type_name ||' ('||type_desc||')') b, '' c from hosp.srvs_types WHERE sys_code != 'VS-0001' order by 2",
-        /**1**/ "SELECT distinct trim(to_char(x.prsn_id,'999999999999999999999999999999')) a, 
+        /**0**/
+        "select distinct trim(to_char(type_id,'999999999999999999999999999999')) a, trim(type_name ||' ('||type_desc||')') b, '' c from hosp.srvs_types WHERE sys_code != 'VS-0001' order by 2",
+        /**1**/
+        "SELECT distinct trim(to_char(x.prsn_id,'999999999999999999999999999999')) a, 
     (SELECT trim(title || ' ' || sur_name || ', ' || first_name || ' ' || other_names) FROM prs.prsn_names_nos WHERE person_id = x.prsn_id)
     ||'('||(SELECT type_name from hosp.srvs_types WHERE type_id = x.srvs_type_id)||')' b, '' c, srvs_type_id d FROM hosp.srvs_prvdrs x order by 2",
-       /**2**/ "SELECT distinct trim(to_char(prvdr_grp_id,'999999999999999999999999999999')) a, prvdr_grp_name b, '' c FROM hosp.prvdr_grps order by 2",
-       /**3**/ "",
-       /**4**/ "SELECT distinct trim(to_char(item_id,'999999999999999999999999999999')) a, item_desc||' ('||item_code||')' b, '' c, org_id d FROM inv.inv_itm_list WHERE item_type = 'Services'  order by 2",
-       /**5**/ "SELECT distinct trim(to_char(disease_id,'999999999999999999999999999999')) a, trim(disease_name)||' ('||symtms||')' b, '' c  FROM hosp.diseases WHERE is_enabled = '1' order by 1",
-       /**6**/ "SELECT distinct trim(to_char(invstgtn_list_id,'999999999999999999999999999999')) a, invstgtn_name||' ('||invstgtn_desc||')' b, '' c  FROM hosp.invstgtn_list order by 2",
-       /**7**/ "",
-       /**8**/ "SELECT distinct trim(to_char(item_id,'999999999999999999999999999999')) a, item_desc || '(' || item_code || ')' b, '' c, org_id d FROM inv.inv_itm_list order by 2",
-       /**9**/ "select distinct trim(to_char(type_id,'999999999999999999999999999999')) a, trim(type_name ||' ('||sys_code||')') b, '' c from hosp.srvs_types where sys_code not in ('MC-0001','IA-0001','LI-0001','PH-0001','RD-0001','VS-0001') order by 2",
-       /**10**/ "SELECT distinct trim(to_char(prvdr_grp_id,'999999999999999999999999999999')) a, prvdr_grp_name b, '' c, main_srvc_type_id d FROM hosp.prvdr_grps x order by 2",
-       /**11**/ "SELECT (SELECT v.uom_name FROM inv.unit_of_measure v WHERE v.uom_id = x.uom_id) a, (SELECT w.uom_desc FROM inv.unit_of_measure w WHERE w.uom_id = x.uom_id) b,
+        /**2**/
+        "SELECT distinct trim(to_char(prvdr_grp_id,'999999999999999999999999999999')) a, prvdr_grp_name b, '' c FROM hosp.prvdr_grps order by 2",
+        /**3**/
+        "",
+        /**4**/
+        "SELECT distinct trim(to_char(item_id,'999999999999999999999999999999')) a, item_desc||' ('||item_code||')' b, '' c, org_id d FROM inv.inv_itm_list WHERE item_type = 'Services'  order by 2",
+        /**5**/
+        "SELECT distinct trim(to_char(disease_id,'999999999999999999999999999999')) a, trim(disease_name)||' ('||symtms||')' b, '' c  FROM hosp.diseases WHERE is_enabled = '1' order by 1",
+        /**6**/
+        "SELECT distinct trim(to_char(invstgtn_list_id,'999999999999999999999999999999')) a, invstgtn_name||' ('||invstgtn_desc||')' b, '' c  FROM hosp.invstgtn_list order by 2",
+        /**7**/
+        "",
+        /**8**/
+        "SELECT distinct trim(to_char(item_id,'999999999999999999999999999999')) a, item_desc || '(' || item_code || ')' b, '' c, org_id d FROM inv.inv_itm_list order by 2",
+        /**9**/
+        "select distinct trim(to_char(type_id,'999999999999999999999999999999')) a, trim(type_name ||' ('||sys_code||')') b, '' c from hosp.srvs_types where sys_code not in ('MC-0001','IA-0001','LI-0001','PH-0001','RD-0001','VS-0001') order by 2",
+        /**10**/
+        "SELECT distinct trim(to_char(prvdr_grp_id,'999999999999999999999999999999')) a, prvdr_grp_name b, '' c, main_srvc_type_id d FROM hosp.prvdr_grps x order by 2",
+        /**11**/
+        "SELECT (SELECT v.uom_name FROM inv.unit_of_measure v WHERE v.uom_id = x.uom_id) a, (SELECT w.uom_desc FROM inv.unit_of_measure w WHERE w.uom_id = x.uom_id) b,
             '' c, z.org_id d, (SELECT w.item_code FROM inv.inv_itm_list w WHERE w.item_id = x.item_id) e
             FROM inv.inv_itm_list z, inv.itm_uoms x WHERE z.item_id = x.item_id 
             union
             SELECT (SELECT y.uom_name FROM inv.unit_of_measure y WHERE y.uom_id = x.base_uom_id) a, (SELECT y.uom_desc FROM inv.unit_of_measure y WHERE y.uom_id = x.base_uom_id) b,
             '' c, x.org_id d, x.item_code e FROM inv.inv_itm_list x  ORDER BY 1",
-        /**12**/ "SELECT distinct trim(to_char(item_id,'999999999999999999999999999999')) a, item_desc || '(' || item_code || ')' b, '' c, x.org_id d 
+        /**12**/
+        "SELECT distinct trim(to_char(item_id,'999999999999999999999999999999')) a, item_desc || '(' || item_code || ')' b, '' c, x.org_id d 
                 FROM inv.inv_itm_list x, inv.inv_product_categories y  WHERE x.category_id = y.cat_id AND cat_name = 'Pharmacy' order by 2",
-        /**13**/ "SELECT distinct person_id|| '' a, trim(title || ' ' || sur_name || ', ' || first_name || ' ' || other_names||' ('||local_id_no||')') b, '' c, org_id d FROM prs.prsn_names_nos a WHERE pasn.get_prsn_type(person_id) = 'Patient' order by 1 DESC",
-        /**14**/ "SELECT distinct person_id|| '' a, trim(title || ' ' || sur_name || ', ' || first_name || ' ' || other_names||' ('||local_id_no||')') b, '' c, org_id d FROM prs.prsn_names_nos a WHERE pasn.get_prsn_type(person_id) = 'Employee' order by 1 DESC"
+        /**13**/
+        "SELECT distinct person_id|| '' a, trim(title || ' ' || sur_name || ', ' || first_name || ' ' || other_names||' ('||local_id_no||')') b, '' c, org_id d FROM prs.prsn_names_nos a WHERE pasn.get_prsn_type(person_id) = 'Patient' order by 1 DESC",
+        /**14**/
+        "SELECT distinct person_id|| '' a, trim(title || ' ' || sur_name || ', ' || first_name || ' ' || other_names||' ('||local_id_no||')') b, '' c, org_id d FROM prs.prsn_names_nos a WHERE pasn.get_prsn_type(person_id) = 'Employee' order by 1 DESC"
     );
 
     $pssblVals = array(
-        "3", "Oral", "To be taken my mouth"
-        , "3", "Suppository", "To be taken through the anus, urethra"
-        , "3", "External", "External applications"
-        , "3", "Injection", "To be injected"
-        , "3", "Intra-venous Infusion", "To be infused into the veins"
-        , "7", "BOG Clinic", "Bank Of Ghana Clinic Laboratory"
-        , "7", "Ridge Hospital", "Ridge Hospital Laboratory"
+        "3", "Oral", "To be taken my mouth", "3", "Suppository", "To be taken through the anus, urethra", "3", "External", "External applications", "3", "Injection", "To be injected", "3", "Intra-venous Infusion", "To be infused into the veins", "7", "BOG Clinic", "Bank Of Ghana Clinic Laboratory", "7", "Ridge Hospital", "Ridge Hospital Laboratory"
     );
 
     createSysLovs($sysLovs, $sysLovsDesc, $sysLovsDynQrys);
