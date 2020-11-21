@@ -3,8 +3,8 @@ if (1 === 1) {
     $superAdminConfigPswd1 = $_SESSION['SUPERADMINCONFIGPSWD'];
     $superAdminConfigPswd2 = $_SESSION['SUPERADMINCONFIGPSWD2'];
     $actyp = isset($_POST['actyp']) ? (int) ($_POST['actyp']) : 0;
-	
-	/*if ($superAdminConfigPswd1 !== "") {
+
+    /*if ($superAdminConfigPswd1 !== "") {
             $superAdminConfigPswd1 = decrypt($superAdminConfigPswd1, $smplTokenWord1);
         }
     echo $superAdminConfigPswd1."<br/>Pwd: 2=><br/>";
@@ -14,11 +14,11 @@ if (1 === 1) {
             $superAdminConfigPswd2 = decrypt($superAdminConfigPswd2, $smplTokenWord1);
         }
     echo $superAdminConfigPswd2;*/
-	
-    if ($actyp == 1) { 
+
+    if ($actyp == 1) {
         header("content-type:application/json");
         $superAdminConfigPswd2 = isset($_POST['superAdminConfigPswd2']) ? ($_POST['superAdminConfigPswd2']) : "";
-		
+
         if ($superAdminConfigPswd2 !== "") {
             $superAdminConfigPswd2 = encrypt($superAdminConfigPswd2, $smplTokenWord1);
         }
@@ -113,9 +113,9 @@ if (1 === 1) {
         $aboutRho = isset($_POST['aboutRho']) ? cleanInputData($_POST['aboutRho']) : $aboutRho;
         $smplTokenWord = isset($_POST['smplTokenWord']) ? cleanInputData($_POST['smplTokenWord']) : $smplTokenWord;
         $abt_portal = isset($_POST['abt_portal']) ? cleanInputData($_POST['abt_portal']) : $abt_portal;
-        $homepgfile= isset($_POST['homepgfile']) ? cleanInputData($_POST['homepgfile']) : $homepgfile;
-        $browserPDFCmd= isset($_POST['browserPDFCmd']) ? cleanInputData($_POST['browserPDFCmd']) : $browserPDFCmd;
-        $rhoAPIUrl= isset($_POST['rhoAPIUrl']) ? cleanInputData($_POST['rhoAPIUrl']) : $rhoAPIUrl;
+        $homepgfile = isset($_POST['homepgfile']) ? cleanInputData($_POST['homepgfile']) : $homepgfile;
+        $browserPDFCmd = isset($_POST['browserPDFCmd']) ? cleanInputData($_POST['browserPDFCmd']) : $browserPDFCmd;
+        $rhoAPIUrl = isset($_POST['rhoAPIUrl']) ? cleanInputData($_POST['rhoAPIUrl']) : $rhoAPIUrl;
         $putInMntnceMode = isset($_POST['putInMntnceMode']) ? cleanInputData($_POST['putInMntnceMode']) : "NO";
 
         $cnfg_arr_content['page_title'] = $page_title;
@@ -196,11 +196,10 @@ if (1 === 1) {
             exit();
         }
     } else {
-        ?>
-        <link rel="STYLESHEET" type="text/css" href="cmn_scrpts/loginStyles.css"/>
+?>
+        <link rel="STYLESHEET" type="text/css" href="cmn_scrpts/loginStyles.css" />
         <script type="text/javascript">
-            function enterKeyFunc(e)
-            {
+            function enterKeyFunc(e) {
                 var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
                 if (charCode == 13) {
                     verifyRhoConfigPwd();
@@ -208,8 +207,7 @@ if (1 === 1) {
                 //return false;
             }
 
-            function logoutRhoConfigPwd()
-            {
+            function logoutRhoConfigPwd() {
                 var msgsTitle = 'Rhomi Configuration';
                 var dialog = bootbox.confirm({
                     title: 'Logout ' + msgsTitle + '?',
@@ -225,21 +223,20 @@ if (1 === 1) {
                             className: 'btn-danger'
                         }
                     },
-                    callback: function (result) {
-                        if (result === true)
-                        {
+                    callback: function(result) {
+                        if (result === true) {
                             var dialog1 = bootbox.alert({
                                 title: 'Logout of Rhomi Configuration',
                                 size: 'small',
                                 message: '<p><i class="fa fa-spin fa-spinner"></i> Loging Out of Rhomi Configuration...Please Wait...</p>',
-                                callback: function () {
+                                callback: function() {
                                     window.location = 'index.php?cp=2';
                                 }
                             });
                             var formData = new FormData();
                             formData.append('shdGoConfig', 1005);
                             formData.append('actyp', 2);
-                            dialog1.init(function () {
+                            dialog1.init(function() {
                                 $body = $("body");
                                 $body.removeClass("mdlloading");
                                 $.ajax({
@@ -250,13 +247,13 @@ if (1 === 1) {
                                     cache: false,
                                     contentType: false,
                                     processData: false,
-                                    success: function (data) {
+                                    success: function(data) {
                                         console.warn(data);
-                                        setTimeout(function () {
+                                        setTimeout(function() {
                                             dialog1.find('.bootbox-body').html(data.message);
                                         }, 500);
                                     },
-                                    error: function (jqXHR, textStatus, errorThrown) {
+                                    error: function(jqXHR, textStatus, errorThrown) {
                                         console.log(textStatus + " " + errorThrown);
                                         console.warn(jqXHR.responseText);
                                     }
@@ -268,14 +265,13 @@ if (1 === 1) {
 
             }
 
-            function verifyRhoConfigPwd()
-            {
+            function verifyRhoConfigPwd() {
                 var superAdminConfigPswd = typeof $("#superAdminConfigPswd").val() === 'undefined' ? '' : $("#superAdminConfigPswd").val();
                 var dialog = bootbox.alert({
                     title: 'Verify Password',
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Verifying Password...Please Wait...</p>',
-                    callback: function () {
+                    callback: function() {
                         window.location = 'index.php?cp=2';
                     }
                 });
@@ -283,7 +279,7 @@ if (1 === 1) {
                 formData.append('shdGoConfig', 1005);
                 formData.append('actyp', 1);
                 formData.append('superAdminConfigPswd2', superAdminConfigPswd);
-                dialog.init(function () {
+                dialog.init(function() {
                     $body = $("body");
                     $body.removeClass("mdlloading");
                     $.ajax({
@@ -294,12 +290,12 @@ if (1 === 1) {
                         cache: false,
                         contentType: false,
                         processData: false,
-                        success: function (data) {
-                            setTimeout(function () {
+                        success: function(data) {
+                            setTimeout(function() {
                                 dialog.find('.bootbox-body').html(data.message);
                             }, 500);
                         },
-                        error: function (jqXHR, textStatus, errorThrown) {
+                        error: function(jqXHR, textStatus, errorThrown) {
                             console.log(textStatus + " " + errorThrown);
                             console.warn(jqXHR.responseText);
                         }
@@ -307,8 +303,7 @@ if (1 === 1) {
                 });
             }
 
-            function updateRhoConfigFiles()
-            {
+            function updateRhoConfigFiles() {
                 var page_title = typeof $("#page_title").val() === 'undefined' ? '' : $("#page_title").val();
                 var app_url = typeof $("#app_url").val() === 'undefined' ? '' : $("#app_url").val();
                 var flxcde_url = typeof $("#flxcde_url").val() === 'undefined' ? '' : $("#flxcde_url").val();
@@ -367,15 +362,16 @@ if (1 === 1) {
                 var aboutRho = typeof $("#aboutRho").val() === 'undefined' ? '' : $("#aboutRho").val();
                 var smplTokenWord = typeof $("#smplTokenWord").val() === 'undefined' ? '' : $("#smplTokenWord").val();
                 var abt_portal = typeof $("#abt_portal").val() === 'undefined' ? '' : $("#abt_portal").val();
-                var homepgfile = typeof $("#homepgfile").val() === 'undefined' ? '' : $("#homepgfile").val();putInMntnceMode
+                var homepgfile = typeof $("#homepgfile").val() === 'undefined' ? '' : $("#homepgfile").val();
                 var browserPDFCmd = typeof $("#browserPDFCmd").val() === 'undefined' ? '' : $("#browserPDFCmd").val();
+                var rhoAPIUrl = typeof $("#rhoAPIUrl").val() === 'undefined' ? '' : $("#rhoAPIUrl").val();
                 var putInMntnceMode = typeof $("#putInMntnceMode").val() === 'undefined' ? '' : $("#putInMntnceMode").val();
 
                 var dialog = bootbox.alert({
                     title: 'Update Configuration',
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Updating Configuration...Please Wait...</p>',
-                    callback: function () {
+                    callback: function() {
                         window.location = 'index.php?cp=2';
                     }
                 });
@@ -442,8 +438,9 @@ if (1 === 1) {
                 formData.append('abt_portal', abt_portal);
                 formData.append('homepgfile', homepgfile);
                 formData.append('browserPDFCmd', browserPDFCmd);
+                formData.append('rhoAPIUrl', rhoAPIUrl);
                 formData.append('putInMntnceMode', putInMntnceMode);
-                dialog.init(function () {
+                dialog.init(function() {
                     $body = $("body");
                     $body.removeClass("mdlloading");
                     $.ajax({
@@ -454,13 +451,13 @@ if (1 === 1) {
                         cache: false,
                         contentType: false,
                         processData: false,
-                        success: function (data) {
-                            setTimeout(function () {
+                        success: function(data) {
+                            setTimeout(function() {
                                 console.warn(data);
                                 dialog.find('.bootbox-body').html(data.message);
                             }, 500);
                         },
-                        error: function (jqXHR, textStatus, errorThrown) {
+                        error: function(jqXHR, textStatus, errorThrown) {
                             console.log(textStatus + " " + errorThrown);
                             console.warn(jqXHR.responseText);
                         }
@@ -470,12 +467,13 @@ if (1 === 1) {
         </script>
         </head>
         <?php /* flush();  -webkit-calc(87vh);height: -moz-calc(87vh);height: calc(87vh) */ ?>
+
         <body style="<?php echo $bckcolorsChngPwd; ?>min-width:360px;min-height:430px;height:100% !important;width:100% !important;">
             <div class="container-fluid">
                 <div class="row" style="min-height:65px;max-height:70px !important;height: 65px;border-bottom:0px solid #FFF;padding:0px;background-color: rgba(0,0,0,0.32);">
                     <div style="max-width:25%;float:left;"><img src="cmn_images/<?php echo $app_image1; ?>" style="left: 0.5%; margin:2px; padding-right: 1em; height:60px; width:auto; position: relative; vertical-align: middle;"></div>
                     <div class="hdrDiv" style="max-width:90%;color:#FFF;text-align:center;float:none;">
-                        <span class="h4"><?php echo $app_name; ?></span><br/>
+                        <span class="h4"><?php echo $app_name; ?></span><br />
                         <span class="h6"><?php echo $app_slogan; ?></span>
                     </div>
                 </div>
@@ -485,11 +483,11 @@ if (1 === 1) {
                         <div class="center-block" id="loginDiv" style="min-width: 700px !important;max-width: 1400px !important;">
                             <div class="login-panel panel panel-default login" style="min-width: 700px !important;max-width: 1400px !important;">
                                 <h3 class="panel-title logintitle">CONFIGURE THE RHOMI ERP/BANKING SYSTEM</h3>
-                                <form method="post" action="" style="width:100%;"  onSubmit="return false;">
+                                <form method="post" action="" style="width:100%;" onSubmit="return false;">
                                     <div class="row">
                                         <?php
                                         if ($superAdminConfigPswd2 !== $superAdminConfigPswd1 || $superAdminConfigPswd1 === "") {
-                                            ?>
+                                        ?>
                                             <div class="col-md-12" style="padding: 5px 20px 5px 20px !important;">
                                                 <fieldset class="basic_person_fs2" style="min-height:50px !important;padding: 5px 5px 5px 5px !important;border: 1px solid #eee !important;">
                                                     <div class="form-group">
@@ -515,97 +513,97 @@ if (1 === 1) {
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Page Title</span>
-                                                            <input class="form-control" type="text" id="page_title" name="page_title" value="<?php echo $page_title; ?>"/>
+                                                            <input class="form-control" type="text" id="page_title" name="page_title" value="<?php echo $page_title; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;App URL</span>
-                                                            <input class="form-control" type="text" id="app_url" name="app_url" value="<?php echo $app_url; ?>"/>
+                                                            <input class="form-control" type="text" id="app_url" name="app_url" value="<?php echo $app_url; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Flexcode URL</span>
-                                                            <input class="form-control" type="text" id="flxcde_url" name="flxcde_url" value="<?php echo $flxcde_url; ?>"/>
+                                                            <input class="form-control" type="text" id="flxcde_url" name="flxcde_url" value="<?php echo $flxcde_url; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;App Name</span>
-                                                            <input class="form-control" type="text" id="app_name" name="app_name" value="<?php echo $app_name; ?>"/>
+                                                            <input class="form-control" type="text" id="app_name" name="app_name" value="<?php echo $app_name; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;System Name</span>
-                                                            <input class="form-control" type="text" id="system_name" name="system_name" value="<?php echo $system_name; ?>"/>
+                                                            <input class="form-control" type="text" id="system_name" name="system_name" value="<?php echo $system_name; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Client's Name</span>
-                                                            <input class="form-control" type="text" id="app_cstmr" name="app_cstmr" value="<?php echo $app_cstmr; ?>"/>
+                                                            <input class="form-control" type="text" id="app_cstmr" name="app_cstmr" value="<?php echo $app_cstmr; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Client's Website</span>
-                                                            <input class="form-control" type="text" id="app_cstmr_url" name="app_cstmr_url" value="<?php echo $app_cstmr_url; ?>"/>
+                                                            <input class="form-control" type="text" id="app_cstmr_url" name="app_cstmr_url" value="<?php echo $app_cstmr_url; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Slogan</span>
-                                                            <input class="form-control" type="text" id="app_slogan" name="app_slogan" value="<?php echo $app_slogan; ?>"/>
+                                                            <input class="form-control" type="text" id="app_slogan" name="app_slogan" value="<?php echo $app_slogan; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Admin Email</span>
-                                                            <input class="form-control" type="text" id="admin_email" name="admin_email" value="<?php echo $admin_email; ?>"/>
+                                                            <input class="form-control" type="text" id="admin_email" name="admin_email" value="<?php echo $admin_email; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Admin's Name</span>
-                                                            <input class="form-control" type="text" id="admin_name" name="admin_name" value="<?php echo $admin_name; ?>"/>
+                                                            <input class="form-control" type="text" id="admin_name" name="admin_name" value="<?php echo $admin_name; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;JS/CSS File Version</span>
-                                                            <input class="form-control" type="text" id="jsCssFileVrsn" name="jsCssFileVrsn" value="<?php echo $jsCssFileVrsn; ?>"/>
+                                                            <input class="form-control" type="text" id="jsCssFileVrsn" name="jsCssFileVrsn" value="<?php echo $jsCssFileVrsn; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Notices Element</span>
-                                                            <input class="form-control" type="text" id="noticesElmntNm" name="noticesElmntNm" value="<?php echo $noticesElmntNm; ?>"/>
+                                                            <input class="form-control" type="text" id="noticesElmntNm" name="noticesElmntNm" value="<?php echo $noticesElmntNm; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Sample Password</span>
-                                                            <input class="form-control" type="text" id="smplPwd" name="smplPwd" value="<?php echo $smplPwd; ?>"/>
+                                                            <input class="form-control" type="text" id="smplPwd" name="smplPwd" value="<?php echo $smplPwd; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;PostgreSQL DB Host:</span>
-                                                            <input class="form-control" type="text" id="host" name="host" value="<?php echo $host; ?>"/>
+                                                            <input class="form-control" type="text" id="host" name="host" value="<?php echo $host; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;PostgreSQL DB Name</span>
-                                                            <input class="form-control" type="text" id="database" name="database" value="<?php echo $database; ?>"/>
+                                                            <input class="form-control" type="text" id="database" name="database" value="<?php echo $database; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;PostgreSQL DB User</span>
-                                                            <input class="form-control" type="text" id="db_usr" name="db_usr" value="<?php echo $db_usr; ?>"/>
+                                                            <input class="form-control" type="text" id="db_usr" name="db_usr" value="<?php echo $db_usr; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -617,7 +615,7 @@ if (1 === 1) {
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;DB Port No.</span>
-                                                            <input class="form-control" type="text" id="port" name="port" value="<?php echo $port; ?>"/>
+                                                            <input class="form-control" type="text" id="port" name="port" value="<?php echo $port; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -629,61 +627,61 @@ if (1 === 1) {
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Database Folder</span>
-                                                            <input class="form-control" type="text" id="db_folder" name="db_folder" value="<?php echo $db_folder; ?>"/>
+                                                            <input class="form-control" type="text" id="db_folder" name="db_folder" value="<?php echo $db_folder; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Folder Prefix</span>
-                                                            <input class="form-control" type="text" id="fldrPrfx" name="fldrPrfx" value="<?php echo $fldrPrfx; ?>"/>
+                                                            <input class="form-control" type="text" id="fldrPrfx" name="fldrPrfx" value="<?php echo $fldrPrfx; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Temporary Destination</span>
-                                                            <input class="form-control" type="text" id="tmpDest" name="tmpDest" value="<?php echo $tmpDest; ?>"/>
+                                                            <input class="form-control" type="text" id="tmpDest" name="tmpDest" value="<?php echo $tmpDest; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Permanent Destination</span>
-                                                            <input class="form-control" type="text" id="pemDest" name="pemDest" value="<?php echo $pemDest; ?>"/>
+                                                            <input class="form-control" type="text" id="pemDest" name="pemDest" value="<?php echo $pemDest; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;FTP Base DB Folder</span>
-                                                            <input class="form-control" type="text" id="ftp_base_db_fldr" name="ftp_base_db_fldr" value="<?php echo $ftp_base_db_fldr; ?>"/>
+                                                            <input class="form-control" type="text" id="ftp_base_db_fldr" name="ftp_base_db_fldr" value="<?php echo $ftp_base_db_fldr; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;MySQL DB Name</span>
-                                                            <input class="form-control" type="text" id="mysql_db_name" name="mysql_db_name" value="<?php echo $mysql_db_name; ?>"/>
+                                                            <input class="form-control" type="text" id="mysql_db_name" name="mysql_db_name" value="<?php echo $mysql_db_name; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;MySQL DB User</span>
-                                                            <input class="form-control" type="text" id="mysql_db_user" name="mysql_db_user" value="<?php echo $mysql_db_user; ?>"/>
+                                                            <input class="form-control" type="text" id="mysql_db_user" name="mysql_db_user" value="<?php echo $mysql_db_user; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;MySQL DB Password</span>
-                                                            <input class="form-control" type="password" id="mysql_db_pass" name="mysql_db_pass" value="<?php echo $mysql_db_pass; ?>"/>
+                                                            <input class="form-control" type="password" id="mysql_db_pass" name="mysql_db_pass" value="<?php echo $mysql_db_pass; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;MySQL DB Host</span>
-                                                            <input class="form-control" type="text" id="mysql_db_host" name="mysql_db_host" value="<?php echo $mysql_db_host; ?>"/>
+                                                            <input class="form-control" type="text" id="mysql_db_host" name="mysql_db_host" value="<?php echo $mysql_db_host; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;MySQL DB Port</span>
-                                                            <input class="form-control" type="text" id="mysql_db_port" name="mysql_db_port" value="<?php echo $mysql_db_port; ?>"/>
+                                                            <input class="form-control" type="text" id="mysql_db_port" name="mysql_db_port" value="<?php echo $mysql_db_port; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -695,141 +693,141 @@ if (1 === 1) {
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Home Page File</span>
-                                                            <input class="form-control" type="text" id="homepgfile" name="homepgfile" value="<?php echo $homepgfile; ?>"/>
+                                                            <input class="form-control" type="text" id="homepgfile" name="homepgfile" value="<?php echo $homepgfile; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Maintenance Mode? (YES/NO)</span>
-                                                            <input class="form-control" type="text" id="putInMntnceMode" name="putInMntnceMode" value="<?php echo $putInMntnceMode; ?>"/>
+                                                            <input class="form-control" type="text" id="putInMntnceMode" name="putInMntnceMode" value="<?php echo $putInMntnceMode; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Config. File Location</span>
-                                                            <input class="form-control" type="text" id="superAdminConfigFilePath" name="superAdminConfigFilePath" value="<?php echo $superAdminConfigFilePath; ?>"/>
+                                                            <input class="form-control" type="text" id="superAdminConfigFilePath" name="superAdminConfigFilePath" value="<?php echo $superAdminConfigFilePath; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Software License</span>
-                                                            <input class="form-control" type="text" id="softwareLincenseCode" name="softwareLincenseCode" value="<?php echo $softwareLincenseCode; ?>"/>
+                                                            <input class="form-control" type="text" id="softwareLincenseCode" name="softwareLincenseCode" value="<?php echo $softwareLincenseCode; ?>" />
                                                         </div>
-                                                    </div>                                                               
+                                                    </div>
                                                     <div class="form-group">
-                                                        <div class="input-group"  style="width:100%;">
+                                                        <div class="input-group" style="width:100%;">
                                                             <span class="input-group-addon"><i class="fa fa-key fa-fw fa-border"></i>&nbsp;Token Word 1:</span>
                                                             <textarea class="form-control rqrdFld" rows="2" cols="20" id="smplTokenWord1" name="smplTokenWord1" style="text-align:left !important;"><?php echo $smplTokenWord1; ?></textarea>
                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('smplTokenWord1');" style="max-width:30px;width:30px;">
                                                                 <span class="glyphicon glyphicon-th-list"></span>
                                                             </label>
                                                         </div>
-                                                    </div> 
+                                                    </div>
                                                 </fieldset>
                                             </div>
                                             <div class="col-md-6" style="padding: 5px 20px 5px 20px !important;">
-                                                <fieldset class="basic_person_fs2" style="min-height:50px !important;padding: 5px 5px 5px 5px !important;border: 1px solid #ddd !important;">                                                               
+                                                <fieldset class="basic_person_fs2" style="min-height:50px !important;padding: 5px 5px 5px 5px !important;border: 1px solid #ddd !important;">
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;PDF Command (E.g. google-chrome,chromium-browser,chromium)</span>
-                                                            <input class="form-control" type="text" id="browserPDFCmd" name="browserPDFCmd" value="<?php echo $browserPDFCmd; ?>"/>
+                                                            <input class="form-control" type="text" id="browserPDFCmd" name="browserPDFCmd" value="<?php echo $browserPDFCmd; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Rhomicom APIs URL</span>
-                                                            <input class="form-control" type="text" id="rhoAPIUrl" name="rhoAPIUrl" value="<?php echo $rhoAPIUrl; ?>"/>
+                                                            <input class="form-control" type="text" id="rhoAPIUrl" name="rhoAPIUrl" value="<?php echo $rhoAPIUrl; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Logo 1</span>
-                                                            <input class="form-control" type="text" id="app_image1" name="app_image1" value="<?php echo $app_image1; ?>"/>
+                                                            <input class="form-control" type="text" id="app_image1" name="app_image1" value="<?php echo $app_image1; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Favicon</span>
-                                                            <input class="form-control" type="text" id="app_favicon" name="app_favicon" value="<?php echo $app_favicon; ?>"/>
+                                                            <input class="form-control" type="text" id="app_favicon" name="app_favicon" value="<?php echo $app_favicon; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Background Color Only</span>
-                                                            <input class="form-control" type="text" id="bckcolorOnly" name="bckcolorOnly" value="<?php echo $bckcolorOnly; ?>"/>
+                                                            <input class="form-control" type="text" id="bckcolorOnly" name="bckcolorOnly" value="<?php echo $bckcolorOnly; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Background Color Only 1</span>
-                                                            <input class="form-control" type="text" id="bckcolorOnly1" name="bckcolorOnly1" value="<?php echo $bckcolorOnly1; ?>"/>
+                                                            <input class="form-control" type="text" id="bckcolorOnly1" name="bckcolorOnly1" value="<?php echo $bckcolorOnly1; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Background Color Only 2</span>
-                                                            <input class="form-control" type="text" id="bckcolorOnly2" name="bckcolorOnly2" value="<?php echo $bckcolorOnly2; ?>"/>
+                                                            <input class="form-control" type="text" id="bckcolorOnly2" name="bckcolorOnly2" value="<?php echo $bckcolorOnly2; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;On Hover Background Color</span>
-                                                            <input class="form-control" type="text" id="bckcolorshv" name="bckcolorshv" value="<?php echo $bckcolorshv; ?>"/>
+                                                            <input class="form-control" type="text" id="bckcolorshv" name="bckcolorshv" value="<?php echo $bckcolorshv; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Text Fore Colors</span>
-                                                            <input class="form-control" type="text" id="forecolors" name="forecolors" value="<?php echo $forecolors; ?>"/>
+                                                            <input class="form-control" type="text" id="forecolors" name="forecolors" value="<?php echo $forecolors; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Back Color 1</span>
-                                                            <input class="form-control" type="text" id="bckcolors1" name="bckcolors1" value="<?php echo $bckcolors1; ?>"/>
+                                                            <input class="form-control" type="text" id="bckcolors1" name="bckcolors1" value="<?php echo $bckcolors1; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Back Color 2</span>
-                                                            <input class="form-control" type="text" id="bckcolors2" name="bckcolors2" value="<?php echo $bckcolors2; ?>"/>
+                                                            <input class="form-control" type="text" id="bckcolors2" name="bckcolors2" value="<?php echo $bckcolors2; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Go Back Button Msg</span>
-                                                            <input class="form-control" type="text" id="goBackButtonMsg" name="goBackButtonMsg" value="<?php echo $goBackButtonMsg; ?>"/>
+                                                            <input class="form-control" type="text" id="goBackButtonMsg" name="goBackButtonMsg" value="<?php echo $goBackButtonMsg; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;User Name Placeholder</span>
-                                                            <input class="form-control" type="text" id="placeHolder1" name="placeHolder1" value="<?php echo $placeHolder1; ?>"/>
+                                                            <input class="form-control" type="text" id="placeHolder1" name="placeHolder1" value="<?php echo $placeHolder1; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Login Title</span>
-                                                            <input class="form-control" type="text" id="loginTitle" name="loginTitle" value="<?php echo $loginTitle; ?>"/>
+                                                            <input class="form-control" type="text" id="loginTitle" name="loginTitle" value="<?php echo $loginTitle; ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Website Button Text</span>
-                                                            <input class="form-control" type="text" id="website_btn_txt" name="website_btn_txt" value="<?php echo $website_btn_txt; ?>"/>
+                                                            <input class="form-control" type="text" id="website_btn_txt" name="website_btn_txt" value="<?php echo $website_btn_txt; ?>" />
                                                         </div>
-                                                    </div>                                                           
+                                                    </div>
                                                     <div class="form-group">
-                                                        <div class="input-group"  style="width:100%;">
+                                                        <div class="input-group" style="width:100%;">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Background Colors:</span>
                                                             <textarea class="form-control rqrdFld" rows="2" cols="20" id="bckcolors" name="bckcolors" style="text-align:left !important;"><?php echo $bckcolors; ?></textarea>
                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('bckcolors');" style="max-width:30px;width:30px;">
                                                                 <span class="glyphicon glyphicon-th-list"></span>
                                                             </label>
                                                         </div>
-                                                    </div>                                                           
+                                                    </div>
                                                     <div class="form-group">
-                                                        <div class="input-group"  style="width:100%;">
+                                                        <div class="input-group" style="width:100%;">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Change Pwd. Page CSS:</span>
                                                             <textarea class="form-control rqrdFld" rows="2" cols="20" id="bckcolorsChngPwd" name="bckcolorsChngPwd" style="text-align:left !important;"><?php echo $bckcolorsChngPwd; ?></textarea>
                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('bckcolorsChngPwd');" style="max-width:30px;width:30px;">
@@ -838,7 +836,7 @@ if (1 === 1) {
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <div class="input-group"  style="width:100%;">
+                                                        <div class="input-group" style="width:100%;">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Home Background CSS:</span>
                                                             <textarea class="form-control rqrdFld" rows="2" cols="20" id="bckcolors_home" name="bckcolors_home" style="text-align:left !important;"><?php echo $bckcolors_home; ?></textarea>
                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('bckcolors_home');" style="max-width:30px;width:30px;">
@@ -847,7 +845,7 @@ if (1 === 1) {
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <div class="input-group"  style="width:100%;">
+                                                        <div class="input-group" style="width:100%;">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Breadcrumb CSS:</span>
                                                             <textarea class="form-control rqrdFld" rows="2" cols="20" id="breadCrmbBckclr" name="breadCrmbBckclr" style="text-align:left !important;"><?php echo $breadCrmbBckclr; ?></textarea>
                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('breadCrmbBckclr');" style="max-width:30px;width:30px;">
@@ -856,7 +854,7 @@ if (1 === 1) {
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <div class="input-group"  style="width:100%;">
+                                                        <div class="input-group" style="width:100%;">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Login Page Notice</span>
                                                             <textarea class="form-control rqrdFld" rows="2" cols="20" id="loginPgNotice" name="loginPgNotice" style="text-align:left !important;"><?php echo $loginPgNotice; ?></textarea>
                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('loginPgNotice');" style="max-width:30px;width:30px;">
@@ -865,7 +863,7 @@ if (1 === 1) {
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <div class="input-group"  style="width:100%;">
+                                                        <div class="input-group" style="width:100%;">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Instructions</span>
                                                             <textarea class="form-control rqrdFld" rows="2" cols="20" id="instructions" name="instructions" style="text-align:left !important;"><?php echo $instructions; ?></textarea>
                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('instructions');" style="max-width:30px;width:30px;">
@@ -874,7 +872,7 @@ if (1 === 1) {
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <div class="input-group"  style="width:100%;">
+                                                        <div class="input-group" style="width:100%;">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;About Portal</span>
                                                             <textarea class="form-control rqrdFld" rows="2" cols="20" id="abt_portal" name="abt_portal" style="text-align:left !important;"><?php echo $abt_portal; ?></textarea>
                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('abt_portal');" style="max-width:30px;width:30px;">
@@ -883,7 +881,7 @@ if (1 === 1) {
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <div class="input-group"  style="width:100%;">
+                                                        <div class="input-group" style="width:100%;">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Intro. to Portal</span>
                                                             <textarea class="form-control rqrdFld" rows="2" cols="20" id="introToPrtlArtBody" name="introToPrtlArtBody" style="text-align:left !important;"><?php echo $introToPrtlArtBody; ?></textarea>
                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('introToPrtlArtBody');" style="max-width:30px;width:30px;">
@@ -892,7 +890,7 @@ if (1 === 1) {
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <div class="input-group"  style="width:100%;">
+                                                        <div class="input-group" style="width:100%;">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Latest Articles</span>
                                                             <textarea class="form-control rqrdFld" rows="2" cols="20" id="ltstNewArtBody" name="ltstNewArtBody" style="text-align:left !important;"><?php echo $ltstNewArtBody; ?></textarea>
                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('ltstNewArtBody');" style="max-width:30px;width:30px;">
@@ -901,7 +899,7 @@ if (1 === 1) {
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <div class="input-group"  style="width:100%;">
+                                                        <div class="input-group" style="width:100%;">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;Useful Links.</span>
                                                             <textarea class="form-control rqrdFld" rows="2" cols="20" id="usefulLnksArtBody" name="usefulLnksArtBody" style="text-align:left !important;"><?php echo $usefulLnksArtBody; ?></textarea>
                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('usefulLnksArtBody');" style="max-width:30px;width:30px;">
@@ -910,7 +908,7 @@ if (1 === 1) {
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <div class="input-group"  style="width:100%;">
+                                                        <div class="input-group" style="width:100%;">
                                                             <span class="input-group-addon"><i class="fa fa-gear fa-fw fa-border"></i>&nbsp;About Rhomicom</span>
                                                             <textarea class="form-control rqrdFld" rows="2" cols="20" id="aboutRho" name="aboutRho" style="text-align:left !important;"><?php echo $aboutRho; ?></textarea>
                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('aboutRho');" style="max-width:30px;width:30px;">
@@ -919,7 +917,7 @@ if (1 === 1) {
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <div class="input-group"  style="width:100%;">
+                                                        <div class="input-group" style="width:100%;">
                                                             <span class="input-group-addon"><i class="fa fa-key fa-fw fa-border"></i>&nbsp;Token Word:</span>
                                                             <textarea class="form-control rqrdFld" rows="2" cols="20" id="smplTokenWord" name="smplTokenWord" style="text-align:left !important;"><?php echo $smplTokenWord; ?></textarea>
                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('smplTokenWord');" style="max-width:30px;width:30px;">
@@ -976,8 +974,9 @@ if (1 === 1) {
             <!-- Bootstrap Core JavaScript -->
             <script src="cmn_scrpts/bootstrap337/js/bootstrap.min.js"></script>
         </body>
+
         </html>
-        <?php
+<?php
     }
 } else {
     echo "Inside rhoconfig NOTHING TO SHOW";

@@ -254,20 +254,25 @@ file_put_contents($file, $html, FILE_APPEND);
   $exitErrMsg = execInBackground($cmd); */
 
 //$cmd = "bash wkhtmltopdf.sh " . $fullPemDest . " " . $fullPemDest1;
-//$cmd = $browserPDFCmd . " --headless --no-sandbox --disable-gpu --print-to-pdf=\"$fullPemDest1\" " . $fullPemDest;
-//logSsnErrs($cmd);
-//$exitErrMsg = shellExecInBackground($ftp_base_db_fldr . "/bin", $cmd);
- 
-$rslt = rhoPOSTToAPI(
-    $rhoAPIUrl . '/getChromePDF',
-    array(
-        'browserPDFCmd' => $browserPDFCmd,
-        'pdfPath' => $fullPemDest1,
-        'htmPath' => $fullPemDest
-    )
-);
-$exitErrMsg = $rslt;
+$cmd = $browserPDFCmd . " --headless --no-sandbox --disable-gpu --print-to-pdf=\"$fullPemDest1\" " . $fullPemDest;
 
+$exitErrMsg = "";
+$rhoAPIhost = parse_url($rhoAPIUrl, PHP_URL_HOST);
+$rhoAPIport = parse_url($rhoAPIUrl, PHP_URL_PORT);
+if (fsockopen($rhoAPIhost, $rhoAPIport)) {
+    $rslt = rhoPOSTToAPI(
+        $rhoAPIUrl . '/getChromePDF',
+        array(
+            'browserPDFCmd' => $browserPDFCmd,
+            'pdfPath' => $fullPemDest1,
+            'htmPath' => $fullPemDest
+        )
+    );
+    $exitErrMsg = $rslt;
+} else {
+    logSsnErrs($cmd);
+    $exitErrMsg = shellExecInBackground($ftp_base_db_fldr . "/bin", $cmd);
+}
 /*$waitCntr = 0;
 while (!file_exists($fullPemDest1) && $waitCntr < 5) {
     $waitCntr++;
@@ -282,13 +287,11 @@ $arr_content['mailTo'] = urlencode($email);
 $arr_content['mailCc'] = urlencode($admin_email);
 $arr_content['mailSubject'] = urlencode("Customer Invoice (" . $docNo . ")");
 $message = "<p style=\"font-family: Calibri;font-size:18px;\">Dear " . $Customer . ", <br/><br/>"
-        . "Please find attached your Invoice for a transaction in our System: " . $app_name .
-        "<br/>Please do not hesitate to contact us should any of the information in the attached be inaccurate.<br/><br/>"
-        . "Thank you!</p>";
+    . "Please find attached your Invoice for a transaction in our System: " . $app_name .
+    "<br/>Please do not hesitate to contact us should any of the information in the attached be inaccurate.<br/><br/>"
+    . "Thank you!</p>";
 $arr_content['bulkMessageBody'] = urlencode($message);
 $arr_content['URL'] = urlencode($app_url . "dwnlds/amcharts_2100/samples/" . $nwPDFFileName);
 $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>" . $exitErrMsg . "</span>";
 echo json_encode($arr_content);
 exit();
-?>
-
