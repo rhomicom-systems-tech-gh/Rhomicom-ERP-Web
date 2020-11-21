@@ -31862,16 +31862,16 @@ function submitWithdrawlqdtn(pgNo, subPgNo, vtyp, actn)
                 });
                 return false;
             }
-            if (lqdtnTtlInterest.trim() == "" || lqdtnTtlInterest == undefined || lqdtnTtlInterest.trim() == 0) {
+            /*if (lqdtnTtlInterest.trim() == "" || lqdtnTtlInterest == undefined || lqdtnTtlInterest.trim() == 0) {
                 bootbox.alert({
                     size: "small",
                     title: "Rhomicom Message",
                     message: "Please select an Investment with a positive Accrued Interest",
-                    callback: function () { /* your callback code */
+                    callback: function () { 
                     }
                 });
                 return false;
-            } 
+            } */
 
         } else if (actn == 'WITHDRAW') {
             rtrnSuccessMsg = "WITHDRAWN";
