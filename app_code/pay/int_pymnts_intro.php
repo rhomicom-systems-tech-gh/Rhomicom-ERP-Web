@@ -1544,6 +1544,7 @@ function isItmValSQLValid($itemSQL, $prsn_id, $org_id, $dateStr, $p_itm_typ_id, 
 
 function isPrsnSetSQLValid($prsStSQL, &$errMsg)
 {
+    set_error_handler("rhoErrorHandler3");
     try {
         $testSQL = "SELECT DISTINCT " .
             "a.person_id, " .
@@ -1572,6 +1573,7 @@ function isPrsnSetSQLValid($prsStSQL, &$errMsg)
 
 function isItemSetSQLValid($itmStSQL, &$errMsg)
 {
+    set_error_handler("rhoErrorHandler3");
     try {
         $testSQL = "SELECT a.item_id, a.item_code_name, a.item_value_uom, " .
             "(CASE WHEN a.item_min_type='Earnings' or a.item_min_type='Employer Charges' " .

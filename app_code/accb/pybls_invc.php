@@ -340,6 +340,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     }
                                 }
                             }
+                                           
                             if ($errMsg === "") {
                                 //Create Payable Invoice Summary Trns Record Itself
                                 if ($lineDesc != "" && $ln_AccountID1 > 0 && $ln_AccountID2 > 0 && $ln_InitAmntLnID <= 0) {
@@ -355,7 +356,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 $lineCurID, $ln_CodeBehind, $accbPyblsInvcVchType, $ln_AutoCalc, $ln_IncrsDcrs1,
                                                 $ln_AccountID1, $ln_IncrsDcrs2, $ln_AccountID2, $prepayDocHdrID, $vldyStatus, $orgnlLnID,
                                                 $fnccurid, $accntCurrID1, $ln_FuncExchgRate, $acntExchRate1, $funcCurrAmnt, $acntAmnt1,
-                                                $initAmntID, $lnRefDoc, $lnSlctdAmtBrkdwns, $ln_TaxID, $ln_WHTaxID, $ln_DscntID);
+                                                $initAmntID, $lnRefDoc, $lnSlctdAmtBrkdwns, $ln_TaxID, $ln_WHTaxID, $ln_DscntID);                                                
                                     }
                                 }
                             } else {
@@ -393,13 +394,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 }
                 if ($shdSbmt != 2) {
                     $errMsg1 = reCalcPyblInvcSmmrys($sbmtdAccbPyblsInvcID, $accbPyblsInvcVchType, $accbPyblsInvcInvcCurID);
-                    if (strpos($errMsg1, "ERROR") !== FALSE) {
+                   if (strpos($errMsg1, "ERROR") !== FALSE) {
                         $exitErrMsg .= "<br/>" . $errMsg1;
                     }
                     updtPyblsDocAmnt($sbmtdAccbPyblsInvcID, getPyblsDocGrndAmnt($sbmtdAccbPyblsInvcID));
                     $errMsg = "";
                     if (validatePyblInvcLns($sbmtdAccbPyblsInvcID, $accbPyblsInvcVchType, $accbPyblsInvcTtlAmnt, $errMsg) === false) {
-                        $exitErrMsg .= "<br/>" . $errMsg;
+                        $exitErrMsg .= "IS INVALID?<br/>" . $errMsg;
                     }
                 }
                 if ($exitErrMsg != "") {

@@ -135,16 +135,74 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $acntCurRate = 1;
                 $acntCurAmnt = 0;
                 if ($sbmtdAccbPymntsID <= 0) {
-                    createPymntsBatch($orgID, $accbPymntsTrnsStrtDte, $accbPymntsTrnsEndDte, $accbPymntsDocType, $accbPymntsBatchNum, $accbPymntsDesc, $accbPymntsSpplrID,
-                            $accbPymntsPayMthdID, $accbPymntsMthdType, $orgnlBtchID, $vldtyStatus, $accbPymntsDocTmplt, $batchStatus, $accbPymntsDfltTrnsDte, $incrdcrs1,
-                            $rcvblPyblAcntID, $incrsDcrs2, $cashSuspnsAcntID, $accbPymntsGvnAmnt, $amntPaid, $chngBals, $accbPymntsInvcCurID, $fnccurid, $funcCurRate, $funcCurAmnt,
-                            $acntCurID, $acntCurRate, $acntCurAmnt, $accbPymntsChqName, $accbPymntsChqNumber, $accbPymntsSignCode);
+                    createPymntsBatch(
+                        $orgID,
+                        $accbPymntsTrnsStrtDte,
+                        $accbPymntsTrnsEndDte,
+                        $accbPymntsDocType,
+                        $accbPymntsBatchNum,
+                        $accbPymntsDesc,
+                        $accbPymntsSpplrID,
+                        $accbPymntsPayMthdID,
+                        $accbPymntsMthdType,
+                        $orgnlBtchID,
+                        $vldtyStatus,
+                        $accbPymntsDocTmplt,
+                        $batchStatus,
+                        $accbPymntsDfltTrnsDte,
+                        $incrdcrs1,
+                        $rcvblPyblAcntID,
+                        $incrsDcrs2,
+                        $cashSuspnsAcntID,
+                        $accbPymntsGvnAmnt,
+                        $amntPaid,
+                        $chngBals,
+                        $accbPymntsInvcCurID,
+                        $fnccurid,
+                        $funcCurRate,
+                        $funcCurAmnt,
+                        $acntCurID,
+                        $acntCurRate,
+                        $acntCurAmnt,
+                        $accbPymntsChqName,
+                        $accbPymntsChqNumber,
+                        $accbPymntsSignCode
+                    );
                     $sbmtdAccbPymntsID = getGnrlRecID("accb.accb_payments_batches", "pymnt_batch_name", "pymnt_batch_id", $accbPymntsBatchNum, $orgID);
                 } else if ($sbmtdAccbPymntsID > 0) {
-                    updtPymntsBatch($sbmtdAccbPymntsID, $accbPymntsTrnsStrtDte, $accbPymntsTrnsEndDte, $accbPymntsDocType, $accbPymntsBatchNum, $accbPymntsDesc, $accbPymntsSpplrID,
-                            $accbPymntsPayMthdID, $accbPymntsMthdType, $orgnlBtchID, $vldtyStatus, $accbPymntsDocTmplt, $batchStatus, $accbPymntsDfltTrnsDte, $incrdcrs1,
-                            $rcvblPyblAcntID, $incrsDcrs2, $cashSuspnsAcntID, $accbPymntsGvnAmnt, $amntPaid, $chngBals, $accbPymntsInvcCurID, $fnccurid, $funcCurRate, $funcCurAmnt,
-                            $acntCurID, $acntCurRate, $acntCurAmnt, $accbPymntsChqName, $accbPymntsChqNumber, $accbPymntsSignCode);
+                    updtPymntsBatch(
+                        $sbmtdAccbPymntsID,
+                        $accbPymntsTrnsStrtDte,
+                        $accbPymntsTrnsEndDte,
+                        $accbPymntsDocType,
+                        $accbPymntsBatchNum,
+                        $accbPymntsDesc,
+                        $accbPymntsSpplrID,
+                        $accbPymntsPayMthdID,
+                        $accbPymntsMthdType,
+                        $orgnlBtchID,
+                        $vldtyStatus,
+                        $accbPymntsDocTmplt,
+                        $batchStatus,
+                        $accbPymntsDfltTrnsDte,
+                        $incrdcrs1,
+                        $rcvblPyblAcntID,
+                        $incrsDcrs2,
+                        $cashSuspnsAcntID,
+                        $accbPymntsGvnAmnt,
+                        $amntPaid,
+                        $chngBals,
+                        $accbPymntsInvcCurID,
+                        $fnccurid,
+                        $funcCurRate,
+                        $funcCurAmnt,
+                        $acntCurID,
+                        $acntCurRate,
+                        $acntCurAmnt,
+                        $accbPymntsChqName,
+                        $accbPymntsChqNumber,
+                        $accbPymntsSignCode
+                    );
                 }
                 $afftctd = 0;
                 $afftctd1 = 0;
@@ -171,10 +229,41 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $errMsg = "";
                             if ($lineDesc != "" && $entrdAmt > 0) {
                                 if ($lnSmmryLnID > 0) {
-                                    $afftctd += updtPymntDet1($lnSmmryLnID, $sbmtdAccbPymntsID, $accbPymntsPayMthdID, $amntPaid, $accbPymntsInvcCurID, $chngBals, $lineDesc,
-                                            $accbPymntsDfltTrnsDte, $incrdcrs1, $rcvblPyblAcntID, $incrsDcrs2, $cashSuspnsAcntID, -1, $vldtyStatus, -1, $fnccurid, $acntCurID,
-                                            $funcCurRate, $acntCurRate, $funcCurAmnt, $acntCurAmnt, $prepayDocID, $prepayDocType, $otherinfo, $accbPymntsChqName, $expryDte,
-                                            $accbPymntsChqNumber, $accbPymntsSignCode, $actvtyStatus, $actvtyDocName, -1, '0', $entrdAmt);
+                                    $afftctd += updtPymntDet1(
+                                        $lnSmmryLnID,
+                                        $sbmtdAccbPymntsID,
+                                        $accbPymntsPayMthdID,
+                                        $amntPaid,
+                                        $accbPymntsInvcCurID,
+                                        $chngBals,
+                                        $lineDesc,
+                                        $accbPymntsDfltTrnsDte,
+                                        $incrdcrs1,
+                                        $rcvblPyblAcntID,
+                                        $incrsDcrs2,
+                                        $cashSuspnsAcntID,
+                                        -1,
+                                        $vldtyStatus,
+                                        -1,
+                                        $fnccurid,
+                                        $acntCurID,
+                                        $funcCurRate,
+                                        $acntCurRate,
+                                        $funcCurAmnt,
+                                        $acntCurAmnt,
+                                        $prepayDocID,
+                                        $prepayDocType,
+                                        $otherinfo,
+                                        $accbPymntsChqName,
+                                        $expryDte,
+                                        $accbPymntsChqNumber,
+                                        $accbPymntsSignCode,
+                                        $actvtyStatus,
+                                        $actvtyDocName,
+                                        -1,
+                                        '0',
+                                        $entrdAmt
+                                    );
                                 }
                             }
                         }
@@ -241,19 +330,50 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                       } */
                     if ($lnSmmryLnID <= 0) {
                         $lnSmmryLnID = getNewPymntLnID();
-                        $afftctd += createPymntDet($lnSmmryLnID, $sbmtdAccbPymntsID, $accbPymntsPayMthdID, $amntPaid, $accbPymntsInvcCurID, $chngBals, $pymntRemark, $srcDocType,
-                                $srcDocID, $accbPymntsDfltTrnsDte, $incrdcrs1, $rcvblPyblAcntID, $incrsDcrs2, $cashSuspnsAcntID, -1, $vldtyStatus, -1, $fnccurid, $acntCurID,
-                                $funcCurRate, $acntCurRate, $funcCurAmnt, $acntCurAmnt, $prepayDocID, $prepayDocType, $otherinfo, $accbPymntsChqName, $expryDte,
-                                $accbPymntsChqNumber, $accbPymntsSignCode, $actvtyStatus, $actvtyDocName, $entrdAmt);
+                        $afftctd += createPymntDet(
+                            $lnSmmryLnID,
+                            $sbmtdAccbPymntsID,
+                            $accbPymntsPayMthdID,
+                            $amntPaid,
+                            $accbPymntsInvcCurID,
+                            $chngBals,
+                            $pymntRemark,
+                            $srcDocType,
+                            $srcDocID,
+                            $accbPymntsDfltTrnsDte,
+                            $incrdcrs1,
+                            $rcvblPyblAcntID,
+                            $incrsDcrs2,
+                            $cashSuspnsAcntID,
+                            -1,
+                            $vldtyStatus,
+                            -1,
+                            $fnccurid,
+                            $acntCurID,
+                            $funcCurRate,
+                            $acntCurRate,
+                            $funcCurAmnt,
+                            $acntCurAmnt,
+                            $prepayDocID,
+                            $prepayDocType,
+                            $otherinfo,
+                            $accbPymntsChqName,
+                            $expryDte,
+                            $accbPymntsChqNumber,
+                            $accbPymntsSignCode,
+                            $actvtyStatus,
+                            $actvtyDocName,
+                            $entrdAmt
+                        );
                     }
                 }
                 if ($exitErrMsg != "") {
                     $exitErrMsg = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>Payment Batch Successfully Saved!"
-                            . "<br/>" . $afftctd . " Payment Document(s) Saved Successfully!"
-                            . "<br/><span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>" . $exitErrMsg . "</span>";
+                        . "<br/>" . $afftctd . " Payment Document(s) Saved Successfully!"
+                        . "<br/><span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>" . $exitErrMsg . "</span>";
                 } else {
                     $exitErrMsg = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>Payment Batch Successfully Saved!"
-                            . "<br/>" . $afftctd . " Payment Document(s) Saved Successfully!";
+                        . "<br/>" . $afftctd . " Payment Document(s) Saved Successfully!";
                 }
                 $arr_content['percent'] = 100;
                 $arr_content['sbmtdAccbPymntsID'] = $sbmtdAccbPymntsID;
@@ -312,19 +432,65 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     for ($k = 0; $k < count($vArry); $k++) {
                         $accbPymntsPrepayDocID = (int) $vArry[$k];
                         $p_appld_prpay_docid = $accbPymntsPrepayDocID;
-                        $p_pay_amt_rcvd = getRcvblsPrepayAvlblAmt($accbPymntsPrepayDocID);
+                        
+                        if ($p_doc_types == "Supplier Payments") {
+                            $p_pay_amt_rcvd = getPyblsPrepayAvlblAmt($accbPymntsPrepayDocID);
+                        } else {
+                            $p_pay_amt_rcvd = getRcvblsPrepayAvlblAmt($accbPymntsPrepayDocID);
+                        }
+                        //echo $accbPymntsGvnAmnt . "::" . $p_appld_prpay_docid . "::" . $p_pay_amt_rcvd;
                         if ($accbPymntsGvnAmnt < $p_pay_amt_rcvd) {
                             $p_pay_amt_rcvd = $accbPymntsGvnAmnt;
                         }
-                        $exitErrMsg .= processInvcQuickPay($p_orgnlPymntID, $p_NewPymntBatchID, $p_invoice_id, $p_msPyID, $p_createPrepay, $p_doc_types, $p_pay_mthd_id,
-                                $p_pay_remarks, $p_pay_date, $p_pay_amt_rcvd, $p_appld_prpay_docid, $p_cheque_card_name, $p_cheque_card_num, $p_cheque_card_code,
-                                $p_cheque_card_expdate, $p_who_rn, $p_run_date, $orgidno, $p_msgid, $accbPymntsInvcSpplrID, $accbPymntsInvcCurID);
+                        $exitErrMsg .= processInvcQuickPay(
+                            $p_orgnlPymntID,
+                            $p_NewPymntBatchID,
+                            $p_invoice_id,
+                            $p_msPyID,
+                            $p_createPrepay,
+                            $p_doc_types,
+                            $p_pay_mthd_id,
+                            $p_pay_remarks,
+                            $p_pay_date,
+                            $p_pay_amt_rcvd,
+                            $p_appld_prpay_docid,
+                            $p_cheque_card_name,
+                            $p_cheque_card_num,
+                            $p_cheque_card_code,
+                            $p_cheque_card_expdate,
+                            $p_who_rn,
+                            $p_run_date,
+                            $orgidno,
+                            $p_msgid,
+                            $accbPymntsInvcSpplrID,
+                            $accbPymntsInvcCurID
+                        );
                         $accbPymntsGvnAmnt -= $p_pay_amt_rcvd;
                     }
                 } else {
-                    $exitErrMsg .= processInvcQuickPay($p_orgnlPymntID, $p_NewPymntBatchID, $p_invoice_id, $p_msPyID, $p_createPrepay, $p_doc_types, $p_pay_mthd_id, $p_pay_remarks,
-                            $p_pay_date, $p_pay_amt_rcvd, $p_appld_prpay_docid, $p_cheque_card_name, $p_cheque_card_num, $p_cheque_card_code, $p_cheque_card_expdate, $p_who_rn,
-                            $p_run_date, $orgidno, $p_msgid, $accbPymntsInvcSpplrID, $accbPymntsInvcCurID);
+                    $exitErrMsg .= processInvcQuickPay(
+                        $p_orgnlPymntID,
+                        $p_NewPymntBatchID,
+                        $p_invoice_id,
+                        $p_msPyID,
+                        $p_createPrepay,
+                        $p_doc_types,
+                        $p_pay_mthd_id,
+                        $p_pay_remarks,
+                        $p_pay_date,
+                        $p_pay_amt_rcvd,
+                        $p_appld_prpay_docid,
+                        $p_cheque_card_name,
+                        $p_cheque_card_num,
+                        $p_cheque_card_code,
+                        $p_cheque_card_expdate,
+                        $p_who_rn,
+                        $p_run_date,
+                        $orgidno,
+                        $p_msgid,
+                        $accbPymntsInvcSpplrID,
+                        $accbPymntsInvcCurID
+                    );
                 }
                 $arr_content['percent'] = 100;
                 if (strpos($exitErrMsg, "SUCCESS") !== FALSE) {
@@ -393,8 +559,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 if ($sbmtdAccbPymntsID > 0 && $accbPymntsDesc != "") {
                     $rsltCnt = execUpdtInsSQL("UPDATE accb.accb_payments_batches SET pymnt_batch_desc='" . loc_db_escape_string($accbPymntsDesc) . "' WHERE pymnt_batch_id=" . $sbmtdAccbPymntsID);
                     $errMsg = $rsltCnt . " Batch Reversal Started Successfully!";
-                    $response = array('sbmtdAccbPymntsID' => $sbmtdAccbPymntsID,
-                        'sbmtMsg' => $errMsg);
+                    $response = array(
+                        'sbmtdAccbPymntsID' => $sbmtdAccbPymntsID,
+                        'sbmtMsg' => $errMsg
+                    );
                     echo json_encode($response);
                 } else {
                     echo "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Failed to start Payment Batch Reversal!</span>";
@@ -461,11 +629,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $colClassType1 = "col-md-2";
                     $colClassType2 = "col-md-5";
                     $colClassType3 = "col-md-5";
-                    ?> 
+?>
                     <form id='accbPymntsForm' action='' method='post' accept-charset='UTF-8'>
                         <!--ROW ID-->
-                        <input class="form-control" id="tblRowID" type = "hidden" placeholder="ROW ID"/>                     
-                        <fieldset class=""><legend class="basic_person_lg1" style="color: #003245">INVOICE PAYMENTS</legend>
+                        <input class="form-control" id="tblRowID" type="hidden" placeholder="ROW ID" />
+                        <fieldset class="">
+                            <legend class="basic_person_lg1" style="color: #003245">INVOICE PAYMENTS</legend>
                             <div class="row" style="margin-bottom:0px;">
                                 <?php
                                 $colClassType1 = "col-md-2";
@@ -474,10 +643,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 ?>
                                 <div class="<?php echo $colClassType3; ?>" style="padding:0px 15px 0px 15px !important;">
                                     <div class="input-group">
-                                        <input class="form-control" id="accbPymntsSrchFor" type = "text" placeholder="Search For" value="<?php
-                                        echo trim(str_replace("%", " ", $srchFor));
-                                        ?>" onkeyup="enterKeyFuncAccbPymnts(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
-                                        <input id="accbPymntsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                                        <input class="form-control" id="accbPymntsSrchFor" type="text" placeholder="Search For" value="<?php
+                                                                                                                                        echo trim(str_replace("%", " ", $srchFor));
+                                                                                                                                        ?>" onkeyup="enterKeyFuncAccbPymnts(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
+                                        <input id="accbPymntsPageNo" type="hidden" value="<?php echo $pageNo; ?>">
                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getAccbPymnts('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0');">
                                             <span class="glyphicon glyphicon-remove"></span>
                                         </label>
@@ -488,18 +657,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <select data-placeholder="Select..." class="form-control chosen-select" id="accbPymntsSrchIn">
                                             <?php
                                             $valslctdArry = array("", "", "", "", "", "", "", "", "", "");
-                                            $srchInsArrys = array("All", "Batch Name", "Batch Description", "Document Classification", "Customer/Supplier Name",
-                                                "Payment Method", "Source Doc Number", "Document Type", "Batch Source", "Batch Status");
+                                            $srchInsArrys = array(
+                                                "All", "Batch Name", "Batch Description", "Document Classification", "Customer/Supplier Name",
+                                                "Payment Method", "Source Doc Number", "Document Type", "Batch Source", "Batch Status"
+                                            );
                                             for ($z = 0; $z < count($srchInsArrys); $z++) {
                                                 if ($srchIn == $srchInsArrys[$z]) {
                                                     $valslctdArry[$z] = "selected";
                                                 }
-                                                ?>
+                                            ?>
                                                 <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                             <?php } ?>
                                         </select>
                                         <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
-                                        <select data-placeholder="Select..." class="form-control chosen-select" id="accbPymntsDsplySze" style="min-width:70px !important;">                            
+                                        <select data-placeholder="Select..." class="form-control chosen-select" id="accbPymntsDsplySze" style="min-width:70px !important;">
                                             <?php
                                             $valslctdArry = array("", "", "", "", "", "", "", "");
                                             $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000, 1000000);
@@ -509,12 +680,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 } else {
                                                     $valslctdArry[$y] = "";
                                                 }
-                                                ?>
-                                                <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
-                                                <?php
+                                            ?>
+                                                <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>
+                                            <?php
                                             }
                                             ?>
-                                        </select> 
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="<?php echo $colClassType1; ?>">
@@ -533,60 +704,60 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </ul>
                                     </nav>
                                 </div>
-                            </div>   
-                            <div class="row " style="margin-bottom:2px;padding:2px 15px 2px 15px !important">   
+                            </div>
+                            <div class="row " style="margin-bottom:2px;padding:2px 15px 2px 15px !important">
                                 <div class="col-md-12" style="padding:2px 1px 2px 1px !important;border-top:1px solid #ddd;border-bottom:1px solid #ddd;">
-                                    <?php if ($canAdd === true) { ?>   
-                                        <div class="col-md-5" style="padding:0px 0px 0px 0px !important;">                      
+                                    <?php if ($canAdd === true) { ?>
+                                        <div class="col-md-5" style="padding:0px 0px 0px 0px !important;">
                                             <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="getOneAccbPymntsForm(-1, 1, 'ShowDialog', 'Supplier Standard Payment');" data-toggle="tooltip" data-placement="bottom" title="Add New Supplier Payment">
                                                 <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 New Supplier Payment
-                                            </button>                 
+                                            </button>
                                             <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="getOneAccbPymntsForm(-1, 1, 'ShowDialog', 'Customer Standard Payment');" data-toggle="tooltip" data-placement="bottom" title="Add New Customer Payment">
                                                 <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 New Customer Payment
                                             </button>
-                                        </div>  
+                                        </div>
                                     <?php }
                                     ?>
-                                    <div class = "col-md-2" style = "padding:5px 1px 0px 1px !important;">
-                                        <div class = "form-check" style = "font-size: 12px !important;">
-                                            <label class = "form-check-label">
+                                    <div class="col-md-2" style="padding:5px 1px 0px 1px !important;">
+                                        <div class="form-check" style="font-size: 12px !important;">
+                                            <label class="form-check-label">
                                                 <?php
                                                 $shwUnpstdOnlyChkd = "";
                                                 if ($qShwUnpstdOnly == true) {
                                                     $shwUnpstdOnlyChkd = "checked=\"true\"";
                                                 }
                                                 ?>
-                                                <input type="checkbox" class="form-check-input" onclick="getAccbPymnts('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="accbPymntsShwUnpstdOnly" name="accbPymntsShwUnpstdOnly"  <?php echo $shwUnpstdOnlyChkd; ?>>
+                                                <input type="checkbox" class="form-check-input" onclick="getAccbPymnts('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="accbPymntsShwUnpstdOnly" name="accbPymntsShwUnpstdOnly" <?php echo $shwUnpstdOnlyChkd; ?>>
                                                 Only Unposted
                                             </label>
-                                        </div>                            
+                                        </div>
                                     </div>
                                     <div class="col-md-5" style="padding:0px 1px 0px 1px !important;">
                                         <div class="col-xs-6" style="padding:0px 1px 0px 0px !important;">
                                             <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
                                                 <input class="form-control" size="16" type="text" id="accbPymntsStrtDate" name="accbPymntsStrtDate" value="<?php
-                                                echo substr($qStrtDte, 0, 11);
-                                                ?>" placeholder="Start Date">
+                                                                                                                                                            echo substr($qStrtDte, 0, 11);
+                                                                                                                                                            ?>" placeholder="Start Date">
                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                             </div>
                                         </div>
                                         <div class="col-xs-6" style="padding:0px 1px 0px 0px !important;">
                                             <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                                                <input class="form-control" size="16" type="text"  id="accbPymntsEndDate" name="accbPymntsEndDate" value="<?php
-                                                echo substr($qEndDte, 0, 11);
-                                                ?>" placeholder="End Date">
+                                                <input class="form-control" size="16" type="text" id="accbPymntsEndDate" name="accbPymntsEndDate" value="<?php
+                                                                                                                                                            echo substr($qEndDte, 0, 11);
+                                                                                                                                                            ?>" placeholder="End Date">
                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                             </div>
-                                        </div>                            
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row"> 
-                                <div  class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12">
                                     <table class="table table-striped table-bordered table-responsive" id="accbPymntsHdrsTable" cellspacing="0" width="100%" style="width:100%;">
                                         <thead>
                                             <tr>
@@ -596,7 +767,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <th>Batch Description</th>
                                                 <th style="min-width:100px;width:100px;">Payment Method</th>
                                                 <th style="min-width:100px;width:100px;">Payment Date</th>
-                                                <th style="text-align:center;max-width:35px;width:35px;">CUR.</th>	
+                                                <th style="text-align:center;max-width:35px;width:35px;">CUR.</th>
                                                 <th style="text-align:right;min-width:100px;width:100px;">Total Payment Amount</th>
                                                 <th style="max-width:75px;width:75px;">Payment Status</th>
                                                 <?php if ($canDel === true) { ?>
@@ -611,15 +782,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <?php
                                             while ($row = loc_db_fetch_array($result)) {
                                                 $cntr += 1;
-                                                ?>
-                                                <tr id="accbPymntsHdrsRow_<?php echo $cntr; ?>">                                    
-                                                    <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>    
+                                            ?>
+                                                <tr id="accbPymntsHdrsRow_<?php echo $cntr; ?>">
+                                                    <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
                                                     <td class="lovtd">
-                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View/Edit Payment" 
-                                                                onclick="getOneAccbPymntsForm(<?php echo $row[0]; ?>, 1, 'ShowDialog', '<?php echo $row[2]; ?>');" style="padding:2px !important;" style="padding:2px !important;">                                                                
-                                                                    <?php
-                                                                    if ($canAdd === true) {
-                                                                        ?>                                
+                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View/Edit Payment" onclick="getOneAccbPymntsForm(<?php echo $row[0]; ?>, 1, 'ShowDialog', '<?php echo $row[2]; ?>');" style="padding:2px !important;" style="padding:2px !important;">
+                                                            <?php
+                                                            if ($canAdd === true) {
+                                                            ?>
                                                                 <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             <?php } else { ?>
                                                                 <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
@@ -632,8 +802,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td class="lovtd" style=""><?php echo $row[5]; ?></td>
                                                     <td class="lovtd" style="text-align:center;font-weight: bold;color:black;"><?php echo $row[6]; ?></td>
                                                     <td class="lovtd" style="text-align:right;font-weight: bold;color:blue;"><?php
-                                                        echo number_format((float) $row[7], 2);
-                                                        ?>
+                                                                                                                                echo number_format((float) $row[7], 2);
+                                                                                                                                ?>
                                                     </td>
                                                     <?php
                                                     $style1 = "color:red;";
@@ -643,7 +813,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         $style1 = "color:#0d0d0d;";
                                                     }
                                                     ?>
-                                                    <td class="lovtd" style="font-weight:bold;<?php echo $style1; ?>"><?php echo $row[8]; ?></td>  
+                                                    <td class="lovtd" style="font-weight:bold;<?php echo $style1; ?>"><?php echo $row[8]; ?></td>
                                                     <?php if ($canDel === true) { ?>
                                                         <td class="lovtd">
                                                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Delete Batch" onclick="delAccbPymnts('accbPymntsHdrsRow_<?php echo $cntr; ?>');" style="padding:2px !important;" style="padding:2px !important;">
@@ -654,26 +824,26 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <?php } ?>
                                                     <?php
                                                     if ($canVwRcHstry === true) {
-                                                        ?>
+                                                    ?>
                                                         <td class="lovtd">
                                                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php
-                                                            echo urlencode(encrypt1(($row[0] . "|accb.accb_payments_batches|pymnt_batch_id"), $smplTokenWord1));
-                                                            ?>');" style="padding:2px !important;">
+                                                                                                                                                                                                                    echo urlencode(encrypt1(($row[0] . "|accb.accb_payments_batches|pymnt_batch_id"), $smplTokenWord1));
+                                                                                                                                                                                                                    ?>');" style="padding:2px !important;">
                                                                 <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             </button>
                                                         </td>
                                                     <?php } ?>
                                                 </tr>
-                                                <?php
+                                            <?php
                                             }
                                             ?>
                                         </tbody>
                                     </table>
-                                </div>                     
+                                </div>
                             </div>
                         </fieldset>
                     </form>
-                    <?php
+                <?php
                 }
             } else if ($vwtyp == 1) {
                 //New Payments Form
@@ -833,7 +1003,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $docTypPrfx = $docTypPrfxs[findArryIdx($docTypes, $accbPymntsVchType)];
                     $gnrtdTrnsNo1 = $docTypPrfx . "-" . $usrTrnsCode . "-" . $dte . "-";
                     $gnrtdTrnsNo = $gnrtdTrnsNo1 . str_pad(((getRecCount_LstNum("accb.accb_payments_batches", "pymnt_batch_name", "pymnt_batch_id", $gnrtdTrnsNo1 . "%") + 1) . ""),
-                                    3, '0', STR_PAD_LEFT);
+                        3,
+                        '0',
+                        STR_PAD_LEFT
+                    );
                     if ($accbPymntsVchType == "Customer Payments") {
                         $accbPymntsDfltBalsAcntID = get_DfltCstmrRcvblsCashAcnt($accbPymntsSpplrID, $orgID);
                         $accbPymntsIncrsDcrs2 = "Increase";
@@ -858,11 +1031,39 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $accbPymntsChqName = "";
                     $accbPymntsChqNumber = "";
                     $accbPymntsSignCode = "";
-                    createPymntsBatch($orgID, $accbPymntsTrnsStrtDte, $accbPymntsTrnsEndDte, $accbPymntsDocType, $gnrtdTrnsNo, $accbPymntsDesc, $accbPymntsSpplrID,
-                            $accbPymntsPayMthdID, $accbPymntsVchType, $voidedAccbPymntsID, $accbPymntsVldtyStatus, $accbPymntsDocTmplt, $rqStatus, $accbPymntsDfltTrnsDte,
-                            $accbPymntsIncrsDcrs1, $accbPymntsAccntID1, $accbPymntsIncrsDcrs2, $accbPymntsAccntID2, $accbPymntsGvnAmnt, $accbPymntsPaidAmnt, $accbPymntsChngBals,
-                            $accbPymntsInvcCurID, $accbPymntsFuncCurID, $accbPymntsFuncCurRate, $accbPymntsFuncCurAmnt, $accbPymntsAcntCurID, $accbPymntsAcntCurRate,
-                            $accbPymntsAcntCurAmnt, $accbPymntsChqName, $accbPymntsChqNumber, $accbPymntsSignCode);
+                    createPymntsBatch(
+                        $orgID,
+                        $accbPymntsTrnsStrtDte,
+                        $accbPymntsTrnsEndDte,
+                        $accbPymntsDocType,
+                        $gnrtdTrnsNo,
+                        $accbPymntsDesc,
+                        $accbPymntsSpplrID,
+                        $accbPymntsPayMthdID,
+                        $accbPymntsVchType,
+                        $voidedAccbPymntsID,
+                        $accbPymntsVldtyStatus,
+                        $accbPymntsDocTmplt,
+                        $rqStatus,
+                        $accbPymntsDfltTrnsDte,
+                        $accbPymntsIncrsDcrs1,
+                        $accbPymntsAccntID1,
+                        $accbPymntsIncrsDcrs2,
+                        $accbPymntsAccntID2,
+                        $accbPymntsGvnAmnt,
+                        $accbPymntsPaidAmnt,
+                        $accbPymntsChngBals,
+                        $accbPymntsInvcCurID,
+                        $accbPymntsFuncCurID,
+                        $accbPymntsFuncCurRate,
+                        $accbPymntsFuncCurAmnt,
+                        $accbPymntsAcntCurID,
+                        $accbPymntsAcntCurRate,
+                        $accbPymntsAcntCurAmnt,
+                        $accbPymntsChqName,
+                        $accbPymntsChqNumber,
+                        $accbPymntsSignCode
+                    );
                     $sbmtdAccbPymntsID = getGnrlRecID("accb.accb_payments_batches", "pymnt_batch_name", "pymnt_batch_id", $gnrtdTrnsNo, $orgID);
                 }
 
@@ -941,7 +1142,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     "Direct Refund from Supplier",
                                                     "Supplier Credit Memo (InDirect Refund)",
                                                     "Direct Topup for Supplier",
-                                                    "Supplier Debit Memo (InDirect Topup)");
+                                                    "Supplier Debit Memo (InDirect Topup)"
+                                                );
                                             } else {
                                                 $valslctdArry = array("", "", "", "", "", "");
                                                 $srchInsArrys = array(
@@ -950,13 +1152,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     "Direct Topup from Customer",
                                                     "Direct Refund to Customer",
                                                     "Customer Credit Memo (InDirect Topup)",
-                                                    "Customer Debit Memo (InDirect Refund)");
+                                                    "Customer Debit Memo (InDirect Refund)"
+                                                );
                                             }
                                             for ($z = 0; $z < count($srchInsArrys); $z++) {
                                                 if ($accbPymntsDocType == $srchInsArrys[$z]) {
                                                     $valslctdArry[$z] = "selected";
                                                 }
-                                                ?>
+                                            ?>
                                                 <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                             <?php } ?>
                                         </select>
@@ -966,7 +1169,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="accbPymntsPayMthd" class="control-label col-md-4">Payment Method:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <div class="input-group">
                                             <input type="text" class="form-control rqrdFld" aria-label="..." id="accbPymntsPayMthd" name="accbPymntsPayMthd" value="<?php echo $accbPymntsPayMthd; ?>" readonly="true">
                                             <input type="hidden" id="accbPymntsPayMthdID" value="<?php echo $accbPymntsPayMthdID; ?>">
@@ -982,7 +1185,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </div>
                                 <div class="form-group">
                                     <label for="accbPymntsDocTmplt" class="control-label col-md-4">Doc. Template:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <div class="input-group">
                                             <input type="text" class="form-control" aria-label="..." id="accbPymntsDocTmplt" name="accbPymntsDocTmplt" value="<?php echo $accbPymntsDocTmplt; ?>" readonly="true">
                                             <input type="hidden" id="accbPymntsDocTmpltID" value="<?php echo $accbPymntsDocTmpltID; ?>">
@@ -997,7 +1200,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </div>
                                 <div class="form-group">
                                     <label for="accbPymntsSpplr" class="control-label col-md-4">Trade Partner:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <div class="input-group">
                                             <input type="text" class="form-control" aria-label="..." id="accbPymntsSpplr" name="accbPymntsSpplr" value="<?php echo $accbPymntsSpplr; ?>" readonly="true">
                                             <input type="hidden" id="accbPymntsSpplrID" value="<?php echo $accbPymntsSpplrID; ?>">
@@ -1006,12 +1209,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </label>
                                         </div>
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
                                         <label style="margin-bottom:0px !important;">Batch Source:</label>
                                     </div>
-                                    <div class="col-md-8">                             
+                                    <div class="col-md-8">
                                         <button type="button" class="btn btn-default" style="width:100% !important;">
                                             <span style="color:blue;font-weight: bold;">
                                                 <?php
@@ -1024,15 +1227,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </span>
                                         </button>
                                     </div>
-                                </div>  
+                                </div>
                             </div>
-                            <div class = "col-md-4">                                                             
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="col-md-4">
                                         <label style="margin-bottom:0px !important;">Remark / Narration:</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <div class="input-group"  style="width:100%;">
+                                        <div class="input-group" style="width:100%;">
                                             <textarea class="form-control rqrdFld" rows="3" cols="20" id="accbPymntsDesc" name="accbPymntsDesc" <?php echo $mkRmrkReadOnly; ?> style="text-align:left !important;"><?php echo $accbPymntsDesc; ?></textarea>
                                             <input class="form-control" type="hidden" id="accbPymntsDesc1" value="<?php echo $accbPymntsDesc; ?>">
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('accbPymntsDesc');" style="max-width:30px;width:30px;">
@@ -1040,24 +1243,24 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </label>
                                         </div>
                                     </div>
-                                </div>                          
+                                </div>
                                 <div class="form-group">
                                     <label for="accbPymntsGLBatch" class="control-label col-md-4">GL Batch Name:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <div class="input-group">
-                                            <input class="form-control" id="accbPymntsGLBatch" style="font-size: 13px !important;font-weight: bold !important;" placeholder="" type = "text" placeholder="" value="<?php echo $accbPymntsGLBatch; ?>" readonly="true"/>
+                                            <input class="form-control" id="accbPymntsGLBatch" style="font-size: 13px !important;font-weight: bold !important;" placeholder="" type="text" placeholder="" value="<?php echo $accbPymntsGLBatch; ?>" readonly="true" />
                                             <input type="hidden" id="accbPymntsGLBatchID" value="<?php echo $accbPymntsGLBatchID; ?>">
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="getOneJrnlBatchForm(<?php echo $accbPymntsGLBatchID; ?>, 1, 'ReloadDialog',<?php echo $sbmtdAccbPymntsID; ?>, 'Payment Batch');">
                                                 <img src="cmn_images/openfileicon.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Open
                                             </label>
                                         </div>
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
                                         <label style="margin-bottom:0px !important;">Status:</label>
                                     </div>
-                                    <div class="col-md-8">                             
+                                    <div class="col-md-8">
                                         <button type="button" class="btn btn-default" style="width:100% !important;" id="myAccbPymntsStatusBtn">
                                             <span style="color:<?php echo $rqstatusColor; ?>;font-weight: bold;">
                                                 <?php
@@ -1082,31 +1285,31 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <li class="active"><a data-toggle="tabajxpymntsinvc" data-rhodata="" href="#pymntsInvcExtraInfo" id="pymntsInvcExtraInfotab">Payment Information</a></li>
                                     <li class=""><a data-toggle="tabajxpymntsinvc" data-rhodata="" href="#pymntsInvcSelected" id="pymntsInvcSelectedtab">Selected Invoices</a></li>
                                     <li class=""><a data-toggle="tabajxpymntsinvc" data-rhodata="" href="#pymntsInvcRemoved" id="pymntsInvcRemovedtab">Removed Invoices</a></li>
-                                </ul>  
-                                <div class="custDiv" style="padding:0px !important;min-height: 30px !important;"> 
+                                </ul>
+                                <div class="custDiv" style="padding:0px !important;min-height: 30px !important;">
                                     <div class="tab-content" style="padding:3px 5px 2px 5px!important;">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="col-md-12" style="padding:0px 0px 0px 0px !important;">
                                                     <div class="col-md-8" style="padding:0px 0px 0px 0px !important;float:left;">
                                                         <?php if (1 == 2) { ?>
-                                                            <button id="addNwAccbPymntsRmvBtn" type="button" class="btn btn-default hideNotice" style="margin-bottom: 1px;height:30px;" onclick="" data-toggle="tooltip" data-placement="bottom" title = "Remove Selected Lines">
+                                                            <button id="addNwAccbPymntsRmvBtn" type="button" class="btn btn-default hideNotice" style="margin-bottom: 1px;height:30px;" onclick="" data-toggle="tooltip" data-placement="bottom" title="Remove Selected Lines">
                                                                 <img src="cmn_images/delete.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                 Remove Selection
-                                                            </button> 
-                                                            <button id="addNwAccbPymntsRstrBtn" type="button" class="btn btn-default hideNotice" style="margin-bottom: 1px;height:30px;" onclick="" data-toggle="tooltip" data-placement="bottom" title = "Restore Selected Lines">
+                                                            </button>
+                                                            <button id="addNwAccbPymntsRstrBtn" type="button" class="btn btn-default hideNotice" style="margin-bottom: 1px;height:30px;" onclick="" data-toggle="tooltip" data-placement="bottom" title="Restore Selected Lines">
                                                                 <img src="cmn_images/undo_256.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                 Restore Selection
-                                                            </button>                                  
+                                                            </button>
                                                         <?php } ?>
                                                         <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getOneAccbPymntsForm(<?php echo $sbmtdAccbPymntsID; ?>, 1, 'ReloadDialog');"><img src="cmn_images/refresh.bmp" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;"></button>
-                                                        <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;"  onclick="getSilentRptsRnSts(<?php echo $rptID; ?>, -1, '<?php echo $paramStr; ?>');" style="width:100% !important;">
+                                                        <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getSilentRptsRnSts(<?php echo $rptID; ?>, -1, '<?php echo $paramStr; ?>');" style="width:100% !important;">
                                                             <img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             Print
                                                         </button>
                                                         <button type="button" class="btn btn-default" style="height:30px;margin-bottom: 1px;">
                                                             <span style="font-weight:bold;color:black;">Total Selected: </span>
-                                                            <span style="color:red;font-weight: bold;" id="myCptrdPymntsValsTtlBtn"><?php echo $accbPymntsInvcCur; ?> 
+                                                            <span style="color:red;font-weight: bold;" id="myCptrdPymntsValsTtlBtn"><?php echo $accbPymntsInvcCur; ?>
                                                                 <?php
                                                                 echo number_format($accbPymntsTtlAmnt, 2);
                                                                 ?>
@@ -1115,40 +1318,40 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         </button>
                                                         <button type="button" class="btn btn-default" style="height:30px;margin-bottom: 1px;">
                                                             <span style="font-weight:bold;color:black;">Total Removed: </span>
-                                                            <span style="color:red;font-weight: bold;" id="myCptrdPymntsRmvdValsTtlBtn"><?php echo $accbPymntsInvcCur; ?> 
+                                                            <span style="color:red;font-weight: bold;" id="myCptrdPymntsRmvdValsTtlBtn"><?php echo $accbPymntsInvcCur; ?>
                                                                 <?php
                                                                 echo number_format($accbPymntsRmvdTtlAmnt, 2);
                                                                 ?>
                                                             </span>
                                                             <input type="hidden" id="myCptrdPymntsRmvdValsTtlVal" value="<?php echo $accbPymntsRmvdTtlAmnt; ?>">
                                                         </button>
-                                                    </div> 
+                                                    </div>
                                                     <div class="col-md-4" style="padding:0px 0px 0px 0px !important;">
-                                                        <div class="" style="padding:0px 0px 0px 0px;float:right !important;"> 
+                                                        <div class="" style="padding:0px 0px 0px 0px;float:right !important;">
                                                             <?php
                                                             if ($rqStatus == "Unprocessed") {
-                                                                ?>
+                                                            ?>
                                                                 <?php if ($canEdt) { ?>
-                                                                    <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveAccbPymntsForm('<?php echo $fnccurnm; ?>', 0);"><img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Save&nbsp;</button>    
+                                                                    <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveAccbPymntsForm('<?php echo $fnccurnm; ?>', 0);"><img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Save&nbsp;</button>
                                                                 <?php } ?>
                                                                 <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveAccbPymntsForm('<?php echo $fnccurnm; ?>', 5,<?php echo $rptID1; ?>, -1, '<?php echo $paramStr1; ?>');" data-toggle="tooltip" data-placement="bottom" title="Run Payment Batch">
                                                                     <img src="cmn_images/tick_64.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Run Payment Batch
                                                                 </button>
-                                                                <?php
+                                                            <?php
                                                             } else if ($rqStatus == "Processed") {
-                                                                ?>
-                                                                <button id="fnlzeRvrslAccbPymntsBtn" type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveAccbPymntsRvrslForm('<?php echo $fnccurnm; ?>', 1,<?php echo $rptID2; ?>, -1, '<?php echo $paramStr2; ?>');"><img src="cmn_images/90.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Void Payment Batch&nbsp;</button>                                                                   
-                                                                <?php
+                                                            ?>
+                                                                <button id="fnlzeRvrslAccbPymntsBtn" type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveAccbPymntsRvrslForm('<?php echo $fnccurnm; ?>', 1,<?php echo $rptID2; ?>, -1, '<?php echo $paramStr2; ?>');"><img src="cmn_images/90.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Void Payment Batch&nbsp;</button>
+                                                            <?php
                                                             }
                                                             ?>
                                                         </div>
-                                                    </div>                    
-                                                </div> 
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="custDiv" style="padding:0px !important;min-height: 40px !important;" id="oneAccbPymntsLnsTblSctn"> 
+                                <div class="custDiv" style="padding:0px !important;min-height: 40px !important;" id="oneAccbPymntsLnsTblSctn">
                                     <div class="tab-content" style="padding:5px !important;padding-top:7px !important;">
                                         <div id="pymntsInvcExtraInfo" class="tab-pane fadein active" style="border:none !important;padding:0px 15px 0px 15px !important;">
                                             <div class="row">
@@ -1176,11 +1379,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                         });">
                                                                     <span class="" style="font-size: 20px !important;" id="accbPymntsInvcCur1"><?php echo $accbPymntsInvcCur; ?></span>
                                                                 </label>
-                                                                <input type="hidden" id="accbPymntsInvcCur" value="<?php echo $accbPymntsInvcCur; ?>"> 
+                                                                <input type="hidden" id="accbPymntsInvcCur" value="<?php echo $accbPymntsInvcCur; ?>">
                                                                 <input class="form-control rqrdFld" type="text" id="accbPymntsGvnAmnt" value="<?php
-                                                                echo number_format($accbPymntsGvnAmnt, 2);
-                                                                ?>"  
-                                                                       style="font-weight:bold;width:100%;font-size:18px !important;" onchange="fmtAsNumber('accbPymntsGvnAmnt');" <?php echo $mkReadOnly; ?>/>
+                                                                                                                                                echo number_format($accbPymntsGvnAmnt, 2);
+                                                                                                                                                ?>" style="font-weight:bold;width:100%;font-size:18px !important;" onchange="fmtAsNumber('accbPymntsGvnAmnt');" <?php echo $mkReadOnly; ?> />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1194,8 +1396,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <span class="" style="font-size: 20px !important;" id="accbPymntsInvcCur2"><?php echo $accbPymntsInvcCur; ?></span>
                                                                 </label>
                                                                 <input class="form-control" type="text" id="accbPymntsPaidAmnt" value="<?php
-                                                                echo number_format($accbPymntsPaidAmnt, 2);
-                                                                ?>"  style="font-weight:bold;width:100%;font-size:18px !important;" onchange="fmtAsNumber('accbPymntsPaidAmnt');" readonly="true"/>
+                                                                                                                                        echo number_format($accbPymntsPaidAmnt, 2);
+                                                                                                                                        ?>" style="font-weight:bold;width:100%;font-size:18px !important;" onchange="fmtAsNumber('accbPymntsPaidAmnt');" readonly="true" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1209,8 +1411,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <span class="" style="font-size: 20px !important;" id="accbPymntsInvcCur3"><?php echo $accbPymntsInvcCur; ?></span>
                                                                 </label>
                                                                 <input class="form-control" type="text" id="accbPymntsChngBals" value="<?php
-                                                                echo number_format($accbPymntsChngBals, 2);
-                                                                ?>" style="font-weight:bold;width:100%;font-size:18px !important;" onchange="fmtAsNumber('accbPymntsChngBals');"  readonly="true"/>
+                                                                                                                                        echo number_format($accbPymntsChngBals, 2);
+                                                                                                                                        ?>" style="font-weight:bold;width:100%;font-size:18px !important;" onchange="fmtAsNumber('accbPymntsChngBals');" readonly="true" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1223,7 +1425,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="col-md-8">
                                                             <input type="text" data-toggle="tooltip" title="Cheque/Card Owner's Name" class="form-control rqrdFld" aria-label="..." id="accbPymntsChqName" name="accbPymntsChqName" value="<?php echo $accbPymntsChqName; ?>" <?php echo $mkReadOnly; ?>>
                                                         </div>
-                                                    </div> 
+                                                    </div>
                                                     <div class="form-group">
                                                         <div class="col-md-4">
                                                             <label style="margin-bottom:0px !important;">Number:</label>
@@ -1232,7 +1434,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <input type="text" class="form-control rqrdFld" aria-label="..." data-toggle="tooltip" title="Cheque/Card Number" id="accbPymntsChqNumber" name="accbPymntsChqNumber" value="<?php echo $accbPymntsChqNumber; ?>" <?php echo $mkReadOnly; ?>>
                                                         </div>
                                                         <div class="col-md-3" style="padding: 0px 15px 0px 2px !important;">
-                                                            <input class="form-control rqrdFld" type="text" data-toggle="tooltip" title="Sign Code (CCV)" id="accbPymntsSignCode" value="<?php echo $accbPymntsSignCode; ?>" style="width:100%;" <?php echo $mkReadOnly; ?>/>
+                                                            <input class="form-control rqrdFld" type="text" data-toggle="tooltip" title="Sign Code (CCV)" id="accbPymntsSignCode" value="<?php echo $accbPymntsSignCode; ?>" style="width:100%;" <?php echo $mkReadOnly; ?> />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -1245,12 +1447,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <span class="" style="" id="accbPymntsInvcCur4"><?php echo $accbPymntsFuncCur; ?></span>
                                                                 </label>
                                                                 <input class="form-control" type="text" id="accbPymntsFuncCurRate" data-toggle="tooltip" title="Rate" value="<?php
-                                                                echo number_format($accbPymntsFuncCurRate, 4);
-                                                                ?>" style="width:100%;" onchange="fmtAsNumber('accbPymntsFuncCurRate');" readonly="true"/>
+                                                                                                                                                                                echo number_format($accbPymntsFuncCurRate, 4);
+                                                                                                                                                                                ?>" style="width:100%;" onchange="fmtAsNumber('accbPymntsFuncCurRate');" readonly="true" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4" style="padding: 0px 15px 0px 2px !important;">
-                                                            <input class="form-control" type="text" data-toggle="tooltip"  title="Amount" id="accbPymntsFuncCurAmnt" value="<?php echo $accbPymntsFuncCurAmnt; ?>" style="width:100%;" readonly="true"/>
+                                                            <input class="form-control" type="text" data-toggle="tooltip" title="Amount" id="accbPymntsFuncCurAmnt" value="<?php echo $accbPymntsFuncCurAmnt; ?>" style="width:100%;" readonly="true" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -1262,22 +1464,22 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <label class="btn btn-default btn-file input-group-addon active" onclick="">
                                                                     <span class="" style="" id="accbPymntsInvcCur5"><?php echo $accbPymntsAcntCur; ?></span>
                                                                 </label>
-                                                                <input class="form-control" type="text" id="accbPymntsAcntCurRate" data-toggle="tooltip"  title="Rate" value="<?php
-                                                                echo number_format($accbPymntsAcntCurRate, 4);
-                                                                ?>" style="width:100%;" onchange="fmtAsNumber('accbPymntsAcntCurRate');"  readonly="true"/>
+                                                                <input class="form-control" type="text" id="accbPymntsAcntCurRate" data-toggle="tooltip" title="Rate" value="<?php
+                                                                                                                                                                                echo number_format($accbPymntsAcntCurRate, 4);
+                                                                                                                                                                                ?>" style="width:100%;" onchange="fmtAsNumber('accbPymntsAcntCurRate');" readonly="true" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4" style="padding: 0px 15px 0px 2px !important;">
-                                                            <input class="form-control" type="text" id="accbPymntsAcntCurAmnt" data-toggle="tooltip"  title="Amount" value="<?php
-                                                            echo number_format($accbPymntsAcntCurAmnt, 2);
-                                                            ?>" style="width:100%;"  readonly="true"/>
+                                                            <input class="form-control" type="text" id="accbPymntsAcntCurAmnt" data-toggle="tooltip" title="Amount" value="<?php
+                                                                                                                                                                            echo number_format($accbPymntsAcntCurAmnt, 2);
+                                                                                                                                                                            ?>" style="width:100%;" readonly="true" />
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4" style="border:1px solid #ddd; border-radius: 5px;padding: 5px 10px 5px 10px;margin-left: 0px !important;margin-right: -2px !important;">      
+                                                <div class="col-md-4" style="border:1px solid #ddd; border-radius: 5px;padding: 5px 10px 5px 10px;margin-left: 0px !important;margin-right: -2px !important;">
                                                     <div class="form-group">
                                                         <label for="accbPymntsIncrsDcrs1" class="control-label col-md-4">Incrs./ Dcrs.:</label>
-                                                        <div  class="col-md-8">
+                                                        <div class="col-md-8">
                                                             <select data-placeholder="Select..." class="form-control chosen-select" id="accbPymntsIncrsDcrs1" style="width:100% !important;">
                                                                 <?php
                                                                 $valslctdArry = array("", "");
@@ -1286,22 +1488,22 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     if ($accbPymntsIncrsDcrs1 == $srchInsArrys[$z]) {
                                                                         $valslctdArry[$z] = "selected";
                                                                     }
-                                                                    ?>
+                                                                ?>
                                                                     <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
-                                                    </div>   
+                                                    </div>
                                                     <div class="form-group">
                                                         <label for="accbPymntsAccntNm1" class="control-label col-md-4">Clearing Acc.:</label>
-                                                        <div  class="col-md-8">
-                                                            <input class="form-control" id="accbPymntsAccntNm1" style="font-size: 13px !important;font-weight: bold !important;" placeholder="" type = "text" min="0" placeholder="" value="<?php echo $accbPymntsAccntNm1; ?>" readonly="true"/>
+                                                        <div class="col-md-8">
+                                                            <input class="form-control" id="accbPymntsAccntNm1" style="font-size: 13px !important;font-weight: bold !important;" placeholder="" type="text" min="0" placeholder="" value="<?php echo $accbPymntsAccntNm1; ?>" readonly="true" />
                                                             <input type="hidden" id="accbPymntsAccntID1" value="<?php echo $accbPymntsAccntID1; ?>">
                                                         </div>
-                                                    </div>    
+                                                    </div>
                                                     <div class="form-group">
                                                         <label for="accbPymntsIncrsDcrs2" class="control-label col-md-4">Incrs./ Dcrs.:</label>
-                                                        <div  class="col-md-8">
+                                                        <div class="col-md-8">
                                                             <select data-placeholder="Select..." class="form-control chosen-select" id="accbPymntsIncrsDcrs2" style="width:100% !important;">
                                                                 <?php
                                                                 $valslctdArry = array("", "");
@@ -1310,16 +1512,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     if ($accbPymntsIncrsDcrs2 == $srchInsArrys[$z]) {
                                                                         $valslctdArry[$z] = "selected";
                                                                     }
-                                                                    ?>
+                                                                ?>
                                                                     <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
-                                                    </div>   
+                                                    </div>
                                                     <div class="form-group">
                                                         <label for="accbPymntsAccntNm2" class="control-label col-md-4">Charge Acc.:</label>
-                                                        <div  class="col-md-8">
-                                                            <input class="form-control" id="accbPymntsAccntNm2" style="font-size: 13px !important;font-weight: bold !important;" placeholder="" type = "text" value="<?php echo $accbPymntsAccntNm2; ?>" readonly="true"/>
+                                                        <div class="col-md-8">
+                                                            <input class="form-control" id="accbPymntsAccntNm2" style="font-size: 13px !important;font-weight: bold !important;" placeholder="" type="text" value="<?php echo $accbPymntsAccntNm2; ?>" readonly="true" />
                                                             <input type="hidden" id="accbPymntsAccntID2" value="<?php echo $accbPymntsAccntID2; ?>">
                                                         </div>
                                                     </div>
@@ -1344,17 +1546,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <th style="">&nbsp;</th>
                                                                 <?php
                                                                 if ($canDel === true) {
-                                                                    ?>
+                                                                ?>
                                                                     <th style="max-width:20px;width:20px;">&nbsp;</th>
                                                                 <?php } ?>
                                                                 <?php
                                                                 if ($canVwRcHstry === true) {
-                                                                    ?>
+                                                                ?>
                                                                     <th style="max-width:20px;width:20px;">&nbsp;</th>
                                                                 <?php } ?>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>   
+                                                        <tbody>
                                                             <?php
                                                             $cntr = 0;
                                                             $resultRw = get_PymntBatchLns(0, 1000000, $sbmtdAccbPymntsID, '0');
@@ -1384,56 +1586,55 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 $ttlTrsctnAmntPaid = $ttlTrsctnAmntPaid + $trsctnLineAmntPaid;
                                                                 $ttlTrsctnAmntBals = $ttlTrsctnAmntBals + $trsctnLineBals;
                                                                 $cntr += 1;
-                                                                ?>
-                                                                <tr id="oneAccbPymntsSmryRow_<?php echo $cntr; ?>">                                    
+                                                            ?>
+                                                                <tr id="oneAccbPymntsSmryRow_<?php echo $cntr; ?>">
                                                                     <td class="lovtd">
                                                                         <span><?php echo ($cntr); ?></span>
                                                                         <input type="checkbox" name="oneAccbPymntsSmryRow<?php echo $cntr; ?>_CheckBox" value="<?php echo $trsctnLineID . ";" . $trsctnLineSrcDocNum; ?>">
-                                                                    </td>       
+                                                                    </td>
                                                                     <td class="lovtd">
                                                                         <span><?php echo ($trsctnLineSrcDocType . "<br/>" . $trsctnLineSrcDocNum); ?></span>
-                                                                    </td>                                           
-                                                                    <td class="lovtd"  style="">  
+                                                                    </td>
+                                                                    <td class="lovtd" style="">
                                                                         <input type="hidden" class="form-control" aria-label="..." id="oneAccbPymntsSmryRow<?php echo $cntr; ?>_TrnsLnID" value="<?php echo $trsctnLineID; ?>" style="width:100% !important;">
-                                                                        <div class="input-group"  style="width:100%;">
-                                                                            <input type="text" class="form-control rqrdFld jbDetDesc" aria-label="..." id="oneAccbPymntsSmryRow<?php echo $cntr; ?>_LineDesc" name="oneAccbPymntsSmryRow<?php echo $cntr; ?>_LineDesc" value="<?php echo $trsctnLineDesc; ?>" 
-                                                                                   style="width:100% !important;" <?php echo $mkReadOnly; ?> onkeypress="gnrlFldKeyPress(event, 'oneAccbPymntsSmryRow<?php echo $cntr; ?>_LineDesc', 'oneAccbPymntsSmryLinesTable', 'jbDetDesc');">  
+                                                                        <div class="input-group" style="width:100%;">
+                                                                            <input type="text" class="form-control rqrdFld jbDetDesc" aria-label="..." id="oneAccbPymntsSmryRow<?php echo $cntr; ?>_LineDesc" name="oneAccbPymntsSmryRow<?php echo $cntr; ?>_LineDesc" value="<?php echo $trsctnLineDesc; ?>" style="width:100% !important;" <?php echo $mkReadOnly; ?> onkeypress="gnrlFldKeyPress(event, 'oneAccbPymntsSmryRow<?php echo $cntr; ?>_LineDesc', 'oneAccbPymntsSmryLinesTable', 'jbDetDesc');">
                                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('oneAccbPymntsSmryRow<?php echo $cntr; ?>_LineDesc');" style="max-width:30px;width:30px;">
                                                                                 <span class="glyphicon glyphicon-th-list"></span>
                                                                             </label>
-                                                                        </div>                                                  
-                                                                    </td>                                         
+                                                                        </div>
+                                                                    </td>
                                                                     <td class="lovtd" style="max-width:35px;width:35px;">
                                                                         <div class="" style="width:100% !important;">
                                                                             <label class="btn btn-primary btn-file" onclick="">
                                                                                 <span class="" id="oneAccbPymntsSmryRow<?php echo $cntr; ?>_TrnsCurNm1"><?php echo $entrdCurNm; ?></span>
                                                                             </label>
-                                                                        </div>                                              
+                                                                        </div>
                                                                     </td>
                                                                     <td class="lovtd">
                                                                         <input type="text" class="form-control rqrdFld jbDetDbt" aria-label="..." id="oneAccbPymntsSmryRow<?php echo $cntr; ?>_AmtGvn" name="oneAccbPymntsSmryRow<?php echo $cntr; ?>_AmtGvn" value="<?php
-                                                                        echo number_format($trsctnLineAmntGvn, 2);
-                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneAccbPymntsSmryRow<?php echo $cntr; ?>_AmtGvn', 'oneAccbPymntsSmryLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllAccbPymntsSmryTtl();">                                                    
+                                                                                                                                                                                                                                                                        echo number_format($trsctnLineAmntGvn, 2);
+                                                                                                                                                                                                                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneAccbPymntsSmryRow<?php echo $cntr; ?>_AmtGvn', 'oneAccbPymntsSmryLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllAccbPymntsSmryTtl();">
                                                                     </td>
                                                                     <td class="lovtd">
                                                                         <input type="text" class="form-control" aria-label="..." id="oneAccbPymntsSmryRow<?php echo $cntr; ?>_AmtPaid" name="oneAccbPymntsSmryRow<?php echo $cntr; ?>_AmtPaid" value="<?php
-                                                                        echo number_format($trsctnLineAmntPaid, 2);
-                                                                        ?>"  style="width:100% !important;text-align: right;" readonly="true">                                                    
+                                                                                                                                                                                                                                                        echo number_format($trsctnLineAmntPaid, 2);
+                                                                                                                                                                                                                                                        ?>" style="width:100% !important;text-align: right;" readonly="true">
                                                                     </td>
                                                                     <td class="lovtd">
                                                                         <input type="text" class="form-control" aria-label="..." id="oneAccbPymntsSmryRow<?php echo $cntr; ?>_ChngBals" name="oneAccbPymntsSmryRow<?php echo $cntr; ?>_ChngBals" value="<?php
-                                                                        echo number_format($trsctnLineBals, 2);
-                                                                        ?>"  style="width:100% !important;text-align: right;" readonly="true">                                                    
-                                                                    </td>     
+                                                                                                                                                                                                                                                        echo number_format($trsctnLineBals, 2);
+                                                                                                                                                                                                                                                        ?>" style="width:100% !important;text-align: right;" readonly="true">
+                                                                    </td>
                                                                     <td class="lovtd" style="">
                                                                         <span><?php echo ($trsctnLineApldDocNo); ?></span>
                                                                         <input type="hidden" class="form-control" aria-label="..." id="oneAccbPymntsSmryRow<?php echo $cntr; ?>_ApldDocNum" name="oneAccbPymntsSmryRow<?php echo $cntr; ?>_ApldDocNum" value="<?php
-                                                                        echo $trsctnLineApldDocNo;
-                                                                        ?>" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllAccbPymntsSmryTtl();">                                                    
+                                                                                                                                                                                                                                                                echo $trsctnLineApldDocNo;
+                                                                                                                                                                                                                                                                ?>" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllAccbPymntsSmryTtl();">
                                                                     </td>
                                                                     <td class="lovtd">
                                                                         <div class="input-group" style="width:100% !important;">
-                                                                            <input class="form-control" id="oneAccbPymntsSmryRow<?php echo $cntr; ?>_GlBtchNm" style="font-size: 13px !important;font-weight: bold !important;width:100% !important;" placeholder="" type = "text" value="<?php echo $trsctnLineGlBtchNm; ?>" readonly="true"/>
+                                                                            <input class="form-control" id="oneAccbPymntsSmryRow<?php echo $cntr; ?>_GlBtchNm" style="font-size: 13px !important;font-weight: bold !important;width:100% !important;" placeholder="" type="text" value="<?php echo $trsctnLineGlBtchNm; ?>" readonly="true" />
                                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="getOneJrnlBatchForm(<?php echo $trsctnLineGlBtchID; ?>, 1, 'ReloadDialog',<?php echo $sbmtdAccbPymntsID; ?>, 'Payment Batch');">
                                                                                 <img src="cmn_images/openfileicon.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">
                                                                             </label>
@@ -1446,7 +1647,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     </td>
                                                                     <?php
                                                                     if ($canDel === true) {
-                                                                        ?>
+                                                                    ?>
                                                                         <td class="lovtd">
                                                                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Permanently Delete Payment" onclick="delAccbPymntsDetLn('oneAccbPymntsSmryRow_<?php echo $cntr; ?>');" style="padding:2px !important;" style="padding:2px !important;">
                                                                                 <img src="cmn_images/no.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
@@ -1455,21 +1656,21 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <?php } ?>
                                                                     <?php
                                                                     if ($canVwRcHstry === true) {
-                                                                        ?>
+                                                                    ?>
                                                                         <td class="lovtd">
                                                                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php
-                                                                            echo urlencode(encrypt1(($rowRw[0] . "|accb.accb_payments|pymnt_id"), $smplTokenWord1));
-                                                                            ?>');" style="padding:2px !important;">
+                                                                                                                                                                                                                                    echo urlencode(encrypt1(($rowRw[0] . "|accb.accb_payments|pymnt_id"), $smplTokenWord1));
+                                                                                                                                                                                                                                    ?>');" style="padding:2px !important;">
                                                                                 <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                             </button>
                                                                         </td>
                                                                     <?php } ?>
                                                                 </tr>
-                                                                <?php
+                                                            <?php
                                                             }
                                                             ?>
                                                         </tbody>
-                                                        <tfoot>                                                            
+                                                        <tfoot>
                                                             <tr>
                                                                 <th>&nbsp;</th>
                                                                 <th>&nbsp;</th>
@@ -1477,22 +1678,34 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <th>&nbsp;</th>
                                                                 <th style="text-align: right;">
                                                                     <?php
-                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdPMTGvnSmryAmtTtlBtn\">" . number_format($ttlTrsctnAmntGvn,
-                                                                            2, '.', ',') . "</span>";
+                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdPMTGvnSmryAmtTtlBtn\">" . number_format(
+                                                                        $ttlTrsctnAmntGvn,
+                                                                        2,
+                                                                        '.',
+                                                                        ','
+                                                                    ) . "</span>";
                                                                     ?>
                                                                     <input type="hidden" id="myCptrdPMTGvnSmryAmtTtlVal" value="<?php echo $ttlTrsctnAmntGvn; ?>">
                                                                 </th>
                                                                 <th style="text-align: right;">
                                                                     <?php
-                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdPMTMdeSmryAmtTtlBtn\">" . number_format($ttlTrsctnAmntPaid,
-                                                                            2, '.', ',') . "</span>";
+                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdPMTMdeSmryAmtTtlBtn\">" . number_format(
+                                                                        $ttlTrsctnAmntPaid,
+                                                                        2,
+                                                                        '.',
+                                                                        ','
+                                                                    ) . "</span>";
                                                                     ?>
                                                                     <input type="hidden" id="myCptrdPMTMdeSmryAmtTtlVal" value="<?php echo $ttlTrsctnAmntPaid; ?>">
                                                                 </th>
                                                                 <th style="text-align: right;">
                                                                     <?php
-                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdPMTBalsSmryAmtTtlBtn\">" . number_format($ttlTrsctnAmntBals,
-                                                                            2, '.', ',') . "</span>";
+                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdPMTBalsSmryAmtTtlBtn\">" . number_format(
+                                                                        $ttlTrsctnAmntBals,
+                                                                        2,
+                                                                        '.',
+                                                                        ','
+                                                                    ) . "</span>";
                                                                     ?>
                                                                     <input type="hidden" id="myCptrdPMTBalsSmryAmtTtlVal" value="<?php echo $ttlTrsctnAmntBals; ?>">
                                                                 </th>
@@ -1501,12 +1714,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <th>&nbsp;</th>
                                                                 <?php
                                                                 if ($canDel === true) {
-                                                                    ?>
+                                                                ?>
                                                                     <th style="">&nbsp;</th>
                                                                 <?php } ?>
                                                                 <?php
                                                                 if ($canVwRcHstry === true) {
-                                                                    ?>
+                                                                ?>
                                                                     <th style="">&nbsp;</th>
                                                                 <?php } ?>
                                                             </tr>
@@ -1533,17 +1746,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <th style="">&nbsp;</th>
                                                                 <?php
                                                                 if ($canDel === true) {
-                                                                    ?>
+                                                                ?>
                                                                     <th style="max-width:20px;width:20px;">&nbsp;</th>
                                                                 <?php } ?>
                                                                 <?php
                                                                 if ($canVwRcHstry === true) {
-                                                                    ?>
+                                                                ?>
                                                                     <th style="max-width:20px;width:20px;">&nbsp;</th>
                                                                 <?php } ?>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>   
+                                                        <tbody>
                                                             <?php
                                                             $cntr = 0;
                                                             $resultRw = get_PymntBatchLns(0, 1000000, $sbmtdAccbPymntsID, '1');
@@ -1571,41 +1784,41 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 $ttlTrsctnAmntPaid = $ttlTrsctnAmntPaid + $trsctnLineAmntPaid;
                                                                 $ttlTrsctnAmntBals = $ttlTrsctnAmntBals + $trsctnLineBals;
                                                                 $cntr += 1;
-                                                                ?>
-                                                                <tr id="oneAccbPymntsRmvdRow_<?php echo $cntr; ?>">                                   
+                                                            ?>
+                                                                <tr id="oneAccbPymntsRmvdRow_<?php echo $cntr; ?>">
                                                                     <td class="lovtd">
                                                                         <span><?php echo ($cntr); ?></span>
                                                                         <input type="checkbox" name="oneAccbPymntsRmvdRow<?php echo $cntr; ?>_CheckBox" value="<?php echo $trsctnLineID . ";" . $trsctnLineSrcDocNum; ?>">
-                                                                    </td>        
+                                                                    </td>
                                                                     <td class="lovtd">
                                                                         <span><?php echo ($trsctnLineSrcDocType . "<br/>" . $trsctnLineSrcDocNum); ?></span>
-                                                                    </td>                                           
-                                                                    <td class="lovtd"  style="">  
+                                                                    </td>
+                                                                    <td class="lovtd" style="">
                                                                         <input type="hidden" class="form-control" aria-label="..." id="oneAccbPymntsRmvdRow<?php echo $cntr; ?>_TrnsLnID" value="<?php echo $trsctnLineID; ?>" style="width:100% !important;">
                                                                         <span><?php echo ($trsctnLineDesc); ?></span>
-                                                                    </td>                                         
+                                                                    </td>
                                                                     <td class="lovtd" style="max-width:35px;width:35px;">
                                                                         <div class="" style="width:100% !important;">
                                                                             <label class="btn btn-primary btn-file" onclick="">
                                                                                 <span class="" id="oneAccbPymntsRmvdRow<?php echo $cntr; ?>_TrnsCurNm1"><?php echo $entrdCurNm; ?></span>
                                                                             </label>
-                                                                        </div>                                              
+                                                                        </div>
                                                                     </td>
                                                                     <td class="lovtd">
                                                                         <input type="text" class="form-control jbDetDbt" aria-label="..." id="oneAccbPymntsRmvdRow<?php echo $cntr; ?>_AmtGvn" name="oneAccbPymntsRmvdRow<?php echo $cntr; ?>_AmtGvn" value="<?php
-                                                                        echo number_format($trsctnLineAmntGvn, 2);
-                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneAccbPymntsRmvdRow<?php echo $cntr; ?>_AmtGvn', 'oneAccbPymntsRmvdLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" readonly="true">                                                    
+                                                                                                                                                                                                                                                                echo number_format($trsctnLineAmntGvn, 2);
+                                                                                                                                                                                                                                                                ?>" onkeypress="gnrlFldKeyPress(event, 'oneAccbPymntsRmvdRow<?php echo $cntr; ?>_AmtGvn', 'oneAccbPymntsRmvdLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" readonly="true">
                                                                     </td>
                                                                     <td class="lovtd">
                                                                         <input type="text" class="form-control" aria-label="..." id="oneAccbPymntsRmvdRow<?php echo $cntr; ?>_AmtPaid" name="oneAccbPymntsRmvdRow<?php echo $cntr; ?>_AmtPaid" value="<?php
-                                                                        echo number_format($trsctnLineAmntPaid, 2);
-                                                                        ?>"  style="width:100% !important;text-align: right;" readonly="true">                                                    
+                                                                                                                                                                                                                                                        echo number_format($trsctnLineAmntPaid, 2);
+                                                                                                                                                                                                                                                        ?>" style="width:100% !important;text-align: right;" readonly="true">
                                                                     </td>
                                                                     <td class="lovtd">
                                                                         <input type="text" class="form-control" aria-label="..." id="oneAccbPymntsRmvdRow<?php echo $cntr; ?>_ChngBals" name="oneAccbPymntsRmvdRow<?php echo $cntr; ?>_ChngBals" value="<?php
-                                                                        echo number_format($trsctnLineBals, 2);
-                                                                        ?>"  style="width:100% !important;text-align: right;" readonly="true">                                                    
-                                                                    </td>     
+                                                                                                                                                                                                                                                        echo number_format($trsctnLineBals, 2);
+                                                                                                                                                                                                                                                        ?>" style="width:100% !important;text-align: right;" readonly="true">
+                                                                    </td>
                                                                     <td class="lovtd" style="">
                                                                         <span><?php echo ($trsctnLineApldDocNo); ?></span>
                                                                     </td>
@@ -1617,7 +1830,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     </td>
                                                                     <?php
                                                                     if ($canDel === true) {
-                                                                        ?>
+                                                                    ?>
                                                                         <td class="lovtd">
                                                                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Permanently Delete Payment" onclick="delAccbPymntsDetLn('oneAccbPymntsRmvdRow_<?php echo $cntr; ?>');" style="padding:2px !important;" style="padding:2px !important;">
                                                                                 <img src="cmn_images/no.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
@@ -1626,21 +1839,21 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <?php } ?>
                                                                     <?php
                                                                     if ($canVwRcHstry === true) {
-                                                                        ?>
+                                                                    ?>
                                                                         <td class="lovtd">
                                                                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php
-                                                                            echo urlencode(encrypt1(($rowRw[0] . "|accb.accb_payments|pymnt_id"), $smplTokenWord1));
-                                                                            ?>');" style="padding:2px !important;">
+                                                                                                                                                                                                                                    echo urlencode(encrypt1(($rowRw[0] . "|accb.accb_payments|pymnt_id"), $smplTokenWord1));
+                                                                                                                                                                                                                                    ?>');" style="padding:2px !important;">
                                                                                 <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                             </button>
                                                                         </td>
                                                                     <?php } ?>
                                                                 </tr>
-                                                                <?php
+                                                            <?php
                                                             }
                                                             ?>
                                                         </tbody>
-                                                        <tfoot>                                                            
+                                                        <tfoot>
                                                             <tr>
                                                                 <th>&nbsp;</th>
                                                                 <th>&nbsp;</th>
@@ -1648,22 +1861,34 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <th>&nbsp;</th>
                                                                 <th style="text-align: right;">
                                                                     <?php
-                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdPMTGvnRmvdAmtTtlBtn\">" . number_format($ttlTrsctnAmntGvn,
-                                                                            2, '.', ',') . "</span>";
+                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdPMTGvnRmvdAmtTtlBtn\">" . number_format(
+                                                                        $ttlTrsctnAmntGvn,
+                                                                        2,
+                                                                        '.',
+                                                                        ','
+                                                                    ) . "</span>";
                                                                     ?>
                                                                     <input type="hidden" id="myCptrdPMTGvnRmvdAmtTtlVal" value="<?php echo $ttlTrsctnAmntGvn; ?>">
                                                                 </th>
                                                                 <th style="text-align: right;">
                                                                     <?php
-                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdPMTMdeRmvdAmtTtlBtn\">" . number_format($ttlTrsctnAmntPaid,
-                                                                            2, '.', ',') . "</span>";
+                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdPMTMdeRmvdAmtTtlBtn\">" . number_format(
+                                                                        $ttlTrsctnAmntPaid,
+                                                                        2,
+                                                                        '.',
+                                                                        ','
+                                                                    ) . "</span>";
                                                                     ?>
                                                                     <input type="hidden" id="myCptrdPMTMdeRmvdAmtTtlVal" value="<?php echo $ttlTrsctnAmntPaid; ?>">
                                                                 </th>
                                                                 <th style="text-align: right;">
                                                                     <?php
-                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdPMTBalsRmvdAmtTtlBtn\">" . number_format($ttlTrsctnAmntBals,
-                                                                            2, '.', ',') . "</span>";
+                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdPMTBalsRmvdAmtTtlBtn\">" . number_format(
+                                                                        $ttlTrsctnAmntBals,
+                                                                        2,
+                                                                        '.',
+                                                                        ','
+                                                                    ) . "</span>";
                                                                     ?>
                                                                     <input type="hidden" id="myCptrdPMTBalsRmvdAmtTtlVal" value="<?php echo $ttlTrsctnAmntBals; ?>">
                                                                 </th>
@@ -1672,12 +1897,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <th style="">&nbsp;</th>
                                                                 <?php
                                                                 if ($canDel === true) {
-                                                                    ?>
+                                                                ?>
                                                                     <th style="">&nbsp;</th>
                                                                 <?php } ?>
                                                                 <?php
                                                                 if ($canVwRcHstry === true) {
-                                                                    ?>
+                                                                ?>
                                                                     <th style="">&nbsp;</th>
                                                                 <?php } ?>
                                                             </tr>
@@ -1692,7 +1917,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                     </fieldset>
                 </form>
-                <?php
+            <?php
             } else if ($vwtyp == 101) {
                 $sbmtdAccbPymntsID = isset($_POST['sbmtdAccbPymntsID']) ? cleanInputData($_POST['sbmtdAccbPymntsID']) : -1;
                 $sbmtdDocumentID = isset($_POST['sbmtdDocumentID']) ? cleanInputData($_POST['sbmtdDocumentID']) : -1;
@@ -1788,8 +2013,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 $accbPymntsAccntNm1 = $row[30];
                                 $accbPymntsIncrsDcrs2 = "Decrease";
                                 $accbPymntsAccntID2 = (int) getGnrlRecNm("accb.accb_paymnt_mthds", "paymnt_mthd_id", "current_asst_acnt_id", $accbPymntsPayMthdID);
-                                $accbPymntsAccntNm2 = getGnrlRecNm("accb.accb_paymnt_mthds", "paymnt_mthd_id",
-                                        "accb.get_accnt_num(current_asst_acnt_id) || '.' || accb.get_accnt_name(current_asst_acnt_id)", $accbPymntsPayMthdID);
+                                $accbPymntsAccntNm2 = getGnrlRecNm(
+                                    "accb.accb_paymnt_mthds",
+                                    "paymnt_mthd_id",
+                                    "accb.get_accnt_num(current_asst_acnt_id) || '.' || accb.get_accnt_name(current_asst_acnt_id)",
+                                    $accbPymntsPayMthdID
+                                );
                                 $accbPymntsInvcSpplrID = (float) $row[8];
                                 $accbPymntsDesc = "Payment of Invoice No.:" . $row[4] . " (" . $row[6] . ") by " . $row[9];
                                 $srcPymntsDocNum = $row[4];
@@ -1831,8 +2060,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 $accbPymntsAccntNm1 = $row[30];
                                 $accbPymntsIncrsDcrs2 = "Increase";
                                 $accbPymntsAccntID2 = (int) getGnrlRecNm("accb.accb_paymnt_mthds", "paymnt_mthd_id", "current_asst_acnt_id", $accbPymntsPayMthdID);
-                                $accbPymntsAccntNm2 = getGnrlRecNm("accb.accb_paymnt_mthds", "paymnt_mthd_id",
-                                        "accb.get_accnt_num(current_asst_acnt_id) || '.' || accb.get_accnt_name(current_asst_acnt_id)", $accbPymntsPayMthdID);
+                                $accbPymntsAccntNm2 = getGnrlRecNm(
+                                    "accb.accb_paymnt_mthds",
+                                    "paymnt_mthd_id",
+                                    "accb.get_accnt_num(current_asst_acnt_id) || '.' || accb.get_accnt_name(current_asst_acnt_id)",
+                                    $accbPymntsPayMthdID
+                                );
                                 $accbPymntsInvcSpplrID = (float) $row[8];
                                 $accbPymntsDesc = "Payment of Invoice No.:" . $row[4] . " (" . $row[6] . ") by " . $row[9];
                                 $srcPymntsDocNum = $row[4];
@@ -1896,13 +2129,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         $accbPymntsPrepayDocNum = $row[34];
                     }
                 }
-                ?>
+            ?>
                 <form class="form-horizontal" id='accbPymntsPayInvcForm' action='' method='post' accept-charset='UTF-8'>
                     <div class="row">
-                        <div class="col-md-12" style="border:1px solid #ddd; border-radius: 5px;padding: 5px 10px 5px 10px;margin-top: 2px !important;">      
+                        <div class="col-md-12" style="border:1px solid #ddd; border-radius: 5px;padding: 5px 10px 5px 10px;margin-top: 2px !important;">
                             <div class="form-group">
                                 <label for="accbPymntsPayMthdID" class="control-label col-md-4">Pay Method:</label>
-                                <div  class="col-md-8">
+                                <div class="col-md-8">
                                     <select data-placeholder="Select..." class="form-control chosen-select rqrdFld" id="accbPymntsPayMthdID" style="width:100% !important;" onchange="accbPymntsPayMthdChng();">
                                         <?php
                                         $brghtStr = "";
@@ -1913,15 +2146,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             if ($titleRow[0] == $accbPymntsPayMthdID) {
                                                 $selectedTxt = "selected";
                                             }
-                                            ?>
+                                        ?>
                                             <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[1]; ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
-                            </div>   
+                            </div>
                             <div class="form-group <?php echo $accbPymntsPrepayFrmGroupStyle; ?>" id="accbPymntsPrepayFrmGroup">
                                 <label for="accbPymntsPrepayDocNum" class="control-label col-md-4">Prepayment:</label>
-                                <div  class="col-md-8">
+                                <div class="col-md-8">
                                     <div class="input-group">
                                         <input type="text" class="form-control" aria-label="..." id="accbPymntsPrepayDocNum" name="accbPymntsPrepayDocNum" value="<?php echo $accbPymntsPrepayDocNum; ?>" readonly="true">
                                         <input type="hidden" id="accbPymntsPrepayDocID" value="<?php echo $accbPymntsPrepayDocID; ?>">
@@ -1938,7 +2171,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             </div>
                             <div class="form-group">
                                 <label for="accbPymntsDesc" class="control-label col-md-4">Remarks/ Narration:</label>
-                                <div  class="col-md-8">
+                                <div class="col-md-8">
                                     <input type="hidden" id="sbmtdAccbPymntsID" value="<?php echo $sbmtdAccbPymntsID; ?>">
                                     <input type="hidden" id="sbmtdDocumentID" value="<?php echo $sbmtdDocumentID; ?>">
                                     <input type="hidden" id="sbmtdDocumentType" value="<?php echo $accbPymntsVchType; ?>">
@@ -1947,7 +2180,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <textarea class="form-control rqrdFld" rows="2" cols="20" id="accbPymntsDesc" name="accbPymntsDesc" <?php echo $mkReadOnly; ?> style="text-align:left !important;"><?php echo $accbPymntsDesc; ?></textarea>
                                 </div>
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-md-12" style="border:1px solid #ddd; border-radius: 5px;padding: 5px 10px 5px 10px;margin-top: 2px !important;">
                             <div class="form-group">
                                 <div class="col-md-4">
@@ -1974,10 +2207,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 });">
                                             <span class="" style="font-size: 20px !important;" id="accbPymntsInvcCur1"><?php echo $accbPymntsInvcCur; ?></span>
                                         </label>
-                                        <input type="hidden" id="accbPymntsInvcCur" value="<?php echo $accbPymntsInvcCur; ?>"> 
+                                        <input type="hidden" id="accbPymntsInvcCur" value="<?php echo $accbPymntsInvcCur; ?>">
                                         <input class="form-control rqrdFld" type="text" id="accbPymntsGvnAmnt" value="<?php
-                                        echo number_format($accbPymntsGvnAmnt, 2);
-                                        ?>" style="font-weight:bold;width:100%;font-size:18px !important;" onkeyup="quickInvcPayAmntKeyFunc(event);" onchange="quickInvcPayAmntChng();" <?php echo $mkReadOnly; ?>/>
+                                                                                                                        echo number_format($accbPymntsGvnAmnt, 2);
+                                                                                                                        ?>" style="font-weight:bold;width:100%;font-size:18px !important;" onkeyup="quickInvcPayAmntKeyFunc(event);" onchange="quickInvcPayAmntChng();" <?php echo $mkReadOnly; ?> />
                                     </div>
                                 </div>
                             </div>
@@ -1991,8 +2224,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <span class="" style="font-size: 20px !important;" id="accbPymntsInvcCur2"><?php echo $accbPymntsInvcCur; ?></span>
                                         </label>
                                         <input class="form-control" type="text" id="accbPymntsPaidAmnt" value="<?php
-                                        echo number_format($accbPymntsPaidAmnt, 2);
-                                        ?>"  style="font-weight:bold;width:100%;font-size:18px !important;" onchange="fmtAsNumber('accbPymntsPaidAmnt');" readonly="true"/>
+                                                                                                                echo number_format($accbPymntsPaidAmnt, 2);
+                                                                                                                ?>" style="font-weight:bold;width:100%;font-size:18px !important;" onchange="fmtAsNumber('accbPymntsPaidAmnt');" readonly="true" />
                                     </div>
                                 </div>
                             </div>
@@ -2006,8 +2239,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <span class="" style="font-size: 20px !important;" id="accbPymntsInvcCur3"><?php echo $accbPymntsInvcCur; ?></span>
                                         </label>
                                         <input class="form-control" type="text" id="accbPymntsChngBals" value="<?php
-                                        echo number_format($accbPymntsChngBals, 2);
-                                        ?>" style="font-weight:bold;width:100%;font-size:18px !important;" onchange="fmtAsNumber('accbPymntsChngBals');"  readonly="true"/>
+                                                                                                                echo number_format($accbPymntsChngBals, 2);
+                                                                                                                ?>" style="font-weight:bold;width:100%;font-size:18px !important;" onchange="fmtAsNumber('accbPymntsChngBals');" readonly="true" />
                                     </div>
                                 </div>
                             </div>
@@ -2028,7 +2261,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <div class="col-md-8">
                                     <input type="text" data-toggle="tooltip" title="Cheque/Card Number" class="form-control" aria-label="..." id="accbPymntsChqNumber" name="accbPymntsChqNumber" value="<?php echo $accbPymntsChqNumber; ?>" <?php echo $mkReadOnly; ?>>
                                 </div>
-                            </div> 
+                            </div>
                             <div class="form-group">
                                 <div class="col-md-4">
                                     <label style="margin-bottom:0px !important;">(MM/YY)/CCV:</label>
@@ -2037,7 +2270,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <input type="text" class="form-control" aria-label="..." data-toggle="tooltip" title="Card Expiry Date" id="accbPymntsExpiryDate" name="accbPymntsExpiryDate" value="<?php echo $accbPymntsExpiryDate; ?>" <?php echo $mkReadOnly; ?>>
                                 </div>
                                 <div class="col-md-3" style="padding: 0px 15px 0px 2px !important;">
-                                    <input class="form-control" type="text" data-toggle="tooltip" title="Sign Code (CCV)" id="accbPymntsSignCode" value="<?php echo $accbPymntsSignCode; ?>" style="width:100%;" <?php echo $mkReadOnly; ?>/>
+                                    <input class="form-control" type="text" data-toggle="tooltip" title="Sign Code (CCV)" id="accbPymntsSignCode" value="<?php echo $accbPymntsSignCode; ?>" style="width:100%;" <?php echo $mkReadOnly; ?> />
                                 </div>
                             </div>
                             <div class="form-group" style="display:none">
@@ -2050,12 +2283,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <span class="" style="" id="accbPymntsInvcCur4"><?php echo $accbPymntsInvcCur; ?></span>
                                         </label>
                                         <input class="form-control rqrdFld" type="text" id="accbPymntsFuncCurRate" data-toggle="tooltip" title="Rate" value="<?php
-                                        echo number_format($accbPymntsFuncCurRate, 4);
-                                        ?>" style="width:100%;" onchange="fmtAsNumber('accbPymntsFuncCurRate');"  <?php echo $mkReadOnly; ?>/>
+                                                                                                                                                                echo number_format($accbPymntsFuncCurRate, 4);
+                                                                                                                                                                ?>" style="width:100%;" onchange="fmtAsNumber('accbPymntsFuncCurRate');" <?php echo $mkReadOnly; ?> />
                                     </div>
                                 </div>
                                 <div class="col-md-4" style="padding: 0px 15px 0px 2px !important;">
-                                    <input class="form-control" type="text" data-toggle="tooltip"  title="Amount" id="accbPymntsFuncCurAmnt" value="<?php echo $accbPymntsFuncCurAmnt; ?>" style="width:100%;" readonly="true"/>
+                                    <input class="form-control" type="text" data-toggle="tooltip" title="Amount" id="accbPymntsFuncCurAmnt" value="<?php echo $accbPymntsFuncCurAmnt; ?>" style="width:100%;" readonly="true" />
                                 </div>
                             </div>
                             <div class="form-group" style="display:none">
@@ -2067,22 +2300,22 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label class="btn btn-default btn-file input-group-addon active" onclick="">
                                             <span class="" style="" id="accbPymntsInvcCur5"><?php echo $accbPymntsInvcCur; ?></span>
                                         </label>
-                                        <input class="form-control rqrdFld" type="text" id="accbPymntsAcntCurRate" data-toggle="tooltip"  title="Rate" value="<?php
-                                        echo number_format($accbPymntsAcntCurRate, 4);
-                                        ?>" style="width:100%;" onchange="fmtAsNumber('accbPymntsAcntCurRate');" <?php echo $mkReadOnly; ?>/>
+                                        <input class="form-control rqrdFld" type="text" id="accbPymntsAcntCurRate" data-toggle="tooltip" title="Rate" value="<?php
+                                                                                                                                                                echo number_format($accbPymntsAcntCurRate, 4);
+                                                                                                                                                                ?>" style="width:100%;" onchange="fmtAsNumber('accbPymntsAcntCurRate');" <?php echo $mkReadOnly; ?> />
                                     </div>
                                 </div>
                                 <div class="col-md-4" style="padding: 0px 15px 0px 2px !important;">
-                                    <input class="form-control" type="text" id="accbPymntsAcntCurAmnt" data-toggle="tooltip"  title="Amount" value="<?php
-                                    echo number_format($accbPymntsAcntCurAmnt, 2);
-                                    ?>" style="width:100%;"  readonly="true"/>
+                                    <input class="form-control" type="text" id="accbPymntsAcntCurAmnt" data-toggle="tooltip" title="Amount" value="<?php
+                                                                                                                                                    echo number_format($accbPymntsAcntCurAmnt, 2);
+                                                                                                                                                    ?>" style="width:100%;" readonly="true" />
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-12" style="display:none;border:1px solid #ddd; border-radius: 5px;padding: 5px 10px 5px 10px;margin-top: 2px !important;">      
+                        <div class="col-md-12" style="display:none;border:1px solid #ddd; border-radius: 5px;padding: 5px 10px 5px 10px;margin-top: 2px !important;">
                             <div class="form-group">
                                 <label for="accbPymntsIncrsDcrs1" class="control-label col-md-4">Incrs./ Dcrs.:</label>
-                                <div  class="col-md-8">
+                                <div class="col-md-8">
                                     <select data-placeholder="Select..." class="form-control chosen-select" id="accbPymntsIncrsDcrs1" style="width:100% !important;">
                                         <?php
                                         $valslctdArry = array("", "");
@@ -2091,22 +2324,22 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             if ($accbPymntsIncrsDcrs1 == $srchInsArrys[$z]) {
                                                 $valslctdArry[$z] = "selected";
                                             }
-                                            ?>
+                                        ?>
                                             <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
-                            </div>   
+                            </div>
                             <div class="form-group">
                                 <label for="accbPymntsAccntNm1" class="control-label col-md-4">Clearing Acc.:</label>
-                                <div  class="col-md-8">
-                                    <input class="form-control" id="accbPymntsAccntNm1" style="font-size: 13px !important;font-weight: bold !important;" placeholder="" type = "text" min="0" placeholder="" value="<?php echo $accbPymntsAccntNm1; ?>" readonly="true"/>
+                                <div class="col-md-8">
+                                    <input class="form-control" id="accbPymntsAccntNm1" style="font-size: 13px !important;font-weight: bold !important;" placeholder="" type="text" min="0" placeholder="" value="<?php echo $accbPymntsAccntNm1; ?>" readonly="true" />
                                     <input type="hidden" id="accbPymntsAccntID1" value="<?php echo $accbPymntsAccntID1; ?>">
                                 </div>
-                            </div>    
+                            </div>
                             <div class="form-group">
                                 <label for="accbPymntsIncrsDcrs2" class="control-label col-md-4">Incrs./ Dcrs.:</label>
-                                <div  class="col-md-8">
+                                <div class="col-md-8">
                                     <select data-placeholder="Select..." class="form-control chosen-select" id="accbPymntsIncrsDcrs2" style="width:100% !important;">
                                         <?php
                                         $valslctdArry = array("", "");
@@ -2115,21 +2348,23 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             if ($accbPymntsIncrsDcrs2 == $srchInsArrys[$z]) {
                                                 $valslctdArry[$z] = "selected";
                                             }
-                                            ?>
+                                        ?>
                                             <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
-                            </div>   
+                            </div>
                             <div class="form-group">
                                 <label for="accbPymntsAccntNm2" class="control-label col-md-4">Charge Acc.:</label>
-                                <div  class="col-md-8">
-                                    <input class="form-control" id="accbPymntsAccntNm2" style="font-size: 13px !important;font-weight: bold !important;" placeholder="" type = "text" value="<?php echo $accbPymntsAccntNm2; ?>" readonly="true"/>
+                                <div class="col-md-8">
+                                    <input class="form-control" id="accbPymntsAccntNm2" style="font-size: 13px !important;font-weight: bold !important;" placeholder="" type="text" value="<?php echo $accbPymntsAccntNm2; ?>" readonly="true" />
                                     <input type="hidden" id="accbPymntsAccntID2" value="<?php echo $accbPymntsAccntID2; ?>">
                                 </div>
                             </div>
-                        </div>  
-                        <div class="row" style="padding:1px 15px 1px 15px !important;"><hr style="margin:1px 0px 1px 0px;"></div>
+                        </div>
+                        <div class="row" style="padding:1px 15px 1px 15px !important;">
+                            <hr style="margin:1px 0px 1px 0px;">
+                        </div>
                         <div class="row" style="float:right;padding-right: 15px;margin-top: 2px;">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <?php if ($canEdt === true) { ?>
@@ -2137,8 +2372,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <?php } ?>
                         </div>
                     </div>
-                </form> 
-                <?php
+                </form>
+            <?php
             } else if ($vwtyp == 102) {
                 header("content-type:application/json");
                 $accbPymntsPrepayDocIDs = isset($_POST['accbPymntsPrepayDocIDs']) ? cleanInputData($_POST['accbPymntsPrepayDocIDs']) : "-1";
@@ -2168,42 +2403,44 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $extraPKeyType = isset($_POST['extraPKeyType']) ? cleanInputData($_POST['extraPKeyType']) : "";
                 $sbmtdAccbPymntsID = $sbmtdAccbInvcID;
                 $mkReadOnly = "readonly=\"true\"";
-                ?>
+            ?>
                 <div id="pymntsInvcSelected" class="tab-pane fadein" style="border:none !important;padding:0px !important;">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="" style="padding:0px 0px 0px 0px;float:right !important;"> 
+                            <div class="" style="padding:0px 0px 0px 0px;float:right !important;">
                                 <?php
                                 //echo $extraPKeyID . "<br/>" . $extraPKeyType;
                                 if ($extraPKeyID > 0 && ($extraPKeyType == "Payable Invoice" || $accbInvcVchType == "Supplier Payments")) {
-                                    ?>
+                                ?>
                                     <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getOneAccbPyblsInvcForm(<?php echo $extraPKeyID; ?>, 1, 'ReloadDialog');">
                                         <img src="cmn_images/undo_256.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">
                                         Go Back&nbsp;
-                                    </button>  
-                                    <?php
-                                } else if ($extraPKeyID > 0 && ($extraPKeyType == "Receivable Invoice" || ($accbInvcVchType == "Customer Payments" && strpos($extraPKeyType,
-                                                "Sales Invoice") === FALSE))) {
-                                    ?>
+                                    </button>
+                                <?php
+                                } else if ($extraPKeyID > 0 && ($extraPKeyType == "Receivable Invoice" || ($accbInvcVchType == "Customer Payments" && strpos(
+                                    $extraPKeyType,
+                                    "Sales Invoice"
+                                ) === FALSE))) {
+                                ?>
                                     <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getOneAccbRcvblsInvcForm(<?php echo $extraPKeyID; ?>, 1, 'ReloadDialog');">
                                         <img src="cmn_images/undo_256.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">
                                         Go Back&nbsp;
-                                    </button>  
-                                    <?php
+                                    </button>
+                                <?php
                                 } else if ($extraPKeyID > 0 && ($extraPKeyType == "Sales Invoice" && $accbInvcVchType == "Customer Payments") && $extraPKeyType != "Quick Sales Invoice") {
-                                    ?>
+                                ?>
                                     <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getOneScmSalesInvcForm(<?php echo $extraPKeyID; ?>, 3, 'ReloadDialog');">
                                         <img src="cmn_images/undo_256.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">
                                         Go Back&nbsp;
-                                    </button>  
-                                    <?php
+                                    </button>
+                                <?php
                                 } else if ($extraPKeyID > 0 && ($extraPKeyType == "Sales Invoice-Hospitality" && $accbInvcVchType == "Customer Payments")) {
-                                    ?>
+                                ?>
                                     <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getOneHotlChckinDocForm(<?php echo $extraPKeyID; ?>, 3, 'ReloadDialog');">
                                         <img src="cmn_images/undo_256.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">
                                         Go Back&nbsp;
-                                    </button>  
-                                    <?php
+                                    </button>
+                                <?php
                                 }
                                 ?>
                             </div>
@@ -2224,12 +2461,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <th style="">&nbsp;</th>
                                         <?php
                                         if ($canVwRcHstry === true) {
-                                            ?>
+                                        ?>
                                             <th style="max-width:20px;width:20px;">&nbsp;</th>
                                         <?php } ?>
                                     </tr>
                                 </thead>
-                                <tbody>   
+                                <tbody>
                                     <?php
                                     $cntr = 0;
                                     $resultRw = get_PayHstry_Trns($sbmtdAccbInvcID, $accbInvcVchType);
@@ -2247,7 +2484,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         $trsctnLinePayMethod = $rowRw[2];
                                         $trsctnLineSrcDocNum = $rowRw[8];
                                         $trsctnLineSrcDocID = $rowRw[7];
-                                        $trsctnLineDesc = $rowRw[5]." [Payment Date:".$rowRw[10]."]";
+                                        $trsctnLineDesc = $rowRw[5] . " [Payment Date:" . $rowRw[10] . "]";
                                         $trsctnLineAmntGvn = $rowRw[25];
                                         $trsctnLineAmntPaid = $rowRw[3];
                                         $trsctnLineBals = $rowRw[4];
@@ -2261,46 +2498,46 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         $ttlTrsctnAmntPaid = $ttlTrsctnAmntPaid + $trsctnLineAmntPaid;
                                         $ttlTrsctnAmntBals = $ttlTrsctnAmntBals + $trsctnLineBals;
                                         $cntr += 1;
-                                        ?>
-                                        <tr id="oneAccbPymntsHstryRow_<?php echo $cntr; ?>">                                    
+                                    ?>
+                                        <tr id="oneAccbPymntsHstryRow_<?php echo $cntr; ?>">
                                             <td class="lovtd">
                                                 <span><?php echo ($cntr); ?></span>
-                                            </td>       
+                                            </td>
                                             <td class="lovtd">
                                                 <span><?php echo ($trsctnLineSrcDocType . "<br/>" . $trsctnLineSrcDocNum); ?></span>
-                                            </td>                                           
-                                            <td class="lovtd"  style="">  
+                                            </td>
+                                            <td class="lovtd" style="">
                                                 <input type="hidden" class="form-control" aria-label="..." id="oneAccbPymntsHstryRow<?php echo $cntr; ?>_TrnsLnID" value="<?php echo $trsctnLineID; ?>" style="width:100% !important;">
-                                                <span><?php echo $trsctnLineDesc; ?></span>                                                  
-                                            </td>                                         
+                                                <span><?php echo $trsctnLineDesc; ?></span>
+                                            </td>
                                             <td class="lovtd">
                                                 <div class="" style="width:100% !important;">
                                                     <label class="btn btn-primary btn-file" onclick="">
                                                         <span class="" id="oneAccbPymntsHstryRow<?php echo $cntr; ?>_TrnsCurNm1"><?php echo $entrdCurNm; ?></span>
                                                     </label>
-                                                </div>                                              
+                                                </div>
                                             </td>
                                             <td class="lovtd" style="text-align: right;">
                                                 <span style="font-weight:bold;font-size:16px;color:blue;text-align: right;"><?php
-                                                    echo number_format($trsctnLineAmntGvn, 2);
-                                                    ?></span>                                                  
+                                                                                                                            echo number_format($trsctnLineAmntGvn, 2);
+                                                                                                                            ?></span>
                                             </td>
                                             <td class="lovtd" style="text-align: right;">
                                                 <span style="font-weight:bold;font-size:16px;color:green;text-align: right;"><?php
-                                                    echo number_format($trsctnLineAmntPaid, 2);
-                                                    ?></span> 
+                                                                                                                                echo number_format($trsctnLineAmntPaid, 2);
+                                                                                                                                ?></span>
                                             </td>
                                             <td class="lovtd" style="text-align: right;">
                                                 <span style="font-weight:bold;font-size:16px;color:red;text-align: right;"><?php
-                                                    echo number_format($trsctnLineBals, 2);
-                                                    ?></span> 
-                                            </td>     
+                                                                                                                            echo number_format($trsctnLineBals, 2);
+                                                                                                                            ?></span>
+                                            </td>
                                             <td class="lovtd" style="">
-                                                <span><?php echo $trsctnLinePayMethod . "<br/>" . $trsctnLineApldDocNo; ?></span>                                                  
+                                                <span><?php echo $trsctnLinePayMethod . "<br/>" . $trsctnLineApldDocNo; ?></span>
                                             </td>
                                             <td class="lovtd">
                                                 <div class="input-group" style="width:100% !important;">
-                                                    <input class="form-control" id="oneAccbPymntsSmryRow<?php echo $cntr; ?>_GlBtchNm" style="font-size: 13px !important;font-weight: bold !important;width:100% !important;" placeholder="" type = "text" value="<?php echo $trsctnLineGlBtchNm; ?>" readonly="true"/>
+                                                    <input class="form-control" id="oneAccbPymntsSmryRow<?php echo $cntr; ?>_GlBtchNm" style="font-size: 13px !important;font-weight: bold !important;width:100% !important;" placeholder="" type="text" value="<?php echo $trsctnLineGlBtchNm; ?>" readonly="true" />
                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getOneJrnlBatchForm(<?php echo $trsctnLineGlBtchID; ?>, 1, 'ReloadDialog', <?php echo $sbmtdAccbInvcID; ?>, 'Payment History|<?php echo $accbInvcVchType; ?>|<?php echo $extraPKeyType; ?>');">
                                                         <img src="cmn_images/openfileicon.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">
                                                     </label>
@@ -2313,21 +2550,21 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </td>
                                             <?php
                                             if ($canVwRcHstry === true) {
-                                                ?>
+                                            ?>
                                                 <td class="lovtd">
                                                     <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php
-                                                    echo urlencode(encrypt1(($trsctnLineID . "|accb.accb_payments|pymnt_id"), $smplTokenWord1));
-                                                    ?>');" style="padding:2px !important;">
+                                                                                                                                                                                                            echo urlencode(encrypt1(($trsctnLineID . "|accb.accb_payments|pymnt_id"), $smplTokenWord1));
+                                                                                                                                                                                                            ?>');" style="padding:2px !important;">
                                                         <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                     </button>
                                                 </td>
                                             <?php } ?>
                                         </tr>
-                                        <?php
+                                    <?php
                                     }
                                     ?>
                                 </tbody>
-                                <tfoot>                                                            
+                                <tfoot>
                                     <tr>
                                         <th>&nbsp;</th>
                                         <th>&nbsp;</th>
@@ -2335,22 +2572,34 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <th>&nbsp;</th>
                                         <th style="text-align: right;">
                                             <?php
-                                            echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdPMTGvnHstryAmtTtlBtn\">" . number_format($ttlTrsctnAmntGvn,
-                                                    2, '.', ',') . "</span>";
+                                            echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdPMTGvnHstryAmtTtlBtn\">" . number_format(
+                                                $ttlTrsctnAmntGvn,
+                                                2,
+                                                '.',
+                                                ','
+                                            ) . "</span>";
                                             ?>
                                             <input type="hidden" id="myCptrdPMTGvnHstryAmtTtlVal" value="<?php echo $ttlTrsctnAmntGvn; ?>">
                                         </th>
                                         <th style="text-align: right;">
                                             <?php
-                                            echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdPMTMdeHstryAmtTtlBtn\">" . number_format($ttlTrsctnAmntPaid,
-                                                    2, '.', ',') . "</span>";
+                                            echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdPMTMdeHstryAmtTtlBtn\">" . number_format(
+                                                $ttlTrsctnAmntPaid,
+                                                2,
+                                                '.',
+                                                ','
+                                            ) . "</span>";
                                             ?>
                                             <input type="hidden" id="myCptrdPMTMdeHstryAmtTtlVal" value="<?php echo $ttlTrsctnAmntPaid; ?>">
                                         </th>
                                         <th style="text-align: right;">
                                             <?php
-                                            echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdPMTBalsHstryAmtTtlBtn\">" . number_format($ttlTrsctnAmntBals,
-                                                    2, '.', ',') . "</span>";
+                                            echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdPMTBalsHstryAmtTtlBtn\">" . number_format(
+                                                $ttlTrsctnAmntBals,
+                                                2,
+                                                '.',
+                                                ','
+                                            ) . "</span>";
                                             ?>
                                             <input type="hidden" id="myCptrdPMTBalsHstryAmtTtlVal" value="<?php echo $ttlTrsctnAmntBals; ?>">
                                         </th>
@@ -2364,7 +2613,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                     </div>
                 </div>
-                <?php
+            <?php
             } else if ($vwtyp == 20) {
                 /* All Attached Documents */
                 $sbmtdAccbPymntsID = isset($_POST['sbmtdAccbPymntsID']) ? cleanInputData($_POST['sbmtdAccbPymntsID']) : -1;
@@ -2385,14 +2634,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $colClassType1 = "col-lg-2";
                 $colClassType2 = "col-lg-3";
                 $colClassType3 = "col-lg-4";
-                ?>       
+            ?>
                 <fieldset class="" style="padding:10px 0px 5px 0px !important;">
                     <form class="" id="attchdPymntsDocsTblForm">
                         <div class="row">
                             <?php
                             $nwRowHtml = urlencode("<tr id=\"attchdPymntsDocsRow__WWW123WWW\">"
-                                    . "<td class=\"lovtd\"><span>New</span></td>"
-                                    . "<td class=\"lovtd\">
+                                . "<td class=\"lovtd\"><span>New</span></td>"
+                                . "<td class=\"lovtd\">
                                               <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
                                               <div class=\"input-group\" style=\"width:100% !important;\">
                                                 <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"attchdPymntsDocsRow_WWW123WWW_DocCtgryNm\" value=\"\">
@@ -2415,8 +2664,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </button>
                                           </td>
                                         </tr>");
-                            ?> 
-                            <div class="<?php echo $colClassType3; ?>" style="padding:0px 1px 0px 1px !important;"> 
+                            ?>
+                            <div class="<?php echo $colClassType3; ?>" style="padding:0px 1px 0px 1px !important;">
                                 <div class="col-md-12">
                                     <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('attchdPymntsDocsTable', 0, '<?php echo $nwRowHtml; ?>');" style="width:100% !important;">
                                         <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
@@ -2426,23 +2675,23 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             </div>
                             <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                                 <div class="input-group">
-                                    <input class="form-control" id="attchdPymntsDocsSrchFor" type = "text" placeholder="Search For" value="<?php
-                                    echo trim(str_replace("%", " ", $srchFor));
-                                    ?>" onkeyup="enterKeyFuncAttchdPymntsDocs(event, '', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdAccbPymntsID=<?php echo $sbmtdAccbPymntsID; ?>', 'ReloadDialog');">
-                                    <input id="attchdPymntsDocsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                                    <input class="form-control" id="attchdPymntsDocsSrchFor" type="text" placeholder="Search For" value="<?php
+                                                                                                                                            echo trim(str_replace("%", " ", $srchFor));
+                                                                                                                                            ?>" onkeyup="enterKeyFuncAttchdPymntsDocs(event, '', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdAccbPymntsID=<?php echo $sbmtdAccbPymntsID; ?>', 'ReloadDialog');">
+                                    <input id="attchdPymntsDocsPageNo" type="hidden" value="<?php echo $pageNo; ?>">
                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdPymntsDocs('clear', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdAccbPymntsID=<?php echo $sbmtdAccbPymntsID; ?>', 'ReloadDialog');">
                                         <span class="glyphicon glyphicon-remove"></span>
                                     </label>
                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdPymntsDocs('', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdAccbPymntsID=<?php echo $sbmtdAccbPymntsID; ?>', 'ReloadDialog');">
                                         <span class="glyphicon glyphicon-search"></span>
-                                    </label> 
+                                    </label>
                                 </div>
                             </div>
                             <div class="<?php echo $colClassType2; ?>">
                                 <div class="input-group">
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
                                     <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
-                                    <select data-placeholder="Select..." class="form-control chosen-select" id="attchdPymntsDocsDsplySze" style="min-width:70px !important;">                            
+                                    <select data-placeholder="Select..." class="form-control chosen-select" id="attchdPymntsDocsDsplySze" style="min-width:70px !important;">
                                         <?php
                                         $valslctdArry = array("", "", "", "", "", "", "", "");
                                         $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
@@ -2452,9 +2701,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             } else {
                                                 $valslctdArry[$y] = "";
                                             }
-                                            ?>
-                                            <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
-                                            <?php
+                                        ?>
+                                            <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>
+                                        <?php
                                         }
                                         ?>
                                     </select>
@@ -2477,7 +2726,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </nav>
                             </div>
                         </div>
-                        <div class="row"> 
+                        <div class="row">
                             <div class="col-md-12">
                                 <table class="table table-striped table-bordered table-responsive" id="attchdPymntsDocsTable" cellspacing="0" width="100%" style="width:100%;min-width: 400px !important;">
                                     <thead>
@@ -2501,25 +2750,25 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 //file does not exist.
                                                 $doc_src_encrpt = "None";
                                             }
-                                            ?>
-                                            <tr id="attchdPymntsDocsRow_<?php echo $cntr; ?>">                                    
+                                        ?>
+                                            <tr id="attchdPymntsDocsRow_<?php echo $cntr; ?>">
                                                 <td class="lovtd"><span><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
-                                                <td class="lovtd">                                                                   
+                                                <td class="lovtd">
                                                     <span><?php echo $row2[2]; ?></span>
-                                                    <input type="hidden" class="form-control" aria-label="..." id="attchdPymntsDocsRow<?php echo $cntr; ?>_AttchdDocsID" value="<?php echo $row2[0]; ?>" style="width:100% !important;">                                              
+                                                    <input type="hidden" class="form-control" aria-label="..." id="attchdPymntsDocsRow<?php echo $cntr; ?>_AttchdDocsID" value="<?php echo $row2[0]; ?>" style="width:100% !important;">
                                                 </td>
                                                 <td class="lovtd">
                                                     <?php
                                                     if ($doc_src_encrpt == "None") {
-                                                        ?>
+                                                    ?>
                                                         <span style="font-weight: bold;color:#FF0000;">
                                                             <?php
                                                             echo "File Not Found!";
                                                             ?>
                                                         </span>
-                                                        <?php
+                                                    <?php
                                                     } else {
-                                                        ?>
+                                                    ?>
                                                         <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="doAjax('grp=1&typ=11&q=Download&fnm=<?php echo $doc_src_encrpt; ?>', '', 'Redirect', '', '', '');" data-toggle="tooltip" data-placement="bottom" title="Download Document">
                                                             <img src="cmn_images/dwldicon.png" style="height:15px; width:auto; position: relative; vertical-align: middle;"> Download
                                                         </button>
@@ -2531,16 +2780,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     </button>
                                                 </td>
                                             </tr>
-                                            <?php
+                                        <?php
                                         }
                                         ?>
                                     </tbody>
                                 </table>
-                            </div>                     
+                            </div>
                         </div>
                     </form>
-                </fieldset>         
-                <?php
+                </fieldset>
+<?php
             }
         }
     }
