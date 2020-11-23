@@ -422,7 +422,12 @@ $cmd = $browserPDFCmd . " --headless --no-sandbox --disable-gpu --print-to-pdf=\
 $exitErrMsg = "";
 $rhoAPIhost = parse_url($rhoAPIUrl, PHP_URL_HOST);
 $rhoAPIport = parse_url($rhoAPIUrl, PHP_URL_PORT);
-if (fsockopen($rhoAPIhost, $rhoAPIport)) {
+
+$errno = 0;
+$errstr = "";
+set_error_handler("rhoErrorHandler3");
+$rc = @fsockopen($rhoAPIhost, $rhoAPIport, $errno, $errstr, 1);
+if (is_resource($rc)) {
     $rslt = rhoPOSTToAPI(
         $rhoAPIUrl . '/getChromePDF',
         array(

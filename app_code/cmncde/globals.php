@@ -1337,7 +1337,12 @@ function generateReportRun($rptID, $slctdParams, $alrtID)
 
         $rhoAPIhost = parse_url($rhoAPIUrl, PHP_URL_HOST);
         $rhoAPIport = parse_url($rhoAPIUrl, PHP_URL_PORT);
-        if (fsockopen($rhoAPIhost, $rhoAPIport)) {
+
+        $errno = 0;
+        $errstr = "";
+        set_error_handler("rhoErrorHandler3");
+        $rc = @fsockopen($rhoAPIhost, $rhoAPIport, $errno, $errstr, 1);
+        if (is_resource($rc)) {
             $rslt = rhoPOSTToAPI(
                 $rhoAPIUrl . '/startJavaRunner',
                 array(
@@ -1397,10 +1402,15 @@ function reRunReport($rptID, $rptRunID)
     $cmd = "java -jar " . $rnnrPrcsFile . " " . $strArgs;
     logSessionErrs(str_replace($db_pwd, "***************", $cmd));
     $logfilenm = $ftp_base_db_fldr . "/Logs/cmnd_line_logs_" . $rptRunID . "_" . getDB_Date_timeYYMDHMS() . ".txt";
-    
+
     $rhoAPIhost = parse_url($rhoAPIUrl, PHP_URL_HOST);
     $rhoAPIport = parse_url($rhoAPIUrl, PHP_URL_PORT);
-    if (fsockopen($rhoAPIhost, $rhoAPIport)) {
+
+    $errno = 0;
+    $errstr = "";
+    set_error_handler("rhoErrorHandler3");
+    $rc = @fsockopen($rhoAPIhost, $rhoAPIport, $errno, $errstr, 1);
+    if (is_resource($rc)) {
         $rslt = rhoPOSTToAPI(
             $rhoAPIUrl . '/startJavaRunner',
             array(

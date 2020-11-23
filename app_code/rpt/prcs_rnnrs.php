@@ -109,7 +109,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
                     $rhoAPIhost = parse_url($rhoAPIUrl, PHP_URL_HOST);
                     $rhoAPIport = parse_url($rhoAPIUrl, PHP_URL_PORT);
-                    if (fsockopen($rhoAPIhost, $rhoAPIport)) {
+
+                    $errno = 0;
+                    $errstr = "";
+                    set_error_handler("rhoErrorHandler3");
+                    $rc = @fsockopen($rhoAPIhost, $rhoAPIport, $errno, $errstr, 1);
+                    if (is_resource($rc)) {
                         $rslt = rhoPOSTToAPI(
                             $rhoAPIUrl . '/startJavaRunner',
                             array(
