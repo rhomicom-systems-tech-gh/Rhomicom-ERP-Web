@@ -46,7 +46,7 @@ $dfltPrvldgs = array("View Inventory Manager",
     /* 93 */ "View Item Production", "Add Item Production", "Edit Item Production", "Delete Item Production",
     /* 97 */ "Setup Production Processes", "Apply Adhoc Discounts",
     /* 99 */ "View Production Runs", "Add Production Runs", "Edit Production Runs", "Delete Production Runs",
-    /* 103 */ "Can Edit Unit Price", "View only Branch-Related Documents");
+    /* 103 */ "Can Edit Unit Price", "View only Branch-Related Documents", "Can View Cost Price");
 
 $prsnid = $_SESSION['PRSN_ID'];
 $orgID = $_SESSION['ORG_ID'];

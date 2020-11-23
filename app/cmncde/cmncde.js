@@ -1893,8 +1893,8 @@ function getOneAccbPayInvcForm(pKeyID, docType, actionTxt, pOrgnPayID, extraPKey
 
 function quickInvcPayAmntChng() {
     fmtAsNumber('accbPymntsGvnAmnt');
-    var accbPymntsGvnAmnt = typeof $("#accbPymntsGvnAmnt").val() === 'undefined' ? '0' : $("#accbPymntsGvnAmnt").val();
-    var accbPymntsPaidAmnt = typeof $("#accbPymntsPaidAmnt").val() === 'undefined' ? '0' : $("#accbPymntsPaidAmnt").val();
+    var accbPymntsGvnAmnt = typeof $("#accbPymntsGvnAmnt").val() === 'undefined' ? '0' : $("#accbPymntsGvnAmnt").val().replace(/[^-?0-9\.]/g, '');
+    var accbPymntsPaidAmnt = typeof $("#accbPymntsPaidAmnt").val() === 'undefined' ? '0' : $("#accbPymntsPaidAmnt").val().replace(/[^-?0-9\.]/g, '');
     var accbPymntsChngBals = Number(accbPymntsPaidAmnt.replace(/[^-?0-9\.]/g, '')) - Number(accbPymntsGvnAmnt.replace(/[^-?0-9\.]/g, ''));
     $("#accbPymntsChngBals").val(accbPymntsChngBals);
     if (accbPymntsChngBals <= 0) {
@@ -1973,9 +1973,9 @@ function saveQuickInvPayForm() {
     var accbPymntsInvcSpplrID = typeof $("#accbPymntsInvcSpplrID").val() === 'undefined' ? -1 : $("#accbPymntsInvcSpplrID").val();
     var accbPymntsDesc = typeof $("#accbPymntsDesc").val() === 'undefined' ? '' : $("#accbPymntsDesc").val();
     var accbPymntsDfltTrnsDte = typeof $("#accbPymntsDfltTrnsDte").val() === 'undefined' ? '' : $("#accbPymntsDfltTrnsDte").val();
-    var accbPymntsGvnAmnt = typeof $("#accbPymntsGvnAmnt").val() === 'undefined' ? '0' : $("#accbPymntsGvnAmnt").val();
-    var accbPymntsPaidAmnt = typeof $("#accbPymntsPaidAmnt").val() === 'undefined' ? '0' : $("#accbPymntsPaidAmnt").val();
-    var accbPymntsChngBals = typeof $("#accbPymntsChngBals").val() === 'undefined' ? '0' : $("#accbPymntsChngBals").val();
+    var accbPymntsGvnAmnt = typeof $("#accbPymntsGvnAmnt").val() === 'undefined' ? '0' : $("#accbPymntsGvnAmnt").val().replace(/[^-?0-9\.]/g, '');
+    var accbPymntsPaidAmnt = typeof $("#accbPymntsPaidAmnt").val() === 'undefined' ? '0' : $("#accbPymntsPaidAmnt").val().replace(/[^-?0-9\.]/g, '');
+    var accbPymntsChngBals = typeof $("#accbPymntsChngBals").val() === 'undefined' ? '0' : $("#accbPymntsChngBals").val().replace(/[^-?0-9\.]/g, '');
     fmtAsNumber('accbPymntsGvnAmnt').toFixed(2);
     fmtAsNumber('accbPymntsPaidAmnt').toFixed(2);
     fmtAsNumber('accbPymntsChngBals').toFixed(2);

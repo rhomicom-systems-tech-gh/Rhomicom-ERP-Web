@@ -1,31 +1,32 @@
 <?php
 
-function getInvPgPrmssns($prsnID, $orgid, $usrID) {
+function getInvPgPrmssns($prsnID, $orgid, $usrID)
+{
     global $ssnRoles;
     $mdlNm = "Stores And Inventory Manager";
     $rslts = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     $sqlStr = "Select (select oprtnl_crncy_id from org.org_details where org_id = $orgid), "
-            . "pasn.get_prsn_siteid(" . $prsnID . "), "
-            . "pasn.get_prsn_divid_of_spctype(" . $prsnID . ",'Access Control Group'),"
-            . "scm.getUserStoreID(" . $usrID . ", " . $orgid . "), "
-            . "sec.test_prmssns('View Inventory Manager', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "') vwInvntry, "
-            . "sec.test_prmssns('View Sales/Item Issues', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('View Purchases', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('View Item List', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('View Product Categories', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('View Stores/Warehouses', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('View Receipts', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('View Receipt Returns', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('View Item Type Templates', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('View Item Balances', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('View UOM', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('View GL Interface', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('View Item Production', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('View Record History', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('View SQL', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('View only Self-Created Documents', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'),"
-            . "sec.test_prmssns('Can Edit Unit Price', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'),"
-            . "sec.test_prmssns('View only Branch-Related Documents', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "')";
+        . "pasn.get_prsn_siteid(" . $prsnID . "), "
+        . "pasn.get_prsn_divid_of_spctype(" . $prsnID . ",'Access Control Group'),"
+        . "scm.getUserStoreID(" . $usrID . ", " . $orgid . "), "
+        . "sec.test_prmssns('View Inventory Manager', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "') vwInvntry, "
+        . "sec.test_prmssns('View Sales/Item Issues', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('View Purchases', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('View Item List', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('View Product Categories', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('View Stores/Warehouses', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('View Receipts', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('View Receipt Returns', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('View Item Type Templates', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('View Item Balances', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('View UOM', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('View GL Interface', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('View Item Production', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('View Record History', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('View SQL', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('View only Self-Created Documents', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'),"
+        . "sec.test_prmssns('Can Edit Unit Price', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'),"
+        . "sec.test_prmssns('View only Branch-Related Documents', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "')";
     //echo $sqlStr;
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -55,33 +56,34 @@ function getInvPgPrmssns($prsnID, $orgid, $usrID) {
     return $rslts;
 }
 
-function getScmSalesPrmssns($orgid) {
+function getScmSalesPrmssns($orgid)
+{
     global $ssnRoles;
     global $mdlNm;
     $rslts = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     $sqlStr = "Select sec.test_prmssns('Add Pro-Forma Invoices', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Edit Pro-Forma Invoices', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Delete Pro-Forma Invoices', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Add Sales Orders', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Edit Sales Orders', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Delete Sales Orders', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Add Sales Invoices', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Edit Sales Invoices', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Delete Sales Invoices', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Add Internal Item Requests', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Edit Internal Item Requests', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Delete Internal Item Requests', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Add Item Issues-Unbilled', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Edit Item Issues-Unbilled', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Delete Item Issues-Unbilled', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Add Sales Return', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Edit Sales Return', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Delete Sales Return', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('View only Self-Created Documents', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Make Payments', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Cancel Documents', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Can Edit Unit Price', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "')";
-//echo $sqlStr;
+        . "sec.test_prmssns('Edit Pro-Forma Invoices', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Delete Pro-Forma Invoices', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Add Sales Orders', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Edit Sales Orders', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Delete Sales Orders', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Add Sales Invoices', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Edit Sales Invoices', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Delete Sales Invoices', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Add Internal Item Requests', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Edit Internal Item Requests', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Delete Internal Item Requests', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Add Item Issues-Unbilled', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Edit Item Issues-Unbilled', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Delete Item Issues-Unbilled', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Add Sales Return', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Edit Sales Return', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Delete Sales Return', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('View only Self-Created Documents', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Make Payments', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Cancel Documents', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Can Edit Unit Price', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "')";
+    //echo $sqlStr;
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         $rslts[0] = ((int) $row[0]);
@@ -115,21 +117,22 @@ function getScmSalesPrmssns($orgid) {
     return $rslts;
 }
 
-function getScmPrchsPrmssns($orgid) {
+function getScmPrchsPrmssns($orgid)
+{
     global $ssnRoles;
     global $mdlNm;
     $rslts = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     $sqlStr = "Select sec.test_prmssns('Add Purchase Requisitions', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Edit Purchase Requisitions', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Delete Purchase Requisitions', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Add Purchase Orders', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Edit Purchase Orders', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Delete Purchase Orders', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('View only Self-Created Documents', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Make Payments', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Cancel Documents', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
-            . "sec.test_prmssns('Can Edit Unit Price', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "')";
-//echo $sqlStr;
+        . "sec.test_prmssns('Edit Purchase Requisitions', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Delete Purchase Requisitions', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Add Purchase Orders', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Edit Purchase Orders', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Delete Purchase Orders', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('View only Self-Created Documents', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Make Payments', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Cancel Documents', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
+        . "sec.test_prmssns('Can Edit Unit Price', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "')";
+    //echo $sqlStr;
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         $rslts[0] = ((int) $row[0]);
@@ -164,56 +167,70 @@ function getScmPrchsPrmssns($orgid) {
     return $rslts;
 }
 
-function createPaymntLine($pymtTyp, $amnt, $curBals, $payRmrk, $srcDocTyp, $srcDocID, $dateStr, $dateRcvd) {
+function createPaymntLine($pymtTyp, $amnt, $curBals, $payRmrk, $srcDocTyp, $srcDocID, $dateStr, $dateRcvd)
+{
     $dateStr = getDB_Date_time();
     global $usrID;
     global $orgID;
 
     $insSQL = "INSERT INTO scm.scm_payments(" .
-            "pymnt_type, amount_paid, custmrs_balance, pymnt_remark, " .
-            "src_doc_typ, src_doc_id, created_by, creation_date, last_update_by, " .
-            "last_update_date, date_rcvd) " .
-            "VALUES ('" . loc_db_escape_string($pymtTyp) . "',$amnt,$curBals, '" . loc_db_escape_string($payRmrk) .
-            "','" . loc_db_escape_string($srcDocTyp) .
-            "',$srcDocID,$usrID, '" . $dateStr . "',$usrID, '" . $dateStr . "', '" . $dateRcvd . "')";
+        "pymnt_type, amount_paid, custmrs_balance, pymnt_remark, " .
+        "src_doc_typ, src_doc_id, created_by, creation_date, last_update_by, " .
+        "last_update_date, date_rcvd) " .
+        "VALUES ('" . loc_db_escape_string($pymtTyp) . "',$amnt,$curBals, '" . loc_db_escape_string($payRmrk) .
+        "','" . loc_db_escape_string($srcDocTyp) .
+        "',$srcDocID,$usrID, '" . $dateStr . "',$usrID, '" . $dateStr . "', '" . $dateRcvd . "')";
     execUpdtInsSQL($insSQL);
 }
 
-function createTodaysGLBatch($orgid, $batchnm, $batchdesc, $batchsource) {
+function createTodaysGLBatch($orgid, $batchnm, $batchdesc, $batchsource)
+{
     $dateStr = getDB_Date_time();
     global $usrID;
     global $orgID;
 
     $insSQL = "INSERT INTO accb.accb_trnsctn_batches(" .
-            "batch_name, batch_description, created_by, creation_date, " .
-            "org_id, batch_status, last_update_by, last_update_date, batch_source) " .
-            "VALUES ('" . loc_db_escape_string($batchnm) . "', '" . loc_db_escape_string($batchdesc) .
-            "',$usrID, '" . $dateStr . "',$orgid, '0', $usrID, 
+        "batch_name, batch_description, created_by, creation_date, " .
+        "org_id, batch_status, last_update_by, last_update_date, batch_source) " .
+        "VALUES ('" . loc_db_escape_string($batchnm) . "', '" . loc_db_escape_string($batchdesc) .
+        "',$usrID, '" . $dateStr . "',$orgid, '0', $usrID, 
               '" . $dateStr . "','" . loc_db_escape_string($batchsource) . "')";
     execUpdtInsSQL($insSQL);
 }
 
-function createPymntGLLine($accntid, $trnsdesc, $dbtamnt, $trnsdte, $crncyid, $batchid, $crdtamnt, $netamnt, $srcids, $dateStr) {
+function createPymntGLLine($accntid, $trnsdesc, $dbtamnt, $trnsdte, $crncyid, $batchid, $crdtamnt, $netamnt, $srcids, $dateStr)
+{
     $dateStr = getDB_Date_time();
     global $usrID;
     global $orgID;
 
-    if (accntid <= 0) {
+    if ($accntid <= 0) {
         return;
     }
     $insSQL = "INSERT INTO accb.accb_trnsctn_details(" .
-            "accnt_id, transaction_desc, dbt_amount, trnsctn_date, " .
-            "func_cur_id, created_by, creation_date, batch_id, crdt_amount, " .
-            "last_update_by, last_update_date, net_amount, trns_status, source_trns_ids) " .
-            "VALUES ($accntid, '" . loc_db_escape_string($trnsdesc) . "', $dbtamnt, 
+        "accnt_id, transaction_desc, dbt_amount, trnsctn_date, " .
+        "func_cur_id, created_by, creation_date, batch_id, crdt_amount, " .
+        "last_update_by, last_update_date, net_amount, trns_status, source_trns_ids) " .
+        "VALUES ($accntid, '" . loc_db_escape_string($trnsdesc) . "', $dbtamnt, 
                '" . loc_db_escape_string($trnsdte) . "',$crncyid, $usrID, 
                 '" . $dateStr . "',$batchid,$crdtamnt,$usrID, 
                '" . $dateStr . "',$netamnt, '0', '" . $srcids . "')";
     execUpdtInsSQL($insSQL);
 }
 
-function createPymntGLIntFcLn($accntid, $trnsdesc, $dbtamnt, $trnsdte, $crncyid, $crdtamnt, $netamnt, $srcDocTyp, $srcDocID, $srcDocLnID,
-        $dateStr) {
+function createPymntGLIntFcLn(
+    $accntid,
+    $trnsdesc,
+    $dbtamnt,
+    $trnsdte,
+    $crncyid,
+    $crdtamnt,
+    $netamnt,
+    $srcDocTyp,
+    $srcDocID,
+    $srcDocLnID,
+    $dateStr
+) {
     $dateStr = getDB_Date_time();
     global $usrID;
     global $orgID;
@@ -222,17 +239,18 @@ function createPymntGLIntFcLn($accntid, $trnsdesc, $dbtamnt, $trnsdte, $crncyid,
         return;
     }
     $insSQL = "INSERT INTO scm.scm_gl_interface(" .
-            "accnt_id, transaction_desc, dbt_amount, trnsctn_date, " .
-            "func_cur_id, created_by, creation_date, crdt_amount, last_update_by, " .
-            "last_update_date, net_amount, gl_batch_id, src_doc_typ, src_doc_id, " .
-            "src_doc_line_id) " .
-            "VALUES ($accntid, '" . loc_db_escape_string($trnsdesc) . "',$dbtamnt, 
+        "accnt_id, transaction_desc, dbt_amount, trnsctn_date, " .
+        "func_cur_id, created_by, creation_date, crdt_amount, last_update_by, " .
+        "last_update_date, net_amount, gl_batch_id, src_doc_typ, src_doc_id, " .
+        "src_doc_line_id) " .
+        "VALUES ($accntid, '" . loc_db_escape_string($trnsdesc) . "',$dbtamnt, 
                '" . loc_db_escape_string($trnsdte) . "',$crncyid,$usrID, '" . $dateStr . "',$crdtamnt,$usrID, 
                    '" . $dateStr . "',$netamnt, -1,'" . loc_db_escape_string($srcDocTyp) . "',$srcDocID, $srcDocLnID)";
     execUpdtInsSQL($insSQL);
 }
 
-function getPurchOdrID($parPONo) {
+function getPurchOdrID($parPONo)
+{
     global $orgID;
     $sqlStr = "SELECT prchs_doc_hdr_id from scm.scm_prchs_docs_hdr
           WHERE purchase_doc_num = $parPONo AND org_id = $orgID";
@@ -243,7 +261,8 @@ function getPurchOdrID($parPONo) {
     return 0;
 }
 
-function getPurchOdrNo($parPOID) {
+function getPurchOdrNo($parPOID)
+{
     $sqlStr = "select purchase_doc_num from scm.scm_prchs_docs_hdr 
          where prchs_doc_hdr_id = $parPOID";
     $result = executeSQLNoParams($sqlStr);
@@ -253,18 +272,26 @@ function getPurchOdrNo($parPOID) {
     return 0;
 }
 
-function dispDBTimeLong($parDTime) {
+function dispDBTimeLong($parDTime)
+{
     if ($parDTime == "") {
         return "";
     } else {
-        return to_char(to_timestamp($parDTime, 'YYYY-MM-DD HH24:MI:SS'), 'DD-Mon-YYYY HH24:MI:SS');
+        $sqlStr = "select to_char(to_timestamp($parDTime, 'YYYY-MM-DD HH24:MI:SS'), 'DD-Mon-YYYY HH24:MI:SS')";
+        $result = executeSQLNoParams($sqlStr);
+        if (loc_db_num_rows($result) > 0) {
+            $row = loc_db_fetch_array($result);
+            return $row[0];
+        }
+        return "";
     }
 }
 
-function getGnrlRecIDilike($tblNm, $srchcol, $rtrnCol, $recname, $orgid) {
+function getGnrlRecIDilike($tblNm, $srchcol, $rtrnCol, $recname, $orgid)
+{
     $sqlStr = "select " . $rtrnCol . " from " . $tblNm . " where lower(" . $srchcol . ") ilike lower('" .
-            loc_db_escape_string($recname) . "') and org_id = " . $orgid;
-//echo "<p>".$sqlStr ."</p>";
+        loc_db_escape_string($recname) . "') and org_id = " . $orgid;
+    //echo "<p>".$sqlStr ."</p>";
     $result = executeSQLNoParams($sqlStr);
     $ftchrslt = "'";
     $ftchrslt1 = "'";
@@ -278,10 +305,11 @@ function getGnrlRecIDilike($tblNm, $srchcol, $rtrnCol, $recname, $orgid) {
     return -1;
 }
 
-function getSalesDocLnID($itmID, $storeID, $srcDocID) {
+function getSalesDocLnID($itmID, $storeID, $srcDocID)
+{
     $sqlStr = "select y.invc_det_ln_id " .
-            "from scm.scm_sales_invc_det y " .
-            "where y.itm_id=  $itmID and y.store_id= $storeID 
+        "from scm.scm_sales_invc_det y " .
+        "where y.itm_id=  $itmID and y.store_id= $storeID 
             and y.invc_hdr_id=" . $srcDocID . " ";
     $result = executeSQLNoParams($sqlStr);
     if (loc_db_num_rows($result) > 0) {
@@ -291,12 +319,13 @@ function getSalesDocLnID($itmID, $storeID, $srcDocID) {
     return -1;
 }
 
-function getSalesSmmryItmID($smmryType, $codeBhnd, $srcDocID, $srcDocTyp) {
+function getSalesSmmryItmID($smmryType, $codeBhnd, $srcDocID, $srcDocTyp)
+{
     $sqlStr = "select y.smmry_id " .
-            "from scm.scm_doc_amnt_smmrys y " .
-            "where y.smmry_type= '" . $smmryType . "' and y.code_id_behind= " . $codeBhnd .
-            " and y.src_doc_type='" . $srcDocTyp .
-            "' and y.src_doc_hdr_id=" . $srcDocID . " ";
+        "from scm.scm_doc_amnt_smmrys y " .
+        "where y.smmry_type= '" . $smmryType . "' and y.code_id_behind= " . $codeBhnd .
+        " and y.src_doc_type='" . $srcDocTyp .
+        "' and y.src_doc_hdr_id=" . $srcDocID . " ";
     $result = executeSQLNoParams($sqlStr);
     if (loc_db_num_rows($result) > 0) {
         $row = loc_db_fetch_array($result);
@@ -305,21 +334,23 @@ function getSalesSmmryItmID($smmryType, $codeBhnd, $srcDocID, $srcDocTyp) {
     return -1;
 }
 
-function get_One_SalesDcDt1($dochdrID) {
+function get_One_SalesDcDt1($dochdrID)
+{
     $strSql = "SELECT a.invc_hdr_id, a.invc_number, " .
-            "a.invc_type, a.src_doc_hdr_id, a.invc_date, " .
-            "a.customer_id, a.customer_site_id, a.comments_desc, a.payment_terms, " .
-            "a.approval_status, a.next_aproval_action, " .
-            "a.created_by, a.branch_id, org.get_site_code_desc(a.branch_id) " .
-            "FROM scm.scm_sales_invc_hdr a " .
-            "WHERE(a.invc_hdr_id = " . $dochdrID .
-            ")";
+        "a.invc_type, a.src_doc_hdr_id, a.invc_date, " .
+        "a.customer_id, a.customer_site_id, a.comments_desc, a.payment_terms, " .
+        "a.approval_status, a.next_aproval_action, " .
+        "a.created_by, a.branch_id, org.get_site_code_desc(a.branch_id) " .
+        "FROM scm.scm_sales_invc_hdr a " .
+        "WHERE(a.invc_hdr_id = " . $dochdrID .
+        ")";
 
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_One_SalesDcDt($dochdrID) {
+function get_One_SalesDcDt($dochdrID)
+{
     $sqlStr = "SELECT a.invc_hdr_id mt, 
         CASE WHEN a.invc_type = 'Sales Order' THEN 'Sales Invoice'
         WHEN a.invc_type = 'Pro-Forma Invoice' THEN 'Sales Order'
@@ -338,18 +369,19 @@ function get_One_SalesDcDt($dochdrID) {
        a.customer_site_id mt, a.branch_id, org.get_site_code_desc(a.branch_id)
        FROM scm.scm_sales_invc_hdr a 
         WHERE a.invc_hdr_id = $dochdrID";
-//echo $sqlStr;
+    //echo $sqlStr;
     $result = executeSQLNoParams($sqlStr);
     return $result;
 }
 
-function getSalesDocBscAmnt($dochdrID, $docTyp) {
+function getSalesDocBscAmnt($dochdrID, $docTyp)
+{
     $strSql = "select SUM(CASE WHEN (smmry_type='2Tax' or smmry_type='4Extra Charge') THEN -1*y.smmry_amnt ELSE y.smmry_amnt END) amnt " .
-            "from scm.scm_doc_amnt_smmrys y " .
-            "where y.src_doc_hdr_id=" . $dochdrID .
-            " and y.src_doc_type='" . $docTyp . "' and y.smmry_type != '1Initial Amount' " .
-            " and y.smmry_type != '6Total Payments Received' and y.smmry_type != " .
-            "'7Change/Balance' and smmry_type!='3Discount'";
+        "from scm.scm_doc_amnt_smmrys y " .
+        "where y.src_doc_hdr_id=" . $dochdrID .
+        " and y.src_doc_type='" . $docTyp . "' and y.smmry_type != '1Initial Amount' " .
+        " and y.smmry_type != '6Total Payments Received' and y.smmry_type != " .
+        "'7Change/Balance' and smmry_type!='3Discount'";
     $result = executeSQLNoParams($strSql);
     $rs = 0;
 
@@ -360,7 +392,8 @@ function getSalesDocBscAmnt($dochdrID, $docTyp) {
     return $rs;
 }
 
-function getSalesDocCodesAmnt($codeID, $unitAmnt, $qnty) {
+function getSalesDocCodesAmnt($codeID, $unitAmnt, $qnty)
+{
     $codeSQL = getGnrlRecNm("scm.scm_tax_codes", "code_id", "sql_formular", $codeID);
     $codeSQL = str_replace("{:unit_price}", $unitAmnt, str_replace("{:qty}", $qnty, $codeSQL));
     if ($codeSQL != "") {
@@ -377,11 +410,12 @@ function getSalesDocCodesAmnt($codeID, $unitAmnt, $qnty) {
     }
 }
 
-function getSalesDocGrndAmnt($dochdrID) {
+function getSalesDocGrndAmnt($dochdrID)
+{
     $strSql = "select COALESCE(SUM(y.doc_qty*unit_selling_price),0) amnt " .
-            "from scm.scm_sales_invc_det y " .
-            "where y.invc_hdr_id=" . $dochdrID . " ";
-//echo "</br>".$strSql;
+        "from scm.scm_sales_invc_det y " .
+        "where y.invc_hdr_id=" . $dochdrID . " ";
+    //echo "</br>".$strSql;
     $result = executeSQLNoParams($strSql);
     $rs = 0;
 
@@ -392,10 +426,11 @@ function getSalesDocGrndAmnt($dochdrID) {
     return $rs;
 }
 
-function getSalesDocRcvdPymnts($dochdrID, $docType) {
+function getSalesDocRcvdPymnts($dochdrID, $docType)
+{
     $strSql = "select COALESCE(SUM(y.amount_paid),0) amnt " .
-            "from scm.scm_payments y " .
-            "where y.src_doc_id=" . $dochdrID . " and y.src_doc_typ = '" . loc_db_escape_string($docType) . "'";
+        "from scm.scm_payments y " .
+        "where y.src_doc_id=" . $dochdrID . " and y.src_doc_typ = '" . loc_db_escape_string($docType) . "'";
     $result = executeSQLNoParams($strSql);
     $rs = 0;
 
@@ -406,11 +441,12 @@ function getSalesDocRcvdPymnts($dochdrID, $docType) {
     return $rs;
 }
 
-function get_One_AvlblSrcLnQty($srcLnID) {
+function get_One_AvlblSrcLnQty($srcLnID)
+{
     $strSql = "SELECT (a.doc_qty - a.qty_trnsctd_in_dest_doc) avlbl_qty " .
-            "FROM scm.scm_sales_invc_det a " .
-            "WHERE(a.invc_det_ln_id = " . $srcLnID .
-            ") ORDER BY a.invc_det_ln_id";
+        "FROM scm.scm_sales_invc_det a " .
+        "WHERE(a.invc_det_ln_id = " . $srcLnID .
+        ") ORDER BY a.invc_det_ln_id";
     $result = executeSQLNoParams($strSql);
     $rs = 0;
     if (loc_db_num_rows($result) > 0) {
@@ -420,13 +456,14 @@ function get_One_AvlblSrcLnQty($srcLnID) {
     return $rs;
 }
 
-function get_One_LnTrnsctdQty($dochdrID, $srcLnID) {
+function get_One_LnTrnsctdQty($dochdrID, $srcLnID)
+{
     $strSql = "SELECT SUM(a.doc_qty) trnsctd_qty " .
-            "FROM scm.scm_sales_invc_det a " .
-            "WHERE(a.invc_hdr_id IN(select b.invc_hdr_id " .
-            "from scm.scm_sales_invc_hdr b where b.src_doc_hdr_id = " . $dochdrID .
-            " and b.src_doc_hdr_id>0) and a.invc_det_ln_id = "
-            . $srcLnID . ")";
+        "FROM scm.scm_sales_invc_det a " .
+        "WHERE(a.invc_hdr_id IN(select b.invc_hdr_id " .
+        "from scm.scm_sales_invc_hdr b where b.src_doc_hdr_id = " . $dochdrID .
+        " and b.src_doc_hdr_id>0) and a.invc_det_ln_id = "
+        . $srcLnID . ")";
     $result = executeSQLNoParams($strSql);
     $rs = 0;
     if (loc_db_num_rows($result) > 0) {
@@ -436,37 +473,40 @@ function get_One_LnTrnsctdQty($dochdrID, $srcLnID) {
     return $rs;
 }
 
-function get_One_SalesDcLines($dochdrID) {
+function get_One_SalesDcLines($dochdrID)
+{
     global $recDt_SQL;
     $strSql = "SELECT a.invc_det_ln_id, a.itm_id, " .
-            "a.doc_qty, a.unit_selling_price, (a.doc_qty * a.unit_selling_price) amnt, " .
-            "a.store_id, a.crncy_id, (a.doc_qty - a.qty_trnsctd_in_dest_doc) avlbl_qty, " .
-            "a.src_line_id, a.tax_code_id, a.dscnt_code_id, a.chrg_code_id, a.rtrn_reason, a.consgmnt_ids " .
-            "FROM scm.scm_sales_invc_det a " .
-            "WHERE(a.invc_hdr_id = " . $dochdrID .
-            " and a.invc_hdr_id >0) ORDER BY a.invc_det_ln_id";
+        "a.doc_qty, a.unit_selling_price, (a.doc_qty * a.unit_selling_price) amnt, " .
+        "a.store_id, a.crncy_id, (a.doc_qty - a.qty_trnsctd_in_dest_doc) avlbl_qty, " .
+        "a.src_line_id, a.tax_code_id, a.dscnt_code_id, a.chrg_code_id, a.rtrn_reason, a.consgmnt_ids " .
+        "FROM scm.scm_sales_invc_det a " .
+        "WHERE(a.invc_hdr_id = " . $dochdrID .
+        " and a.invc_hdr_id >0) ORDER BY a.invc_det_ln_id";
     $result = executeSQLNoParams($strSql);
     $recDt_SQL = $strSql;
     return $result;
 }
 
-function updateSmmryItmOld($smmryID, $smmryTyp, $amnt, $autoCalc, $smmryNm) {
-//Global.mnFrm.cmCde.Extra_Adt_Trl_Info = "";
+function updateSmmryItmOld($smmryID, $smmryTyp, $amnt, $autoCalc, $smmryNm)
+{
+    //Global.mnFrm.cmCde.Extra_Adt_Trl_Info = "";
     global $usrID;
     if ($smmryTyp == "3Discount") {
         $amnt = -1 * abs($amnt);
     }
     $dateStr = getDB_Date_time();
     $updtSQL = "UPDATE scm.scm_doc_amnt_smmrys SET " .
-            "smmry_amnt = " . $amnt .
-            ", last_update_by = " . $usrID . ", " .
-            "auto_calc = '" . cnvrtBoolToBitStr($autoCalc) .
-            "', last_update_date = '" . $dateStr .
-            "', smmry_name='" . loc_db_escape_string($smmryNm) . "' WHERE (smmry_id = " . $smmryID . ")";
+        "smmry_amnt = " . $amnt .
+        ", last_update_by = " . $usrID . ", " .
+        "auto_calc = '" . cnvrtBoolToBitStr($autoCalc) .
+        "', last_update_date = '" . $dateStr .
+        "', smmry_name='" . loc_db_escape_string($smmryNm) . "' WHERE (smmry_id = " . $smmryID . ")";
     execUpdtInsSQL($updtSQL);
 }
 
-function deleteSalesDocHdrNDet($valLnid, $docNum) {
+function deleteSalesDocHdrNDet($valLnid, $docNum)
+{
     $trnsCnt1 = 0;
     $docStatus = getGnrlRecNm("scm.scm_sales_invc_hdr", "invc_hdr_id", "approval_status", $valLnid);
     $docType = getGnrlRecNm("scm.scm_sales_invc_hdr", "invc_hdr_id", "invc_type", $valLnid);
@@ -498,7 +538,8 @@ function deleteSalesDocHdrNDet($valLnid, $docNum) {
     }
 }
 
-function deleteSalesDocLine($valLnid, $docNum) {
+function deleteSalesDocLine($valLnid, $docNum)
+{
     $trnsCnt1 = 0;
     $docHdrID = getGnrlRecNm("scm.scm_sales_invc_det", "invc_det_ln_id", "invc_hdr_id", $valLnid);
     $docStatus = getGnrlRecNm("scm.scm_sales_invc_hdr", "invc_hdr_id", "approval_status", $docHdrID);
@@ -523,14 +564,16 @@ function deleteSalesDocLine($valLnid, $docNum) {
     }
 }
 
-function deleteSmmryItm($docID, $docType, $smmryTyp) {
-//Global.mnFrm.cmCde.Extra_Adt_Trl_Info = "";
+function deleteSmmryItm($docID, $docType, $smmryTyp)
+{
+    //Global.mnFrm.cmCde.Extra_Adt_Trl_Info = "";
     $delSQL = "DELETE FROM scm.scm_doc_amnt_smmrys WHERE src_doc_hdr_id = " .
-            $docID . " and src_doc_type = '" . $docType . "' and smmry_type = '" . $smmryTyp . "'";
+        $docID . " and src_doc_type = '" . $docType . "' and smmry_type = '" . $smmryTyp . "'";
     execUpdtInsSQL($delSQL);
 }
 
-function get_INVItems($searchFor, $searchIn, $offset, $limit_size, $sortBy) {
+function get_INVItems($searchFor, $searchIn, $offset, $limit_size, $sortBy)
+{
     global $orgID;
     $whereClause = "";
     $strSql = "";
@@ -540,54 +583,55 @@ function get_INVItems($searchFor, $searchIn, $offset, $limit_size, $sortBy) {
     } else {
         $ordrBy = "a.item_id DESC";
     }
-//Total Quantity
+    //Total Quantity
     if ($searchIn == "Name/Description") {
         $whereClause = " and ((a.item_code||' '||a.item_desc) ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     } else if ($searchIn == "Category") {
         $whereClause = " and ((select cat_name FROM inv.inv_product_categories WHERE cat_id = category_id) ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     } else if ($searchIn == "Type") {
         $whereClause = " and (a.item_type ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     }
     $strSql = "select item_id,item_code, item_desc, category_id, tax_code_id, " .
-            "dscnt_code_id, extr_chrg_id, inv_asset_acct_id, cogs_acct_id, sales_rev_accnt_id, sales_ret_accnt_id, " .
-            " purch_ret_accnt_id, expense_accnt_id, enabled_flag, planning_enabled, min_level, max_level, " .
-            " selling_price, item_type, scm.get_ltst_item_bals(item_id, to_char(now(),'YYYY-MM-DD')) total_qty, extra_info, other_desc, image, 
+        "dscnt_code_id, extr_chrg_id, inv_asset_acct_id, cogs_acct_id, sales_rev_accnt_id, sales_ret_accnt_id, " .
+        " purch_ret_accnt_id, expense_accnt_id, enabled_flag, planning_enabled, min_level, max_level, " .
+        " selling_price, item_type, scm.get_ltst_item_bals(item_id, to_char(now(),'YYYY-MM-DD')) total_qty, extra_info, other_desc, image, 
                 (SELECT uom_name from inv.unit_of_measure WHERE uom_id = a.base_uom_id), " .
-            " generic_name, trade_name, drug_usual_dsge, drug_max_dsge, 
+        " generic_name, trade_name, drug_usual_dsge, drug_max_dsge, 
                 contraindications, food_interactions, inv.get_invitm_unitval(item_id) orgnl_selling_price,
                 (select cat_name FROM inv.inv_product_categories WHERE cat_id = category_id), 
                 value_price_crncy_id, gst.get_pssbl_val(value_price_crncy_id), auto_dflt_in_vms_trns 
             from inv.inv_itm_list a " .
-            "WHERE ((a.org_id = " . $orgID . ")$whereClause) ORDER BY $ordrBy LIMIT " . $limit_size .
-            " OFFSET " . abs($offset * $limit_size);
-// echo $strSql;
-// and a.item_type not ilike 'VaultItem%'
+        "WHERE ((a.org_id = " . $orgID . ")$whereClause) ORDER BY $ordrBy LIMIT " . $limit_size .
+        " OFFSET " . abs($offset * $limit_size);
+    // echo $strSql;
+    // and a.item_type not ilike 'VaultItem%'
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_INVItemsTtl($searchFor, $searchIn) {
+function get_INVItemsTtl($searchFor, $searchIn)
+{
     global $orgID;
     $whereClause = "";
     $strSql = "";
-//Total Quantity
+    //Total Quantity
     if ($searchIn == "Name/Description") {
         $whereClause = " and ((a.item_code||' '||a.item_desc) ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     } else if ($searchIn == "Category") {
         $whereClause = " and ((select cat_name FROM inv.inv_product_categories WHERE cat_id = category_id) ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     } else if ($searchIn == "Type") {
         $whereClause = " and (a.item_type ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     }
     $strSql = "select count(1) 
             from inv.inv_itm_list a " .
-            "WHERE ((a.org_id = " . $orgID . ")$whereClause)";
-// and a.item_type not ilike 'VaultItem%'
+        "WHERE ((a.org_id = " . $orgID . ")$whereClause)";
+    // and a.item_type not ilike 'VaultItem%'
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -595,7 +639,8 @@ function get_INVItemsTtl($searchFor, $searchIn) {
     return 0;
 }
 
-function get_INVItemsToExport($orgID, $limit_size) {
+function get_INVItemsToExport($orgID, $limit_size)
+{
     $whereClause = "";
     $strSql = "
 select item_code,
@@ -653,16 +698,17 @@ select item_code,
        auto_dflt_in_vms_trns,
        item_id
 from inv.inv_itm_list a " .
-            "WHERE ((a.org_id = " . $orgID . ")$whereClause) ORDER BY item_code LIMIT " . $limit_size .
-            " OFFSET 0";
-// echo $strSql;
+        "WHERE ((a.org_id = " . $orgID . ")$whereClause) ORDER BY item_code LIMIT " . $limit_size .
+        " OFFSET 0";
+    // echo $strSql;
     logSessionErrs($strSql);
-// and a.item_type not ilike 'VaultItem%'
+    // and a.item_type not ilike 'VaultItem%'
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_OneINVItems($item_id) {
+function get_OneINVItems($item_id)
+{
     $strSql = "select item_id,item_code, item_desc, tmplt_id,
             (select item_type_name FROM inv.inv_itm_type_templates y WHERE y.item_type_id = a.tmplt_id), 
             item_type, category_id, 
@@ -688,7 +734,8 @@ function get_OneINVItems($item_id) {
     return executeSQLNoParams($strSql);
 }
 
-function get_OneINVItemStores($item_id) {
+function get_OneINVItemStores($item_id)
+{
     $strSql = "SELECT row_number() over(order by b.subinv_name) as row , b.subinv_name, a.shelves,
             to_char(to_timestamp(a.start_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS'), 
             CASE WHEN a.end_date='' THEN a.end_date ELSE to_char(to_timestamp(a.end_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') END, 
@@ -698,7 +745,8 @@ function get_OneINVItemStores($item_id) {
     return executeSQLNoParams($strSql);
 }
 
-function get_OneINVItemUOMs($item_id) {
+function get_OneINVItemUOMs($item_id)
+{
     $strSql = "SELECT row_number() over(order by tbl1.uom_level DESC, tbl1.itm_uom_id) as row, tbl1.* FROM 
            (SELECT b.uom_name, a.cnvsn_factor,
           a.uom_level, a.itm_uom_id, a.uom_id, a.selling_price, a.price_less_tax
@@ -712,7 +760,8 @@ function get_OneINVItemUOMs($item_id) {
     return executeSQLNoParams($strSql);
 }
 
-function get_OneINVItemDrgIntrctns($item_id) {
+function get_OneINVItemDrgIntrctns($item_id)
+{
     $strSql = "SELECT row_number() over(order by b.item_code) as row, 
           b.item_desc || '(' || b.item_code || ')', a.intrctn_effect,
           a.action, a.second_drug_id, a.drug_intrctn_id 
@@ -721,7 +770,8 @@ function get_OneINVItemDrgIntrctns($item_id) {
     return executeSQLNoParams($strSql);
 }
 
-function getHgstUnitCostPrice($itmID) {
+function getHgstUnitCostPrice($itmID)
+{
     $strSql = "SELECT c.cost_price 
          FROM inv.inv_consgmt_rcpt_det c 
          WHERE (c.itm_id =" . $itmID . ") ORDER BY c.consgmt_id DESC LIMIT 1 OFFSET 0";
@@ -732,23 +782,25 @@ function getHgstUnitCostPrice($itmID) {
     return 0;
 }
 
-function updateSellingPrice($itemID, $nwPrice, $invTxCodeID) {
+function updateSellingPrice($itemID, $nwPrice, $invTxCodeID)
+{
     global $usrID;
-// $orgnlPrice .
-//$dateStr = getDB_Date_time();
+    // $orgnlPrice .
+    //$dateStr = getDB_Date_time();
     $updtSQL = "UPDATE inv.inv_itm_list SET 
                   selling_price=" . $nwPrice .
-            ", orgnl_selling_price = scm.get_sllng_price_lesstax(" . $invTxCodeID . "," . $nwPrice . ")" .
-            ",tax_code_id=" . $invTxCodeID .
-            ", last_update_by=" . loc_db_escape_string($usrID) .
-            ", last_update_date=to_char(now(),'YYYY-MM-DD HH24:MI:SS') WHERE (item_id = " . $itemID . ")";
+        ", orgnl_selling_price = scm.get_sllng_price_lesstax(" . $invTxCodeID . "," . $nwPrice . ")" .
+        ",tax_code_id=" . $invTxCodeID .
+        ", last_update_by=" . loc_db_escape_string($usrID) .
+        ", last_update_date=to_char(now(),'YYYY-MM-DD HH24:MI:SS') WHERE (item_id = " . $itemID . ")";
     return execUpdtInsSQL($updtSQL);
 }
 
-function getINVItmID($itemNm) {
+function getINVItmID($itemNm)
+{
     global $orgID;
     $sqlStr = "select item_id from inv.inv_itm_list where lower(trim(item_code)) = '" .
-            loc_db_escape_string(strtolower($itemNm)) . "' and org_id = " . $orgID;
+        loc_db_escape_string(strtolower($itemNm)) . "' and org_id = " . $orgID;
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return (float) $row[0];
@@ -756,9 +808,41 @@ function getINVItmID($itemNm) {
     return -1;
 }
 
-function createINVItm($itmNm, $itmDesc, $ctgryID, $orgid, $isenbled, $sllgPrice, $cogsID, $assetID, $revID, $salesRetID, $prchRetID,
-        $expnsID, $txID, $dscntID, $chrgID, $minLvl, $maxLvl, $plnngEnbld, $itmType, $image, $extrInfo, $othrDesc, $baseUomID, $tmpltID,
-        $gnrcNm, $tradeNm, $drugUslDsg, $drugMaxDsg, $cntrIndctns, $foodIntrctns, $orgnSllngPrc, $valCrncyID, $autoDfltINV) {
+function createINVItm(
+    $itmNm,
+    $itmDesc,
+    $ctgryID,
+    $orgid,
+    $isenbled,
+    $sllgPrice,
+    $cogsID,
+    $assetID,
+    $revID,
+    $salesRetID,
+    $prchRetID,
+    $expnsID,
+    $txID,
+    $dscntID,
+    $chrgID,
+    $minLvl,
+    $maxLvl,
+    $plnngEnbld,
+    $itmType,
+    $image,
+    $extrInfo,
+    $othrDesc,
+    $baseUomID,
+    $tmpltID,
+    $gnrcNm,
+    $tradeNm,
+    $drugUslDsg,
+    $drugMaxDsg,
+    $cntrIndctns,
+    $foodIntrctns,
+    $orgnSllngPrc,
+    $valCrncyID,
+    $autoDfltINV
+) {
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO inv.inv_itm_list(
@@ -771,94 +855,128 @@ function createINVItm($itmNm, $itmDesc, $ctgryID, $orgid, $isenbled, $sllgPrice,
             tmplt_id, generic_name, trade_name, drug_usual_dsge, drug_max_dsge, 
             contraindications, food_interactions, orgnl_selling_price, value_price_crncy_id, 
             auto_dflt_in_vms_trns) " .
-            "VALUES ('" . loc_db_escape_string($itmNm) .
-            "', '" . loc_db_escape_string($itmDesc) .
-            "'," . loc_db_escape_string($ctgryID) .
-            "," . loc_db_escape_string($orgid) .
-            ", '" . loc_db_escape_string($isenbled) .
-            "', " . loc_db_escape_string($sllgPrice) .
-            ", " . loc_db_escape_string($cogsID) .
-            ", " . loc_db_escape_string($assetID) .
-            ", " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "',0,0,0, " . loc_db_escape_string($revID) .
-            ", " . loc_db_escape_string($salesRetID) .
-            ", " . loc_db_escape_string($prchRetID) .
-            ", " . loc_db_escape_string($expnsID) .
-            ", " . loc_db_escape_string($txID) .
-            ", " . loc_db_escape_string($dscntID) .
-            ", " . loc_db_escape_string($chrgID) .
-            ", " . loc_db_escape_string($minLvl) .
-            ", " . loc_db_escape_string($maxLvl) .
-            ", '" . loc_db_escape_string($plnngEnbld) .
-            "', '" . loc_db_escape_string($itmType) .
-            "', '" . loc_db_escape_string($image) .
-            "', '" . loc_db_escape_string($extrInfo) .
-            "', '" . loc_db_escape_string($othrDesc) .
-            "', " . loc_db_escape_string($baseUomID) .
-            ", " . loc_db_escape_string($tmpltID) .
-            ", '" . loc_db_escape_string($gnrcNm) .
-            "', '" . loc_db_escape_string($tradeNm) .
-            "', '" . loc_db_escape_string($drugUslDsg) .
-            "', '" . loc_db_escape_string($drugMaxDsg) .
-            "', '" . loc_db_escape_string($cntrIndctns) .
-            "', '" . loc_db_escape_string($foodIntrctns) .
-            "', scm.get_sllng_price_lesstax(" . $txID . "," . $sllgPrice . "), " . loc_db_escape_string($valCrncyID) .
-            ", '" . loc_db_escape_string($autoDfltINV) .
-            "')";
+        "VALUES ('" . loc_db_escape_string($itmNm) .
+        "', '" . loc_db_escape_string($itmDesc) .
+        "'," . loc_db_escape_string($ctgryID) .
+        "," . loc_db_escape_string($orgid) .
+        ", '" . loc_db_escape_string($isenbled) .
+        "', " . loc_db_escape_string($sllgPrice) .
+        ", " . loc_db_escape_string($cogsID) .
+        ", " . loc_db_escape_string($assetID) .
+        ", " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "',0,0,0, " . loc_db_escape_string($revID) .
+        ", " . loc_db_escape_string($salesRetID) .
+        ", " . loc_db_escape_string($prchRetID) .
+        ", " . loc_db_escape_string($expnsID) .
+        ", " . loc_db_escape_string($txID) .
+        ", " . loc_db_escape_string($dscntID) .
+        ", " . loc_db_escape_string($chrgID) .
+        ", " . loc_db_escape_string($minLvl) .
+        ", " . loc_db_escape_string($maxLvl) .
+        ", '" . loc_db_escape_string($plnngEnbld) .
+        "', '" . loc_db_escape_string($itmType) .
+        "', '" . loc_db_escape_string($image) .
+        "', '" . loc_db_escape_string($extrInfo) .
+        "', '" . loc_db_escape_string($othrDesc) .
+        "', " . loc_db_escape_string($baseUomID) .
+        ", " . loc_db_escape_string($tmpltID) .
+        ", '" . loc_db_escape_string($gnrcNm) .
+        "', '" . loc_db_escape_string($tradeNm) .
+        "', '" . loc_db_escape_string($drugUslDsg) .
+        "', '" . loc_db_escape_string($drugMaxDsg) .
+        "', '" . loc_db_escape_string($cntrIndctns) .
+        "', '" . loc_db_escape_string($foodIntrctns) .
+        "', scm.get_sllng_price_lesstax(" . $txID . "," . $sllgPrice . "), " . loc_db_escape_string($valCrncyID) .
+        ", '" . loc_db_escape_string($autoDfltINV) .
+        "')";
     //logSsnErrs($insSQL);
     return execUpdtInsSQL($insSQL);
 }
 
-function updateINVItem($itemid, $itmNm, $itmDesc, $ctgryID, $orgid, $isenbled, $sllgPrice, $cogsID, $assetID, $revID, $salesRetID,
-        $prchRetID, $expnsID, $txID, $dscntID, $chrgID, $minLvl, $maxLvl, $plnngEnbld, $itmType, $image, $extrInfo, $othrDesc, $baseUomID,
-        $tmpltID, $gnrcNm, $tradeNm, $drugUslDsg, $drugMaxDsg, $cntrIndctns, $foodIntrctns, $orgnSllngPrc, $valCrncyID, $autoDfltINV) {
+function updateINVItem(
+    $itemid,
+    $itmNm,
+    $itmDesc,
+    $ctgryID,
+    $orgid,
+    $isenbled,
+    $sllgPrice,
+    $cogsID,
+    $assetID,
+    $revID,
+    $salesRetID,
+    $prchRetID,
+    $expnsID,
+    $txID,
+    $dscntID,
+    $chrgID,
+    $minLvl,
+    $maxLvl,
+    $plnngEnbld,
+    $itmType,
+    $image,
+    $extrInfo,
+    $othrDesc,
+    $baseUomID,
+    $tmpltID,
+    $gnrcNm,
+    $tradeNm,
+    $drugUslDsg,
+    $drugMaxDsg,
+    $cntrIndctns,
+    $foodIntrctns,
+    $orgnSllngPrc,
+    $valCrncyID,
+    $autoDfltINV
+) {
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "UPDATE inv.inv_itm_list
    SET item_code='" . loc_db_escape_string($itmNm) .
-            "', item_desc='" . loc_db_escape_string($itmDesc) .
-            "', category_id=" . loc_db_escape_string($ctgryID) .
-            ", org_id=" . loc_db_escape_string($orgid) .
-            ", enabled_flag='" . loc_db_escape_string($isenbled) .
-            "', selling_price=" . loc_db_escape_string($sllgPrice) .
-            ", cogs_acct_id=" . loc_db_escape_string($cogsID) .
-            ", inv_asset_acct_id=" . loc_db_escape_string($assetID) .
-            ", last_update_by=" . loc_db_escape_string($usrID) .
-            ", last_update_date='" . loc_db_escape_string($dateStr) .
-            "', sales_rev_accnt_id=" . loc_db_escape_string($revID) .
-            ", sales_ret_accnt_id=" . loc_db_escape_string($salesRetID) .
-            ", purch_ret_accnt_id=" . loc_db_escape_string($prchRetID) .
-            ", expense_accnt_id=" . loc_db_escape_string($expnsID) .
-            ", tax_code_id=" . loc_db_escape_string($txID) .
-            ", dscnt_code_id=" . loc_db_escape_string($dscntID) .
-            ", extr_chrg_id=" . loc_db_escape_string($chrgID) .
-            ", min_level=" . loc_db_escape_string($minLvl) .
-            ", max_level=" . loc_db_escape_string($maxLvl) .
-            ", planning_enabled='" . loc_db_escape_string($plnngEnbld) .
-            "', item_type='" . loc_db_escape_string($itmType) .
-            "', image='" . loc_db_escape_string($image) .
-            "', extra_info='" . loc_db_escape_string($extrInfo) .
-            "', other_desc='" . loc_db_escape_string($othrDesc) .
-            "', base_uom_id=" . loc_db_escape_string($baseUomID) .
-            ", tmplt_id=" . loc_db_escape_string($tmpltID) .
-            ", generic_name='" . loc_db_escape_string($gnrcNm) .
-            "', trade_name='" . loc_db_escape_string($tradeNm) .
-            "', drug_usual_dsge='" . loc_db_escape_string($drugUslDsg) .
-            "', drug_max_dsge='" . loc_db_escape_string($drugMaxDsg) .
-            "', contraindications='" . loc_db_escape_string($cntrIndctns) .
-            "', food_interactions='" . loc_db_escape_string($foodIntrctns) .
-            "', orgnl_selling_price=scm.get_sllng_price_lesstax(" . $txID . "," . $sllgPrice . ")" .
-            ", value_price_crncy_id=" . loc_db_escape_string($valCrncyID) .
-            ", auto_dflt_in_vms_trns='" . loc_db_escape_string($autoDfltINV) .
-            "' WHERE item_id = " . $itemid;
-// . loc_db_escape_string($orgnSllngPrc)
+        "', item_desc='" . loc_db_escape_string($itmDesc) .
+        "', category_id=" . loc_db_escape_string($ctgryID) .
+        ", org_id=" . loc_db_escape_string($orgid) .
+        ", enabled_flag='" . loc_db_escape_string($isenbled) .
+        "', selling_price=" . loc_db_escape_string($sllgPrice) .
+        ", cogs_acct_id=" . loc_db_escape_string($cogsID) .
+        ", inv_asset_acct_id=" . loc_db_escape_string($assetID) .
+        ", last_update_by=" . loc_db_escape_string($usrID) .
+        ", last_update_date='" . loc_db_escape_string($dateStr) .
+        "', sales_rev_accnt_id=" . loc_db_escape_string($revID) .
+        ", sales_ret_accnt_id=" . loc_db_escape_string($salesRetID) .
+        ", purch_ret_accnt_id=" . loc_db_escape_string($prchRetID) .
+        ", expense_accnt_id=" . loc_db_escape_string($expnsID) .
+        ", tax_code_id=" . loc_db_escape_string($txID) .
+        ", dscnt_code_id=" . loc_db_escape_string($dscntID) .
+        ", extr_chrg_id=" . loc_db_escape_string($chrgID) .
+        ", min_level=" . loc_db_escape_string($minLvl) .
+        ", max_level=" . loc_db_escape_string($maxLvl) .
+        ", planning_enabled='" . loc_db_escape_string($plnngEnbld) .
+        "', item_type='" . loc_db_escape_string($itmType) .
+        "', image='" . loc_db_escape_string($image) .
+        "', extra_info='" . loc_db_escape_string($extrInfo) .
+        "', other_desc='" . loc_db_escape_string($othrDesc) .
+        "', base_uom_id=" . loc_db_escape_string($baseUomID) .
+        ", tmplt_id=" . loc_db_escape_string($tmpltID) .
+        ", generic_name='" . loc_db_escape_string($gnrcNm) .
+        "', trade_name='" . loc_db_escape_string($tradeNm) .
+        "', drug_usual_dsge='" . loc_db_escape_string($drugUslDsg) .
+        "', drug_max_dsge='" . loc_db_escape_string($drugMaxDsg) .
+        "', contraindications='" . loc_db_escape_string($cntrIndctns) .
+        "', food_interactions='" . loc_db_escape_string($foodIntrctns) .
+        "', orgnl_selling_price=scm.get_sllng_price_lesstax(" . $txID . "," . $sllgPrice . ")" .
+        ", value_price_crncy_id=" . loc_db_escape_string($valCrncyID) .
+        ", auto_dflt_in_vms_trns='" . loc_db_escape_string($autoDfltINV) .
+        "' WHERE item_id = " . $itemid;
+    // . loc_db_escape_string($orgnSllngPrc)
     return execUpdtInsSQL($insSQL);
 }
 
-function getPriceLessTx($txID, $sllgPrice) {
+function getPriceLessTx($txID, $sllgPrice)
+{
     $strSQL = "select scm.get_sllng_price_lesstax(" . $txID . "," . $sllgPrice . ")";
     $result = executeSQLNoParams($strSQL);
     while ($row = loc_db_fetch_array($result)) {
@@ -867,9 +985,10 @@ function getPriceLessTx($txID, $sllgPrice) {
     return 0;
 }
 
-function getINVItemStockID($itmID, $storeID) {
+function getINVItemStockID($itmID, $storeID)
+{
     $sqlStr = "select stock_id from inv.inv_stock where itm_id = " . loc_db_escape_string($itmID) .
-            " and subinv_id = " . loc_db_escape_string($storeID);
+        " and subinv_id = " . loc_db_escape_string($storeID);
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return (float) $row[0];
@@ -877,45 +996,48 @@ function getINVItemStockID($itmID, $storeID) {
     return -1;
 }
 
-function createINVItemStore($itmID, $storeID, $shelves, $orgID, $strtDte, $endDte, $shelveIDs) {
+function createINVItemStore($itmID, $storeID, $shelves, $orgID, $strtDte, $endDte, $shelveIDs)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO inv.inv_stock(
             itm_id, subinv_id, created_by, creation_date, last_update_by, 
             last_update_date, shelves, start_date, end_date, org_id, shelves_ids) " .
-            "VALUES (" . loc_db_escape_string($itmID) .
-            ", " . loc_db_escape_string($storeID) .
-            ", " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', '" . loc_db_escape_string($shelves) .
-            "', '" . loc_db_escape_string($strtDte) .
-            "', '" . loc_db_escape_string($endDte) .
-            "', " . loc_db_escape_string($orgID) .
-            ", '" . loc_db_escape_string($shelveIDs) .
-            "')";
+        "VALUES (" . loc_db_escape_string($itmID) .
+        ", " . loc_db_escape_string($storeID) .
+        ", " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', '" . loc_db_escape_string($shelves) .
+        "', '" . loc_db_escape_string($strtDte) .
+        "', '" . loc_db_escape_string($endDte) .
+        "', " . loc_db_escape_string($orgID) .
+        ", '" . loc_db_escape_string($shelveIDs) .
+        "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function updateINVItemStore($stockID, $itmID, $storeID, $shelves, $orgID, $strtDte, $endDte, $shelveIDs) {
+function updateINVItemStore($stockID, $itmID, $storeID, $shelves, $orgID, $strtDte, $endDte, $shelveIDs)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "UPDATE inv.inv_stock
    SET itm_id=" . loc_db_escape_string($itmID) .
-            ", subinv_id=" . loc_db_escape_string($storeID) .
-            ", shelves='" . loc_db_escape_string($shelves) .
-            "', start_date='" . loc_db_escape_string($strtDte) .
-            "', end_date='" . loc_db_escape_string($endDte) .
-            "', shelves_ids='" . loc_db_escape_string($shelveIDs) .
-            "', last_update_by=" . loc_db_escape_string($usrID) .
-            ", last_update_date='" . loc_db_escape_string($dateStr) .
-            "', org_id=" . loc_db_escape_string($orgID) .
-            "  WHERE stock_id = " . $stockID;
+        ", subinv_id=" . loc_db_escape_string($storeID) .
+        ", shelves='" . loc_db_escape_string($shelves) .
+        "', start_date='" . loc_db_escape_string($strtDte) .
+        "', end_date='" . loc_db_escape_string($endDte) .
+        "', shelves_ids='" . loc_db_escape_string($shelveIDs) .
+        "', last_update_by=" . loc_db_escape_string($usrID) .
+        ", last_update_date='" . loc_db_escape_string($dateStr) .
+        "', org_id=" . loc_db_escape_string($orgID) .
+        "  WHERE stock_id = " . $stockID;
     return execUpdtInsSQL($insSQL);
 }
 
-function getINVItemUomID($itmID, $uomID) {
+function getINVItemUomID($itmID, $uomID)
+{
     $sqlStr = "select itm_uom_id from inv.itm_uoms where item_id = " . loc_db_escape_string($itmID) . " and uom_id = " . loc_db_escape_string($uomID);
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -924,45 +1046,48 @@ function getINVItemUomID($itmID, $uomID) {
     return -1;
 }
 
-function createINVItemUom($itmID, $uomID, $cnvsnFctr, $sortOrdr, $prcLsTx, $sllngPrice) {
+function createINVItemUom($itmID, $uomID, $cnvsnFctr, $sortOrdr, $prcLsTx, $sllngPrice)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO inv.itm_uoms(
             item_id, uom_id, is_base_uom, cnvsn_factor, uom_level, 
             created_by, creation_date, last_update_by, last_update_date, 
             price_less_tax, selling_price) " .
-            "VALUES (" . loc_db_escape_string($itmID) .
-            ", " . loc_db_escape_string($uomID) .
-            ",'0', " . loc_db_escape_string($cnvsnFctr) .
-            ", " . loc_db_escape_string($sortOrdr) .
-            ", " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', " . loc_db_escape_string($prcLsTx) .
-            ", " . loc_db_escape_string($sllngPrice) .
-            ")";
-//    echo $insSQL;
+        "VALUES (" . loc_db_escape_string($itmID) .
+        ", " . loc_db_escape_string($uomID) .
+        ",'0', " . loc_db_escape_string($cnvsnFctr) .
+        ", " . loc_db_escape_string($sortOrdr) .
+        ", " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', " . loc_db_escape_string($prcLsTx) .
+        ", " . loc_db_escape_string($sllngPrice) .
+        ")";
+    //    echo $insSQL;
     return execUpdtInsSQL($insSQL);
 }
 
-function updateINVItemUom($itmUoMID, $itmID, $uomID, $cnvsnFctr, $sortOrdr, $prcLsTx, $sllngPrice) {
+function updateINVItemUom($itmUoMID, $itmID, $uomID, $cnvsnFctr, $sortOrdr, $prcLsTx, $sllngPrice)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "UPDATE inv.itm_uoms
    SET item_id=" . loc_db_escape_string($itmID) .
-            ", uom_id=" . loc_db_escape_string($uomID) .
-            ", cnvsn_factor='" . loc_db_escape_string($cnvsnFctr) .
-            "', uom_level=" . loc_db_escape_string($sortOrdr) .
-            ", price_less_tax=" . loc_db_escape_string($prcLsTx) .
-            ", last_update_by=" . loc_db_escape_string($usrID) .
-            ", last_update_date='" . loc_db_escape_string($dateStr) .
-            "', selling_price=" . loc_db_escape_string($sllngPrice) .
-            "  WHERE itm_uom_id = " . $itmUoMID;
+        ", uom_id=" . loc_db_escape_string($uomID) .
+        ", cnvsn_factor='" . loc_db_escape_string($cnvsnFctr) .
+        "', uom_level=" . loc_db_escape_string($sortOrdr) .
+        ", price_less_tax=" . loc_db_escape_string($prcLsTx) .
+        ", last_update_by=" . loc_db_escape_string($usrID) .
+        ", last_update_date='" . loc_db_escape_string($dateStr) .
+        "', selling_price=" . loc_db_escape_string($sllngPrice) .
+        "  WHERE itm_uom_id = " . $itmUoMID;
     return execUpdtInsSQL($insSQL);
 }
 
-function getINVItemIntrctnID($itmID, $secondItmID) {
+function getINVItemIntrctnID($itmID, $secondItmID)
+{
     $sqlStr = "select drug_intrctn_id from inv.inv_drug_interactions where first_drug_id = " . loc_db_escape_string($itmID) . " and second_drug_id = " . loc_db_escape_string($secondItmID);
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -971,39 +1096,42 @@ function getINVItemIntrctnID($itmID, $secondItmID) {
     return -1;
 }
 
-function createINVItemIntrctn($itmID, $secondItmID, $intrctnEffct, $actionItm) {
+function createINVItemIntrctn($itmID, $secondItmID, $intrctnEffct, $actionItm)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO inv.inv_drug_interactions(
             first_drug_id, second_drug_id, intrctn_effect, action, created_by, 
             creation_date, last_update_by, last_update_date) " .
-            "VALUES (" . loc_db_escape_string($itmID) .
-            ", " . loc_db_escape_string($secondItmID) .
-            ", '" . loc_db_escape_string($intrctnEffct) .
-            "', '" . loc_db_escape_string($actionItm) .
-            "', " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "')";
+        "VALUES (" . loc_db_escape_string($itmID) .
+        ", " . loc_db_escape_string($secondItmID) .
+        ", '" . loc_db_escape_string($intrctnEffct) .
+        "', '" . loc_db_escape_string($actionItm) .
+        "', " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function updateINVItemIntrctn($intrctnID, $itmID, $secondItmID, $intrctnEffct, $actionItm) {
+function updateINVItemIntrctn($intrctnID, $itmID, $secondItmID, $intrctnEffct, $actionItm)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "UPDATE inv.inv_drug_interactions
    SET first_drug_id=" . loc_db_escape_string($itmID) .
-            ", second_drug_id=" . loc_db_escape_string($secondItmID) .
-            ", intrctn_effect='" . loc_db_escape_string($intrctnEffct) .
-            "', action='" . loc_db_escape_string($actionItm) .
-            "', last_update_by=" . loc_db_escape_string($usrID) .
-            ", last_update_date='" . loc_db_escape_string($dateStr) .
-            "' WHERE drug_intrctn_id = " . $intrctnID;
+        ", second_drug_id=" . loc_db_escape_string($secondItmID) .
+        ", intrctn_effect='" . loc_db_escape_string($intrctnEffct) .
+        "', action='" . loc_db_escape_string($actionItm) .
+        "', last_update_by=" . loc_db_escape_string($usrID) .
+        ", last_update_date='" . loc_db_escape_string($dateStr) .
+        "' WHERE drug_intrctn_id = " . $intrctnID;
     return execUpdtInsSQL($insSQL);
 }
 
-function uploadDaImageItem($itemid, &$nwImgLoc) {
+function uploadDaImageItem($itemid, &$nwImgLoc)
+{
     global $tmpDest;
     global $ftp_base_db_fldr;
     global $usrID;
@@ -1013,7 +1141,7 @@ function uploadDaImageItem($itemid, &$nwImgLoc) {
     $msg = "";
     $allowedExts = array("gif", "jpeg", "jpg", "png");
     if (isset($_FILES["daItemPicture"])) {
-//$files = multiple($_FILES);
+        //$files = multiple($_FILES);
         $flnm = $_FILES["daItemPicture"]["name"];
         $msg .= $flnm;
         $temp = explode(".", $flnm);
@@ -1035,9 +1163,9 @@ function uploadDaImageItem($itemid, &$nwImgLoc) {
 
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE inv.inv_itm_list " .
-                            "SET last_update_by=" . $usrID . ", " .
-                            "last_update_date='" . $dateStr .
-                            "', image = '" . $itemid . "." . $extension . "' WHERE item_id=" . $itemid;
+                        "SET last_update_by=" . $usrID . ", " .
+                        "last_update_date='" . $dateStr .
+                        "', image = '" . $itemid . "." . $extension . "' WHERE item_id=" . $itemid;
                     execUpdtInsSQL($updtSQL);
                 }
                 $msg .= "Image Stored";
@@ -1054,7 +1182,8 @@ function uploadDaImageItem($itemid, &$nwImgLoc) {
     return FALSE;
 }
 
-function deleteINVItm($pkeyID, $extrInfo = "") {
+function deleteINVItm($pkeyID, $extrInfo = "")
+{
     $selSQL = "Select count(1) from scm.scm_sales_invc_det where itm_id = " . $pkeyID;
     $result = executeSQLNoParams($selSQL);
     $trnsCnt = 0;
@@ -1086,7 +1215,7 @@ function deleteINVItm($pkeyID, $extrInfo = "") {
         return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
     }
     $selSQL3 = "Select count(1) from inv.inv_stock_daily_bals a, inv.inv_stock b  "
-            . "WHERE a.stock_id=b.stock_id and b.itm_id= " . $pkeyID . "";
+        . "WHERE a.stock_id=b.stock_id and b.itm_id= " . $pkeyID . "";
     $result3 = executeSQLNoParams($selSQL3);
     $trnsCnt3 = 0;
     while ($row = loc_db_fetch_array($result3)) {
@@ -1097,7 +1226,7 @@ function deleteINVItm($pkeyID, $extrInfo = "") {
         return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
     }
     $selSQL33 = "Select count(1) from mcf.mcf_currency_denominations "
-            . "WHERE vault_item_id = " . $pkeyID . "";
+        . "WHERE vault_item_id = " . $pkeyID . "";
     $result33 = executeSQLNoParams($selSQL33);
     $trnsCnt33 = 0;
     while ($row = loc_db_fetch_array($result33)) {
@@ -1108,7 +1237,7 @@ function deleteINVItm($pkeyID, $extrInfo = "") {
         return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
     }
     $selSQL31 = "Select count(1) from vms.vms_transaction_lines "
-            . "WHERE itm_id= " . $pkeyID . "";
+        . "WHERE itm_id= " . $pkeyID . "";
     $result31 = executeSQLNoParams($selSQL31);
     $trnsCnt31 = 0;
     while ($row = loc_db_fetch_array($result31)) {
@@ -1119,7 +1248,7 @@ function deleteINVItm($pkeyID, $extrInfo = "") {
         return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
     }
     $selSQL32 = "Select count(1) from vms.vms_transaction_pymnt "
-            . "WHERE itm_id= " . $pkeyID . "";
+        . "WHERE itm_id= " . $pkeyID . "";
     $result32 = executeSQLNoParams($selSQL32);
     $trnsCnt32 = 0;
     while ($row = loc_db_fetch_array($result32)) {
@@ -1153,7 +1282,8 @@ function deleteINVItm($pkeyID, $extrInfo = "") {
     }
 }
 
-function deleteINVItmStore($pkeyID, $extrInfo = "") {
+function deleteINVItmStore($pkeyID, $extrInfo = "")
+{
     $selSQL11 = "Select count(1) from inv.inv_consgmt_rcpt_det where stock_id = " . $pkeyID;
     $result11 = executeSQLNoParams($selSQL11);
     $trnsCnt11 = 0;
@@ -1176,7 +1306,8 @@ function deleteINVItmStore($pkeyID, $extrInfo = "") {
     }
 }
 
-function deleteINVItmUom($pkeyID, $extrInfo = "") {
+function deleteINVItmUom($pkeyID, $extrInfo = "")
+{
     $trnsCnt = 0;
     $affctd2 = 0;
     if (($trnsCnt) <= 0) {
@@ -1190,7 +1321,8 @@ function deleteINVItmUom($pkeyID, $extrInfo = "") {
     }
 }
 
-function deleteINVItmIntrctn($pkeyID, $extrInfo = "") {
+function deleteINVItmIntrctn($pkeyID, $extrInfo = "")
+{
     $trnsCnt = 0;
     $affctd3 = 0;
     if (($trnsCnt) <= 0) {
@@ -1204,7 +1336,8 @@ function deleteINVItmIntrctn($pkeyID, $extrInfo = "") {
     }
 }
 
-function get_StoresWhs($pkID, $prsnID, $searchWord, $searchIn, $offset, $limit_size) {
+function get_StoresWhs($pkID, $prsnID, $searchWord, $searchIn, $offset, $limit_size)
+{
     global $orgID;
     global $fnccurid;
     global $gnrlTrnsDteYMD;
@@ -1239,7 +1372,8 @@ function get_StoresWhs($pkID, $prsnID, $searchWord, $searchIn, $offset, $limit_s
     return $result;
 }
 
-function get_StoresWhsTtl($pkID, $prsnID, $searchWord, $searchIn) {
+function get_StoresWhsTtl($pkID, $prsnID, $searchWord, $searchIn)
+{
     global $orgID;
     $whereCls = "";
     $extrWhere = "";
@@ -1261,7 +1395,8 @@ function get_StoresWhsTtl($pkID, $prsnID, $searchWord, $searchIn) {
     return 0;
 }
 
-function get_OneStoreDet($subinvID) {
+function get_OneStoreDet($subinvID)
+{
     $strSql = "select a.subinv_id, a.subinv_name, a.subinv_desc, a.address, a.lnkd_site_id, 
                    org.get_site_code_desc(lnkd_site_id) site_name, 
                     a.inv_asset_acct_id, accb.get_accnt_num(a.inv_asset_acct_id) || '.' || accb.get_accnt_name(a.inv_asset_acct_id) asset_acc,
@@ -1276,7 +1411,8 @@ function get_OneStoreDet($subinvID) {
     return $result;
 }
 
-function get_OneStoreCages($subinvID) {
+function get_OneStoreCages($subinvID)
+{
     $strSql = "SELECT row_number() over(order by shelf_id) as row, shelf_id, line_id, 
                    lnkd_cstmr_id, scm.get_cstmr_splr_name(lnkd_cstmr_id), allwd_group_type, allwd_group_value, 
                     enabled_flag,  inv_asset_acct_id, cage_shelve_mngr_id, prs.get_prsn_name(cage_shelve_mngr_id), 
@@ -1289,7 +1425,8 @@ function get_OneStoreCages($subinvID) {
     return $result;
 }
 
-function get_OneStoreUsers($subinvID) {
+function get_OneStoreUsers($subinvID)
+{
     $strSql = "SELECT row_number() over(order by user_id) as row , user_id, 
                     sec.get_usr_name(user_id) || '(' || prs.get_prsn_name(sec.get_usr_prsn_id(user_id)) || ')',
                     to_char(to_timestamp(start_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS'), 
@@ -1301,9 +1438,10 @@ function get_OneStoreUsers($subinvID) {
     return $result;
 }
 
-function getStoreID($storeNm) {
+function getStoreID($storeNm)
+{
     $sqlStr = "select subinv_id from inv.inv_itm_subinventories where lower(subinv_name) = '" .
-            loc_db_escape_string(strtolower($storeNm)) . "'";
+        loc_db_escape_string(strtolower($storeNm)) . "'";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return (float) $row[0];
@@ -1311,9 +1449,10 @@ function getStoreID($storeNm) {
     return -1;
 }
 
-function getStoreNm($storeID) {
+function getStoreNm($storeID)
+{
     $sqlStr = "select subinv_name from inv.inv_itm_subinventories where subinv_id= " .
-            loc_db_escape_string($storeID) . "";
+        loc_db_escape_string($storeID) . "";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -1321,8 +1460,19 @@ function getStoreNm($storeID) {
     return "";
 }
 
-function createStore($storeNm, $storeDesc, $storeAddrs, $isSalesAllwd, $mngrPrsnID, $orgid, $isenbled, $invAsstAcntID, $lnkdSiteID,
-        $allwdGrpType, $allwdGrpVal) {
+function createStore(
+    $storeNm,
+    $storeDesc,
+    $storeAddrs,
+    $isSalesAllwd,
+    $mngrPrsnID,
+    $orgid,
+    $isenbled,
+    $invAsstAcntID,
+    $lnkdSiteID,
+    $allwdGrpType,
+    $allwdGrpVal
+) {
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO inv.inv_itm_subinventories(
@@ -1330,48 +1480,61 @@ function createStore($storeNm, $storeDesc, $storeAddrs, $isSalesAllwd, $mngrPrsn
             created_by, last_update_by, last_update_date, allow_sales, subinv_manager, 
             org_id, enabled_flag, inv_asset_acct_id, lnkd_site_id, allwd_group_type, 
             allwd_group_value) " .
-            "VALUES ('" . loc_db_escape_string($storeNm) .
-            "', '" . loc_db_escape_string($storeDesc) .
-            "', '" . loc_db_escape_string($storeAddrs) .
-            "', '" . loc_db_escape_string($dateStr) .
-            "', " . loc_db_escape_string($usrID) .
-            ", " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', '" . loc_db_escape_string($isSalesAllwd) .
-            "', " . loc_db_escape_string($mngrPrsnID) .
-            ", " . loc_db_escape_string($orgid) .
-            ", '" . loc_db_escape_string($isenbled) .
-            "', " . loc_db_escape_string($invAsstAcntID) .
-            ", " . loc_db_escape_string($lnkdSiteID) .
-            ", '" . loc_db_escape_string($allwdGrpType) .
-            "', '" . loc_db_escape_string($allwdGrpVal) .
-            "')";
+        "VALUES ('" . loc_db_escape_string($storeNm) .
+        "', '" . loc_db_escape_string($storeDesc) .
+        "', '" . loc_db_escape_string($storeAddrs) .
+        "', '" . loc_db_escape_string($dateStr) .
+        "', " . loc_db_escape_string($usrID) .
+        ", " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', '" . loc_db_escape_string($isSalesAllwd) .
+        "', " . loc_db_escape_string($mngrPrsnID) .
+        ", " . loc_db_escape_string($orgid) .
+        ", '" . loc_db_escape_string($isenbled) .
+        "', " . loc_db_escape_string($invAsstAcntID) .
+        ", " . loc_db_escape_string($lnkdSiteID) .
+        ", '" . loc_db_escape_string($allwdGrpType) .
+        "', '" . loc_db_escape_string($allwdGrpVal) .
+        "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function updateStore($storeid, $storeNm, $storeDesc, $storeAddrs, $isSalesAllwd, $mngrPrsnID, $orgid, $isenbled, $invAsstAcntID,
-        $lnkdSiteID, $allwdGrpType, $allwdGrpVal) {
+function updateStore(
+    $storeid,
+    $storeNm,
+    $storeDesc,
+    $storeAddrs,
+    $isSalesAllwd,
+    $mngrPrsnID,
+    $orgid,
+    $isenbled,
+    $invAsstAcntID,
+    $lnkdSiteID,
+    $allwdGrpType,
+    $allwdGrpVal
+) {
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "UPDATE inv.inv_itm_subinventories SET 
                 subinv_name='" . loc_db_escape_string($storeNm) .
-            "', subinv_desc='" . loc_db_escape_string($storeDesc) .
-            "', address='" . loc_db_escape_string($storeAddrs) .
-            "', last_update_by=" . loc_db_escape_string($usrID) .
-            ", last_update_date='" . loc_db_escape_string($dateStr) .
-            "', allow_sales='" . loc_db_escape_string($isSalesAllwd) .
-            "', subinv_manager=" . loc_db_escape_string($mngrPrsnID) .
-            ", org_id=" . loc_db_escape_string($orgid) .
-            ", enabled_flag='" . loc_db_escape_string($isenbled) .
-            "', inv_asset_acct_id=" . loc_db_escape_string($invAsstAcntID) .
-            ", lnkd_site_id=" . loc_db_escape_string($lnkdSiteID) .
-            ", allwd_group_type='" . loc_db_escape_string($allwdGrpType) .
-            "', allwd_group_value='" . loc_db_escape_string($allwdGrpVal) .
-            "' WHERE subinv_id = " . $storeid;
+        "', subinv_desc='" . loc_db_escape_string($storeDesc) .
+        "', address='" . loc_db_escape_string($storeAddrs) .
+        "', last_update_by=" . loc_db_escape_string($usrID) .
+        ", last_update_date='" . loc_db_escape_string($dateStr) .
+        "', allow_sales='" . loc_db_escape_string($isSalesAllwd) .
+        "', subinv_manager=" . loc_db_escape_string($mngrPrsnID) .
+        ", org_id=" . loc_db_escape_string($orgid) .
+        ", enabled_flag='" . loc_db_escape_string($isenbled) .
+        "', inv_asset_acct_id=" . loc_db_escape_string($invAsstAcntID) .
+        ", lnkd_site_id=" . loc_db_escape_string($lnkdSiteID) .
+        ", allwd_group_type='" . loc_db_escape_string($allwdGrpType) .
+        "', allwd_group_value='" . loc_db_escape_string($allwdGrpVal) .
+        "' WHERE subinv_id = " . $storeid;
     return execUpdtInsSQL($insSQL);
 }
 
-function deleteStore($pkeyID, $extrInfo = "") {
+function deleteStore($pkeyID, $extrInfo = "")
+{
     $selSQL = "Select count(1) from mcf.mcf_account_trns_cash_analysis WHERE vault_id = " . $pkeyID;
     $result = executeSQLNoParams($selSQL);
     $trnsCnt = 0;
@@ -1447,10 +1610,11 @@ function deleteStore($pkeyID, $extrInfo = "") {
     }
 }
 
-function getStoreUsrLineID($user_id, $storewhsID) {
+function getStoreUsrLineID($user_id, $storewhsID)
+{
     $sqlStr = "select line_id from inv.inv_user_subinventories where user_id = " .
-            loc_db_escape_string($user_id) . " and subinv_id = " .
-            loc_db_escape_string($storewhsID) . " ORDER BY line_id DESC LIMIT 1 OFFSET 0";
+        loc_db_escape_string($user_id) . " and subinv_id = " .
+        loc_db_escape_string($storewhsID) . " ORDER BY line_id DESC LIMIT 1 OFFSET 0";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return (float) $row[0];
@@ -1458,7 +1622,8 @@ function getStoreUsrLineID($user_id, $storewhsID) {
     return -1;
 }
 
-function createStoreUser($storewhsUsrID, $storeID, $strtDte, $endDte) {
+function createStoreUser($storewhsUsrID, $storeID, $strtDte, $endDte)
+{
     global $usrID;
     global $orgID;
     $dateStr = getDB_Date_time();
@@ -1471,20 +1636,21 @@ function createStoreUser($storewhsUsrID, $storeID, $strtDte, $endDte) {
     $insSQL = "INSERT INTO inv.inv_user_subinventories(
             user_id, subinv_id, start_date, end_date, created_by, creation_date, 
             last_update_by, last_update_date, org_id) " .
-            "VALUES (" . loc_db_escape_string($storewhsUsrID) .
-            ", " . loc_db_escape_string($storeID) .
-            ", '" . loc_db_escape_string($strtDte) .
-            "', '" . loc_db_escape_string($endDte) .
-            "', " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', " . loc_db_escape_string($orgID) .
-            ")";
+        "VALUES (" . loc_db_escape_string($storewhsUsrID) .
+        ", " . loc_db_escape_string($storeID) .
+        ", '" . loc_db_escape_string($strtDte) .
+        "', '" . loc_db_escape_string($endDte) .
+        "', " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', " . loc_db_escape_string($orgID) .
+        ")";
     return execUpdtInsSQL($insSQL);
 }
 
-function updateStoreUser($lineID, $storewhsUsrID, $storeID, $strtDte, $endDte) {
+function updateStoreUser($lineID, $storewhsUsrID, $storeID, $strtDte, $endDte)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     if ($strtDte != "") {
@@ -1504,7 +1670,8 @@ function updateStoreUser($lineID, $storewhsUsrID, $storeID, $strtDte, $endDte) {
     return execUpdtInsSQL($insSQL);
 }
 
-function deleteStoreUser($pkeyID, $extrInfo = "") {
+function deleteStoreUser($pkeyID, $extrInfo = "")
+{
     $insSQL = "DELETE FROM inv.inv_user_subinventories WHERE line_id = " . $pkeyID;
     $affctd2 = execUpdtInsSQL($insSQL, "Store Name:" . $extrInfo);
     if ($affctd2 > 0) {
@@ -1517,7 +1684,8 @@ function deleteStoreUser($pkeyID, $extrInfo = "") {
     }
 }
 
-function get_StoreCages($pkID, $prsnID, $searchWord, $searchIn, $offset, $limit_size) {
+function get_StoreCages($pkID, $prsnID, $searchWord, $searchIn, $offset, $limit_size)
+{
     $whereCls = "";
     $extrWhere = "";
     global $orgID;
@@ -1557,7 +1725,8 @@ function get_StoreCages($pkID, $prsnID, $searchWord, $searchIn, $offset, $limit_
     return $result;
 }
 
-function get_StoreCagesTtl($pkID, $prsnID, $searchWord, $searchIn) {
+function get_StoreCagesTtl($pkID, $prsnID, $searchWord, $searchIn)
+{
     $whereCls = "";
     $extrWhere = "";
     global $orgID;
@@ -1581,7 +1750,8 @@ function get_StoreCagesTtl($pkID, $prsnID, $searchWord, $searchIn) {
     return 0;
 }
 
-function get_OneCageDet($pkID) {
+function get_OneCageDet($pkID)
+{
     global $fnccurid;
     global $gnrlTrnsDteYMD;
     $strSql = "SELECT a.line_id mt, 
@@ -1610,15 +1780,16 @@ function get_OneCageDet($pkID) {
         LEFT OUTER JOIN inv.inv_itm_subinventories b ON (b.subinv_id = a.store_id)
         LEFT OUTER JOIN org.org_sites_locations c ON (c.location_id = b.lnkd_site_id)
         WHERE (a.line_id=" . $pkID . ")";
-//echo $strSql;
+    //echo $strSql;
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function getCageTillID($shlveNm, $storewhsid) {
+function getCageTillID($shlveNm, $storewhsid)
+{
     $sqlStr = "select line_id from inv.inv_shelf where lower(shelve_name) = '" .
-            loc_db_escape_string(strtolower($shlveNm)) .
-            "' and store_id = " . loc_db_escape_string($storewhsid);
+        loc_db_escape_string(strtolower($shlveNm)) .
+        "' and store_id = " . loc_db_escape_string($storewhsid);
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return (float) $row[0];
@@ -1626,7 +1797,8 @@ function getCageTillID($shlveNm, $storewhsid) {
     return -1;
 }
 
-function getCageMngrID($lineid) {
+function getCageMngrID($lineid)
+{
     $sqlStr = "select cage_shelve_mngr_id from inv.inv_shelf where line_id = " . loc_db_escape_string($lineid);
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -1635,8 +1807,23 @@ function getCageMngrID($lineid) {
     return -1;
 }
 
-function createCageTill($orgid, $shelfID, $storeID, $shelfNm, $shelfDesc, $lnkdCstmrID, $allwdGrpType, $allwdGrpVal, $invAcntID,
-        $cageMngrID, $dfltItmState, $mngrsWthdrwLmt, $mngrsDepLmt, $dfltType, $isenbled) {
+function createCageTill(
+    $orgid,
+    $shelfID,
+    $storeID,
+    $shelfNm,
+    $shelfDesc,
+    $lnkdCstmrID,
+    $allwdGrpType,
+    $allwdGrpVal,
+    $invAcntID,
+    $cageMngrID,
+    $dfltItmState,
+    $mngrsWthdrwLmt,
+    $mngrsDepLmt,
+    $dfltType,
+    $isenbled
+) {
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO inv.inv_shelf(
@@ -1645,54 +1832,70 @@ function createCageTill($orgid, $shelfID, $storeID, $shelfNm, $shelfDesc, $lnkdC
             lnkd_cstmr_id, allwd_group_type, allwd_group_value, enabled_flag, 
             inv_asset_acct_id, cage_shelve_mngr_id, dflt_item_state, managers_wthdrwl_limit, 
             managers_deposit_limit, dflt_item_type) " .
-            "VALUES (" . loc_db_escape_string($shelfID) .
-            ", " . loc_db_escape_string($storeID) .
-            ", " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', " . loc_db_escape_string($orgid) .
-            ", '" . loc_db_escape_string($shelfNm) .
-            "', '" . loc_db_escape_string($shelfDesc) .
-            "', " . loc_db_escape_string($lnkdCstmrID) .
-            ", '" . loc_db_escape_string($allwdGrpType) .
-            "', '" . loc_db_escape_string($allwdGrpVal) .
-            "', '" . loc_db_escape_string($isenbled) .
-            "', " . loc_db_escape_string($invAcntID) .
-            ", " . loc_db_escape_string($cageMngrID) .
-            ", '" . loc_db_escape_string($dfltItmState) .
-            "', " . loc_db_escape_string($mngrsWthdrwLmt) .
-            ", " . loc_db_escape_string($mngrsDepLmt) .
-            ", '" . loc_db_escape_string($dfltType) .
-            "')";
+        "VALUES (" . loc_db_escape_string($shelfID) .
+        ", " . loc_db_escape_string($storeID) .
+        ", " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', " . loc_db_escape_string($orgid) .
+        ", '" . loc_db_escape_string($shelfNm) .
+        "', '" . loc_db_escape_string($shelfDesc) .
+        "', " . loc_db_escape_string($lnkdCstmrID) .
+        ", '" . loc_db_escape_string($allwdGrpType) .
+        "', '" . loc_db_escape_string($allwdGrpVal) .
+        "', '" . loc_db_escape_string($isenbled) .
+        "', " . loc_db_escape_string($invAcntID) .
+        ", " . loc_db_escape_string($cageMngrID) .
+        ", '" . loc_db_escape_string($dfltItmState) .
+        "', " . loc_db_escape_string($mngrsWthdrwLmt) .
+        ", " . loc_db_escape_string($mngrsDepLmt) .
+        ", '" . loc_db_escape_string($dfltType) .
+        "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function updateCageTill($lineid, $shelfID, $storeID, $shelfNm, $shelfDesc, $lnkdCstmrID, $allwdGrpType, $allwdGrpVal, $invAcntID,
-        $cageMngrID, $dfltItmState, $mngrsWthdrwLmt, $mngrsDepLmt, $dfltType, $isenbled) {
+function updateCageTill(
+    $lineid,
+    $shelfID,
+    $storeID,
+    $shelfNm,
+    $shelfDesc,
+    $lnkdCstmrID,
+    $allwdGrpType,
+    $allwdGrpVal,
+    $invAcntID,
+    $cageMngrID,
+    $dfltItmState,
+    $mngrsWthdrwLmt,
+    $mngrsDepLmt,
+    $dfltType,
+    $isenbled
+) {
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "UPDATE inv.inv_shelf SET shelf_id =" . loc_db_escape_string($shelfID) .
-            ", store_id =" . loc_db_escape_string($storeID) .
-            ", last_update_by = " . loc_db_escape_string($usrID) .
-            ", last_update_date = '" . loc_db_escape_string($dateStr) .
-            "', shelve_name = '" . loc_db_escape_string($shelfNm) .
-            "', shelve_desc ='" . loc_db_escape_string($shelfDesc) .
-            "', lnkd_cstmr_id = " . loc_db_escape_string($lnkdCstmrID) .
-            ", allwd_group_type = '" . loc_db_escape_string($allwdGrpType) .
-            "', allwd_group_value = '" . loc_db_escape_string($allwdGrpVal) .
-            "', enabled_flag = '" . loc_db_escape_string($isenbled) .
-            "', inv_asset_acct_id = " . loc_db_escape_string($invAcntID) .
-            ", cage_shelve_mngr_id = " . loc_db_escape_string($cageMngrID) .
-            ", dflt_item_state = '" . loc_db_escape_string($dfltItmState) .
-            "', managers_wthdrwl_limit = " . loc_db_escape_string($mngrsWthdrwLmt) .
-            ", managers_deposit_limit = " . loc_db_escape_string($mngrsDepLmt) .
-            ", dflt_item_type = '" . loc_db_escape_string($dfltType) .
-            "' WHERE line_id = " . $lineid;
+        ", store_id =" . loc_db_escape_string($storeID) .
+        ", last_update_by = " . loc_db_escape_string($usrID) .
+        ", last_update_date = '" . loc_db_escape_string($dateStr) .
+        "', shelve_name = '" . loc_db_escape_string($shelfNm) .
+        "', shelve_desc ='" . loc_db_escape_string($shelfDesc) .
+        "', lnkd_cstmr_id = " . loc_db_escape_string($lnkdCstmrID) .
+        ", allwd_group_type = '" . loc_db_escape_string($allwdGrpType) .
+        "', allwd_group_value = '" . loc_db_escape_string($allwdGrpVal) .
+        "', enabled_flag = '" . loc_db_escape_string($isenbled) .
+        "', inv_asset_acct_id = " . loc_db_escape_string($invAcntID) .
+        ", cage_shelve_mngr_id = " . loc_db_escape_string($cageMngrID) .
+        ", dflt_item_state = '" . loc_db_escape_string($dfltItmState) .
+        "', managers_wthdrwl_limit = " . loc_db_escape_string($mngrsWthdrwLmt) .
+        ", managers_deposit_limit = " . loc_db_escape_string($mngrsDepLmt) .
+        ", dflt_item_type = '" . loc_db_escape_string($dfltType) .
+        "' WHERE line_id = " . $lineid;
     return execUpdtInsSQL($insSQL);
 }
 
-function deleteCageTill($pkeyID, $extrInfo = "") {
+function deleteCageTill($pkeyID, $extrInfo = "")
+{
     $selSQL = "Select count(1) from mcf.mcf_account_trns_cash_analysis WHERE cage_shelve_id = " . $pkeyID;
     $result = executeSQLNoParams($selSQL);
     $trnsCnt = 0;
@@ -1745,8 +1948,20 @@ function deleteCageTill($pkeyID, $extrInfo = "") {
     }
 }
 
-function get_INVGlIntrfc($searchWord, $searchIn, $offset, $limit_size, $orgID, $dte1, $dte2, $notgonetogl, $imblcnTrns, $usrTrns, $lowVal,
-        $highVal) {
+function get_INVGlIntrfc(
+    $searchWord,
+    $searchIn,
+    $offset,
+    $limit_size,
+    $orgID,
+    $dte1,
+    $dte2,
+    $notgonetogl,
+    $imblcnTrns,
+    $usrTrns,
+    $lowVal,
+    $highVal
+) {
     if ($dte1 != "") {
         $dte1 = cnvrtDMYTmToYMDTm($dte1);
     }
@@ -1761,7 +1976,7 @@ function get_INVGlIntrfc($searchWord, $searchIn, $offset, $limit_size, $orgID, $
     $amntCls = "";
     if ($lowVal != 0 || $highVal != 0) {
         $amntCls = " and ((dbt_amount !=0 and dbt_amount between " . $lowVal . " and " . $highVal .
-                ") or (crdt_amount !=0 and crdt_amount between " . $lowVal . " and " . $highVal . "))";
+            ") or (crdt_amount !=0 and crdt_amount between " . $lowVal . " and " . $highVal . "))";
     }
     if ($usrTrns) {
         $usrTrnsSql = " and (trns_source != 'SYS') ";
@@ -1790,34 +2005,35 @@ function get_INVGlIntrfc($searchWord, $searchIn, $offset, $limit_size, $orgID, $
     }
     if ($searchIn == "Account Name") {
         $whereCls = "(b.accnt_name ilike '" . loc_db_escape_string($searchWord) .
-                "') and ";
+            "') and ";
     } else if ($searchIn == "Account Number") {
         $whereCls = "(b.accnt_num ilike '" . loc_db_escape_string($searchWord) .
-                "') and ";
+            "') and ";
     } else if ($searchIn == "Source") {
         $whereCls = "(a.src_doc_typ ||' '||scm.get_src_doc_num(a.src_doc_id,a.src_doc_typ) ilike '" . loc_db_escape_string($searchWord) .
-                "') and ";
+            "') and ";
     } else if ($searchIn == "Transaction Description") {
         $whereCls = "(a.transaction_desc ilike '" . loc_db_escape_string($searchWord) .
-                "') and ";
+            "') and ";
     }
     $strSql = "SELECT a.accnt_id, b.accnt_num, b.accnt_name, a.transaction_desc, 
 to_char(to_timestamp(a.trnsctn_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS'), a.dbt_amount, " .
-            "a.crdt_amount, a.src_doc_id source_trns_id, a.src_doc_typ, a.gl_batch_id, " .
-            "(select d.batch_name from accb.accb_trnsctn_batches d where d.batch_id = a.gl_batch_id) btch_nm, " .
-            "a.interface_id, a.func_cur_id, -1, scm.get_src_doc_num(a.src_doc_id,a.src_doc_typ), "
-            . "gst.get_pssbl_val(a.func_cur_id), a.src_doc_typ trns_source " .
-            "FROM scm.scm_gl_interface a, accb.accb_chart_of_accnts b " .
-            "WHERE ((a.accnt_id = b.accnt_id) and " . $whereCls . "(b.org_id = " . $orgID . ")" . $to_gl .
-            $imblnce_trns . $usrTrnsSql . $amntCls . " and (to_timestamp(a.trnsctn_date,'YYYY-MM-DD HH24:MI:SS') between to_timestamp('" . $dte1 .
-            "','YYYY-MM-DD HH24:MI:SS') AND to_timestamp('" . $dte2 . "','YYYY-MM-DD HH24:MI:SS'))) " .
-            "ORDER BY a.interface_id DESC LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
-//echo $strSql;
+        "a.crdt_amount, a.src_doc_id source_trns_id, a.src_doc_typ, a.gl_batch_id, " .
+        "(select d.batch_name from accb.accb_trnsctn_batches d where d.batch_id = a.gl_batch_id) btch_nm, " .
+        "a.interface_id, a.func_cur_id, -1, scm.get_src_doc_num(a.src_doc_id,a.src_doc_typ), "
+        . "gst.get_pssbl_val(a.func_cur_id), a.src_doc_typ trns_source " .
+        "FROM scm.scm_gl_interface a, accb.accb_chart_of_accnts b " .
+        "WHERE ((a.accnt_id = b.accnt_id) and " . $whereCls . "(b.org_id = " . $orgID . ")" . $to_gl .
+        $imblnce_trns . $usrTrnsSql . $amntCls . " and (to_timestamp(a.trnsctn_date,'YYYY-MM-DD HH24:MI:SS') between to_timestamp('" . $dte1 .
+        "','YYYY-MM-DD HH24:MI:SS') AND to_timestamp('" . $dte2 . "','YYYY-MM-DD HH24:MI:SS'))) " .
+        "ORDER BY a.interface_id DESC LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    //echo $strSql;
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_INVGlIntrfcTtl($searchWord, $searchIn, $orgID, $dte1, $dte2, $notgonetogl, $imblcnTrns, $usrTrns, $lowVal, $highVal) {
+function get_INVGlIntrfcTtl($searchWord, $searchIn, $orgID, $dte1, $dte2, $notgonetogl, $imblcnTrns, $usrTrns, $lowVal, $highVal)
+{
     global $gnrlTrnsDteYMDHMS;
     execUpdtInsSQL("UPDATE scm.scm_gl_interface SET trnsctn_date='" . $gnrlTrnsDteYMDHMS . "' WHERE trnsctn_date=''");
     if ($dte1 != "") {
@@ -1834,7 +2050,7 @@ function get_INVGlIntrfcTtl($searchWord, $searchIn, $orgID, $dte1, $dte2, $notgo
     $amntCls = "";
     if ($lowVal != 0 || $highVal != 0) {
         $amntCls = " and ((dbt_amount !=0 and dbt_amount between " . $lowVal . " and " . $highVal .
-                ") or (crdt_amount !=0 and crdt_amount between " . $lowVal . " and " . $highVal . "))";
+            ") or (crdt_amount !=0 and crdt_amount between " . $lowVal . " and " . $highVal . "))";
     }
     if ($usrTrns) {
         $usrTrnsSql = " and (trns_source !='SYS') ";
@@ -1853,23 +2069,23 @@ function get_INVGlIntrfcTtl($searchWord, $searchIn, $orgID, $dte1, $dte2, $notgo
 
     if ($searchIn == "Account Name") {
         $whereCls = "(b.accnt_name ilike '" . loc_db_escape_string($searchWord) .
-                "') and ";
+            "') and ";
     } else if ($searchIn == "Account Number") {
         $whereCls = "(b.accnt_num ilike '" . loc_db_escape_string($searchWord) .
-                "') and ";
+            "') and ";
     } else if ($searchIn == "Source") {
         $whereCls = "(a.src_doc_typ ||' '||scm.get_src_doc_num(a.src_doc_id,a.src_doc_typ) ilike '" . loc_db_escape_string($searchWord) .
-                "') and ";
+            "') and ";
     } else if ($searchIn == "Transaction Description") {
         $whereCls = "(a.transaction_desc ilike '" . loc_db_escape_string($searchWord) .
-                "') and ";
+            "') and ";
     }
     $strSql = "SELECT count(1) " .
-            "FROM scm.scm_gl_interface a, accb.accb_chart_of_accnts b " .
-            "WHERE ((a.accnt_id = b.accnt_id) and " . $whereCls . "(b.org_id = " . $orgID . ")" . $to_gl .
-            $imblnce_trns . $usrTrnsSql . $amntCls . " and (to_timestamp(a.trnsctn_date,'YYYY-MM-DD HH24:MI:SS') between to_timestamp('" . $dte1 .
-            "','YYYY-MM-DD HH24:MI:SS') AND to_timestamp('" . $dte2 . "','YYYY-MM-DD HH24:MI:SS'))) ";
-//echo $strSql;
+        "FROM scm.scm_gl_interface a, accb.accb_chart_of_accnts b " .
+        "WHERE ((a.accnt_id = b.accnt_id) and " . $whereCls . "(b.org_id = " . $orgID . ")" . $to_gl .
+        $imblnce_trns . $usrTrnsSql . $amntCls . " and (to_timestamp(a.trnsctn_date,'YYYY-MM-DD HH24:MI:SS') between to_timestamp('" . $dte1 .
+        "','YYYY-MM-DD HH24:MI:SS') AND to_timestamp('" . $dte2 . "','YYYY-MM-DD HH24:MI:SS'))) ";
+    //echo $strSql;
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -1877,28 +2093,30 @@ function get_INVGlIntrfcTtl($searchWord, $searchIn, $orgID, $dte1, $dte2, $notgo
     return 0;
 }
 
-function get_OneINVGlIntrfcDet($intrfcID) {
+function get_OneINVGlIntrfcDet($intrfcID)
+{
     $strSql = "SELECT a.accnt_id, b.accnt_num, b.accnt_name, a.transaction_desc, 
 to_char(to_timestamp(a.trnsctn_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS'), a.dbt_amount, " .
-            "a.crdt_amount, a.src_doc_id source_trns_id, 'INVroll Run', a.gl_batch_id, " .
-            "(select d.batch_name from accb.accb_trnsctn_batches d where d.batch_id = a.gl_batch_id) btch_nm, a.interface_id, a.func_cur_id, " .
-            "-1, 'Batch Name', gst.get_pssbl_val(a.func_cur_id), 
+        "a.crdt_amount, a.src_doc_id source_trns_id, 'INVroll Run', a.gl_batch_id, " .
+        "(select d.batch_name from accb.accb_trnsctn_batches d where d.batch_id = a.gl_batch_id) btch_nm, a.interface_id, a.func_cur_id, " .
+        "-1, 'Batch Name', gst.get_pssbl_val(a.func_cur_id), 
              a.src_doc_typ trns_source, a.net_amount, a.net_amount entered_amnt, a.func_cur_id entered_amt_crncy_id, 
              gst.get_pssbl_val(a.func_cur_id), a.net_amount accnt_crncy_amnt, a.func_cur_id accnt_crncy_id, 
              gst.get_pssbl_val(a.func_cur_id), 
              1 func_cur_exchng_rate, 1 accnt_cur_exchng_rate " .
-            "FROM scm.scm_gl_interface a, accb.accb_chart_of_accnts b " .
-            "WHERE ((a.accnt_id = b.accnt_id) and (a.interface_id = " . $intrfcID . "))";
+        "FROM scm.scm_gl_interface a, accb.accb_chart_of_accnts b " .
+        "WHERE ((a.accnt_id = b.accnt_id) and (a.interface_id = " . $intrfcID . "))";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function getINVGLIntrfcDffrnc($orgID) {
+function getINVGLIntrfcDffrnc($orgID)
+{
     $strSql = "SELECT COALESCE(SUM(a.dbt_amount),0) dbt_sum, 
 COALESCE(SUM(a.crdt_amount),0) crdt_sum 
 FROM scm.scm_gl_interface a, accb.accb_chart_of_accnts b 
 WHERE a.gl_batch_id = -1 and a.accnt_id = b.accnt_id and b.org_id=" . $orgID .
-            " ";
+        " ";
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         $dffrce1 = (float) $row[0] - (float) $row[1];
@@ -1907,8 +2125,27 @@ WHERE a.gl_batch_id = -1 and a.accnt_id = b.accnt_id and b.org_id=" . $orgID .
     return 0;
 }
 
-function createINVTrnsGLIntFcLn($accntid, $trnsdesc, $dbtamnt, $trnsdte, $crncyid, $crdtamnt, $netamnt, $srcDocTyp, $srcDocID, $srcDocLnID,
-        $dateStr, $trnsLnTyp, $trnsSrc, $entrdAMnt, $entrdCrncyID, $acctCrncyAmnt, $acctCrncyID, $funcCrncyRate, $acntCrncyRate) {
+function createINVTrnsGLIntFcLn(
+    $accntid,
+    $trnsdesc,
+    $dbtamnt,
+    $trnsdte,
+    $crncyid,
+    $crdtamnt,
+    $netamnt,
+    $srcDocTyp,
+    $srcDocID,
+    $srcDocLnID,
+    $dateStr,
+    $trnsLnTyp,
+    $trnsSrc,
+    $entrdAMnt,
+    $entrdCrncyID,
+    $acctCrncyAmnt,
+    $acctCrncyID,
+    $funcCrncyRate,
+    $acntCrncyRate
+) {
     global $usrID;
     global $gnrlTrnsDteYMDHMS;
     if ($accntid <= 0) {
@@ -1926,35 +2163,54 @@ function createINVTrnsGLIntFcLn($accntid, $trnsdesc, $dbtamnt, $trnsdte, $crncyi
             last_update_date, net_amount, gl_batch_id, src_doc_typ, src_doc_id, 
             src_doc_line_id, trns_ln_type, trns_source, entered_amnt, entered_amt_crncy_id, 
             accnt_crncy_amnt, accnt_crncy_id, func_cur_exchng_rate, accnt_cur_exchng_rate) " .
-            "VALUES (" . $accntid .
-            ", '" . loc_db_escape_string($trnsdesc) .
-            "', " . $dbtamnt .
-            ", '" . loc_db_escape_string($gnrlTrnsDteYMDHMS) .
-            "', " . $crncyid .
-            ", " . $usrID .
-            ", '" . $dateStr .
-            "', " . $crdtamnt .
-            ", " . $usrID .
-            ", '" . $dateStr .
-            "', " . $netamnt .
-            ", -1, '" . loc_db_escape_string($srcDocTyp) .
-            "', " . $srcDocID .
-            ", " . $srcDocLnID .
-            ", '" . $trnsLnTyp .
-            "', '" . $trnsSrc .
-            "', " . $entrdAMnt .
-            ", " . $entrdCrncyID .
-            ", " . $acctCrncyAmnt .
-            ", " . $acctCrncyID .
-            ", " . $funcCrncyRate .
-            ", " . $acntCrncyRate .
-            ")";
+        "VALUES (" . $accntid .
+        ", '" . loc_db_escape_string($trnsdesc) .
+        "', " . $dbtamnt .
+        ", '" . loc_db_escape_string($gnrlTrnsDteYMDHMS) .
+        "', " . $crncyid .
+        ", " . $usrID .
+        ", '" . $dateStr .
+        "', " . $crdtamnt .
+        ", " . $usrID .
+        ", '" . $dateStr .
+        "', " . $netamnt .
+        ", -1, '" . loc_db_escape_string($srcDocTyp) .
+        "', " . $srcDocID .
+        ", " . $srcDocLnID .
+        ", '" . $trnsLnTyp .
+        "', '" . $trnsSrc .
+        "', " . $entrdAMnt .
+        ", " . $entrdCrncyID .
+        ", " . $acctCrncyAmnt .
+        ", " . $acctCrncyID .
+        ", " . $funcCrncyRate .
+        ", " . $acntCrncyRate .
+        ")";
     return execUpdtInsSQL($insSQL);
 }
 
-function updateINVTrnsGLIntFcLn($intrfcLineID, $accntid, $trnsdesc, $dbtamnt, $trnsdte, $crncyid, $crdtamnt, $netamnt, $srcDocTyp,
-        $srcDocID, $srcDocLnID, $dateStr, $trnsLnTyp, $trnsSrc, $entrdAMnt, $entrdCrncyID, $acctCrncyAmnt, $acctCrncyID, $funcCrncyRate,
-        $acntCrncyRate) {
+function updateINVTrnsGLIntFcLn(
+    $intrfcLineID,
+    $accntid,
+    $trnsdesc,
+    $dbtamnt,
+    $trnsdte,
+    $crncyid,
+    $crdtamnt,
+    $netamnt,
+    $srcDocTyp,
+    $srcDocID,
+    $srcDocLnID,
+    $dateStr,
+    $trnsLnTyp,
+    $trnsSrc,
+    $entrdAMnt,
+    $entrdCrncyID,
+    $acctCrncyAmnt,
+    $acctCrncyID,
+    $funcCrncyRate,
+    $acntCrncyRate
+) {
     global $usrID;
     global $gnrlTrnsDteYMDHMS;
     if ($accntid <= 0) {
@@ -1968,53 +2224,56 @@ function updateINVTrnsGLIntFcLn($intrfcLineID, $accntid, $trnsdesc, $dbtamnt, $t
     }
     $insSQL = "UPDATE scm.scm_gl_interface
             SET accnt_id=" . $accntid .
-            ", transaction_desc='" . loc_db_escape_string($trnsdesc) .
-            "', dbt_amount=" . $dbtamnt .
-            ", trnsctn_date='" . loc_db_escape_string($trnsdte) .
-            "', func_cur_id=" . $crncyid .
-            ", crdt_amount=" . $crdtamnt .
-            ", last_update_by=" . $usrID .
-            ", last_update_date='" . $dateStr .
-            "', net_amount=" . $netamnt .
-            ", entered_amnt=" . $entrdAMnt .
-            ", entered_amt_crncy_id=" . $entrdCrncyID .
-            ", accnt_crncy_amnt=" . $acctCrncyAmnt .
-            ", accnt_crncy_id=" . $acctCrncyID .
-            ", func_cur_exchng_rate=" . $funcCrncyRate .
-            ", accnt_cur_exchng_rate=" . $acntCrncyRate .
-            " WHERE interface_id=" . $intrfcLineID . " and gl_batch_id<=0";
+        ", transaction_desc='" . loc_db_escape_string($trnsdesc) .
+        "', dbt_amount=" . $dbtamnt .
+        ", trnsctn_date='" . loc_db_escape_string($trnsdte) .
+        "', func_cur_id=" . $crncyid .
+        ", crdt_amount=" . $crdtamnt .
+        ", last_update_by=" . $usrID .
+        ", last_update_date='" . $dateStr .
+        "', net_amount=" . $netamnt .
+        ", entered_amnt=" . $entrdAMnt .
+        ", entered_amt_crncy_id=" . $entrdCrncyID .
+        ", accnt_crncy_amnt=" . $acctCrncyAmnt .
+        ", accnt_crncy_id=" . $acctCrncyID .
+        ", func_cur_exchng_rate=" . $funcCrncyRate .
+        ", accnt_cur_exchng_rate=" . $acntCrncyRate .
+        " WHERE interface_id=" . $intrfcLineID . " and gl_batch_id<=0";
     //and trns_source='USR'
     return execUpdtInsSQL($insSQL);
 }
 
-function deleteINVTrnsGLIntFcLn($intrfcLineID, $intrfcDesc) {
+function deleteINVTrnsGLIntFcLn($intrfcLineID, $intrfcDesc)
+{
     $delSQL = "DELETE FROM scm.scm_gl_interface WHERE interface_id = " . $intrfcLineID . " and gl_batch_id<=0 and trns_source != 'SYS'";
     return execUpdtInsSQL($delSQL, $intrfcDesc);
 }
 
-function getUomBrkDwn($itemID) {
+function getUomBrkDwn($itemID)
+{
     $strSQL = "Select * from (SELECT a.itm_uom_id mt, "
-            . "(SELECT b.uom_name FROM inv.unit_of_measure b WHERE b.uom_id = a.uom_id) uom, " .
-            " a.uom_id mt, uom_level mt, cnvsn_factor mt, selling_price, price_less_tax, inv.get_invitm_unitval(a.item_id) " .
-            " FROM inv.itm_uoms a WHERE a.item_id = $itemID " .
-            " union " .
-            " SELECT -1 mt, (SELECT b.uom_name FROM inv.unit_of_measure b WHERE b.uom_id = a.base_uom_id) uom, " .
-            " base_uom_id mt, -1 mt, 1 mt, selling_price, orgnl_selling_price, inv.get_invitm_unitval(a.item_id) " .
-            " FROM inv.inv_itm_list a WHERE a.item_id = $itemID) tbl1 ORDER BY 4 DESC";
+        . "(SELECT b.uom_name FROM inv.unit_of_measure b WHERE b.uom_id = a.uom_id) uom, " .
+        " a.uom_id mt, uom_level mt, cnvsn_factor mt, selling_price, price_less_tax, inv.get_invitm_unitval(a.item_id) " .
+        " FROM inv.itm_uoms a WHERE a.item_id = $itemID " .
+        " union " .
+        " SELECT -1 mt, (SELECT b.uom_name FROM inv.unit_of_measure b WHERE b.uom_id = a.base_uom_id) uom, " .
+        " base_uom_id mt, -1 mt, 1 mt, selling_price, orgnl_selling_price, inv.get_invitm_unitval(a.item_id) " .
+        " FROM inv.inv_itm_list a WHERE a.item_id = $itemID) tbl1 ORDER BY 4 DESC";
     $result = executeSQLNoParams($strSQL);
     return $result;
 }
 
-function getUomCnvrsnFctr($itemID, $uomNm) {
+function getUomCnvrsnFctr($itemID, $uomNm)
+{
     $strSQL = "Select tbl1.mtcf from (SELECT a.itm_uom_id mt, "
-            . "(SELECT b.uom_name FROM inv.unit_of_measure b WHERE b.uom_id = a.uom_id) uom, " .
-            " a.uom_id mt, uom_level mt, cnvsn_factor mtcf, selling_price, price_less_tax, inv.get_invitm_unitval(a.item_id) " .
-            " FROM inv.itm_uoms a WHERE a.item_id = $itemID " .
-            " union " .
-            " SELECT -1 mt, (SELECT b.uom_name FROM inv.unit_of_measure b WHERE b.uom_id = a.base_uom_id) uom, " .
-            " base_uom_id mt, -1 mt, 1 mtcf, selling_price, orgnl_selling_price, inv.get_invitm_unitval(a.item_id) " .
-            " FROM inv.inv_itm_list a WHERE a.item_id = $itemID) tbl1 "
-            . "WHERE lower(tbl1.uom) = '" . loc_db_escape_string(strtolower($uomNm)) . "'";
+        . "(SELECT b.uom_name FROM inv.unit_of_measure b WHERE b.uom_id = a.uom_id) uom, " .
+        " a.uom_id mt, uom_level mt, cnvsn_factor mtcf, selling_price, price_less_tax, inv.get_invitm_unitval(a.item_id) " .
+        " FROM inv.itm_uoms a WHERE a.item_id = $itemID " .
+        " union " .
+        " SELECT -1 mt, (SELECT b.uom_name FROM inv.unit_of_measure b WHERE b.uom_id = a.base_uom_id) uom, " .
+        " base_uom_id mt, -1 mt, 1 mtcf, selling_price, orgnl_selling_price, inv.get_invitm_unitval(a.item_id) " .
+        " FROM inv.inv_itm_list a WHERE a.item_id = $itemID) tbl1 "
+        . "WHERE lower(tbl1.uom) = '" . loc_db_escape_string(strtolower($uomNm)) . "'";
     $result = executeSQLNoParams($strSQL);
     while ($rw = loc_db_fetch_array($result)) {
         return (float) $rw[0];
@@ -2022,43 +2281,46 @@ function getUomCnvrsnFctr($itemID, $uomNm) {
     return 1;
 }
 
-function get_One_PrdtCtgry_Det($catID) {
+function get_One_PrdtCtgry_Det($catID)
+{
     $strSql = "select a.cat_id, a.cat_name, a.cat_desc, a.start_date, a.end_date, a.enabled_flag "
-            . "from inv.inv_product_categories a " .
-            "WHERE(a.cat_id = " . $catID . ")";
+        . "from inv.inv_product_categories a " .
+        "WHERE(a.cat_id = " . $catID . ")";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_Basic_PrdtCtgry($searchWord, $searchIn, $offset, $limit_size) {
+function get_Basic_PrdtCtgry($searchWord, $searchIn, $offset, $limit_size)
+{
     $whrcls = "";
     if ($searchIn == "Category Name") {
         $whrcls = " and (a.cat_name ilike '" . loc_db_escape_string($searchWord) .
-                "')";
+            "')";
     } else if ($searchIn == "Category Description") {
         $whrcls = " and (a.cat_desc ilike '" . loc_db_escape_string($searchWord) .
-                "')";
+            "')";
     }
     $strSql = "select a.cat_id, a.cat_name, a.cat_desc, a.start_date, a.end_date, a.enabled_flag "
-            . "from inv.inv_product_categories a " .
-            "WHERE ((1=1)" . $whrcls . ") ORDER BY a.cat_id DESC LIMIT " . $limit_size .
-            " OFFSET " . (abs($offset * $limit_size));
+        . "from inv.inv_product_categories a " .
+        "WHERE ((1=1)" . $whrcls . ") ORDER BY a.cat_id DESC LIMIT " . $limit_size .
+        " OFFSET " . (abs($offset * $limit_size));
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_Total_PrdtCtgry($searchWord, $searchIn) {
+function get_Total_PrdtCtgry($searchWord, $searchIn)
+{
     $whrcls = "";
     if ($searchIn == "Category Name") {
         $whrcls = " and (a.cat_name ilike '" . loc_db_escape_string($searchWord) .
-                "')";
+            "')";
     } else if ($searchIn == "Category Description") {
         $whrcls = " and (a.cat_desc ilike '" . loc_db_escape_string($searchWord) .
-                "')";
+            "')";
     }
     $strSql = "SELECT count(1)  " .
-            "FROM inv.inv_product_categories a " .
-            "WHERE ((1=1)" . $whrcls . ")";
+        "FROM inv.inv_product_categories a " .
+        "WHERE ((1=1)" . $whrcls . ")";
 
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
@@ -2067,31 +2329,34 @@ function get_Total_PrdtCtgry($searchWord, $searchIn) {
     return 0;
 }
 
-function createPrdctCtgry($orgid, $cat_name, $cat_desc, $isEnbld) {
+function createPrdctCtgry($orgid, $cat_name, $cat_desc, $isEnbld)
+{
     global $usrID;
     $insSQL = "INSERT INTO inv.inv_product_categories(cat_name, cat_desc, created_by, creation_date,
                                        last_update_by, last_update_date, start_date, end_date, org_id, enabled_flag) " .
-            "VALUES ('" . loc_db_escape_string($cat_name) .
-            "', '" . loc_db_escape_string($cat_desc) .
-            "', " . $usrID . ", to_char(now(), 'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
-            ", to_char(now(), 'YYYY-MM-DD HH24:MI:SS'),'','', " . $orgid . ", '" .
-            cnvrtBoolToBitStr($isEnbld) . "')";
+        "VALUES ('" . loc_db_escape_string($cat_name) .
+        "', '" . loc_db_escape_string($cat_desc) .
+        "', " . $usrID . ", to_char(now(), 'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
+        ", to_char(now(), 'YYYY-MM-DD HH24:MI:SS'),'','', " . $orgid . ", '" .
+        cnvrtBoolToBitStr($isEnbld) . "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function updatePrdctCtgry($cat_id, $cat_name, $cat_desc, $isEnbld) {
+function updatePrdctCtgry($cat_id, $cat_name, $cat_desc, $isEnbld)
+{
     global $usrID;
     $updtSQL = "UPDATE inv.inv_product_categories SET " .
-            "cat_name='" . loc_db_escape_string($cat_name) .
-            "', cat_desc='" . loc_db_escape_string($cat_desc) .
-            "', last_update_by=" . $usrID . ", " .
-            "last_update_date=to_char(now(), 'YYYY-MM-DD HH24:MI:SS')" .
-            ", enabled_flag='" . cnvrtBoolToBitStr($isEnbld) .
-            "' WHERE (cat_id =" . $cat_id . ")";
+        "cat_name='" . loc_db_escape_string($cat_name) .
+        "', cat_desc='" . loc_db_escape_string($cat_desc) .
+        "', last_update_by=" . $usrID . ", " .
+        "last_update_date=to_char(now(), 'YYYY-MM-DD HH24:MI:SS')" .
+        ", enabled_flag='" . cnvrtBoolToBitStr($isEnbld) .
+        "' WHERE (cat_id =" . $cat_id . ")";
     return execUpdtInsSQL($updtSQL);
 }
 
-function deletePrdctCtgry($ctgryid, $ctgryNm) {
+function deletePrdctCtgry($ctgryid, $ctgryNm)
+{
     $trnsCnt1 = 0;
     $trnsCnt2 = 0;
     $strSql = "SELECT count(1) FROM inv.inv_itm_list a WHERE(a.category_id = " . $ctgryid . ")";
@@ -2121,41 +2386,44 @@ function deletePrdctCtgry($ctgryid, $ctgryNm) {
     }
 }
 
-function get_One_UOMStp_Det($uomID) {
+function get_One_UOMStp_Det($uomID)
+{
     $strSql = "select a.uom_id, a.uom_name, a.uom_desc, a.enabled_flag from inv.unit_of_measure a " .
-            "WHERE(a.uom_id = " . $uomID . ")";
+        "WHERE(a.uom_id = " . $uomID . ")";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_Basic_UOMStp($searchWord, $searchIn, $offset, $limit_size) {
+function get_Basic_UOMStp($searchWord, $searchIn, $offset, $limit_size)
+{
     $whrcls = "";
     if ($searchIn == "UOM Name") {
         $whrcls = " and (a.uom_name ilike '" . loc_db_escape_string($searchWord) .
-                "')";
+            "')";
     } else if ($searchIn == "UOM Description") {
         $whrcls = " and (a.uom_desc ilike '" . loc_db_escape_string($searchWord) .
-                "')";
+            "')";
     }
     $strSql = "select a.uom_id, a.uom_name, a.uom_desc, a.enabled_flag from inv.unit_of_measure a "
-            . "WHERE ((1=1)" . $whrcls . ") ORDER BY a.uom_id DESC LIMIT " . $limit_size .
-            " OFFSET " . (abs($offset * $limit_size));
+        . "WHERE ((1=1)" . $whrcls . ") ORDER BY a.uom_id DESC LIMIT " . $limit_size .
+        " OFFSET " . (abs($offset * $limit_size));
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_Total_UOMStp($searchWord, $searchIn) {
+function get_Total_UOMStp($searchWord, $searchIn)
+{
     $whrcls = "";
     if ($searchIn == "UOM Name") {
         $whrcls = " and (a.uom_name ilike '" . loc_db_escape_string($searchWord) .
-                "')";
+            "')";
     } else if ($searchIn == "UOM Description") {
         $whrcls = " and (a.uom_desc ilike '" . loc_db_escape_string($searchWord) .
-                "')";
+            "')";
     }
     $strSql = "SELECT count(1)  " .
-            "FROM inv.unit_of_measure a " .
-            "WHERE ((1=1)" . $whrcls . ")";
+        "FROM inv.unit_of_measure a " .
+        "WHERE ((1=1)" . $whrcls . ")";
 
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
@@ -2164,30 +2432,33 @@ function get_Total_UOMStp($searchWord, $searchIn) {
     return 0;
 }
 
-function createUOMStp($orgid, $uom_name, $uom_desc, $isEnbld) {
+function createUOMStp($orgid, $uom_name, $uom_desc, $isEnbld)
+{
     global $usrID;
     $insSQL = "INSERT INTO inv.unit_of_measure(
 	uom_name, uom_desc, enabled_flag, org_id, created_by, creation_date, last_update_by, last_update_date) " .
-            "VALUES ('" . loc_db_escape_string($uom_name) .
-            "', '" . loc_db_escape_string($uom_desc) .
-            "', '" . cnvrtBoolToBitStr($isEnbld) . "', " . $orgid .
-            ", " . $usrID . ", to_char(now(), 'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
-            ", to_char(now(), 'YYYY-MM-DD HH24:MI:SS'))";
+        "VALUES ('" . loc_db_escape_string($uom_name) .
+        "', '" . loc_db_escape_string($uom_desc) .
+        "', '" . cnvrtBoolToBitStr($isEnbld) . "', " . $orgid .
+        ", " . $usrID . ", to_char(now(), 'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
+        ", to_char(now(), 'YYYY-MM-DD HH24:MI:SS'))";
     return execUpdtInsSQL($insSQL);
 }
 
-function updateUOMStp($uom_id, $uom_name, $uom_desc, $isEnbld) {
+function updateUOMStp($uom_id, $uom_name, $uom_desc, $isEnbld)
+{
     global $usrID;
     $updtSQL = "UPDATE inv.unit_of_measure SET " .
-            "uom_name='" . loc_db_escape_string($uom_name) .
-            "', uom_desc='" . loc_db_escape_string($uom_desc) .
-            "', last_update_by=" . $usrID . ", last_update_date=to_char(now(), 'YYYY-MM-DD HH24:MI:SS')" .
-            ", enabled_flag='" . cnvrtBoolToBitStr($isEnbld) .
-            "' WHERE (uom_id =" . $uom_id . ")";
+        "uom_name='" . loc_db_escape_string($uom_name) .
+        "', uom_desc='" . loc_db_escape_string($uom_desc) .
+        "', last_update_by=" . $usrID . ", last_update_date=to_char(now(), 'YYYY-MM-DD HH24:MI:SS')" .
+        ", enabled_flag='" . cnvrtBoolToBitStr($isEnbld) .
+        "' WHERE (uom_id =" . $uom_id . ")";
     return execUpdtInsSQL($updtSQL);
 }
 
-function deleteUOMStp($uomid, $uomNm) {
+function deleteUOMStp($uomid, $uomNm)
+{
     $trnsCnt1 = 0;
     $trnsCnt2 = 0;
     $trnsCnt3 = 0;
@@ -2223,39 +2494,41 @@ function deleteUOMStp($uomid, $uomNm) {
     }
 }
 
-function get_ItmTmplts($searchFor, $searchIn, $offset, $limit_size) {
+function get_ItmTmplts($searchFor, $searchIn, $offset, $limit_size)
+{
     $whereClause = "";
     $strSql = "";
     if ($searchIn == "Name") {
         $whereClause = " and ((a.item_type_name) ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     } else if ($searchIn == "Description") {
         $whereClause = " and (a.item_type_desc ilike '" . loc_db_escape_string($searchFor) . "')";
     }
     $strSql = "select item_type_id, item_type_name, item_type_desc, category_id,
                 (select cat_name FROM inv.inv_product_categories WHERE cat_id = category_id), 
                 (SELECT uom_name from inv.unit_of_measure WHERE uom_id = a.base_uom_id), a.base_uom_id, tax_code_id, " .
-            "dscnt_code_id, extr_chrg_id, inv_asset_acct_id, cogs_acct_id, sales_rev_accnt_id, sales_ret_accnt_id, " .
-            " purch_ret_accnt_id, expense_accnt_id, is_tmplt_enabled_flag, planning_enabled, min_level, max_level, " .
-            " selling_price, item_type, value_price_crncy_id, gst.get_pssbl_val(value_price_crncy_id), auto_dflt_in_vms_trns  from inv.inv_itm_type_templates a " .
-            "WHERE ((1=1)$whereClause) ORDER BY a.item_type_id DESC LIMIT " . $limit_size .
-            " OFFSET " . abs($offset * $limit_size);
+        "dscnt_code_id, extr_chrg_id, inv_asset_acct_id, cogs_acct_id, sales_rev_accnt_id, sales_ret_accnt_id, " .
+        " purch_ret_accnt_id, expense_accnt_id, is_tmplt_enabled_flag, planning_enabled, min_level, max_level, " .
+        " selling_price, item_type, value_price_crncy_id, gst.get_pssbl_val(value_price_crncy_id), auto_dflt_in_vms_trns  from inv.inv_itm_type_templates a " .
+        "WHERE ((1=1)$whereClause) ORDER BY a.item_type_id DESC LIMIT " . $limit_size .
+        " OFFSET " . abs($offset * $limit_size);
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_ItmTmpltsTtl($searchFor, $searchIn) {
+function get_ItmTmpltsTtl($searchFor, $searchIn)
+{
 
     $whereClause = "";
     $strSql = "";
     if ($searchIn == "Name") {
         $whereClause = " and ((a.item_type_name) ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     } else if ($searchIn == "Description") {
         $whereClause = " and (a.item_type_desc ilike '" . loc_db_escape_string($searchFor) . "')";
     }
     $strSql = "select count(1) from inv.inv_itm_type_templates a " .
-            "WHERE ((1=1)$whereClause)";
+        "WHERE ((1=1)$whereClause)";
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -2263,7 +2536,8 @@ function get_ItmTmpltsTtl($searchFor, $searchIn) {
     return 0;
 }
 
-function get_OneItmTmplts($tmplt_id) {
+function get_OneItmTmplts($tmplt_id)
+{
     $strSql = "SELECT item_type_id, item_type_name, item_type_desc, 
         cogs_acct_id, accb.get_accnt_num(a.cogs_acct_id) || '.' || accb.get_accnt_name(a.cogs_acct_id), 
         inv_asset_acct_id, accb.get_accnt_num(a.inv_asset_acct_id) || '.' || accb.get_accnt_name(a.inv_asset_acct_id), 
@@ -2282,7 +2556,8 @@ function get_OneItmTmplts($tmplt_id) {
     return executeSQLNoParams($strSql);
 }
 
-function get_OneItmTmpltStores($tmplt_id) {
+function get_OneItmTmpltStores($tmplt_id)
+{
     $strSql = "SELECT row_number() over(order by b.subinv_name) as row , b.subinv_name, a.shelves,
             to_char(to_timestamp(a.start_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS'), 
             CASE WHEN a.end_date='' THEN a.end_date ELSE to_char(to_timestamp(a.end_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') END, 
@@ -2292,7 +2567,8 @@ function get_OneItmTmpltStores($tmplt_id) {
     return executeSQLNoParams($strSql);
 }
 
-function get_OneItmTmpltUOMs($tmplt_id) {
+function get_OneItmTmpltUOMs($tmplt_id)
+{
     $strSql = "SELECT row_number() over(order by tbl1.uom_level DESC, tbl1.tmplt_uom_id) as row, tbl1.* FROM 
            (SELECT b.uom_name, a.cnvsn_factor,
           a.uom_level, a.tmplt_uom_id, a.uom_id
@@ -2306,9 +2582,10 @@ function get_OneItmTmpltUOMs($tmplt_id) {
     return executeSQLNoParams($strSql);
 }
 
-function getItmTmpltID($itemNm) {
+function getItmTmpltID($itemNm)
+{
     $sqlStr = "select item_type_id from inv.inv_itm_type_templates where lower(item_type_name) = '" .
-            loc_db_escape_string(strtolower($itemNm)) . "'";
+        loc_db_escape_string(strtolower($itemNm)) . "'";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return (float) $row[0];
@@ -2316,8 +2593,30 @@ function getItmTmpltID($itemNm) {
     return -1;
 }
 
-function createItmTmplt($itmNm, $itmDesc, $ctgryID, $orgid, $isenbled, $sllgPrice, $cogsID, $assetID, $revID, $salesRetID, $prchRetID,
-        $expnsID, $txID, $dscntID, $chrgID, $minLvl, $maxLvl, $plnngEnbld, $itmType, $baseUomID, $valCrncyID, $autoDfltINV) {
+function createItmTmplt(
+    $itmNm,
+    $itmDesc,
+    $ctgryID,
+    $orgid,
+    $isenbled,
+    $sllgPrice,
+    $cogsID,
+    $assetID,
+    $revID,
+    $salesRetID,
+    $prchRetID,
+    $expnsID,
+    $txID,
+    $dscntID,
+    $chrgID,
+    $minLvl,
+    $maxLvl,
+    $plnngEnbld,
+    $itmType,
+    $baseUomID,
+    $valCrncyID,
+    $autoDfltINV
+) {
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO inv.inv_itm_type_templates(
@@ -2328,72 +2627,96 @@ function createItmTmplt($itmNm, $itmDesc, $ctgryID, $orgid, $isenbled, $sllgPric
             tax_code_id, dscnt_code_id, extr_chrg_id, min_level, max_level, 
             planning_enabled, item_type, base_uom_id, value_price_crncy_id, 
             auto_dflt_in_vms_trns) " .
-            "VALUES ('" . loc_db_escape_string($itmNm) .
-            "', '" . loc_db_escape_string($itmDesc) .
-            "'," . loc_db_escape_string($ctgryID) .
-            "," . loc_db_escape_string($orgid) .
-            ", '" . loc_db_escape_string($isenbled) .
-            "', " . loc_db_escape_string($sllgPrice) .
-            ", " . loc_db_escape_string($cogsID) .
-            ", " . loc_db_escape_string($assetID) .
-            ", " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', " . loc_db_escape_string($revID) .
-            ", " . loc_db_escape_string($salesRetID) .
-            ", " . loc_db_escape_string($prchRetID) .
-            ", " . loc_db_escape_string($expnsID) .
-            ", " . loc_db_escape_string($txID) .
-            ", " . loc_db_escape_string($dscntID) .
-            ", " . loc_db_escape_string($chrgID) .
-            ", " . loc_db_escape_string($minLvl) .
-            ", " . loc_db_escape_string($maxLvl) .
-            ", '" . loc_db_escape_string($plnngEnbld) .
-            "', '" . loc_db_escape_string($itmType) .
-            "', " . loc_db_escape_string($baseUomID) .
-            ", " . loc_db_escape_string($valCrncyID) .
-            ", '" . loc_db_escape_string($autoDfltINV) .
-            "')";
+        "VALUES ('" . loc_db_escape_string($itmNm) .
+        "', '" . loc_db_escape_string($itmDesc) .
+        "'," . loc_db_escape_string($ctgryID) .
+        "," . loc_db_escape_string($orgid) .
+        ", '" . loc_db_escape_string($isenbled) .
+        "', " . loc_db_escape_string($sllgPrice) .
+        ", " . loc_db_escape_string($cogsID) .
+        ", " . loc_db_escape_string($assetID) .
+        ", " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', " . loc_db_escape_string($revID) .
+        ", " . loc_db_escape_string($salesRetID) .
+        ", " . loc_db_escape_string($prchRetID) .
+        ", " . loc_db_escape_string($expnsID) .
+        ", " . loc_db_escape_string($txID) .
+        ", " . loc_db_escape_string($dscntID) .
+        ", " . loc_db_escape_string($chrgID) .
+        ", " . loc_db_escape_string($minLvl) .
+        ", " . loc_db_escape_string($maxLvl) .
+        ", '" . loc_db_escape_string($plnngEnbld) .
+        "', '" . loc_db_escape_string($itmType) .
+        "', " . loc_db_escape_string($baseUomID) .
+        ", " . loc_db_escape_string($valCrncyID) .
+        ", '" . loc_db_escape_string($autoDfltINV) .
+        "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function updateItmTmplt($itemid, $itmNm, $itmDesc, $ctgryID, $orgid, $isenbled, $sllgPrice, $cogsID, $assetID, $revID, $salesRetID,
-        $prchRetID, $expnsID, $txID, $dscntID, $chrgID, $minLvl, $maxLvl, $plnngEnbld, $itmType, $baseUomID, $valCrncyID, $autoDfltINV) {
+function updateItmTmplt(
+    $itemid,
+    $itmNm,
+    $itmDesc,
+    $ctgryID,
+    $orgid,
+    $isenbled,
+    $sllgPrice,
+    $cogsID,
+    $assetID,
+    $revID,
+    $salesRetID,
+    $prchRetID,
+    $expnsID,
+    $txID,
+    $dscntID,
+    $chrgID,
+    $minLvl,
+    $maxLvl,
+    $plnngEnbld,
+    $itmType,
+    $baseUomID,
+    $valCrncyID,
+    $autoDfltINV
+) {
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "UPDATE inv.inv_itm_type_templates
    SET item_type_name='" . loc_db_escape_string($itmNm) .
-            "', item_type_desc='" . loc_db_escape_string($itmDesc) .
-            "', category_id=" . loc_db_escape_string($ctgryID) .
-            ", org_id=" . loc_db_escape_string($orgid) .
-            ", is_tmplt_enabled_flag='" . loc_db_escape_string($isenbled) .
-            "', selling_price=" . loc_db_escape_string($sllgPrice) .
-            ", cogs_acct_id=" . loc_db_escape_string($cogsID) .
-            ", inv_asset_acct_id=" . loc_db_escape_string($assetID) .
-            ", last_update_by=" . loc_db_escape_string($usrID) .
-            ", last_update_date='" . loc_db_escape_string($dateStr) .
-            "', sales_rev_accnt_id=" . loc_db_escape_string($revID) .
-            ", sales_ret_accnt_id=" . loc_db_escape_string($salesRetID) .
-            ", purch_ret_accnt_id=" . loc_db_escape_string($prchRetID) .
-            ", expense_accnt_id=" . loc_db_escape_string($expnsID) .
-            ", tax_code_id=" . loc_db_escape_string($txID) .
-            ", dscnt_code_id=" . loc_db_escape_string($dscntID) .
-            ", extr_chrg_id=" . loc_db_escape_string($chrgID) .
-            ", min_level=" . loc_db_escape_string($minLvl) .
-            ", max_level=" . loc_db_escape_string($maxLvl) .
-            ", planning_enabled='" . loc_db_escape_string($plnngEnbld) .
-            "', item_type='" . loc_db_escape_string($itmType) .
-            "', base_uom_id=" . loc_db_escape_string($baseUomID) .
-            ", value_price_crncy_id=" . loc_db_escape_string($valCrncyID) .
-            ", auto_dflt_in_vms_trns='" . loc_db_escape_string($autoDfltINV) .
-            "' WHERE item_type_id = " . $itemid;
+        "', item_type_desc='" . loc_db_escape_string($itmDesc) .
+        "', category_id=" . loc_db_escape_string($ctgryID) .
+        ", org_id=" . loc_db_escape_string($orgid) .
+        ", is_tmplt_enabled_flag='" . loc_db_escape_string($isenbled) .
+        "', selling_price=" . loc_db_escape_string($sllgPrice) .
+        ", cogs_acct_id=" . loc_db_escape_string($cogsID) .
+        ", inv_asset_acct_id=" . loc_db_escape_string($assetID) .
+        ", last_update_by=" . loc_db_escape_string($usrID) .
+        ", last_update_date='" . loc_db_escape_string($dateStr) .
+        "', sales_rev_accnt_id=" . loc_db_escape_string($revID) .
+        ", sales_ret_accnt_id=" . loc_db_escape_string($salesRetID) .
+        ", purch_ret_accnt_id=" . loc_db_escape_string($prchRetID) .
+        ", expense_accnt_id=" . loc_db_escape_string($expnsID) .
+        ", tax_code_id=" . loc_db_escape_string($txID) .
+        ", dscnt_code_id=" . loc_db_escape_string($dscntID) .
+        ", extr_chrg_id=" . loc_db_escape_string($chrgID) .
+        ", min_level=" . loc_db_escape_string($minLvl) .
+        ", max_level=" . loc_db_escape_string($maxLvl) .
+        ", planning_enabled='" . loc_db_escape_string($plnngEnbld) .
+        "', item_type='" . loc_db_escape_string($itmType) .
+        "', base_uom_id=" . loc_db_escape_string($baseUomID) .
+        ", value_price_crncy_id=" . loc_db_escape_string($valCrncyID) .
+        ", auto_dflt_in_vms_trns='" . loc_db_escape_string($autoDfltINV) .
+        "' WHERE item_type_id = " . $itemid;
     return execUpdtInsSQL($insSQL);
 }
 
-function getItmTmpltStockID($itmID, $storeID) {
+function getItmTmpltStockID($itmID, $storeID)
+{
     $sqlStr = "select line_id from inv.inv_item_types_stores_template where item_type_template_id = " . loc_db_escape_string($itmID) .
-            " and subinv_id = " . loc_db_escape_string($storeID);
+        " and subinv_id = " . loc_db_escape_string($storeID);
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return (float) $row[0];
@@ -2401,45 +2724,48 @@ function getItmTmpltStockID($itmID, $storeID) {
     return -1;
 }
 
-function createItmTmpltStore($itmID, $storeID, $shelves, $orgID, $strtDte, $endDte, $shelveIDs) {
+function createItmTmpltStore($itmID, $storeID, $shelves, $orgID, $strtDte, $endDte, $shelveIDs)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO inv.inv_item_types_stores_template(
             item_type_template_id, subinv_id, created_by, creation_date, last_update_by, 
             last_update_date, shelves, start_date, end_date, org_id, shelves_ids) " .
-            "VALUES (" . loc_db_escape_string($itmID) .
-            ", " . loc_db_escape_string($storeID) .
-            ", " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', '" . loc_db_escape_string($shelves) .
-            "', '" . loc_db_escape_string($strtDte) .
-            "', '" . loc_db_escape_string($endDte) .
-            "', " . loc_db_escape_string($orgID) .
-            ", '" . loc_db_escape_string($shelveIDs) .
-            "')";
+        "VALUES (" . loc_db_escape_string($itmID) .
+        ", " . loc_db_escape_string($storeID) .
+        ", " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', '" . loc_db_escape_string($shelves) .
+        "', '" . loc_db_escape_string($strtDte) .
+        "', '" . loc_db_escape_string($endDte) .
+        "', " . loc_db_escape_string($orgID) .
+        ", '" . loc_db_escape_string($shelveIDs) .
+        "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function updateItmTmpltStore($stockID, $itmID, $storeID, $shelves, $orgID, $strtDte, $endDte, $shelveIDs) {
+function updateItmTmpltStore($stockID, $itmID, $storeID, $shelves, $orgID, $strtDte, $endDte, $shelveIDs)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "UPDATE inv.inv_item_types_stores_template
    SET item_type_template_id=" . loc_db_escape_string($itmID) .
-            ", subinv_id=" . loc_db_escape_string($storeID) .
-            ", shelves='" . loc_db_escape_string($shelves) .
-            "', start_date='" . loc_db_escape_string($strtDte) .
-            "', end_date='" . loc_db_escape_string($endDte) .
-            "', shelves_ids='" . loc_db_escape_string($shelveIDs) .
-            "', last_update_by=" . loc_db_escape_string($usrID) .
-            ", last_update_date='" . loc_db_escape_string($dateStr) .
-            "', org_id=" . loc_db_escape_string($orgID) .
-            "  WHERE line_id = " . $stockID;
+        ", subinv_id=" . loc_db_escape_string($storeID) .
+        ", shelves='" . loc_db_escape_string($shelves) .
+        "', start_date='" . loc_db_escape_string($strtDte) .
+        "', end_date='" . loc_db_escape_string($endDte) .
+        "', shelves_ids='" . loc_db_escape_string($shelveIDs) .
+        "', last_update_by=" . loc_db_escape_string($usrID) .
+        ", last_update_date='" . loc_db_escape_string($dateStr) .
+        "', org_id=" . loc_db_escape_string($orgID) .
+        "  WHERE line_id = " . $stockID;
     return execUpdtInsSQL($insSQL);
 }
 
-function getItmTmpltUomID($itmID, $uomID) {
+function getItmTmpltUomID($itmID, $uomID)
+{
     $sqlStr = "select tmplt_uom_id from inv.inv_tmplt_uoms where item_type_id = " . loc_db_escape_string($itmID) . " and uom_id = " . loc_db_escape_string($uomID);
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -2448,39 +2774,42 @@ function getItmTmpltUomID($itmID, $uomID) {
     return -1;
 }
 
-function createItmTmpltUom($itmID, $uomID, $cnvsnFctr, $sortOrdr) {
+function createItmTmpltUom($itmID, $uomID, $cnvsnFctr, $sortOrdr)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO inv.inv_tmplt_uoms(
             item_type_id, uom_id, is_base_uom, cnvsn_factor, uom_level, 
             created_by, creation_date, last_update_by, last_update_date) " .
-            "VALUES (" . loc_db_escape_string($itmID) .
-            ", " . loc_db_escape_string($uomID) .
-            ",'0', " . loc_db_escape_string($cnvsnFctr) .
-            ", " . loc_db_escape_string($sortOrdr) .
-            ", " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "')";
+        "VALUES (" . loc_db_escape_string($itmID) .
+        ", " . loc_db_escape_string($uomID) .
+        ",'0', " . loc_db_escape_string($cnvsnFctr) .
+        ", " . loc_db_escape_string($sortOrdr) .
+        ", " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function updateItmTmpltUom($itmUoMID, $itmID, $uomID, $cnvsnFctr, $sortOrdr) {
+function updateItmTmpltUom($itmUoMID, $itmID, $uomID, $cnvsnFctr, $sortOrdr)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "UPDATE inv.inv_tmplt_uoms
    SET item_type_id=" . loc_db_escape_string($itmID) .
-            ", uom_id=" . loc_db_escape_string($uomID) .
-            ", cnvsn_factor='" . loc_db_escape_string($cnvsnFctr) .
-            "', uom_level=" . loc_db_escape_string($sortOrdr) .
-            ", last_update_by=" . loc_db_escape_string($usrID) .
-            ", last_update_date='" . loc_db_escape_string($dateStr) .
-            "'  WHERE tmplt_uom_id = " . $itmUoMID;
+        ", uom_id=" . loc_db_escape_string($uomID) .
+        ", cnvsn_factor='" . loc_db_escape_string($cnvsnFctr) .
+        "', uom_level=" . loc_db_escape_string($sortOrdr) .
+        ", last_update_by=" . loc_db_escape_string($usrID) .
+        ", last_update_date='" . loc_db_escape_string($dateStr) .
+        "'  WHERE tmplt_uom_id = " . $itmUoMID;
     return execUpdtInsSQL($insSQL);
 }
 
-function deleteItmTmplt($pkeyID, $extrInfo = "") {
+function deleteItmTmplt($pkeyID, $extrInfo = "")
+{
     $selSQL = "Select count(1) from inv.inv_itm_list where item_id = " . $pkeyID;
     $result = executeSQLNoParams($selSQL);
     $trnsCnt = 0;
@@ -2512,7 +2841,8 @@ function deleteItmTmplt($pkeyID, $extrInfo = "") {
     }
 }
 
-function deleteItmTmpltStore($pkeyID, $extrInfo = "") {
+function deleteItmTmpltStore($pkeyID, $extrInfo = "")
+{
     $trnsCnt11 = 0;
     $affctd1 = 0;
     if (($trnsCnt11) <= 0) {
@@ -2526,7 +2856,8 @@ function deleteItmTmpltStore($pkeyID, $extrInfo = "") {
     }
 }
 
-function deleteItmTmpltUom($pkeyID, $extrInfo = "") {
+function deleteItmTmpltUom($pkeyID, $extrInfo = "")
+{
     $trnsCnt = 0;
     $affctd2 = 0;
     if (($trnsCnt) <= 0) {
@@ -2540,8 +2871,19 @@ function deleteItmTmpltUom($pkeyID, $extrInfo = "") {
     }
 }
 
-function get_Basic_SalesDoc($searchWord, $searchIn, $offset, $limit_size, $orgID, $shwUnpstdOnly, $shwUnpaidOnly, $shwSelfOnly,
-        $qShwMyBranch, $qStrtDte, $qEndDte) {
+function get_Basic_SalesDoc(
+    $searchWord,
+    $searchIn,
+    $offset,
+    $limit_size,
+    $orgID,
+    $shwUnpstdOnly,
+    $shwUnpaidOnly,
+    $shwSelfOnly,
+    $qShwMyBranch,
+    $qStrtDte,
+    $qEndDte
+) {
     global $vwOnlySelf;
     global $usrID;
     global $brnchLocID;
@@ -2569,17 +2911,17 @@ function get_Basic_SalesDoc($searchWord, $searchIn, $offset, $limit_size, $orgID
     }
     if ($searchIn == "Document Number") {
         $whrcls .= " and (a.invc_number ilike '" . loc_db_escape_string($searchWord) . "' or trim(to_char(a.invc_hdr_id, '99999999999999999999')) ilike '" . loc_db_escape_string($searchWord) .
-                "')";
+            "')";
     } else if ($searchIn == "Document Description") {
         $whrcls .= " and (a.comments_desc ilike '" . loc_db_escape_string($searchWord) . "')";
     } else if ($searchIn == "Customer Name") {
         $whrcls .= " and (a.customer_id IN (select c.cust_sup_id from 
 scm.scm_cstmr_suplr c where c.cust_sup_name ilike '" . loc_db_escape_string($searchWord) .
-                "'))";
+            "'))";
     } else if ($searchIn == "Source Doc Number") {
         $whrcls .= " and (a.src_doc_hdr_id IN (select c.invc_hdr_id from scm.scm_sales_invc_hdr c where c.invc_number ilike '" . loc_db_escape_string($searchWord) .
-                "') or scm.get_src_doc_num(a.other_mdls_doc_id, a.other_mdls_doc_type) ilike '" . loc_db_escape_string($searchWord) .
-                "')";
+            "') or scm.get_src_doc_num(a.other_mdls_doc_id, a.other_mdls_doc_type) ilike '" . loc_db_escape_string($searchWord) .
+            "')";
     } else if ($searchIn == "Approval Status") {
         $whrcls .= " and (a.approval_status ilike '" . loc_db_escape_string($searchWord) . "')";
     } else if ($searchIn == "Created By") {
@@ -2592,16 +2934,16 @@ scm.scm_cstmr_suplr c where c.cust_sup_name ilike '" . loc_db_escape_string($sea
         $whrcls .= " and (org.get_site_code_desc(a.branch_id) ilike '" . loc_db_escape_string($searchWord) . "')";
     } else {
         $whrcls .= " and (org.get_site_code_desc(a.branch_id) ilike '" . loc_db_escape_string($searchWord) . "' "
-                . "or gst.get_pssbl_val(a.invc_curr_id) ilike '" . loc_db_escape_string($searchWord) . "' "
-                . "or sec.get_usr_name(a.created_by) ilike '" . loc_db_escape_string($searchWord) . "' "
-                . "or a.approval_status ilike '" . loc_db_escape_string($searchWord) . "' "
-                . "or a.invc_number ilike '" . loc_db_escape_string($searchWord) . "' or trim(to_char(a.invc_hdr_id, '99999999999999999999')) ilike '" . loc_db_escape_string($searchWord) .
-                "' or a.comments_desc ilike '" . loc_db_escape_string($searchWord) . "' "
-                . "or a.customer_id IN (select c.cust_sup_id from 
+            . "or gst.get_pssbl_val(a.invc_curr_id) ilike '" . loc_db_escape_string($searchWord) . "' "
+            . "or sec.get_usr_name(a.created_by) ilike '" . loc_db_escape_string($searchWord) . "' "
+            . "or a.approval_status ilike '" . loc_db_escape_string($searchWord) . "' "
+            . "or a.invc_number ilike '" . loc_db_escape_string($searchWord) . "' or trim(to_char(a.invc_hdr_id, '99999999999999999999')) ilike '" . loc_db_escape_string($searchWord) .
+            "' or a.comments_desc ilike '" . loc_db_escape_string($searchWord) . "' "
+            . "or a.customer_id IN (select c.cust_sup_id from 
 scm.scm_cstmr_suplr c where c.cust_sup_name ilike '" . loc_db_escape_string($searchWord) .
-                "') or a.src_doc_hdr_id IN (select c.invc_hdr_id from scm.scm_sales_invc_hdr c where c.invc_number ilike '" . loc_db_escape_string($searchWord) .
-                "') or scm.get_src_doc_num(a.other_mdls_doc_id, a.other_mdls_doc_type) ilike '" . loc_db_escape_string($searchWord) .
-                "' or a.invoice_clsfctn ilike '" . loc_db_escape_string($searchWord) . "')";
+            "') or a.src_doc_hdr_id IN (select c.invc_hdr_id from scm.scm_sales_invc_hdr c where c.invc_number ilike '" . loc_db_escape_string($searchWord) .
+            "') or scm.get_src_doc_num(a.other_mdls_doc_id, a.other_mdls_doc_type) ilike '" . loc_db_escape_string($searchWord) .
+            "' or a.invoice_clsfctn ilike '" . loc_db_escape_string($searchWord) . "')";
     }
     $strSql = "SELECT a.invc_hdr_id, a.invc_number, a.invc_type,
         a.comments_desc,gst.get_pssbl_val(a.invc_curr_id), 
@@ -2612,14 +2954,15 @@ scm.scm_cstmr_suplr c where c.cust_sup_name ilike '" . loc_db_escape_string($sea
         a.branch_id, org.get_site_code_desc(a.branch_id), a.invc_date, to_char(to_timestamp(a.invc_date,'YYYY-MM-DD'),'DD-Mon-YYYY') date
         FROM scm.scm_sales_invc_hdr a
         WHERE((a.org_id = " . $orgID . ") and (to_timestamp(a.invc_date,'YYYY-MM-DD') between to_timestamp('" . $qStrtDte .
-            "','YYYY-MM-DD HH24:MI:SS') AND to_timestamp('" . $qEndDte . "','YYYY-MM-DD HH24:MI:SS'))" . $whrcls . $unpstdCls .
-            ") ORDER BY a.invc_hdr_id DESC LIMIT " . $limit_size .
-            " OFFSET " . (abs($offset * $limit_size));
+        "','YYYY-MM-DD HH24:MI:SS') AND to_timestamp('" . $qEndDte . "','YYYY-MM-DD HH24:MI:SS'))" . $whrcls . $unpstdCls .
+        ") ORDER BY a.invc_hdr_id DESC LIMIT " . $limit_size .
+        " OFFSET " . (abs($offset * $limit_size));
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_Total_SalesDoc($searchWord, $searchIn, $orgID, $shwUnpstdOnly, $shwUnpaidOnly, $shwSelfOnly, $qShwMyBranch, $qStrtDte, $qEndDte) {
+function get_Total_SalesDoc($searchWord, $searchIn, $orgID, $shwUnpstdOnly, $shwUnpaidOnly, $shwSelfOnly, $qShwMyBranch, $qStrtDte, $qEndDte)
+{
     global $vwOnlySelf;
     global $usrID;
     global $brnchLocID;
@@ -2657,17 +3000,17 @@ function get_Total_SalesDoc($searchWord, $searchIn, $orgID, $shwUnpstdOnly, $shw
     }
     if ($searchIn == "Document Number") {
         $whrcls .= " and (a.invc_number ilike '" . loc_db_escape_string($searchWord) . "' or trim(to_char(a.invc_hdr_id, '99999999999999999999')) ilike '" . loc_db_escape_string($searchWord) .
-                "')";
+            "')";
     } else if ($searchIn == "Document Description") {
         $whrcls .= " and (a.comments_desc ilike '" . loc_db_escape_string($searchWord) . "')";
     } else if ($searchIn == "Customer Name") {
         $whrcls .= " and (a.customer_id IN (select c.cust_sup_id from 
 scm.scm_cstmr_suplr c where c.cust_sup_name ilike '" . loc_db_escape_string($searchWord) .
-                "'))";
+            "'))";
     } else if ($searchIn == "Source Doc Number") {
         $whrcls .= " and (a.src_doc_hdr_id IN (select c.invc_hdr_id from scm.scm_sales_invc_hdr c where c.invc_number ilike '" . loc_db_escape_string($searchWord) .
-                "') or scm.get_src_doc_num(a.other_mdls_doc_id, a.other_mdls_doc_type) ilike '" . loc_db_escape_string($searchWord) .
-                "')";
+            "') or scm.get_src_doc_num(a.other_mdls_doc_id, a.other_mdls_doc_type) ilike '" . loc_db_escape_string($searchWord) .
+            "')";
     } else if ($searchIn == "Approval Status") {
         $whrcls .= " and (a.approval_status ilike '" . loc_db_escape_string($searchWord) . "')";
     } else if ($searchIn == "Created By") {
@@ -2680,21 +3023,21 @@ scm.scm_cstmr_suplr c where c.cust_sup_name ilike '" . loc_db_escape_string($sea
         $whrcls .= " and (org.get_site_code_desc(a.branch_id) ilike '" . loc_db_escape_string($searchWord) . "')";
     } else {
         $whrcls .= " and (org.get_site_code_desc(a.branch_id) ilike '" . loc_db_escape_string($searchWord) . "' "
-                . "or gst.get_pssbl_val(a.invc_curr_id) ilike '" . loc_db_escape_string($searchWord) . "' "
-                . "or sec.get_usr_name(a.created_by) ilike '" . loc_db_escape_string($searchWord) . "' "
-                . "or a.approval_status ilike '" . loc_db_escape_string($searchWord) . "' "
-                . "or a.invc_number ilike '" . loc_db_escape_string($searchWord) . "' or trim(to_char(a.invc_hdr_id, '99999999999999999999')) ilike '" . loc_db_escape_string($searchWord) .
-                "' or a.comments_desc ilike '" . loc_db_escape_string($searchWord) . "' "
-                . "or a.customer_id IN (select c.cust_sup_id from 
+            . "or gst.get_pssbl_val(a.invc_curr_id) ilike '" . loc_db_escape_string($searchWord) . "' "
+            . "or sec.get_usr_name(a.created_by) ilike '" . loc_db_escape_string($searchWord) . "' "
+            . "or a.approval_status ilike '" . loc_db_escape_string($searchWord) . "' "
+            . "or a.invc_number ilike '" . loc_db_escape_string($searchWord) . "' or trim(to_char(a.invc_hdr_id, '99999999999999999999')) ilike '" . loc_db_escape_string($searchWord) .
+            "' or a.comments_desc ilike '" . loc_db_escape_string($searchWord) . "' "
+            . "or a.customer_id IN (select c.cust_sup_id from 
 scm.scm_cstmr_suplr c where c.cust_sup_name ilike '" . loc_db_escape_string($searchWord) .
-                "') or a.src_doc_hdr_id IN (select c.invc_hdr_id from scm.scm_sales_invc_hdr c where c.invc_number ilike '" . loc_db_escape_string($searchWord) .
-                "') or scm.get_src_doc_num(a.other_mdls_doc_id, a.other_mdls_doc_type) ilike '" . loc_db_escape_string($searchWord) .
-                "' or a.invoice_clsfctn ilike '" . loc_db_escape_string($searchWord) . "')";
+            "') or a.src_doc_hdr_id IN (select c.invc_hdr_id from scm.scm_sales_invc_hdr c where c.invc_number ilike '" . loc_db_escape_string($searchWord) .
+            "') or scm.get_src_doc_num(a.other_mdls_doc_id, a.other_mdls_doc_type) ilike '" . loc_db_escape_string($searchWord) .
+            "' or a.invoice_clsfctn ilike '" . loc_db_escape_string($searchWord) . "')";
     }
     $strSql = "SELECT count(1) 
         FROM scm.scm_sales_invc_hdr a 
         WHERE((a.org_id = " . $orgID . ") and (to_timestamp(a.invc_date,'YYYY-MM-DD') between to_timestamp('" . $qStrtDte .
-            "','YYYY-MM-DD HH24:MI:SS') AND to_timestamp('" . $qEndDte . "','YYYY-MM-DD HH24:MI:SS'))" . $whrcls . $unpstdCls . ")";
+        "','YYYY-MM-DD HH24:MI:SS') AND to_timestamp('" . $qEndDte . "','YYYY-MM-DD HH24:MI:SS'))" . $whrcls . $unpstdCls . ")";
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -2702,26 +3045,28 @@ scm.scm_cstmr_suplr c where c.cust_sup_name ilike '" . loc_db_escape_string($sea
     return 0;
 }
 
-function get_DocSmryLns($dochdrID, $docTyp) {
+function get_DocSmryLns($dochdrID, $docTyp)
+{
     $strSql = "SELECT a.smmry_id, CASE WHEN a.smmry_type='3Discount' THEN 'Discount' ELSE a.smmry_name END, " .
-            "a.smmry_amnt, a.code_id_behind, a.smmry_type, a.auto_calc, "
-            . "REPLACE(REPLACE(a.smmry_type,'2Tax','3Tax'),'3Discount','2Discount') smtyp " .
-            "FROM scm.scm_doc_amnt_smmrys a " .
-            "WHERE((a.src_doc_hdr_id = " . $dochdrID .
-            ") and (a.src_doc_type='" . loc_db_escape_string($docTyp) . "')) ORDER BY 7";
+        "a.smmry_amnt, a.code_id_behind, a.smmry_type, a.auto_calc, "
+        . "REPLACE(REPLACE(a.smmry_type,'2Tax','3Tax'),'3Discount','2Discount') smtyp " .
+        "FROM scm.scm_doc_amnt_smmrys a " .
+        "WHERE((a.src_doc_hdr_id = " . $dochdrID .
+        ") and (a.src_doc_type='" . loc_db_escape_string($docTyp) . "')) ORDER BY 7";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_DfltSplrPyblsCashAcnt($spplrID, $orgID, $v_BranchID = -1) {
+function get_DfltSplrPyblsCashAcnt($spplrID, $orgID, $v_BranchID = -1)
+{
     global $brnchLocID;
     if ($v_BranchID <= 0) {
         $v_BranchID = $brnchLocID;
     }
     $strSql = "SELECT (CASE WHEN " . $spplrID . ">0 THEN "
-            . "(SELECT org.get_accnt_id_brnch_eqv(" . $v_BranchID . ", dflt_pybl_accnt_id) FROM scm.scm_cstmr_suplr WHERE cust_sup_id=" . $spplrID . ") "
-            . "ELSE (SELECT org.get_accnt_id_brnch_eqv(" . $v_BranchID . ", rcpt_lblty_acnt_id)) END) FROM scm.scm_dflt_accnts a " .
-            "WHERE(a.org_id = " . $orgID . ")";
+        . "(SELECT org.get_accnt_id_brnch_eqv(" . $v_BranchID . ", dflt_pybl_accnt_id) FROM scm.scm_cstmr_suplr WHERE cust_sup_id=" . $spplrID . ") "
+        . "ELSE (SELECT org.get_accnt_id_brnch_eqv(" . $v_BranchID . ", rcpt_lblty_acnt_id)) END) FROM scm.scm_dflt_accnts a " .
+        "WHERE(a.org_id = " . $orgID . ")";
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return ((int) $row[0]);
@@ -2729,15 +3074,16 @@ function get_DfltSplrPyblsCashAcnt($spplrID, $orgID, $v_BranchID = -1) {
     return -1;
 }
 
-function get_DfltCstmrRcvblsCashAcnt($spplrID, $orgID, $v_BranchID = -1) {
+function get_DfltCstmrRcvblsCashAcnt($spplrID, $orgID, $v_BranchID = -1)
+{
     global $brnchLocID;
     if ($v_BranchID <= 0) {
         $v_BranchID = $brnchLocID;
     }
     $strSql = "SELECT (CASE WHEN " . $spplrID . ">0 THEN (SELECT org.get_accnt_id_brnch_eqv(" . $v_BranchID . ", dflt_rcvbl_accnt_id) FROM scm.scm_cstmr_suplr WHERE cust_sup_id=" . $spplrID . ") "
-            . "ELSE (SELECT org.get_accnt_id_brnch_eqv(" . $v_BranchID . ", sales_rcvbl_acnt_id)) END) " .
-            "FROM scm.scm_dflt_accnts a " .
-            "WHERE(a.org_id = " . $orgID . ")";
+        . "ELSE (SELECT org.get_accnt_id_brnch_eqv(" . $v_BranchID . ", sales_rcvbl_acnt_id)) END) " .
+        "FROM scm.scm_dflt_accnts a " .
+        "WHERE(a.org_id = " . $orgID . ")";
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return ((int) $row[0]);
@@ -2745,7 +3091,8 @@ function get_DfltCstmrRcvblsCashAcnt($spplrID, $orgID, $v_BranchID = -1) {
     return -1;
 }
 
-function get_DfltCstmrSpplrSiteID($spplrID) {
+function get_DfltCstmrSpplrSiteID($spplrID)
+{
     $strSql = "SELECT cust_sup_site_id
 	FROM scm.scm_cstmr_suplr_sites
 	WHERE cust_supplier_id=" . $spplrID . "
@@ -2757,12 +3104,13 @@ function get_DfltCstmrSpplrSiteID($spplrID) {
     return -1;
 }
 
-function get_CstmrSpplrSiteLnkID($spplrID, $siteID) {
+function get_CstmrSpplrSiteLnkID($spplrID, $siteID)
+{
     $strSql = "SELECT cust_sup_site_id
 	FROM scm.scm_cstmr_suplr_sites
 	WHERE cust_supplier_id=" . $spplrID . "
 	and is_enabled='1' and cust_sup_site_id=" . $siteID .
-            " ORDER BY cust_sup_site_id DESC LIMIT 1 OFFSET 0";
+        " ORDER BY cust_sup_site_id DESC LIMIT 1 OFFSET 0";
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return ((int) $row[0]);
@@ -2770,7 +3118,8 @@ function get_CstmrSpplrSiteLnkID($spplrID, $siteID) {
     return -1;
 }
 
-function getLnkdPrsnCstmrSpplrID($lnkdprsnid) {
+function getLnkdPrsnCstmrSpplrID($lnkdprsnid)
+{
     $sqlStr = "select cust_sup_id from scm.scm_cstmr_suplr where lnkd_prsn_id=" . $lnkdprsnid;
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -2779,9 +3128,30 @@ function getLnkdPrsnCstmrSpplrID($lnkdprsnid) {
     return -1;
 }
 
-function createCstmrLnkdPrsn($cstmrNm, $cstmrDesc, $clsfctn, $cstrmOrSpplr, $orgid, $dfltPyblAcnt, $dfltRcvblAcnt, $lnkdPrsn, $gender, $dob,
-        $isenbled, $frmBrndNm, $orgType, $cmpnyRegNum, $dateIncorp, $typeOfIncorp, $vatNum, $tinNum, $ssnitNum, $numEmplys, $descSrvcs,
-        $listSrvcs) {
+function createCstmrLnkdPrsn(
+    $cstmrNm,
+    $cstmrDesc,
+    $clsfctn,
+    $cstrmOrSpplr,
+    $orgid,
+    $dfltPyblAcnt,
+    $dfltRcvblAcnt,
+    $lnkdPrsn,
+    $gender,
+    $dob,
+    $isenbled,
+    $frmBrndNm,
+    $orgType,
+    $cmpnyRegNum,
+    $dateIncorp,
+    $typeOfIncorp,
+    $vatNum,
+    $tinNum,
+    $ssnitNum,
+    $numEmplys,
+    $descSrvcs,
+    $listSrvcs
+) {
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO scm.scm_cstmr_suplr(
@@ -2792,39 +3162,61 @@ function createCstmrLnkdPrsn($cstmrNm, $cstmrDesc, $clsfctn, $cstrmOrSpplr, $org
             company_reg_num, date_of_incorptn, type_of_incorporation, vat_number, 
             tin_number, ssnit_reg_number, no_of_emplyees, description_of_services, 
             list_of_services) " .
-            "VALUES ('" . loc_db_escape_string($cstmrNm) .
-            "', " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', '" . loc_db_escape_string($cstmrDesc) .
-            "', '" . loc_db_escape_string($clsfctn) .
-            "', '" . loc_db_escape_string($cstrmOrSpplr) .
-            "'," . loc_db_escape_string($orgid) .
-            "," . loc_db_escape_string($dfltPyblAcnt) .
-            "," . loc_db_escape_string($dfltRcvblAcnt) .
-            "," . loc_db_escape_string($lnkdPrsn) .
-            ", '" . loc_db_escape_string($gender) .
-            "', '" . loc_db_escape_string($dob) .
-            "', '" . loc_db_escape_string($isenbled) .
-            "', '" . loc_db_escape_string($frmBrndNm) .
-            "', '" . loc_db_escape_string($orgType) .
-            "', '" . loc_db_escape_string($cmpnyRegNum) .
-            "', '" . loc_db_escape_string($dateIncorp) .
-            "', '" . loc_db_escape_string($typeOfIncorp) .
-            "', '" . loc_db_escape_string($vatNum) .
-            "', '" . loc_db_escape_string($tinNum) .
-            "', '" . loc_db_escape_string($ssnitNum) .
-            "', " . loc_db_escape_string($numEmplys) .
-            ", '" . loc_db_escape_string($descSrvcs) .
-            "', '" . loc_db_escape_string($listSrvcs) .
-            "')";
+        "VALUES ('" . loc_db_escape_string($cstmrNm) .
+        "', " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', '" . loc_db_escape_string($cstmrDesc) .
+        "', '" . loc_db_escape_string($clsfctn) .
+        "', '" . loc_db_escape_string($cstrmOrSpplr) .
+        "'," . loc_db_escape_string($orgid) .
+        "," . loc_db_escape_string($dfltPyblAcnt) .
+        "," . loc_db_escape_string($dfltRcvblAcnt) .
+        "," . loc_db_escape_string($lnkdPrsn) .
+        ", '" . loc_db_escape_string($gender) .
+        "', '" . loc_db_escape_string($dob) .
+        "', '" . loc_db_escape_string($isenbled) .
+        "', '" . loc_db_escape_string($frmBrndNm) .
+        "', '" . loc_db_escape_string($orgType) .
+        "', '" . loc_db_escape_string($cmpnyRegNum) .
+        "', '" . loc_db_escape_string($dateIncorp) .
+        "', '" . loc_db_escape_string($typeOfIncorp) .
+        "', '" . loc_db_escape_string($vatNum) .
+        "', '" . loc_db_escape_string($tinNum) .
+        "', '" . loc_db_escape_string($ssnitNum) .
+        "', " . loc_db_escape_string($numEmplys) .
+        ", '" . loc_db_escape_string($descSrvcs) .
+        "', '" . loc_db_escape_string($listSrvcs) .
+        "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function createCstmrSiteLnkdPrsn($cstmrID, $cntctPrsn, $cntctNos, $email, $siteNm, $siteDesc, $bankNm, $bankBrnch, $bnkNum, $wthTaxID,
-        $dscntCodeID, $bllngAddrs, $shpToAddrs, $swftCode, $natnlty, $ntnltyIDType, $idNum, $dateIssued, $expryDate, $otherInfo, $isenabled,
-        $ibanNum, $accntCurID) {
+function createCstmrSiteLnkdPrsn(
+    $cstmrID,
+    $cntctPrsn,
+    $cntctNos,
+    $email,
+    $siteNm,
+    $siteDesc,
+    $bankNm,
+    $bankBrnch,
+    $bnkNum,
+    $wthTaxID,
+    $dscntCodeID,
+    $bllngAddrs,
+    $shpToAddrs,
+    $swftCode,
+    $natnlty,
+    $ntnltyIDType,
+    $idNum,
+    $dateIssued,
+    $expryDate,
+    $otherInfo,
+    $isenabled,
+    $ibanNum,
+    $accntCurID
+) {
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO scm.scm_cstmr_suplr_sites(
@@ -2834,38 +3226,39 @@ function createCstmrSiteLnkdPrsn($cstmrID, $cntctPrsn, $cntctNos, $email, $siteN
             billing_address, ship_to_address, swift_code, 
             nationality, national_id_typ, id_number, date_issued, expiry_date, 
             other_info, is_enabled, iban_number, accnt_cur_id) " .
-            "VALUES (" . loc_db_escape_string($cstmrID) .
-            ", '" . loc_db_escape_string($cntctPrsn) .
-            "', '" . loc_db_escape_string($cntctNos) .
-            "', '" . loc_db_escape_string($email) .
-            "', " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', " . loc_db_escape_string($usrID) .
-            ", '" . loc_db_escape_string($dateStr) .
-            "', '" . loc_db_escape_string($siteNm) .
-            "', '" . loc_db_escape_string($siteDesc) .
-            "', '" . loc_db_escape_string($bankNm) .
-            "', '" . loc_db_escape_string($bankBrnch) .
-            "', '" . loc_db_escape_string($bnkNum) .
-            "', " . loc_db_escape_string($wthTaxID) .
-            ", " . loc_db_escape_string($dscntCodeID) .
-            ", '" . loc_db_escape_string($bllngAddrs) .
-            "', '" . loc_db_escape_string($shpToAddrs) .
-            "', '" . loc_db_escape_string($swftCode) .
-            "', '" . loc_db_escape_string($natnlty) .
-            "', '" . loc_db_escape_string($ntnltyIDType) .
-            "', '" . loc_db_escape_string($idNum) .
-            "', '" . loc_db_escape_string($dateIssued) .
-            "', '" . loc_db_escape_string($expryDate) .
-            "', '" . loc_db_escape_string($otherInfo) .
-            "', '" . loc_db_escape_string($isenabled) .
-            "', '" . loc_db_escape_string($ibanNum) .
-            "', " . loc_db_escape_string($accntCurID) .
-            ")";
+        "VALUES (" . loc_db_escape_string($cstmrID) .
+        ", '" . loc_db_escape_string($cntctPrsn) .
+        "', '" . loc_db_escape_string($cntctNos) .
+        "', '" . loc_db_escape_string($email) .
+        "', " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', " . loc_db_escape_string($usrID) .
+        ", '" . loc_db_escape_string($dateStr) .
+        "', '" . loc_db_escape_string($siteNm) .
+        "', '" . loc_db_escape_string($siteDesc) .
+        "', '" . loc_db_escape_string($bankNm) .
+        "', '" . loc_db_escape_string($bankBrnch) .
+        "', '" . loc_db_escape_string($bnkNum) .
+        "', " . loc_db_escape_string($wthTaxID) .
+        ", " . loc_db_escape_string($dscntCodeID) .
+        ", '" . loc_db_escape_string($bllngAddrs) .
+        "', '" . loc_db_escape_string($shpToAddrs) .
+        "', '" . loc_db_escape_string($swftCode) .
+        "', '" . loc_db_escape_string($natnlty) .
+        "', '" . loc_db_escape_string($ntnltyIDType) .
+        "', '" . loc_db_escape_string($idNum) .
+        "', '" . loc_db_escape_string($dateIssued) .
+        "', '" . loc_db_escape_string($expryDate) .
+        "', '" . loc_db_escape_string($otherInfo) .
+        "', '" . loc_db_escape_string($isenabled) .
+        "', '" . loc_db_escape_string($ibanNum) .
+        "', " . loc_db_escape_string($accntCurID) .
+        ")";
     return execUpdtInsSQL($insSQL);
 }
 
-function getCstmrSpplrName1($cstmrid) {
+function getCstmrSpplrName1($cstmrid)
+{
     $sqlStr = "select cust_sup_name from scm.scm_cstmr_suplr where cust_sup_id=" . $cstmrid;
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -2874,9 +3267,10 @@ function getCstmrSpplrName1($cstmrid) {
     return "";
 }
 
-function getCstmrSiteNm($siteID, $cstmrID) {
+function getCstmrSiteNm($siteID, $cstmrID)
+{
     $sqlStr = "select site_name from scm.scm_cstmr_suplr_sites where cust_supplier_id = " . loc_db_escape_string($cstmrID) .
-            " and cust_sup_site_id = " . loc_db_escape_string(strtolower($siteID)) . "";
+        " and cust_sup_site_id = " . loc_db_escape_string(strtolower($siteID)) . "";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -2884,7 +3278,8 @@ function getCstmrSiteNm($siteID, $cstmrID) {
     return "";
 }
 
-function get_One_SalesInvcDocHdr($hdrID) {
+function get_One_SalesInvcDocHdr($hdrID)
+{
     $strSql = "SELECT a.invc_hdr_id, to_char(to_timestamp(a.invc_date,'YYYY-MM-DD'),'DD-Mon-YYYY'), 
        created_by, sec.get_usr_name(a.created_by), a.invc_number, a.invc_type, 
        a.comments_desc, a.src_doc_hdr_id, a.customer_id, scm.get_cstmr_splr_name(a.customer_id),
@@ -2913,7 +3308,8 @@ function get_One_SalesInvcDocHdr($hdrID) {
     return $result;
 }
 
-function get_One_SalesInvcAmounts($hdrID) {
+function get_One_SalesInvcAmounts($hdrID)
+{
     $strSql = "SELECT round(scm.get_DocSmryGrndTtl(a.invc_hdr_id,a.invc_type),2) invoice_amount, 
        round(scm.get_DocSmryPymtRcvd(a.invc_hdr_id,a.invc_type),2) amnt_paid
   FROM scm.scm_sales_invc_hdr a
@@ -2922,7 +3318,8 @@ function get_One_SalesInvcAmounts($hdrID) {
     return $result;
 }
 
-function get_One_PrchsDocAmounts($hdrID) {
+function get_One_PrchsDocAmounts($hdrID)
+{
     $strSql = "SELECT round(scm.getprchsdocgrndamnt(a.prchs_doc_hdr_id),2) invoice_amount, 
        0 amnt_paid
   FROM scm.scm_prchs_docs_hdr a
@@ -2931,12 +3328,13 @@ function get_One_PrchsDocAmounts($hdrID) {
     return $result;
 }
 
-function get_SalesInvcDocDet($dochdrID) {
+function get_SalesInvcDocDet($dochdrID)
+{
     $strSql = "SELECT a.invc_det_ln_id, a.itm_id, " .
-            "a.doc_qty, a.unit_selling_price, (a.doc_qty * a.unit_selling_price) amnt, " .
-            "a.store_id, a.crncy_id, (a.doc_qty - a.qty_trnsctd_in_dest_doc) avlbl_qty, " .
-            "a.src_line_id, a.tax_code_id, a.dscnt_code_id, a.chrg_code_id, a.rtrn_reason, " .
-            "a.consgmnt_ids, a.orgnl_selling_price, b.base_uom_id, b.item_code, b.item_desc, 
+        "a.doc_qty, a.unit_selling_price, (a.doc_qty * a.unit_selling_price) amnt, " .
+        "a.store_id, a.crncy_id, (a.doc_qty - a.qty_trnsctd_in_dest_doc) avlbl_qty, " .
+        "a.src_line_id, a.tax_code_id, a.dscnt_code_id, a.chrg_code_id, a.rtrn_reason, " .
+        "a.consgmnt_ids, a.orgnl_selling_price, b.base_uom_id, b.item_code, b.item_desc, 
       c.uom_name, a.is_itm_delivered, REPLACE(a.extra_desc || ' (' || a.other_mdls_doc_type || ')',' ()','')
         , a.other_mdls_doc_id, a.other_mdls_doc_type, a.lnkd_person_id, 
       REPLACE(prs.get_prsn_surname(a.lnkd_person_id) || ' (' 
@@ -2948,18 +3346,19 @@ function get_SalesInvcDocDet($dochdrID) {
         scm.get_tax_code(a.tax_code_id), scm.get_tax_code(a.dscnt_code_id), scm.get_tax_code(a.chrg_code_id) 
         FROM scm.scm_sales_invc_det a, inv.inv_itm_list b, inv.unit_of_measure c, inv.inv_product_categories d  
         WHERE(a.invc_hdr_id = " . $dochdrID .
-            " and a.invc_hdr_id>0 and a.itm_id = b.item_id and b.base_uom_id = c.uom_id and d.cat_id = b.category_id) ORDER BY a.invc_det_ln_id, b.category_id";
+        " and a.invc_hdr_id>0 and a.itm_id = b.item_id and b.base_uom_id = c.uom_id and d.cat_id = b.category_id) ORDER BY a.invc_det_ln_id, b.category_id";
 
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_SalesInvcDocDet2($dochdrID) {
+function get_SalesInvcDocDet2($dochdrID)
+{
     $strSql = "SELECT a.invc_det_ln_id, a.itm_id, " .
-            "a.doc_qty, a.unit_selling_price, (a.doc_qty * a.unit_selling_price * a.rented_itm_qty) amnt, " .
-            "a.store_id, a.crncy_id, (a.doc_qty - a.qty_trnsctd_in_dest_doc) avlbl_qty, " .
-            "a.src_line_id, a.tax_code_id, a.dscnt_code_id, a.chrg_code_id, a.rtrn_reason, " .
-            "a.consgmnt_ids, a.orgnl_selling_price, b.base_uom_id, b.item_code, b.item_desc, 
+        "a.doc_qty, a.unit_selling_price, (a.doc_qty * a.unit_selling_price * a.rented_itm_qty) amnt, " .
+        "a.store_id, a.crncy_id, (a.doc_qty - a.qty_trnsctd_in_dest_doc) avlbl_qty, " .
+        "a.src_line_id, a.tax_code_id, a.dscnt_code_id, a.chrg_code_id, a.rtrn_reason, " .
+        "a.consgmnt_ids, a.orgnl_selling_price, b.base_uom_id, b.item_code, b.item_desc, 
       c.uom_name, a.is_itm_delivered, REPLACE(a.extra_desc || ' (' || a.other_mdls_doc_type || ')',' ()','')
         , a.other_mdls_doc_id, a.other_mdls_doc_type, a.lnkd_person_id, 
       REPLACE(prs.get_prsn_surname(a.lnkd_person_id) || ' (' 
@@ -2971,48 +3370,78 @@ function get_SalesInvcDocDet2($dochdrID) {
         scm.get_tax_code(a.tax_code_id), scm.get_tax_code(a.dscnt_code_id), scm.get_tax_code(a.chrg_code_id)  
       FROM scm.scm_sales_invc_det a, inv.inv_itm_list b, inv.unit_of_measure c, inv.inv_product_categories d  
         WHERE(a.invc_hdr_id = " . $dochdrID . " and a.invc_hdr_id>0 and a.itm_id = b.item_id and b.base_uom_id = c.uom_id and d.cat_id = b.category_id)"
-            . " ORDER BY a.invc_det_ln_id, b.category_id";
+        . " ORDER BY a.invc_det_ln_id, b.category_id";
     //echo $strSql;
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function createSmmryItm($smmryTyp, $smmryNm, $amnt, $codeBehind, $srcDocTyp, $srcDocHdrID, $autoCalc) {
+function createSmmryItm($smmryTyp, $smmryNm, $amnt, $codeBehind, $srcDocTyp, $srcDocHdrID, $autoCalc)
+{
     global $usrID;
     if ($smmryTyp == "3Discount") {
         $amnt = -1 * abs($amnt);
     }
     $insSQL = "INSERT INTO scm.scm_doc_amnt_smmrys(" .
-            "smmry_type, smmry_name, smmry_amnt, code_id_behind, " .
-            "src_doc_type, src_doc_hdr_id, created_by, creation_date, last_update_by, " .
-            "last_update_date, auto_calc) " .
-            "VALUES ('" . loc_db_escape_string($smmryTyp) .
-            "', '" . loc_db_escape_string($smmryNm) .
-            "', " . $amnt . ", " . $codeBehind . ", '" . loc_db_escape_string($srcDocTyp) .
-            "', " . $srcDocHdrID . ", " . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), '" .
-            cnvrtBoolToBitStr($autoCalc) . "')";
+        "smmry_type, smmry_name, smmry_amnt, code_id_behind, " .
+        "src_doc_type, src_doc_hdr_id, created_by, creation_date, last_update_by, " .
+        "last_update_date, auto_calc) " .
+        "VALUES ('" . loc_db_escape_string($smmryTyp) .
+        "', '" . loc_db_escape_string($smmryNm) .
+        "', " . $amnt . ", " . $codeBehind . ", '" . loc_db_escape_string($srcDocTyp) .
+        "', " . $srcDocHdrID . ", " . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), '" .
+        cnvrtBoolToBitStr($autoCalc) . "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function updateSmmryItm($smmryID, $smmryTyp, $amnt, $autoCalc, $smmryNm) {
+function updateSmmryItm($smmryID, $smmryTyp, $amnt, $autoCalc, $smmryNm)
+{
     global $usrID;
     if ($smmryTyp == "3Discount") {
         $amnt = -1 * abs($amnt);
     }
     $updtSQL = "UPDATE scm.scm_doc_amnt_smmrys SET " .
-            "smmry_amnt = " . $amnt .
-            ", last_update_by = " . $usrID . ", " .
-            "auto_calc = '" . cnvrtBoolToBitStr($autoCalc) .
-            "', last_update_date = to_char(now(),'YYYY-MM-DD HH24:MI:SS'), smmry_name='" . loc_db_escape_string($smmryNm) . "' WHERE (smmry_id = " . $smmryID . ")";
+        "smmry_amnt = " . $amnt .
+        ", last_update_by = " . $usrID . ", " .
+        "auto_calc = '" . cnvrtBoolToBitStr($autoCalc) .
+        "', last_update_date = to_char(now(),'YYYY-MM-DD HH24:MI:SS'), smmry_name='" . loc_db_escape_string($smmryNm) . "' WHERE (smmry_id = " . $smmryID . ")";
 
     return execUpdtInsSQL($updtSQL);
 }
 
-function createSalesDocHdr($orgid, $docNum, $desc, $docTyp, $docdte, $pymntTrms, $cstmrID, $siteID, $apprvlSts, $nxtApprvl, $srcDocID,
-        $rcvblAcntID, $pymntID, $invcCurrID, $exchRate, $chckInID, $chckInType, $enblAutoChrg, $event_rgstr_id, $evntCtgry, $allwDues,
-        $evntType, $src_doc_type, $brnchID = -1, $scmSalesInvcClssfctn = "Standard", $scmSalesInvcPyItmSetID = -1,
-        $scmSalesInvcPyAmntGvn = 0, $scmSalesInvcPyChqNumber = "", $scmSalesInvcPySignCode = "", $scmSalesInvcAplyAdvnc = "1",
-        $scmSalesInvcKeepExcss = "1") {
+function createSalesDocHdr(
+    $orgid,
+    $docNum,
+    $desc,
+    $docTyp,
+    $docdte,
+    $pymntTrms,
+    $cstmrID,
+    $siteID,
+    $apprvlSts,
+    $nxtApprvl,
+    $srcDocID,
+    $rcvblAcntID,
+    $pymntID,
+    $invcCurrID,
+    $exchRate,
+    $chckInID,
+    $chckInType,
+    $enblAutoChrg,
+    $event_rgstr_id,
+    $evntCtgry,
+    $allwDues,
+    $evntType,
+    $src_doc_type,
+    $brnchID = -1,
+    $scmSalesInvcClssfctn = "Standard",
+    $scmSalesInvcPyItmSetID = -1,
+    $scmSalesInvcPyAmntGvn = 0,
+    $scmSalesInvcPyChqNumber = "",
+    $scmSalesInvcPySignCode = "",
+    $scmSalesInvcAplyAdvnc = "1",
+    $scmSalesInvcKeepExcss = "1"
+) {
     global $usrID;
     global $brnchLocID;
     if ($brnchID <= 0) {
@@ -3022,36 +3451,36 @@ function createSalesDocHdr($orgid, $docNum, $desc, $docTyp, $docdte, $pymntTrms,
         $docdte = cnvrtDMYToYMD($docdte);
     }
     $insSQL = "INSERT INTO scm.scm_sales_invc_hdr(" .
-            "invc_date, payment_terms, customer_id, " .
-            "customer_site_id, comments_desc, approval_status, created_by, " .
-            "creation_date, last_update_by, last_update_date, next_aproval_action, " .
-            "invc_number, invc_type, src_doc_hdr_id, org_id, receivables_accnt_id, " .
-            "pymny_method_id, invc_curr_id, exchng_rate, " .
-            "other_mdls_doc_id, other_mdls_doc_type, enbl_auto_misc_chrges, " .
-            "event_rgstr_id, evnt_cost_category, allow_dues, event_doc_type, " .
-            "src_doc_type, branch_id,invoice_clsfctn, mspy_amnt_gvn, mspy_item_set_id, "
-            . "cheque_card_num, sign_code, mspy_apply_advnc, mspy_keep_excess) " .
-            "VALUES ('" . loc_db_escape_string($docdte) .
-            "', '" . loc_db_escape_string($pymntTrms) .
-            "', " . $cstmrID . ", " . $siteID . ", '" . loc_db_escape_string($desc) .
-            "', '" . loc_db_escape_string($apprvlSts) . "', " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), '" . loc_db_escape_string($nxtApprvl) .
-            "', '" . loc_db_escape_string($docNum) . "', '"
-            . loc_db_escape_string($docTyp) . "', " . $srcDocID . ", " .
-            $orgid . ", " . $rcvblAcntID . ", " . $pymntID . ", "
-            . $invcCurrID . ", " . $exchRate . "," . $chckInID . ",'" . $chckInType .
-            "','" . cnvrtBoolToBitStr($enblAutoChrg) .
-            "'," . $event_rgstr_id . ", '" . loc_db_escape_string($evntCtgry) .
-            "','" . cnvrtBoolToBitStr($allwDues) .
-            "', '" . loc_db_escape_string($evntType) .
-            "','" . loc_db_escape_string($src_doc_type) . "'," . $brnchID .
-            ", '" . loc_db_escape_string($scmSalesInvcClssfctn) .
-            "'," . $scmSalesInvcPyAmntGvn . "," . $scmSalesInvcPyItmSetID .
-            ",'" . loc_db_escape_string($scmSalesInvcPyChqNumber) .
-            "','" . loc_db_escape_string($scmSalesInvcPySignCode) .
-            "','" . loc_db_escape_string($scmSalesInvcAplyAdvnc) .
-            "','" . loc_db_escape_string($scmSalesInvcKeepExcss) . "')";
+        "invc_date, payment_terms, customer_id, " .
+        "customer_site_id, comments_desc, approval_status, created_by, " .
+        "creation_date, last_update_by, last_update_date, next_aproval_action, " .
+        "invc_number, invc_type, src_doc_hdr_id, org_id, receivables_accnt_id, " .
+        "pymny_method_id, invc_curr_id, exchng_rate, " .
+        "other_mdls_doc_id, other_mdls_doc_type, enbl_auto_misc_chrges, " .
+        "event_rgstr_id, evnt_cost_category, allow_dues, event_doc_type, " .
+        "src_doc_type, branch_id,invoice_clsfctn, mspy_amnt_gvn, mspy_item_set_id, "
+        . "cheque_card_num, sign_code, mspy_apply_advnc, mspy_keep_excess) " .
+        "VALUES ('" . loc_db_escape_string($docdte) .
+        "', '" . loc_db_escape_string($pymntTrms) .
+        "', " . $cstmrID . ", " . $siteID . ", '" . loc_db_escape_string($desc) .
+        "', '" . loc_db_escape_string($apprvlSts) . "', " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), '" . loc_db_escape_string($nxtApprvl) .
+        "', '" . loc_db_escape_string($docNum) . "', '"
+        . loc_db_escape_string($docTyp) . "', " . $srcDocID . ", " .
+        $orgid . ", " . $rcvblAcntID . ", " . $pymntID . ", "
+        . $invcCurrID . ", " . $exchRate . "," . $chckInID . ",'" . $chckInType .
+        "','" . cnvrtBoolToBitStr($enblAutoChrg) .
+        "'," . $event_rgstr_id . ", '" . loc_db_escape_string($evntCtgry) .
+        "','" . cnvrtBoolToBitStr($allwDues) .
+        "', '" . loc_db_escape_string($evntType) .
+        "','" . loc_db_escape_string($src_doc_type) . "'," . $brnchID .
+        ", '" . loc_db_escape_string($scmSalesInvcClssfctn) .
+        "'," . $scmSalesInvcPyAmntGvn . "," . $scmSalesInvcPyItmSetID .
+        ",'" . loc_db_escape_string($scmSalesInvcPyChqNumber) .
+        "','" . loc_db_escape_string($scmSalesInvcPySignCode) .
+        "','" . loc_db_escape_string($scmSalesInvcAplyAdvnc) .
+        "','" . loc_db_escape_string($scmSalesInvcKeepExcss) . "')";
     //echo $insSQL;
     execUpdtInsSQL($insSQL);
     $sbmtdScmSalesInvcID = getGnrlRecID("scm.scm_sales_invc_hdr", "invc_number", "invc_hdr_id", $docNum, $orgid);
@@ -3064,22 +3493,50 @@ function createSalesDocHdr($orgid, $docNum, $desc, $docTyp, $docdte, $pymntTrms,
                                    alternate_item_name, rented_itm_qty, cogs_acct_id, sales_rev_accnt_id,
                                    sales_ret_accnt_id, purch_ret_accnt_id, expense_accnt_id, inv_asset_acct_id) 
                  select " . $sbmtdScmSalesInvcID . ", c.itm_id,c.store_id, (c.doc_qty-coalesce(c.qty_trnsctd_in_dest_doc,0)),c.unit_selling_price,c.tax_code_id, " .
-                $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), c.dscnt_code_id ,c.chrg_code_id, 
+            $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), c.dscnt_code_id ,c.chrg_code_id, 
                     c.invc_det_ln_id, 0,c.crncy_id,c.rtrn_reason,'','',c.orgnl_selling_price,'0',-1,'','',-1,c.alternate_item_name,
                     c.rented_itm_qty,c.cogs_acct_id,c.sales_rev_accnt_id,c.sales_ret_accnt_id,
                     c.purch_ret_accnt_id, c.expense_accnt_id, c.inv_asset_acct_id
                 from scm.scm_sales_invc_det c where (c.invc_hdr_id = " . $srcDocID . " and (c.doc_qty-coalesce(c.qty_trnsctd_in_dest_doc,0))>0) ORDER BY c.invc_det_ln_id";
-//echo $insSQL;
+        //echo $insSQL;
         execUpdtInsSQL($insSQL);
     }
     return $sbmtdScmSalesInvcID;
 }
 
-function updtSalesDocHdr($docid, $docNum, $desc, $docTyp, $docdte, $pymntTerms, $spplrID, $spplrSiteID, $apprvlSts, $nxtApprvl, $srcDocID,
-        $rcvblAcntID, $pymntID, $invcCurrID, $exchRate, $chckInID, $chckInType, $enblAutoChrg, $event_rgstr_id, $evntCtgry, $allwDues,
-        $evntType, $src_doc_type, $brnchID = -1, $scmSalesInvcClssfctn = "Standard", $scmSalesInvcPyItmSetID = -1,
-        $scmSalesInvcPyAmntGvn = 0, $scmSalesInvcPyChqNumber = "", $scmSalesInvcPySignCode = "", $scmSalesInvcAplyAdvnc = "0",
-        $scmSalesInvcKeepExcss = "1") {
+function updtSalesDocHdr(
+    $docid,
+    $docNum,
+    $desc,
+    $docTyp,
+    $docdte,
+    $pymntTerms,
+    $spplrID,
+    $spplrSiteID,
+    $apprvlSts,
+    $nxtApprvl,
+    $srcDocID,
+    $rcvblAcntID,
+    $pymntID,
+    $invcCurrID,
+    $exchRate,
+    $chckInID,
+    $chckInType,
+    $enblAutoChrg,
+    $event_rgstr_id,
+    $evntCtgry,
+    $allwDues,
+    $evntType,
+    $src_doc_type,
+    $brnchID = -1,
+    $scmSalesInvcClssfctn = "Standard",
+    $scmSalesInvcPyItmSetID = -1,
+    $scmSalesInvcPyAmntGvn = 0,
+    $scmSalesInvcPyChqNumber = "",
+    $scmSalesInvcPySignCode = "",
+    $scmSalesInvcAplyAdvnc = "0",
+    $scmSalesInvcKeepExcss = "1"
+) {
     global $usrID;
     global $brnchLocID;
     if ($brnchID <= 0) {
@@ -3089,38 +3546,39 @@ function updtSalesDocHdr($docid, $docNum, $desc, $docTyp, $docdte, $pymntTerms, 
         $docdte = cnvrtDMYToYMD($docdte);
     }
     $updtSQL = "UPDATE scm.scm_sales_invc_hdr SET " .
-            "invc_date='" . loc_db_escape_string($docdte) .
-            "', payment_terms='" . loc_db_escape_string($pymntTerms) .
-            "', customer_id=" . $spplrID . ", " .
-            "customer_site_id=" . $spplrSiteID .
-            ", comments_desc='" . loc_db_escape_string($desc) .
-            "', approval_status='" . loc_db_escape_string($apprvlSts) .
-            "', last_update_by=" . $usrID .
-            ", last_update_date = to_char(now(),'YYYY-MM-DD HH24:MI:SS'), next_aproval_action = '" . loc_db_escape_string($nxtApprvl) .
-            "', invc_number = '" . loc_db_escape_string($docNum) .
-            "', invc_type = '" . loc_db_escape_string($docTyp) . "', src_doc_hdr_id=" . $srcDocID .
-            ", pymny_method_id = " . $pymntID . ", invc_curr_id=" . $invcCurrID .
-            ", exchng_rate=" . $exchRate .
-            ", other_mdls_doc_id=" . $chckInID .
-            ", other_mdls_doc_type='" . loc_db_escape_string($chckInType) . "' " .
-            ", enbl_auto_misc_chrges='" . cnvrtBoolToBitStr($enblAutoChrg) . "' " .
-            ", event_rgstr_id = " . $event_rgstr_id .
-            ", evnt_cost_category = '" . loc_db_escape_string($evntCtgry) . "' " .
-            ", allow_dues = '" . cnvrtBoolToBitStr($allwDues) .
-            "', event_doc_type = '" . loc_db_escape_string($evntType) . "', receivables_accnt_id= " . $rcvblAcntID .
-            ", src_doc_type = '" . loc_db_escape_string($src_doc_type) . "', branch_id=" . $brnchID .
-            ", invoice_clsfctn = '" . loc_db_escape_string($scmSalesInvcClssfctn) .
-            "', mspy_amnt_gvn=" . $scmSalesInvcPyAmntGvn .
-            ", mspy_item_set_id=" . $scmSalesInvcPyItmSetID .
-            ", cheque_card_num='" . loc_db_escape_string($scmSalesInvcPyChqNumber) .
-            "', sign_code='" . loc_db_escape_string($scmSalesInvcPySignCode) .
-            "', mspy_apply_advnc='" . loc_db_escape_string($scmSalesInvcAplyAdvnc) .
-            "', mspy_keep_excess='" . loc_db_escape_string($scmSalesInvcKeepExcss) .
-            "' WHERE (invc_hdr_id = " . $docid . ")";
+        "invc_date='" . loc_db_escape_string($docdte) .
+        "', payment_terms='" . loc_db_escape_string($pymntTerms) .
+        "', customer_id=" . $spplrID . ", " .
+        "customer_site_id=" . $spplrSiteID .
+        ", comments_desc='" . loc_db_escape_string($desc) .
+        "', approval_status='" . loc_db_escape_string($apprvlSts) .
+        "', last_update_by=" . $usrID .
+        ", last_update_date = to_char(now(),'YYYY-MM-DD HH24:MI:SS'), next_aproval_action = '" . loc_db_escape_string($nxtApprvl) .
+        "', invc_number = '" . loc_db_escape_string($docNum) .
+        "', invc_type = '" . loc_db_escape_string($docTyp) . "', src_doc_hdr_id=" . $srcDocID .
+        ", pymny_method_id = " . $pymntID . ", invc_curr_id=" . $invcCurrID .
+        ", exchng_rate=" . $exchRate .
+        ", other_mdls_doc_id=" . $chckInID .
+        ", other_mdls_doc_type='" . loc_db_escape_string($chckInType) . "' " .
+        ", enbl_auto_misc_chrges='" . cnvrtBoolToBitStr($enblAutoChrg) . "' " .
+        ", event_rgstr_id = " . $event_rgstr_id .
+        ", evnt_cost_category = '" . loc_db_escape_string($evntCtgry) . "' " .
+        ", allow_dues = '" . cnvrtBoolToBitStr($allwDues) .
+        "', event_doc_type = '" . loc_db_escape_string($evntType) . "', receivables_accnt_id= " . $rcvblAcntID .
+        ", src_doc_type = '" . loc_db_escape_string($src_doc_type) . "', branch_id=" . $brnchID .
+        ", invoice_clsfctn = '" . loc_db_escape_string($scmSalesInvcClssfctn) .
+        "', mspy_amnt_gvn=" . $scmSalesInvcPyAmntGvn .
+        ", mspy_item_set_id=" . $scmSalesInvcPyItmSetID .
+        ", cheque_card_num='" . loc_db_escape_string($scmSalesInvcPyChqNumber) .
+        "', sign_code='" . loc_db_escape_string($scmSalesInvcPySignCode) .
+        "', mspy_apply_advnc='" . loc_db_escape_string($scmSalesInvcAplyAdvnc) .
+        "', mspy_keep_excess='" . loc_db_escape_string($scmSalesInvcKeepExcss) .
+        "' WHERE (invc_hdr_id = " . $docid . ")";
     return execUpdtInsSQL($updtSQL);
 }
 
-function getNewSalesInvcLnID() {
+function getNewSalesInvcLnID()
+{
     $strSql = "select nextval('scm.scm_itm_sales_ordrs_det_trnstn_id_seq')";
     $result = executeSQLNoParams($strSql);
 
@@ -3131,8 +3589,31 @@ function getNewSalesInvcLnID() {
     return -1;
 }
 
-function createSalesDocLn($lineid, $docID, $itmID, $qty, $untPrice, $storeID, $crncyID, $srclnID, $txCode, $dscntCde, $chrgeCde, $rtrnRsn,
-        $cnsgmntIDs, $orgnlPrice, $dlvrd, $prsnID, $altrntNm, $invAstAcntID, $cogsID, $salesRevID, $salesRetID, $purcRetID, $expnsID) {
+function createSalesDocLn(
+    $lineid,
+    $docID,
+    $itmID,
+    $qty,
+    $untPrice,
+    $storeID,
+    $crncyID,
+    $srclnID,
+    $txCode,
+    $dscntCde,
+    $chrgeCde,
+    $rtrnRsn,
+    $cnsgmntIDs,
+    $orgnlPrice,
+    $dlvrd,
+    $prsnID,
+    $altrntNm,
+    $invAstAcntID,
+    $cogsID,
+    $salesRevID,
+    $salesRetID,
+    $purcRetID,
+    $expnsID
+) {
     global $usrID;
     global $canEdtItmPrice;
     $untPriceCls = $untPrice;
@@ -3140,34 +3621,56 @@ function createSalesDocLn($lineid, $docID, $itmID, $qty, $untPrice, $storeID, $c
         $untPriceCls = "scm.get_item_unit_sllng_price(" . $itmID . ", " . $qty . ")";
     }
     $insSQL = "INSERT INTO scm.scm_sales_invc_det(invc_det_ln_id, " .
-            "invc_hdr_id, itm_id, doc_qty, unit_selling_price, " .
-            "created_by, creation_date, last_update_by, last_update_date, " .
-            "store_id, crncy_id, src_line_id, tax_code_id, " .
-            "dscnt_code_id, chrg_code_id, qty_trnsctd_in_dest_doc,
+        "invc_hdr_id, itm_id, doc_qty, unit_selling_price, " .
+        "created_by, creation_date, last_update_by, last_update_date, " .
+        "store_id, crncy_id, src_line_id, tax_code_id, " .
+        "dscnt_code_id, chrg_code_id, qty_trnsctd_in_dest_doc,
   rtrn_reason, consgmnt_ids, orgnl_selling_price,is_itm_delivered, lnkd_person_id, alternate_item_name,
   cogs_acct_id, sales_rev_accnt_id, sales_ret_accnt_id, purch_ret_accnt_id, expense_accnt_id, inv_asset_acct_id) " .
-            "VALUES (" . $lineid .
-            "," . $docID .
-            ", " . $itmID .
-            ", " . $qty . ", " . $untPriceCls . ", " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $storeID .
-            ", " . $crncyID . ", " . $srclnID . ", " . $txCode .
-            ", " . $dscntCde . ", " . $chrgeCde . ", 0, '" .
-            loc_db_escape_string($rtrnRsn) . "', '" . loc_db_escape_string($cnsgmntIDs) .
-            "', scm.get_sllng_price_lesstax(" . $txCode . "," . $untPriceCls . "), '" . cnvrtBoolToBitStr($dlvrd) . "', " . $prsnID .
-            ",'" . loc_db_escape_string($altrntNm) . "'," . $cogsID .
-            "," . $salesRevID .
-            "," . $salesRetID .
-            "," . $purcRetID .
-            "," . $expnsID .
-            "," . $invAstAcntID .
-            ")";
+        "VALUES (" . $lineid .
+        "," . $docID .
+        ", " . $itmID .
+        ", " . $qty . ", " . $untPriceCls . ", " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $storeID .
+        ", " . $crncyID . ", " . $srclnID . ", " . $txCode .
+        ", " . $dscntCde . ", " . $chrgeCde . ", 0, '" .
+        loc_db_escape_string($rtrnRsn) . "', '" . loc_db_escape_string($cnsgmntIDs) .
+        "', scm.get_sllng_price_lesstax(" . $txCode . "," . $untPriceCls . "), '" . cnvrtBoolToBitStr($dlvrd) . "', " . $prsnID .
+        ",'" . loc_db_escape_string($altrntNm) . "'," . $cogsID .
+        "," . $salesRevID .
+        "," . $salesRetID .
+        "," . $purcRetID .
+        "," . $expnsID .
+        "," . $invAstAcntID .
+        ")";
     return execUpdtInsSQL($insSQL);
 }
 
-function updateSalesDocLn($lnID, $itmID, $qty, $untPrice, $storeID, $crncyID, $srclnID, $txCode, $dscntCde, $chrgeCde, $rtrnRsn,
-        $cnsgmntIDs, $orgnlPrice, $dlvrd, $prsnID, $altrntNm, $invAstAcntID, $cogsID, $salesRevID, $salesRetID, $purcRetID, $expnsID) {
+function updateSalesDocLn(
+    $lnID,
+    $itmID,
+    $qty,
+    $untPrice,
+    $storeID,
+    $crncyID,
+    $srclnID,
+    $txCode,
+    $dscntCde,
+    $chrgeCde,
+    $rtrnRsn,
+    $cnsgmntIDs,
+    $orgnlPrice,
+    $dlvrd,
+    $prsnID,
+    $altrntNm,
+    $invAstAcntID,
+    $cogsID,
+    $salesRevID,
+    $salesRetID,
+    $purcRetID,
+    $expnsID
+) {
     global $usrID;
     global $canEdtItmPrice;
     $untPriceCls = $untPrice;
@@ -3175,35 +3678,61 @@ function updateSalesDocLn($lnID, $itmID, $qty, $untPrice, $storeID, $crncyID, $s
         $untPriceCls = "scm.get_item_unit_sllng_price(" . $itmID . ", " . $qty . ")";
     }
     $updtSQL = "UPDATE scm.scm_sales_invc_det SET " .
-            "itm_id=" . $itmID .
-            ", doc_qty =" . $qty .
-            ", unit_selling_price= " . $untPriceCls .
-            ", orgnl_selling_price= scm.get_sllng_price_lesstax(" . $txCode . "," . $untPriceCls . "), " .
-            "last_update_by = " . $usrID .
-            ", last_update_date= to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " .
-            "store_id=" . $storeID .
-            ", crncy_id =" . $crncyID . ", src_line_id = " . $srclnID .
-            ", tax_code_id = " . $txCode .
-            ", dscnt_code_id = " . $dscntCde .
-            ", chrg_code_id = " . $chrgeCde .
-            ", rtrn_reason = '" . loc_db_escape_string($rtrnRsn) .
-            "', consgmnt_ids ='" . loc_db_escape_string($cnsgmntIDs) .
-            "', is_itm_delivered ='" . cnvrtBoolToBitStr($dlvrd) .
-            "', lnkd_person_id = " . $prsnID .
-            ", alternate_item_name = '" . loc_db_escape_string($altrntNm) .
-            "', cogs_acct_id=" . $cogsID .
-            ", sales_rev_accnt_id=" . $salesRevID .
-            ", sales_ret_accnt_id =" . $salesRetID .
-            ", purch_ret_accnt_id =" . $purcRetID .
-            ", expense_accnt_id =" . $expnsID .
-            ", inv_asset_acct_id =" . $invAstAcntID .
-            " WHERE (invc_det_ln_id = " . $lnID . ")";
+        "itm_id=" . $itmID .
+        ", doc_qty =" . $qty .
+        ", unit_selling_price= " . $untPriceCls .
+        ", orgnl_selling_price= scm.get_sllng_price_lesstax(" . $txCode . "," . $untPriceCls . "), " .
+        "last_update_by = " . $usrID .
+        ", last_update_date= to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " .
+        "store_id=" . $storeID .
+        ", crncy_id =" . $crncyID . ", src_line_id = " . $srclnID .
+        ", tax_code_id = " . $txCode .
+        ", dscnt_code_id = " . $dscntCde .
+        ", chrg_code_id = " . $chrgeCde .
+        ", rtrn_reason = '" . loc_db_escape_string($rtrnRsn) .
+        "', consgmnt_ids ='" . loc_db_escape_string($cnsgmntIDs) .
+        "', is_itm_delivered ='" . cnvrtBoolToBitStr($dlvrd) .
+        "', lnkd_person_id = " . $prsnID .
+        ", alternate_item_name = '" . loc_db_escape_string($altrntNm) .
+        "', cogs_acct_id=" . $cogsID .
+        ", sales_rev_accnt_id=" . $salesRevID .
+        ", sales_ret_accnt_id =" . $salesRetID .
+        ", purch_ret_accnt_id =" . $purcRetID .
+        ", expense_accnt_id =" . $expnsID .
+        ", inv_asset_acct_id =" . $invAstAcntID .
+        " WHERE (invc_det_ln_id = " . $lnID . ")";
     return execUpdtInsSQL($updtSQL);
 }
 
-function createSalesDocLn1($lineid, $docID, $itmID, $qty, $untPrice, $storeID, $crncyID, $srclnID, $txCode, $dscntCde, $chrgeCde, $rtrnRsn,
-        $cnsgmntIDs, $orgnlPrice, $dlvrd, $prsnID, $altrntNm, $invAstAcntID, $cogsID, $salesRevID, $salesRetID, $purcRetID, $expnsID,
-        $rented_itm_qty = 1, $other_mdls_doc_id = -1, $other_mdls_doc_type = "", $extra_desc = "") {
+function createSalesDocLn1(
+    $lineid,
+    $docID,
+    $itmID,
+    $qty,
+    $untPrice,
+    $storeID,
+    $crncyID,
+    $srclnID,
+    $txCode,
+    $dscntCde,
+    $chrgeCde,
+    $rtrnRsn,
+    $cnsgmntIDs,
+    $orgnlPrice,
+    $dlvrd,
+    $prsnID,
+    $altrntNm,
+    $invAstAcntID,
+    $cogsID,
+    $salesRevID,
+    $salesRetID,
+    $purcRetID,
+    $expnsID,
+    $rented_itm_qty = 1,
+    $other_mdls_doc_id = -1,
+    $other_mdls_doc_type = "",
+    $extra_desc = ""
+) {
     global $usrID;
     global $canEdtItmPrice;
     $untPriceCls = $untPrice;
@@ -3214,62 +3743,87 @@ function createSalesDocLn1($lineid, $docID, $itmID, $qty, $untPrice, $storeID, $
         $extra_desc = substr($extra_desc, 0, 300);
     }
     $insSQL = "INSERT INTO scm.scm_sales_invc_det(invc_det_ln_id, " .
-            "invc_hdr_id, itm_id, doc_qty, unit_selling_price, " .
-            "created_by, creation_date, last_update_by, last_update_date, " .
-            "store_id, crncy_id, src_line_id, tax_code_id, " .
-            "dscnt_code_id, chrg_code_id, qty_trnsctd_in_dest_doc, 
+        "invc_hdr_id, itm_id, doc_qty, unit_selling_price, " .
+        "created_by, creation_date, last_update_by, last_update_date, " .
+        "store_id, crncy_id, src_line_id, tax_code_id, " .
+        "dscnt_code_id, chrg_code_id, qty_trnsctd_in_dest_doc, 
       rtrn_reason, consgmnt_ids, orgnl_selling_price,is_itm_delivered, lnkd_person_id, alternate_item_name,  
             cogs_acct_id, sales_rev_accnt_id, sales_ret_accnt_id, purch_ret_accnt_id, expense_accnt_id, 
             inv_asset_acct_id, rented_itm_qty, other_mdls_doc_id, other_mdls_doc_type, extra_desc) " .
-            "VALUES (" . $lineid .
-            "," . $docID .
-            ", " . $itmID .
-            ", " . $qty . ", " . $untPriceCls . ", " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $storeID .
-            ", " . $crncyID . ", " . $srclnID . ", " . $txCode .
-            ", " . $dscntCde . ", " . $chrgeCde . ", 0, '" .
-            loc_db_escape_string($rtrnRsn) . "', '" . loc_db_escape_string($cnsgmntIDs) .
-            "', scm.get_sllng_price_lesstax(" . $txCode . "," . $untPriceCls . "), '" . cnvrtBoolToBitStr($dlvrd) . "', " . $prsnID .
-            ",'" . loc_db_escape_string($altrntNm) . "'," . $cogsID .
-            "," . $salesRevID .
-            "," . $salesRetID .
-            "," . $purcRetID .
-            "," . $expnsID .
-            "," . $invAstAcntID .
-            "," . $rented_itm_qty .
-            "," . $other_mdls_doc_id .
-            ",'" . loc_db_escape_string($other_mdls_doc_type) . "','" . loc_db_escape_string($extra_desc) . "')";
-			
-	    /*CLINIC/HOSPITAL*/
-        $chckInID = getInvcHdrChckInID($docID);
-        $admsn_id = -1;
-        if($chckInID > 0){
-            $admsn_id = getGnrlRecNm("hosp.inpatient_admissions", "ref_check_in_id", "admsn_id", $chckInID);
-            if($admsn_id == ""){
-                 $admsn_id = -1;
-            }
-        }
+        "VALUES (" . $lineid .
+        "," . $docID .
+        ", " . $itmID .
+        ", " . $qty . ", " . $untPriceCls . ", " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $storeID .
+        ", " . $crncyID . ", " . $srclnID . ", " . $txCode .
+        ", " . $dscntCde . ", " . $chrgeCde . ", 0, '" .
+        loc_db_escape_string($rtrnRsn) . "', '" . loc_db_escape_string($cnsgmntIDs) .
+        "', scm.get_sllng_price_lesstax(" . $txCode . "," . $untPriceCls . "), '" . cnvrtBoolToBitStr($dlvrd) . "', " . $prsnID .
+        ",'" . loc_db_escape_string($altrntNm) . "'," . $cogsID .
+        "," . $salesRevID .
+        "," . $salesRetID .
+        "," . $purcRetID .
+        "," . $expnsID .
+        "," . $invAstAcntID .
+        "," . $rented_itm_qty .
+        "," . $other_mdls_doc_id .
+        ",'" . loc_db_escape_string($other_mdls_doc_type) . "','" . loc_db_escape_string($extra_desc) . "')";
 
-        if($admsn_id > 0){
-            $appntmntID = (int)getGnrlRecNm("hosp.inpatient_admissions", "admsn_id", "dest_appntmnt_id", $admsn_id);
-            //$appntmntID = getGnrlRecNm("hosp.medcl_cnsltn", "cnsltn_id", "appntmnt_id", $cnsltnID);
-            //$srvs_type_id = getGnrlRecNm("hosp.appntmnt", "appntmnt_id", "srvs_type_id", $appntmntID); 
-            $dateStr = getDB_Date_time();
-            $ttlQty = $qty;
-                $appntmntDataItemsID = getAppntmntDataItemsIDHotl();
-                $uomID = "(SELECT inv.get_invitm_uom_id($itmID))";
-                $isBilled = "Y";
-                insertAppntmntDataItemsAllCols($appntmntDataItemsID, $appntmntID, $itmID, $ttlQty, $docID, $lineid, $isBilled, $usrID, $dateStr, $uomID, -1);
+    /*CLINIC/HOSPITAL*/
+    $chckInID = getInvcHdrChckInID($docID);
+    $admsn_id = -1;
+    if ($chckInID > 0) {
+        $admsn_id = getGnrlRecNm("hosp.inpatient_admissions", "ref_check_in_id", "admsn_id", $chckInID);
+        if ($admsn_id == "") {
+            $admsn_id = -1;
         }
-        /*CLINIC/HOSPITAL*/
-			
+    }
+
+    if ($admsn_id > 0) {
+        $appntmntID = (int)getGnrlRecNm("hosp.inpatient_admissions", "admsn_id", "dest_appntmnt_id", $admsn_id);
+        //$appntmntID = getGnrlRecNm("hosp.medcl_cnsltn", "cnsltn_id", "appntmnt_id", $cnsltnID);
+        //$srvs_type_id = getGnrlRecNm("hosp.appntmnt", "appntmnt_id", "srvs_type_id", $appntmntID); 
+        $dateStr = getDB_Date_time();
+        $ttlQty = $qty;
+        $appntmntDataItemsID = getAppntmntDataItemsIDHotl();
+        $uomID = "(SELECT inv.get_invitm_uom_id($itmID))";
+        $isBilled = "Y";
+        insertAppntmntDataItemsAllCols($appntmntDataItemsID, $appntmntID, $itmID, $ttlQty, $docID, $lineid, $isBilled, $usrID, $dateStr, $uomID, -1);
+    }
+    /*CLINIC/HOSPITAL*/
+
     return execUpdtInsSQL($insSQL);
 }
 
-function updateSalesDocLn1($lnID, $itmID, $qty, $untPrice, $storeID, $crncyID, $srclnID, $txCode, $dscntCde, $chrgeCde, $rtrnRsn,
-        $cnsgmntIDs, $orgnlPrice, $dlvrd, $prsnID, $altrntNm, $invAstAcntID, $cogsID, $salesRevID, $salesRetID, $purcRetID, $expnsID,
-        $rented_itm_qty = 1, $other_mdls_doc_id = -1, $other_mdls_doc_type = "", $extra_desc = "") {
+function updateSalesDocLn1(
+    $lnID,
+    $itmID,
+    $qty,
+    $untPrice,
+    $storeID,
+    $crncyID,
+    $srclnID,
+    $txCode,
+    $dscntCde,
+    $chrgeCde,
+    $rtrnRsn,
+    $cnsgmntIDs,
+    $orgnlPrice,
+    $dlvrd,
+    $prsnID,
+    $altrntNm,
+    $invAstAcntID,
+    $cogsID,
+    $salesRevID,
+    $salesRetID,
+    $purcRetID,
+    $expnsID,
+    $rented_itm_qty = 1,
+    $other_mdls_doc_id = -1,
+    $other_mdls_doc_type = "",
+    $extra_desc = ""
+) {
     global $usrID;
     global $canEdtItmPrice;
     $untPriceCls = $untPrice;
@@ -3280,55 +3834,81 @@ function updateSalesDocLn1($lnID, $itmID, $qty, $untPrice, $storeID, $crncyID, $
         $extra_desc = substr($extra_desc, 0, 300);
     }
     $updtSQL = "UPDATE scm.scm_sales_invc_det SET " .
-            "itm_id=" . $itmID .
-            ", doc_qty =" . $qty .
-            ", unit_selling_price= " . $untPriceCls .
-            ", orgnl_selling_price= scm.get_sllng_price_lesstax(" . $txCode . "," . $untPriceCls . "), " .
-            "last_update_by = " . $usrID .
-            ", last_update_date= to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " .
-            "store_id=" . $storeID .
-            ", crncy_id =" . $crncyID . ", src_line_id = " . $srclnID .
-            ", tax_code_id = " . $txCode .
-            ", dscnt_code_id = " . $dscntCde .
-            ", chrg_code_id = " . $chrgeCde .
-            ", rtrn_reason = '" . loc_db_escape_string($rtrnRsn) .
-            "', consgmnt_ids ='" . loc_db_escape_string($cnsgmntIDs) .
-            "', is_itm_delivered ='" . cnvrtBoolToBitStr($dlvrd) .
-            "', lnkd_person_id = " . $prsnID .
-            ", alternate_item_name = '" . loc_db_escape_string($altrntNm) .
-            "', cogs_acct_id=" . $cogsID .
-            ", sales_rev_accnt_id=" . $salesRevID .
-            ", sales_ret_accnt_id =" . $salesRetID .
-            ", purch_ret_accnt_id =" . $purcRetID .
-            ", expense_accnt_id =" . $expnsID .
-            ", inv_asset_acct_id =" . $invAstAcntID .
-            ", rented_itm_qty=" . $rented_itm_qty .
-            ", other_mdls_doc_id=" . $other_mdls_doc_id .
-            ", other_mdls_doc_type='" . loc_db_escape_string($other_mdls_doc_type) .
-            "', extra_desc='" . loc_db_escape_string($extra_desc) . "' WHERE (invc_det_ln_id = " . $lnID . ")";
-			
-	    /*CLINIC/HOSPITAL*/   
-        $docID = (int)getGnrlRecNm("scm.scm_sales_invc_det", "invc_det_ln_id", "invc_hdr_id", $lnID);
-        $chckInID = getInvcHdrChckInID($docID);
-        $admsn_id = -1;
-        if($chckInID > 0){
-            $admsn_id = getGnrlRecNm("hosp.inpatient_admissions", "ref_check_in_id", "admsn_id", $chckInID);
-            if($admsn_id == ""){
-                 $admsn_id = -1;
-            }
-            
-             if($admsn_id > 0){
-                 execUpdtInsSQL("UPDATE hosp.appntmnt_data_items SET qty = $qty WHERE invc_hdr_id = $docID AND invc_det_ln_id = $lnID AND invc_hdr_id > 0 AND invc_det_ln_id > 0");
-             }
+        "itm_id=" . $itmID .
+        ", doc_qty =" . $qty .
+        ", unit_selling_price= " . $untPriceCls .
+        ", orgnl_selling_price= scm.get_sllng_price_lesstax(" . $txCode . "," . $untPriceCls . "), " .
+        "last_update_by = " . $usrID .
+        ", last_update_date= to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " .
+        "store_id=" . $storeID .
+        ", crncy_id =" . $crncyID . ", src_line_id = " . $srclnID .
+        ", tax_code_id = " . $txCode .
+        ", dscnt_code_id = " . $dscntCde .
+        ", chrg_code_id = " . $chrgeCde .
+        ", rtrn_reason = '" . loc_db_escape_string($rtrnRsn) .
+        "', consgmnt_ids ='" . loc_db_escape_string($cnsgmntIDs) .
+        "', is_itm_delivered ='" . cnvrtBoolToBitStr($dlvrd) .
+        "', lnkd_person_id = " . $prsnID .
+        ", alternate_item_name = '" . loc_db_escape_string($altrntNm) .
+        "', cogs_acct_id=" . $cogsID .
+        ", sales_rev_accnt_id=" . $salesRevID .
+        ", sales_ret_accnt_id =" . $salesRetID .
+        ", purch_ret_accnt_id =" . $purcRetID .
+        ", expense_accnt_id =" . $expnsID .
+        ", inv_asset_acct_id =" . $invAstAcntID .
+        ", rented_itm_qty=" . $rented_itm_qty .
+        ", other_mdls_doc_id=" . $other_mdls_doc_id .
+        ", other_mdls_doc_type='" . loc_db_escape_string($other_mdls_doc_type) .
+        "', extra_desc='" . loc_db_escape_string($extra_desc) . "' WHERE (invc_det_ln_id = " . $lnID . ")";
+
+    /*CLINIC/HOSPITAL*/
+    $docID = (int)getGnrlRecNm("scm.scm_sales_invc_det", "invc_det_ln_id", "invc_hdr_id", $lnID);
+    $chckInID = getInvcHdrChckInID($docID);
+    $admsn_id = -1;
+    if ($chckInID > 0) {
+        $admsn_id = getGnrlRecNm("hosp.inpatient_admissions", "ref_check_in_id", "admsn_id", $chckInID);
+        if ($admsn_id == "") {
+            $admsn_id = -1;
         }
-        /*CLINIC/HOSPITAL*/
-	
+
+        if ($admsn_id > 0) {
+            execUpdtInsSQL("UPDATE hosp.appntmnt_data_items SET qty = $qty WHERE invc_hdr_id = $docID AND invc_det_ln_id = $lnID AND invc_hdr_id > 0 AND invc_det_ln_id > 0");
+        }
+    }
+    /*CLINIC/HOSPITAL*/
+
     return execUpdtInsSQL($updtSQL);
 }
 
-function createSalesDocLn2($lineid, $docID, $itmID, $qty, $untPrice, $storeID, $crncyID, $srclnID, $txCode, $dscntCde, $chrgeCde, $rtrnRsn,
-        $cnsgmntIDs, $orgnlPrice, $dlvrd, $prsnID, $altrntNm, $invAstAcntID, $cogsID, $salesRevID, $salesRetID, $purcRetID, $expnsID,
-        $rented_itm_qty = 1, $other_mdls_doc_id = -1, $other_mdls_doc_type = "", $extra_desc = "") {
+function createSalesDocLn2(
+    $lineid,
+    $docID,
+    $itmID,
+    $qty,
+    $untPrice,
+    $storeID,
+    $crncyID,
+    $srclnID,
+    $txCode,
+    $dscntCde,
+    $chrgeCde,
+    $rtrnRsn,
+    $cnsgmntIDs,
+    $orgnlPrice,
+    $dlvrd,
+    $prsnID,
+    $altrntNm,
+    $invAstAcntID,
+    $cogsID,
+    $salesRevID,
+    $salesRetID,
+    $purcRetID,
+    $expnsID,
+    $rented_itm_qty = 1,
+    $other_mdls_doc_id = -1,
+    $other_mdls_doc_type = "",
+    $extra_desc = ""
+) {
     global $usrID;
     global $canEdtItmPrice;
     $untPriceCls = $untPrice;
@@ -3339,173 +3919,214 @@ function createSalesDocLn2($lineid, $docID, $itmID, $qty, $untPrice, $storeID, $
         $extra_desc = substr($extra_desc, 0, 300);
     }
     $insSQL = "INSERT INTO scm.scm_sales_invc_det(invc_det_ln_id, " .
-            "invc_hdr_id, itm_id, doc_qty, unit_selling_price, " .
-            "created_by, creation_date, last_update_by, last_update_date, " .
-            "store_id, crncy_id, src_line_id, tax_code_id, " .
-            "dscnt_code_id, chrg_code_id, qty_trnsctd_in_dest_doc, 
+        "invc_hdr_id, itm_id, doc_qty, unit_selling_price, " .
+        "created_by, creation_date, last_update_by, last_update_date, " .
+        "store_id, crncy_id, src_line_id, tax_code_id, " .
+        "dscnt_code_id, chrg_code_id, qty_trnsctd_in_dest_doc, 
       rtrn_reason, consgmnt_ids, orgnl_selling_price,is_itm_delivered, lnkd_person_id, alternate_item_name,  
             cogs_acct_id, sales_rev_accnt_id, sales_ret_accnt_id, purch_ret_accnt_id, expense_accnt_id, 
             inv_asset_acct_id, rented_itm_qty, other_mdls_doc_id, other_mdls_doc_type, extra_desc) " .
-            "VALUES (" . $lineid .
-            "," . $docID .
-            ", " . $itmID .
-            ", " . $qty . ", " . $untPriceCls . ", " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $storeID .
-            ", " . $crncyID . ", " . $srclnID . ", " . $txCode .
-            ", " . $dscntCde . ", " . $chrgeCde . ", 0, '" .
-            loc_db_escape_string($rtrnRsn) . "', '" . loc_db_escape_string($cnsgmntIDs) .
-            "', scm.get_sllng_price_lesstax(" . $txCode . "," . $untPriceCls . "), '" . cnvrtBoolToBitStr($dlvrd) . "', " . $prsnID .
-            ",'" . loc_db_escape_string($altrntNm) . "'," . $cogsID .
-            "," . $salesRevID .
-            "," . $salesRetID .
-            "," . $purcRetID .
-            "," . $expnsID .
-            "," . $invAstAcntID .
-            "," . $rented_itm_qty .
-            "," . $other_mdls_doc_id .
-            ",'" . loc_db_escape_string($other_mdls_doc_type) . "','" . loc_db_escape_string($extra_desc) . "')";
-			
-	       /*CLINIC/HOSPITAL*/
-        $chckInID = getInvcHdrChckInID($docID);
-        $admsn_id = -1;
-        if($chckInID > 0){
-            $admsn_id = getGnrlRecNm("hosp.inpatient_admissions", "ref_check_in_id", "admsn_id", $chckInID);
-            if($admsn_id == ""){
-                 $admsn_id = -1;
-            }
-        }
+        "VALUES (" . $lineid .
+        "," . $docID .
+        ", " . $itmID .
+        ", " . $qty . ", " . $untPriceCls . ", " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $storeID .
+        ", " . $crncyID . ", " . $srclnID . ", " . $txCode .
+        ", " . $dscntCde . ", " . $chrgeCde . ", 0, '" .
+        loc_db_escape_string($rtrnRsn) . "', '" . loc_db_escape_string($cnsgmntIDs) .
+        "', scm.get_sllng_price_lesstax(" . $txCode . "," . $untPriceCls . "), '" . cnvrtBoolToBitStr($dlvrd) . "', " . $prsnID .
+        ",'" . loc_db_escape_string($altrntNm) . "'," . $cogsID .
+        "," . $salesRevID .
+        "," . $salesRetID .
+        "," . $purcRetID .
+        "," . $expnsID .
+        "," . $invAstAcntID .
+        "," . $rented_itm_qty .
+        "," . $other_mdls_doc_id .
+        ",'" . loc_db_escape_string($other_mdls_doc_type) . "','" . loc_db_escape_string($extra_desc) . "')";
 
-        if($admsn_id > 0){
-            $appntmntID = (int)getGnrlRecNm("hosp.inpatient_admissions", "admsn_id", "dest_appntmnt_id", $admsn_id);
-            //$appntmntID = getGnrlRecNm("hosp.medcl_cnsltn", "cnsltn_id", "appntmnt_id", $cnsltnID);
-            //$srvs_type_id = getGnrlRecNm("hosp.appntmnt", "appntmnt_id", "srvs_type_id", $appntmntID); 
-            $dateStr = getDB_Date_time();
-            $ttlQty = $qty;
-                $appntmntDataItemsID = getAppntmntDataItemsIDHotl();
-                $uomID = "(SELECT inv.get_invitm_uom_id($itmID))";
-                $isBilled = "Y";
-                insertAppntmntDataItemsAllCols($appntmntDataItemsID, $appntmntID, $itmID, $ttlQty, $docID, $lineid, $isBilled, $usrID, $dateStr, $uomID, -1);
+    /*CLINIC/HOSPITAL*/
+    $chckInID = getInvcHdrChckInID($docID);
+    $admsn_id = -1;
+    if ($chckInID > 0) {
+        $admsn_id = getGnrlRecNm("hosp.inpatient_admissions", "ref_check_in_id", "admsn_id", $chckInID);
+        if ($admsn_id == "") {
+            $admsn_id = -1;
         }
-        /*CLINIC/HOSPITAL*/
-	
+    }
+
+    if ($admsn_id > 0) {
+        $appntmntID = (int)getGnrlRecNm("hosp.inpatient_admissions", "admsn_id", "dest_appntmnt_id", $admsn_id);
+        //$appntmntID = getGnrlRecNm("hosp.medcl_cnsltn", "cnsltn_id", "appntmnt_id", $cnsltnID);
+        //$srvs_type_id = getGnrlRecNm("hosp.appntmnt", "appntmnt_id", "srvs_type_id", $appntmntID); 
+        $dateStr = getDB_Date_time();
+        $ttlQty = $qty;
+        $appntmntDataItemsID = getAppntmntDataItemsIDHotl();
+        $uomID = "(SELECT inv.get_invitm_uom_id($itmID))";
+        $isBilled = "Y";
+        insertAppntmntDataItemsAllCols($appntmntDataItemsID, $appntmntID, $itmID, $ttlQty, $docID, $lineid, $isBilled, $usrID, $dateStr, $uomID, -1);
+    }
+    /*CLINIC/HOSPITAL*/
+
     return execUpdtInsSQL($insSQL);
 }
 
-function updateSalesDocLn2($lnID, $itmID, $qty, $untPrice, $storeID, $crncyID, $srclnID, $txCode, $cnsgmntIDs, $dlvrd, $altrntNm,
-        $rented_itm_qty = 1, $other_mdls_doc_id = -1, $other_mdls_doc_type = "", $extra_desc = "") {
+function updateSalesDocLn2(
+    $lnID,
+    $itmID,
+    $qty,
+    $untPrice,
+    $storeID,
+    $crncyID,
+    $srclnID,
+    $txCode,
+    $cnsgmntIDs,
+    $dlvrd,
+    $altrntNm,
+    $rented_itm_qty = 1,
+    $other_mdls_doc_id = -1,
+    $other_mdls_doc_type = "",
+    $extra_desc = ""
+) {
     global $usrID;
     $untPriceCls = $untPrice;
     if (strlen($extra_desc) > 300) {
         $extra_desc = substr($extra_desc, 0, 300);
     }
     $updtSQL = "UPDATE scm.scm_sales_invc_det SET " .
-            "itm_id=" . $itmID .
-            ", doc_qty =" . $qty .
-            ", unit_selling_price= " . $untPriceCls .
-            ", orgnl_selling_price= scm.get_sllng_price_lesstax(" . $txCode . "," . $untPriceCls . "), " .
-            "last_update_by = " . $usrID .
-            ", last_update_date= to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " .
-            "store_id=" . $storeID .
-            ", crncy_id =" . $crncyID . ", src_line_id = " . $srclnID .
-            ", consgmnt_ids ='" . loc_db_escape_string($cnsgmntIDs) .
-            "', is_itm_delivered ='" . cnvrtBoolToBitStr($dlvrd) .
-            "', alternate_item_name = '" . loc_db_escape_string($altrntNm) .
-            "', rented_itm_qty=" . $rented_itm_qty .
-            ", other_mdls_doc_id=" . $other_mdls_doc_id .
-            ", other_mdls_doc_type='" . loc_db_escape_string($other_mdls_doc_type) .
-            "', extra_desc='" . loc_db_escape_string($extra_desc) . "' WHERE (invc_det_ln_id = " . $lnID . ")";
+        "itm_id=" . $itmID .
+        ", doc_qty =" . $qty .
+        ", unit_selling_price= " . $untPriceCls .
+        ", orgnl_selling_price= scm.get_sllng_price_lesstax(" . $txCode . "," . $untPriceCls . "), " .
+        "last_update_by = " . $usrID .
+        ", last_update_date= to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " .
+        "store_id=" . $storeID .
+        ", crncy_id =" . $crncyID . ", src_line_id = " . $srclnID .
+        ", consgmnt_ids ='" . loc_db_escape_string($cnsgmntIDs) .
+        "', is_itm_delivered ='" . cnvrtBoolToBitStr($dlvrd) .
+        "', alternate_item_name = '" . loc_db_escape_string($altrntNm) .
+        "', rented_itm_qty=" . $rented_itm_qty .
+        ", other_mdls_doc_id=" . $other_mdls_doc_id .
+        ", other_mdls_doc_type='" . loc_db_escape_string($other_mdls_doc_type) .
+        "', extra_desc='" . loc_db_escape_string($extra_desc) . "' WHERE (invc_det_ln_id = " . $lnID . ")";
     //echo $updtSQL;
-	
-	    /*CLINIC/HOSPITAL*/   
-        $docID = (int)getGnrlRecNm("scm.scm_sales_invc_det", "invc_det_ln_id", "invc_hdr_id", $lnID);
-        $chckInID = getInvcHdrChckInID($docID);
-        $admsn_id = -1;
-        if($chckInID > 0){
-            $admsn_id = getGnrlRecNm("hosp.inpatient_admissions", "ref_check_in_id", "admsn_id", $chckInID);
-            if($admsn_id == ""){
-                 $admsn_id = -1;
-            }
-            
-             if($admsn_id > 0){
-                 execUpdtInsSQL("UPDATE hosp.appntmnt_data_items SET qty = $qty WHERE invc_hdr_id = $docID AND invc_det_ln_id = $lnID AND invc_hdr_id > 0 AND invc_det_ln_id > 0");
-             }
+
+    /*CLINIC/HOSPITAL*/
+    $docID = (int)getGnrlRecNm("scm.scm_sales_invc_det", "invc_det_ln_id", "invc_hdr_id", $lnID);
+    $chckInID = getInvcHdrChckInID($docID);
+    $admsn_id = -1;
+    if ($chckInID > 0) {
+        $admsn_id = getGnrlRecNm("hosp.inpatient_admissions", "ref_check_in_id", "admsn_id", $chckInID);
+        if ($admsn_id == "") {
+            $admsn_id = -1;
         }
-        /*CLINIC/HOSPITAL*/
-	
+
+        if ($admsn_id > 0) {
+            execUpdtInsSQL("UPDATE hosp.appntmnt_data_items SET qty = $qty WHERE invc_hdr_id = $docID AND invc_det_ln_id = $lnID AND invc_hdr_id > 0 AND invc_det_ln_id > 0");
+        }
+    }
+    /*CLINIC/HOSPITAL*/
+
     return execUpdtInsSQL($updtSQL);
 }
 
-function updateSalesDocLn3($lnID, $itmID, $qty, $storeID, $crncyID, $srclnID, $txCode, $dscntCde, $chrgeCde, $rtrnRsn, $cnsgmntIDs, $dlvrd,
-        $prsnID, $altrntNm, $invAstAcntID, $cogsID, $salesRevID, $salesRetID, $purcRetID, $expnsID, $rented_itm_qty = 1,
-        $other_mdls_doc_id = -1, $other_mdls_doc_type = "", $extra_desc = "") {
+function updateSalesDocLn3(
+    $lnID,
+    $itmID,
+    $qty,
+    $storeID,
+    $crncyID,
+    $srclnID,
+    $txCode,
+    $dscntCde,
+    $chrgeCde,
+    $rtrnRsn,
+    $cnsgmntIDs,
+    $dlvrd,
+    $prsnID,
+    $altrntNm,
+    $invAstAcntID,
+    $cogsID,
+    $salesRevID,
+    $salesRetID,
+    $purcRetID,
+    $expnsID,
+    $rented_itm_qty = 1,
+    $other_mdls_doc_id = -1,
+    $other_mdls_doc_type = "",
+    $extra_desc = ""
+) {
     global $usrID;
     if (strlen($extra_desc) > 300) {
         $extra_desc = substr($extra_desc, 0, 300);
     }
     $updtSQL = "UPDATE scm.scm_sales_invc_det SET " .
-            "itm_id=" . $itmID .
-            ", doc_qty =" . $qty .
-            ", last_update_by = " . $usrID .
-            ", last_update_date= to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " .
-            "store_id=" . $storeID .
-            ", crncy_id =" . $crncyID . ", src_line_id = " . $srclnID .
-            ", tax_code_id = " . $txCode .
-            ", dscnt_code_id = " . $dscntCde .
-            ", chrg_code_id = " . $chrgeCde .
-            ", rtrn_reason = '" . loc_db_escape_string($rtrnRsn) .
-            "', consgmnt_ids ='" . loc_db_escape_string($cnsgmntIDs) .
-            "', is_itm_delivered ='" . cnvrtBoolToBitStr($dlvrd) .
-            "', lnkd_person_id = " . $prsnID .
-            ", alternate_item_name = '" . loc_db_escape_string($altrntNm) .
-            "', cogs_acct_id=" . $cogsID .
-            ", sales_rev_accnt_id=" . $salesRevID .
-            ", sales_ret_accnt_id =" . $salesRetID .
-            ", purch_ret_accnt_id =" . $purcRetID .
-            ", expense_accnt_id =" . $expnsID .
-            ", inv_asset_acct_id =" . $invAstAcntID .
-            ", rented_itm_qty=" . $rented_itm_qty .
-            ", other_mdls_doc_id=" . $other_mdls_doc_id .
-            ", other_mdls_doc_type='" . loc_db_escape_string($other_mdls_doc_type) .
-            "', extra_desc='" . loc_db_escape_string($extra_desc) . "' WHERE (invc_det_ln_id = " . $lnID . ")";
-			
-	    /*CLINIC/HOSPITAL*/   
-        $docID = (int)getGnrlRecNm("scm.scm_sales_invc_det", "invc_det_ln_id", "invc_hdr_id", $lnID);
-        $chckInID = getInvcHdrChckInID($docID);
-        $admsn_id = -1;
-        if($chckInID > 0){
-            $admsn_id = getGnrlRecNm("hosp.inpatient_admissions", "ref_check_in_id", "admsn_id", $chckInID);
-            if($admsn_id == ""){
-                 $admsn_id = -1;
-            }
-            
-             if($admsn_id > 0){
-                 execUpdtInsSQL("UPDATE hosp.appntmnt_data_items SET qty = $qty WHERE invc_hdr_id = $docID AND invc_det_ln_id = $lnID AND invc_hdr_id > 0 AND invc_det_ln_id > 0");
-             }
+        "itm_id=" . $itmID .
+        ", doc_qty =" . $qty .
+        ", last_update_by = " . $usrID .
+        ", last_update_date= to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " .
+        "store_id=" . $storeID .
+        ", crncy_id =" . $crncyID . ", src_line_id = " . $srclnID .
+        ", tax_code_id = " . $txCode .
+        ", dscnt_code_id = " . $dscntCde .
+        ", chrg_code_id = " . $chrgeCde .
+        ", rtrn_reason = '" . loc_db_escape_string($rtrnRsn) .
+        "', consgmnt_ids ='" . loc_db_escape_string($cnsgmntIDs) .
+        "', is_itm_delivered ='" . cnvrtBoolToBitStr($dlvrd) .
+        "', lnkd_person_id = " . $prsnID .
+        ", alternate_item_name = '" . loc_db_escape_string($altrntNm) .
+        "', cogs_acct_id=" . $cogsID .
+        ", sales_rev_accnt_id=" . $salesRevID .
+        ", sales_ret_accnt_id =" . $salesRetID .
+        ", purch_ret_accnt_id =" . $purcRetID .
+        ", expense_accnt_id =" . $expnsID .
+        ", inv_asset_acct_id =" . $invAstAcntID .
+        ", rented_itm_qty=" . $rented_itm_qty .
+        ", other_mdls_doc_id=" . $other_mdls_doc_id .
+        ", other_mdls_doc_type='" . loc_db_escape_string($other_mdls_doc_type) .
+        "', extra_desc='" . loc_db_escape_string($extra_desc) . "' WHERE (invc_det_ln_id = " . $lnID . ")";
+
+    /*CLINIC/HOSPITAL*/
+    $docID = (int)getGnrlRecNm("scm.scm_sales_invc_det", "invc_det_ln_id", "invc_hdr_id", $lnID);
+    $chckInID = getInvcHdrChckInID($docID);
+    $admsn_id = -1;
+    if ($chckInID > 0) {
+        $admsn_id = getGnrlRecNm("hosp.inpatient_admissions", "ref_check_in_id", "admsn_id", $chckInID);
+        if ($admsn_id == "") {
+            $admsn_id = -1;
         }
-        /*CLINIC/HOSPITAL*/		
-	
+
+        if ($admsn_id > 0) {
+            execUpdtInsSQL("UPDATE hosp.appntmnt_data_items SET qty = $qty WHERE invc_hdr_id = $docID AND invc_det_ln_id = $lnID AND invc_hdr_id > 0 AND invc_det_ln_id > 0");
+        }
+    }
+    /*CLINIC/HOSPITAL*/
+
     return execUpdtInsSQL($updtSQL);
 }
 
-function updateSalesLnDlvrd($lnID, $dlvrd) {
+function updateSalesLnDlvrd($lnID, $dlvrd)
+{
     $updtSQL = "UPDATE scm.scm_sales_invc_det SET " .
-            "is_itm_delivered='" . cnvrtBoolToBitStr($dlvrd) .
-            "' WHERE (invc_det_ln_id = " . $lnID . ")";
+        "is_itm_delivered='" . cnvrtBoolToBitStr($dlvrd) .
+        "' WHERE (invc_det_ln_id = " . $lnID . ")";
     return execUpdtInsSQL($updtSQL);
 }
 
-function updtSrcDocTrnsctdQty($src_lnid, $qty) {
+function updtSrcDocTrnsctdQty($src_lnid, $qty)
+{
     global $usrID;
     $updtSQL = "UPDATE scm.scm_sales_invc_det SET " .
-            "qty_trnsctd_in_dest_doc=qty_trnsctd_in_dest_doc+" . $qty .
-            ", last_update_by=" . $usrID .
-            ", last_update_date=to_char(now(),'YYYY-MM-DD HH24:MI:SS') WHERE (invc_det_ln_id = " .
-            $src_lnid . ")";
+        "qty_trnsctd_in_dest_doc=qty_trnsctd_in_dest_doc+" . $qty .
+        ", last_update_by=" . $usrID .
+        ", last_update_date=to_char(now(),'YYYY-MM-DD HH24:MI:SS') WHERE (invc_det_ln_id = " .
+        $src_lnid . ")";
     return execUpdtInsSQL($updtSQL);
 }
 
-function get_AllConsignments($searchWord, $searchIn, $offset, $limit_size, $orgID, $cstmrSiteID) {
+function get_AllConsignments($searchWord, $searchIn, $offset, $limit_size, $orgID, $cstmrSiteID)
+{
     $strSql = "";
     $wherecls = "";
     $invCls = "";
@@ -3514,28 +4135,29 @@ function get_AllConsignments($searchWord, $searchIn, $offset, $limit_size, $orgI
 
     if ($searchIn == "Item Code/Name") {
         $wherecls = "(a.item_code ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Item Description") {
         $wherecls = "(a.item_desc ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     }
 
     $strSql = "SELECT distinct a.item_id, a.item_code, a.item_desc, " .
-            "a.selling_price, a.category_id, b.stock_id, b.subinv_id, b.shelves, " .
-            "a.tax_code_id, CASE WHEN scm.get_cstmr_splr_dscntid("
-            . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
-            . $cstmrSiteID . ") ELSE a.dscnt_code_id END , a.extr_chrg_id, c.consgmt_id, c.cost_price, c.expiry_date " .
-            "FROM inv.inv_itm_list a, inv.inv_stock b, inv.inv_consgmt_rcpt_det c " .
-            "WHERE (" . $wherecls . "(a.item_id = b.itm_id and b.stock_id = c.stock_id " .
-            "and a.item_id = c.itm_id and b.subinv_id = c.subinv_id and a.enabled_flag='1')" . $invCls .
-            " AND (a.org_id = " . $orgID .
-            ")" . $extInvCls . $itmTyp . ") ORDER BY c.consgmt_id ASC, a.item_code LIMIT " . $limit_size .
-            " OFFSET " . (abs($offset * $limit_size));
+        "a.selling_price, a.category_id, b.stock_id, b.subinv_id, b.shelves, " .
+        "a.tax_code_id, CASE WHEN scm.get_cstmr_splr_dscntid("
+        . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
+        . $cstmrSiteID . ") ELSE a.dscnt_code_id END , a.extr_chrg_id, c.consgmt_id, c.cost_price, c.expiry_date " .
+        "FROM inv.inv_itm_list a, inv.inv_stock b, inv.inv_consgmt_rcpt_det c " .
+        "WHERE (" . $wherecls . "(a.item_id = b.itm_id and b.stock_id = c.stock_id " .
+        "and a.item_id = c.itm_id and b.subinv_id = c.subinv_id and a.enabled_flag='1')" . $invCls .
+        " AND (a.org_id = " . $orgID .
+        ")" . $extInvCls . $itmTyp . ") ORDER BY c.consgmt_id ASC, a.item_code LIMIT " . $limit_size .
+        " OFFSET " . (abs($offset * $limit_size));
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_StoreItems($searchWord, $searchIn, $offset, $limit_size, $orgID, $storeID, $docTyp, $cnsgmtsOnly, $itmID, $cstmrSiteID) {
+function get_StoreItems($searchWord, $searchIn, $offset, $limit_size, $orgID, $storeID, $docTyp, $cnsgmtsOnly, $itmID, $cstmrSiteID)
+{
     $strSql = "";
     $wherecls = "";
     $invCls = "";
@@ -3545,28 +4167,28 @@ function get_StoreItems($searchWord, $searchIn, $offset, $limit_size, $orgID, $s
         $itmTyp = " AND ((a.item_type = 'Merchandise Inventory' AND b.subinv_id = " . $storeID . ") OR a.item_type = 'Services')";
         $invCls = "";
         $extInvCls = " AND (now() between to_timestamp(b.start_date, " .
-                "'YYYY-MM-DD HH24:MI:SS') AND to_timestamp(CASE WHEN b.end_date='' " .
-                "THEN '4000-12-31 23:59:59' ELSE b.end_date END, " .
-                "'YYYY-MM-DD HH24:MI:SS'))";
+            "'YYYY-MM-DD HH24:MI:SS') AND to_timestamp(CASE WHEN b.end_date='' " .
+            "THEN '4000-12-31 23:59:59' ELSE b.end_date END, " .
+            "'YYYY-MM-DD HH24:MI:SS'))";
     } else if ($docTyp == "Internal Item Request") {
-//itmTyp = " AND (a.item_type != 'Expense Item') AND (a.item_type != 'Services')";
+        //itmTyp = " AND (a.item_type != 'Expense Item') AND (a.item_type != 'Services')";
     } else if ($docTyp == "Item Issue-Unbilled") {
-//itmTyp = " AND (a.item_type != 'Expense Item') AND (a.item_type != 'Services')";
+        //itmTyp = " AND (a.item_type != 'Expense Item') AND (a.item_type != 'Services')";
         $invCls = " AND (b.subinv_id = " . $storeID . ")";
         $extInvCls = " AND (now() between to_timestamp(b.start_date, " .
-                "'YYYY-MM-DD HH24:MI:SS') AND to_timestamp(CASE WHEN b.end_date='' THEN '4000-12-31 23:59:59' ELSE b.end_date END, " .
-                "'YYYY-MM-DD HH24:MI:SS'))";
+            "'YYYY-MM-DD HH24:MI:SS') AND to_timestamp(CASE WHEN b.end_date='' THEN '4000-12-31 23:59:59' ELSE b.end_date END, " .
+            "'YYYY-MM-DD HH24:MI:SS'))";
     } /* else if ($docTyp == "") {
       $invCls = " AND (b.subinv_id = " . $storeID . ")";
       } */
     if ($searchIn == "Item Code/Name") {
         $wherecls = "(a.item_code ilike '" . loc_db_escape_string($searchWord) .
-                "' or a.item_desc ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "' or a.item_desc ilike '" . loc_db_escape_string($searchWord) .
+            "') AND ";
     } else /* if ($searchIn == "Item Description") */ {
         $wherecls = "(a.item_code ilike '" . loc_db_escape_string($searchWord) .
-                "' or a.item_desc ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "' or a.item_desc ilike '" . loc_db_escape_string($searchWord) .
+            "') AND ";
     }
     if ($itmID > 0) {
         $wherecls .= "(a.item_id=" . $itmID . ") AND ";
@@ -3576,48 +4198,55 @@ function get_StoreItems($searchWord, $searchIn, $offset, $limit_size, $orgID, $s
             $invCls = " AND (b.subinv_id = " . $storeID . ")";
         }
         $strSql = "SELECT distinct a.item_id, a.item_code, REPLACE(a.item_code || ' (' || a.item_desc || ')', ' (' || a.item_code || ')','') item_desc, " .
-                "a.selling_price, a.category_id, b.stock_id, b.subinv_id, b.shelves, " .
-                "a.tax_code_id, CASE WHEN scm.get_cstmr_splr_dscntid("
-                . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
-                . $cstmrSiteID . ") ELSE a.dscnt_code_id END , a.extr_chrg_id, c.consgmt_id, c.cost_price, c.expiry_date,"
-                . "inv.get_store_name(b.subinv_id),scm.get_tax_code(a.tax_code_id),"
-                . " scm.get_tax_code((CASE WHEN scm.get_cstmr_splr_dscntid("
-                . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
-                . $cstmrSiteID . ") ELSE a.dscnt_code_id END)), scm.get_tax_code(a.extr_chrg_id), a.base_uom_id, inv.get_uom_name(a.base_uom_id),"
-                . "inv.get_csgmt_lst_avlbl_bls(c.consgmt_id), 0,0,inv.get_catgryname(a.category_id),
+            "a.selling_price, a.category_id, b.stock_id, b.subinv_id, b.shelves, " .
+            "a.tax_code_id, CASE WHEN scm.get_cstmr_splr_dscntid("
+            . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
+            . $cstmrSiteID . ") ELSE a.dscnt_code_id END , a.extr_chrg_id, c.consgmt_id, c.cost_price, c.expiry_date,"
+            . "inv.get_store_name(b.subinv_id),scm.get_tax_code(a.tax_code_id),"
+            . " scm.get_tax_code((CASE WHEN scm.get_cstmr_splr_dscntid("
+            . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
+            . $cstmrSiteID . ") ELSE a.dscnt_code_id END)), scm.get_tax_code(a.extr_chrg_id), a.base_uom_id, inv.get_uom_name(a.base_uom_id),"
+            . "inv.get_csgmt_lst_avlbl_bls(c.consgmt_id), 0,0,inv.get_catgryname(a.category_id),
                    a.inv_asset_acct_id, a.cogs_acct_id, a.sales_rev_accnt_id, a.sales_ret_accnt_id, a.purch_ret_accnt_id, a.expense_accnt_id,a.item_type " .
-                "FROM inv.inv_itm_list a, inv.inv_stock b, inv.inv_consgmt_rcpt_det c " .
-                "WHERE (" . $wherecls . "(a.item_id = b.itm_id and b.stock_id = c.stock_id " .
-                "and a.item_id = c.itm_id and b.subinv_id = c.subinv_id and a.enabled_flag='1')" . $invCls .
-                " AND (a.org_id = " . $orgID . " and inv.get_csgmt_lst_avlbl_bls(c.consgmt_id)>0)" . $extInvCls . $itmTyp . ") ORDER BY c.consgmt_id ASC, a.item_code LIMIT " . $limit_size .
-                " OFFSET " . (abs($offset * $limit_size));
-//echo $strSql; inv.get_csgmt_lst_rsvd_bls(c.consgmt_id), inv.get_csgmt_lst_tot_bls(c.consgmt_id)
+            "FROM inv.inv_itm_list a, inv.inv_stock b, inv.inv_consgmt_rcpt_det c " .
+            "WHERE (" . $wherecls . "(a.item_id = b.itm_id and b.stock_id = c.stock_id " .
+            "and a.item_id = c.itm_id and b.subinv_id = c.subinv_id and a.enabled_flag='1')" . $invCls .
+            " AND (a.org_id = " . $orgID . " and inv.get_csgmt_lst_avlbl_bls(c.consgmt_id)>0)" . $extInvCls . $itmTyp . ") ORDER BY c.consgmt_id ASC, a.item_code LIMIT " . $limit_size .
+            " OFFSET " . (abs($offset * $limit_size));
+        //echo $strSql; inv.get_csgmt_lst_rsvd_bls(c.consgmt_id), inv.get_csgmt_lst_tot_bls(c.consgmt_id)
     } else {
         $strSql = "SELECT a.item_id, a.item_code, REPLACE(a.item_code || ' (' || a.item_desc || ')', ' (' || a.item_code || ')','') item_desc, " .
-                "a.selling_price, a.category_id, COALESCE(b.stock_id,-1), COALESCE(b.subinv_id,-1), b.shelves, " .
-                "a.tax_code_id, CASE WHEN scm.get_cstmr_splr_dscntid("
-                . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
-                . $cstmrSiteID . ") ELSE a.dscnt_code_id END , a.extr_chrg_id, -1, inv.get_invitm_unitval(a.item_id),'', "
-                . "inv.get_store_name(b.subinv_id), scm.get_tax_code(a.tax_code_id),"
-                . " scm.get_tax_code((CASE WHEN scm.get_cstmr_splr_dscntid("
-                . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
-                . $cstmrSiteID . ") ELSE a.dscnt_code_id END)), scm.get_tax_code(a.extr_chrg_id), a.base_uom_id, inv.get_uom_name(a.base_uom_id),"
-                . "scm.get_ltst_stock_avlbl_bals(b.stock_id,to_char(now(),'YYYY-MM-DD')), 0, 0,inv.get_catgryname(a.category_id),
+            "a.selling_price, a.category_id, COALESCE(b.stock_id,-1), COALESCE(b.subinv_id,-1), b.shelves, " .
+            "a.tax_code_id, CASE WHEN scm.get_cstmr_splr_dscntid("
+            . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
+            . $cstmrSiteID . ") ELSE a.dscnt_code_id END , a.extr_chrg_id, -1, inv.get_invitm_unitval(a.item_id),'', "
+            . "inv.get_store_name(b.subinv_id), scm.get_tax_code(a.tax_code_id),"
+            . " scm.get_tax_code((CASE WHEN scm.get_cstmr_splr_dscntid("
+            . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
+            . $cstmrSiteID . ") ELSE a.dscnt_code_id END)), scm.get_tax_code(a.extr_chrg_id), a.base_uom_id, inv.get_uom_name(a.base_uom_id),"
+            . "scm.get_ltst_stock_avlbl_bals(b.stock_id,to_char(now(),'YYYY-MM-DD')), 0, 0,inv.get_catgryname(a.category_id),
                    a.inv_asset_acct_id, a.cogs_acct_id, a.sales_rev_accnt_id, a.sales_ret_accnt_id, a.purch_ret_accnt_id, a.expense_accnt_id,a.item_type " .
-                "FROM inv.inv_itm_list a LEFT OUTER JOIN inv.inv_stock b ON a.item_id = b.itm_id " . $extInvCls .
-                " WHERE (" . $wherecls . "(a.enabled_flag='1')" . $invCls .
-                " AND (a.org_id = " . $orgID .
-                ")" . $itmTyp . ") ORDER BY a.item_code LIMIT " . $limit_size .
-                " OFFSET " . (abs($offset * $limit_size));
-//scm.get_ltst_stock_rsrvd_bals(b.stock_id), scm.get_ltst_stock_bals(b.stock_id)
+            "FROM inv.inv_itm_list a LEFT OUTER JOIN inv.inv_stock b ON a.item_id = b.itm_id " . $extInvCls .
+            " WHERE (" . $wherecls . "(a.enabled_flag='1')" . $invCls .
+            " AND (a.org_id = " . $orgID .
+            ")" . $itmTyp . ") ORDER BY a.item_code LIMIT " . $limit_size .
+            " OFFSET " . (abs($offset * $limit_size));
+        //scm.get_ltst_stock_rsrvd_bals(b.stock_id), scm.get_ltst_stock_bals(b.stock_id)
     }
-//echo $strSql;
+    //echo $strSql;
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
 function get_Total_StoreItms(
-        $searchWord, $searchIn, $orgID, $storeID, $docTyp, $cnsgmtsOnly, $itmID) {
+    $searchWord,
+    $searchIn,
+    $orgID,
+    $storeID,
+    $docTyp,
+    $cnsgmtsOnly,
+    $itmID
+) {
     $strSql = "";
     $wherecls = "";
     $invCls = "";
@@ -3627,28 +4256,28 @@ function get_Total_StoreItms(
         $itmTyp = " AND ((a.item_type = 'Merchandise Inventory' AND b.subinv_id = " . $storeID . ") OR a.item_type = 'Services')";
         $invCls = "";
         $extInvCls = " AND (now() between to_timestamp(b.start_date, " .
-                "'YYYY-MM-DD HH24:MI:SS') AND to_timestamp(CASE WHEN b.end_date='' " .
-                "THEN '4000-12-31 23:59:59' ELSE b.end_date END, " .
-                "'YYYY-MM-DD HH24:MI:SS'))";
+            "'YYYY-MM-DD HH24:MI:SS') AND to_timestamp(CASE WHEN b.end_date='' " .
+            "THEN '4000-12-31 23:59:59' ELSE b.end_date END, " .
+            "'YYYY-MM-DD HH24:MI:SS'))";
     } else if ($docTyp == "Internal Item Request") {
-//itmTyp = " AND (a.item_type != 'Expense Item') AND (a.item_type != 'Services')";
+        //itmTyp = " AND (a.item_type != 'Expense Item') AND (a.item_type != 'Services')";
     } else if ($docTyp == "Item Issue-Unbilled") {
-//itmTyp = " AND (a.item_type != 'Expense Item') AND (a.item_type != 'Services')";
+        //itmTyp = " AND (a.item_type != 'Expense Item') AND (a.item_type != 'Services')";
         $invCls = " AND (b.subinv_id = " . $storeID . ")";
         $extInvCls = " AND (now() between to_timestamp(b.start_date, " .
-                "'YYYY-MM-DD HH24:MI:SS') AND to_timestamp(CASE WHEN b.end_date='' THEN '4000-12-31 23:59:59' ELSE b.end_date END, " .
-                "'YYYY-MM-DD HH24:MI:SS'))";
+            "'YYYY-MM-DD HH24:MI:SS') AND to_timestamp(CASE WHEN b.end_date='' THEN '4000-12-31 23:59:59' ELSE b.end_date END, " .
+            "'YYYY-MM-DD HH24:MI:SS'))";
     } /* else if ($docTyp == "") {
       $invCls = " AND (b.subinv_id = " . $storeID . ")";
       } */
     if ($searchIn == "Item Code/Name") {
         $wherecls = "(a.item_code ilike '" . loc_db_escape_string($searchWord) .
-                "' or a.item_desc ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "' or a.item_desc ilike '" . loc_db_escape_string($searchWord) .
+            "') AND ";
     } else /* if ($searchIn == "Item Description") */ {
         $wherecls = "(a.item_code ilike '" . loc_db_escape_string($searchWord) .
-                "' or a.item_desc ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "' or a.item_desc ilike '" . loc_db_escape_string($searchWord) .
+            "') AND ";
     }
     if ($itmID > 0) {
         $wherecls .= "(a.item_id=" . $itmID . ") AND ";
@@ -3658,17 +4287,17 @@ function get_Total_StoreItms(
             $invCls = " AND (b.subinv_id = " . $storeID . ")";
         }
         $strSql = "SELECT count(distinct c.consgmt_id) " .
-                "FROM inv.inv_itm_list a, inv.inv_stock b, inv.inv_consgmt_rcpt_det c " .
-                "WHERE (" . $wherecls . "(a.item_id = b.itm_id and b.stock_id = c.stock_id " .
-                "and a.item_id = c.itm_id and b.subinv_id = c.subinv_id and a.enabled_flag='1')" . $invCls .
-                " AND (a.org_id = " . $orgID .
-                " and inv.get_csgmt_lst_avlbl_bls(c.consgmt_id)>0)" . $extInvCls . $itmTyp . ")";
+            "FROM inv.inv_itm_list a, inv.inv_stock b, inv.inv_consgmt_rcpt_det c " .
+            "WHERE (" . $wherecls . "(a.item_id = b.itm_id and b.stock_id = c.stock_id " .
+            "and a.item_id = c.itm_id and b.subinv_id = c.subinv_id and a.enabled_flag='1')" . $invCls .
+            " AND (a.org_id = " . $orgID .
+            " and inv.get_csgmt_lst_avlbl_bls(c.consgmt_id)>0)" . $extInvCls . $itmTyp . ")";
     } else {
         $strSql = "SELECT count(1)" .
-                "FROM inv.inv_itm_list a LEFT OUTER JOIN inv.inv_stock b ON a.item_id = b.itm_id " . $extInvCls .
-                " WHERE (" . $wherecls . "(a.enabled_flag='1')" . $invCls .
-                " AND (a.org_id = " . $orgID .
-                ")" . $itmTyp . ")";
+            "FROM inv.inv_itm_list a LEFT OUTER JOIN inv.inv_stock b ON a.item_id = b.itm_id " . $extInvCls .
+            " WHERE (" . $wherecls . "(a.enabled_flag='1')" . $invCls .
+            " AND (a.org_id = " . $orgID .
+            ")" . $itmTyp . ")";
     }
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
@@ -3677,7 +4306,8 @@ function get_Total_StoreItms(
     return -1;
 }
 
-function get_OneStoreItemDets($searchWord, $orgID, $storeID, $docTyp, $cnsgmtsOnly, $itmID, $cstmrSiteID) {
+function get_OneStoreItemDets($searchWord, $orgID, $storeID, $docTyp, $cnsgmtsOnly, $itmID, $cstmrSiteID)
+{
     $strSql = "";
     $wherecls = "";
     $invCls = "";
@@ -3687,23 +4317,23 @@ function get_OneStoreItemDets($searchWord, $orgID, $storeID, $docTyp, $cnsgmtsOn
         $itmTyp = " AND ((a.item_type = 'Merchandise Inventory' AND b.subinv_id = " . $storeID . ") OR a.item_type = 'Services')";
         $invCls = "";
         $extInvCls = " AND (now() between to_timestamp(b.start_date, " .
-                "'YYYY-MM-DD HH24:MI:SS') AND to_timestamp(CASE WHEN b.end_date='' " .
-                "THEN '4000-12-31 23:59:59' ELSE b.end_date END, " .
-                "'YYYY-MM-DD HH24:MI:SS'))";
+            "'YYYY-MM-DD HH24:MI:SS') AND to_timestamp(CASE WHEN b.end_date='' " .
+            "THEN '4000-12-31 23:59:59' ELSE b.end_date END, " .
+            "'YYYY-MM-DD HH24:MI:SS'))";
     } else if ($docTyp == "Internal Item Request") {
-//itmTyp = " AND (a.item_type != 'Expense Item') AND (a.item_type != 'Services')";
+        //itmTyp = " AND (a.item_type != 'Expense Item') AND (a.item_type != 'Services')";
     } else if ($docTyp == "Item Issue-Unbilled") {
-//itmTyp = " AND (a.item_type != 'Expense Item') AND (a.item_type != 'Services')";
+        //itmTyp = " AND (a.item_type != 'Expense Item') AND (a.item_type != 'Services')";
         $invCls = " AND (b.subinv_id = " . $storeID . ")";
         $extInvCls = " AND (now() between to_timestamp(b.start_date, " .
-                "'YYYY-MM-DD HH24:MI:SS') AND to_timestamp(CASE WHEN b.end_date='' THEN '4000-12-31 23:59:59' ELSE b.end_date END, " .
-                "'YYYY-MM-DD HH24:MI:SS'))";
+            "'YYYY-MM-DD HH24:MI:SS') AND to_timestamp(CASE WHEN b.end_date='' THEN '4000-12-31 23:59:59' ELSE b.end_date END, " .
+            "'YYYY-MM-DD HH24:MI:SS'))";
     } /* else if ($docTyp == "") {
       $invCls = " AND (b.subinv_id = " . $storeID . ")";
       } */
     $wherecls = "(a.item_code ilike '" . loc_db_escape_string($searchWord) .
-            "' or a.item_desc ilike '" . loc_db_escape_string($searchWord) .
-            "') AND ";
+        "' or a.item_desc ilike '" . loc_db_escape_string($searchWord) .
+        "') AND ";
     if ($itmID > 0) {
         $wherecls .= "(a.item_id=" . $itmID . ") AND ";
     }
@@ -3712,50 +4342,51 @@ function get_OneStoreItemDets($searchWord, $orgID, $storeID, $docTyp, $cnsgmtsOn
     }
     if ($cnsgmtsOnly == true) {
         $strSql = "SELECT distinct a.item_id, a.item_code, REPLACE(a.item_code || ' (' || a.item_desc || ')', ' (' || a.item_code || ')','') item_desc, " .
-                "a.selling_price, a.category_id, b.stock_id, b.subinv_id, b.shelves, " .
-                "a.tax_code_id, CASE WHEN scm.get_cstmr_splr_dscntid("
-                . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
-                . $cstmrSiteID . ") ELSE a.dscnt_code_id END , a.extr_chrg_id, c.consgmt_id, c.cost_price, c.expiry_date,"
-                . "inv.get_store_name(b.subinv_id),scm.get_tax_code(a.tax_code_id),"
-                . " scm.get_tax_code((CASE WHEN scm.get_cstmr_splr_dscntid("
-                . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
-                . $cstmrSiteID . ") ELSE a.dscnt_code_id END)), scm.get_tax_code(a.extr_chrg_id), a.base_uom_id, inv.get_uom_name(a.base_uom_id),"
-                . "inv.get_csgmt_lst_avlbl_bls(c.consgmt_id), 0,0,inv.get_catgryname(a.category_id),
+            "a.selling_price, a.category_id, b.stock_id, b.subinv_id, b.shelves, " .
+            "a.tax_code_id, CASE WHEN scm.get_cstmr_splr_dscntid("
+            . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
+            . $cstmrSiteID . ") ELSE a.dscnt_code_id END , a.extr_chrg_id, c.consgmt_id, c.cost_price, c.expiry_date,"
+            . "inv.get_store_name(b.subinv_id),scm.get_tax_code(a.tax_code_id),"
+            . " scm.get_tax_code((CASE WHEN scm.get_cstmr_splr_dscntid("
+            . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
+            . $cstmrSiteID . ") ELSE a.dscnt_code_id END)), scm.get_tax_code(a.extr_chrg_id), a.base_uom_id, inv.get_uom_name(a.base_uom_id),"
+            . "inv.get_csgmt_lst_avlbl_bls(c.consgmt_id), 0,0,inv.get_catgryname(a.category_id),
                    a.inv_asset_acct_id, a.cogs_acct_id, a.sales_rev_accnt_id, a.sales_ret_accnt_id, a.purch_ret_accnt_id, a.expense_accnt_id,a.item_type " .
-                "FROM inv.inv_itm_list a, inv.inv_stock b, inv.inv_consgmt_rcpt_det c " .
-                "WHERE (" . $wherecls . "(a.item_id = b.itm_id and b.stock_id = c.stock_id " .
-                "and a.item_id = c.itm_id and b.subinv_id = c.subinv_id and a.enabled_flag='1')" . $invCls .
-                " AND (a.org_id = " . $orgID . " and inv.get_csgmt_lst_avlbl_bls(c.consgmt_id)>0)" . $extInvCls . $itmTyp . ") ORDER BY c.consgmt_id ASC, a.item_code";
-//echo $strSql; inv.get_csgmt_lst_rsvd_bls(c.consgmt_id), inv.get_csgmt_lst_tot_bls(c.consgmt_id)
+            "FROM inv.inv_itm_list a, inv.inv_stock b, inv.inv_consgmt_rcpt_det c " .
+            "WHERE (" . $wherecls . "(a.item_id = b.itm_id and b.stock_id = c.stock_id " .
+            "and a.item_id = c.itm_id and b.subinv_id = c.subinv_id and a.enabled_flag='1')" . $invCls .
+            " AND (a.org_id = " . $orgID . " and inv.get_csgmt_lst_avlbl_bls(c.consgmt_id)>0)" . $extInvCls . $itmTyp . ") ORDER BY c.consgmt_id ASC, a.item_code";
+        //echo $strSql; inv.get_csgmt_lst_rsvd_bls(c.consgmt_id), inv.get_csgmt_lst_tot_bls(c.consgmt_id)
     } else {
         $strSql = "SELECT a.item_id, a.item_code, REPLACE(a.item_code || ' (' || a.item_desc || ')', ' (' || a.item_code || ')','') item_desc, " .
-                "a.selling_price, a.category_id, COALESCE(b.stock_id,-1), COALESCE(b.subinv_id,-1), b.shelves, " .
-                "a.tax_code_id, CASE WHEN scm.get_cstmr_splr_dscntid("
-                . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
-                . $cstmrSiteID . ") ELSE a.dscnt_code_id END , a.extr_chrg_id, -1, inv.get_invitm_unitval(a.item_id),'', "
-                . "inv.get_store_name(b.subinv_id), scm.get_tax_code(a.tax_code_id),"
-                . " scm.get_tax_code((CASE WHEN scm.get_cstmr_splr_dscntid("
-                . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
-                . $cstmrSiteID . ") ELSE a.dscnt_code_id END)), scm.get_tax_code(a.extr_chrg_id), a.base_uom_id, inv.get_uom_name(a.base_uom_id),"
-                . "CASE WHEN scm.get_ltst_stock_avlbl_bals(b.stock_id,to_char(now(),'YYYY-MM-DD'))<=inv.get_invitm_stckttl(a.item_id, b.subinv_id) THEN scm.get_ltst_stock_avlbl_bals(b.stock_id,to_char(now(),'YYYY-MM-DD')) ELSE inv.get_invitm_stckttl(a.item_id, b.subinv_id) END, 0, 0,inv.get_catgryname(a.category_id),
+            "a.selling_price, a.category_id, COALESCE(b.stock_id,-1), COALESCE(b.subinv_id,-1), b.shelves, " .
+            "a.tax_code_id, CASE WHEN scm.get_cstmr_splr_dscntid("
+            . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
+            . $cstmrSiteID . ") ELSE a.dscnt_code_id END , a.extr_chrg_id, -1, inv.get_invitm_unitval(a.item_id),'', "
+            . "inv.get_store_name(b.subinv_id), scm.get_tax_code(a.tax_code_id),"
+            . " scm.get_tax_code((CASE WHEN scm.get_cstmr_splr_dscntid("
+            . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
+            . $cstmrSiteID . ") ELSE a.dscnt_code_id END)), scm.get_tax_code(a.extr_chrg_id), a.base_uom_id, inv.get_uom_name(a.base_uom_id),"
+            . "CASE WHEN scm.get_ltst_stock_avlbl_bals(b.stock_id,to_char(now(),'YYYY-MM-DD'))<=inv.get_invitm_stckttl(a.item_id, b.subinv_id) THEN scm.get_ltst_stock_avlbl_bals(b.stock_id,to_char(now(),'YYYY-MM-DD')) ELSE inv.get_invitm_stckttl(a.item_id, b.subinv_id) END, 0, 0,inv.get_catgryname(a.category_id),
                    a.inv_asset_acct_id, a.cogs_acct_id, a.sales_rev_accnt_id, a.sales_ret_accnt_id, a.purch_ret_accnt_id, a.expense_accnt_id,a.item_type " .
-                "FROM inv.inv_itm_list a LEFT OUTER JOIN inv.inv_stock b ON a.item_id = b.itm_id " . $extInvCls .
-                " WHERE (" . $wherecls . "(a.enabled_flag='1')" . $invCls .
-                " AND (a.org_id = " . $orgID .
-                ")" . $itmTyp . ") ORDER BY a.item_code";
-//scm.get_ltst_stock_rsrvd_bals(b.stock_id), scm.get_ltst_stock_bals(b.stock_id)
+            "FROM inv.inv_itm_list a LEFT OUTER JOIN inv.inv_stock b ON a.item_id = b.itm_id " . $extInvCls .
+            " WHERE (" . $wherecls . "(a.enabled_flag='1')" . $invCls .
+            " AND (a.org_id = " . $orgID .
+            ")" . $itmTyp . ") ORDER BY a.item_code";
+        //scm.get_ltst_stock_rsrvd_bals(b.stock_id), scm.get_ltst_stock_bals(b.stock_id)
     }
-//echo $strSql;
+    //echo $strSql;
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function getOldstItmCnsgmts($itmID, $qnty) {
+function getOldstItmCnsgmts($itmID, $qnty)
+{
     global $selectedStoreID;
     $res = ",";
     $strSql = "SELECT distinct c.consgmt_id, inv.get_csgmt_lst_avlbl_bls(c.consgmt_id) " .
-            "FROM inv.inv_consgmt_rcpt_det c " .
-            "WHERE ((c.itm_id=" . $itmID . ") and (c.subinv_id =" . $selectedStoreID . ") and  (inv.get_csgmt_lst_avlbl_bls(c.consgmt_id)>0)) ORDER BY c.consgmt_id ASC";
+        "FROM inv.inv_consgmt_rcpt_det c " .
+        "WHERE ((c.itm_id=" . $itmID . ") and (c.subinv_id =" . $selectedStoreID . ") and  (inv.get_csgmt_lst_avlbl_bls(c.consgmt_id)>0)) ORDER BY c.consgmt_id ASC";
 
     $result = executeSQLNoParams($strSql);
     $curAvlbQty = 0;
@@ -3770,12 +4401,13 @@ function getOldstItmCnsgmts($itmID, $qnty) {
     return trim($res, ',');
 }
 
-function getOldstItmCnsgmtsForStock($itmID, $qnty, $storeID) {
+function getOldstItmCnsgmtsForStock($itmID, $qnty, $storeID)
+{
     $res = ",";
     $strSql = "SELECT distinct c.consgmt_id, inv.get_csgmt_lst_avlbl_bls(c.consgmt_id) " .
-            "FROM inv.inv_consgmt_rcpt_det c " .
-            "WHERE ((c.itm_id=" . $itmID . ") and (c.subinv_id =" . $storeID .
-            ") and (inv.get_csgmt_lst_avlbl_bls(c.consgmt_id)>0)) ORDER BY c.consgmt_id ASC";
+        "FROM inv.inv_consgmt_rcpt_det c " .
+        "WHERE ((c.itm_id=" . $itmID . ") and (c.subinv_id =" . $storeID .
+        ") and (inv.get_csgmt_lst_avlbl_bls(c.consgmt_id)>0)) ORDER BY c.consgmt_id ASC";
 
 
     $result = executeSQLNoParams($strSql);
@@ -3822,8 +4454,9 @@ function getOldstItmCnsgmtsForStock($itmID, $qnty, $storeID) {
   return result;
   } */
 
-function getCnsgmtsQtySum($cnsgmtIDs) {
-//MessageBox.Show(cnsgmtIDs);
+function getCnsgmtsQtySum($cnsgmtIDs)
+{
+    //MessageBox.Show(cnsgmtIDs);
     if ($cnsgmtIDs != "") {
         $cnsgmtIDs = trim(str_replace(",,", ",", str_replace(",,", ",", str_replace(",,", ",", $cnsgmtIDs))), ',');
     }
@@ -3831,9 +4464,9 @@ function getCnsgmtsQtySum($cnsgmtIDs) {
         $cnsgmtIDs = "-123412";
     }
     $strSql = "SELECT distinct c.consgmt_id, inv.get_csgmt_lst_avlbl_bls(c.consgmt_id) " .
-            "FROM inv.inv_consgmt_rcpt_det c " .
-            "WHERE ((c.consgmt_id IN (" . trim($cnsgmtIDs, ',') .
-            ")) and (inv.get_csgmt_lst_avlbl_bls(c.consgmt_id)>0)) ORDER BY c.consgmt_id ASC";
+        "FROM inv.inv_consgmt_rcpt_det c " .
+        "WHERE ((c.consgmt_id IN (" . trim($cnsgmtIDs, ',') .
+        ")) and (inv.get_csgmt_lst_avlbl_bls(c.consgmt_id)>0)) ORDER BY c.consgmt_id ASC";
 
     $result = executeSQLNoParams($strSql);
     $ttlQty = 0;
@@ -3843,14 +4476,15 @@ function getCnsgmtsQtySum($cnsgmtIDs) {
     return $ttlQty;
 }
 
-function getCnsgmtsRsvdSum($cnsgmtIDs) {
+function getCnsgmtsRsvdSum($cnsgmtIDs)
+{
     if ($cnsgmtIDs == "") {
         $cnsgmtIDs = "-123412";
     }
     $strSql = "SELECT distinct c.consgmt_id, inv.get_csgmt_lst_rsvd_bls(c.consgmt_id) " .
-            "FROM inv.inv_consgmt_rcpt_det c " .
-            "WHERE ((c.consgmt_id IN (" . trim($cnsgmtIDs, ',') .
-            ")) and (inv.get_csgmt_lst_rsvd_bls(c.consgmt_id)>0)) ORDER BY c.consgmt_id ASC";
+        "FROM inv.inv_consgmt_rcpt_det c " .
+        "WHERE ((c.consgmt_id IN (" . trim($cnsgmtIDs, ',') .
+        ")) and (inv.get_csgmt_lst_rsvd_bls(c.consgmt_id)>0)) ORDER BY c.consgmt_id ASC";
 
     $result = executeSQLNoParams($strSql);
     $ttlQty = 0;
@@ -3860,21 +4494,23 @@ function getCnsgmtsRsvdSum($cnsgmtIDs) {
     return $ttlQty;
 }
 
-function get_SalesInvc_Attachments($searchWord, $offset, $limit_size, $batchID, &$attchSQL) {
+function get_SalesInvc_Attachments($searchWord, $offset, $limit_size, $batchID, &$attchSQL)
+{
     $strSql = "SELECT a.attchmnt_id, a.doc_hdr_id, a.attchmnt_desc, a.file_name " .
-            "FROM scm.scm_sales_doc_attchmnts a " .
-            "WHERE(a.attchmnt_desc ilike '" . loc_db_escape_string($searchWord) .
-            "' and a.doc_hdr_id = " . $batchID . ") ORDER BY a.attchmnt_id LIMIT " . $limit_size .
-            " OFFSET " . (abs($offset * $limit_size));
+        "FROM scm.scm_sales_doc_attchmnts a " .
+        "WHERE(a.attchmnt_desc ilike '" . loc_db_escape_string($searchWord) .
+        "' and a.doc_hdr_id = " . $batchID . ") ORDER BY a.attchmnt_id LIMIT " . $limit_size .
+        " OFFSET " . (abs($offset * $limit_size));
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_Total_SalesInvc_Attachments($searchWord, $batchID) {
+function get_Total_SalesInvc_Attachments($searchWord, $batchID)
+{
     $strSql = "SELECT count(1) " .
-            "FROM scm.scm_sales_doc_attchmnts a " .
-            "WHERE(a.attchmnt_desc ilike '" . loc_db_escape_string($searchWord) .
-            "' and a.doc_hdr_id = " . $batchID . ")";
+        "FROM scm.scm_sales_doc_attchmnts a " .
+        "WHERE(a.attchmnt_desc ilike '" . loc_db_escape_string($searchWord) .
+        "' and a.doc_hdr_id = " . $batchID . ")";
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -3882,25 +4518,28 @@ function get_Total_SalesInvc_Attachments($searchWord, $batchID) {
     return 0;
 }
 
-function getSalesInvcAttchmtDocs($batchid) {
+function getSalesInvcAttchmtDocs($batchid)
+{
     $sqlStr = "SELECT attchmnt_id, file_name, attchmnt_desc
   FROM scm.scm_sales_doc_attchmnts WHERE 1=1 AND file_name != '' AND doc_hdr_id = " . $batchid;
     $result = executeSQLNoParams($sqlStr);
     return $result;
 }
 
-function updateSalesInvcDocFlNm($attchmnt_id, $file_name) {
+function updateSalesInvcDocFlNm($attchmnt_id, $file_name)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "UPDATE scm.scm_sales_doc_attchmnts SET file_name='"
-            . loc_db_escape_string($file_name) .
-            "', last_update_by=" . $usrID .
-            ", last_update_date='" . $dateStr . "'
+        . loc_db_escape_string($file_name) .
+        "', last_update_by=" . $usrID .
+        ", last_update_date='" . $dateStr . "'
                 WHERE attchmnt_id=" . $attchmnt_id;
     return execUpdtInsSQL($insSQL);
 }
 
-function getNewSalesInvcDocID() {
+function getNewSalesInvcDocID()
+{
     $strSql = "select nextval('scm.scm_sales_doc_attchmnts_attchmnt_id_seq')";
     $result = executeSQLNoParams($strSql);
 
@@ -3911,20 +4550,22 @@ function getNewSalesInvcDocID() {
     return -1;
 }
 
-function createSalesInvcDoc($attchmnt_id, $hdrid, $attchmnt_desc, $file_name) {
+function createSalesInvcDoc($attchmnt_id, $hdrid, $attchmnt_desc, $file_name)
+{
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO scm.scm_sales_doc_attchmnts(
             attchmnt_id, doc_hdr_id, attchmnt_desc, file_name, created_by, 
             creation_date, last_update_by, last_update_date)
              VALUES (" . $attchmnt_id . ", " . $hdrid . ",'"
-            . loc_db_escape_string($attchmnt_desc) . "','"
-            . loc_db_escape_string($file_name) . "',"
-            . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
+        . loc_db_escape_string($attchmnt_desc) . "','"
+        . loc_db_escape_string($file_name) . "',"
+        . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function deleteSalesInvcDoc($pkeyID, $docTrnsNum = "") {
+function deleteSalesInvcDoc($pkeyID, $docTrnsNum = "")
+{
     $insSQL = "DELETE FROM scm.scm_sales_doc_attchmnts WHERE attchmnt_id = " . $pkeyID;
     $affctd1 = execUpdtInsSQL($insSQL, "Trns. No:" . $docTrnsNum);
     if ($affctd1 > 0) {
@@ -3937,7 +4578,8 @@ function deleteSalesInvcDoc($pkeyID, $docTrnsNum = "") {
     }
 }
 
-function uploadDaSalesInvcDoc($attchmntID, &$nwImgLoc, &$errMsg) {
+function uploadDaSalesInvcDoc($attchmntID, &$nwImgLoc, &$errMsg)
+{
     global $tmpDest;
     global $ftp_base_db_fldr;
     global $usrID;
@@ -3945,8 +4587,10 @@ function uploadDaSalesInvcDoc($attchmntID, &$nwImgLoc, &$errMsg) {
     global $smplTokenWord1;
 
     $msg = "";
-    $allowedExts = array('png', 'jpg', 'gif', 'jpeg', 'bmp', 'pdf', 'xls', 'xlsx',
-        'doc', 'docx', 'ppt', 'pptx', 'txt', 'csv');
+    $allowedExts = array(
+        'png', 'jpg', 'gif', 'jpeg', 'bmp', 'pdf', 'xls', 'xlsx',
+        'doc', 'docx', 'ppt', 'pptx', 'txt', 'csv'
+    );
 
     if (isset($_FILES["daSalesInvcAttchmnt"])) {
         $flnm = $_FILES["daSalesInvcAttchmnt"]["name"];
@@ -3958,7 +4602,7 @@ function uploadDaSalesInvcDoc($attchmntID, &$nwImgLoc, &$errMsg) {
             $msg .= "Uploaded File: " . $_FILES["daSalesInvcAttchmnt"]["name"] . "<br>";
             $msg .= "Type: " . $_FILES["daSalesInvcAttchmnt"]["type"] . "<br>";
             $msg .= "Size: " . round(($_FILES["daSalesInvcAttchmnt"]["size"]) / (1024 * 1024), 2) . " MB<br>";
-//$msg .= "Temp file: " . $_FILES["daSalesInvcAttchmnt"]["tmp_name"] . "<br>";
+            //$msg .= "Temp file: " . $_FILES["daSalesInvcAttchmnt"]["tmp_name"] . "<br>";
             if ((($_FILES["daSalesInvcAttchmnt"]["type"] == "image/gif") || ($_FILES["daSalesInvcAttchmnt"]["type"] == "image/jpeg") || ($_FILES["daSalesInvcAttchmnt"]["type"] == "image/jpg") || ($_FILES["daSalesInvcAttchmnt"]["type"] == "image/pjpeg") || ($_FILES["daSalesInvcAttchmnt"]["type"] == "image/x-png") || ($_FILES["daSalesInvcAttchmnt"]["type"] == "image/png") || in_array($extension, $allowedExts)) && ($_FILES["daSalesInvcAttchmnt"]["size"] < 10000000)) {
                 $nwFileName = encrypt1($attchmntID . "." . $extension, $smplTokenWord1) . "." . $extension;
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
@@ -3969,9 +4613,9 @@ function uploadDaSalesInvcDoc($attchmntID, &$nwImgLoc, &$errMsg) {
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE scm.scm_sales_doc_attchmnts
                             SET file_name='" . $attchmntID . "." . $extension .
-                            "', last_update_by=" . $usrID .
-                            ", last_update_date='" . $dateStr .
-                            "' WHERE attchmnt_id=" . $attchmntID;
+                        "', last_update_by=" . $usrID .
+                        ", last_update_date='" . $dateStr .
+                        "' WHERE attchmnt_id=" . $attchmntID;
                     execUpdtInsSQL($updtSQL);
                 }
                 $msg .= "Document Stored Successfully!<br/>";
@@ -3979,8 +4623,10 @@ function uploadDaSalesInvcDoc($attchmntID, &$nwImgLoc, &$errMsg) {
                 $errMsg = $msg;
                 return TRUE;
             } else {
-                $msg .= "Invalid file!<br/>File Size must be below 10MB and<br/>File Type must be in the ff:<br/>" . implode(", ",
-                                $allowedExts);
+                $msg .= "Invalid file!<br/>File Size must be below 10MB and<br/>File Type must be in the ff:<br/>" . implode(
+                    ", ",
+                    $allowedExts
+                );
                 $nwImgLoc = $msg;
                 $errMsg = $msg;
             }
@@ -3992,12 +4638,13 @@ function uploadDaSalesInvcDoc($attchmntID, &$nwImgLoc, &$errMsg) {
     return FALSE;
 }
 
-function reCalcSalesInvcSmmrys($srcDocID, $srcDocType, $p_cstmrID, $invcCurrID, $p_docStatus) {
+function reCalcSalesInvcSmmrys($srcDocID, $srcDocType, $p_cstmrID, $invcCurrID, $p_docStatus)
+{
     global $usrID;
     global $orgID;
     $strSql = "select scm.reCalcSmmrys(" . $srcDocID .
-            ", '" . loc_db_escape_string($srcDocType) .
-            "'," . $p_cstmrID . "," . $invcCurrID . ",'" . loc_db_escape_string($p_docStatus) . "'," . $orgID . "," . $usrID . ")";
+        ", '" . loc_db_escape_string($srcDocType) .
+        "'," . $p_cstmrID . "," . $invcCurrID . ",'" . loc_db_escape_string($p_docStatus) . "'," . $orgID . "," . $usrID . ")";
 
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
@@ -4006,7 +4653,8 @@ function reCalcSalesInvcSmmrys($srcDocID, $srcDocType, $p_cstmrID, $invcCurrID, 
     return "ERROR:No Result";
 }
 
-function load_dues_attchd_vals($invoice_id, $p_storeid) {
+function load_dues_attchd_vals($invoice_id, $p_storeid)
+{
     global $usrID;
     global $orgID;
     $strSql = "SELECT pay.invcSaveMassPayItms(" . $invoice_id . "," . $p_storeid . "," . $usrID . ")";
@@ -4017,12 +4665,13 @@ function load_dues_attchd_vals($invoice_id, $p_storeid) {
     return "ERROR:No Result";
 }
 
-function reCalcPrchsDocSmmrys($srcDocID, $srcDocType, $p_cstmrID, $invcCurrID, $p_docStatus) {
+function reCalcPrchsDocSmmrys($srcDocID, $srcDocType, $p_cstmrID, $invcCurrID, $p_docStatus)
+{
     global $usrID;
     global $orgID;
     $strSql = "select scm.reCalcPrchsDocSmmrys(" . $srcDocID .
-            ", '" . loc_db_escape_string($srcDocType) .
-            "'," . $p_cstmrID . "," . $invcCurrID . ",'" . loc_db_escape_string($p_docStatus) . "'," . $orgID . "," . $usrID . ")";
+        ", '" . loc_db_escape_string($srcDocType) .
+        "'," . $p_cstmrID . "," . $invcCurrID . ",'" . loc_db_escape_string($p_docStatus) . "'," . $orgID . "," . $usrID . ")";
 
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
@@ -4031,7 +4680,8 @@ function reCalcPrchsDocSmmrys($srcDocID, $srcDocType, $p_cstmrID, $invcCurrID, $
     return "ERROR:No Result";
 }
 
-function approve_sales_prchsdoc($srcDocID, $p_DocKind) {
+function approve_sales_prchsdoc($srcDocID, $p_DocKind)
+{
     global $usrID;
     global $orgID;
     $strSql = "select scm.approve_sales_prchsdoc(" . $srcDocID . ",'" . loc_db_escape_string($p_DocKind) . "'," . $orgID . "," . $usrID . ")";
@@ -4042,10 +4692,11 @@ function approve_sales_prchsdoc($srcDocID, $p_DocKind) {
     return "ERROR:No Result";
 }
 
-function cancelSalesPrchsDoc($p_dochdrid, $p_dockind, $p_org_id, $p_who_rn) {
+function cancelSalesPrchsDoc($p_dochdrid, $p_dockind, $p_org_id, $p_who_rn)
+{
     $strSql = "select scm.cancel_sales_prchsdoc(" . $p_dochdrid .
-            ", '" . loc_db_escape_string($p_dockind) .
-            "', " . $p_org_id . "," . $p_who_rn . ")";
+        ", '" . loc_db_escape_string($p_dockind) .
+        "', " . $p_org_id . "," . $p_who_rn . ")";
 
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
@@ -4054,9 +4705,36 @@ function cancelSalesPrchsDoc($p_dochdrid, $p_dockind, $p_org_id, $p_who_rn) {
     return "ERROR:No Result";
 }
 
-function udateItemBalances($itmID, $qnty, $cnsgmntIDs, $txCodeID, $dscntCodeID, $chrgCodeID, $docTyp, $docID, $srcDocID, $dfltRcvblAcntID,
-        $dfltInvAcntID, $dfltCGSAcntID, $dfltExpnsAcntID, $dfltRvnuAcntID, $stckID, $unitSllgPrc, $crncyID, $docLnID, $dfltSRAcntID,
-        $dfltCashAcntID, $dfltCheckAcntID, $srcDocLnID, $dateStr, $docIDNum, $entrdCurrID, $exchngRate, $dfltLbltyAccnt, $strSrcDocType) {
+function udateItemBalances(
+    $itmID,
+    $qnty,
+    $cnsgmntIDs,
+    $txCodeID,
+    $dscntCodeID,
+    $chrgCodeID,
+    $docTyp,
+    $docID,
+    $srcDocID,
+    $dfltRcvblAcntID,
+    $dfltInvAcntID,
+    $dfltCGSAcntID,
+    $dfltExpnsAcntID,
+    $dfltRvnuAcntID,
+    $stckID,
+    $unitSllgPrc,
+    $crncyID,
+    $docLnID,
+    $dfltSRAcntID,
+    $dfltCashAcntID,
+    $dfltCheckAcntID,
+    $srcDocLnID,
+    $dateStr,
+    $docIDNum,
+    $entrdCurrID,
+    $exchngRate,
+    $dfltLbltyAccnt,
+    $strSrcDocType
+) {
     global $usrID;
     $strSql = "select inv.udateitembalances(
 	" . $itmID . ",
@@ -4094,7 +4772,8 @@ function udateItemBalances($itmID, $qnty, $cnsgmntIDs, $txCodeID, $dscntCodeID, 
     return "ERROR:No Result";
 }
 
-function rvrsQtyPostngs($lnID, $cnsgmntIDs, $dateStr, $stckID, $p_doctyp, $strSrcDocType) {
+function rvrsQtyPostngs($lnID, $cnsgmntIDs, $dateStr, $stckID, $p_doctyp, $strSrcDocType)
+{
     global $usrID;
     $strSql = "select 
       inv.rvrsqtypostngs(
@@ -4112,7 +4791,8 @@ function rvrsQtyPostngs($lnID, $cnsgmntIDs, $dateStr, $stckID, $p_doctyp, $strSr
     return "ERROR:No Result";
 }
 
-function approve_cnsgn_rcpt($srcDocID, $p_DocKind) {
+function approve_cnsgn_rcpt($srcDocID, $p_DocKind)
+{
     global $usrID;
     global $orgID;
     $strSql = "select inv.approve_cnsgn_rcpt(" . $srcDocID . ",'" . loc_db_escape_string($p_DocKind) . "'," . $orgID . "," . $usrID . ")";
@@ -4124,10 +4804,11 @@ function approve_cnsgn_rcpt($srcDocID, $p_DocKind) {
     return "ERROR:No Result";
 }
 
-function cancel_cnsgn_rcpt($p_dochdrid, $p_dockind, $p_org_id, $p_who_rn) {
+function cancel_cnsgn_rcpt($p_dochdrid, $p_dockind, $p_org_id, $p_who_rn)
+{
     $strSql = "select inv.cancel_cnsgn_rcpt(" . $p_dochdrid .
-            ", '" . loc_db_escape_string($p_dockind) .
-            "', " . $p_org_id . "," . $p_who_rn . ")";
+        ", '" . loc_db_escape_string($p_dockind) .
+        "', " . $p_org_id . "," . $p_who_rn . ")";
 
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
@@ -4136,7 +4817,8 @@ function cancel_cnsgn_rcpt($p_dochdrid, $p_dockind, $p_org_id, $p_who_rn) {
     return "ERROR:No Result";
 }
 
-function approve_stck_trnsfr($srcDocID, $p_DocKind) {
+function approve_stck_trnsfr($srcDocID, $p_DocKind)
+{
     global $usrID;
     global $orgID;
     $strSql = "select inv.approve_stck_trnsfr(" . $srcDocID . ",'" . loc_db_escape_string($p_DocKind) . "'," . $orgID . "," . $usrID . ")";
@@ -4148,10 +4830,11 @@ function approve_stck_trnsfr($srcDocID, $p_DocKind) {
     return "ERROR:No Result";
 }
 
-function cancel_stck_trnsfr($p_dochdrid, $p_dockind, $p_org_id, $p_who_rn) {
+function cancel_stck_trnsfr($p_dochdrid, $p_dockind, $p_org_id, $p_who_rn)
+{
     $strSql = "select inv.cancel_stck_trnsfr(" . $p_dochdrid .
-            ", '" . loc_db_escape_string($p_dockind) .
-            "', " . $p_org_id . "," . $p_who_rn . ")";
+        ", '" . loc_db_escape_string($p_dockind) .
+        "', " . $p_org_id . "," . $p_who_rn . ")";
 
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
@@ -4160,7 +4843,8 @@ function cancel_stck_trnsfr($p_dochdrid, $p_dockind, $p_org_id, $p_who_rn) {
     return "ERROR:No Result";
 }
 
-function get_Basic_PrchsDoc($searchWord, $searchIn, $offset, $limit_size, $orgID, $shwUnpstdOnly, $shwUnpaidOnly) {
+function get_Basic_PrchsDoc($searchWord, $searchIn, $offset, $limit_size, $orgID, $shwUnpstdOnly, $shwUnpaidOnly)
+{
     global $vwOnlySelf;
     global $usrID;
     $strSql = "";
@@ -4171,47 +4855,48 @@ function get_Basic_PrchsDoc($searchWord, $searchIn, $offset, $limit_size, $orgID
     }
     if ($searchIn == "Document Number") {
         $whereClause = "(a.purchase_doc_num ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Document Description") {
         $whereClause = "(a.comments_desc ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Supplier Name") {
         $whereClause = "(a.supplier_id IN (select c.cust_sup_id from scm.scm_cstmr_suplr c where c.cust_sup_name ilike '" . loc_db_escape_string($searchWord) .
-                "')) AND ";
+            "')) AND ";
     } else if ($searchIn == "Requisition Number") {
         $whereClause = "(a.requisition_id IN (select c.prchs_doc_hdr_id from scm.scm_prchs_docs_hdr c where c.purchase_doc_num ilike '" . loc_db_escape_string($searchWord) .
-                "')) AND ";
+            "')) AND ";
     } else if ($searchIn == "Approval Status") {
         $whereClause = "(a.approval_status ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Created By") {
         $whereClause = "(a.created_by IN (select c.user_id from sec.sec_users c where c.user_name ilike '" . loc_db_escape_string($searchWord) .
-                "')) AND ";
+            "')) AND ";
     } else if ($searchIn == "Branch") {
         $whereClause = " and (org.get_site_code_desc(a.branch_id) ilike '" . loc_db_escape_string($searchWord) . "')";
     } else {
         $whereClause = " and (org.get_site_code_desc(a.branch_id) ilike '" . loc_db_escape_string($searchWord) . "' "
-                . "or a.created_by IN (select c.user_id from sec.sec_users c where c.user_name ilike '" . loc_db_escape_string($searchWord) .
-                "') or a.approval_status ilike '" . loc_db_escape_string($searchWord) .
-                "' or a.requisition_id IN (select c.prchs_doc_hdr_id from scm.scm_prchs_docs_hdr c where c.purchase_doc_num ilike '" . loc_db_escape_string($searchWord) .
-                "') or a.supplier_id IN (select c.cust_sup_id from scm.scm_cstmr_suplr c where c.cust_sup_name ilike '" . loc_db_escape_string($searchWord) .
-                "') or a.comments_desc ilike '" . loc_db_escape_string($searchWord) .
-                "' or a.purchase_doc_num ilike '" . loc_db_escape_string($searchWord) .
-                "')";
+            . "or a.created_by IN (select c.user_id from sec.sec_users c where c.user_name ilike '" . loc_db_escape_string($searchWord) .
+            "') or a.approval_status ilike '" . loc_db_escape_string($searchWord) .
+            "' or a.requisition_id IN (select c.prchs_doc_hdr_id from scm.scm_prchs_docs_hdr c where c.purchase_doc_num ilike '" . loc_db_escape_string($searchWord) .
+            "') or a.supplier_id IN (select c.cust_sup_id from scm.scm_cstmr_suplr c where c.cust_sup_name ilike '" . loc_db_escape_string($searchWord) .
+            "') or a.comments_desc ilike '" . loc_db_escape_string($searchWord) .
+            "' or a.purchase_doc_num ilike '" . loc_db_escape_string($searchWord) .
+            "')";
     }
 
     $strSql = "SELECT a.prchs_doc_hdr_id, a.purchase_doc_num, a.purchase_doc_type, 
         comments_desc,gst.get_pssbl_val(a.prntd_doc_curr_id), round(scm.getprchsdocgrndamnt(a.prchs_doc_hdr_id),2), 
         a.approval_status, scm.get_cstmr_splr_name(a.supplier_id), a.branch_id, org.get_site_code_desc(a.branch_id) " .
-            "FROM scm.scm_prchs_docs_hdr a " .
-            "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
-            ")" . $crtdByClause . ") ORDER BY a.prchs_doc_hdr_id DESC LIMIT " . $limit_size .
-            " OFFSET " . (abs($offset * $limit_size));
+        "FROM scm.scm_prchs_docs_hdr a " .
+        "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
+        ")" . $crtdByClause . ") ORDER BY a.prchs_doc_hdr_id DESC LIMIT " . $limit_size .
+        " OFFSET " . (abs($offset * $limit_size));
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_Total_PrchsDoc($searchWord, $searchIn, $orgID, $shwUnpstdOnly, $shwUnpaidOnly) {
+function get_Total_PrchsDoc($searchWord, $searchIn, $orgID, $shwUnpstdOnly, $shwUnpaidOnly)
+{
     global $vwOnlySelf;
     global $usrID;
     $strSql = "";
@@ -4222,39 +4907,39 @@ function get_Total_PrchsDoc($searchWord, $searchIn, $orgID, $shwUnpstdOnly, $shw
     }
     if ($searchIn == "Document Number") {
         $whereClause = "(a.purchase_doc_num ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Document Description") {
         $whereClause = "(a.comments_desc ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Supplier Name") {
         $whereClause = "(a.supplier_id IN (select c.cust_sup_id from scm.scm_cstmr_suplr c where c.cust_sup_name ilike '" . loc_db_escape_string($searchWord) .
-                "')) AND ";
+            "')) AND ";
     } else if ($searchIn == "Requisition Number") {
         $whereClause = "(a.requisition_id IN (select c.prchs_doc_hdr_id from scm.scm_prchs_docs_hdr c where c.purchase_doc_num ilike '" . loc_db_escape_string($searchWord) .
-                "')) AND ";
+            "')) AND ";
     } else if ($searchIn == "Approval Status") {
         $whereClause = "(a.approval_status ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Created By") {
         $whereClause = "(a.created_by IN (select c.user_id from sec.sec_users c where c.user_name ilike '" . loc_db_escape_string($searchWord) .
-                "')) AND ";
+            "')) AND ";
     } else if ($searchIn == "Branch") {
         $whereClause = " and (org.get_site_code_desc(a.branch_id) ilike '" . loc_db_escape_string($searchWord) . "')";
     } else {
         $whereClause = " and (org.get_site_code_desc(a.branch_id) ilike '" . loc_db_escape_string($searchWord) . "' "
-                . "or a.created_by IN (select c.user_id from sec.sec_users c where c.user_name ilike '" . loc_db_escape_string($searchWord) .
-                "') or a.approval_status ilike '" . loc_db_escape_string($searchWord) .
-                "' or a.requisition_id IN (select c.prchs_doc_hdr_id from scm.scm_prchs_docs_hdr c where c.purchase_doc_num ilike '" . loc_db_escape_string($searchWord) .
-                "') or a.supplier_id IN (select c.cust_sup_id from scm.scm_cstmr_suplr c where c.cust_sup_name ilike '" . loc_db_escape_string($searchWord) .
-                "') or a.comments_desc ilike '" . loc_db_escape_string($searchWord) .
-                "' or a.purchase_doc_num ilike '" . loc_db_escape_string($searchWord) .
-                "')";
+            . "or a.created_by IN (select c.user_id from sec.sec_users c where c.user_name ilike '" . loc_db_escape_string($searchWord) .
+            "') or a.approval_status ilike '" . loc_db_escape_string($searchWord) .
+            "' or a.requisition_id IN (select c.prchs_doc_hdr_id from scm.scm_prchs_docs_hdr c where c.purchase_doc_num ilike '" . loc_db_escape_string($searchWord) .
+            "') or a.supplier_id IN (select c.cust_sup_id from scm.scm_cstmr_suplr c where c.cust_sup_name ilike '" . loc_db_escape_string($searchWord) .
+            "') or a.comments_desc ilike '" . loc_db_escape_string($searchWord) .
+            "' or a.purchase_doc_num ilike '" . loc_db_escape_string($searchWord) .
+            "')";
     }
 
     $strSql = "SELECT count(1) " .
-            "FROM scm.scm_prchs_docs_hdr a " .
-            "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
-            ")" . $crtdByClause . ")";
+        "FROM scm.scm_prchs_docs_hdr a " .
+        "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
+        ")" . $crtdByClause . ")";
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -4262,7 +4947,8 @@ function get_Total_PrchsDoc($searchWord, $searchIn, $orgID, $shwUnpstdOnly, $shw
     return 0;
 }
 
-function get_One_PrchsDocDocHdr($hdrID) {
+function get_One_PrchsDocDocHdr($hdrID)
+{
     $strSql = "SELECT a.prchs_doc_hdr_id,
        to_char(to_timestamp(a.prchs_doc_date, 'YYYY-MM-DD'), 'DD-Mon-YYYY'),
        created_by,
@@ -4296,12 +4982,13 @@ function get_One_PrchsDocDocHdr($hdrID) {
       a.branch_id, org.get_site_code_desc(a.branch_id)
   FROM scm.scm_prchs_docs_hdr a 
   WHERE ((a.prchs_doc_hdr_id = " . $hdrID . "))";
-//echo $strSql;
+    //echo $strSql;
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_PrchsDocDocDet($hdrID) {
+function get_PrchsDocDocDet($hdrID)
+{
     $strSql = "SELECT a.prchs_doc_line_id,
                     a.itm_id,
                     a.quantity,
@@ -4322,13 +5009,28 @@ function get_PrchsDocDocDet($hdrID) {
                     a.qty_rcvd,
                     a.rqstd_qty_ordrd
              FROM scm.scm_prchs_docs_det a, inv.inv_itm_list b " .
-            "WHERE (a.itm_id=b.item_id and a.prchs_doc_hdr_id = " . $hdrID . ") ORDER BY a.prchs_doc_line_id";
+        "WHERE (a.itm_id=b.item_id and a.prchs_doc_hdr_id = " . $hdrID . ") ORDER BY a.prchs_doc_line_id";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function createPrchsDocHdr($orgid, $docNum, $desc, $docTyp, $docdte, $pymntTrms, $spplrID, $siteID, $apprvlSts, $nxtApprvl, $srcDocID,
-        $invcCurrID, $exchRate, $needByDte, $brnchID = -1) {
+function createPrchsDocHdr(
+    $orgid,
+    $docNum,
+    $desc,
+    $docTyp,
+    $docdte,
+    $pymntTrms,
+    $spplrID,
+    $siteID,
+    $apprvlSts,
+    $nxtApprvl,
+    $srcDocID,
+    $invcCurrID,
+    $exchRate,
+    $needByDte,
+    $brnchID = -1
+) {
     global $usrID;
     global $brnchLocID;
     if ($brnchID <= 0) {
@@ -4345,16 +5047,16 @@ function createPrchsDocHdr($orgid, $docNum, $desc, $docTyp, $docdte, $pymntTrms,
                                    next_aproval_action,
                                    purchase_doc_num, purchase_doc_type, requisition_id, org_id,
                                    po_rec_status, prntd_doc_curr_id, exchng_rate, payment_terms, payables_accnt_id, branch_id) " .
-            "VALUES ('" . loc_db_escape_string($docdte) .
-            "', '" . loc_db_escape_string($needByDte) .
-            "', " . $spplrID . ", " . $siteID . ", '" . loc_db_escape_string($desc) .
-            "', '" . loc_db_escape_string($apprvlSts) . "', " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), '" . loc_db_escape_string($nxtApprvl) .
-            "', '" . loc_db_escape_string($docNum) . "', '"
-            . loc_db_escape_string($docTyp) . "', " . $srcDocID . ", " .
-            $orgid . ",'', " . $invcCurrID . ", " . $exchRate . ", '" . loc_db_escape_string($pymntTrms) .
-            "',-1," . $brnchID . ")";
+        "VALUES ('" . loc_db_escape_string($docdte) .
+        "', '" . loc_db_escape_string($needByDte) .
+        "', " . $spplrID . ", " . $siteID . ", '" . loc_db_escape_string($desc) .
+        "', '" . loc_db_escape_string($apprvlSts) . "', " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), '" . loc_db_escape_string($nxtApprvl) .
+        "', '" . loc_db_escape_string($docNum) . "', '"
+        . loc_db_escape_string($docTyp) . "', " . $srcDocID . ", " .
+        $orgid . ",'', " . $invcCurrID . ", " . $exchRate . ", '" . loc_db_escape_string($pymntTrms) .
+        "',-1," . $brnchID . ")";
     execUpdtInsSQL($insSQL);
     $sbmtdScmPrchsDocID = getGnrlRecID("scm.scm_prchs_docs_hdr", "purchase_doc_num", "prchs_doc_hdr_id", $docNum, $orgid);
     if ($srcDocID > 0 && $sbmtdScmPrchsDocID > 0) {
@@ -4363,15 +5065,30 @@ function createPrchsDocHdr($orgid, $docNum, $desc, $docTyp, $docdte, $pymntTrms,
                                    rqstd_qty_ordrd, src_line_id, dsply_doc_line_in_rcpt, alternate_item_name,
                                    tax_code_id, dscnt_code_id, extr_chrg_id, unit_price_ls_tx) 
                  select " . $sbmtdScmPrchsDocID . ", c.itm_id, (c.quantity-coalesce(c.rqstd_qty_ordrd,0)),c.unit_price, " . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
-                ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), c.store_id ,c.crncy_id,0, 0, c.prchs_doc_line_id, '1',c.alternate_item_name,c.tax_code_id,c.dscnt_code_id,c.extr_chrg_id,c.unit_price_ls_tx
+            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), c.store_id ,c.crncy_id,0, 0, c.prchs_doc_line_id, '1',c.alternate_item_name,c.tax_code_id,c.dscnt_code_id,c.extr_chrg_id,c.unit_price_ls_tx
                 from scm.scm_prchs_docs_det c where (c.prchs_doc_hdr_id = " . $srcDocID . " and (c.quantity-coalesce(c.rqstd_qty_ordrd,0))>0) ORDER BY c.prchs_doc_line_id";
         execUpdtInsSQL($insSQL);
     }
     return $sbmtdScmPrchsDocID;
 }
 
-function updtPrchsDocHdr($docid, $docNum, $desc, $docTyp, $docdte, $pymntTrms, $spplrID, $siteID, $apprvlSts, $nxtApprvl, $srcDocID,
-        $invcCurrID, $exchRate, $needByDte, $brnchID = -1) {
+function updtPrchsDocHdr(
+    $docid,
+    $docNum,
+    $desc,
+    $docTyp,
+    $docdte,
+    $pymntTrms,
+    $spplrID,
+    $siteID,
+    $apprvlSts,
+    $nxtApprvl,
+    $srcDocID,
+    $invcCurrID,
+    $exchRate,
+    $needByDte,
+    $brnchID = -1
+) {
     global $usrID;
     global $brnchLocID;
     if ($brnchID <= 0) {
@@ -4404,25 +5121,48 @@ function updtPrchsDocHdr($docid, $docNum, $desc, $docTyp, $docdte, $pymntTrms, $
     return execUpdtInsSQL($updtSQL);
 }
 
-function createPrchsDocLn($docID, $itmID, $qty, $untPrice, $storeID, $crncyID, $srclnID, $altrntNm, $tax_code_id, $dscnt_code_id,
-        $extr_chrg_id) {
+function createPrchsDocLn(
+    $docID,
+    $itmID,
+    $qty,
+    $untPrice,
+    $storeID,
+    $crncyID,
+    $srclnID,
+    $altrntNm,
+    $tax_code_id,
+    $dscnt_code_id,
+    $extr_chrg_id
+) {
     global $usrID;
     $insSQL = "INSERT INTO scm.scm_prchs_docs_det(prchs_doc_hdr_id, itm_id, quantity, unit_price, created_by,
                                    creation_date, last_update_by, last_update_date, store_id, crncy_id, qty_rcvd,
                                    rqstd_qty_ordrd, src_line_id, dsply_doc_line_in_rcpt, alternate_item_name, 
                                    tax_code_id, dscnt_code_id, extr_chrg_id, unit_price_ls_tx) " .
-            "VALUES (" . $docID .
-            ", " . $itmID .
-            ", " . $qty . ", " . $untPrice . ", " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $storeID .
-            ", " . $crncyID . ",0,0, " . $srclnID . ", '1','" . loc_db_escape_string($altrntNm) .
-            "', " . $tax_code_id . ", " . $dscnt_code_id . ", " . $extr_chrg_id . ", scm.get_sllng_price_lesstax(" . $tax_code_id . ", " . $untPrice . "))";
+        "VALUES (" . $docID .
+        ", " . $itmID .
+        ", " . $qty . ", " . $untPrice . ", " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $storeID .
+        ", " . $crncyID . ",0,0, " . $srclnID . ", '1','" . loc_db_escape_string($altrntNm) .
+        "', " . $tax_code_id . ", " . $dscnt_code_id . ", " . $extr_chrg_id . ", scm.get_sllng_price_lesstax(" . $tax_code_id . ", " . $untPrice . "))";
     return execUpdtInsSQL($insSQL);
 }
 
-function updatePrchsDocLn($lnID, $docID, $itmID, $qty, $untPrice, $storeID, $crncyID, $srclnID, $altrntNm, $tax_code_id, $dscnt_code_id,
-        $extr_chrg_id) {
+function updatePrchsDocLn(
+    $lnID,
+    $docID,
+    $itmID,
+    $qty,
+    $untPrice,
+    $storeID,
+    $crncyID,
+    $srclnID,
+    $altrntNm,
+    $tax_code_id,
+    $dscnt_code_id,
+    $extr_chrg_id
+) {
     global $usrID;
     $updtSQL = "UPDATE scm.scm_prchs_docs_det
                     SET prchs_doc_hdr_id=" . $docID . ",
@@ -4442,11 +5182,14 @@ function updatePrchsDocLn($lnID, $docID, $itmID, $qty, $untPrice, $storeID, $crn
     return execUpdtInsSQL($updtSQL);
 }
 
-function deletePrchsDocHdrNDet($valLnid, $docNum) {
+function deletePrchsDocHdrNDet($valLnid, $docNum)
+{
     $trnsCnt1 = 0;
     $docStatus = getGnrlRecNm("scm.scm_prchs_docs_hdr", "prchs_doc_hdr_id", "approval_status", $valLnid);
-    if ($docStatus == "Approved" || $docStatus == "Initiated" || $docStatus == "Validated" || $docStatus == "Cancelled" || strpos($docStatus,
-                    "Reviewed") !== FALSE) {
+    if ($docStatus == "Approved" || $docStatus == "Initiated" || $docStatus == "Validated" || $docStatus == "Cancelled" || strpos(
+        $docStatus,
+        "Reviewed"
+    ) !== FALSE) {
         $trnsCnt1 = 1;
     }
     if ($trnsCnt1 > 0) {
@@ -4471,12 +5214,15 @@ function deletePrchsDocHdrNDet($valLnid, $docNum) {
     }
 }
 
-function deletePrchsDocLine($valLnid, $docNum) {
+function deletePrchsDocLine($valLnid, $docNum)
+{
     $trnsCnt1 = 0;
     $docHdrID = (float) getGnrlRecNm("scm.scm_prchs_docs_det", "prchs_doc_line_id", "prchs_doc_hdr_id", $valLnid);
     $docStatus = getGnrlRecNm("scm.scm_prchs_docs_hdr", "prchs_doc_hdr_id", "approval_status", $docHdrID);
-    if ($docStatus == "Approved" || $docStatus == "Initiated" || $docStatus == "Validated" || $docStatus == "Cancelled" || strpos($docStatus,
-                    "Reviewed") !== FALSE) {
+    if ($docStatus == "Approved" || $docStatus == "Initiated" || $docStatus == "Validated" || $docStatus == "Cancelled" || strpos(
+        $docStatus,
+        "Reviewed"
+    ) !== FALSE) {
         $trnsCnt1 = 1;
     }
     if ($trnsCnt1 > 0) {
@@ -4496,7 +5242,8 @@ function deletePrchsDocLine($valLnid, $docNum) {
     }
 }
 
-function get_Basic_CnsgnRcpt($searchWord, $searchIn, $offset, $limit_size, $orgID, $shwUnpstdOnly, $shwUnpaidOnly) {
+function get_Basic_CnsgnRcpt($searchWord, $searchIn, $offset, $limit_size, $orgID, $shwUnpstdOnly, $shwUnpaidOnly)
+{
     execUpdtInsSQL("UPDATE inv.inv_consgmt_rcpt_hdr SET doc_curr_id=org.get_orgfunc_crncy_id(" . $orgID . ") WHERE doc_curr_id<=0");
     global $vwOnlySelf;
     global $usrID;
@@ -4509,34 +5256,35 @@ function get_Basic_CnsgnRcpt($searchWord, $searchIn, $offset, $limit_size, $orgI
     }
     if ($searchIn == "Document Number") {
         $whereClause = "(((CASE WHEN char_length(coalesce(a.rcpt_number,''))<=0 THEN ''||a.rcpt_id ELSE coalesce(a.rcpt_number,'') END)||' ['||scm.get_src_doc_num(coalesce(a.po_id,-1),'Purchase')||']') ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Document Description") {
         $whereClause = "(a.description ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Supplier Name") {
         $whereClause = "(a.supplier_id IN (select c.cust_sup_id from scm.scm_cstmr_suplr c where c.cust_sup_name ilike '" . loc_db_escape_string($searchWord) .
-                "')) AND ";
+            "')) AND ";
     } else if ($searchIn == "Approval Status") {
         $whereClause = "(a.approval_status ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Created By") {
         $whereClause = "(a.created_by IN (select c.user_id from sec.sec_users c where c.user_name ilike '" . loc_db_escape_string($searchWord) .
-                "')) AND ";
+            "')) AND ";
     }
     $strSql = "SELECT a.rcpt_id, (CASE WHEN char_length(coalesce(a.rcpt_number,''))<=0 THEN ''||a.rcpt_id ELSE coalesce(a.rcpt_number,'') END) ||' ['||scm.get_src_doc_num(coalesce(a.po_id,-1),'Purchase')||']', 
         to_char(to_timestamp(a.date_received,'YYYY-MM-DD'),'DD-Mon-YYYY'),
         description,gst.get_pssbl_val(a.doc_curr_id), round(scm.getcnsgnrcptgrndamnt(a.rcpt_id),2), 
         a.approval_status, scm.get_cstmr_splr_name(a.supplier_id), a.received_by, coalesce(a.po_id,-1) " .
-            "FROM inv.inv_consgmt_rcpt_hdr a " .
-            "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
-            ")" . $crtdByClause . ") ORDER BY a.rcpt_id DESC LIMIT " . $limit_size .
-            " OFFSET " . (abs($offset * $limit_size));
-//echo $strSql;a.doc_curr_id invc_curr_id, gst.get_pssbl_val(a.doc_curr_id)
+        "FROM inv.inv_consgmt_rcpt_hdr a " .
+        "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
+        ")" . $crtdByClause . ") ORDER BY a.rcpt_id DESC LIMIT " . $limit_size .
+        " OFFSET " . (abs($offset * $limit_size));
+    //echo $strSql;a.doc_curr_id invc_curr_id, gst.get_pssbl_val(a.doc_curr_id)
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_Total_CnsgnRcpt($searchWord, $searchIn, $orgID, $shwUnpstdOnly, $shwUnpaidOnly) {
+function get_Total_CnsgnRcpt($searchWord, $searchIn, $orgID, $shwUnpstdOnly, $shwUnpaidOnly)
+{
     global $vwOnlySelf;
     global $usrID;
     $strSql = "";
@@ -4547,25 +5295,25 @@ function get_Total_CnsgnRcpt($searchWord, $searchIn, $orgID, $shwUnpstdOnly, $sh
     }
     if ($searchIn == "Document Number") {
         $whereClause = "(((CASE WHEN char_length(coalesce(a.rcpt_number,''))<=0 THEN ''||a.rcpt_id ELSE coalesce(a.rcpt_number,'') END)||' ['||scm.get_src_doc_num(coalesce(a.po_id,-1),'Purchase')||']') ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Document Description") {
         $whereClause = "(a.description ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Supplier Name") {
         $whereClause = "(a.supplier_id IN (select c.cust_sup_id from scm.scm_cstmr_suplr c where c.cust_sup_name ilike '" . loc_db_escape_string($searchWord) .
-                "')) AND ";
+            "')) AND ";
     } else if ($searchIn == "Approval Status") {
         $whereClause = "(a.approval_status ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Created By") {
         $whereClause = "(a.created_by IN (select c.user_id from sec.sec_users c where c.user_name ilike '" . loc_db_escape_string($searchWord) .
-                "')) AND ";
+            "')) AND ";
     }
     $strSql = "SELECT count(1) " .
-            "FROM inv.inv_consgmt_rcpt_hdr a " .
-            "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
-            ")" . $crtdByClause . ")";
-//echo $strSql;
+        "FROM inv.inv_consgmt_rcpt_hdr a " .
+        "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
+        ")" . $crtdByClause . ")";
+    //echo $strSql;
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -4573,7 +5321,8 @@ function get_Total_CnsgnRcpt($searchWord, $searchIn, $orgID, $shwUnpstdOnly, $sh
     return 0;
 }
 
-function get_One_CnsgnRcptDocHdr($hdrID) {
+function get_One_CnsgnRcptDocHdr($hdrID)
+{
     $strSql = "SELECT a.rcpt_id, to_char(to_timestamp(a.date_received, 'YYYY-MM-DD'), 'DD-Mon-YYYY'), 
        created_by, sec.get_usr_name(a.created_by), coalesce(a.rcpt_number,''||a.rcpt_id), 
        (CASE WHEN coalesce(a.po_id,-1)>0 THEN 'Purchase Order Receipt' ELSE 'Miscellaneous Receipt' END) rcpt_type, 
@@ -4597,7 +5346,8 @@ function get_One_CnsgnRcptDocHdr($hdrID) {
     return $result;
 }
 
-function get_CnsgnRcptDocDet($hdrID, $lmtSze = 50) {
+function get_CnsgnRcptDocDet($hdrID, $lmtSze = 50)
+{
     $docStatus = getGnrlRecNm("inv.inv_consgmt_rcpt_hdr", "rcpt_id", "approval_status", $hdrID);
     $docExchRate = (float) getGnrlRecNm("inv.inv_consgmt_rcpt_hdr", "rcpt_id", "exchng_rate", $hdrID);
     $strSql = "";
@@ -4609,7 +5359,7 @@ function get_CnsgnRcptDocDet($hdrID, $lmtSze = 50) {
                 c.lifespan, c.tag_number, c.serial_number, c.consignmt_condition, 
                 c.remarks, c.consgmt_id, d.base_uom_id, inv.get_uom_name(d.base_uom_id)
                 from inv.inv_consgmt_rcpt_det c, inv.inv_itm_list d where (c.itm_id=d.item_id and c.rcpt_id = " . $hdrID .
-                ") ORDER BY c.line_id LIMIT " . $lmtSze . " OFFSET 0";
+            ") ORDER BY c.line_id LIMIT " . $lmtSze . " OFFSET 0";
     } else {
         $strSql = "select c.s_line_id , c.s_itm_id, inv.get_invitm_name(c.s_itm_id::INTEGER), c.s_quantity_rcvd, c.s_cost_price, 
                 c.s_po_line_id, c.s_subinv_id, inv.get_store_name(c.s_subinv_id), c.s_stock_id, 
@@ -4618,14 +5368,15 @@ function get_CnsgnRcptDocDet($hdrID, $lmtSze = 50) {
                 c.s_lifespan, c.s_tag_number, c.s_serial_number, c.s_consignmt_condition, 
                 c.s_remarks, c.s_consgmt_id, d.base_uom_id, inv.get_uom_name(d.base_uom_id)
                 from inv.inv_svd_consgmt_rcpt_det c, inv.inv_itm_list d where (c.s_itm_id=d.item_id and c.s_rcpt_id = " . $hdrID .
-                ") ORDER BY c.s_line_id LIMIT " . $lmtSze . " OFFSET 0";
+            ") ORDER BY c.s_line_id LIMIT " . $lmtSze . " OFFSET 0";
     }
     //echo $strSql;
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_Basic_CnsgnRtrn($searchWord, $searchIn, $offset, $limit_size, $orgID, $shwUnpstdOnly, $shwUnpaidOnly) {
+function get_Basic_CnsgnRtrn($searchWord, $searchIn, $offset, $limit_size, $orgID, $shwUnpstdOnly, $shwUnpaidOnly)
+{
     execUpdtInsSQL("UPDATE inv.inv_consgmt_rcpt_rtns_hdr SET doc_curr_id=org.get_orgfunc_crncy_id(" . $orgID . ") WHERE doc_curr_id<=0");
     global $vwOnlySelf;
     global $usrID;
@@ -4638,35 +5389,36 @@ function get_Basic_CnsgnRtrn($searchWord, $searchIn, $offset, $limit_size, $orgI
     }
     if ($searchIn == "Document Number") {
         $whereClause = "((a.rcpt_rtns_id||' ['||scm.get_src_doc_num(coalesce(a.rcpt_id,-1),'Receipt')||']') ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Document Description") {
         $whereClause = "(a.description ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Supplier Name") {
         $whereClause = "(a.supplier_id IN (select c.cust_sup_id from scm.scm_cstmr_suplr c where c.cust_sup_name ilike '" . loc_db_escape_string($searchWord) .
-                "')) AND ";
+            "')) AND ";
     } else if ($searchIn == "Approval Status") {
         $whereClause = "(a.approval_status ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Created By") {
         $whereClause = "(a.created_by IN (select c.user_id from sec.sec_users c where c.user_name ilike '" . loc_db_escape_string($searchWord) .
-                "')) AND ";
+            "')) AND ";
     }
 
     $strSql = "SELECT a.rcpt_rtns_id, a.rcpt_rtns_id||' [RCPT NO.:'||scm.get_src_doc_num(coalesce(a.rcpt_id,-1),'Receipt')||']', 
         to_char(to_timestamp(a.date_returned,'YYYY-MM-DD'),'DD-Mon-YYYY'),
         description,gst.get_pssbl_val(a.doc_curr_id), round(scm.getcnsgnrtrngrndamnt(a.rcpt_rtns_id),2), 
         a.approval_status, scm.get_cstmr_splr_name(a.supplier_id), a.returned_by, coalesce(a.rcpt_id,-1) " .
-            "FROM inv.inv_consgmt_rcpt_rtns_hdr a " .
-            "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
-            ")" . $crtdByClause . ") ORDER BY a.rcpt_rtns_id DESC LIMIT " . $limit_size .
-            " OFFSET " . (abs($offset * $limit_size));
-//echo $strSql;
+        "FROM inv.inv_consgmt_rcpt_rtns_hdr a " .
+        "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
+        ")" . $crtdByClause . ") ORDER BY a.rcpt_rtns_id DESC LIMIT " . $limit_size .
+        " OFFSET " . (abs($offset * $limit_size));
+    //echo $strSql;
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_Total_CnsgnRtrn($searchWord, $searchIn, $orgID, $shwUnpstdOnly, $shwUnpaidOnly) {
+function get_Total_CnsgnRtrn($searchWord, $searchIn, $orgID, $shwUnpstdOnly, $shwUnpaidOnly)
+{
     global $vwOnlySelf;
     global $usrID;
     $strSql = "";
@@ -4677,26 +5429,26 @@ function get_Total_CnsgnRtrn($searchWord, $searchIn, $orgID, $shwUnpstdOnly, $sh
     }
     if ($searchIn == "Document Number") {
         $whereClause = "((a.rcpt_rtns_id||' ['||scm.get_src_doc_num(coalesce(a.rcpt_id,-1),'Receipt')||']') ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Document Description") {
         $whereClause = "(a.description ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Supplier Name") {
         $whereClause = "(a.supplier_id IN (select c.cust_sup_id from scm.scm_cstmr_suplr c where c.cust_sup_name ilike '" . loc_db_escape_string($searchWord) .
-                "')) AND ";
+            "')) AND ";
     } else if ($searchIn == "Approval Status") {
         $whereClause = "(a.approval_status ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Created By") {
         $whereClause = "(a.created_by IN (select c.user_id from sec.sec_users c where c.user_name ilike '" . loc_db_escape_string($searchWord) .
-                "')) AND ";
+            "')) AND ";
     }
 
     $strSql = "SELECT count(1) " .
-            "FROM inv.inv_consgmt_rcpt_rtns_hdr a " .
-            "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
-            ")" . $crtdByClause . ")";
-//echo $strSql;
+        "FROM inv.inv_consgmt_rcpt_rtns_hdr a " .
+        "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
+        ")" . $crtdByClause . ")";
+    //echo $strSql;
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -4704,7 +5456,8 @@ function get_Total_CnsgnRtrn($searchWord, $searchIn, $orgID, $shwUnpstdOnly, $sh
     return 0;
 }
 
-function get_One_CnsgnRtrnDocHdr($hdrID) {
+function get_One_CnsgnRtrnDocHdr($hdrID)
+{
     $strSql = "SELECT a.rcpt_rtns_id, to_char(to_timestamp(a.date_returned,'YYYY-MM-DD'),'DD-Mon-YYYY'), 
        created_by, sec.get_usr_name(a.created_by), coalesce(a.rcpt_number,''||a.rcpt_rtns_id), 
        'Receipt Returns' rcpt_type, a.description, a.rcpt_id, a.supplier_id, scm.get_cstmr_splr_name(a.supplier_id),
@@ -4725,7 +5478,8 @@ function get_One_CnsgnRtrnDocHdr($hdrID) {
     return $result;
 }
 
-function get_CnsgnRtrnDocDet($hdrID) {
+function get_CnsgnRtrnDocDet($hdrID)
+{
     $docStatus = getGnrlRecNm("inv.inv_consgmt_rcpt_rtns_hdr", "rcpt_rtns_id", "approval_status", $hdrID);
     $docExchRate = (float) getGnrlRecNm("inv.inv_consgmt_rcpt_rtns_hdr", "rcpt_rtns_id", "exchng_rate", $hdrID);
     $strSql = "";
@@ -4746,7 +5500,8 @@ function get_CnsgnRtrnDocDet($hdrID) {
     return $result;
 }
 
-function createCnsgnRtrnHdr($orgid, $docNum, $desc, $docdte, $spplrID, $spplrSiteID, $apprvlSts, $nxtApprvl, $rcptDocID, $pyblAccntID, $docCurID, $docExchRate) {
+function createCnsgnRtrnHdr($orgid, $docNum, $desc, $docdte, $spplrID, $spplrSiteID, $apprvlSts, $nxtApprvl, $rcptDocID, $pyblAccntID, $docCurID, $docExchRate)
+{
     global $usrID;
     if ($docdte != "") {
         $docdte = cnvrtDMYToYMD($docdte);
@@ -4754,35 +5509,36 @@ function createCnsgnRtrnHdr($orgid, $docNum, $desc, $docdte, $spplrID, $spplrSit
     $insSQL = "INSERT INTO inv.inv_consgmt_rcpt_rtns_hdr(rcpt_id, date_returned, returned_by, supplier_id, created_by, creation_date, last_update_by, last_update_date, 
                                      approval_status, next_approval_status, description, org_id,
                                      site_id, rcpt_number, payables_accnt_id, doc_curr_id, exchng_rate) " .
-            "VALUES (" . $rcptDocID . ", '" . loc_db_escape_string($docdte) .
-            "', " . $usrID .
-            ", " . $spplrID . ", " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), '" . loc_db_escape_string($apprvlSts) . "', '" . loc_db_escape_string($nxtApprvl) .
-            "', '" . loc_db_escape_string($desc) .
-            "', " . $orgid . ", " . $spplrSiteID . ", '" . loc_db_escape_string($docNum) . "', " . $pyblAccntID .
-            ", " . $docCurID .
-            ", " . $docExchRate .
-            ")";
+        "VALUES (" . $rcptDocID . ", '" . loc_db_escape_string($docdte) .
+        "', " . $usrID .
+        ", " . $spplrID . ", " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), '" . loc_db_escape_string($apprvlSts) . "', '" . loc_db_escape_string($nxtApprvl) .
+        "', '" . loc_db_escape_string($desc) .
+        "', " . $orgid . ", " . $spplrSiteID . ", '" . loc_db_escape_string($docNum) . "', " . $pyblAccntID .
+        ", " . $docCurID .
+        ", " . $docExchRate .
+        ")";
     execUpdtInsSQL($insSQL);
     $sbmtdScmCnsgnRtrnID = (float) getGnrlRecID("inv.inv_consgmt_rcpt_rtns_hdr", "rcpt_number", "rcpt_rtns_id", $docNum, $orgid);
     if ($rcptDocID > 0 && $sbmtdScmCnsgnRtrnID > 0) {
         $insSQL = "INSERT INTO inv.inv_svd_consgmt_rcpt_rtns_det(s_consgmt_id, s_stock_id, s_qty_rtnd, s_created_by, s_creation_date, s_last_update_by, s_last_update_date,
                                          s_rcpt_line_id, s_rtnd_reason, s_remarks, s_itm_id, s_subinv_id, s_rtns_hdr_id) 
                  select c.consgmt_id, c.stock_id, (c.quantity_rcvd-coalesce(c.qty_rtrnd,0)), " . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
-                ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), c.line_id ,'Wrong Receipt','', c.itm_id, c.subinv_id, " . $sbmtdScmCnsgnRtrnID . " 
+            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), c.line_id ,'Wrong Receipt','', c.itm_id, c.subinv_id, " . $sbmtdScmCnsgnRtrnID . " 
                 from inv.inv_consgmt_rcpt_det c where (c.rcpt_id = " . $rcptDocID . " and (c.quantity_rcvd-coalesce(c.qty_rtrnd,0))>0) ORDER BY c.line_id";
         execUpdtInsSQL($insSQL);
     }
     return $sbmtdScmCnsgnRtrnID;
 }
 
-function updtCnsgnRtrnHdr($docid, $docNum, $desc, $docdte, $spplrID, $spplrSiteID, $apprvlSts, $nxtApprvl, $rcptDocID, $pyblAccntID, $docCurID, $docExchRate) {
+function updtCnsgnRtrnHdr($docid, $docNum, $desc, $docdte, $spplrID, $spplrSiteID, $apprvlSts, $nxtApprvl, $rcptDocID, $pyblAccntID, $docCurID, $docExchRate)
+{
     global $usrID;
     if ($docdte != "") {
         $docdte = cnvrtDMYToYMD($docdte);
     }
-//rcpt_id=" . $rcptDocID . ",
+    //rcpt_id=" . $rcptDocID . ",
 
     $updtSQL = "UPDATE inv.inv_consgmt_rcpt_rtns_hdr
                     SET date_returned='" . loc_db_escape_string($docdte) . "',
@@ -4802,18 +5558,20 @@ function updtCnsgnRtrnHdr($docid, $docNum, $desc, $docdte, $spplrID, $spplrSiteI
     return execUpdtInsSQL($updtSQL);
 }
 
-function createCnsgnRtrnLine($qtyRtrd, $cnsgnID, $rcptDocLnID, $cnsgnCndtn, $rmrks, $itmID, $storeID, $rcptRtrnsHdrID) {
+function createCnsgnRtrnLine($qtyRtrd, $cnsgnID, $rcptDocLnID, $cnsgnCndtn, $rmrks, $itmID, $storeID, $rcptRtrnsHdrID)
+{
     global $usrID;
     $insSQL = "INSERT INTO inv.inv_svd_consgmt_rcpt_rtns_det(s_consgmt_id, s_stock_id, s_qty_rtnd, s_created_by, s_creation_date, s_last_update_by, s_last_update_date,
                                          s_rcpt_line_id, s_rtnd_reason, s_remarks, s_itm_id, s_subinv_id, s_rtns_hdr_id) " .
-            "VALUES (" . $cnsgnID . ", " .
-            "inv.getItemStockID(" . $itmID . "," . $storeID . "), " . $qtyRtrd . ", " . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $rcptDocLnID .
-            ", '" . loc_db_escape_string($cnsgnCndtn) . "', '" . loc_db_escape_string($rmrks) . "', " . $itmID . ", " . $storeID . ", " . $rcptRtrnsHdrID . ")";
+        "VALUES (" . $cnsgnID . ", " .
+        "inv.getItemStockID(" . $itmID . "," . $storeID . "), " . $qtyRtrd . ", " . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $rcptDocLnID .
+        ", '" . loc_db_escape_string($cnsgnCndtn) . "', '" . loc_db_escape_string($rmrks) . "', " . $itmID . ", " . $storeID . ", " . $rcptRtrnsHdrID . ")";
     return execUpdtInsSQL($insSQL);
 }
 
-function updtCnsgnRtrnLine($lineID, $qtyRtrd, $cnsgnID, $rcptDocLnID, $cnsgnCndtn, $rmrks, $itmID, $storeID, $rcptRtrnsHdrID) {
+function updtCnsgnRtrnLine($lineID, $qtyRtrd, $cnsgnID, $rcptDocLnID, $cnsgnCndtn, $rmrks, $itmID, $storeID, $rcptRtrnsHdrID)
+{
 
     global $usrID;
     $updtSQL = "UPDATE inv.inv_svd_consgmt_rcpt_rtns_det
@@ -4832,7 +5590,8 @@ function updtCnsgnRtrnLine($lineID, $qtyRtrd, $cnsgnID, $rcptDocLnID, $cnsgnCndt
     return execUpdtInsSQL($updtSQL);
 }
 
-function deleteCnsgnRtrnHdrNDet($valLnid, $docNum) {
+function deleteCnsgnRtrnHdrNDet($valLnid, $docNum)
+{
     $trnsCnt1 = 0;
     $docStatus = getGnrlRecNm("inv.inv_consgmt_rcpt_rtns_hdr", "rcpt_rtns_id", "approval_status", $valLnid);
     $docType = "Receipt Returns";
@@ -4864,7 +5623,8 @@ function deleteCnsgnRtrnHdrNDet($valLnid, $docNum) {
     }
 }
 
-function deleteCnsgnRtrnLine($valLnid, $docNum) {
+function deleteCnsgnRtrnLine($valLnid, $docNum)
+{
     $trnsCnt1 = 0;
     $docHdrID = (float) getGnrlRecNm("inv.inv_svd_consgmt_rcpt_rtns_det", "s_line_id", "s_rtns_hdr_id", $valLnid);
     if ($docHdrID <= 0) {
@@ -4893,7 +5653,8 @@ function deleteCnsgnRtrnLine($valLnid, $docNum) {
     }
 }
 
-function get_Basic_StockTrnsfr($searchWord, $searchIn, $offset, $limit_size, $orgID, $shwUnpstdOnly, $shwUnpaidOnly) {
+function get_Basic_StockTrnsfr($searchWord, $searchIn, $offset, $limit_size, $orgID, $shwUnpstdOnly, $shwUnpaidOnly)
+{
     global $vwOnlySelf;
     global $usrID;
     global $fnccurnm;
@@ -4905,32 +5666,33 @@ function get_Basic_StockTrnsfr($searchWord, $searchIn, $offset, $limit_size, $or
     }
     if ($searchIn == "Document Number") {
         $whereClause = "((a.transfer_hdr_id||'') ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Document Description") {
         $whereClause = "(a.description ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Status") {
         $whereClause = "(a.status ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Created By") {
         $whereClause = "(a.created_by IN (select c.user_id from sec.sec_users c where c.user_name ilike '" . loc_db_escape_string($searchWord) .
-                "')) AND ";
+            "')) AND ";
     }
 
     $strSql = "SELECT a.transfer_hdr_id, (CASE WHEN char_length(coalesce(a.rcpt_number,''))>0 THEN coalesce(a.rcpt_number,'') ELSE ''||a.transfer_hdr_id END), 
         to_char(to_timestamp(a.transfer_date,'YYYY-MM-DD'),'DD-Mon-YYYY'),
         description,'" . loc_db_escape_string($fnccurnm) . "', round(total_amount::NUMERIC,2), 
         a.status, inv.get_store_name(a.source_subinv_id), inv.get_store_name(a.dest_subinv_id) " .
-            "FROM inv.inv_stock_transfer_hdr a " .
-            "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
-            ")" . $crtdByClause . ") ORDER BY a.transfer_hdr_id DESC LIMIT " . $limit_size .
-            " OFFSET " . (abs($offset * $limit_size));
-//echo $strSql;
+        "FROM inv.inv_stock_transfer_hdr a " .
+        "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
+        ")" . $crtdByClause . ") ORDER BY a.transfer_hdr_id DESC LIMIT " . $limit_size .
+        " OFFSET " . (abs($offset * $limit_size));
+    //echo $strSql;
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_Total_StockTrnsfr($searchWord, $searchIn, $orgID, $shwUnpstdOnly, $shwUnpaidOnly) {
+function get_Total_StockTrnsfr($searchWord, $searchIn, $orgID, $shwUnpstdOnly, $shwUnpaidOnly)
+{
     global $vwOnlySelf;
     global $usrID;
     $strSql = "";
@@ -4941,23 +5703,23 @@ function get_Total_StockTrnsfr($searchWord, $searchIn, $orgID, $shwUnpstdOnly, $
     }
     if ($searchIn == "Document Number") {
         $whereClause = "((a.transfer_hdr_id||'') ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Document Description") {
         $whereClause = "(a.description ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Status") {
         $whereClause = "(a.status ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Created By") {
         $whereClause = "(a.created_by IN (select c.user_id from sec.sec_users c where c.user_name ilike '" . loc_db_escape_string($searchWord) .
-                "')) AND ";
+            "')) AND ";
     }
 
     $strSql = "SELECT count(1) " .
-            "FROM inv.inv_stock_transfer_hdr a " .
-            "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
-            ")" . $crtdByClause . ")";
-//echo $strSql;
+        "FROM inv.inv_stock_transfer_hdr a " .
+        "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
+        ")" . $crtdByClause . ")";
+    //echo $strSql;
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -4965,7 +5727,8 @@ function get_Total_StockTrnsfr($searchWord, $searchIn, $orgID, $shwUnpstdOnly, $
     return 0;
 }
 
-function get_One_StockTrnsfrDocHdr($hdrID) {
+function get_One_StockTrnsfrDocHdr($hdrID)
+{
     $strSql = "SELECT a.transfer_hdr_id, 
         to_char(to_timestamp(a.transfer_date,'YYYY-MM-DD'),'DD-Mon-YYYY'), 
        created_by, sec.get_usr_name(a.created_by), 
@@ -4974,12 +5737,13 @@ function get_One_StockTrnsfrDocHdr($hdrID) {
        a.source_subinv_id, inv.get_store_name(a.source_subinv_id), a.dest_subinv_id, inv.get_store_name(a.dest_subinv_id)       
   FROM inv.inv_stock_transfer_hdr a
   WHERE ((a.transfer_hdr_id = " . $hdrID . "))";
-//echo $strSql;
+    //echo $strSql;
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_StockTrnsfrDocDet($hdrID) {
+function get_StockTrnsfrDocDet($hdrID)
+{
     $strSql = "SELECT line_id,
                     itm_id, inv.get_invitm_name(itm_id),
                     transfer_qty,
@@ -4994,12 +5758,13 @@ function get_StockTrnsfrDocDet($hdrID) {
                   CASE WHEN scm.get_ltst_stock_avlbl_bals(src_stock_id,to_char(now(),'YYYY-MM-DD'))<=inv.get_invitm_stckttl(a.itm_id, a.src_store_id) THEN scm.get_ltst_stock_avlbl_bals(src_stock_id,to_char(now(),'YYYY-MM-DD')) ELSE inv.get_invitm_stckttl(a.itm_id, a.src_store_id) END,
                    cost_price
              FROM inv.inv_stock_transfer_det a, inv.inv_itm_list b " .
-            "WHERE (a.itm_id=b.item_id and a.transfer_hdr_id=" . $hdrID . ") ORDER BY a.line_id";
+        "WHERE (a.itm_id=b.item_id and a.transfer_hdr_id=" . $hdrID . ") ORDER BY a.line_id";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_Basic_PrdctCrtn($searchWord, $searchIn, $offset, $limit_size, $orgID, $isDeftn) {
+function get_Basic_PrdctCrtn($searchWord, $searchIn, $offset, $limit_size, $orgID, $isDeftn)
+{
     /* Run Status-R
       Batch Number-R
       Classification-D/R
@@ -5013,100 +5778,101 @@ function get_Basic_PrdctCrtn($searchWord, $searchIn, $offset, $limit_size, $orgI
     if ($isDeftn == false) {
         if ($searchIn == "Batch Number") {
             $whereClause = "(a.batch_code_num ilike '" . loc_db_escape_string($searchWord) .
-                    "') AND ";
+                "') AND ";
         } else if ($searchIn == "Run Status") {
             $whereClause = "(a.process_status ilike '" . loc_db_escape_string($searchWord) .
-                    "') AND ";
+                "') AND ";
         } else if ($searchIn == "Start Date") {
             $whereClause = "(to_char(to_timestamp(a.start_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') ilike '" . loc_db_escape_string($searchWord) .
-                    "') AND ";
+                "') AND ";
         }
     }
 
     if ($searchIn == "Description") {
         if ($isDeftn) {
             $whereClause = "(a.process_def_description ilike '" . loc_db_escape_string($searchWord) .
-                    "') AND ";
+                "') AND ";
         } else {
             $whereClause = "(a.remarks_desc ilike '" . loc_db_escape_string($searchWord) .
-                    "') AND ";
+                "') AND ";
         }
     } else if ($searchIn == "Classification") {
         $whereClause = "((Select b.process_def_clsfctn from scm.scm_process_definition b where b.process_def_id = a.process_def_id) ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Process Code/Name") {
         $whereClause = "((Select b.process_def_name from scm.scm_process_definition b where b.process_def_id = a.process_def_id) ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Created By") {
         $whereClause = "(a.created_by IN (select c.user_id from sec.sec_users c where c.user_name ilike '" . loc_db_escape_string($searchWord) .
-                "')) AND ";
+            "')) AND ";
     }
 
     if ($isDeftn) {
         $strSql = "SELECT a.process_def_id, a.process_def_name, a.process_def_clsfctn, a.process_def_description, a.is_enabled " .
-                "FROM scm.scm_process_definition a " .
-                "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
-                ")" . $crtdByClause . ") ORDER BY a.process_def_id DESC LIMIT " . $limit_size .
-                " OFFSET " . (abs($offset * $limit_size));
+            "FROM scm.scm_process_definition a " .
+            "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
+            ")" . $crtdByClause . ") ORDER BY a.process_def_id DESC LIMIT " . $limit_size .
+            " OFFSET " . (abs($offset * $limit_size));
     } else {
         $strSql = "SELECT a.process_run_id, a.batch_code_num, z.process_def_clsfctn clsftn, a.remarks_desc, a.process_status " .
-                "FROM scm.scm_process_run a, scm.scm_process_definition z " .
-                "WHERE (" . $whereClause . "(z.org_id = " . $orgID .
-                " and z.process_def_id = a.process_def_id)" . $crtdByClause . ") ORDER BY a.process_run_id DESC LIMIT " . $limit_size .
-                " OFFSET " . (abs($offset * $limit_size));
+            "FROM scm.scm_process_run a, scm.scm_process_definition z " .
+            "WHERE (" . $whereClause . "(z.org_id = " . $orgID .
+            " and z.process_def_id = a.process_def_id)" . $crtdByClause . ") ORDER BY a.process_run_id DESC LIMIT " . $limit_size .
+            " OFFSET " . (abs($offset * $limit_size));
     }
-//echo $strSql;
+    //echo $strSql;
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_Total_PrdctCrtn($searchWord, $searchIn, $orgID, $isDeftn) {
+function get_Total_PrdctCrtn($searchWord, $searchIn, $orgID, $isDeftn)
+{
     $strSql = "";
     $whereClause = "";
     $crtdByClause = "";
     if ($isDeftn == false) {
         if ($searchIn == "Batch Number") {
             $whereClause = "(a.batch_code_num ilike '" . loc_db_escape_string($searchWord) .
-                    "') AND ";
+                "') AND ";
         } else if ($searchIn == "Run Status") {
             $whereClause = "(a.process_status ilike '" . loc_db_escape_string($searchWord) .
-                    "') AND ";
+                "') AND ";
         } else if ($searchIn == "Start Date") {
             $whereClause = "(to_char(to_timestamp(a.start_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') ilike '" . loc_db_escape_string($searchWord) .
-                    "') AND ";
+                "') AND ";
         }
     }
 
     if ($searchIn == "Description") {
         if ($isDeftn) {
             $whereClause = "(a.process_def_description ilike '" . loc_db_escape_string($searchWord) .
-                    "') AND ";
+                "') AND ";
         } else {
             $whereClause = "(a.remarks_desc ilike '" . loc_db_escape_string($searchWord) .
-                    "') AND ";
+                "') AND ";
         }
     } else if ($searchIn == "Classification") {
         $whereClause = "((Select b.process_def_clsfctn from scm.scm_process_definition b where b.process_def_id = a.process_def_id) ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Process Code/Name") {
         $whereClause = "((Select b.process_def_name from scm.scm_process_definition b where b.process_def_id = a.process_def_id) ilike '" . loc_db_escape_string($searchWord) .
-                "') AND ";
+            "') AND ";
     } else if ($searchIn == "Created By") {
         $whereClause = "(a.created_by IN (select c.user_id from sec.sec_users c where c.user_name ilike '" . loc_db_escape_string($searchWord) .
-                "')) AND ";
+            "')) AND ";
     }
 
     if ($isDeftn) {
         $strSql = "SELECT count(1) " .
-                "FROM scm.scm_process_definition a " .
-                "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
-                ")" . $crtdByClause . ")";
+            "FROM scm.scm_process_definition a " .
+            "WHERE (" . $whereClause . "(a.org_id = " . $orgID .
+            ")" . $crtdByClause . ")";
     } else {
         $strSql = "SELECT count(1) FROM scm.scm_process_run a, scm.scm_process_definition z " .
-                "WHERE (" . $whereClause . "(z.org_id = " . $orgID .
-                " and z.process_def_id = a.process_def_id)" . $crtdByClause . ")";
+            "WHERE (" . $whereClause . "(z.org_id = " . $orgID .
+            " and z.process_def_id = a.process_def_id)" . $crtdByClause . ")";
     }
-//echo $strSql;
+    //echo $strSql;
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -5114,23 +5880,25 @@ function get_Total_PrdctCrtn($searchWord, $searchIn, $orgID, $isDeftn) {
     return 0;
 }
 
-function get_One_PrdctCrtnDt($hdrID) {
+function get_One_PrdctCrtnDt($hdrID)
+{
     $strSql = "SELECT a.prchs_doc_hdr_id, a.purchase_doc_num, 
         a.purchase_doc_type, a.requisition_id, 
       to_char(to_timestamp(a.prchs_doc_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY'), 
       to_char(to_timestamp(a.need_by_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY'), " .
-            "a.supplier_id, a.supplier_site_id, a.comments_desc, " .
-            "a.approval_status, a.next_aproval_action, " .
-            "a.created_by, a.prntd_doc_curr_id, a.exchng_rate, a.payment_terms, "
-            . "a.branch_id, org.get_site_code_desc(a.branch_id)  " .
-            "FROM scm.scm_prchs_docs_hdr a " .
-            "WHERE(a.prchs_doc_hdr_id = " . $hdrID .
-            ") ORDER BY a.purchase_doc_type, a.purchase_doc_num";
+        "a.supplier_id, a.supplier_site_id, a.comments_desc, " .
+        "a.approval_status, a.next_aproval_action, " .
+        "a.created_by, a.prntd_doc_curr_id, a.exchng_rate, a.payment_terms, "
+        . "a.branch_id, org.get_site_code_desc(a.branch_id)  " .
+        "FROM scm.scm_prchs_docs_hdr a " .
+        "WHERE(a.prchs_doc_hdr_id = " . $hdrID .
+        ") ORDER BY a.purchase_doc_type, a.purchase_doc_num";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function createCnsgnRcpHdr($orgid, $docNum, $desc, $docdte, $spplrID, $spplrSiteID, $apprvlSts, $nxtApprvl, $poDocID, $pyblAccntID, $docCurID, $docExchRate) {
+function createCnsgnRcpHdr($orgid, $docNum, $desc, $docdte, $spplrID, $spplrSiteID, $apprvlSts, $nxtApprvl, $poDocID, $pyblAccntID, $docCurID, $docExchRate)
+{
     global $usrID;
     if ($docdte != "") {
         $docdte = cnvrtDMYToYMD($docdte);
@@ -5138,16 +5906,16 @@ function createCnsgnRcpHdr($orgid, $docNum, $desc, $docdte, $spplrID, $spplrSite
     $insSQL = "INSERT INTO inv.inv_consgmt_rcpt_hdr(po_id, date_received, received_by, supplier_id, created_by, creation_date, last_update_by, last_update_date, 
                                      approval_status, next_approval_status, description, org_id,
                                      site_id, return_status, rcpt_number, payables_accnt_id, doc_curr_id, exchng_rate) " .
-            "VALUES (" . $poDocID . ", '" . loc_db_escape_string($docdte) .
-            "', " . $usrID .
-            ", " . $spplrID . ", " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), '" . loc_db_escape_string($apprvlSts) . "', '" . loc_db_escape_string($nxtApprvl) .
-            "', '" . loc_db_escape_string($desc) .
-            "', " . $orgid . ", " . $spplrSiteID . ",'', '" . loc_db_escape_string($docNum) . "', " . $pyblAccntID .
-            ", " . $docCurID .
-            ", " . $docExchRate .
-            ")";
+        "VALUES (" . $poDocID . ", '" . loc_db_escape_string($docdte) .
+        "', " . $usrID .
+        ", " . $spplrID . ", " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), '" . loc_db_escape_string($apprvlSts) . "', '" . loc_db_escape_string($nxtApprvl) .
+        "', '" . loc_db_escape_string($desc) .
+        "', " . $orgid . ", " . $spplrSiteID . ",'', '" . loc_db_escape_string($docNum) . "', " . $pyblAccntID .
+        ", " . $docCurID .
+        ", " . $docExchRate .
+        ")";
     execUpdtInsSQL($insSQL);
     $sbmtdScmCnsgnRcptID = getGnrlRecID("inv.inv_consgmt_rcpt_hdr", "rcpt_number", "rcpt_id", $docNum, $orgid);
     if ($poDocID > 0 && $sbmtdScmCnsgnRcptID > 0) {
@@ -5156,15 +5924,16 @@ function createCnsgnRcpHdr($orgid, $docNum, $desc, $docdte, $spplrID, $spplrSite
                                          s_manfct_date, s_lifespan, s_tag_number, s_serial_number, s_po_line_id,
                                          s_consignmt_condition, s_remarks, s_itm_id, s_subinv_id, s_rcpt_id) 
                  select -1, inv.getItemStockID(c.itm_id,c.store_id), (c.quantity-coalesce(c.qty_rcvd,0)),c.unit_price, " . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
-                ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'),'','','','','',c.prchs_doc_line_id, 'Good','',c.itm_id,c.store_id," . $sbmtdScmCnsgnRcptID . "
+            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'),'','','','','',c.prchs_doc_line_id, 'Good','',c.itm_id,c.store_id," . $sbmtdScmCnsgnRcptID . "
                 from scm.scm_prchs_docs_det c where (c.prchs_doc_hdr_id = " . $poDocID . " and (c.quantity-coalesce(c.qty_rcvd,0))>0) ORDER BY c.prchs_doc_line_id";
-//echo $insSQL;
+        //echo $insSQL;
         execUpdtInsSQL($insSQL);
     }
     return $sbmtdScmCnsgnRcptID;
 }
 
-function updtCnsgnRcpHdr($docid, $docNum, $desc, $docdte, $spplrID, $spplrSiteID, $apprvlSts, $nxtApprvl, $poDocID, $pyblAccntID, $docCurID, $docExchRate) {
+function updtCnsgnRcpHdr($docid, $docNum, $desc, $docdte, $spplrID, $spplrSiteID, $apprvlSts, $nxtApprvl, $poDocID, $pyblAccntID, $docCurID, $docExchRate)
+{
     global $usrID;
     if ($docdte != "") {
         $docdte = cnvrtDMYToYMD($docdte);
@@ -5188,8 +5957,20 @@ function updtCnsgnRcpHdr($docid, $docNum, $desc, $docdte, $spplrID, $spplrSiteID
     return execUpdtInsSQL($updtSQL);
 }
 
-function createCnsgnRcptLine($qtyRcvd, $costPrce, $expdte, $manDte, $tagNum, $serialNum, $poDocLnID, $cnsgnCndtn, $rmrks, $itmID, $storeID,
-        $rcptHdrID) {
+function createCnsgnRcptLine(
+    $qtyRcvd,
+    $costPrce,
+    $expdte,
+    $manDte,
+    $tagNum,
+    $serialNum,
+    $poDocLnID,
+    $cnsgnCndtn,
+    $rmrks,
+    $itmID,
+    $storeID,
+    $rcptHdrID
+) {
     global $usrID;
     if (trim($expdte) === "") {
         $expdte = "31-Dec-4000";
@@ -5204,17 +5985,30 @@ function createCnsgnRcptLine($qtyRcvd, $costPrce, $expdte, $manDte, $tagNum, $se
     $insSQL = "INSERT INTO inv.inv_svd_consgmt_rcpt_det(s_consgmt_id, s_stock_id, s_quantity_rcvd, s_cost_price, s_created_by, s_creation_date, s_last_update_by, s_last_update_date,
                                          s_expiry_date, s_manfct_date, s_lifespan, s_tag_number, s_serial_number, s_po_line_id,
                                          s_consignmt_condition, s_remarks, s_itm_id, s_subinv_id, s_rcpt_id) " .
-            "VALUES (-1, " .
-            "inv.getItemStockID(" . $itmID . "," . $storeID . "), " . $qtyRcvd . ", " . $costPrce . ", " . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), '" . loc_db_escape_string($expdte) . "', '" . loc_db_escape_string($manDte) . "', " .
-            "substr(''||age(to_timestamp('" . loc_db_escape_string($expdte) . "', 'YYYY-MM-DD'),to_timestamp((CASE WHEN char_length('" . loc_db_escape_string($manDte) . "') <=0 THEN to_char(now(),'YYYY-MM-DD') ELSE '" . loc_db_escape_string($expdte) . "' END),'YYYY-MM-DD')),1,21)" .
-            ", '" . loc_db_escape_string($tagNum) . "', '" . loc_db_escape_string($serialNum) . "', " . $poDocLnID .
-            ", '" . loc_db_escape_string($cnsgnCndtn) . "', '" . loc_db_escape_string($rmrks) . "', " . $itmID . ", " . $storeID . ", " . $rcptHdrID . ")";
+        "VALUES (-1, " .
+        "inv.getItemStockID(" . $itmID . "," . $storeID . "), " . $qtyRcvd . ", " . $costPrce . ", " . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), '" . loc_db_escape_string($expdte) . "', '" . loc_db_escape_string($manDte) . "', " .
+        "substr(''||age(to_timestamp('" . loc_db_escape_string($expdte) . "', 'YYYY-MM-DD'),to_timestamp((CASE WHEN char_length('" . loc_db_escape_string($manDte) . "') <=0 THEN to_char(now(),'YYYY-MM-DD') ELSE '" . loc_db_escape_string($expdte) . "' END),'YYYY-MM-DD')),1,21)" .
+        ", '" . loc_db_escape_string($tagNum) . "', '" . loc_db_escape_string($serialNum) . "', " . $poDocLnID .
+        ", '" . loc_db_escape_string($cnsgnCndtn) . "', '" . loc_db_escape_string($rmrks) . "', " . $itmID . ", " . $storeID . ", " . $rcptHdrID . ")";
     return execUpdtInsSQL($insSQL);
 }
 
-function updtCnsgnRcptLine($lineID, $qtyRcvd, $costPrce, $expdte, $manDte, $tagNum, $serialNum, $poDocLnID, $cnsgnCndtn, $rmrks, $itmID,
-        $storeID, $rcptHdrID) {
+function updtCnsgnRcptLine(
+    $lineID,
+    $qtyRcvd,
+    $costPrce,
+    $expdte,
+    $manDte,
+    $tagNum,
+    $serialNum,
+    $poDocLnID,
+    $cnsgnCndtn,
+    $rmrks,
+    $itmID,
+    $storeID,
+    $rcptHdrID
+) {
 
     global $usrID;
     if (trim($expdte) === "") {
@@ -5249,11 +6043,16 @@ function updtCnsgnRcptLine($lineID, $qtyRcvd, $costPrce, $expdte, $manDte, $tagN
     return execUpdtInsSQL($updtSQL);
 }
 
-function deleteCnsgnRcptHdrNDet($valLnid, $docNum) {
+function deleteCnsgnRcptHdrNDet($valLnid, $docNum)
+{
     $trnsCnt1 = 0;
     $docStatus = getGnrlRecNm("inv.inv_consgmt_rcpt_hdr", "rcpt_id", "approval_status", $valLnid);
-    $docType = getGnrlRecNm("inv.inv_consgmt_rcpt_hdr", "rcpt_id",
-            "(CASE WHEN coalesce(po_id,-1)>0 THEN 'Purchase Order Receipt' ELSE 'Miscellaneous Receipt' END)", $valLnid);
+    $docType = getGnrlRecNm(
+        "inv.inv_consgmt_rcpt_hdr",
+        "rcpt_id",
+        "(CASE WHEN coalesce(po_id,-1)>0 THEN 'Purchase Order Receipt' ELSE 'Miscellaneous Receipt' END)",
+        $valLnid
+    );
     $docTypeLnsDlvrd = (int) getGnrlRecNm("inv.inv_consgmt_rcpt_det", "rcpt_id", "count(line_id)", $valLnid);
     if ($docTypeLnsDlvrd > 0 || $docStatus == "Received" || $docStatus == "Initiated" || $docStatus == "Validated" || $docStatus == "Cancelled" || strpos($docStatus, "Reviewed") !== FALSE) {
         $trnsCnt1 = 1;
@@ -5282,7 +6081,8 @@ function deleteCnsgnRcptHdrNDet($valLnid, $docNum) {
     }
 }
 
-function deleteCnsgnRcptLine($valLnid, $docNum) {
+function deleteCnsgnRcptLine($valLnid, $docNum)
+{
     $trnsCnt1 = 0;
     $docHdrID = (float) getGnrlRecNm("inv.inv_svd_consgmt_rcpt_det", "s_line_id", "s_rcpt_id", $valLnid);
     if ($docHdrID <= 0) {
@@ -5311,7 +6111,8 @@ function deleteCnsgnRcptLine($valLnid, $docNum) {
     }
 }
 
-function createStockTrnsfrHdr($orgid, $docNum, $desc, $docdte, $srcStoreID, $destStoreID, $apprvlSts, $ttlAmnt) {
+function createStockTrnsfrHdr($orgid, $docNum, $desc, $docdte, $srcStoreID, $destStoreID, $apprvlSts, $ttlAmnt)
+{
     global $usrID;
     if ($docdte != "") {
         $docdte = cnvrtDMYToYMD($docdte);
@@ -5319,15 +6120,16 @@ function createStockTrnsfrHdr($orgid, $docNum, $desc, $docdte, $srcStoreID, $des
     $insSQL = "INSERT INTO inv.inv_stock_transfer_hdr(description, created_by, creation_date, last_update_by, last_update_date, 
                                        transfer_date, source_subinv_id, dest_subinv_id, org_id, 
                                        total_amount, status, rcpt_number) " .
-            "VALUES ('" . loc_db_escape_string($desc) . "', " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), '" . loc_db_escape_string($docdte) .
-            "', " . $srcStoreID . ", " . $destStoreID . ", " . $orgid . ", " . $ttlAmnt .
-            ", '" . loc_db_escape_string($apprvlSts) . "', '" . loc_db_escape_string($docNum) . "')";
+        "VALUES ('" . loc_db_escape_string($desc) . "', " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), '" . loc_db_escape_string($docdte) .
+        "', " . $srcStoreID . ", " . $destStoreID . ", " . $orgid . ", " . $ttlAmnt .
+        ", '" . loc_db_escape_string($apprvlSts) . "', '" . loc_db_escape_string($docNum) . "')";
     return execUpdtInsSQL($insSQL);
 }
 
-function updtStockTrnsfrHdr($docid, $docNum, $desc, $docdte, $srcStoreID, $destStoreID, $apprvlSts, $ttlAmnt) {
+function updtStockTrnsfrHdr($docid, $docNum, $desc, $docdte, $srcStoreID, $destStoreID, $apprvlSts, $ttlAmnt)
+{
     global $usrID;
     if ($docdte != "") {
         $docdte = cnvrtDMYToYMD($docdte);
@@ -5346,22 +6148,43 @@ function updtStockTrnsfrHdr($docid, $docNum, $desc, $docdte, $srcStoreID, $destS
     return execUpdtInsSQL($updtSQL);
 }
 
-function createStockTrnsfrLine($qtyTrnsfr, $costPrce, $cnsgnCndtn, $trnsfrHdrID, $rmrks, $itmID, $deststoreID, $cnsgnNos, $ttlAmnt,
-        $srcStoreID) {
+function createStockTrnsfrLine(
+    $qtyTrnsfr,
+    $costPrce,
+    $cnsgnCndtn,
+    $trnsfrHdrID,
+    $rmrks,
+    $itmID,
+    $deststoreID,
+    $cnsgnNos,
+    $ttlAmnt,
+    $srcStoreID
+) {
     global $usrID;
     $insSQL = "INSERT INTO inv.inv_stock_transfer_det(transfer_qty, src_stock_id, reason, created_by, creation_date, last_update_by, last_update_date, 
                                        transfer_hdr_id, remarks, itm_id, dest_subinv_id, cnsgmnt_nos, ttl_amount,
                                        src_store_id, dest_stock_id, cost_price) " .
-            "VALUES (" . $qtyTrnsfr . ", inv.getItemStockID(" . $itmID . "," . $srcStoreID . "), '" . loc_db_escape_string($cnsgnCndtn) .
-            "', " . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
-            ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $trnsfrHdrID . ", '" . loc_db_escape_string($rmrks) .
-            "', " . $itmID . ", " . $deststoreID . ", '" . loc_db_escape_string($cnsgnNos) . "', " . $ttlAmnt .
-            "," . $srcStoreID . ", inv.getItemStockID(" . $itmID . "," . $deststoreID . ")," . $costPrce . ")";
+        "VALUES (" . $qtyTrnsfr . ", inv.getItemStockID(" . $itmID . "," . $srcStoreID . "), '" . loc_db_escape_string($cnsgnCndtn) .
+        "', " . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $trnsfrHdrID . ", '" . loc_db_escape_string($rmrks) .
+        "', " . $itmID . ", " . $deststoreID . ", '" . loc_db_escape_string($cnsgnNos) . "', " . $ttlAmnt .
+        "," . $srcStoreID . ", inv.getItemStockID(" . $itmID . "," . $deststoreID . ")," . $costPrce . ")";
     return execUpdtInsSQL($insSQL);
 }
 
-function updtStockTrnsfrLine($lineID, $qtyTrnsfr, $costPrce, $cnsgnCndtn, $trnsfrHdrID, $rmrks, $itmID, $deststoreID, $cnsgnNos, $ttlAmnt,
-        $srcStoreID) {
+function updtStockTrnsfrLine(
+    $lineID,
+    $qtyTrnsfr,
+    $costPrce,
+    $cnsgnCndtn,
+    $trnsfrHdrID,
+    $rmrks,
+    $itmID,
+    $deststoreID,
+    $cnsgnNos,
+    $ttlAmnt,
+    $srcStoreID
+) {
 
     global $usrID;
     $updtSQL = "UPDATE inv.inv_stock_transfer_det
@@ -5383,11 +6206,14 @@ function updtStockTrnsfrLine($lineID, $qtyTrnsfr, $costPrce, $cnsgnCndtn, $trnsf
     return execUpdtInsSQL($updtSQL);
 }
 
-function deleteStockTrnsfrHdrNDet($valLnid, $docNum) {
+function deleteStockTrnsfrHdrNDet($valLnid, $docNum)
+{
     $trnsCnt1 = 0;
     $docStatus = getGnrlRecNm("inv.inv_stock_transfer_hdr", "transfer_hdr_id", "status", $valLnid);
-    if ($docStatus == "Transfer Successful" || $docStatus == "Initiated" || $docStatus == "Validated" || $docStatus == "Cancelled" || strpos($docStatus,
-                    "Reviewed") !== FALSE) {
+    if ($docStatus == "Transfer Successful" || $docStatus == "Initiated" || $docStatus == "Validated" || $docStatus == "Cancelled" || strpos(
+        $docStatus,
+        "Reviewed"
+    ) !== FALSE) {
         $trnsCnt1 = 1;
     }
     if ($trnsCnt1 > 0) {
@@ -5414,7 +6240,8 @@ function deleteStockTrnsfrHdrNDet($valLnid, $docNum) {
     }
 }
 
-function deleteStockTrnsfrLine($valLnid, $docNum) {
+function deleteStockTrnsfrLine($valLnid, $docNum)
+{
     $trnsCnt1 = 0;
     $docHdrID = (float) getGnrlRecNm("inv.inv_stock_transfer_det", "line_id", "transfer_hdr_id", $valLnid);
     if ($docHdrID <= 0) {
@@ -5422,8 +6249,10 @@ function deleteStockTrnsfrLine($valLnid, $docNum) {
         return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
     }
     $docStatus = getGnrlRecNm("inv.inv_stock_transfer_hdr", "transfer_hdr_id", "status", $docHdrID);
-    if ($docStatus == "Transfer Successful" || $docStatus == "Initiated" || $docStatus == "Validated" || $docStatus == "Cancelled" || strpos($docStatus,
-                    "Reviewed") !== FALSE) {
+    if ($docStatus == "Transfer Successful" || $docStatus == "Initiated" || $docStatus == "Validated" || $docStatus == "Cancelled" || strpos(
+        $docStatus,
+        "Reviewed"
+    ) !== FALSE) {
         $trnsCnt1 = 1;
     }
     if ($trnsCnt1 > 0) {
@@ -5443,7 +6272,8 @@ function deleteStockTrnsfrLine($valLnid, $docNum) {
     }
 }
 
-function get_InvWrngBalsRpt($trnsID, $asAtDate) {
+function get_InvWrngBalsRpt($trnsID, $asAtDate)
+{
     $strSql = "SELECT
 tbl1.gnrl_data1::INTEGER rownumbr,
 tbl1.gnrl_data2 item_name,
@@ -5463,7 +6293,8 @@ WHERE tbl1.accb_rpt_runid=" . $trnsID . " ORDER BY tbl1.gnrl_data1::INTEGER";
     return $result;
 }
 
-function get_ItemBalsRpt($trnsID, $asAtDate) {
+function get_ItemBalsRpt($trnsID, $asAtDate)
+{
     $strSql = "SELECT
 tbl1.gnrl_data1::INTEGER rownumbr,
 tbl1.gnrl_data2 item_name,
@@ -5482,7 +6313,8 @@ WHERE tbl1.accb_rpt_runid=" . $trnsID . " ORDER BY tbl1.gnrl_data1::INTEGER";
     return $result;
 }
 
-function get_StockBalsRpt($trnsID, $asAtDate) {
+function get_StockBalsRpt($trnsID, $asAtDate)
+{
     $strSql = "SELECT
 tbl1.gnrl_data1::INTEGER rownumbr,
 tbl1.gnrl_data2 item_name,
@@ -5502,7 +6334,8 @@ WHERE tbl1.accb_rpt_runid=" . $trnsID . " ORDER BY tbl1.gnrl_data1::INTEGER";
     return $result;
 }
 
-function get_CnsgnBalsRpt($trnsID, $asAtDate) {
+function get_CnsgnBalsRpt($trnsID, $asAtDate)
+{
     $strSql = "SELECT
 tbl1.gnrl_data1::INTEGER rownumbr,
 tbl1.gnrl_data2 item_name,
@@ -5523,7 +6356,8 @@ WHERE tbl1.accb_rpt_runid=" . $trnsID . " ORDER BY tbl1.gnrl_data1::INTEGER";
     return $result;
 }
 
-function get_BinCardRpt($trnsID, $accbStrtFSRptDte, $asAtDate) {
+function get_BinCardRpt($trnsID, $accbStrtFSRptDte, $asAtDate)
+{
     $strSql = "SELECT
     tbl1.gnrl_data1::INTEGER rownumbr,
     tbl1.gnrl_data2 item_name,
@@ -5547,7 +6381,8 @@ WHERE tbl1.accb_rpt_runid=" . $trnsID . " ORDER BY tbl1.gnrl_data1::INTEGER";
     return $result;
 }
 
-function get_SalesMoneyRcvd($trnsID, $accbStrtFSRptDte, $asAtDate) {
+function get_SalesMoneyRcvd($trnsID, $accbStrtFSRptDte, $asAtDate)
+{
     $strSql = "SELECT
     tbl1.gnrl_data1::INTEGER rownumbr,
     tbl1.gnrl_data2 doc_number,
@@ -5567,7 +6402,8 @@ WHERE tbl1.accb_rpt_runid=" . $trnsID . " ORDER BY tbl1.gnrl_data1::INTEGER";
     return $result;
 }
 
-function get_PymtsMoneyRcvd($trnsID, $accbStrtFSRptDte, $asAtDate) {
+function get_PymtsMoneyRcvd($trnsID, $accbStrtFSRptDte, $asAtDate)
+{
     $strSql = "SELECT
     tbl1.gnrl_data1::INTEGER rownumbr,
     tbl1.gnrl_data2 doc_number,
@@ -5587,7 +6423,8 @@ WHERE tbl1.accb_rpt_runid=" . $trnsID . " ORDER BY tbl1.gnrl_data1::INTEGER";
     return $result;
 }
 
-function get_ItemsSold($trnsID, $accbStrtFSRptDte, $asAtDate) {
+function get_ItemsSold($trnsID, $accbStrtFSRptDte, $asAtDate)
+{
     $strSql = "SELECT
     tbl1.gnrl_data1::INTEGER rownumbr,
     tbl1.gnrl_data2 item_code_desc,
@@ -5607,20 +6444,22 @@ WHERE tbl1.accb_rpt_runid=" . $trnsID . " ORDER BY tbl1.gnrl_data1::INTEGER";
     return $result;
 }
 
-function get_ItemInf($itmID, $cstmrSiteID) {
+function get_ItemInf($itmID, $cstmrSiteID)
+{
     $strSql = "SELECT a.item_code, a.item_desc, 
 a.selling_price, a.tax_code_id, CASE WHEN scm.get_cstmr_splr_dscntid("
-            . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
-            . $cstmrSiteID . ") ELSE a.dscnt_code_id END, a.extr_chrg_id, 
+        . $cstmrSiteID . ") != -1 THEN scm.get_cstmr_splr_dscntid("
+        . $cstmrSiteID . ") ELSE a.dscnt_code_id END, a.extr_chrg_id, 
                 a.item_type, a.base_uom_id, a.orgnl_selling_price, 
                 (SELECT z.uom_name FROM inv.unit_of_measure z WHERE z.uom_id = a.base_uom_id),
                 inv_asset_acct_id, cogs_acct_id, sales_rev_accnt_id, sales_ret_accnt_id, purch_ret_accnt_id, expense_accnt_id " .
-            "FROM inv.inv_itm_list a WHERE a.item_id = " . $itmID;
+        "FROM inv.inv_itm_list a WHERE a.item_id = " . $itmID;
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function getTrnsDatePrice($hdrid, $trnsDte, $calcMethod) {
+function getTrnsDatePrice($hdrid, $trnsDte, $calcMethod)
+{
     if (strlen($trnsDte) > 20) {
         $trnsDte = substr($trnsDte, 0, 20);
     }
@@ -5633,11 +6472,11 @@ to_timestamp(a.start_date,'YYYY-MM-DD HH24:MI:SS') AND to_timestamp(a.end_date,'
     if ($calcMethod == "2") {
         $whrcls = " and (to_timestamp('" . $trnsDte . "','YYYY-MM-DD HH24:MI:SS') between 
 to_timestamp('" . $trnsDte1 . "' ||substring(a.start_date,11),'YYYY-MM-DD HH24:MI:SS') "
-                . "AND to_timestamp('" . $trnsDte1 . "' ||substring(a.end_date,11),'YYYY-MM-DD HH24:MI:SS'))";
+            . "AND to_timestamp('" . $trnsDte1 . "' ||substring(a.end_date,11),'YYYY-MM-DD HH24:MI:SS'))";
     }
     $strSql = "SELECT a.selling_price " .
-            "FROM hotl.service_type_prices a " .
-            "WHERE(a.service_type_id = " . $hdrid . $whrcls . ")";
+        "FROM hotl.service_type_prices a " .
+        "WHERE(a.service_type_id = " . $hdrid . $whrcls . ")";
     //echo $strSql;
     $result = executeSQLNoParams($strSql);
     if (loc_db_num_rows($result) > 0) {
@@ -5647,12 +6486,13 @@ to_timestamp('" . $trnsDte1 . "' ||substring(a.start_date,11),'YYYY-MM-DD HH24:M
     return -1;
 }
 
-function get_SalesDocLnID($itemID, $unitPrice, $docHdrID) {
+function get_SalesDocLnID($itemID, $unitPrice, $docHdrID)
+{
     $strSql = "SELECT a.invc_det_ln_id FROM scm.scm_sales_invc_det a " .
-            " WHERE a.itm_id=" . $itemID .
-            " and a.unit_selling_price=" . $unitPrice .
-            " and a.other_mdls_doc_id=" . $docHdrID .
-            " ORDER BY a.invc_det_ln_id ASC LIMIT 1 OFFSET 0";
+        " WHERE a.itm_id=" . $itemID .
+        " and a.unit_selling_price=" . $unitPrice .
+        " and a.other_mdls_doc_id=" . $docHdrID .
+        " ORDER BY a.invc_det_ln_id ASC LIMIT 1 OFFSET 0";
     //echo $strSql;
     $result = executeSQLNoParams($strSql);
     //echo loc_db_num_rows($result);
@@ -5662,12 +6502,13 @@ function get_SalesDocLnID($itemID, $unitPrice, $docHdrID) {
     return -1;
 }
 
-function get_One_ChcknSalesID($checkInID) {
+function get_One_ChcknSalesID($checkInID)
+{
     $strSql = "Select COALESCE(y.invc_hdr_id,-1)
        FROM hotl.checkins_hdr a 
         LEFT OUTER JOIN scm.scm_sales_invc_hdr y ON ((a.check_in_id = y.other_mdls_doc_id or (a.prnt_chck_in_id=y.other_mdls_doc_id and y.other_mdls_doc_id>0))
         and (a.doc_type=y.other_mdls_doc_type or (a.prnt_doc_typ=y.other_mdls_doc_type and a.prnt_doc_typ != ''))) " .
-            "WHERE a.check_in_id=" . $checkInID . " ";
+        "WHERE a.check_in_id=" . $checkInID . " ";
     $result = executeSQLNoParams($strSql);
     if (loc_db_num_rows($result) > 0) {
         $row = loc_db_fetch_array($result);
@@ -5676,11 +6517,14 @@ function get_One_ChcknSalesID($checkInID) {
     return -1;
 }
 
-function deleteRcvblsDocHdrNDet($valLnid, $docNum) {
+function deleteRcvblsDocHdrNDet($valLnid, $docNum)
+{
     $trnsCnt1 = 0;
     $docStatus = getGnrlRecNm("accb.accb_rcvbls_invc_hdr", "rcvbls_invc_hdr_id", "approval_status", $valLnid);
-    if ($docStatus == "Approved" || $docStatus == "Initiated" || $docStatus == "Validated" || $docStatus == "Cancelled" || strpos($docStatus,
-                    "Reviewed") !== FALSE) {
+    if ($docStatus == "Approved" || $docStatus == "Initiated" || $docStatus == "Validated" || $docStatus == "Cancelled" || strpos(
+        $docStatus,
+        "Reviewed"
+    ) !== FALSE) {
         $trnsCnt1 = 1;
     }
     if ($trnsCnt1 > 0) {
@@ -5703,7 +6547,8 @@ function deleteRcvblsDocHdrNDet($valLnid, $docNum) {
     }
 }
 
-function getInvoiceReport($P_INVOICE_ID) {
+function getInvoiceReport($P_INVOICE_ID)
+{
     $sqlStr = "SELECT a.invc_hdr_id,
        a.doc_qty,
        a.unit_selling_price,
@@ -5752,7 +6597,8 @@ ORDER BY to_timestamp(tbl1a.pymnt_date, 'YYYY-MM-DD HH24:MI:SS') DESC, tbl1a.pym
     return $result;
 }
 
-function getInvoiceRptDet($P_INVOICE_ID) {
+function getInvoiceRptDet($P_INVOICE_ID)
+{
     $strSQL = "SELECT 
         a.doc_qty, a.unit_selling_price, (a.doc_qty * a.unit_selling_price*a.rented_itm_qty) amnt, 
         b.item_code, b.item_desc, 
@@ -5768,7 +6614,8 @@ function getInvoiceRptDet($P_INVOICE_ID) {
     return $result;
 }
 
-function getInvoiceRptSmmry($P_INVOICE_ID, $P_INVOICE_TYP) {
+function getInvoiceRptSmmry($P_INVOICE_ID, $P_INVOICE_TYP)
+{
     $strSQL = "Select REPLACE(CASE WHEN smmry_type='3Discount' THEN 'Discount' ELSE smmry_name END,'Actual Outstanding Balance','Amount Due') ||':' smmry_name, 
 smmry_amnt, 
 REPLACE(REPLACE(smmry_type,'2Tax','3Tax'),'3Discount','2Discount') smtyp 
@@ -5780,7 +6627,8 @@ and smmry_name !='Total Deposits' order by 3";
     return $result;
 }
 
-function getInvoiceRptAllSmmry($P_INVOICE_ID, $P_INVOICE_TYP) {
+function getInvoiceRptAllSmmry($P_INVOICE_ID, $P_INVOICE_TYP)
+{
     $strSQL = "Select REPLACE(CASE WHEN smmry_type='3Discount' THEN 'Discount' ELSE smmry_name END,'Actual Outstanding Balance','Amount Due') ||':' smmry_name, 
 smmry_amnt, 
 REPLACE(REPLACE(smmry_type,'2Tax','3Tax'),'3Discount','2Discount') smtyp 
@@ -5793,10 +6641,11 @@ WHERE src_doc_hdr_id=" . $P_INVOICE_ID . " and src_doc_type='" . loc_db_escape_s
       and smmry_name !='Total Deposits' */
 }
 
-function getInvTemplateID($templtNm) {
+function getInvTemplateID($templtNm)
+{
     $strSql = "SELECT a.item_type_id " .
-            "FROM inv.inv_itm_type_templates a " .
-            "WHERE (lower(a.item_type_name) = lower('" . loc_db_escape_string($templtNm) . "'))";
+        "FROM inv.inv_itm_type_templates a " .
+        "WHERE (lower(a.item_type_name) = lower('" . loc_db_escape_string($templtNm) . "'))";
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return (int) $row[0];
@@ -5804,18 +6653,20 @@ function getInvTemplateID($templtNm) {
     return -1;
 }
 
-function getInvTemplateInf($tmpltID) {
+function getInvTemplateInf($tmpltID)
+{
     $strSql = "SELECT a.inv_asset_acct_id, cogs_acct_id, sales_rev_accnt_id, sales_ret_accnt_id, purch_ret_accnt_id, expense_accnt_id, "
-            . "tax_code_id, dscnt_code_id, extr_chrg_id, item_type, base_uom_id, value_price_crncy_id, auto_dflt_in_vms_trns,"
-            . "planning_enabled,min_level,max_level,category_id " .
-            "FROM inv.inv_itm_type_templates a WHERE a.item_type_id = " . $tmpltID;
+        . "tax_code_id, dscnt_code_id, extr_chrg_id, item_type, base_uom_id, value_price_crncy_id, auto_dflt_in_vms_trns,"
+        . "planning_enabled,min_level,max_level,category_id " .
+        "FROM inv.inv_itm_type_templates a WHERE a.item_type_id = " . $tmpltID;
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function getTaxCodeID($codeNm, $orgID) {
+function getTaxCodeID($codeNm, $orgID)
+{
     $strSql = "SELECT a.code_id FROM scm.scm_tax_codes a " .
-            "WHERE(a.code_name = '" . loc_db_escape_string($codeNm) . "' and a.org_id = " . $orgID . ")";
+        "WHERE(a.code_name = '" . loc_db_escape_string($codeNm) . "' and a.org_id = " . $orgID . ")";
     //logSessionErrs($strSql);
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
@@ -5827,8 +6678,19 @@ function getTaxCodeID($codeNm, $orgID) {
 /* CONSUMER CREDIT ASSESSMENT */
 
 //CREDIT ITEMS
-function insertCreditItems($credit_itm_id, $cnsmr_credit_id, $item_id, $vendor_id, $itm_pymnt_plan_id, $qty, $unit_selling_price,
-        $itm_plan_init_deposit, $usrID, $dateStr, $noOfPymnt) {
+function insertCreditItems(
+    $credit_itm_id,
+    $cnsmr_credit_id,
+    $item_id,
+    $vendor_id,
+    $itm_pymnt_plan_id,
+    $qty,
+    $unit_selling_price,
+    $itm_plan_init_deposit,
+    $usrID,
+    $dateStr,
+    $noOfPymnt
+) {
 
     $insSQL = "INSERT INTO scm.scm_cnsmr_credit_items(
             credit_itm_id, cnsmr_credit_id, item_id, vendor_id, itm_pymnt_plan_id, 
@@ -5854,8 +6716,19 @@ function insertCreditItems($credit_itm_id, $cnsmr_credit_id, $item_id, $vendor_i
     return $cnta;
 }
 
-function updateCreditItems($credit_itm_id, $cnsmr_credit_id, $item_id, $vendor_id, $itm_pymnt_plan_id, $qty, $unit_selling_price,
-        $itm_plan_init_deposit, $usrID, $dateStr, $noOfPymnt) {
+function updateCreditItems(
+    $credit_itm_id,
+    $cnsmr_credit_id,
+    $item_id,
+    $vendor_id,
+    $itm_pymnt_plan_id,
+    $qty,
+    $unit_selling_price,
+    $itm_plan_init_deposit,
+    $usrID,
+    $dateStr,
+    $noOfPymnt
+) {
     $updtSQL = "UPDATE scm.scm_cnsmr_credit_items
    SET item_id=$item_id, vendor_id=$vendor_id, itm_pymnt_plan_id=$itm_pymnt_plan_id, 
        qty=$qty, unit_selling_price=$unit_selling_price, itm_plan_init_deposit = $itm_plan_init_deposit, 
@@ -5880,7 +6753,8 @@ function updateCreditItems($credit_itm_id, $cnsmr_credit_id, $item_id, $vendor_i
     return $cnta;
 }
 
-function deleteCreditItems($credit_itm_id, $cnsmr_credit_id, $noOfPymnt, $usrID, $dateStr) {
+function deleteCreditItems($credit_itm_id, $cnsmr_credit_id, $noOfPymnt, $usrID, $dateStr)
+{
     $delSQL1 = "DELETE FROM scm.scm_cnsmr_credit_items WHERE credit_itm_id = $credit_itm_id";
 
     $cnta = execUpdtInsSQL($delSQL1);
@@ -5902,7 +6776,8 @@ function deleteCreditItems($credit_itm_id, $cnsmr_credit_id, $noOfPymnt, $usrID,
     return $cnta;
 }
 
-function getCreditItemsID() {
+function getCreditItemsID()
+{
     $sqlStr = "SELECT nextval('scm.scm_cnsmr_credit_items_credit_itm_id_seq'::regclass);";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -5911,7 +6786,8 @@ function getCreditItemsID() {
     return -1;
 }
 
-function get_CreditItems($cnsmr_credit_id) {
+function get_CreditItems($cnsmr_credit_id)
+{
     $strSql = "SELECT credit_itm_id, item_id, (select item_code||'.'||item_desc FROM inv.inv_itm_list WHERE item_id = x.item_id) item_desc, 
         vendor_id, (SELECT cust_sup_name FROM scm.scm_cstmr_suplr WHERE cust_sup_id = vendor_id) vendor_name,
         itm_pymnt_plan_id, (SELECT plan_name FROM inv.inv_itm_payment_plans WHERE itm_pymnt_plan_id = x.itm_pymnt_plan_id) plan_name, 
@@ -5923,12 +6799,13 @@ function get_CreditItems($cnsmr_credit_id) {
     return $result;
 }
 
-function get_CreditItemsTtl($searchWord, $searchIn) {
+function get_CreditItemsTtl($searchWord, $searchIn)
+{
     $whrcls = "";
     if ($searchIn == "Item") {
         $whrcls .= " and (b.item_desc ilike '" . loc_db_escape_string($searchWord) .
-                "' OR b.item_code ilike '" . loc_db_escape_string($searchWord) .
-                "') ";
+            "' OR b.item_code ilike '" . loc_db_escape_string($searchWord) .
+            "') ";
     }
 
 
@@ -5943,7 +6820,8 @@ function get_CreditItemsTtl($searchWord, $searchIn) {
     return $cnt;
 }
 
-function getCreditItemsDet($credit_itm_id) {
+function getCreditItemsDet($credit_itm_id)
+{
     $strSql = "SELECT credit_itm_id, item_id, (select item_code||'.'||item_desc FROM inv.inv_itm_list WHERE item_id = x.item_id) item_desc, 
         vendor_id, (SELECT cust_sup_name FROM scm.scm_cstmr_suplr WHERE cust_sup_id = vendor_id) vendor_name,
         itm_pymnt_plan_id, (SELECT plan_name FROM inv.inv_itm_payment_plans WHERE itm_pymnt_plan_id = x.itm_pymnt_plan_id) plan_name, 
@@ -5956,7 +6834,8 @@ function getCreditItemsDet($credit_itm_id) {
 }
 
 //On select of payment plan, get plan price
-function getItmPlanUnitPrice($itm_pymnt_plan_id) {
+function getItmPlanUnitPrice($itm_pymnt_plan_id)
+{
     $sqlStr = "SELECT coalesce(plan_price,0.00) FROM inv.inv_itm_payment_plans WHERE itm_pymnt_plan_id = $itm_pymnt_plan_id";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -5965,7 +6844,8 @@ function getItmPlanUnitPrice($itm_pymnt_plan_id) {
     return 0.00;
 }
 
-function getItmPlanIntlDpst($itm_pymnt_plan_id) {
+function getItmPlanIntlDpst($itm_pymnt_plan_id)
+{
     $sqlStr = "SELECT coalesce(initial_deposit,0.00) FROM inv.inv_itm_payment_plans WHERE itm_pymnt_plan_id = $itm_pymnt_plan_id";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -5975,7 +6855,8 @@ function getItmPlanIntlDpst($itm_pymnt_plan_id) {
 }
 
 //ITEM PAYMENT PLANS
-function insertItemPymntPlans($itm_pymnt_plan_id, $item_id, $plan_name, $no_of_pymnts, $plan_price, $initial_deposit, $is_enabled, $usrID, $dateStr) {
+function insertItemPymntPlans($itm_pymnt_plan_id, $item_id, $plan_name, $no_of_pymnts, $plan_price, $initial_deposit, $is_enabled, $usrID, $dateStr)
+{
     global $orgID;
     $insSQL = "INSERT INTO inv.inv_itm_payment_plans(
             itm_pymnt_plan_id, item_id, plan_name, no_of_pymnts, 
@@ -5987,7 +6868,8 @@ function insertItemPymntPlans($itm_pymnt_plan_id, $item_id, $plan_name, $no_of_p
     return execUpdtInsSQL($insSQL);
 }
 
-function updateItemPymntPlans($itm_pymnt_plan_id, $item_id, $plan_name, $no_of_pymnts, $plan_price, $initial_deposit, $is_enabled, $usrID, $dateStr) {
+function updateItemPymntPlans($itm_pymnt_plan_id, $item_id, $plan_name, $no_of_pymnts, $plan_price, $initial_deposit, $is_enabled, $usrID, $dateStr)
+{
     $updtSQL = "UPDATE inv.inv_itm_payment_plans
    SET item_id=$item_id, plan_name='" . loc_db_escape_string($plan_name) . "', no_of_pymnts=$no_of_pymnts, 
        plan_price=$plan_price, initial_deposit = $initial_deposit, is_enabled = '$is_enabled', last_update_by=$usrID, 
@@ -5997,13 +6879,15 @@ function updateItemPymntPlans($itm_pymnt_plan_id, $item_id, $plan_name, $no_of_p
     return execUpdtInsSQL($updtSQL);
 }
 
-function deleteItemPymntPlans($itm_pymnt_plan_id) {
+function deleteItemPymntPlans($itm_pymnt_plan_id)
+{
     $delSQL1 = "DELETE FROM inv.inv_itm_payment_plans WHERE itm_pymnt_plan_id = $itm_pymnt_plan_id";
 
     return execUpdtInsSQL($delSQL1);
 }
 
-function getItemPymntPlansID() {
+function getItemPymntPlansID()
+{
     $sqlStr = "SELECT nextval('inv.inv_itm_payment_plans_itm_pymnt_plan_id_seq'::regclass);";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -6012,7 +6896,8 @@ function getItemPymntPlansID() {
     return -1;
 }
 
-function getItmPymntPlansDets($itm_pymnt_plan_id) {
+function getItmPymntPlansDets($itm_pymnt_plan_id)
+{
     $strSql = "SELECT itm_pymnt_plan_id, plan_name, no_of_pymnts, plan_price, is_enabled, initial_deposit
   FROM inv.inv_itm_payment_plans x
   WHERE itm_pymnt_plan_id = $itm_pymnt_plan_id";
@@ -6021,7 +6906,8 @@ function getItmPymntPlansDets($itm_pymnt_plan_id) {
     return $result;
 }
 
-function getItmPymntPlansTbl($isEnabled, $searchFor, $searchIn, $offset, $limit_size, $orgID, $searchAll, $sortBy, $itmID) {
+function getItmPymntPlansTbl($isEnabled, $searchFor, $searchIn, $offset, $limit_size, $orgID, $searchAll, $sortBy, $itmID)
+{
     $extra1 = "";
 
     if ($searchAll == true) {
@@ -6032,7 +6918,7 @@ function getItmPymntPlansTbl($isEnabled, $searchFor, $searchIn, $offset, $limit_
     $whrcls = "";
     if ($searchIn == "Plan Name") {
         $whrcls .= " AND (a.plan_name ilike '" . loc_db_escape_string($searchFor) .
-                "') ";
+            "') ";
     }
 
     if ($isEnabled == "true") {
@@ -6043,14 +6929,15 @@ function getItmPymntPlansTbl($isEnabled, $searchFor, $searchIn, $offset, $limit_
 
     $strSql = "SELECT itm_pymnt_plan_id, plan_name, no_of_pymnts, plan_price, is_enabled, initial_deposit
         FROM inv.inv_itm_payment_plans a  WHERE (1 = 1 AND item_id = $itmID AND (a.org_id = " . $orgID . " " . $extra1 . ")" . $whrcls .
-            ") ORDER BY no_of_pymnts ASC LIMIT " . $limit_size .
-            " OFFSET " . abs($offset * $limit_size);
+        ") ORDER BY no_of_pymnts ASC LIMIT " . $limit_size .
+        " OFFSET " . abs($offset * $limit_size);
     $result = executeSQLNoParams($strSql);
     //var_dump($strSql);
     return $result;
 }
 
-function getItmPymntPlansTblTtl($isEnabled, $searchFor, $searchIn, $orgID, $searchAll, $itmID) {
+function getItmPymntPlansTblTtl($isEnabled, $searchFor, $searchIn, $orgID, $searchAll, $itmID)
+{
     $extra1 = "";
     $extra2 = "";
 
@@ -6062,7 +6949,7 @@ function getItmPymntPlansTblTtl($isEnabled, $searchFor, $searchIn, $orgID, $sear
     $whrcls = "";
     if ($searchIn == "Plan Name") {
         $whrcls .= " AND (a.plan_name ilike '" . loc_db_escape_string($searchFor) .
-                "') ";
+            "') ";
     }
 
     if ($isEnabled == "true") {
@@ -6070,8 +6957,8 @@ function getItmPymntPlansTblTtl($isEnabled, $searchFor, $searchIn, $orgID, $sear
     }
 
     $strSql = "SELECT count(1) " .
-            "FROM inv.inv_itm_payment_plans a WHERE (1 = 1 AND item_id = $itmID AND (a.org_id = " . $orgID . " " . $extra1 . ")" . $whrcls . $extra2 .
-            ")";
+        "FROM inv.inv_itm_payment_plans a WHERE (1 = 1 AND item_id = $itmID AND (a.org_id = " . $orgID . " " . $extra1 . ")" . $whrcls . $extra2 .
+        ")";
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -6080,7 +6967,8 @@ function getItmPymntPlansTblTtl($isEnabled, $searchFor, $searchIn, $orgID, $sear
 }
 
 //POST-DATED CHEQUES
-function insertPostDtdChqs($postdated_chq_id, $cnsmr_credit_id, $chq_no, $chq_issuer_name, $chq_bank, $amount, $usrID, $dateStr) {
+function insertPostDtdChqs($postdated_chq_id, $cnsmr_credit_id, $chq_no, $chq_issuer_name, $chq_bank, $amount, $usrID, $dateStr)
+{
 
     $insSQL = "INSERT INTO scm.scm_post_dated_cheques(
             postdated_chq_id, cnsmr_credit_id, chq_no, chq_issuer_name, 
@@ -6088,12 +6976,13 @@ function insertPostDtdChqs($postdated_chq_id, $cnsmr_credit_id, $chq_no, $chq_is
             last_update_date)
             VALUES ($postdated_chq_id, $cnsmr_credit_id, '" . loc_db_escape_string($chq_no) . "', 
 			'" . loc_db_escape_string($chq_issuer_name) . "', '" . loc_db_escape_string($chq_bank) . "', $amount, $usrID,'" . $dateStr .
-            "'," . $usrID . ",'" . $dateStr . "')";
+        "'," . $usrID . ",'" . $dateStr . "')";
 
     return execUpdtInsSQL($insSQL);
 }
 
-function updatePostDtdChqs($postdated_chq_id, $cnsmr_credit_id, $chq_no, $chq_issuer_name, $chq_bank, $amount, $usrID, $dateStr) {
+function updatePostDtdChqs($postdated_chq_id, $cnsmr_credit_id, $chq_no, $chq_issuer_name, $chq_bank, $amount, $usrID, $dateStr)
+{
     $updtSQL = "UPDATE scm.scm_post_dated_cheques
    SET cnsmr_credit_id=$cnsmr_credit_id, chq_no='" . loc_db_escape_string($chq_no) . "', 
    chq_issuer_name='" . loc_db_escape_string($chq_issuer_name) . "', 
@@ -6104,13 +6993,15 @@ function updatePostDtdChqs($postdated_chq_id, $cnsmr_credit_id, $chq_no, $chq_is
     return execUpdtInsSQL($updtSQL);
 }
 
-function deletePostDtdChqs($postdated_chq_id) {
+function deletePostDtdChqs($postdated_chq_id)
+{
     $delSQL1 = "DELETE FROM scm.scm_post_dated_cheques WHERE postdated_chq_id = $postdated_chq_id";
 
     return execUpdtInsSQL($delSQL1);
 }
 
-function getPostDtdChqsID() {
+function getPostDtdChqsID()
+{
     $sqlStr = "SELECT nextval('scm.scm_post_dated_cheques_postdated_chq_id_seq'::regclass);";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -6119,7 +7010,8 @@ function getPostDtdChqsID() {
     return -1;
 }
 
-function get_PostDtdChqs($cnsmr_credit_id) {
+function get_PostDtdChqs($cnsmr_credit_id)
+{
 
     $strSql = "SELECT postdated_chq_id, chq_no, chq_issuer_name,  chq_bank,  amount, cnsmr_credit_id 
   FROM scm.scm_post_dated_cheques a WHERE cnsmr_credit_id = $cnsmr_credit_id";
@@ -6128,16 +7020,17 @@ function get_PostDtdChqs($cnsmr_credit_id) {
     return $result;
 }
 
-function get_PostDtdChqsTtl($searchWord, $searchIn) {
+function get_PostDtdChqsTtl($searchWord, $searchIn)
+{
     $whrcls = "";
     if ($searchIn == "Issuer") {
         $whrcls .= " and (a.chq_issuer_name ilike '" . loc_db_escape_string($searchWord) .
-                "') ";
+            "') ";
     }
 
     if ($searchIn == "Cheque No") {
         $whrcls .= " and (a.chq_no ilike '" . loc_db_escape_string($searchWord) .
-                "') ";
+            "') ";
     }
 
     $strSql = "SELECT count(1)
@@ -6151,7 +7044,8 @@ function get_PostDtdChqsTtl($searchWord, $searchIn) {
     return $cnt;
 }
 
-function get_PostDtdChqsDet($postdated_chq_id) {
+function get_PostDtdChqsDet($postdated_chq_id)
+{
     $strSql = "SELECT postdated_chq_id, chq_no, chq_issuer_name, chq_bank, amount, cnsmr_credit_id
   FROM scm.scm_post_dated_cheques x
   WHERE postdated_chq_id = $postdated_chq_id";
@@ -6161,14 +7055,37 @@ function get_PostDtdChqsDet($postdated_chq_id) {
 }
 
 //CONSUMER CREDIT ANALYSIS
-function insertCnsmrCrdtAnalysis($cnsmr_credit_id, $cust_sup_id, $salary_income, $fuel_allowance,
-        $rent_allowance, $clothing_allowance, $other_allowances, $loan_deductions, $trns_date,
-        $marketer_person_id, $pymnt_option, $guarantor_name, $guarantor_contact_nos,
-        $guarantor_occupation, $guarantor_place_of_work, $period_at_workplace, $period_uom_at_workplace,
-        $guarantor_email, $no_of_pymnts, $init_dpst_type, $ttl_initial_deposit, $usrID, $dateStr, $transactionNo, $orgID, $salesStoreNmID) {
+function insertCnsmrCrdtAnalysis(
+    $cnsmr_credit_id,
+    $cust_sup_id,
+    $salary_income,
+    $fuel_allowance,
+    $rent_allowance,
+    $clothing_allowance,
+    $other_allowances,
+    $loan_deductions,
+    $trns_date,
+    $marketer_person_id,
+    $pymnt_option,
+    $guarantor_name,
+    $guarantor_contact_nos,
+    $guarantor_occupation,
+    $guarantor_place_of_work,
+    $period_at_workplace,
+    $period_uom_at_workplace,
+    $guarantor_email,
+    $no_of_pymnts,
+    $init_dpst_type,
+    $ttl_initial_deposit,
+    $usrID,
+    $dateStr,
+    $transactionNo,
+    $orgID,
+    $salesStoreNmID
+) {
 
     $dbtSvsRtio = round((($salary_income + $fuel_allowance +
-            $rent_allowance + $clothing_allowance + $other_allowances) / 2), 2);
+        $rent_allowance + $clothing_allowance + $other_allowances) / 2), 2);
 
     $affdblty = round(($dbtSvsRtio - $loan_deductions), 2);
 
@@ -6194,24 +7111,45 @@ function insertCnsmrCrdtAnalysis($cnsmr_credit_id, $cust_sup_id, $salary_income,
             VALUES ($cnsmr_credit_id, $cust_sup_id, $salary_income, $fuel_allowance, 
             $rent_allowance, $clothing_allowance, $other_allowances,  $dbtSvsRtio,   
             $loan_deductions,  $affdblty, $usrID,'" . $dateStr .
-            "',$usrID,'" . $dateStr . "', '$trns_date', $marketer_person_id, 
+        "',$usrID,'" . $dateStr . "', '$trns_date', $marketer_person_id, 
             '$pymnt_option','" . loc_db_escape_string($guarantor_name) . "','" . loc_db_escape_string($guarantor_contact_nos) .
-            "','" . loc_db_escape_string($guarantor_occupation) . "','"
-            . loc_db_escape_string($guarantor_place_of_work) . "','" . loc_db_escape_string($period_at_workplace) .
-            "','" . loc_db_escape_string($period_uom_at_workplace) . "','" . loc_db_escape_string($guarantor_email) . "',
+        "','" . loc_db_escape_string($guarantor_occupation) . "','"
+        . loc_db_escape_string($guarantor_place_of_work) . "','" . loc_db_escape_string($period_at_workplace) .
+        "','" . loc_db_escape_string($period_uom_at_workplace) . "','" . loc_db_escape_string($guarantor_email) . "',
 			$ttl_prdt_price, $no_of_pymnts, '$init_dpst_type', $ttl_initial_deposit, $mnthly_rpymnts, '$transactionNo', $orgID, $salesStoreNmID)";
     //var_dump($insSQL);
     return execUpdtInsSQL($insSQL);
 }
 
-function updateCnsmrCrdtAnalysis($cnsmr_credit_id, $cust_sup_id, $salary_income, $fuel_allowance,
-        $rent_allowance, $clothing_allowance, $other_allowances, $loan_deductions, $trns_date,
-        $marketer_person_id, $pymnt_option, $guarantor_name, $guarantor_contact_nos,
-        $guarantor_occupation, $guarantor_place_of_work, $period_at_workplace, $period_uom_at_workplace,
-        $guarantor_email, $no_of_pymnts, $init_dpst_type, $ttl_initial_deposit, $usrID, $dateStr, $salesStoreNmID) {
+function updateCnsmrCrdtAnalysis(
+    $cnsmr_credit_id,
+    $cust_sup_id,
+    $salary_income,
+    $fuel_allowance,
+    $rent_allowance,
+    $clothing_allowance,
+    $other_allowances,
+    $loan_deductions,
+    $trns_date,
+    $marketer_person_id,
+    $pymnt_option,
+    $guarantor_name,
+    $guarantor_contact_nos,
+    $guarantor_occupation,
+    $guarantor_place_of_work,
+    $period_at_workplace,
+    $period_uom_at_workplace,
+    $guarantor_email,
+    $no_of_pymnts,
+    $init_dpst_type,
+    $ttl_initial_deposit,
+    $usrID,
+    $dateStr,
+    $salesStoreNmID
+) {
 
     $dbtSvsRtio = round((($salary_income + $fuel_allowance +
-            $rent_allowance + $clothing_allowance + $other_allowances) / 2), 2);
+        $rent_allowance + $clothing_allowance + $other_allowances) / 2), 2);
 
     $affdblty = round(($dbtSvsRtio - $loan_deductions), 2);
 
@@ -6250,7 +7188,8 @@ function updateCnsmrCrdtAnalysis($cnsmr_credit_id, $cust_sup_id, $salary_income,
     return execUpdtInsSQL($updtSQL);
 }
 
-function deleteCnsmrCrdtAnalysis($cnsmr_credit_id) {
+function deleteCnsmrCrdtAnalysis($cnsmr_credit_id)
+{
     $delSQL1 = "DELETE FROM scm.scm_cnsmr_credit_items WHERE cnsmr_credit_id = $cnsmr_credit_id";
     $delSQL2 = "DELETE FROM scm.scm_post_dated_cheques WHERE cnsmr_credit_id = $cnsmr_credit_id";
     $delSQL3 = "DELETE FROM scm.scm_cnsmr_credit_analys WHERE cnsmr_credit_id = $cnsmr_credit_id";
@@ -6260,7 +7199,8 @@ function deleteCnsmrCrdtAnalysis($cnsmr_credit_id) {
     return execUpdtInsSQL($delSQL3);
 }
 
-function getCnsmrCrdtAnalysisID() {
+function getCnsmrCrdtAnalysisID()
+{
     $sqlStr = "SELECT nextval('scm.scm_cnsmr_credit_analys_cnsmr_credit_id_seq'::regclass);";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -6269,7 +7209,8 @@ function getCnsmrCrdtAnalysisID() {
     return -1;
 }
 
-function get_CnsmrCrdtAnalysisDet($cnsmr_credit_id) {
+function get_CnsmrCrdtAnalysisDet($cnsmr_credit_id)
+{
     $strSql = "SELECT cnsmr_credit_id, a.cust_sup_id, cust_sup_name, salary_income, fuel_allowance, /**4**/
        rent_allowance, clothing_allowance, other_allowances, debt_service_ratio, /**8**/
        loan_deductions, affordability_amnt, to_char(to_timestamp(trns_date,'YYYY-MM-DD'),'DD-Mon-YYYY') trns_date, /**11**/
@@ -6287,7 +7228,8 @@ function get_CnsmrCrdtAnalysisDet($cnsmr_credit_id) {
     return $result;
 }
 
-function get_CnsmrCrdtAnalysis($searchFor, $searchIn, $offset, $limit_size, $sortBy) {
+function get_CnsmrCrdtAnalysis($searchFor, $searchIn, $offset, $limit_size, $sortBy)
+{
     global $orgID;
     $whereClause = "";
     $strSql = "";
@@ -6301,14 +7243,14 @@ function get_CnsmrCrdtAnalysis($searchFor, $searchIn, $offset, $limit_size, $sor
 
     if ($searchIn == "Customer Name") {
         $whereClause = " and (b.cust_sup_name ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     } else if ($searchIn == "Transaction No.") {
         $whereClause = " and (a.transaction_no ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     } else if ($searchIn == "Marketer") {
         $whereClause = " and ((SELECT title||' '||first_name ||' '|| other_names ||' '|| sur_name FROM prs.prsn_names_nos
 	   WHERE person_id = a.marketer_person_id) ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     }
     $strSql = "SELECT cnsmr_credit_id, cust_sup_name, transaction_no,  ttl_prdt_price, affordability_amnt,
         no_of_pymnts, mnthly_rpymnts, to_char(to_timestamp(trns_date,'YYYY-MM-DD'),'DD-Mon-YYYY') trns_date, (SELECT title||' '||first_name ||' '|| other_names ||' '|| sur_name FROM prs.prsn_names_nos
@@ -6317,35 +7259,36 @@ function get_CnsmrCrdtAnalysis($searchFor, $searchIn, $offset, $limit_size, $sor
        pymnt_option,  guarantor_contact_nos, guarantor_occupation,  guarantor_place_of_work, 
        period_at_workplace, period_uom_at_workplace,  guarantor_email,  ttl_initial_deposit,  init_dpst_type, status
   FROM scm.scm_cnsmr_credit_analys a, scm.scm_cstmr_suplr b " .
-            "WHERE ((a.org_id = " . $orgID . " AND a.cust_sup_id = b.cust_sup_id)$whereClause) ORDER BY $ordrBy LIMIT " . $limit_size .
-            " OFFSET " . abs($offset * $limit_size);
-// echo $strSql;
-// and a.item_type not ilike 'VaultItem%'
+        "WHERE ((a.org_id = " . $orgID . " AND a.cust_sup_id = b.cust_sup_id)$whereClause) ORDER BY $ordrBy LIMIT " . $limit_size .
+        " OFFSET " . abs($offset * $limit_size);
+    // echo $strSql;
+    // and a.item_type not ilike 'VaultItem%'
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_CnsmrCrdtAnalysisTtl($searchFor, $searchIn) {
+function get_CnsmrCrdtAnalysisTtl($searchFor, $searchIn)
+{
     global $orgID;
     $whereClause = "";
     $strSql = "";
-//Total Quantity
+    //Total Quantity
     if ($searchIn == "Customer Name") {
         $whereClause = " and (b.cust_sup_name ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     } else if ($searchIn == "Transaction No.") {
         $whereClause = " and (a.transaction_no ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     } else if ($searchIn == "Marketer") {
         $whereClause = " and ((SELECT title||' '||first_name ||' '|| other_names ||' '|| sur_name FROM prs.prsn_names_nos
 	   WHERE person_id = a.marketer_person_id) ilike '" . loc_db_escape_string($searchFor) .
-                "')";
+            "')";
     }
 
     $strSql = "select count(1) 
             from (SELECT 1 FROM scm.scm_cnsmr_credit_analys a, scm.scm_cstmr_suplr b " .
-            "WHERE ((a.org_id = " . $orgID . " AND a.cust_sup_id = b.cust_sup_id)$whereClause))TBL1";
-// and a.item_type not ilike 'VaultItem%'
+        "WHERE ((a.org_id = " . $orgID . " AND a.cust_sup_id = b.cust_sup_id)$whereClause))TBL1";
+    // and a.item_type not ilike 'VaultItem%'
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -6354,7 +7297,8 @@ function get_CnsmrCrdtAnalysisTtl($searchFor, $searchIn) {
 }
 
 //Total Items Product Price
-function getTtlPrdtsPrice($cnsmr_credit_id) {
+function getTtlPrdtsPrice($cnsmr_credit_id)
+{
     $sqlStr = "SELECT sum(coalesce(unit_selling_price,0.00) * coalesce(qty,1)) FROM scm.scm_cnsmr_credit_items WHERE cnsmr_credit_id = $cnsmr_credit_id";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -6364,7 +7308,8 @@ function getTtlPrdtsPrice($cnsmr_credit_id) {
 }
 
 //Total Items Expected Deposit
-function getTtlItmDpsts($cnsmr_credit_id) {
+function getTtlItmDpsts($cnsmr_credit_id)
+{
     $sqlStr = "SELECT sum(coalesce(itm_plan_init_deposit,0.00))  FROM scm.scm_cnsmr_credit_items WHERE cnsmr_credit_id = $cnsmr_credit_id";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -6373,12 +7318,14 @@ function getTtlItmDpsts($cnsmr_credit_id) {
     return 0.00;
 }
 
-function getMnthlyRpymnts($ttlPrdtsPrice, $initDpsts, $noOfRpymnts) {
+function getMnthlyRpymnts($ttlPrdtsPrice, $initDpsts, $noOfRpymnts)
+{
     $mntlyPymnt = round(($ttlPrdtsPrice - $initDpsts) / $noOfRpymnts, 2);
     return $mntlyPymnt;
 }
 
-function getCnsmrCrdtItemCount($cnsmr_credit_id) {
+function getCnsmrCrdtItemCount($cnsmr_credit_id)
+{
     $strSql = "SELECT count(*)
   FROM scm.scm_cnsmr_credit_items
 WHERE cnsmr_credit_id = $cnsmr_credit_id";
@@ -6390,21 +7337,24 @@ WHERE cnsmr_credit_id = $cnsmr_credit_id";
     return -1;
 }
 
-function getItmPlanSllnPrice($itm_pymnt_plan_id) {
+function getItmPlanSllnPrice($itm_pymnt_plan_id)
+{
     $sqlStr = "SELECT plan_price, initial_deposit FROM inv.inv_itm_payment_plans WHERE itm_pymnt_plan_id = $itm_pymnt_plan_id";
     $result = executeSQLNoParams($sqlStr);
 
     return $result;
 }
 
-function updateCnsmrCrdtAnalysisStatus($cnsmr_credit_id, $status) {
+function updateCnsmrCrdtAnalysisStatus($cnsmr_credit_id, $status)
+{
     $updtSQL1 = "UPDATE scm.scm_cnsmr_credit_analys SET status = '$status' WHERE cnsmr_credit_id = $cnsmr_credit_id";
 
     return execUpdtInsSQL($updtSQL1);
 }
 
 //ITEM PAYMENT PLAN SETUP
-function insertItemPymntPlansSetup($itm_pymnt_plan_setup_id, $plan_name, $no_of_pymnts, $plan_price_type, $plan_price, $initial_deposit_type, $initial_deposit, $order_no, $is_enabled, $usrID, $dateStr) {
+function insertItemPymntPlansSetup($itm_pymnt_plan_setup_id, $plan_name, $no_of_pymnts, $plan_price_type, $plan_price, $initial_deposit_type, $initial_deposit, $order_no, $is_enabled, $usrID, $dateStr)
+{
     global $orgID;
     $insSQL = "INSERT INTO inv.inv_itm_payment_plans_setup(
             itm_pymnt_plan_setup_id, plan_name, no_of_pymnts, plan_price_type,
@@ -6417,7 +7367,8 @@ function insertItemPymntPlansSetup($itm_pymnt_plan_setup_id, $plan_name, $no_of_
     return execUpdtInsSQL($insSQL);
 }
 
-function updateItemPymntPlansSetup($itm_pymnt_plan_setup_id, $plan_name, $no_of_pymnts, $plan_price_type, $plan_price, $initial_deposit_type, $initial_deposit, $order_no, $is_enabled, $usrID, $dateStr) {
+function updateItemPymntPlansSetup($itm_pymnt_plan_setup_id, $plan_name, $no_of_pymnts, $plan_price_type, $plan_price, $initial_deposit_type, $initial_deposit, $order_no, $is_enabled, $usrID, $dateStr)
+{
     $updtSQL = "UPDATE inv.inv_itm_payment_plans_setup
    SET plan_name='" . loc_db_escape_string($plan_name) . "', no_of_pymnts=$no_of_pymnts, 
        plan_price_type = '" . loc_db_escape_string($plan_price_type) . "', plan_price=$plan_price, 
@@ -6429,13 +7380,15 @@ function updateItemPymntPlansSetup($itm_pymnt_plan_setup_id, $plan_name, $no_of_
     return execUpdtInsSQL($updtSQL);
 }
 
-function deleteItemPymntPlansSetup($itm_pymnt_plan_setup_id) {
+function deleteItemPymntPlansSetup($itm_pymnt_plan_setup_id)
+{
     $delSQL1 = "DELETE FROM inv.inv_itm_payment_plans_setup WHERE itm_pymnt_plan_setup_id = $itm_pymnt_plan_setup_id";
 
     return execUpdtInsSQL($delSQL1);
 }
 
-function getItemPymntPlansSetupID() {
+function getItemPymntPlansSetupID()
+{
     $sqlStr = "SELECT nextval('inv.inv_itm_payment_plans_itm_pymnt_plan_id_seq'::regclass);";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -6444,7 +7397,8 @@ function getItemPymntPlansSetupID() {
     return -1;
 }
 
-function getItmPymntPlansSetupDets($itm_pymnt_plan_setup_id) {
+function getItmPymntPlansSetupDets($itm_pymnt_plan_setup_id)
+{
     $strSql = "SELECT itm_pymnt_plan_setup_id, plan_name, no_of_pymnts, plan_price_type, plan_price, is_enabled, initial_deposit_type, initial_deposit, order_no
   FROM inv.inv_itm_payment_plans_setup x
   WHERE itm_pymnt_plan_setup_id = $itm_pymnt_plan_setup_id";
@@ -6453,7 +7407,8 @@ function getItmPymntPlansSetupDets($itm_pymnt_plan_setup_id) {
     return $result;
 }
 
-function getItmPymntPlansSetupTbl($isEnabled, $searchFor, $searchIn, $offset, $limit_size, $orgID, $searchAll, $sortBy) {
+function getItmPymntPlansSetupTbl($isEnabled, $searchFor, $searchIn, $offset, $limit_size, $orgID, $searchAll, $sortBy)
+{
     $extra1 = "";
 
     if ($searchAll == true) {
@@ -6464,7 +7419,7 @@ function getItmPymntPlansSetupTbl($isEnabled, $searchFor, $searchIn, $offset, $l
     $whrcls = "";
     if ($searchIn == "Plan Name") {
         $whrcls .= " AND (a.plan_name ilike '" . loc_db_escape_string($searchFor) .
-                "') ";
+            "') ";
     }
 
     if ($isEnabled == "true") {
@@ -6473,14 +7428,15 @@ function getItmPymntPlansSetupTbl($isEnabled, $searchFor, $searchIn, $offset, $l
 
     $strSql = "SELECT itm_pymnt_plan_setup_id, plan_name, no_of_pymnts, plan_price, is_enabled, initial_deposit, plan_price_type, initial_deposit_type, order_no
         FROM inv.inv_itm_payment_plans_setup a  WHERE (1 = 1 AND (a.org_id = " . $orgID . " " . $extra1 . ")" . $whrcls .
-            ") ORDER BY order_no ASC LIMIT " . $limit_size .
-            " OFFSET " . abs($offset * $limit_size);
+        ") ORDER BY order_no ASC LIMIT " . $limit_size .
+        " OFFSET " . abs($offset * $limit_size);
     $result = executeSQLNoParams($strSql);
     //var_dump($strSql);
     return $result;
 }
 
-function getItmPymntPlansSetupTblTtl($isEnabled, $searchFor, $searchIn, $orgID, $searchAll) {
+function getItmPymntPlansSetupTblTtl($isEnabled, $searchFor, $searchIn, $orgID, $searchAll)
+{
     $extra1 = "";
     $extra2 = "";
 
@@ -6492,7 +7448,7 @@ function getItmPymntPlansSetupTblTtl($isEnabled, $searchFor, $searchIn, $orgID, 
     $whrcls = "";
     if ($searchIn == "Plan Name") {
         $whrcls .= " AND (a.plan_name ilike '" . loc_db_escape_string($searchFor) .
-                "') ";
+            "') ";
     }
 
     if ($isEnabled == "true") {
@@ -6500,8 +7456,8 @@ function getItmPymntPlansSetupTblTtl($isEnabled, $searchFor, $searchIn, $orgID, 
     }
 
     $strSql = "SELECT count(1) " .
-            "FROM inv.inv_itm_payment_plans_setup a WHERE (1 = 1 AND (a.org_id = " . $orgID . " " . $extra1 . ")" . $whrcls . $extra2 .
-            ")";
+        "FROM inv.inv_itm_payment_plans_setup a WHERE (1 = 1 AND (a.org_id = " . $orgID . " " . $extra1 . ")" . $whrcls . $extra2 .
+        ")";
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -6510,7 +7466,8 @@ function getItmPymntPlansSetupTblTtl($isEnabled, $searchFor, $searchIn, $orgID, 
 }
 
 //FROM 13042020
-function createCreditAnalysisSalesInvoice($cnsmrCreditID, $sbmtdScmSalesInvcID, $scmSalesInvcInvcCurID, $scmSalesInvcVchType, $rqStatus) {
+function createCreditAnalysisSalesInvoice($cnsmrCreditID, $sbmtdScmSalesInvcID, $scmSalesInvcInvcCurID, $scmSalesInvcVchType, $rqStatus)
+{
     //GET CUSTOMER ID AND STORE ID
     $myCustID = -1;
     $myStoreID = -1;
@@ -6561,13 +7518,12 @@ function createCreditAnalysisSalesInvoice($cnsmrCreditID, $sbmtdScmSalesInvcID, 
 
     $result2 = executeSQLNoParams($strSql2);
     while ($row2 = loc_db_fetch_array($result2)) {
-        $myCustSiteID = (int) $row2[0];
-        ;
+        $myCustSiteID = (int) $row2[0];;
     }
 
     //UPDATE scm.scm_sales_invc_hdr
     $updtSQL1 = "UPDATE scm.scm_sales_invc_hdr SET customer_id = $myCustID, customer_site_id = $myCustSiteID, invoice_clsfctn = 'Consumer Finance', "
-            . " comments_desc = '$trnsNo' WHERE invc_hdr_id = $sbmtdScmSalesInvcID";
+        . " comments_desc = '$trnsNo' WHERE invc_hdr_id = $sbmtdScmSalesInvcID";
     $cnta1 = execUpdtInsSQL($updtSQL1);
 
     //UPDATE scm.scm_cnsmr_credit_analys
@@ -6603,10 +7559,31 @@ function createCreditAnalysisSalesInvoice($cnsmrCreditID, $sbmtdScmSalesInvcID, 
 
             $ln_TrnsLnID = getNewSalesInvcLnID();
 
-            $afftctd += createSalesDocLn($ln_TrnsLnID, $sbmtdScmSalesInvcID, $prdtItemId, $prdtQty, $sllnPrice,
-                    $myStoreID, $scmSalesInvcInvcCurID, $ln_SrcDocLnID, $ln_TaxID, $ln_DscntID, $ln_ChrgID,
-                    $ln_ReturnRsn, $ln_CnsgnIDs, $ln_OrgnlPrice, $ln_IsDlvrd, $ln_LnkdPrsnID, $ln_LineDesc,
-                    $ln_AstAcntID, $ln_CogsID, $ln_SalesRevID, $ln_SalesRetID, $ln_PurcRetID, $ln_ExpnsID);
+            $afftctd += createSalesDocLn(
+                $ln_TrnsLnID,
+                $sbmtdScmSalesInvcID,
+                $prdtItemId,
+                $prdtQty,
+                $sllnPrice,
+                $myStoreID,
+                $scmSalesInvcInvcCurID,
+                $ln_SrcDocLnID,
+                $ln_TaxID,
+                $ln_DscntID,
+                $ln_ChrgID,
+                $ln_ReturnRsn,
+                $ln_CnsgnIDs,
+                $ln_OrgnlPrice,
+                $ln_IsDlvrd,
+                $ln_LnkdPrsnID,
+                $ln_LineDesc,
+                $ln_AstAcntID,
+                $ln_CogsID,
+                $ln_SalesRevID,
+                $ln_SalesRetID,
+                $ln_PurcRetID,
+                $ln_ExpnsID
+            );
 
             $errMsg1 = reCalcSalesInvcSmmrys($sbmtdScmSalesInvcID, $scmSalesInvcVchType, $myCustID, $scmSalesInvcInvcCurID, $rqStatus);
 
@@ -6623,7 +7600,8 @@ function createCreditAnalysisSalesInvoice($cnsmrCreditID, $sbmtdScmSalesInvcID, 
     return $afftctd;
 }
 
-function isSalesInvLnkdToCrdtAnlsys($sbmtdScmSalesInvcID) {
+function isSalesInvLnkdToCrdtAnlsys($sbmtdScmSalesInvcID)
+{
     $strSql = "SELECT count(*)
   FROM scm.scm_cnsmr_credit_analys
 WHERE src_invc_hdr_id = $sbmtdScmSalesInvcID";
@@ -6636,10 +7614,11 @@ WHERE src_invc_hdr_id = $sbmtdScmSalesInvcID";
 }
 
 /*CLINIC HOSPITAL*/
-function createHospAppntmntSalesInvoice($appntmntID, $sbmtdScmSalesInvcID, $scmSalesInvcInvcCurID, $scmSalesInvcVchType, $rqStatus){
+function createHospAppntmntSalesInvoice($appntmntID, $sbmtdScmSalesInvcID, $scmSalesInvcInvcCurID, $scmSalesInvcVchType, $rqStatus)
+{
     //GET CUSTOMER ID AND STORE ID
-	global $usrID;
-        global $orgID;
+    global $usrID;
+    global $orgID;
     $dateStr = getDB_Date_time();
     $myCustID = -1;
     $myStoreID = -1;
@@ -6675,9 +7654,9 @@ function createHospAppntmntSalesInvoice($appntmntID, $sbmtdScmSalesInvcID, $scmS
     $errMsg1 = "";
     $cnta6 = 0;
     $trnsNo = "";
-    
+
     $strSql1 = "SELECT src_store_id, appntmnt_no FROM hosp.appntmnt WHERE appntmnt_id = $appntmntID";
-    
+
     $result1 = executeSQLNoParams($strSql1);
     while ($row1 = loc_db_fetch_array($result1)) {
         $myStoreID = (int) $row1[0];
@@ -6685,21 +7664,21 @@ function createHospAppntmntSalesInvoice($appntmntID, $sbmtdScmSalesInvcID, $scmS
     }
 
 
-	//GET customer_id	
+    //GET customer_id	
     $vstID = (int)getGnrlRecNm("hosp.appntmnt", "appntmnt_id", "vst_id", $appntmntID);
-	$ptntPrsnID = (int)getGnrlRecNm("hosp.visit", "vst_id", "prsn_id", $vstID);
+    $ptntPrsnID = (int)getGnrlRecNm("hosp.visit", "vst_id", "prsn_id", $vstID);
 
-	$cstmrNm = "";
-	$resultYY = executeSQLNoParams("SELECT cust_sup_id, cust_sup_name
+    $cstmrNm = "";
+    $resultYY = executeSQLNoParams("SELECT cust_sup_id, cust_sup_name
 		FROM scm.scm_cstmr_suplr a WHERE lnkd_prsn_id > 0 AND lnkd_prsn_id = $ptntPrsnID AND org_id = $orgID LIMIT 1");
-	$rowYYCnt = loc_db_num_fields($resultYY);
-	if($rowYYCnt > 0){
-		while ($rowYY = loc_db_fetch_array($resultYY)) {
-			$myCustID = (int)$rowYY[0];
-			$cstmrNm = $rowYY[1];
-		}
-	}
-    
+    $rowYYCnt = loc_db_num_fields($resultYY);
+    if ($rowYYCnt > 0) {
+        while ($rowYY = loc_db_fetch_array($resultYY)) {
+            $myCustID = (int)$rowYY[0];
+            $cstmrNm = $rowYY[1];
+        }
+    }
+
     //GET CUSTOMER SITE ID
     $strSql2 = "SELECT cust_sup_site_id FROM scm.scm_cstmr_suplr_sites WHERE cust_supplier_id = $myCustID LIMIT 1";
 
@@ -6707,12 +7686,12 @@ function createHospAppntmntSalesInvoice($appntmntID, $sbmtdScmSalesInvcID, $scmS
     while ($row2 = loc_db_fetch_array($result2)) {
         $myCustSiteID = (int) $row2[0];;
     }
-    
+
     //UPDATE scm.scm_sales_invc_hdr
     $updtSQL1 = "UPDATE scm.scm_sales_invc_hdr SET customer_id = $myCustID, customer_site_id = $myCustSiteID, invoice_clsfctn = 'Standard', "
-            . " comments_desc = '$trnsNo' WHERE invc_hdr_id = $sbmtdScmSalesInvcID";
+        . " comments_desc = '$trnsNo' WHERE invc_hdr_id = $sbmtdScmSalesInvcID";
     $cnta1 = execUpdtInsSQL($updtSQL1);
-        
+
     $result3 = getAppntmntDataItems($appntmntID);
     while ($row3 = loc_db_fetch_array($result3)) {
         $appDataItmId = (int)$row3[0];
@@ -6720,8 +7699,8 @@ function createHospAppntmntSalesInvoice($appntmntID, $sbmtdScmSalesInvcID, $scmS
         $prdtQty = (float)$row3[3];
         $sllnPrice = (float)$row3[11];
         $initDpst = 0;
-        
-       //GET RELEVANT DETAILS OF ITEM
+
+        //GET RELEVANT DETAILS OF ITEM
         $strSql4 = "SELECT tax_code_id, dscnt_code_id, extr_chrg_id, orgnl_selling_price, item_desc, inv_asset_acct_id, cogs_acct_id, 
             sales_rev_accnt_id,  sales_ret_accnt_id, purch_ret_accnt_id, expense_accnt_id FROM inv.inv_itm_list WHERE item_id = $prdtItemId";
 
@@ -6738,31 +7717,50 @@ function createHospAppntmntSalesInvoice($appntmntID, $sbmtdScmSalesInvcID, $scmS
             $ln_SalesRetID = (int)$row4[8];
             $ln_PurcRetID = (int)$row4[9];
             $ln_ExpnsID = (int)$row4[10];
-                   
+
             $ln_TrnsLnID = getNewSalesInvcLnID();
-            
-            $afftctd += createSalesDocLn($ln_TrnsLnID, $sbmtdScmSalesInvcID, $prdtItemId, $prdtQty, $sllnPrice,
-		$myStoreID, $scmSalesInvcInvcCurID, $ln_SrcDocLnID, $ln_TaxID, $ln_DscntID, $ln_ChrgID,
-		$ln_ReturnRsn, $ln_CnsgnIDs, $ln_OrgnlPrice, $ln_IsDlvrd, $ln_LnkdPrsnID, $ln_LineDesc,
-		$ln_AstAcntID, $ln_CogsID, $ln_SalesRevID, $ln_SalesRetID, $ln_PurcRetID, $ln_ExpnsID);
-            
+
+            $afftctd += createSalesDocLn(
+                $ln_TrnsLnID,
+                $sbmtdScmSalesInvcID,
+                $prdtItemId,
+                $prdtQty,
+                $sllnPrice,
+                $myStoreID,
+                $scmSalesInvcInvcCurID,
+                $ln_SrcDocLnID,
+                $ln_TaxID,
+                $ln_DscntID,
+                $ln_ChrgID,
+                $ln_ReturnRsn,
+                $ln_CnsgnIDs,
+                $ln_OrgnlPrice,
+                $ln_IsDlvrd,
+                $ln_LnkdPrsnID,
+                $ln_LineDesc,
+                $ln_AstAcntID,
+                $ln_CogsID,
+                $ln_SalesRevID,
+                $ln_SalesRetID,
+                $ln_PurcRetID,
+                $ln_ExpnsID
+            );
+
             $errMsg1 = reCalcSalesInvcSmmrys($sbmtdScmSalesInvcID, $scmSalesInvcVchType, $myCustID, $scmSalesInvcInvcCurID, $rqStatus);
-            
+
             //UPDATE LINES WITH SALES INVOICE DETAILS
             $updtSQL5 = " UPDATE hosp.appntmnt_data_items SET invc_det_ln_id = $ln_TrnsLnID, invc_hdr_id =  $sbmtdScmSalesInvcID,
 			last_update_by = $usrID,  last_update_date = '$dateStr', is_billed = 'Y'		
 			WHERE appdt_itm_id = $appDataItmId";
             $cnta5 = execUpdtInsSQL($updtSQL5);
-			
-            
         }
-        
     }
 
     return $afftctd;
 }
 
-function isSalesInvLnkdToAppntmnt($sbmtdScmSalesInvcID) {
+function isSalesInvLnkdToAppntmnt($sbmtdScmSalesInvcID)
+{
     $strSql = "SELECT count(*)
   FROM hosp.appntmnt_data_items
 WHERE invc_hdr_id = $sbmtdScmSalesInvcID";
@@ -6774,23 +7772,25 @@ WHERE invc_hdr_id = $sbmtdScmSalesInvcID";
     return -1;
 }
 
-function calcAppntmntDataItmsTtlAmt($appntmntID, $invc_hdr_id){ 
+function calcAppntmntDataItmsTtlAmt($appntmntID, $invc_hdr_id)
+{
     $ttlAmnt = 0;
-    
+
     $strSql = "SELECT distinct item_id, coalesce(qty,0) FROM hosp.appntmnt_data_items WHERE appntmnt_id = $appntmntID AND invc_hdr_id = $invc_hdr_id AND invc_hdr_id > 0";
     $result = executeSQLNoParams($strSql);
-    while($row = loc_db_fetch_array($result)){
-        
+    while ($row = loc_db_fetch_array($result)) {
+
         $strSql4 = "SELECT orgnl_selling_price FROM inv.inv_itm_list WHERE item_id = $row[0]";
         $result4 = executeSQLNoParams($strSql4);
-        while($row4 = loc_db_fetch_array($result4)){
+        while ($row4 = loc_db_fetch_array($result4)) {
             $ttlAmnt =  $ttlAmnt + (float)$row[1] * (float)$row4[0];
-        }       
+        }
     }
-    return round($ttlAmnt,2);
+    return round($ttlAmnt, 2);
 }
 
-function getAppntmntDataItems($appntmntID) {
+function getAppntmntDataItems($appntmntID)
+{
     $strSql = "SELECT appdt_itm_id, x.item_id, item_desc||' ('||item_code||')' itm_desc, qty, /**3**/
         cmnts, CASE WHEN is_billed = 'Y' THEN 'Yes' ELSE 'No' END is_billed, CASE WHEN is_paid = 'Y' THEN 'Yes' ELSE 'No' END is_paid, /**6**/
         x.invc_hdr_id, invc_number, x.invc_det_ln_id, appntmnt_id, /**10**/
@@ -6804,7 +7804,8 @@ function getAppntmntDataItems($appntmntID) {
     return $result;
 }
 
-function getAppntmntDataItemsIDHotl() {
+function getAppntmntDataItemsIDHotl()
+{
     $sqlStr = "SELECT nextval('hosp.appntmnt_data_items_appdt_itm_id_seq'::regclass);";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -6813,7 +7814,8 @@ function getAppntmntDataItemsIDHotl() {
     return -1;
 }
 
-function insertAppntmntDataItemsAllCols($appdt_itm_id, $appntmnt_id, $item_id, $qty, $invc_hdr_id, $invc_det_ln_id, $is_billed, $usrID, $dateStr, $uomID, $src_srvstype_row_id) {
+function insertAppntmntDataItemsAllCols($appdt_itm_id, $appntmnt_id, $item_id, $qty, $invc_hdr_id, $invc_det_ln_id, $is_billed, $usrID, $dateStr, $uomID, $src_srvstype_row_id)
+{
     global $orgID;
     $insSQL = "INSERT INTO hosp.appntmnt_data_items(
             appdt_itm_id, appntmnt_id, qty, created_by, creation_date, 
@@ -6824,14 +7826,13 @@ function insertAppntmntDataItemsAllCols($appdt_itm_id, $appntmnt_id, $item_id, $
     return execUpdtInsSQL($insSQL);
 }
 
-function getInvcHdrChckInID($invcHdrId){
+function getInvcHdrChckInID($invcHdrId)
+{
     $strSql = "SELECT other_mdls_doc_id FROM scm.scm_sales_invc_hdr WHERE invc_hdr_id =  $invcHdrId AND other_mdls_doc_type = 'Check-In'";
     $result = executeSQLNoParams($strSql);
-    while($row = loc_db_fetch_array($result)){
+    while ($row = loc_db_fetch_array($result)) {
         return (int)$row[0];
     }
     return -1;
 }
 /*CLINIC HOSPITAL*/
-
-?>
