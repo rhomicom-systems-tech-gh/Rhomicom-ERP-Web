@@ -235,10 +235,414 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     exit();
                 }
             } else if ($actyp == 3) {
+            } else if ($actyp == 901) {
+                //Import Budget Lines
+                $accbSbmtdBudgetID = isset($_POST['accbSbmtdBudgetID']) ? (float) cleanInputData($_POST['accbSbmtdBudgetID']) : -1;
+                $bdgtPeriodType = getGnrlRecNm("accb.accb_budget_header", "budget_id", "period_type", $accbSbmtdBudgetID);
+                $bdgtYear = getGnrlRecNm("accb.accb_budget_header", "budget_id", "substr(start_date,1,4)", $accbSbmtdBudgetID);
+                $dataToSend = trim(cleanInputData($_POST['dataToSend']), "|~");
+                //var_dump($_POST);
+                //logSessionErrs($dataToSend);
+                session_write_close();
+                $ln_accntnumber = "";
+                $ln_accntName = "";
+                $ln_bdgtCrncyCode = "";
+                $ln_actnIfExceeded = "";
+                $ln_amnt1Value = "";
+                $ln_amnt2Value = "";
+                $ln_amnt3Value = "";
+                $ln_amnt4Value = "";
+                $ln_amnt5Value = "";
+                $ln_amnt6Value = "";
+                $ln_amnt7Value = "";
+                $ln_amnt8Value = "";
+                $ln_amnt9Value = "";
+                $ln_amnt10Value = "";
+                $ln_amnt11Value = "";
+                $ln_amnt12Value = "";
+                $affctd = 0;
+                if ($dataToSend != "") {
+                    $variousRows = explode("|", $dataToSend);
+                    $total = count($variousRows);
+                    $expctdCols = 16;
+                    if ($bdgtPeriodType == "Yearly") {
+                        $expctdCols = 5;
+                    } else if ($bdgtPeriodType == "Half Yearly") {
+                        $expctdCols = 6;
+                    } else if ($bdgtPeriodType == "Quarterly") {
+                        $expctdCols = 8;
+                    }
+                    for ($z = 0; $z < $total; $z++) {
+                        $crntRow = explode("~", $variousRows[$z]);
+                        if (count($crntRow) ==  $expctdCols) {
+                            $ln_accntnumber = trim(cleanInputData1($crntRow[0]));
+                            $ln_accntName = trim(cleanInputData1($crntRow[1]));
+                            $ln_bdgtCrncyCode = trim(cleanInputData1($crntRow[2]));
+                            $ln_actnIfExceeded = trim(cleanInputData1($crntRow[3]));
+                            $ln_amnt1Value = trim(cleanInputData1($crntRow[4]));
+
+                            if ($bdgtPeriodType == "Monthly") {
+                                $ln_amnt2Value = trim(cleanInputData1($crntRow[5]));
+                                $ln_amnt3Value = trim(cleanInputData1($crntRow[6]));
+                                $ln_amnt4Value = trim(cleanInputData1($crntRow[7]));
+                                $ln_amnt5Value = trim(cleanInputData1($crntRow[8]));
+                                $ln_amnt6Value = trim(cleanInputData1($crntRow[9]));
+                                $ln_amnt7Value = trim(cleanInputData1($crntRow[10]));
+                                $ln_amnt8Value = trim(cleanInputData1($crntRow[11]));
+                                $ln_amnt9Value = trim(cleanInputData1($crntRow[12]));
+                                $ln_amnt10Value = trim(cleanInputData1($crntRow[13]));
+                                $ln_amnt11Value = trim(cleanInputData1($crntRow[14]));
+                                $ln_amnt12Value = trim(cleanInputData1($crntRow[15]));
+                            } else if ($bdgtPeriodType == "Half Yearly") {
+                                $ln_amnt2Value = trim(cleanInputData1($crntRow[5]));
+                            } else if ($bdgtPeriodType == "Quarterly") {
+                                $ln_amnt2Value = trim(cleanInputData1($crntRow[5]));
+                                $ln_amnt3Value = trim(cleanInputData1($crntRow[6]));
+                                $ln_amnt4Value = trim(cleanInputData1($crntRow[7]));
+                            }
+                            if ($z == 0) {
+                                if (
+                                    strtoupper($ln_accntnumber) == strtoupper("Account Number**")
+                                    && strtoupper($ln_accntName) == strtoupper("Account Name**")
+                                    && strtoupper($ln_bdgtCrncyCode) == strtoupper("Budget Currency Code**")
+                                ) {
+                                    continue;
+                                } else {
+                                    $arr_content['percent'] = 100;
+                                    $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span> Selected File is Invalid!";
+                                    //.strtoupper($number) ."|". strtoupper($processName) ."|". strtoupper($isEnbld1 == "IS ENABLED?");
+                                    $arr_content['msgcount'] = $total;
+                                    file_put_contents(
+                                        $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_bdgtsimprt_progress.rho",
+                                        json_encode($arr_content)
+                                    );
+                                    break;
+                                }
+                            }
+
+                            $ln_AccountID1 =  getAccntID($ln_accntnumber, $orgID);;
+                            $ln_SlctdAmtBrkdwns = "";
+                            $ln_TrnsCurNm = ($ln_bdgtCrncyCode == "" ? $fnccurnm : $ln_bdgtCrncyCode);
+                            $ln_TrnsCurID = getPssblValID($ln_TrnsCurNm, getLovID("Currencies"));
+                            if ($ln_TrnsCurID <= 0 || $ln_AccountID1 <= 0) {
+                                $arr_content['percent'] = 100;
+                                $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Sorry, Budget Currency and Account cannot be Empty!</span>";
+                                $arr_content['msgcount'] = $total;
+                                file_put_contents(
+                                    $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_bdgtsimprt_progress.rho",
+                                    json_encode($arr_content)
+                                );
+                                break;
+                            }
+                            $startDtes = array(
+                                "01-Jan-" . $bdgtYear, "01-Feb-" . $bdgtYear, "01-Mar-" . $bdgtYear, "01-Apr-" . $bdgtYear, "01-May-" . $bdgtYear,
+                                "01-Jun-" . $bdgtYear, "01-Jul-" . $bdgtYear, "01-Aug-" . $bdgtYear, "01-Sep-" . $bdgtYear, "01-Oct-" . $bdgtYear,
+                                "01-Nov-" . $bdgtYear, "01-Dec-" . $bdgtYear
+                            );
+                            $endDtes = array(
+                                "01-Jan-" . $bdgtYear, "01-Feb-" . $bdgtYear, "01-Mar-" . $bdgtYear, "01-Apr-" . $bdgtYear, "01-May-" . $bdgtYear,
+                                "01-Jun-" . $bdgtYear, "01-Jul-" . $bdgtYear, "01-Aug-" . $bdgtYear, "01-Sep-" . $bdgtYear, "01-Oct-" . $bdgtYear,
+                                "01-Nov-" . $bdgtYear, "01-Dec-" . $bdgtYear
+                            );
+                            $prdVals = array(
+                                $ln_amnt1Value, $ln_amnt2Value, $ln_amnt3Value, $ln_amnt4Value,
+                                $ln_amnt5Value, $ln_amnt6Value, $ln_amnt7Value, $ln_amnt8Value,
+                                $ln_amnt9Value, $ln_amnt10Value, $ln_amnt11Value, $ln_amnt12Value
+                            );
+                            if ($bdgtPeriodType == "Yearly") {
+                                $startDtes = array(
+                                    "01-Jan-" . $bdgtYear
+                                );
+                                $endDtes = array(
+                                    "01-Dec-" . $bdgtYear
+                                );
+                                $prdVals = array(
+                                    $ln_amnt1Value
+                                );
+                            } else if ($bdgtPeriodType == "Half Yearly") {
+                                $startDtes = array(
+                                    "01-Jan-" . $bdgtYear, "01-Jul-" . $bdgtYear
+                                );
+                                $endDtes = array(
+                                    "01-Jun-" . $bdgtYear, "01-Dec-" . $bdgtYear
+                                );
+                                $prdVals = array(
+                                    $ln_amnt1Value, $ln_amnt2Value
+                                );
+                            } else if ($bdgtPeriodType == "Quarterly") {
+                                $startDtes = array(
+                                    "01-Jan-" . $bdgtYear, "01-Apr-" . $bdgtYear,
+                                    "01-Jul-" . $bdgtYear, "01-Oct-" . $bdgtYear
+                                );
+                                $endDtes = array(
+                                    "01-Mar-" . $bdgtYear, "01-Jun-" . $bdgtYear,
+                                    "01-Sep-" . $bdgtYear, "01-Dec-" . $bdgtYear
+                                );
+                                $prdVals = array(
+                                    $ln_amnt1Value, $ln_amnt2Value, $ln_amnt3Value, $ln_amnt4Value
+                                );
+                            }
+                            for ($k = 0; $k < count($startDtes); $k++) {
+                                $ln_EntrdAmt = (float) $prdVals[$k];
+                                $ln_StrtDte = $startDtes[$k];
+                                $ln_EndDte = get_Last_Date_Mnth($endDtes[$k]);
+                                $ln_Action = $ln_actnIfExceeded;
+                                $ln_FuncExchgRate = 1;
+                                if ($ln_FuncExchgRate == 1 || $ln_FuncExchgRate == 0) {
+                                    $ln_FuncExchgRate = round(get_LtstExchRate($ln_TrnsCurID, $fnccurid, $ln_StrtDte), 4);
+                                }
+                                $exitErrMsg = "";
+                                if ($ln_AccountID1 <= 0) {
+                                    $exitErrMsg .= "Account Number does not exist in this Organisation!<br/>";
+                                }
+                                $ln_TrnsLnID = get_BdgtDetID($ln_StrtDte, $ln_EndDte, $accbSbmtdBudgetID, $ln_AccountID1);
+                                if ($ln_TrnsLnID <= 0 && $accbSbmtdBudgetID > 0) {
+                                    $affctd += createBdgtLn(
+                                        $accbSbmtdBudgetID,
+                                        $ln_AccountID1,
+                                        ($ln_EntrdAmt * $ln_FuncExchgRate),
+                                        $ln_StrtDte,
+                                        $ln_EndDte,
+                                        $ln_Action,
+                                        $ln_EntrdAmt,
+                                        $ln_FuncExchgRate,
+                                        $ln_TrnsCurID
+                                    );
+                                    $ln_TrnsLnID = get_BdgtDetID($ln_StrtDte, $ln_EndDte, $accbSbmtdBudgetID, $ln_AccountID1);
+                                } else if ($accbSbmtdBudgetID > 0) {
+                                    $affctd += updateBdgtLn(
+                                        $ln_TrnsLnID,
+                                        $ln_AccountID1,
+                                        ($ln_EntrdAmt * $ln_FuncExchgRate),
+                                        $ln_StrtDte,
+                                        $ln_EndDte,
+                                        $ln_Action,
+                                        $ln_EntrdAmt,
+                                        $ln_FuncExchgRate,
+                                        $ln_TrnsCurID
+                                    );
+                                }
+                            }
+                            /*if ($ln_SlctdAmtBrkdwns != "" && $ln_TrnsLnID > 0) {
+                                //Save Budget Amount Breakdowns
+                                $variousRows1 = explode("|", trim($ln_SlctdAmtBrkdwns, "|"));
+                                for ($y = 0; $y < count($variousRows1); $y++) {
+                                    $crntRow = explode("~", $variousRows1[$y]);
+                                    if (count($crntRow) == 9) {
+                                        $ln_BrkdwnLnID = (float) cleanInputData1($crntRow[0]);
+                                        $ln_DetID = (float) cleanInputData1($crntRow[1]);
+                                        $ln_ItemID = (float) cleanInputData1($crntRow[2]);
+                                        $ln_ItemName = cleanInputData1($crntRow[3]);
+                                        $ln_DetType = cleanInputData1($crntRow[4]);
+                                        $ln_BrkdwnQTY1 = (float) cleanInputData1($crntRow[5]);
+                                        $ln_BrkdwnQTY2 = (float) cleanInputData1($crntRow[6]);
+                                        $ln_BrkdwnUnitVal = (float) cleanInputData1($crntRow[7]);
+                                        $ln_BrkdwnDesc = cleanInputData1($crntRow[8]);
+                                        if ($ln_BrkdwnLnID <= 0 && ($ln_BrkdwnQTY1 * $ln_BrkdwnQTY2 * $ln_BrkdwnUnitVal) != 0) {
+                                            $ln_BrkdwnLnID = getNewBrkDwnLnID();
+                                            $affctd1 += createBdgtBrkDwn(
+                                                $ln_BrkdwnLnID,
+                                                $ln_AccountID1,
+                                                $ln_ItemID,
+                                                $ln_DetType,
+                                                $ln_BrkdwnDesc,
+                                                $ln_BrkdwnQTY1,
+                                                $ln_BrkdwnQTY2,
+                                                $ln_BrkdwnUnitVal,
+                                                $ln_TrnsLnID,
+                                                $ln_StrtDte,
+                                                $ln_EndDte
+                                            );
+                                        } else if ($ln_BrkdwnLnID > 0 && ($ln_BrkdwnQTY1 * $ln_BrkdwnQTY2 * $ln_BrkdwnUnitVal) != 0) {
+                                            $affctd1 += updateBdgtBrkDwn(
+                                                $ln_BrkdwnLnID,
+                                                $ln_AccountID1,
+                                                $ln_ItemID,
+                                                $ln_DetType,
+                                                $ln_BrkdwnDesc,
+                                                $ln_BrkdwnQTY1,
+                                                $ln_BrkdwnQTY2,
+                                                $ln_BrkdwnUnitVal,
+                                                $ln_TrnsLnID,
+                                                $ln_StrtDte,
+                                                $ln_EndDte
+                                            );
+                                        }
+                                    }
+                                }
+                                if ($affctd1 > 0) {
+                                    updateBdgtDetAmnt1($ln_TrnsLnID, $ln_AccountID1);
+                                }
+                            }*/
+                        }
+                        $percent = round((($z + 1) / $total) * 100, 2);
+                        $arr_content['percent'] = $percent;
+                        if ($percent >= 100) {
+                            $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span> 100% Completed!..." . ($z + 1) . " out of " . $total . " Budget Line(s) imported.";
+                            $arr_content['msgcount'] = $total;
+                        } else {
+                            $arr_content['message'] = "<i class=\"fa fa-spin fa-spinner\"></i> Importing Budget Line(s)...Please Wait..." . ($z + 1) . " out of " . $total . " Budget Line(s) imported.";
+                        }
+                        file_put_contents(
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_bdgtsimprt_progress.rho",
+                            json_encode($arr_content)
+                        );
+                    }
+                } else {
+                    $percent = 100;
+                    $arr_content['percent'] = $percent;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> 100% Completed...An Error Occured!<br/>$errMsg</span>";
+                    $arr_content['msgcount'] = "";
+                    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_bdgtsimprt_progress.rho", json_encode($arr_content));
+                }
+            } else if ($actyp == 902) {
+                //Checked Importing Process Status                
+                header('Content-Type: application/json');
+                $file = $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_bdgtsimprt_progress.rho";
+                if (file_exists($file)) {
+                    $text = file_get_contents($file);
+                    echo $text;
+
+                    $obj = json_decode($text);
+                    if ($obj->percent >= 100) {
+                        //$rs = file_exists($file) ? unlink($file) : TRUE;
+                    }
+                } else {
+                    echo json_encode(array("percent" => null, "message" => null));
+                }
+            } else if ($actyp == 903) {
+                //Export Accounts
+                $accbSbmtdBudgetID = isset($_POST['accbSbmtdBudgetID']) ? (float) cleanInputData($_POST['accbSbmtdBudgetID']) : -1;
+                $inptNum = isset($_POST['inptNum']) ? (int) cleanInputData($_POST['inptNum']) : 0;
+                //var_dump($_POST);
+                session_write_close();
+                $bdgtPeriodType = getGnrlRecNm("accb.accb_budget_header", "budget_id", "period_type", $accbSbmtdBudgetID);
+                $bdgtYear = getGnrlRecNm("accb.accb_budget_header", "budget_id", "substr(start_date,1,4)", $accbSbmtdBudgetID);
+                $affctd = 0;
+                $errMsg = "Invalid Option!";
+                if ($inptNum >= 0) {
+                    $hdngs = array(
+                        "Account Number**", "Account Name**", "Budget Currency Code**", "Action if Exceeded**", "Jan " . $bdgtYear . " Amount",
+                        "Feb " . $bdgtYear . " Amount", "Mar " . $bdgtYear . " Amount", "Apr " . $bdgtYear . " Amount", "May " . $bdgtYear . " Amount",
+                        "Jun " . $bdgtYear . " Amount", "Jul " . $bdgtYear . " Amount", "Aug " . $bdgtYear . " Amount", "Sep " . $bdgtYear . " Amount",
+                        "Oct " . $bdgtYear . " Amount", "Nov " . $bdgtYear . " Amount", "Dec " . $bdgtYear . " Amount"
+                    );
+                    if ($bdgtPeriodType == "Yearly") {
+                        $hdngs = array(
+                            "Account Number**", "Account Name**", "Budget Currency Code**", "Action if Exceeded**", "" . $bdgtYear . " Amount"
+                        );
+                    } else if ($bdgtPeriodType == "Half Yearly") {
+                        $hdngs = array(
+                            "Account Number**", "Account Name**", "Budget Currency Code**", "Action if Exceeded**", "Jan-Jun " . $bdgtYear . " Amount", "Jul-Dec " . $bdgtYear . " Amount"
+                        );
+                    } else if ($bdgtPeriodType == "Quarterly") {
+                        $hdngs = array(
+                            "Account Number**", "Account Name**", "Budget Currency Code**", "Action if Exceeded**", "Q1 " . $bdgtYear . " Amount", "Q2 " . $bdgtYear . " Amount", "Q3 " . $bdgtYear . " Amount", "Q4 " . $bdgtYear . " Amount"
+                        );
+                    }
+                    $limit_size = 0;
+                    if ($inptNum > 2) {
+                        $limit_size = $inptNum;
+                    } else if ($inptNum == 2) {
+                        $limit_size = 1000000;
+                    }
+                    $rndm = getRandomNum(10001, 9999999);
+                    $dteNm = date('dMY_His');
+                    $nwFileNm = $fldrPrfx . "dwnlds/tmp/AccntBdgtsExprt_" . $dteNm . "_" . $rndm . ".csv";
+                    $dwnldUrl = $app_url . "dwnlds/tmp/AccntBdgtsExprt_" . $dteNm . "_" . $rndm . ".csv";
+                    $opndfile = fopen($nwFileNm, "w");
+                    fputcsv($opndfile, $hdngs);
+                    if ($limit_size <= 0) {
+                        $arr_content['percent'] = 100;
+                        $arr_content['dwnld_url'] = $dwnldUrl;
+                        $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!... Accounts Chart Template Exported.</span>";
+                        $arr_content['msgcount'] = 0;
+                        file_put_contents(
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccntBdgtsExprt_progress.rho",
+                            json_encode($arr_content)
+                        );
+                        fclose($opndfile);
+                        exit();
+                    }
+                    $z = 0;
+                    $crntRw = "";
+                    $result = get_One_BdgtDtExprt("%", "Account Number", 0, $limit_size, $accbSbmtdBudgetID, $bdgtYear, $bdgtPeriodType);
+                    // get_ChartsToExprt($orgID, $limit_size);
+                    $total = loc_db_num_rows($result);
+                    $fieldCntr = loc_db_num_fields($result);
+                    while ($row = loc_db_fetch_array($result)) {
+                        if ($bdgtPeriodType == "Yearly") {
+                            $crntRw = array(
+                                "" . $row[0], $row[1], $row[2], $row[3], $row[4]
+                            );
+                        }else if ($bdgtPeriodType == "Half Yearly") {
+                            $crntRw = array(
+                                "" . $row[0], $row[1], $row[2], $row[3], $row[4], $row[5]
+                            );
+                        } else if ($bdgtPeriodType == "Quarterly") {
+                            $crntRw = array(
+                                "" . $row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6], $row[7]
+                            );
+                        } else {
+                            $crntRw = array(
+                                "" . $row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6],
+                                $row[7], $row[8], $row[9], $row[10], $row[11],
+                                $row[12], $row[13], $row[14], $row[15]
+                            );
+                        }
+                        fputcsv($opndfile, $crntRw);
+                        //file_put_contents($nwFileNm, $crntRw, FILE_APPEND | LOCK_EX);
+                        $percent = round((($z + 1) / $total) * 100, 2);
+                        $arr_content['percent'] = $percent;
+                        $arr_content['dwnld_url'] = $dwnldUrl;
+                        if ($percent >= 100) {
+                            $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!..." . ($z +
+                                1) . " out of " . $total . " Account(s) exported.</span>";
+                            $arr_content['msgcount'] = $total;
+                        } else {
+                            $arr_content['message'] = "<span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"><br/>Exporting Accounts...Please Wait..." . ($z +
+                                1) . " out of " . $total . " Account(s) exported.</span>";
+                        }
+                        file_put_contents(
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccntBdgtsExprt_progress.rho",
+                            json_encode($arr_content)
+                        );
+                        $z++;
+                    }
+                    fclose($opndfile);
+                } else {
+                    $percent = 100;
+                    $arr_content['percent'] = $percent;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> 100% Completed...An Error Occured!<br/>$errMsg</span>";
+                    $arr_content['msgcount'] = "";
+                    $arr_content['dwnld_url'] = "";
+                    file_put_contents(
+                        $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccntBdgtsExprt_progress.rho",
+                        json_encode($arr_content)
+                    );
+                }
+            } else if ($actyp == 904) {
+                //Checked Exporting Process Status                
+                header('Content-Type: application/json');
+                $file = $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccntBdgtsExprt_progress.rho";
+                if (file_exists($file)) {
+                    $text = file_get_contents($file);
+                    echo $text;
+
+                    $obj = json_decode($text);
+                    if ($obj->percent >= 100) {
+                        //$rs = file_exists($file) ? unlink($file) : TRUE;
+                    }
+                } else {
+                    echo json_encode(array("percent" => 0, "message" => '<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Not Started</span>'));
+                }
             }
         } else {
             if ($vwtyp == 0) {
-                //Budgeting
+                //Budgeting                
+                if (isBdgtMVPopulated() === false) {
+                    execSsnUpdtInsSQL("REFRESH MATERIALIZED VIEW accb.accb_budget_detail_mv");
+                }
                 echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=$group&typ=$type&pg=$pgNo&vtyp=0');\">
                                 <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
                                 <span style=\"text-decoration:none;\">Budgets</span>
@@ -342,8 +746,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         $valslctdArry = array("", "", "", "", "", "");
                                                         $srchInsArrys = array(
                                                             "Yearly", "Half Yearly", "Quarterly",
-                                                            "Monthly", "Fortnightly", "Weekly"
-                                                        );
+                                                            "Monthly"
+                                                        );/*, "Fortnightly", "Weekly"*/
                                                         for ($z = 0; $z < count($srchInsArrys); $z++) {
                                                             $nwRowHtml33 .= "<option value=\"" . $srchInsArrys[$z] . "\" " . $valslctdArry[$z] . ">" . $srchInsArrys[$z] . "</option>";
                                                         }
@@ -599,8 +1003,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     $valslctdArry = array("", "", "", "", "", "");
                                                                                     $srchInsArrys = array(
                                                                                         "Yearly", "Half Yearly", "Quarterly",
-                                                                                        "Monthly", "Fortnightly", "Weekly"
-                                                                                    );
+                                                                                        "Monthly"
+                                                                                    );/*, "Fortnightly", "Weekly"*/
                                                                                     for ($z = 0; $z < count($srchInsArrys); $z++) {
                                                                                         if ($trsctnPrdType == $srchInsArrys[$z]) {
                                                                                             $valslctdArry[$z] = "selected";
@@ -708,6 +1112,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 if (isset($_POST['qShwNonZeroOnly'])) {
                     $qShwNonZeroOnly = cleanInputData($_POST['qShwNonZeroOnly']) === "true" ? true : false;
                 }
+                //var_dump($_POST);
                 $total = get_Total_BdgtDt($srchFor, $srchIn, $accbSbmtdBudgetID, $qShwNonZeroOnly, $shdRefreshMatView);
                 if ($pageNo > ceil($total / $lmtSze)) {
                     $pageNo = 1;
@@ -819,7 +1224,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="saveAccbBudgetLines();" style="width:100% !important;" data-toggle="tooltip" title="Save Budget Lines">
                                         <img src="cmn_images/FloppyDisk.png" style="left: 0.5%;  height:20px; width:auto; position: relative; vertical-align: middle;">
                                     </button>
-                                    <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="" data-toggle="tooltip" title="Export Budget Lines">
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="exprtAccntBdgts();" data-toggle="tooltip" title="Export Budget Lines">
                                         <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                         Export
                                     </button>
@@ -906,7 +1311,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <label class="form-check-label">
                                         <?php
                                         $shwNonZeroOnlyChkd = "";
-                                        if ($qShwNonZeroOnly == true) {
+                                        if ($qShwNonZeroOnly === true) {
                                             $shwNonZeroOnlyChkd = "checked=\"true\"";
                                         }
                                         ?>
@@ -939,7 +1344,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="getMyMdlRptRuns('', 'ShowDialog', 'grp=9&typ=1&pg=1&vtyp=50&sbmtdRptID=<?php echo $rptID; ?>');" data-toggle="tooltip" title="Refresh Materialized Views">
                                         <img src="cmn_images/refresh.bmp" style="left: 0.5%;  height:20px; width:auto; position: relative; vertical-align: middle;">
                                     </button>
-                                    <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="" data-toggle="tooltip" title="Import Budget Lines">
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="importAccntBdgts();" data-toggle="tooltip" title="Import Budget Lines">
                                         <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                         Import
                                     </button>
@@ -953,9 +1358,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         $aedffrc = get_Bdgt_IncmSum($accbSbmtdBudgetID);
                                         $style1 = "color:green;";
                                         ?>
-                                        <input class="form-control" id="allVmsGLIntrfcsImbalsAmt" type="text" placeholder="0.00" value="<?php
-                                                                                                                                        echo number_format($aedffrc, 2);
-                                                                                                                                        ?>" readonly="true" style="font-size:16px;font-weight:bold;<?php echo $style1; ?>">
+                                        <input class="form-control" id="allBdgtsIncmSumAmt" type="text" placeholder="0.00" value="<?php
+                                                                                                                                    echo number_format($aedffrc, 2);
+                                                                                                                                    ?>" readonly="true" style="font-size:16px;font-weight:bold;<?php echo $style1; ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-3" style="padding:0px 1px 0px 1px !important;">
@@ -967,9 +1372,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         $lerdffrc = get_Bdgt_ExpnsSum($accbSbmtdBudgetID);
                                         $style1 = "color:green;";
                                         ?>
-                                        <input class="form-control" id="allVmsGLIntrfcsImbalsAmt" type="text" placeholder="0.00" value="<?php
-                                                                                                                                        echo number_format($lerdffrc, 2);
-                                                                                                                                        ?>" readonly="true" style="font-size:16px;font-weight:bold;<?php echo $style1; ?>">
+                                        <input class="form-control" id="allBdgtsExpnsSumAmt" type="text" placeholder="0.00" value="<?php
+                                                                                                                                    echo number_format($lerdffrc, 2);
+                                                                                                                                    ?>" readonly="true" style="font-size:16px;font-weight:bold;<?php echo $style1; ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-2" style="padding:0px 1px 0px 1px !important;">
@@ -984,9 +1389,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $style1 = "color:red;";
                                         }
                                         ?>
-                                        <input class="form-control" id="allVmsGLIntrfcsImbalsAmt" type="text" placeholder="0.00" value="<?php
-                                                                                                                                        echo number_format($dffrc, 2);
-                                                                                                                                        ?>" readonly="true" style="font-size:16px;font-weight:bold;<?php echo $style1; ?>">
+                                        <input class="form-control" id="allBdgtsDffrncSumAmt" type="text" placeholder="0.00" value="<?php
+                                                                                                                                    echo number_format($dffrc, 2);
+                                                                                                                                    ?>" readonly="true" style="font-size:16px;font-weight:bold;<?php echo $style1; ?>">
                                     </div>
                                 </div>
                             </div>

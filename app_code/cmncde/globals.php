@@ -19,6 +19,17 @@ function differenceInHours($startdate, $enddate)
     return $difference;
 }
 
+function get_Last_Date_Mnth($inpt_date_DMY)
+{
+    $strSql = "SELECT public.last_date_of_month('" . $inpt_date_DMY . "');";
+    $result = executeSQLNoParams($strSql);
+    if (loc_db_num_rows($result) > 0) {
+        $row = loc_db_fetch_array($result);
+        return $row[0];
+    }
+    return "";
+}
+
 function rhoReplaceBtn($str, $needle_start, $needle_end, $replacement, $rplcNeedlesToo = false)
 {
     $pos = strpos($str, $needle_start);
