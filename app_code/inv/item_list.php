@@ -3532,9 +3532,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </td>
                                                 <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
                                                 <td class="lovtd"><?php echo $trnsLnItmNm; ?></td>
-                                                <td class="lovtd"><?php
-                                                                    echo $trnsLnCtgryNm . str_replace(" (" . $trnsLnCtgryNm . ")", "", " (" . $trnsLnItmType . ")");
-                                                                    ?></td>
+                                                <td class="lovtd">
+                                                    <?php echo $trnsLnCtgryNm . str_replace(" (" . $trnsLnCtgryNm . ")", "", " (" . $trnsLnItmType . ")");
+                                                                    ?>
+                                                </td>
                                                 <td class="lovtd" style="max-width:55px;width:55px;text-align: center;">
                                                     <input type="hidden" id="scmSalesInvItmsHdrsRow<?php echo $cntr; ?>_UomID" value="<?php echo $trnsLnUomID; ?>">
                                                     <input type="hidden" id="scmSalesInvItmsHdrsRow<?php echo $cntr; ?>_QTY" value="<?php echo $trnsLnAvlblQty; ?>">
