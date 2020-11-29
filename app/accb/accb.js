@@ -4041,6 +4041,7 @@ function saveAccbPttyCashForm(funcur,shdSbmt) {
                                 lineCurNm.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") +
                                 "~" +
                                 lineEntrdAmt
+                                    .replace(/[^-?0-9\.]/g,"")
                                     .replace(/(~)/g,"{-;-;}")
                                     .replace(/(\|)/g,"{:;:;}") +
                                 "|";

@@ -3887,6 +3887,17 @@ function get_One_BdgtDtExprt($searchWord, $searchIn, $offset, $limit_size, $bdgt
    WHERE (a.accnt_id = b.accnt_id AND b.budget_id = " . $bdgtID . $whrcls . ") 
    ORDER BY a.accnt_typ_id, a.accnt_num LIMIT " . $limit_size .
             " OFFSET " . (abs($offset * $limit_size));
+    } else if ($bdgtPeriodType == "Half Yearly") {
+        $strSql = "Select DISTINCT a.accnt_num, a.accnt_name, 
+            gst.get_pssbl_val(b.entrd_curr_id) entrd_curr_nm, b.action_if_limit_excded, 
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-01-01 00:00:00', '" . $bdgtYear . "-06-30 23:59:59'), 
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-07-01 00:00:00', '" . $bdgtYear . "-12-31 23:59:59'), 
+            b.budget_id, a.accnt_typ_id, b.accnt_id, b.entrd_curr_id
+        FROM accb.accb_chart_of_accnts a,
+        accb.accb_budget_details b
+   WHERE (a.accnt_id = b.accnt_id AND b.budget_id = " . $bdgtID . $whrcls . ") 
+   ORDER BY a.accnt_typ_id, a.accnt_num LIMIT " . $limit_size .
+            " OFFSET " . (abs($offset * $limit_size));
     } else if ($bdgtPeriodType == "Quarterly") {
         $strSql = "Select DISTINCT a.accnt_num, a.accnt_name, 
             gst.get_pssbl_val(b.entrd_curr_id) entrd_curr_nm, b.action_if_limit_excded, 

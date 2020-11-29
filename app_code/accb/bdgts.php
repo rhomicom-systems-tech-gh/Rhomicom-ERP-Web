@@ -264,28 +264,45 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 if ($dataToSend != "") {
                     $variousRows = explode("|", $dataToSend);
                     $total = count($variousRows);
+                    $expctdCols = 16;
+                    if ($bdgtPeriodType == "Yearly") {
+                        $expctdCols = 5;
+                    } else if ($bdgtPeriodType == "Half Yearly") {
+                        $expctdCols = 6;
+                    } else if ($bdgtPeriodType == "Quarterly") {
+                        $expctdCols = 8;
+                    }
                     for ($z = 0; $z < $total; $z++) {
                         $crntRow = explode("~", $variousRows[$z]);
-                        if (count($crntRow) == 16) {
+                        if (count($crntRow) ==  $expctdCols) {
                             $ln_accntnumber = trim(cleanInputData1($crntRow[0]));
                             $ln_accntName = trim(cleanInputData1($crntRow[1]));
                             $ln_bdgtCrncyCode = trim(cleanInputData1($crntRow[2]));
                             $ln_actnIfExceeded = trim(cleanInputData1($crntRow[3]));
                             $ln_amnt1Value = trim(cleanInputData1($crntRow[4]));
-                            $ln_amnt2Value = trim(cleanInputData1($crntRow[5]));
-                            $ln_amnt3Value = trim(cleanInputData1($crntRow[6]));
-                            $ln_amnt4Value = trim(cleanInputData1($crntRow[7]));
-                            $ln_amnt5Value = trim(cleanInputData1($crntRow[8]));
-                            $ln_amnt6Value = trim(cleanInputData1($crntRow[9]));
-                            $ln_amnt7Value = trim(cleanInputData1($crntRow[10]));
-                            $ln_amnt8Value = trim(cleanInputData1($crntRow[11]));
-                            $ln_amnt9Value = trim(cleanInputData1($crntRow[12]));
-                            $ln_amnt10Value = trim(cleanInputData1($crntRow[13]));
-                            $ln_amnt11Value = trim(cleanInputData1($crntRow[14]));
-                            $ln_amnt12Value = trim(cleanInputData1($crntRow[15]));
 
+                            if ($bdgtPeriodType == "Monthly") {
+                                $ln_amnt2Value = trim(cleanInputData1($crntRow[5]));
+                                $ln_amnt3Value = trim(cleanInputData1($crntRow[6]));
+                                $ln_amnt4Value = trim(cleanInputData1($crntRow[7]));
+                                $ln_amnt5Value = trim(cleanInputData1($crntRow[8]));
+                                $ln_amnt6Value = trim(cleanInputData1($crntRow[9]));
+                                $ln_amnt7Value = trim(cleanInputData1($crntRow[10]));
+                                $ln_amnt8Value = trim(cleanInputData1($crntRow[11]));
+                                $ln_amnt9Value = trim(cleanInputData1($crntRow[12]));
+                                $ln_amnt10Value = trim(cleanInputData1($crntRow[13]));
+                                $ln_amnt11Value = trim(cleanInputData1($crntRow[14]));
+                                $ln_amnt12Value = trim(cleanInputData1($crntRow[15]));
+                            } else if ($bdgtPeriodType == "Half Yearly") {
+                                $ln_amnt2Value = trim(cleanInputData1($crntRow[5]));
+                            } else if ($bdgtPeriodType == "Quarterly") {
+                                $ln_amnt2Value = trim(cleanInputData1($crntRow[5]));
+                                $ln_amnt3Value = trim(cleanInputData1($crntRow[6]));
+                                $ln_amnt4Value = trim(cleanInputData1($crntRow[7]));
+                            }
                             if ($z == 0) {
-                                if (strtoupper($ln_accntnumber) == strtoupper("Account Number**")
+                                if (
+                                    strtoupper($ln_accntnumber) == strtoupper("Account Number**")
                                     && strtoupper($ln_accntName) == strtoupper("Account Name**")
                                     && strtoupper($ln_bdgtCrncyCode) == strtoupper("Budget Currency Code**")
                                 ) {
@@ -322,15 +339,53 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 "01-Jun-" . $bdgtYear, "01-Jul-" . $bdgtYear, "01-Aug-" . $bdgtYear, "01-Sep-" . $bdgtYear, "01-Oct-" . $bdgtYear,
                                 "01-Nov-" . $bdgtYear, "01-Dec-" . $bdgtYear
                             );
+                            $endDtes = array(
+                                "01-Jan-" . $bdgtYear, "01-Feb-" . $bdgtYear, "01-Mar-" . $bdgtYear, "01-Apr-" . $bdgtYear, "01-May-" . $bdgtYear,
+                                "01-Jun-" . $bdgtYear, "01-Jul-" . $bdgtYear, "01-Aug-" . $bdgtYear, "01-Sep-" . $bdgtYear, "01-Oct-" . $bdgtYear,
+                                "01-Nov-" . $bdgtYear, "01-Dec-" . $bdgtYear
+                            );
                             $prdVals = array(
                                 $ln_amnt1Value, $ln_amnt2Value, $ln_amnt3Value, $ln_amnt4Value,
                                 $ln_amnt5Value, $ln_amnt6Value, $ln_amnt7Value, $ln_amnt8Value,
                                 $ln_amnt9Value, $ln_amnt10Value, $ln_amnt11Value, $ln_amnt12Value
                             );
+                            if ($bdgtPeriodType == "Yearly") {
+                                $startDtes = array(
+                                    "01-Jan-" . $bdgtYear
+                                );
+                                $endDtes = array(
+                                    "01-Dec-" . $bdgtYear
+                                );
+                                $prdVals = array(
+                                    $ln_amnt1Value
+                                );
+                            } else if ($bdgtPeriodType == "Half Yearly") {
+                                $startDtes = array(
+                                    "01-Jan-" . $bdgtYear, "01-Jul-" . $bdgtYear
+                                );
+                                $endDtes = array(
+                                    "01-Jun-" . $bdgtYear, "01-Dec-" . $bdgtYear
+                                );
+                                $prdVals = array(
+                                    $ln_amnt1Value, $ln_amnt2Value
+                                );
+                            } else if ($bdgtPeriodType == "Quarterly") {
+                                $startDtes = array(
+                                    "01-Jan-" . $bdgtYear, "01-Apr-" . $bdgtYear,
+                                    "01-Jul-" . $bdgtYear, "01-Oct-" . $bdgtYear
+                                );
+                                $endDtes = array(
+                                    "01-Mar-" . $bdgtYear, "01-Jun-" . $bdgtYear,
+                                    "01-Sep-" . $bdgtYear, "01-Dec-" . $bdgtYear
+                                );
+                                $prdVals = array(
+                                    $ln_amnt1Value, $ln_amnt2Value, $ln_amnt3Value, $ln_amnt4Value
+                                );
+                            }
                             for ($k = 0; $k < count($startDtes); $k++) {
                                 $ln_EntrdAmt = (float) $prdVals[$k];
                                 $ln_StrtDte = $startDtes[$k];
-                                $ln_EndDte = get_Last_Date_Mnth($ln_StrtDte);
+                                $ln_EndDte = get_Last_Date_Mnth($endDtes[$k]);
                                 $ln_Action = $ln_actnIfExceeded;
                                 $ln_FuncExchgRate = 1;
                                 if ($ln_FuncExchgRate == 1 || $ln_FuncExchgRate == 0) {
@@ -476,6 +531,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         $hdngs = array(
                             "Account Number**", "Account Name**", "Budget Currency Code**", "Action if Exceeded**", "" . $bdgtYear . " Amount"
                         );
+                    } else if ($bdgtPeriodType == "Half Yearly") {
+                        $hdngs = array(
+                            "Account Number**", "Account Name**", "Budget Currency Code**", "Action if Exceeded**", "Jan-Jun " . $bdgtYear . " Amount", "Jul-Dec " . $bdgtYear . " Amount"
+                        );
                     } else if ($bdgtPeriodType == "Quarterly") {
                         $hdngs = array(
                             "Account Number**", "Account Name**", "Budget Currency Code**", "Action if Exceeded**", "Q1 " . $bdgtYear . " Amount", "Q2 " . $bdgtYear . " Amount", "Q3 " . $bdgtYear . " Amount", "Q4 " . $bdgtYear . " Amount"
@@ -502,7 +561,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccntBdgtsExprt_progress.rho",
                             json_encode($arr_content)
                         );
-
                         fclose($opndfile);
                         exit();
                     }
@@ -516,6 +574,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         if ($bdgtPeriodType == "Yearly") {
                             $crntRw = array(
                                 "" . $row[0], $row[1], $row[2], $row[3], $row[4]
+                            );
+                        }else if ($bdgtPeriodType == "Half Yearly") {
+                            $crntRw = array(
+                                "" . $row[0], $row[1], $row[2], $row[3], $row[4], $row[5]
                             );
                         } else if ($bdgtPeriodType == "Quarterly") {
                             $crntRw = array(
@@ -684,8 +746,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         $valslctdArry = array("", "", "", "", "", "");
                                                         $srchInsArrys = array(
                                                             "Yearly", "Half Yearly", "Quarterly",
-                                                            "Monthly", "Fortnightly", "Weekly"
-                                                        );
+                                                            "Monthly"
+                                                        );/*, "Fortnightly", "Weekly"*/
                                                         for ($z = 0; $z < count($srchInsArrys); $z++) {
                                                             $nwRowHtml33 .= "<option value=\"" . $srchInsArrys[$z] . "\" " . $valslctdArry[$z] . ">" . $srchInsArrys[$z] . "</option>";
                                                         }
@@ -941,8 +1003,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     $valslctdArry = array("", "", "", "", "", "");
                                                                                     $srchInsArrys = array(
                                                                                         "Yearly", "Half Yearly", "Quarterly",
-                                                                                        "Monthly", "Fortnightly", "Weekly"
-                                                                                    );
+                                                                                        "Monthly"
+                                                                                    );/*, "Fortnightly", "Weekly"*/
                                                                                     for ($z = 0; $z < count($srchInsArrys); $z++) {
                                                                                         if ($trsctnPrdType == $srchInsArrys[$z]) {
                                                                                             $valslctdArry[$z] = "selected";
