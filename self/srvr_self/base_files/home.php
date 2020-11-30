@@ -936,7 +936,15 @@ $lighterColor4 = rhoHex2Rgba($bckcolorOnly1, 0.05);
         <aside class="main-sidebar sidebar-dark-primary " style="border-right:1px solid #ddd;">
             <!-- Brand Logo -->
             <a href="index.php" class="brand-link" style="line-height:0.99 !important;width:100% !important;">
-                <img src="../<?php echo $app_image1; ?>" alt="Org Logo" class="brand-image img-circle elevation-3" style="opacity: .99">
+                <?php
+                $vPsblValID1 = getEnbldPssblValID("Application Instance SHORT CODE", getLovID("All Other General Setups"));
+                $vPsblVal1 = getPssblValDesc($vPsblValID1);
+                if ($vPsblVal1 == "JSK_MAIN_ERP_APP_1") {
+                ?>
+                    <img src="../cmn_images/JSK-logo-20-20_2.png" alt="Org Logo" class="brand-image img-circle elevation-3" style="opacity: .99">
+                <?php } else { ?>
+                    <img src="../<?php echo $app_image1; ?>" alt="Org Logo" class="brand-image img-circle elevation-3" style="opacity: .99">
+                <?php } ?>
                 <strong class="brand-text wordEllipsis1" style="font-size:13px !important;padding-top: 9px;font-weight: normal;display:inline-block;"><?php echo $app_name; ?></strong>
             </a>
             <!-- Sidebar -->
