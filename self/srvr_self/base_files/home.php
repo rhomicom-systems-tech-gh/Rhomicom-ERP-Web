@@ -941,7 +941,7 @@ $lighterColor4 = rhoHex2Rgba($bckcolorOnly1, 0.05);
                 $vPsblVal1 = getPssblValDesc($vPsblValID1);
                 if ($vPsblVal1 == "JSK_MAIN_ERP_APP_1") {
                 ?>
-                    <img src="../cmn_images/JSK-logo-20-20_2.png" alt="Org Logo" class="brand-image img-circle elevation-3" style="opacity: .99">
+                    <img src="../cmn_images/JSK-logo-20-20_3.png" alt="Org Logo" class="brand-image img-circle elevation-3" style="opacity: .99">
                 <?php } else { ?>
                     <img src="../<?php echo $app_image1; ?>" alt="Org Logo" class="brand-image img-circle elevation-3" style="opacity: .99">
                 <?php } ?>

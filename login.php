@@ -245,7 +245,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     $vPsblVal1 = getPssblValDesc($vPsblValID1);
                                                     if ($vPsblVal1 == "JSK_MAIN_ERP_APP_1") {
                                                     ?>
-                                                        <img src="cmn_images/JSK-logo-20-20_2.png" style="left: 0.5%; padding-right: 1em; height:60px; width:auto; position: relative; vertical-align: middle;">
+                                                        <img src="cmn_images/JSK-logo-20-20_3.png" style="left: 0.5%; padding-right: 1em; height:60px; width:auto; position: relative; vertical-align: middle;">
                                                     <?php } else { ?>
                                                         <img src="<?php echo $app_image1; ?>" style="left: 0.5%; padding-right: 1em; height:60px; width:auto; position: relative; vertical-align: middle;">
                                                     <?php } ?>
