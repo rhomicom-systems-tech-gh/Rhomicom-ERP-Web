@@ -575,7 +575,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $crntRw = array(
                                 "" . $row[0], $row[1], $row[2], $row[3], $row[4]
                             );
-                        }else if ($bdgtPeriodType == "Half Yearly") {
+                        } else if ($bdgtPeriodType == "Half Yearly") {
                             $crntRw = array(
                                 "" . $row[0], $row[1], $row[2], $row[3], $row[4], $row[5]
                             );
