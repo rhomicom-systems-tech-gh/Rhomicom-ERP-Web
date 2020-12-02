@@ -517,7 +517,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     exit();
                 }
                 $orgnlScmCnsgnRtrnID = $sbmtdScmCnsgnRtrnID;
-                $scmCnsgnRtrnDfltTrnsDte = $gnrlTrnsDteDMYHMS;
+                $scmCnsgnRtrnDfltTrnsDte = $gnrlTrnsDteDMY;//HMS
                 $scmCnsgnRtrnCreator = $uName;
                 $scmCnsgnRtrnCreatorID = $usrID;
                 $gnrtdTrnsNo = "";

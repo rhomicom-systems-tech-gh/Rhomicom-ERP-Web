@@ -358,7 +358,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $sbmtdScmCnsgnRcptPOID = -1;
                 $sbmtdScmCnsgnRcptITEMID = -1;
                 $orgnlScmCnsgnRcptID = $sbmtdScmCnsgnRcptID;
-                $scmCnsgnRcptDfltTrnsDte = $gnrlTrnsDteDMYHMS;
+                $scmCnsgnRcptDfltTrnsDte = $gnrlTrnsDteDMY;//HMS
                 $scmCnsgnRcptCreator = $uName;
                 $scmCnsgnRcptCreatorID = $usrID;
                 $gnrtdTrnsNo = "";
