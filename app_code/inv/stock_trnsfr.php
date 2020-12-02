@@ -494,7 +494,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     exit();
                 }
                 $orgnlScmStockTrnsfrID = $sbmtdScmStockTrnsfrID;
-                $scmStockTrnsfrDfltTrnsDte = $gnrlTrnsDteDMYHMS;
+                $scmStockTrnsfrDfltTrnsDte = $gnrlTrnsDteDMY;//HMS
                 $scmStockTrnsfrCreator = $uName;
                 $scmStockTrnsfrCreatorID = $usrID;
                 $scmStockTrnsfrSrcStoreID = -1;

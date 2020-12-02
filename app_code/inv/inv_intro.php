@@ -61,6 +61,7 @@ if ($accbFSRptStoreID > 0 && getUserStorePkeyID($accbFSRptStoreID) > 0) {
 $gnrlTrnsDteDMYHMS = getFrmtdDB_Date_time();
 $gnrlTrnsDteYMDHMS = cnvrtDMYTmToYMDTm($gnrlTrnsDteDMYHMS);
 $gnrlTrnsDteYMD = substr($gnrlTrnsDteYMDHMS, 0, 10);
+$gnrlTrnsDteDMY= substr($gnrlTrnsDteDMYHMS, 0, 11);
 
 $invPrmSnsRstl = getInvPgPrmssns($prsnid, $orgID, $usrID);
 $fnccurid = $invPrmSnsRstl[0];
@@ -280,4 +281,3 @@ if ($lgn_num > 0 && $canview === true) {
 } else {
     restricted();
 }
-?>
