@@ -170,13 +170,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $lnSlctdAmtBrkdwns = cleanInputData1($crntRow[1]);
                             $lnRefDoc = cleanInputData1($crntRow[2]);
                             $ln_IncrsDcrs1 = cleanInputData1($crntRow[3]);
-                            $ln_AccountID1 = cleanInputData1($crntRow[4]);
+                            $ln_AccountID1 =(int) cleanInputData1($crntRow[4]);
                             $ln_IncrsDcrs2 = "Increase";
                             $ln_AccountID2 = $accbPttyCashDfltBalsAcntID;
                             $lineDesc = cleanInputData1($crntRow[5]);
                             $lineCurNm = cleanInputData1($crntRow[6]);
                             $lineCurID = getPssblValID($lineCurNm, $curLovID);
-                            $entrdAmt = cleanInputData1($crntRow[7]);
+                            $entrdAmt =(float) cleanInputData1($crntRow[7]);
                             $lineTransDate = $accbPttyCashDfltTrnsDte;
                             $drCrdt1 = dbtOrCrdtAccnt($ln_AccountID1, substr($ln_IncrsDcrs1, 0, 1)) == "Debit" ? "D" : "C";
                             if ($drCrdt1 == "D") {

@@ -19,6 +19,17 @@ function differenceInHours($startdate, $enddate)
     return $difference;
 }
 
+function get_Last_Date_Mnth($inpt_date_DMY)
+{
+    $strSql = "SELECT public.last_date_of_month('" . $inpt_date_DMY . "');";
+    $result = executeSQLNoParams($strSql);
+    if (loc_db_num_rows($result) > 0) {
+        $row = loc_db_fetch_array($result);
+        return $row[0];
+    }
+    return "";
+}
+
 function rhoReplaceBtn($str, $needle_start, $needle_end, $replacement, $rplcNeedlesToo = false)
 {
     $pos = strpos($str, $needle_start);
@@ -1334,14 +1345,25 @@ function generateReportRun($rptID, $slctdParams, $alrtID)
         logSessionErrs(str_replace($db_pwd, "***************", $cmd));
         //return -1;
         $logfilenm = $ftp_base_db_fldr . "/Logs/cmnd_line_logs_" . $rptRunID . "_" . getDB_Date_timeYYMDHMS() . ".txt";
-        $rslt = rhoPOSTToAPI(
-            $rhoAPIUrl . '/startJavaRunner',
-            array(
-                'rnnrPrcsFile' => $rnnrPrcsFile,
-                'strArgs' => $strArgs
-            )
-        );
-        //sexecInBackground($cmd, $logfilenm);
+
+        $rhoAPIhost = parse_url($rhoAPIUrl, PHP_URL_HOST);
+        $rhoAPIport = parse_url($rhoAPIUrl, PHP_URL_PORT);
+
+        $errno = 0;
+        $errstr = "";
+        set_error_handler("rhoErrorHandler3");
+        $rc = @fsockopen($rhoAPIhost, $rhoAPIport, $errno, $errstr, 1);
+        if (is_resource($rc)) {
+            $rslt = rhoPOSTToAPI(
+                $rhoAPIUrl . '/startJavaRunner',
+                array(
+                    'rnnrPrcsFile' => $rnnrPrcsFile,
+                    'strArgs' => $strArgs
+                )
+            );
+        } else {
+            execInBackground($cmd, $logfilenm);
+        }
     } else {
         echo "Invalid Parameters";
     }
@@ -1357,6 +1379,7 @@ function reRunReport($rptID, $rptRunID)
     global $postgre_db_pwd;
     global $database;
     global $app_url;
+    global $rhoAPIUrl;
     $db_usr = "postgres";
     $db_pwd = $postgre_db_pwd;
     $outputUsd = "HTML";
@@ -1390,7 +1413,25 @@ function reRunReport($rptID, $rptRunID)
     $cmd = "java -jar " . $rnnrPrcsFile . " " . $strArgs;
     logSessionErrs(str_replace($db_pwd, "***************", $cmd));
     $logfilenm = $ftp_base_db_fldr . "/Logs/cmnd_line_logs_" . $rptRunID . "_" . getDB_Date_timeYYMDHMS() . ".txt";
-    execInBackground($cmd, $logfilenm);
+
+    $rhoAPIhost = parse_url($rhoAPIUrl, PHP_URL_HOST);
+    $rhoAPIport = parse_url($rhoAPIUrl, PHP_URL_PORT);
+
+    $errno = 0;
+    $errstr = "";
+    set_error_handler("rhoErrorHandler3");
+    $rc = @fsockopen($rhoAPIhost, $rhoAPIport, $errno, $errstr, 1);
+    if (is_resource($rc)) {
+        $rslt = rhoPOSTToAPI(
+            $rhoAPIUrl . '/startJavaRunner',
+            array(
+                'rnnrPrcsFile' => $rnnrPrcsFile,
+                'strArgs' => $strArgs
+            )
+        );
+    } else {
+        execInBackground($cmd, $logfilenm);
+    }
     return $rptRunID;
 }
 

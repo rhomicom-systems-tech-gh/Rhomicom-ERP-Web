@@ -292,21 +292,29 @@ $html .= " </tfoot>
 
 // Write the contents back to the file
 file_put_contents($file, $html, FILE_APPEND);
+$exitErrMsg = "";
+$cmd = $browserPDFCmd . " --headless --no-sandbox --disable-gpu --print-to-pdf=\"$fullPemDest1\" " . $fullPemDest;
+$rhoAPIhost = parse_url($rhoAPIUrl, PHP_URL_HOST);
+$rhoAPIport = parse_url($rhoAPIUrl, PHP_URL_PORT);
 
-//$cmd = $browserPDFCmd . " --headless --no-sandbox --disable-gpu --print-to-pdf=\"$fullPemDest1\" " . $fullPemDest;
-      
-$rslt = rhoPOSTToAPI(
-    $rhoAPIUrl . '/getChromePDF',
-    array(
-        'browserPDFCmd' => $browserPDFCmd,
-        'pdfPath' => $fullPemDest1,
-        'htmPath' => $fullPemDest
-    )
-);
-$exitErrMsg = $rslt;
-
-//logSsnErrs($cmd);
-//$exitErrMsg = shellExecInBackground($ftp_base_db_fldr . "/bin", $cmd);
+$errno = 0;
+$errstr = "";
+set_error_handler("rhoErrorHandler3");
+$rc = @fsockopen($rhoAPIhost, $rhoAPIport, $errno, $errstr, 1);
+if (is_resource($rc)) {
+    $rslt = rhoPOSTToAPI(
+        $rhoAPIUrl . '/getChromePDF',
+        array(
+            'browserPDFCmd' => $browserPDFCmd,
+            'pdfPath' => $fullPemDest1,
+            'htmPath' => $fullPemDest
+        )
+    );
+    $exitErrMsg = $rslt;
+} else {
+    //logSsnErrs($cmd);
+    $exitErrMsg = shellExecInBackground($ftp_base_db_fldr . "/bin", $cmd);
+}
 /*$waitCntr = 0;
 while (!file_exists($fullPemDest1) && $waitCntr < 5) {
     $waitCntr++;

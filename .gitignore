@@ -1,0 +1,9 @@
+dwnlds/amcharts_2100/samples/*.html
+dwnlds/amcharts_2100/samples/*.pdf
+dwnlds/tmp/*.png
+dwnlds/tmp/*.jpg
+dwnlds/tmp/*.pdf
+dwnlds/tmp/*.html
+dwnlds/tmp/*.jrxml
+phpinfo.php
+phpsecinfo

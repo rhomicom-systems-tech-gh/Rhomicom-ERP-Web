@@ -4019,8 +4019,8 @@ function prsnDataRODsply1($pkID)
         for ($d = 0; $d < $colsCnt; $d++) {
             $style = "";
             $style2 = "";
-            $row[$d] ??= '';
-            $rowRqst[$d] ??= '';
+            $row[$d] =$row[$d] ?? '';
+            $rowRqst[$d] =$rowRqst[$d] ??  '';
             if (trim(loc_db_field_name($result, $d)) == "mt") {
                 $style = "style=\"display:none;\"";
             }

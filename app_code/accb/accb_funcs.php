@@ -3841,6 +3841,82 @@ function get_Total_Bdgt($searchWord, $searchIn, $orgID)
     return 0;
 }
 
+function get_One_BdgtDtExprt($searchWord, $searchIn, $offset, $limit_size, $bdgtID, $bdgtYear, $bdgtPeriodType)
+{
+    /* Account Number
+      Account Name
+      Period Start Date
+      Period End Date */
+    $whrcls = "";
+    $strSql = "";
+    if ($searchIn == "Account Number") {
+        $whrcls = " and (a.accnt_num ilike '" . loc_db_escape_string($searchWord) . "' or a.accnt_name ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Account Name") {
+        $whrcls = " and (a.accnt_num ilike '" . loc_db_escape_string($searchWord) . "' or a.accnt_name ilike '" . loc_db_escape_string($searchWord) . "')";
+    }
+
+    $strSql = "Select DISTINCT a.accnt_num, a.accnt_name, 
+            gst.get_pssbl_val(b.entrd_curr_id) entrd_curr_nm, b.action_if_limit_excded, 
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-01-01 00:00:00', '" . $bdgtYear . "-01-31 23:59:59'), 
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-02-01 00:00:00', '" . $bdgtYear . "-02-31 23:59:59'),
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-03-01 00:00:00', '" . $bdgtYear . "-03-31 23:59:59'), 
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-04-01 00:00:00', '" . $bdgtYear . "-04-31 23:59:59'),
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-05-01 00:00:00', '" . $bdgtYear . "-05-31 23:59:59'), 
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-06-01 00:00:00', '" . $bdgtYear . "-06-31 23:59:59'),
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-07-01 00:00:00', '" . $bdgtYear . "-07-31 23:59:59'), 
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-08-01 00:00:00', '" . $bdgtYear . "-08-31 23:59:59'),
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-09-01 00:00:00', '" . $bdgtYear . "-09-31 23:59:59'), 
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-10-01 00:00:00', '" . $bdgtYear . "-10-31 23:59:59'),
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-11-01 00:00:00', '" . $bdgtYear . "-11-31 23:59:59'), 
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-12-01 00:00:00', '" . $bdgtYear . "-12-31 23:59:59'), 
+            b.budget_id, a.accnt_typ_id, b.accnt_id, b.entrd_curr_id
+        FROM accb.accb_chart_of_accnts a,
+        accb.accb_budget_details b
+   WHERE (a.accnt_id = b.accnt_id AND b.budget_id = " . $bdgtID . $whrcls . ") 
+   ORDER BY a.accnt_typ_id, a.accnt_num LIMIT " . $limit_size .
+        " OFFSET " . (abs($offset * $limit_size));
+    //b.func_curr_rate, 
+
+    if ($bdgtPeriodType == "Yearly") {
+        $strSql = "Select DISTINCT a.accnt_num, a.accnt_name, 
+            gst.get_pssbl_val(b.entrd_curr_id) entrd_curr_nm, b.action_if_limit_excded, 
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-01-01 00:00:00', '" . $bdgtYear . "-12-31 23:59:59'), 
+            b.budget_id, a.accnt_typ_id, b.accnt_id, b.entrd_curr_id
+        FROM accb.accb_chart_of_accnts a,
+        accb.accb_budget_details b
+   WHERE (a.accnt_id = b.accnt_id AND b.budget_id = " . $bdgtID . $whrcls . ") 
+   ORDER BY a.accnt_typ_id, a.accnt_num LIMIT " . $limit_size .
+            " OFFSET " . (abs($offset * $limit_size));
+    } else if ($bdgtPeriodType == "Half Yearly") {
+        $strSql = "Select DISTINCT a.accnt_num, a.accnt_name, 
+            gst.get_pssbl_val(b.entrd_curr_id) entrd_curr_nm, b.action_if_limit_excded, 
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-01-01 00:00:00', '" . $bdgtYear . "-06-30 23:59:59'), 
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-07-01 00:00:00', '" . $bdgtYear . "-12-31 23:59:59'), 
+            b.budget_id, a.accnt_typ_id, b.accnt_id, b.entrd_curr_id
+        FROM accb.accb_chart_of_accnts a,
+        accb.accb_budget_details b
+   WHERE (a.accnt_id = b.accnt_id AND b.budget_id = " . $bdgtID . $whrcls . ") 
+   ORDER BY a.accnt_typ_id, a.accnt_num LIMIT " . $limit_size .
+            " OFFSET " . (abs($offset * $limit_size));
+    } else if ($bdgtPeriodType == "Quarterly") {
+        $strSql = "Select DISTINCT a.accnt_num, a.accnt_name, 
+            gst.get_pssbl_val(b.entrd_curr_id) entrd_curr_nm, b.action_if_limit_excded, 
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-01-01 00:00:00', '" . $bdgtYear . "-03-31 23:59:59'), 
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-04-01 00:00:00', '" . $bdgtYear . "-06-31 23:59:59'),
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-07-01 00:00:00', '" . $bdgtYear . "-09-31 23:59:59'), 
+            accb.get_bdgt_amount(b.budget_id,b.accnt_id, '" . $bdgtYear . "-10-01 00:00:00', '" . $bdgtYear . "-12-31 23:59:59'), 
+            b.budget_id, a.accnt_typ_id, b.accnt_id, b.entrd_curr_id
+        FROM accb.accb_chart_of_accnts a,
+        accb.accb_budget_details b
+   WHERE (a.accnt_id = b.accnt_id AND b.budget_id = " . $bdgtID . $whrcls . ") 
+   ORDER BY a.accnt_typ_id, a.accnt_num LIMIT " . $limit_size .
+            " OFFSET " . (abs($offset * $limit_size));
+    }
+    //logSessionErrs($strSql);
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
 function get_One_BdgtDt($searchWord, $searchIn, $offset, $limit_size, $bdgtID, $qShwNonZeroOnly, $shdRefreshMatView = false)
 {
     /* Account Number
@@ -3980,6 +4056,17 @@ function get_Bdgt_ExpnsSum($bdgtID)
         return (float) $row[0];
     }
     return 0;
+}
+
+function isBdgtMVPopulated()
+{
+    $strSql = "SELECT (CASE WHEN relispopulated THEN 'true' ELSE 'false' END) mv_loaded FROM pg_class WHERE relname = 'accb_budget_detail_mv'";
+    $result = executeSQLNoParams($strSql);
+
+    while ($row = loc_db_fetch_array($result)) {
+        return  $row[0] == "true";
+    }
+    return false;
 }
 
 function get_Bdgt_MinCrncyID($bdgtID)
@@ -8089,189 +8176,16 @@ function reCalcPyblInvcSmmrys($srcDocID, $srcDocType, $invcCurrID)
         return $row[0];
     }
     return "ERROR:No Result";
-    /*
-      accb.recalcpyblssmmrys(p_docHdrID, v_doctype, p_who_rn)
-     * $grndAmnt = getPyblsDocGrndAmnt($srcDocID);
-      //Grand Total
-      $smmryNm = "Grand Total";
-      $smmryID = getPyblsSmmryItmID("6Grand Total", -1, $srcDocID, $srcDocType, $smmryNm);
-      if ($smmryID <= 0) {
-      $curlnID = getNewPyblsLnID();
-      createPyblsDocDet($curlnID, $srcDocID, "6Grand Total", $smmryNm, $grndAmnt, $invcCurrID, -1, $srcDocType, true, "Increase", -1, "Increase", -1, -1, "VALID", -1, -1, -1, 0, 0, 0, 0, -1, "", ",", -1, -1, -1);
-      } else {
-      updtPyblsDocDet($smmryID, $srcDocID, "6Grand Total", $smmryNm, $grndAmnt, $invcCurrID, -1, $srcDocType, true, "Increase", -1, "Increase", -1, -1, "VALID", -1, -1, -1, 0, 0, 0, 0, -1, "", ",", -1, -1, -1);
-      }
-
-      //7Total Payments Received
-      $smmryNm = "Total Payments Made";
-      $smmryID = getPyblsSmmryItmID("7Total Payments Made", -1, $srcDocID, $srcDocType, $smmryNm);
-      $pymntsAmnt = getPyblsDocTtlPymnts($srcDocID, $srcDocType);
-
-      if ($smmryID <= 0) {
-      $curlnID = getNewPyblsLnID();
-      createPyblsDocDet($curlnID, $srcDocID, "7Total Payments Made", $smmryNm, $pymntsAmnt, $invcCurrID, -1, $srcDocType, true, "Increase", -1, "Increase", -1, -1, "VALID", -1, -1, -1, 0, 0, 0, 0, -1, "", ",", -1, -1, -1);
-      } else {
-      updtPyblsDocDet($smmryID, $srcDocID, "7Total Payments Made", $smmryNm, $pymntsAmnt, $invcCurrID, -1, $srcDocType, true, "Increase", -1, "Increase", -1, -1, "VALID", -1, -1, -1, 0, 0, 0, 0, -1, "", ",", -1, -1, -1);
-      }
-
-      //7Total Payments Received
-      $smmryNm = "Outstanding Balance";
-      $smmryID = getPyblsSmmryItmID("8Outstanding Balance", -1, $srcDocID, $srcDocType, $smmryNm);
-      $outstndngAmnt = $grndAmnt - $pymntsAmnt;
-      if ($smmryID <= 0) {
-      $curlnID = getNewPyblsLnID();
-      createPyblsDocDet($curlnID, $srcDocID, "8Outstanding Balance", $smmryNm, $outstndngAmnt, $invcCurrID, -1, $srcDocType, true, "Increase", -1, "Increase", -1, -1, "VALID", -1, -1, -1, 0, 0, 0, 0, -1, "", ",", -1, -1, -1);
-      } else {
-      updtPyblsDocDet($smmryID, $srcDocID, "8Outstanding Balance", $smmryNm, $outstndngAmnt, $invcCurrID, -1, $srcDocType, true, "Increase", -1, "Increase", -1, -1, "VALID", -1, -1, -1, 0, 0, 0, 0, -1, "", ",", -1, -1, -1);
-      } */
 }
 
 function validatePyblInvcLns($docHdrID, $docType, $invcAmnt, &$errMsg)
 {
     $errMsg = "";
     $sameprepayCnt = getPyblsPrepayDocCnt($docHdrID);
-    /* $grndAmnt = getPyblsDocGrndAmnt($docHdrID);
-      if (round($invcAmnt, 2) != round($grndAmnt, 2)) {
-      $errMsg .= "Total Invoice Amount must be the Same as the Invoice Grand Total!";
-      return false;
-      } */
     if ($sameprepayCnt > 1) {
         $errMsg .= "Same Prepayment Cannot be Applied More than Once!";
         return false;
     }
-
-    /* $blcngAccntID = -1;
-      $costAccntID = -1;
-      $result = get_PyblsInvcDocDet($docHdrID);
-      $i = 0;
-      while ($row = loc_db_fetch_array($result)) {
-      $lineTypeNm = $row[1];
-      $codeBhndID = (int) $row[4];
-      $prepayDocID = (float) $row[10];
-      $prepayLnAmnt = (float) $row[3];
-
-      if ($lineTypeNm == "5Applied Prepayment") {
-      if (($docType == "Supplier Advance Payment"
-      || $docType == "Supplier Credit Memo (InDirect Refund)"
-      || $docType == "Supplier Debit Memo (InDirect Topup)")) {
-      $errMsg .= "Cannot Apply Prepayments to this Document Type!";
-      return false;
-      } else {
-      $prepayAvlblAmnt = get_PyblPrepayDocAvlblAmnt($prepayDocID);
-      if ($prepayLnAmnt > $prepayAvlblAmnt) {
-      $errMsg .= "Applied Prepayment Amount Exceeds the \r\nAvailable Amount on the Source Document!";
-      return false;
-      }
-      }
-      }
-
-      $incrDcrs1 = $row[6];
-      $accntID1 = (int) $row[7];
-      $isdbtCrdt1 = dbtOrCrdtAccnt($accntID1, substr($incrDcrs1, 0, 1));
-
-      $incrDcrs2 = $row[8];
-      $accntID2 = (int) $row[9];
-
-      $lnAmnt = (float) $row[3];
-      if ($lnAmnt == 0) {
-      $errMsg .= "Please Enter an Amount Other than Zero for all Lines!";
-      return false;
-      }
-      if ($accntID1 <= 0 || $accntID2 <= 0) {
-      $errMsg .= "Please provide the Costing and Balancing Account for all Lines!";
-      return false;
-      }
-
-      $isdbtCrdt2 = dbtOrCrdtAccnt($accntID2, substr($incrDcrs2, 0, 1));
-      if ($i == 0) {
-      $blcngAccntID = $accntID2;
-      $costAccntID = $accntID1;
-      }
-
-      if ($blcngAccntID != $accntID2) {
-      $errMsg .= "Balancing Account must be the Same for all Lines!";
-      return false;
-      }
-
-      if ($docType == "Supplier Advance Payment"
-      && $costAccntID != $accntID1) {
-      $errMsg .= "Costing Account must be the Same for all " .
-      "\r\nLines in a Supplier Advance Payment Document!";
-      return false;
-      }
-
-      $acntType = getAccntType($accntID1);
-
-      if ($docType == "Supplier Advance Payment" && $acntType != "A") {
-      $errMsg .= "Must Increase an Account Receivable(Prepaid Expense Account) for all " .
-      "\r\nLines in a Supplier Advance Payment Document!";
-      return false;
-      }
-
-      if (strtoupper($isdbtCrdt1) == strtoupper($isdbtCrdt2)) {
-      if ($docType == "Supplier Standard Payment"
-      || $docType == "Supplier Advance Payment"
-      || $docType == "Direct Topup for Supplier"
-      || $docType == "Supplier Debit Memo (InDirect Topup)") {
-      if ($lineTypeNm == "1Initial Amount") {
-      $errMsg .= "Row " . ($i + 1) .
-      ":- Must Increase Asset, Expense or Prepaid Expense Account!";
-      return false;
-      }
-      if ($lineTypeNm == "2Tax") {
-      $errMsg .= "Row " . ($i + 1) .
-      ":- Must Increase Purchase Tax Expense or Increase/Decrease Taxes Payable Account!";
-      return false;
-      }
-      if ($lineTypeNm == "3Discount") {
-      $errMsg .= "Row " . ($i + 1) .
-      ":- Must Increase Purchase Discounts (Contra Expense) Account!";
-      return false;
-      }
-      if ($lineTypeNm == "4Extra Charge") {
-      $errMsg .= "Row " . ($i + 1) .
-      ":- Must Increase Asset or Expense Account!";
-      return false;
-      }
-      if ($docType == "Supplier Standard Payment"
-      || $docType == "Direct Topup for Supplier") {
-      if ($lineTypeNm == "5Applied Prepayment") {
-      $errMsg .= "Row " . ($i + 1) .
-      ":- Must Decrease Prepaid Expense Account or Receivables Account!";
-      return false;
-      }
-      }
-      } else {
-      if ($lineTypeNm == "1Initial Amount") {
-      $errMsg .= "Row " . ($i + 1) .
-      ":- Must Decrease an Asset, Expense or Prepaid Expense Account!";
-      return false;
-      }
-      if ($lineTypeNm == "2Tax") {
-      $errMsg .= "Row " . ($i + 1) .
-      ":- Must Decrease a Purchase Tax Expense or Increase/Decrease a Taxes Payable Account!";
-      return false;
-      }
-      if ($lineTypeNm == "3Discount") {
-      $errMsg .= "Row " . ($i + 1) .
-      ":- Must Increase Purchase Discounts (Contra Expense) Account!";
-      return false;
-      }
-      if ($lineTypeNm == "4Extra Charge") {
-      $errMsg .= "Row " . ($i + 1) .
-      ":- Must Decrease Asset or Expense Account!";
-      return false;
-      }
-      if (docType == "Direct Refund from Supplier") {
-      if ($lineTypeNm == "5Applied Prepayment") {
-      $errMsg .= "Row " . ($i + 1) .
-      ":- Must Decrease a Receivables Account!";
-      return false;
-      }
-      }
-      }
-      }
-      } */
     return true;
 }
 
@@ -12940,6 +12854,7 @@ function deleteTaxItm($itmid, $itmNm)
 
 function isTxCdeSQLValid($selSQL, $untiPrice, $qty, &$CalcItemValue)
 {
+    set_error_handler("rhoErrorHandler3");
     try {
         if (strpos(strtoupper($selSQL), "DELETE ") !== FALSE || strpos(strtoupper($selSQL), "UPDATE ") !== FALSE || strpos(
             strtoupper($selSQL),

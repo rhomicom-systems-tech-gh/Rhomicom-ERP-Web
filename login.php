@@ -8,11 +8,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
       exit();
       } */
     if ($lgn_num <= 0) {  //echo $lgn_num."-LGN_NUM-".$error;
-        ?>
+?>
         <link rel="STYLESHEET" type="text/css" href="cmn_scrpts/loginStyles.css?v=<?php echo $radomNo; ?>" />
         <script type="text/javascript">
-            if ((typeof window.Worker === "function"))
-            {
+            if ((typeof window.Worker === "function")) {
                 //Worker Supported
                 /*document.addEventListener('contextmenu', function (e) {
                  e.preventDefault();
@@ -25,14 +24,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                  return false;
                  }
                  });*/
-            } else
-            {
+            } else {
                 window.location = 'notsupported.php';
             }
         </script>
         <script type="text/javascript">
-            function enterKeyFunc(e)
-            {
+            function enterKeyFunc(e) {
                 var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
                 if (charCode == 13) {
                     homePage();
@@ -40,8 +37,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 //return false;
             }
 
-            function homePage()
-            {
+            function homePage() {
                 //alert("test" + myCountry() + myIP());
                 var xmlhttp;
                 var usrNm = "";
@@ -51,50 +47,44 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 usrNm = document.getElementById("usrnm").value;
                 old_pswd = document.getElementById("pwd").value;
                 machdet = document.getElementById("machdet").value;
-                if (usrNm === "" || usrNm === null)
-                {
+                if (usrNm === "" || usrNm === null) {
                     $('#modal-7 .modal-body').html('User Name cannot be empty!');
-                    $('#modal-7').modal('show', {backdrop: 'static'});
+                    $('#modal-7').modal('show', {
+                        backdrop: 'static'
+                    });
                     //alert('User Name cannot be empty!');
                     return false;
                 }
-                if (old_pswd === "" || old_pswd === null)
-                {
+                if (old_pswd === "" || old_pswd === null) {
                     $('#modal-7 .modal-body').html('Password cannot be empty!');
-                    $('#modal-7').modal('show', {backdrop: 'static'});
+                    $('#modal-7').modal('show', {
+                        backdrop: 'static'
+                    });
                     //alert('Password cannot be empty!');
                     return false;
                 }
                 lnkArgs = "usrnm=" + usrNm + "&pwd=" + old_pswd + "&machdet=" + machdet + "&screenwdth=" + screen.width;
-                if (window.XMLHttpRequest)
-                {
+                if (window.XMLHttpRequest) {
                     // code for IE7+, Firefox, Chrome, Opera, Safari
                     xmlhttp = new XMLHttpRequest();
-                } else
-                {
+                } else {
                     // code for IE6, IE5
                     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
                 }
 
-                xmlhttp.onreadystatechange = function ()
-                {
-                    if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-                    {
+                xmlhttp.onreadystatechange = function() {
+                    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                         var rspns = xmlhttp.responseText;
                         /*alert(xmlhttp.responseText);*/
-                        if (rspns.indexOf('change password') > -1
-                                || rspns.indexOf('select role') > -1)
-                        {
+                        if (rspns.indexOf('change password') > -1 ||
+                            rspns.indexOf('select role') > -1) {
                             window.location = 'index.php';
-                        } else if (rspns.indexOf('select self') > -1)
-                        {
+                        } else if (rspns.indexOf('select self') > -1) {
                             window.location = 'self/index.php';
-                        } else
-                        {
+                        } else {
                             document.getElementById("msgArea").innerHTML = "<span class=\"wordwrap3\" style=\"color:red;font-size:12px;text-align: center;margin-top:0px;\">&nbsp;" + rspns + "</span>";
                         }
-                    } else
-                    {
+                    } else {
                         document.getElementById("msgArea").innerHTML = "<span class=\"wordwrap3\" style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"><img style=\"width:145px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;\" src='cmn_images/ajax-loader2.gif'/>Loading...Please Wait...</span>";
                     }
                 };
@@ -103,29 +93,23 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 xmlhttp.send(lnkArgs); //+ "&machdetls=" + machDet
             }
 
-            function forgotPwd()
-            {
+            function forgotPwd() {
                 var xmlhttp;
                 var lnkArgs = "q=forgotpwd";
-                if (window.XMLHttpRequest)
-                {
+                if (window.XMLHttpRequest) {
                     // code for IE7+, Firefox, Chrome, Opera, Safari
                     xmlhttp = new XMLHttpRequest();
-                } else
-                {// code for IE6, IE5
+                } else { // code for IE6, IE5
                     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
                 }
 
-                xmlhttp.onreadystatechange = function ()
-                {
+                xmlhttp.onreadystatechange = function() {
                     //var newDoc = document.open("text/html", "replace");
-                    if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-                    {
+                    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                         var rspns = xmlhttp.responseText;
                         document.getElementById("loginDiv").innerHTML = rspns;
                         //$body.removeClass("mdlloading");
-                    } else
-                    {
+                    } else {
                         document.getElementById("loginDiv").innerHTML = "<p style=\"padding:10px;margin:50px;\"><img style=\"width:80px;height:80px;display:inline;float:none;margin-right:auto;clear: left;\" src='cmn_scrpts/images/ajax-loader7.gif'/></p>";
                     }
                 };
@@ -134,16 +118,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 xmlhttp.send(lnkArgs); //+ "&machdetls=" + machDet
             }
 
-            function enterKeyFuncSL(e)
-            {
+            function enterKeyFuncSL(e) {
                 var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
                 if (charCode == 13) {
                     chngePswdPage1('send_link');
                 }
             }
 
-            function enterKeyFunc1(e)
-            {
+            function enterKeyFunc1(e) {
                 var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
                 if (charCode == 13) {
                     e.preventDefault();
@@ -152,8 +134,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 //return false;
             }
 
-            function chngePswdPage1(str_Cmd)
-            {
+            function chngePswdPage1(str_Cmd) {
                 //alert("test" + myCountry() + myIP());
                 var xmlhttp;
                 var usrNm = "";
@@ -162,36 +143,31 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 usrNm = document.getElementById("usrnm").value;
                 //machdet = document.getElementById("machdet").value;
 
-                if (usrNm === "" || usrNm === null)
-                {
+                if (usrNm === "" || usrNm === null) {
                     $('#modal-7 .modal-body').html('User Name cannot be empty!');
-                    $('#modal-7').modal('show', {backdrop: 'static'});
+                    $('#modal-7').modal('show', {
+                        backdrop: 'static'
+                    });
                     //alert('User Name cannot be empty!');
                     return false;
                 }
-                if (str_Cmd == 'send_link')
-                {
+                if (str_Cmd == 'send_link') {
                     lnkArgs = "grp=1&typ=11&q=SendPswdLnk&in_val=" + usrNm;
                 }
-                if (window.XMLHttpRequest)
-                {
+                if (window.XMLHttpRequest) {
                     // code for IE7+, Firefox, Chrome, Opera, Safari
                     xmlhttp = new XMLHttpRequest();
-                } else
-                {// code for IE6, IE5
+                } else { // code for IE6, IE5
                     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
                 }
 
-                xmlhttp.onreadystatechange = function ()
-                {
-                    if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-                    {
+                xmlhttp.onreadystatechange = function() {
+                    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                         var rspns = xmlhttp.responseText;
                         //alert(rspns);
                         document.getElementById("fullName").innerHTML = rspns;
                         return false;
-                    } else
-                    {
+                    } else {
                         //alert('rspns');
                         document.getElementById("fullName").innerHTML = "Sending Password Reset Link...Please Wait...";
                     }
@@ -203,7 +179,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             }
         </script>
         </head>
-        <?php //max-height:70px !important; -webkit-calc(85vh);height: -moz-calc(85vh);height: calc(85vh); -webkit-calc(10vh);height: -moz-calc(10vh);height: calc(10vh)?>
+        <?php //max-height:70px !important; -webkit-calc(85vh);height: -moz-calc(85vh);height: calc(85vh); -webkit-calc(10vh);height: -moz-calc(10vh);height: calc(10vh)
+        ?>
+
         <body style="<?php echo $bckcolorsChngPwd; ?>min-width:300px;min-height:400px;width:100% !important;height:100% !important;width:100% !important;">
             <div class="modalLdng"></div>
             <div class="modalLdng1"></div>
@@ -212,11 +190,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <div class="col-md-6">
                         <div style="max-width:25%;float:left;"><img src="<?php echo $app_image1; ?>" style="left: 0.5%; margin:2px; padding-right: 1em; height:60px; width:auto; position: relative; vertical-align: middle;"></div>
                         <div class="hdrDiv" style="max-width:90%;color:#FFF;text-align:center;float:none;">
-                            <span class="h4 wordwrap1"><?php echo $app_name; ?></span><br/>
+                            <span class="h4 wordwrap1"><?php echo $app_name; ?></span><br />
                             <span class="h6"><?php echo $app_slogan; ?></span>
                         </div>
                     </div>
-                    <div class="col-md-6" >
+                    <div class="col-md-6">
                         <ul class="lgnMenu">
                             <li><a class="active" href="index.php">Home</a></li>
                             <!--<li><a>&nbsp;|&nbsp;</a></li>-->
@@ -241,13 +219,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <div class="input-group">
                                                         <span class="input-group-addon" id="basic-addon1">
                                                             <i class="fa fa-user fa-fw fa-border"></i></span>
-                                                        <input type="text"  autocomplete="off" class="form-control" placeholder="<?php echo $placeHolder1; ?>" aria-describedby="basic-addon1" id="usrnm" name="usrnm"  onkeyup="enterKeyFunc(event);" autofocus>
+                                                        <input type="text" autocomplete="off" class="form-control" placeholder="<?php echo $placeHolder1; ?>" aria-describedby="basic-addon1" id="usrnm" name="usrnm" onkeyup="enterKeyFunc(event);" autofocus>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="input-group">
                                                         <span class="input-group-addon" id="basic-addon1"><i class="fa fa-key fa-fw fa-border"></i></span>
-                                                        <input class="form-control"  autocomplete="off" placeholder="Password" id="pwd" name="pwd" type="password" value=""  onkeyup="enterKeyFunc(event);">
+                                                        <input class="form-control" autocomplete="off" placeholder="Password" id="pwd" name="pwd" type="password" value="" onkeyup="enterKeyFunc(event);">
                                                         <input type="hidden" id="machdet" name="machdet" value="Unknown">
                                                     </div>
                                                 </div>
@@ -260,9 +238,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     </label>
                                                 </p>
                                                 <button type="button" onclick="homePage();" class="btn btn-md btn-default btn-block otherButton"><i class="fa fa-sign-in" aria-hidden="true"></i>&nbsp;&nbsp;Login</button>
-                                                <button type="button"  onclick="forgotPwd();" class="btn btn-md btn-default btn-block otherButton"><i class="fa fa-key" aria-hidden="true"></i>&nbsp;&nbsp;Request for New Password</button>
+                                                <button type="button" onclick="forgotPwd();" class="btn btn-md btn-default btn-block otherButton"><i class="fa fa-key" aria-hidden="true"></i>&nbsp;&nbsp;Request for New Password</button>
                                                 <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="window.open('<?php echo $app_cstmr_url; ?>', '_blank');" style="">
-                                                    <img src="<?php echo $app_image1; ?>" style="left: 0.5%; padding-right: 1em; height:60px; width:auto; position: relative; vertical-align: middle;">
+                                                    <?php
+                                                    $vPsblValID1 = getEnbldPssblValID("Application Instance SHORT CODE", getLovID("All Other General Setups"));
+                                                    $vPsblVal1 = getPssblValDesc($vPsblValID1);
+                                                    if ($vPsblVal1 == "JSK_MAIN_ERP_APP_1") {
+                                                    ?>
+                                                        <img src="cmn_images/JSK-logo-20-20_3.png" style="left: 0.5%; padding-right: 1em; height:60px; width:auto; position: relative; vertical-align: middle;">
+                                                    <?php } else { ?>
+                                                        <img src="<?php echo $app_image1; ?>" style="left: 0.5%; padding-right: 1em; height:60px; width:auto; position: relative; vertical-align: middle;">
+                                                    <?php } ?>
                                                     <br/><?php echo $website_btn_txt; ?>
                                                 </button>
                                             </fieldset>
@@ -270,7 +256,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </div>
                                 </div>
                             </div>
-                        </div>            
+                        </div>
                         <hr>
                     </div>
                     <div class="col-md-4">&nbsp;</div>
@@ -278,13 +264,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             </div>
             <section id="contact" class="gray-section contact" style="background-color: rgba(0, 0,0,0.22);border-top:0px solid #ddd;color:#FFF;font-size: 16px; padding:20px;">
                 <div class="container">
-                    <div class="row">                        
+                    <div class="row">
                         <div class="col-md-4 text-center" style="">
                             <div class="container" style="padding:25px;margin-bottom: 10px;background-color: rgba(0,0,0,0.32);min-height: 200px;">
                                 <h1>About Portal</h1>
                                 <div style="font-family: Tahoma;font-size:14px;"><?php echo $abt_portal; ?></div>
                             </div>
-                        </div>                                                
+                        </div>
                         <div class="col-md-4 text-center" style="">
                             <div class="container" style="padding:25px;margin-bottom: 10px;background-color: rgba(0,0,0,0.32);min-height: 200px;">
                                 <h1>Instructions</h1>
@@ -297,12 +283,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <div class="col-xs-12 text-center">
                                         <div class="navy-line"></div>
                                         <h1>Contact Us</h1>
-                                        <div><?php echo $loginPgNotice ?> </div>                                       
+                                        <div><?php echo $loginPgNotice ?> </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-12 text-center">
-                                        <a href="mailto:<?php echo $admin_email; ?>" class="btn btn-primary">Send us a mail</a>                                        
+                                        <a href="mailto:<?php echo $admin_email; ?>" class="btn btn-primary">Send us a mail</a>
                                     </div>
                                 </div>
                             </div>
@@ -339,15 +325,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             <!-- Bootstrap Core JavaScript -->
             <script src="cmn_scrpts/bootstrap337/js/bootstrap.min.js"></script>
             <script type="text/javascript">
-                                                    $body = $("body");
-                                                    $body.removeClass("mdlloading");
+                $body = $("body");
+                $body.removeClass("mdlloading");
             </script>
         </body>
+
         </html>
-        <?php
+    <?php
     } else {
-//echo $lgn_num."-LGN_NUM-".$error;
-        ?>
-        <?php
+        //echo $lgn_num."-LGN_NUM-".$error;
+    ?>
+<?php
     }
-}?>
+} ?>

@@ -87,16 +87,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $rnnrPrcsFile = $ftp_base_db_fldr . str_replace("\\", "/", $rnnrPrcsFile);
                     //PHP Command to start jar file
                     $strArgs = "\"" . $host . "\" " .
-                            "\"" . $port . "\" " .
-                            "\"" . $db_usr . "\" " .
-                            "\"" . $db_pwd . "\" " .
-                            "\"" . $database . "\" " .
-                            "\"" . $rnnrNm . "\" " .
-                            "\"" . $rptRunID . "\" " .
-                            "\"" . $ftp_base_db_fldr . "/bin" . "\" " .
-                            "WEB" . " " .
-                            "\"" . $ftp_base_db_fldr . "\" " .
-                            "\"" . $app_url . "\"";
+                        "\"" . $port . "\" " .
+                        "\"" . $db_usr . "\" " .
+                        "\"" . $db_pwd . "\" " .
+                        "\"" . $database . "\" " .
+                        "\"" . $rnnrNm . "\" " .
+                        "\"" . $rptRunID . "\" " .
+                        "\"" . $ftp_base_db_fldr . "/bin" . "\" " .
+                        "WEB" . " " .
+                        "\"" . $ftp_base_db_fldr . "\" " .
+                        "\"" . $app_url . "\"";
                     $cmd = "java -jar " . $rnnrPrcsFile . " " . $strArgs;
                     //"java -Xms64m -Xmx4096m -jar "
                     $rptRunID = getRandomNum(9999999, 99999999);
@@ -106,7 +106,25 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>Process Runner Start Successfully attempted!<br/>" . $errMsg;
                     echo json_encode($arr_content);
                     session_write_close();
-                    execInBackground($cmd, $logfilenm);
+
+                    $rhoAPIhost = parse_url($rhoAPIUrl, PHP_URL_HOST);
+                    $rhoAPIport = parse_url($rhoAPIUrl, PHP_URL_PORT);
+
+                    $errno = 0;
+                    $errstr = "";
+                    set_error_handler("rhoErrorHandler3");
+                    $rc = @fsockopen($rhoAPIhost, $rhoAPIport, $errno, $errstr, 1);
+                    if (is_resource($rc)) {
+                        $rslt = rhoPOSTToAPI(
+                            $rhoAPIUrl . '/startJavaRunner',
+                            array(
+                                'rnnrPrcsFile' => $rnnrPrcsFile,
+                                'strArgs' => $strArgs
+                            )
+                        );
+                    } else {
+                        execInBackground($cmd, $logfilenm);
+                    }
                     logSessionErrs($logfilenm);
                     exit();
                 } else if ($shdStart == 0) {
@@ -192,8 +210,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $colClassType2 = "col-lg-3";
                 $colClassType3 = "col-lg-2";
                 $nwRowHtml = "<tr id=\"allPrcsRnnrsRow__WWW123WWW\">"
-                        . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
-                        . "<td class=\"lovtd\">
+                    . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
+                    . "<td class=\"lovtd\">
                                 <textarea class=\"form-control rqrdFld\" row=\"7\" col=\"20\" id=\"allPrcsRnnrsRow_WWW123WWW_RnnrNm\" name=\"allPrcsRnnrsRow_WWW123WWW_RnnrNm\" style=\"width:100% !important;min-height: 80px;height: 80px;\"></textarea>
                             </td>                                             
                             <td class=\"lovtd\">
@@ -211,11 +229,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <td class=\"lovtd\">
                                 <select class=\"form-control\" id=\"allPrcsRnnrsRow_WWW123WWW_Priorty\">";
                 $valslctdArry = array("", "", "", "", "");
-                $valuesArrys = array("1-Highest",
+                $valuesArrys = array(
+                    "1-Highest",
                     "2-AboveNormal",
                     "3-Normal",
                     "4-BelowNormal",
-                    "5-Lowest");
+                    "5-Lowest"
+                );
                 for ($z = 0; $z < count($valuesArrys); $z++) {
                     $nwRowHtml .= "<option value=\"" . $valuesArrys[$z] . "\" " . $valslctdArry[$z] . ">" . $valuesArrys[$z] . "</option>";
                 }
@@ -231,21 +251,21 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             </td>
                           </tr>";
                 $nwRowHtml = urlencode($nwRowHtml);
-                ?>
+?>
                 <form id='allPrcsRnnrsForm' action='' method='post' accept-charset='UTF-8'>
                     <div class="row " style="margin-bottom:2px;padding:2px 15px 2px 15px !important;">
                         <div class="col-md-12" style="padding:0px 0px 0px 0px !important;border-top:1px solid #ddd;border-bottom:1px solid #ddd;">
                             <div class="col-md-12" style="padding:2px 1px 2px 1px !important;">
-                                <?php if ($canAddRecs) { ?>                                                            
+                                <?php if ($canAddRecs) { ?>
                                     <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="insertNewRowBe4('allPrcsRnnrsTable', 0, '<?php echo $nwRowHtml; ?>');">
                                         <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                         Add Runner
-                                    </button>                    
+                                    </button>
                                     <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="savePrcsRnnrs();">
                                         <img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                         Save Runners
-                                    </button> 
-                                <?php } ?>                     
+                                    </button>
+                                <?php } ?>
                                 <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="openATab('#allmodules', 'grp=9&typ=1&pg=4&vtyp=0');">
                                     <img src="cmn_images/refresh.bmp" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                     Refresh Runners
@@ -254,19 +274,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="startRnnrsRfrsh();">
                                         <img src="cmn_images/clock.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                         Auto-Refresh
-                                    </button>  
-                                <?php } ?>  
-                                <?php if ($mstAutoRefresh > 0) { ?>                   
+                                    </button>
+                                <?php } ?>
+                                <?php if ($mstAutoRefresh > 0) { ?>
                                     <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="stopRnnrsRfrsh();">
                                         <img src="cmn_images/90.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                         Stop Auto-Refresh
-                                    </button> 
-                                <?php } ?>    
+                                    </button>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
-                    <div class="row"> 
-                        <div  class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
                             <table class="table table-striped table-bordered table-responsive" id="allPrcsRnnrsTable" cellspacing="0" width="100%" style="width:100%;">
                                 <thead>
                                     <tr>
@@ -292,15 +312,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         if ($isRnng === true) {
                                             $stsCss = "background-color: lime;";
                                         }
-                                        ?>
+                                    ?>
                                         <tr id="allPrcsRnnrsRow_<?php echo $cntr; ?>">
                                             <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
                                             <td class="lovtd">
                                                 <?php
                                                 if ($canEdtRecs === TRUE) {
-                                                    ?>
+                                                ?>
                                                     <textarea class="form-control rqrdFld" row="7" col="20" id="allPrcsRnnrsRow<?php echo $cntr; ?>_RnnrNm" name="allPrcsRnnrsRow<?php echo $cntr; ?>_RnnrNm" readonly="true" style="width:100% !important;min-height: 80px;height: 80px;"><?php echo $row[1]; ?></textarea>
-                                                    <?php
+                                                <?php
                                                 } else {
                                                     echo $row[1];
                                                 }
@@ -310,9 +330,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <td class="lovtd">
                                                 <?php
                                                 if ($canEdtRecs === TRUE) {
-                                                    ?>
+                                                ?>
                                                     <textarea class="form-control rqrdFld" row="7" col="20" id="allPrcsRnnrsRow<?php echo $cntr; ?>_RnnrDesc" name="allPrcsRnnrsRow<?php echo $cntr; ?>_RnnrDesc" readonly="true" style="width:100% !important;min-height: 80px;height: 80px;"><?php echo $row[2]; ?></textarea>
-                                                    <?php
+                                                <?php
                                                 } else {
                                                     echo $row[2];
                                                 }
@@ -321,9 +341,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <td class="lovtd">
                                                 <?php
                                                 if ($canEdtRecs === TRUE) {
-                                                    ?>
+                                                ?>
                                                     <textarea class="form-control" row="7" col="20" id="allPrcsRnnrsRow<?php echo $cntr; ?>_LstActvTme" name="allPrcsRnnrsRow<?php echo $cntr; ?>_LstActvTme" readonly="true" style="width:100% !important;min-height: 80px;height: 80px;<?php echo $stsCss; ?>"><?php echo $row[3]; ?></textarea>
-                                                    <?php
+                                                <?php
                                                 } else {
                                                     echo $row[3];
                                                 }
@@ -332,9 +352,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <td class="lovtd">
                                                 <?php
                                                 if ($canEdtRecs === TRUE) {
-                                                    ?>
+                                                ?>
                                                     <textarea class="form-control" row="7" col="10" id="allPrcsRnnrsRow<?php echo $cntr; ?>_LastStatus" name="allPrcsRnnrsRow<?php echo $cntr; ?>_LastStatus" readonly="true" style="width:100% !important;min-height: 80px;height: 80px;<?php echo $stsCss; ?>"><?php echo $row[4]; ?></textarea>
-                                                    <?php
+                                                <?php
                                                 } else {
                                                     echo $row[4];
                                                 }
@@ -343,9 +363,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <td class="lovtd">
                                                 <?php
                                                 if ($canEdtRecs === TRUE) {
-                                                    ?>
+                                                ?>
                                                     <textarea class="form-control rqrdFld" row="7" col="20" id="allPrcsRnnrsRow<?php echo $cntr; ?>_FileNm" name="allPrcsRnnrsRow<?php echo $cntr; ?>_FileNm" readonly="true" style="width:100% !important;min-height: 80px;height: 80px;"><?php echo $row[5]; ?></textarea>
-                                                    <?php
+                                                <?php
                                                 } else {
                                                     echo $row[5];
                                                 }
@@ -354,25 +374,27 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <td class="lovtd" style="text-align:right;font-weight: bold;color:blue;">
                                                 <?php
                                                 if ($canEdtRecs === TRUE) {
-                                                    ?>
-                                                    <select class="form-control" id="allPrcsRnnrsRow<?php echo $cntr; ?>_Priorty">                                                        
+                                                ?>
+                                                    <select class="form-control" id="allPrcsRnnrsRow<?php echo $cntr; ?>_Priorty">
                                                         <?php
                                                         $valslctdArry = array("", "", "", "", "");
-                                                        $valuesArrys = array("1-Highest",
+                                                        $valuesArrys = array(
+                                                            "1-Highest",
                                                             "2-AboveNormal",
                                                             "3-Normal",
                                                             "4-BelowNormal",
-                                                            "5-Lowest");
+                                                            "5-Lowest"
+                                                        );
 
                                                         for ($z = 0; $z < count($valuesArrys); $z++) {
                                                             if (strtoupper($row[6]) == strtoupper($valuesArrys[$z])) {
                                                                 $valslctdArry[$z] = "selected";
                                                             }
-                                                            ?>
+                                                        ?>
                                                             <option value="<?php echo $valuesArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $valuesArrys[$z]; ?></option>
                                                         <?php } ?>
                                                     </select>
-                                                    <?php
+                                                <?php
                                                 } else {
                                                     echo $row[6];
                                                 }
@@ -385,35 +407,35 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     </button>
                                                 </td>
                                             <?php } ?>
-                                            <td class="lovtd">   
+                                            <td class="lovtd">
                                                 <?php
                                                 if ($canEdtRecs === true && strpos($row[1], "REQUESTS LISTENER PROGRAM") !== FALSE) {
                                                     if ($isRnng === false) {
-                                                        ?>
+                                                ?>
                                                         <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="startProcessRunner('allPrcsRnnrsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" title="Start Request Listener">
-                                                            <img src="cmn_images/98.png" style="left: 0.5%; height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                            <img src="cmn_images/98.png" style="left: 0.5%; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                         </button>
-                                                        <input type="hidden" class="form-control" aria-label="..." id="allPrcsRnnrsRow<?php echo $cntr; ?>_ShdStart" value="1">  
+                                                        <input type="hidden" class="form-control" aria-label="..." id="allPrcsRnnrsRow<?php echo $cntr; ?>_ShdStart" value="1">
                                                     <?php } else { ?>
                                                         <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="startProcessRunner('allPrcsRnnrsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" title="Stop Request Listener">
                                                             <img src="cmn_images/90.png" style="left: 0.5%; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                         </button>
                                                         <input type="hidden" class="form-control" aria-label="..." id="allPrcsRnnrsRow<?php echo $cntr; ?>_ShdStart" value="0">
-                                                        <?php
+                                                <?php
                                                     }
                                                 }
                                                 ?>
                                             </td>
                                         </tr>
-                                        <?php
+                                    <?php
                                     }
                                     ?>
                                 </tbody>
                             </table>
-                        </div>                     
+                        </div>
                     </div>
                 </form>
-                <?php
+<?php
             }
         }
     }

@@ -1,6 +1,7 @@
 <?php
 $canAdd = test_prmssns($dfltPrvldgs[8], $mdlNm);
 $canEdt = test_prmssns($dfltPrvldgs[9], $mdlNm);
+$canVwCstPrc = test_prmssns("Can View Cost Price", $mdlNm); //Can View Cost Price
 $canDel = $canEdt;
 $canVwRcHstry = test_prmssns("View Record History", $mdlNm);
 
@@ -50,7 +51,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 } else {
                     restricted();
                 }
-            } else if ($actyp == 500) {//Plan Setup
+            } else if ($actyp == 500) { //Plan Setup
                 $rowCnt = deleteItemPymntPlans($PKeyID);
                 if ($rowCnt > 0) {
                     echo "Line Deleted Successfully";
@@ -58,7 +59,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     echo "Failed to Delete Line";
                 }
                 exit();
-            } 
+            }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {
                 //Items
@@ -107,20 +108,79 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $errMsg = "";
                 if ($invItemNm != "" && $invItemDesc != "" && ($oldItemID <= 0 || $oldItemID == $sbmtdItmID)) {
                     if ($sbmtdItmID <= 0) {
-                        createINVItm($invItemNm, $invItemDesc, $invItemCtgryID, $orgID, $isItmEnbldVal, $invSllngPrice,
-                                $invCogsAcntID, $invAssetAcntID, $invSRvnuAcntID, $invSRetrnAcntID, $invPRetrnAcntID,
-                                $invExpnsAcntID, $invTxCodeID, $invDscntCodeID, $invChrgCodeID, $invMinItmQty, $invMaxItmQty,
-                                $isPlnngEnbldVal, $invItemType, "", $invItmExtrInfo, $invItmOthrDesc, $invBaseUomID, $invTmpltID,
-                                $invItmGnrcNm, $invItmTradeNm, $invItmUslDsge, $invItmMaxDsge, $invItmCntrIndctns,
-                                $invItmFoodIntrctns, $invPriceLessTax, $invValCrncyID, $autoLoadInVMSVal);
+                        createINVItm(
+                            $invItemNm,
+                            $invItemDesc,
+                            $invItemCtgryID,
+                            $orgID,
+                            $isItmEnbldVal,
+                            $invSllngPrice,
+                            $invCogsAcntID,
+                            $invAssetAcntID,
+                            $invSRvnuAcntID,
+                            $invSRetrnAcntID,
+                            $invPRetrnAcntID,
+                            $invExpnsAcntID,
+                            $invTxCodeID,
+                            $invDscntCodeID,
+                            $invChrgCodeID,
+                            $invMinItmQty,
+                            $invMaxItmQty,
+                            $isPlnngEnbldVal,
+                            $invItemType,
+                            "",
+                            $invItmExtrInfo,
+                            $invItmOthrDesc,
+                            $invBaseUomID,
+                            $invTmpltID,
+                            $invItmGnrcNm,
+                            $invItmTradeNm,
+                            $invItmUslDsge,
+                            $invItmMaxDsge,
+                            $invItmCntrIndctns,
+                            $invItmFoodIntrctns,
+                            $invPriceLessTax,
+                            $invValCrncyID,
+                            $autoLoadInVMSVal
+                        );
                         $sbmtdItmID = getINVItmID($invItemNm);
                     } else {
-                        updateINVItem($sbmtdItmID, $invItemNm, $invItemDesc, $invItemCtgryID, $orgID, $isItmEnbldVal,
-                                $invSllngPrice, $invCogsAcntID, $invAssetAcntID, $invSRvnuAcntID, $invSRetrnAcntID,
-                                $invPRetrnAcntID, $invExpnsAcntID, $invTxCodeID, $invDscntCodeID, $invChrgCodeID, $invMinItmQty,
-                                $invMaxItmQty, $isPlnngEnbldVal, $invItemType, "", $invItmExtrInfo, $invItmOthrDesc,
-                                $invBaseUomID, $invTmpltID, $invItmGnrcNm, $invItmTradeNm, $invItmUslDsge, $invItmMaxDsge,
-                                $invItmCntrIndctns, $invItmFoodIntrctns, $invPriceLessTax, $invValCrncyID, $autoLoadInVMSVal);
+                        updateINVItem(
+                            $sbmtdItmID,
+                            $invItemNm,
+                            $invItemDesc,
+                            $invItemCtgryID,
+                            $orgID,
+                            $isItmEnbldVal,
+                            $invSllngPrice,
+                            $invCogsAcntID,
+                            $invAssetAcntID,
+                            $invSRvnuAcntID,
+                            $invSRetrnAcntID,
+                            $invPRetrnAcntID,
+                            $invExpnsAcntID,
+                            $invTxCodeID,
+                            $invDscntCodeID,
+                            $invChrgCodeID,
+                            $invMinItmQty,
+                            $invMaxItmQty,
+                            $isPlnngEnbldVal,
+                            $invItemType,
+                            "",
+                            $invItmExtrInfo,
+                            $invItmOthrDesc,
+                            $invBaseUomID,
+                            $invTmpltID,
+                            $invItmGnrcNm,
+                            $invItmTradeNm,
+                            $invItmUslDsge,
+                            $invItmMaxDsge,
+                            $invItmCntrIndctns,
+                            $invItmFoodIntrctns,
+                            $invPriceLessTax,
+                            $invValCrncyID,
+                            $autoLoadInVMSVal
+                        );
                     }
                     //Save Item Stores
                     $afftctd = 0;
@@ -147,11 +207,26 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 $oldStockID = getINVItemStockID($sbmtdItmID, $lnStoreID);
                                 if ($oldStockID <= 0 && $lnStoreID > 0) {
                                     //Insert
-                                    $afftctd += createINVItemStore($sbmtdItmID, $lnStoreID, $lnShelves, $orgID, $lnStrtDte,
-                                            $lnEndDte, $lnShelveIDs);
+                                    $afftctd += createINVItemStore(
+                                        $sbmtdItmID,
+                                        $lnStoreID,
+                                        $lnShelves,
+                                        $orgID,
+                                        $lnStrtDte,
+                                        $lnEndDte,
+                                        $lnShelveIDs
+                                    );
                                 } else if ($lnStockID > 0) {
-                                    $afftctd += updateINVItemStore($oldStockID, $sbmtdItmID, $lnStoreID, $lnShelves, $orgID,
-                                            $lnStrtDte, $lnEndDte, $lnShelveIDs);
+                                    $afftctd += updateINVItemStore(
+                                        $oldStockID,
+                                        $sbmtdItmID,
+                                        $lnStoreID,
+                                        $lnShelves,
+                                        $orgID,
+                                        $lnStrtDte,
+                                        $lnEndDte,
+                                        $lnShelveIDs
+                                    );
                                 }
                             }
                         }
@@ -175,11 +250,24 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 $oldLnLineID = getINVItemUomID($sbmtdItmID, $lnUOMID);
                                 if ($oldLnLineID <= 0 && $lnUOMID > 0 && $lnUOMID != $invBaseUomID) {
                                     //Insert
-                                    $afftctd1 += createINVItemUom($sbmtdItmID, $lnUOMID, $lnCnvrsnFctr, $lnSortOrder, $lnPrcLsTx,
-                                            $lnSllngPrice);
+                                    $afftctd1 += createINVItemUom(
+                                        $sbmtdItmID,
+                                        $lnUOMID,
+                                        $lnCnvrsnFctr,
+                                        $lnSortOrder,
+                                        $lnPrcLsTx,
+                                        $lnSllngPrice
+                                    );
                                 } else if ($oldLnLineID > 0 && $lnUOMID > 0 && $lnUOMID != $invBaseUomID) {
-                                    $afftctd1 += updateINVItemUom($oldLnLineID, $sbmtdItmID, $lnUOMID, $lnCnvrsnFctr,
-                                            $lnSortOrder, $lnPrcLsTx, $lnSllngPrice);
+                                    $afftctd1 += updateINVItemUom(
+                                        $oldLnLineID,
+                                        $sbmtdItmID,
+                                        $lnUOMID,
+                                        $lnCnvrsnFctr,
+                                        $lnSortOrder,
+                                        $lnPrcLsTx,
+                                        $lnSllngPrice
+                                    );
                                 }
                             }
                         }
@@ -270,7 +358,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $sbmtdScmCnsgnRcptPOID = -1;
                 $sbmtdScmCnsgnRcptITEMID = -1;
                 $orgnlScmCnsgnRcptID = $sbmtdScmCnsgnRcptID;
-                $scmCnsgnRcptDfltTrnsDte = $gnrlTrnsDteDMYHMS;
+                $scmCnsgnRcptDfltTrnsDte = $gnrlTrnsDteDMY;//HMS
                 $scmCnsgnRcptCreator = $uName;
                 $scmCnsgnRcptCreatorID = $usrID;
                 $gnrtdTrnsNo = "";
@@ -331,15 +419,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $docTypPrfxs = array("PO-RCPT", "MISC-RCPT");
                     $docTypPrfx = $docTypPrfxs[findArryIdx($docTypes, $scmCnsgnRcptType)];
                     $gnrtdTrnsNo1 = $docTypPrfx . "-" . $usrTrnsCode . "-" . $dte . "-";
-                    $gnrtdTrnsNo = $gnrtdTrnsNo1 . str_pad(((getRecCount_LstNum("inv.inv_consgmt_rcpt_hdr", "rcpt_number", "rcpt_id", $gnrtdTrnsNo1 . "%") + 1) . ""), 3, '0',
-                                    STR_PAD_LEFT);
+                    $gnrtdTrnsNo = $gnrtdTrnsNo1 . str_pad(((getRecCount_LstNum("inv.inv_consgmt_rcpt_hdr", "rcpt_number", "rcpt_id", $gnrtdTrnsNo1 . "%") + 1) . ""),
+                        3,
+                        '0',
+                        STR_PAD_LEFT
+                    );
                     $scmCnsgnRcptDfltBalsAcnt = getAccntNum($scmCnsgnRcptDfltBalsAcntID) . "." . getAccntName($scmCnsgnRcptDfltBalsAcntID);
                     $scmCnsgnRcptInvcCurID = (int) getGnrlRecNm("accb.accb_chart_of_accnts", "accnt_id", "crncy_id", $scmCnsgnRcptDfltBalsAcntID);
                     if ($scmCnsgnRcptInvcCurID > 0) {
                         $scmCnsgnRcptInvcCur = getPssblValNm($scmCnsgnRcptInvcCurID);
                     }
-                    $sbmtdScmCnsgnRcptID = createCnsgnRcpHdr($orgID, $gnrtdTrnsNo, $scmCnsgnRcptDesc, $scmCnsgnRcptDfltTrnsDte, $scmCnsgnRcptSpplrID, $scmCnsgnRcptSpplrSiteID,
-                            $rqStatus, $rqStatusNext, $srcCnsgnRcptDocID, $scmCnsgnRcptDfltBalsAcntID);
+                    $funcExchRate = round(get_LtstExchRate($scmCnsgnRcptInvcCurID, $fnccurid, $scmCnsgnRcptDfltTrnsDte), 4);
+                    $sbmtdScmCnsgnRcptID = createCnsgnRcpHdr($orgID, $gnrtdTrnsNo, $scmCnsgnRcptDesc, $scmCnsgnRcptDfltTrnsDte, $scmCnsgnRcptSpplrID, $scmCnsgnRcptSpplrSiteID, $rqStatus, $rqStatusNext, $srcCnsgnRcptDocID, $scmCnsgnRcptDfltBalsAcntID, $scmCnsgnRcptInvcCurID, $funcExchRate);
                 }
                 $affctd = 0;
                 if ($dataToSend != "") {
@@ -401,8 +492,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span> Selected File is Invalid!";
                                     //.strtoupper($number) ."|". strtoupper($processName) ."|". strtoupper($isEnbld1 == "IS ENABLED?");
                                     $arr_content['msgcount'] = $total;
-                                    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_iteminvimprt_progress.rho",
-                                            json_encode($arr_content));
+                                    file_put_contents(
+                                        $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_iteminvimprt_progress.rho",
+                                        json_encode($arr_content)
+                                    );
                                     break;
                                 }
                             } else {
@@ -438,13 +531,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $exitErrMsg = "";
                             //logSessionErrs($invItemNm . ":invItemType11::" . $invItemType);
                             $tmplRslts = getInvTemplateInf($invTmpltID);
-                            if ($invItemType != "Merchandise Inventory" &&
-                                    $invItemType != "Non-Merchandise Inventory" &&
-                                    $invItemType != "Fixed Assets" &&
-                                    $invItemType != "Expense Item" &&
-                                    $invItemType != "Services" &&
-                                    $invItemType != "VaultItem-Cash" &&
-                                    $invItemType != "VaultItem-NonCash") {
+                            if (
+                                $invItemType != "Merchandise Inventory" &&
+                                $invItemType != "Non-Merchandise Inventory" &&
+                                $invItemType != "Fixed Assets" &&
+                                $invItemType != "Expense Item" &&
+                                $invItemType != "Services" &&
+                                $invItemType != "VaultItem-Cash" &&
+                                $invItemType != "VaultItem-NonCash"
+                            ) {
                                 $invItemType = "";
                             }
                             //logSessionErrs($invItemNm . ":invItemType22::" . $invItemType);
@@ -470,20 +565,79 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             //logSessionErrs($invItemNm . ":invItemType::" . $invItemType);
                             if ($invItemNm != "" && $invItemDesc != "" && $invItemType != "" && $invItemCtgryID > 0 && $invBaseUomID > 0 && $invAssetAcntID > 0 && $invExpnsAcntID > 0) {
                                 if ($sbmtdItmID <= 0) {
-                                    createINVItm($invItemNm, $invItemDesc, $invItemCtgryID, $orgID, $isItmEnbldVal, $invSllngPrice,
-                                            $invCogsAcntID, $invAssetAcntID, $invSRvnuAcntID, $invSRetrnAcntID, $invPRetrnAcntID,
-                                            $invExpnsAcntID, $invTxCodeID, $invDscntCodeID, $invChrgCodeID, $invMinItmQty, $invMaxItmQty,
-                                            $isPlnngEnbldVal, $invItemType, "", $invItmExtrInfo, $invItmOthrDesc, $invBaseUomID, $invTmpltID,
-                                            $invItmGnrcNm, $invItmTradeNm, $invItmUslDsge, $invItmMaxDsge, $invItmCntrIndctns,
-                                            $invItmFoodIntrctns, $invPriceLessTax, $invValCrncyID, $autoLoadInVMSVal);
+                                    createINVItm(
+                                        $invItemNm,
+                                        $invItemDesc,
+                                        $invItemCtgryID,
+                                        $orgID,
+                                        $isItmEnbldVal,
+                                        $invSllngPrice,
+                                        $invCogsAcntID,
+                                        $invAssetAcntID,
+                                        $invSRvnuAcntID,
+                                        $invSRetrnAcntID,
+                                        $invPRetrnAcntID,
+                                        $invExpnsAcntID,
+                                        $invTxCodeID,
+                                        $invDscntCodeID,
+                                        $invChrgCodeID,
+                                        $invMinItmQty,
+                                        $invMaxItmQty,
+                                        $isPlnngEnbldVal,
+                                        $invItemType,
+                                        "",
+                                        $invItmExtrInfo,
+                                        $invItmOthrDesc,
+                                        $invBaseUomID,
+                                        $invTmpltID,
+                                        $invItmGnrcNm,
+                                        $invItmTradeNm,
+                                        $invItmUslDsge,
+                                        $invItmMaxDsge,
+                                        $invItmCntrIndctns,
+                                        $invItmFoodIntrctns,
+                                        $invPriceLessTax,
+                                        $invValCrncyID,
+                                        $autoLoadInVMSVal
+                                    );
                                     $sbmtdItmID = getINVItmID($invItemNm);
                                 } else {
-                                    updateINVItem($sbmtdItmID, $invItemNm, $invItemDesc, $invItemCtgryID, $orgID, $isItmEnbldVal,
-                                            $invSllngPrice, $invCogsAcntID, $invAssetAcntID, $invSRvnuAcntID, $invSRetrnAcntID,
-                                            $invPRetrnAcntID, $invExpnsAcntID, $invTxCodeID, $invDscntCodeID, $invChrgCodeID, $invMinItmQty,
-                                            $invMaxItmQty, $isPlnngEnbldVal, $invItemType, "", $invItmExtrInfo, $invItmOthrDesc,
-                                            $invBaseUomID, $invTmpltID, $invItmGnrcNm, $invItmTradeNm, $invItmUslDsge, $invItmMaxDsge,
-                                            $invItmCntrIndctns, $invItmFoodIntrctns, $invPriceLessTax, $invValCrncyID, $autoLoadInVMSVal);
+                                    updateINVItem(
+                                        $sbmtdItmID,
+                                        $invItemNm,
+                                        $invItemDesc,
+                                        $invItemCtgryID,
+                                        $orgID,
+                                        $isItmEnbldVal,
+                                        $invSllngPrice,
+                                        $invCogsAcntID,
+                                        $invAssetAcntID,
+                                        $invSRvnuAcntID,
+                                        $invSRetrnAcntID,
+                                        $invPRetrnAcntID,
+                                        $invExpnsAcntID,
+                                        $invTxCodeID,
+                                        $invDscntCodeID,
+                                        $invChrgCodeID,
+                                        $invMinItmQty,
+                                        $invMaxItmQty,
+                                        $isPlnngEnbldVal,
+                                        $invItemType,
+                                        "",
+                                        $invItmExtrInfo,
+                                        $invItmOthrDesc,
+                                        $invBaseUomID,
+                                        $invTmpltID,
+                                        $invItmGnrcNm,
+                                        $invItmTradeNm,
+                                        $invItmUslDsge,
+                                        $invItmMaxDsge,
+                                        $invItmCntrIndctns,
+                                        $invItmFoodIntrctns,
+                                        $invPriceLessTax,
+                                        $invValCrncyID,
+                                        $autoLoadInVMSVal
+                                    );
                                 }
                                 //Save Item Stores
                                 $afftctd = 0;
@@ -511,8 +665,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $oldStockID = getINVItemStockID($sbmtdItmID, $lnStoreID);
                                             if ($oldStockID <= 0 && $lnStoreID > 0) {
                                                 //Insert
-                                                $afftctd += createINVItemStore($sbmtdItmID, $lnStoreID, $lnShelves, $orgID, $lnStrtDte,
-                                                        $lnEndDte, $lnShelveIDs);
+                                                $afftctd += createINVItemStore(
+                                                    $sbmtdItmID,
+                                                    $lnStoreID,
+                                                    $lnShelves,
+                                                    $orgID,
+                                                    $lnStrtDte,
+                                                    $lnEndDte,
+                                                    $lnShelveIDs
+                                                );
                                                 $oldStockID = getINVItemStockID($sbmtdItmID, $lnStoreID);
                                             }
                                             if ($z === 0 && $sbmtdScmCnsgnRcptID > 0 && $oldStockID > 0 && $invItmQty > 0) {
@@ -537,8 +698,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 $errMsg = "";
                                                 if ($errMsg === "") {
                                                     if ($ln_TrnsLnID <= 0) {
-                                                        $afftctd += createCnsgnRcptLine($ln_QTY, $ln_UnitPrice, $ln_ExpryDte, $ln_ManDte, $ln_TagNo, $ln_SerialNo, $ln_PODocLnID, $ln_CnsgnCdtn,
-                                                                $ln_ExtraDesc, $ln_ItmID, $ln_StoreID, $sbmtdScmCnsgnRcptID);
+                                                        $afftctd += createCnsgnRcptLine(
+                                                            $ln_QTY,
+                                                            $ln_UnitPrice,
+                                                            $ln_ExpryDte,
+                                                            $ln_ManDte,
+                                                            $ln_TagNo,
+                                                            $ln_SerialNo,
+                                                            $ln_PODocLnID,
+                                                            $ln_CnsgnCdtn,
+                                                            $ln_ExtraDesc,
+                                                            $ln_ItmID,
+                                                            $ln_StoreID,
+                                                            $sbmtdScmCnsgnRcptID
+                                                        );
                                                     }
                                                 } else {
                                                     $exitErrMsg .= $errMsg;
@@ -566,11 +739,24 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $oldLnLineID = getINVItemUomID($sbmtdItmID, $lnUOMID);
                                             if ($oldLnLineID <= 0 && $lnUOMID > 0 && $lnUOMID != $invBaseUomID) {
                                                 //Insert
-                                                $afftctd1 += createINVItemUom($sbmtdItmID, $lnUOMID, $lnCnvrsnFctr, $lnSortOrder, $lnPrcLsTx,
-                                                        $lnSllngPrice);
+                                                $afftctd1 += createINVItemUom(
+                                                    $sbmtdItmID,
+                                                    $lnUOMID,
+                                                    $lnCnvrsnFctr,
+                                                    $lnSortOrder,
+                                                    $lnPrcLsTx,
+                                                    $lnSllngPrice
+                                                );
                                             } else if ($oldLnLineID > 0 && $lnUOMID > 0 && $lnUOMID != $invBaseUomID) {
-                                                $afftctd1 += updateINVItemUom($oldLnLineID, $sbmtdItmID, $lnUOMID, $lnCnvrsnFctr,
-                                                        $lnSortOrder, $lnPrcLsTx, $lnSllngPrice);
+                                                $afftctd1 += updateINVItemUom(
+                                                    $oldLnLineID,
+                                                    $sbmtdItmID,
+                                                    $lnUOMID,
+                                                    $lnCnvrsnFctr,
+                                                    $lnSortOrder,
+                                                    $lnPrcLsTx,
+                                                    $lnSllngPrice
+                                                );
                                             }
                                         }
                                     }
@@ -609,8 +795,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         } else {
                             $arr_content['message'] = "<i class=\"fa fa-spin fa-spinner\"></i> Importing Accounts...Please Wait..." . ($y + 1) . " out of " . $totalBIG . " Inventory Item(s) imported.";
                         }
-                        file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_iteminvimprt_progress.rho",
-                                json_encode($arr_content));
+                        file_put_contents(
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_iteminvimprt_progress.rho",
+                            json_encode($arr_content)
+                        );
                     }
                 } else {
                     $percent = 100;
@@ -641,11 +829,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $affctd = 0;
                 $errMsg = "Invalid Option!";
                 if ($inptNum >= 0) {
-                    $hdngs = array("Item Name**", "Item Description**", "Enabled?", "Item Template (For Accounts)**", "Item Type",
+                    $hdngs = array(
+                        "Item Name**", "Item Description**", "Enabled?", "Item Template (For Accounts)**", "Item Type",
                         "Category**", "Base UOM**", "Tax Code", "Discount Code", "Charge Code", "Currency", "Selling Price", "Total Qty",
                         "Unit Cost Price", "Stores/Warehouses (Store Name|)", "UOMs(UOM~Conversion Factor~Sort Order~Selling Price|)",
                         "Extra Info", "Other Description", "Generic Name", "Trade Name", "Usual Dosage", "Maximum Dosage",
-                        "Contraindications", "Food Interactions", "Drug Interactions(Drug Code~Interaction Effect~Action|)");
+                        "Contraindications", "Food Interactions", "Drug Interactions(Drug Code~Interaction Effect~Action|)"
+                    );
                     $limit_size = 0;
                     if ($inptNum > 2) {
                         $limit_size = $inptNum;
@@ -663,8 +853,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         $arr_content['dwnld_url'] = $dwnldUrl;
                         $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!... Inventory Items Template Exported.</span>";
                         $arr_content['msgcount'] = 0;
-                        file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_InvItems_exprt_progress.rho",
-                                json_encode($arr_content));
+                        file_put_contents(
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_InvItems_exprt_progress.rho",
+                            json_encode($arr_content)
+                        );
                         fclose($opndfile);
                         exit();
                     }
@@ -675,10 +867,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $fieldCntr = loc_db_num_fields($result);
                     while ($row = loc_db_fetch_array($result)) {
                         //"" . ($z + 1), 
-                        $crntRw = array("'" . $row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6],
+                        $crntRw = array(
+                            "'" . $row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6],
                             $row[7], $row[8], $row[9], $row[10], $row[11],
                             $row[12], $row[13], $row[14], $row[15], $row[16], $row[17], $row[18], $row[19], $row[20], $row[21],
-                            $row[22], $row[23], $row[24]);
+                            $row[22], $row[23], $row[24]
+                        );
                         fputcsv($opndfile, $crntRw);
                         //file_put_contents($nwFileNm, $crntRw, FILE_APPEND | LOCK_EX);
                         $percent = round((($z + 1) / $total) * 100, 2);
@@ -686,14 +880,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         $arr_content['dwnld_url'] = $dwnldUrl;
                         if ($percent >= 100) {
                             $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!..." . ($z +
-                                    1) . " out of " . $total . " Inventory Item(s) exported.</span>";
+                                1) . " out of " . $total . " Inventory Item(s) exported.</span>";
                             $arr_content['msgcount'] = $total;
                         } else {
                             $arr_content['message'] = "<span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"><br/>Exporting Inventory Items...Please Wait..." . ($z +
-                                    1) . " out of " . $total . " Inventory Item(s) exported.</span>";
+                                1) . " out of " . $total . " Inventory Item(s) exported.</span>";
                         }
-                        file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_InvItems_exprt_progress.rho",
-                                json_encode($arr_content));
+                        file_put_contents(
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_InvItems_exprt_progress.rho",
+                            json_encode($arr_content)
+                        );
                         $z++;
                     }
                     fclose($opndfile);
@@ -703,8 +899,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> 100% Completed...An Error Occured!<br/>$errMsg</span>";
                     $arr_content['msgcount'] = "";
                     $arr_content['dwnld_url'] = "";
-                    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_InvItems_exprt_progress.rho",
-                            json_encode($arr_content));
+                    file_put_contents(
+                        $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_InvItems_exprt_progress.rho",
+                        json_encode($arr_content)
+                    );
                 }
             } else if ($actyp == 4) {
                 //Checked Exporting Process Status                
@@ -770,7 +968,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     exit();
                 } else {
                     echo '<div><img src="cmn_images/error.gif" style="float:left;margin-right:5px;width:30px;height:30px;"/>'
-                    . '<br/>Please complete all required fields before proceeding!<br/></div>';
+                        . '<br/>Please complete all required fields before proceeding!<br/></div>';
                     exit();
                 }
             }
@@ -795,21 +993,21 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $cntr = 0;
                 $colClassType1 = "col-lg-2";
                 $colClassType2 = "col-lg-4";
-                ?>
+?>
                 <form id='allINVItmsForm' action='' method='post' accept-charset='UTF-8'>
                     <div class="row rhoRowMargin">
                         <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                             <div class="input-group">
-                                <input class="form-control" id="allINVItmsSrchFor" type = "text" placeholder="Search For" value="<?php
-                                echo trim(str_replace("%", " ", $srchFor));
-                                ?>" onkeyup="enterKeyFuncAllINVItms(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
-                                <input id="allINVItmsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                                <input class="form-control" id="allINVItmsSrchFor" type="text" placeholder="Search For" value="<?php
+                                                                                                                                echo trim(str_replace("%", " ", $srchFor));
+                                                                                                                                ?>" onkeyup="enterKeyFuncAllINVItms(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                <input id="allINVItmsPageNo" type="hidden" value="<?php echo $pageNo; ?>">
                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getAllINVItms('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
                                     <span class="glyphicon glyphicon-remove"></span>
                                 </label>
                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getAllINVItms('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
                                     <span class="glyphicon glyphicon-search"></span>
-                                </label> 
+                                </label>
                             </div>
                         </div>
                         <div class="<?php echo $colClassType2; ?>">
@@ -824,12 +1022,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         if ($srchIn == $srchInsArrys[$z]) {
                                             $valslctdArry[$z] = "selected";
                                         }
-                                        ?>
+                                    ?>
                                         <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                     <?php } ?>
                                 </select>
                                 <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
-                                <select data-placeholder="Select..." class="form-control chosen-select" id="allINVItmsDsplySze" style="min-width:70px !important;">                            
+                                <select data-placeholder="Select..." class="form-control chosen-select" id="allINVItmsDsplySze" style="min-width:70px !important;">
                                     <?php
                                     $valslctdArry = array("", "", "", "", "", "", "", "");
                                     $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
@@ -839,16 +1037,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         } else {
                                             $valslctdArry[$y] = "";
                                         }
-                                        ?>
-                                        <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
-                                        <?php
+                                    ?>
+                                        <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>
+                                    <?php
                                     }
                                     ?>
                                 </select>
                             </div>
                         </div>
                         <div class="<?php echo $colClassType1; ?>">
-                            <div class="input-group">                        
+                            <div class="input-group">
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-sort-by-attributes"></span></span>
                                 <select data-placeholder="Select..." class="form-control chosen-select" id="allINVItmsSortBy">
                                     <?php
@@ -858,7 +1056,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         if ($sortBy == $srchInsArrys[$z]) {
                                             $valslctdArry[$z] = "selected";
                                         }
-                                        ?>
+                                    ?>
                                         <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                     <?php } ?>
                                 </select>
@@ -880,19 +1078,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </ul>
                             </nav>
                         </div>
-                    </div>                   
+                    </div>
                     <div class="row " style="margin-bottom:2px;padding:2px 15px 2px 15px !important;">
                         <div class="col-md-12" style="padding:2px 1px 2px 1px !important;border-top:1px solid #ddd;border-bottom:1px solid #ddd;">
-                            <?php if ($canAdd === true) { ?>                   
+                            <?php if ($canAdd === true) { ?>
                                 <button type="button" class="btn btn-default btn-sm" onclick="getOneINVItmsForm(-1, 'ShowDialog');">
                                     <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                     New Store Item
                                 </button>
-                            <?php } ?> 
+                            <?php } ?>
                             <button type="button" class="btn btn-default btn-sm" onclick="exprtInvntryItems();">
                                 <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                 Export Store Items
-                            </button>                          
+                            </button>
                             <?php if ($canAdd) { ?>
                                 <button type="button" class="btn btn-default btn-sm" onclick="importInvntryItems();">
                                     <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
@@ -901,8 +1099,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <?php } ?>
                         </div>
                     </div>
-                    <div class="row"> 
-                        <div  class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
                             <table class="table table-striped table-bordered table-responsive" id="allINVItmsTable" cellspacing="0" width="100%" style="width:100%;">
                                 <thead>
                                     <tr>
@@ -930,8 +1128,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <?php
                                     while ($row = loc_db_fetch_array($result)) {
                                         $cntr += 1;
-                                        ?>
-                                        <tr id="allINVItmsRow_<?php echo $cntr; ?>">                                    
+                                    ?>
+                                        <tr id="allINVItmsRow_<?php echo $cntr; ?>">
                                             <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
                                             <td class="lovtd">
                                                 <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Details" onclick="getOneINVItmsForm(<?php echo $row[0]; ?>, 'ShowDialog');" style="padding:2px !important;" style="padding:2px !important;">
@@ -955,8 +1153,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <td class="lovtd"><?php echo $row[33]; ?></td>
                                             <td class="lovtd" style="text-align:right;font-weight:bold;"><?php echo number_format((float) $row[30], 2); ?></td>
                                             <td class="lovtd" style="text-align:right;font-weight:bold;color:blue;"><?php
-                                                echo number_format((float) $row[19] * (float) $row[30], 2);
-                                                ?></td>                                            
+                                                                                                                    echo number_format((float) $row[19] * (float) $row[30], 2);
+                                                                                                                    ?></td>
                                             <td class="lovtd" style="text-align:center;">
                                                 <?php
                                                 $isChkd = "";
@@ -971,19 +1169,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         </label>
                                                     </div>
                                                 </div>
-                                            </td>  
+                                            </td>
                                             <td class="lovtd" style="text-align: center;">
-                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Item Consignments" 
-                                                        onclick="getScmSalesInvcItems('allINVItmsRow_<?php echo $cntr; ?>', 'ShowDialog', '', 'true', function () {
+                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Item Consignments" onclick="getScmSalesInvcItems('allINVItmsRow_<?php echo $cntr; ?>', 'ShowDialog', '', 'true', function () {
                                                                                         var a = 1;
-                                                                                    });" style="padding:2px !important;"> 
-                                                    <img src="cmn_images/chcklst3.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                                                    });" style="padding:2px !important;">
+                                                    <img src="cmn_images/chcklst3.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 </button>
-                                            </td>  
+                                            </td>
                                             <td class="lovtd" style="text-align: center;">
-                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View/Edit Item's New Selling Price" 
-                                                        onclick="getOneINVItmPricesForm('allINVItmsRow_<?php echo $cntr; ?>', 'ShowDialog');" style="padding:2px !important;"> 
-                                                    <img src="cmn_images/payment_256.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View/Edit Item's New Selling Price" onclick="getOneINVItmPricesForm('allINVItmsRow_<?php echo $cntr; ?>', 'ShowDialog');" style="padding:2px !important;">
+                                                    <img src="cmn_images/payment_256.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 </button>
                                             </td>
                                             <td class="lovtd">
@@ -1002,9 +1198,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <?php if ($canVwRcHstry === true) { ?>
                                                 <td class="lovtd">
                                                     <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php
-                                                    echo urlencode(encrypt1(($row[0] . "|inv.inv_itm_list|item_id"),
-                                                                    $smplTokenWord1));
-                                                    ?>');" style="padding:2px !important;">
+                                                                                                                                                                                                            echo urlencode(encrypt1(($row[0] . "|inv.inv_itm_list|item_id"),
+                                                                                                                                                                                                                $smplTokenWord1
+                                                                                                                                                                                                            ));
+                                                                                                                                                                                                            ?>');" style="padding:2px !important;">
                                                         <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                     </button>
                                                 </td>
@@ -1016,15 +1213,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </button>
                                             </td>
                                         </tr>
-                                        <?php
+                                    <?php
                                     }
                                     ?>
                                 </tbody>
                             </table>
-                        </div>                     
+                        </div>
                     </div>
                 </form>
-                <?php
+            <?php
             } else if ($vwtyp == 1) {
                 //New Store Item Form
                 //$canEdt = test_prmssns($dfltPrvldgs[31], $mdlNm) || test_prmssns($dfltPrvldgs[32], $mdlNm);
@@ -1192,7 +1389,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     copy("$ftp_src", "$fullPemDest");
                 }
                 $nwFileName = $tmpDest . $nwFileName;
-                ?>
+            ?>
                 <form class="form-horizontal" id='storeItmStpForm' action='' method='post' accept-charset='UTF-8'>
                     <div class="row">
                         <div class="row" style="padding: 0px 15px 0px 15px !important;">
@@ -1203,7 +1400,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label for="invItemNm" class="control-label">Item Name:</label>
                                         </div>
                                         <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                            <?php if ($canEdt === true) { ?> 
+                                            <?php if ($canEdt === true) { ?>
                                                 <input type="text" name="invItemNm" id="invItemNm" class="form-control rqrdFld" value="<?php echo $invItemNm; ?>" style="width:100% !important;">
                                                 <input type="hidden" name="sbmtdItmID" id="sbmtdItmID" class="form-control" value="<?php echo $sbmtdItmID; ?>">
                                             <?php } else { ?>
@@ -1217,7 +1414,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
                                             <label for="invItemDesc" class="control-label">Item Description:</label>
                                         </div>
-                                        <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">     
+                                        <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                             <?php if ($canEdt === true) { ?>
                                                 <textarea rows="5" name="invItemDesc" id="invItemDesc" class="form-control rqrdFld"><?php echo $invItemDesc; ?></textarea>
                                             <?php } else { ?>
@@ -1226,7 +1423,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group" >
+                                <div class="form-group">
                                     <div class="col-md-12">
                                         <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
                                             &nbsp;
@@ -1247,30 +1444,31 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <input type="checkbox" name="isItmEnbld" id="isItmEnbld" <?php echo $isChkd . " " . $isRdOnly; ?>>Enabled?</label>
                                             </div>
                                         </div>
-                                        <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">                                           
+                                        <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
                                             &nbsp;
                                         </div>
                                     </div>
                                 </div>
-                            </div>  
-                            <div class="col-md-6" style="padding: 1px !important;">                                
+                            </div>
+                            <div class="col-md-6" style="padding: 1px !important;">
                                 <div class="col-md-8">
-                                    <fieldset class="basic_person_fs1" style="min-height: 50px !important;"><!--<legend class="basic_person_lg">Item's Picture</legend>-->
+                                    <fieldset class="basic_person_fs1" style="min-height: 50px !important;">
+                                        <!--<legend class="basic_person_lg">Item's Picture</legend>-->
                                         <div style="margin-bottom: 5px;margin-top:5px !important;">
-                                            <img src="<?php echo $nwFileName; ?>" alt="..." id="img1ItmTest" class="img-rounded center-block img-responsive" style="height: 150px !important; width: auto !important;">                                            
+                                            <img src="<?php echo $nwFileName; ?>" alt="..." id="img1ItmTest" class="img-rounded center-block img-responsive" style="height: 150px !important; width: auto !important;">
                                         </div>
                                     </fieldset>
                                 </div>
                                 <div class="col-md-4">
                                     <?php if ($canEdt === true) { ?>
                                         <div class="form-group form-group-sm" style="margin-bottom: 10px;margin-top:10px !important;">
-                                            <div class="col-md-12" style="padding:1px !important;">                                               
+                                            <div class="col-md-12" style="padding:1px !important;">
                                                 <label class="btn btn-primary btn-file" style="width:100% !important;min-width: 100% !important;">
-                                                    Browse... <input type="file" id="daItemPicture" name="daItemPicture" onchange="changeImgSrc(this, '#img1ItmTest', '#img1ItmSrcLoc');" class="btn btn-default"  style="display: none;">
-                                                </label>                                                                
+                                                    Browse... <input type="file" id="daItemPicture" name="daItemPicture" onchange="changeImgSrc(this, '#img1ItmTest', '#img1ItmSrcLoc');" class="btn btn-default" style="display: none;">
+                                                </label>
                                             </div>
                                             <div class="col-md-12" style="padding:1px !important;">
-                                                <input type="text" class="form-control" aria-label="..." id="img1ItmSrcLoc" value="">    
+                                                <input type="text" class="form-control" aria-label="..." id="img1ItmSrcLoc" value="">
                                             </div>
                                             <div class="col-md-12" style="padding:1px !important;">
                                                 <button type="button" class="btn btn-default" data-dismiss="modal" style="width:100% !important;">Close</button>
@@ -1283,7 +1481,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </div>
                             </div>
                         </div>
-                        <div class="row" style="padding:1px 15px 1px 15px !important;"><hr style="margin:3px 0px 3px 0px;"></div>
+                        <div class="row" style="padding:1px 15px 1px 15px !important;">
+                            <hr style="margin:3px 0px 3px 0px;">
+                        </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <ul class="nav nav-tabs" style="margin-top:1px !important;">
@@ -1295,9 +1495,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <li><a data-toggle="tabajxinvitms" data-rhodata="" href="#invItmsDrugLbl" id="invItmsDrugLbltab" style="padding: 3px 10px !important;">Drug Labels</a></li>
                                     <li><a data-toggle="tabajxinvitms" data-rhodata="" href="#invItmsDrugIntrctns" id="invItmsDrugIntrctnstab" style="padding: 3px 10px !important;">Drug Interactions</a></li>
                                 </ul>
-                                <div class="custDiv" style="padding:0px !important;min-height: 40px !important;" id="oneInvItmDetTblSctn"> 
+                                <div class="custDiv" style="padding:0px !important;min-height: 40px !important;" id="oneInvItmDetTblSctn">
                                     <div class="tab-content" style="padding:5px !important;padding-top:7px !important;">
-                                        <div id="invItmsGnrl" class="tab-pane fadein active" style="border:none !important;padding:0px !important;">                                            
+                                        <div id="invItmsGnrl" class="tab-pane fadein active" style="border:none !important;padding:0px !important;">
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
@@ -1308,13 +1508,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                                 <?php
                                                                 if ($canEdt === true) {
-                                                                    ?>                                   
+                                                                ?>
                                                                     <div class="input-group">
                                                                         <input type="text" name="invTmpltNm" id="invTmpltNm" class="form-control" value="<?php echo $invTmpltNm; ?>" readonly="true">
                                                                         <input type="hidden" name="invTmpltID" id="invTmpltID" class="form-control" value="<?php echo $invTmpltID; ?>">
                                                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Item Templates', '', '', '', 'radio', true, '', 'invTmpltID', 'invTmpltNm', 'clear', 0, '', function () {
                                                                                                         var aa112 = 1;
-                                                                                                    });"> 
+                                                                                                    });">
                                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                                         </label>
                                                                     </div>
@@ -1332,18 +1532,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                                 <?php
                                                                 if ($canEdt === true) {
-                                                                    ?>
-                                                                    <select class="form-control rqrdFld" id="invItemType" onchange="">                                                        
+                                                                ?>
+                                                                    <select class="form-control rqrdFld" id="invItemType" onchange="">
                                                                         <?php
                                                                         $valslctdArry = array("", "", "", "", "", "", "");
-                                                                        $valuesArrys = array("Merchandise Inventory", "Non-Merchandise Inventory",
+                                                                        $valuesArrys = array(
+                                                                            "Merchandise Inventory", "Non-Merchandise Inventory",
                                                                             "Fixed Assets", "Expense Item", "Services", "VaultItem-Cash",
-                                                                            "VaultItem-NonCash");
+                                                                            "VaultItem-NonCash"
+                                                                        );
                                                                         for ($z = 0; $z < count($valuesArrys); $z++) {
                                                                             if ($invItemType == $valuesArrys[$z]) {
                                                                                 $valslctdArry[$z] = "selected";
                                                                             }
-                                                                            ?>
+                                                                        ?>
                                                                             <option value="<?php echo $valuesArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $valuesArrys[$z]; ?></option>
                                                                         <?php } ?>
                                                                     </select>
@@ -1361,7 +1563,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                                 <?php
                                                                 if ($canEdt === true) {
-                                                                    ?>
+                                                                ?>
                                                                     <div class="input-group">
                                                                         <input type="text" class="form-control rqrdFld" aria-label="..." id="invItemCtgry" value="<?php echo $invItemCtgry; ?>" readonly="">
                                                                         <input type="hidden" id="invItemCtgryID" value="<?php echo $invItemCtgryID; ?>">
@@ -1383,16 +1585,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                                 <?php
                                                                 if ($canEdt === true) {
-                                                                    ?>                                   
+                                                                ?>
                                                                     <div class="input-group">
                                                                         <input type="text" name="invBaseUom" id="invBaseUom" class="form-control rqrdFld" value="<?php echo $invBaseUom; ?>" readonly="true">
                                                                         <input type="hidden" name="invBaseUomID" id="invBaseUomID" class="form-control" value="<?php echo $invBaseUomID; ?>">
                                                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Unit Of Measures', 'allOtherInputOrgID', '', '', 'radio', true, '', 'invBaseUomID', 'invBaseUom', 'clear', 0, '', function () {
                                                                                                         var aa112 = 1;
-                                                                                                    });"> 
+                                                                                                    });">
                                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                                         </label>
-                                                                    </div> 
+                                                                    </div>
                                                                 <?php } else { ?>
                                                                     <span><?php echo $invBaseUom; ?></span>
                                                                 <?php } ?>
@@ -1407,13 +1609,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                                 <?php
                                                                 if ($canEdt === true) {
-                                                                    ?>                                   
+                                                                ?>
                                                                     <div class="input-group" style="width:100% !important;">
                                                                         <input type="text" name="invTxCodeName" id="invTxCodeName" class="form-control" value="<?php echo $invTxCodeName; ?>" readonly="true" style="width:100% !important;">
                                                                         <input type="hidden" name="invTxCodeID" id="invTxCodeID" class="form-control" value="<?php echo $invTxCodeID; ?>">
                                                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Tax Codes', '', '', '', 'radio', true, '', 'invTxCodeID', 'invTxCodeName', 'clear', 0, '', function () {
                                                                                                         var aa112 = 1;
-                                                                                                    });"> 
+                                                                                                    });">
                                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                                         </label>
                                                                     </div>
@@ -1431,13 +1633,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                                 <?php
                                                                 if ($canEdt === true) {
-                                                                    ?>                                   
+                                                                ?>
                                                                     <div class="input-group" style="width:100% !important;">
                                                                         <input type="text" name="invDscntCodeName" id="invDscntCodeName" class="form-control" value="<?php echo $invDscntCodeName; ?>" readonly="true" style="width:100% !important;">
                                                                         <input type="hidden" name="invDscntCodeID" id="invDscntCodeID" class="form-control" value="<?php echo $invDscntCodeID; ?>">
                                                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Discount Codes', '', '', '', 'radio', true, '', 'invDscntCodeID', 'invDscntCodeName', 'clear', 0, '', function () {
                                                                                                         var aa112 = 1;
-                                                                                                    });"> 
+                                                                                                    });">
                                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                                         </label>
                                                                     </div>
@@ -1453,13 +1655,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <label for="invChrgCodeName" class="control-label">Charge Code:</label>
                                                             </div>
                                                             <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                                                <?php if ($canEdt === true) { ?>                                   
+                                                                <?php if ($canEdt === true) { ?>
                                                                     <div class="input-group" style="width:100% !important;">
                                                                         <input type="text" name="invChrgCodeName" id="invChrgCodeName" class="form-control" value="<?php echo $invChrgCodeName; ?>" readonly="true" style="width:100% !important;">
                                                                         <input type="hidden" name="invChrgCodeID" id="invChrgCodeID" class="form-control" value="<?php echo $invChrgCodeID; ?>">
                                                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Extra Charges', '', '', '', 'radio', true, '', 'invChrgCodeID', 'invChrgCodeName', 'clear', 0, '', function () {
                                                                                                         var aa112 = 1;
-                                                                                                    });"> 
+                                                                                                    });">
                                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                                         </label>
                                                                     </div>
@@ -1516,8 +1718,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
                                                                 <?php
                                                                 if ($canEdt === true) {
-                                                                    ?>                                   
-                                                                    <input type="number" name="invMinItmQty" id="invMinItmQty" class="form-control" value="<?php echo $invMinItmQty; ?>" placeholder="Min Qty.">                                                                        
+                                                                ?>
+                                                                    <input type="number" name="invMinItmQty" id="invMinItmQty" class="form-control" value="<?php echo $invMinItmQty; ?>" placeholder="Min Qty.">
                                                                 <?php } else { ?>
                                                                     <span><?php echo $invMinItmQty; ?></span>
                                                                 <?php } ?>
@@ -1525,8 +1727,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
                                                                 <?php
                                                                 if ($canEdt === true) {
-                                                                    ?>                                   
-                                                                    <input type="number" name="invMaxItmQty" id="invMaxItmQty" class="form-control" value="<?php echo $invMaxItmQty; ?>" placeholder="Max Qty.">                                                                        
+                                                                ?>
+                                                                    <input type="number" name="invMaxItmQty" id="invMaxItmQty" class="form-control" value="<?php echo $invMaxItmQty; ?>" placeholder="Max Qty.">
                                                                 <?php } else { ?>
                                                                     <span><?php echo $invMaxItmQty; ?></span>
                                                                 <?php } ?>
@@ -1541,13 +1743,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <label for="invValCrncyNm" class="control-label">Value Currency:</label>
                                                             </div>
                                                             <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                                                <?php if ($canEdt === true) { ?>                                   
+                                                                <?php if ($canEdt === true) { ?>
                                                                     <div class="input-group" style="width:100% !important;">
                                                                         <input type="text" name="invValCrncyNm" id="invValCrncyNm" class="form-control rqrdFld" value="<?php echo $invValCrncyNm; ?>" readonly="true" style="width:100% !important;">
                                                                         <input type="hidden" name="invValCrncyID" id="invValCrncyID" class="form-control" value="<?php echo $invValCrncyID; ?>">
                                                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Currencies', '', '', '', 'radio', true, '', 'invValCrncyNm', '', 'clear', 0, '', function () {
                                                                                                         var aa112 = 1;
-                                                                                                    }, 'invValCrncyID');"> 
+                                                                                                    }, 'invValCrncyID');">
                                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                                         </label>
                                                                     </div>
@@ -1565,8 +1767,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                                 <?php
                                                                 if ($canEdt === true) {
-                                                                    ?>                                   
-                                                                    <input type="number" name="invPriceLessTax" id="invPriceLessTax" class="form-control" value="<?php echo $invPriceLessTax; ?>" placeholder="0.00" readonly="true">                                                                        
+                                                                ?>
+                                                                    <input type="number" name="invPriceLessTax" id="invPriceLessTax" class="form-control" value="<?php echo $invPriceLessTax; ?>" placeholder="0.00" readonly="true">
                                                                 <?php } else { ?>
                                                                     <span><?php echo $invPriceLessTax; ?></span>
                                                                 <?php } ?>
@@ -1581,8 +1783,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                                 <?php
                                                                 if ($canEdt === true) {
-                                                                    ?>                                   
-                                                                    <input type="number" name="invSllngPrice" id="invSllngPrice" class="form-control rqrdFld" value="<?php echo $invSllngPrice; ?>" placeholder="0.00">                                                                        
+                                                                ?>
+                                                                    <input type="number" name="invSllngPrice" id="invSllngPrice" class="form-control rqrdFld" value="<?php echo $invSllngPrice; ?>" placeholder="0.00">
                                                                 <?php } else { ?>
                                                                     <span><?php echo $invSllngPrice; ?></span>
                                                                 <?php } ?>
@@ -1597,8 +1799,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                                 <?php
                                                                 if ($canEdt === true) {
-                                                                    ?>                                   
-                                                                    <input type="number" name="invLtstCostPrice" id="invLtstCostPrice" class="form-control" value="<?php echo $invLtstCostPrice; ?>" placeholder="0.00" readonly="true">                                                                        
+                                                                ?>
+                                                                    <input type="number" name="invLtstCostPrice" id="invLtstCostPrice" class="form-control" value="<?php echo $invLtstCostPrice; ?>" placeholder="0.00" readonly="true">
                                                                 <?php } else { ?>
                                                                     <span><?php echo $invLtstCostPrice; ?></span>
                                                                 <?php } ?>
@@ -1613,8 +1815,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                                 <?php
                                                                 if ($canEdt === true) {
-                                                                    ?>                                   
-                                                                    <input type="number" name="invNwPrftAmnt" id="invNwPrftAmnt" class="form-control" value="<?php echo $invNwPrftAmnt; ?>" placeholder="0.00" readonly="true">                                                                        
+                                                                ?>
+                                                                    <input type="number" name="invNwPrftAmnt" id="invNwPrftAmnt" class="form-control" value="<?php echo $invNwPrftAmnt; ?>" placeholder="0.00" readonly="true">
                                                                 <?php } else { ?>
                                                                     <span><?php echo $invNwPrftAmnt; ?></span>
                                                                 <?php } ?>
@@ -1629,8 +1831,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                                 <?php
                                                                 if ($canEdt === true) {
-                                                                    ?>                                   
-                                                                    <input type="number" name="invNewSllngPrice" id="invNewSllngPrice" class="form-control" value="<?php echo $invNewSllngPrice; ?>" placeholder="0.00" readonly="true">                                                                        
+                                                                ?>
+                                                                    <input type="number" name="invNewSllngPrice" id="invNewSllngPrice" class="form-control" value="<?php echo $invNewSllngPrice; ?>" placeholder="0.00" readonly="true">
                                                                 <?php } else { ?>
                                                                     <span><?php echo $invNewSllngPrice; ?></span>
                                                                 <?php } ?>
@@ -1645,14 +1847,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                                 <?php
                                                                 if ($canEdt === true) {
-                                                                    ?>                                   
-                                                                    <input type="text" name="invPrftMrgnPrcnt" id="invPrftMrgnPrcnt" class="form-control" value="<?php echo $invPrftMrgnPrcnt . "%"; ?>" placeholder="0.00" readonly="true">                                                                        
+                                                                ?>
+                                                                    <input type="text" name="invPrftMrgnPrcnt" id="invPrftMrgnPrcnt" class="form-control" value="<?php echo $invPrftMrgnPrcnt . "%"; ?>" placeholder="0.00" readonly="true">
                                                                 <?php } else { ?>
                                                                     <span><?php echo $invPrftMrgnPrcnt . "%"; ?></span>
                                                                 <?php } ?>
                                                             </div>
                                                         </div>
-                                                    </div>                                                    
+                                                    </div>
                                                     <div class="form-group">
                                                         <div class="col-sm-12">
                                                             <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
@@ -1661,14 +1863,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                                 <?php
                                                                 if ($canEdt === true) {
-                                                                    ?>                                   
-                                                                    <input type="number" name="invPrftMrgnAmnt" id="invPrftMrgnAmnt" class="form-control" value="<?php echo $invPrftMrgnAmnt; ?>" placeholder="0.00" readonly="true">                                                                        
+                                                                ?>
+                                                                    <input type="number" name="invPrftMrgnAmnt" id="invPrftMrgnAmnt" class="form-control" value="<?php echo $invPrftMrgnAmnt; ?>" placeholder="0.00" readonly="true">
                                                                 <?php } else { ?>
                                                                     <span><?php echo $invPrftMrgnAmnt; ?></span>
                                                                 <?php } ?>
                                                             </div>
                                                         </div>
-                                                    </div>                                                    
+                                                    </div>
                                                     <div class="form-group">
                                                         <div class="col-sm-12">
                                                             <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
@@ -1677,8 +1879,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                                 <?php
                                                                 if ($canEdt === true) {
-                                                                    ?>                                   
-                                                                    <button type="button" class="btn btn-primary" onclick="saveINVItmsForm();">Overwrite Selling Price</button>                                                                        
+                                                                ?>
+                                                                    <button type="button" class="btn btn-primary" onclick="saveINVItmsForm();">Overwrite Selling Price</button>
                                                                 <?php } else { ?>
                                                                     <span>&nbsp</span>
                                                                 <?php } ?>
@@ -1687,7 +1889,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>                                    
+                                        </div>
                                         <div id="invItmsGl" class="tab-pane fade hideNotice" style="border:none !important;padding:0px !important;">
                                             <div class="form-group">
                                                 <div class="col-sm-12">
@@ -1695,13 +1897,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <label for="invAssetAcntNm" class="control-label">Inventory/Asset Account:</label>
                                                     </div>
                                                     <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                                        <?php if ($canEdt === true) { ?>                                   
+                                                        <?php if ($canEdt === true) { ?>
                                                             <div class="input-group" style="width:100% !important;">
                                                                 <input type="text" name="invAssetAcntNm" id="invAssetAcntNm" class="form-control rqrdFld" value="<?php echo $invAssetAcntNm; ?>" readonly="true" style="width:100% !important;">
                                                                 <input type="hidden" name="invAssetAcntID" id="invAssetAcntID" class="form-control" value="<?php echo $invAssetAcntID; ?>">
                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Asset Accounts', '', '', '', 'radio', true, '', 'invAssetAcntID', 'invAssetAcntNm', 'clear', 0, '', function () {
                                                                                                 var aa112 = 1;
-                                                                                            });"> 
+                                                                                            });">
                                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                                 </label>
                                                             </div>
@@ -1717,13 +1919,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <label for="invCogsAcntNm" class="control-label">Cost of Goods Sold:</label>
                                                     </div>
                                                     <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                                        <?php if ($canEdt === true) { ?>                                   
+                                                        <?php if ($canEdt === true) { ?>
                                                             <div class="input-group" style="width:100% !important;">
                                                                 <input type="text" name="invCogsAcntNm" id="invCogsAcntNm" class="form-control rqrdFld" value="<?php echo $invCogsAcntNm; ?>" readonly="true" style="width:100% !important;">
                                                                 <input type="hidden" name="invCogsAcntID" id="invCogsAcntID" class="form-control" value="<?php echo $invCogsAcntID; ?>">
                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Contra Revenue Accounts', '', '', '', 'radio', true, '', 'invCogsAcntID', 'invCogsAcntNm', 'clear', 0, '', function () {
                                                                                                 var aa112 = 1;
-                                                                                            });"> 
+                                                                                            });">
                                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                                 </label>
                                                             </div>
@@ -1739,13 +1941,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <label for="invSRvnuAcntNm" class="control-label">Sales Revenue:</label>
                                                     </div>
                                                     <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                                        <?php if ($canEdt === true) { ?>                                   
+                                                        <?php if ($canEdt === true) { ?>
                                                             <div class="input-group" style="width:100% !important;">
                                                                 <input type="text" name="invSRvnuAcntNm" id="invSRvnuAcntNm" class="form-control rqrdFld" value="<?php echo $invSRvnuAcntNm; ?>" readonly="true" style="width:100% !important;">
                                                                 <input type="hidden" name="invSRvnuAcntID" id="invSRvnuAcntID" class="form-control" value="<?php echo $invSRvnuAcntID; ?>">
                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Revenue Accounts', '', '', '', 'radio', true, '', 'invSRvnuAcntID', 'invSRvnuAcntNm', 'clear', 0, '', function () {
                                                                                                 var aa112 = 1;
-                                                                                            });"> 
+                                                                                            });">
                                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                                 </label>
                                                             </div>
@@ -1761,13 +1963,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <label for="invSRetrnAcntNm" class="control-label">Sales Return:</label>
                                                     </div>
                                                     <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                                        <?php if ($canEdt === true) { ?>                                   
+                                                        <?php if ($canEdt === true) { ?>
                                                             <div class="input-group" style="width:100% !important;">
                                                                 <input type="text" name="invSRetrnAcntNm" id="invSRetrnAcntNm" class="form-control rqrdFld" value="<?php echo $invSRetrnAcntNm; ?>" readonly="true" style="width:100% !important;">
                                                                 <input type="hidden" name="invSRetrnAcntID" id="invSRetrnAcntID" class="form-control" value="<?php echo $invSRetrnAcntID; ?>">
                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Contra Revenue Accounts', '', '', '', 'radio', true, '', 'invSRetrnAcntID', 'invSRetrnAcntNm', 'clear', 0, '', function () {
                                                                                                 var aa112 = 1;
-                                                                                            });"> 
+                                                                                            });">
                                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                                 </label>
                                                             </div>
@@ -1783,13 +1985,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <label for="invPRetrnAcntNm" class="control-label">Purchase Returns Account:</label>
                                                     </div>
                                                     <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                                        <?php if ($canEdt === true) { ?>                                   
+                                                        <?php if ($canEdt === true) { ?>
                                                             <div class="input-group" style="width:100% !important;">
                                                                 <input type="text" name="invPRetrnAcntNm" id="invPRetrnAcntNm" class="form-control rqrdFld" value="<?php echo $invPRetrnAcntNm; ?>" readonly="true" style="width:100% !important;">
                                                                 <input type="hidden" name="invPRetrnAcntID" id="invPRetrnAcntID" class="form-control" value="<?php echo $invPRetrnAcntID; ?>">
                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Contra Expense Accounts', '', '', '', 'radio', true, '', 'invPRetrnAcntID', 'invPRetrnAcntNm', 'clear', 0, '', function () {
                                                                                                 var aa112 = 1;
-                                                                                            });"> 
+                                                                                            });">
                                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                                 </label>
                                                             </div>
@@ -1805,13 +2007,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <label for="invExpnsAcntNm" class="control-label">Expense Account:</label>
                                                     </div>
                                                     <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                                        <?php if ($canEdt === true) { ?>                                   
+                                                        <?php if ($canEdt === true) { ?>
                                                             <div class="input-group" style="width:100% !important;">
                                                                 <input type="text" name="invExpnsAcntNm" id="invExpnsAcntNm" class="form-control rqrdFld" value="<?php echo $invExpnsAcntNm; ?>" readonly="true" style="width:100% !important;">
                                                                 <input type="hidden" name="invExpnsAcntID" id="invExpnsAcntID" class="form-control" value="<?php echo $invExpnsAcntID; ?>">
                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Expense Accounts', '', '', '', 'radio', true, '', 'invExpnsAcntID', 'invExpnsAcntNm', 'clear', 0, '', function () {
                                                                                                 var aa112 = 1;
-                                                                                            });"> 
+                                                                                            });">
                                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                                 </label>
                                                             </div>
@@ -1822,11 +2024,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="invItmsStores" class="tab-pane fade hideNotice" style="border:none !important;padding:0px !important;"> 
+                                        <div id="invItmsStores" class="tab-pane fade hideNotice" style="border:none !important;padding:0px !important;">
                                             <?php
                                             $nwRowHtmlAB = "<tr id=\"oneItmStoresRow__WWW123WWW\">"
-                                                    . "<td class=\"lovtd\"><span>New</span></td>"
-                                                    . "<td class=\"lovtd\">
+                                                . "<td class=\"lovtd\"><span>New</span></td>"
+                                                . "<td class=\"lovtd\">
                                                         <div class=\"\">
                                                             <div class=\"input-group\"  style=\"width:100%;\">
                                                                 <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"oneItmStoresRow_WWW123WWW_StoreNm\" value=\"\" style=\"width:100%;\">
@@ -1880,16 +2082,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <?php if ($canEdt === true) { ?>
-                                                        <button id="addNwStoreBtn" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowAfta('oneItmStoresTable', 0, '<?php echo $nwRowHtml; ?>');" data-toggle="tooltip" data-placement="bottom" title = "New Item Store">
+                                                        <button id="addNwStoreBtn" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowAfta('oneItmStoresTable', 0, '<?php echo $nwRowHtml; ?>');" data-toggle="tooltip" data-placement="bottom" title="New Item Store">
                                                             <img src="cmn_images/add1-64.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             Add Store
                                                         </button>
                                                     <?php } ?>
-                                                    <button id="refreshItmBtn1" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneINVItmsForm(<?php echo $sbmtdItmID; ?>, 'ReloadDialog');" data-toggle="tooltip" data-placement="bottom" title = "Reload Item Details">
+                                                    <button id="refreshItmBtn1" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneINVItmsForm(<?php echo $sbmtdItmID; ?>, 'ReloadDialog');" data-toggle="tooltip" data-placement="bottom" title="Reload Item Details">
                                                         <img src="cmn_images/refresh.bmp" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                         Refresh
                                                     </button>
-                                                </div>                                            
+                                                </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12">
@@ -1897,14 +2099,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <thead>
                                                             <tr>
                                                                 <th style="max-width:50px;width:50px;">No.</th>
-                                                                <th >Store Name</th>
-                                                                <th >Shelves</th>
-                                                                <th >Start Date</th>
-                                                                <th >End Date</th>
+                                                                <th>Store Name</th>
+                                                                <th>Shelves</th>
+                                                                <th>Start Date</th>
+                                                                <th>End Date</th>
                                                                 <th style="max-width:30px;width:30px;">&nbsp;</th>
                                                                 <?php
                                                                 if ($canVwRcHstry === true) {
-                                                                    ?>
+                                                                ?>
                                                                     <th>...</th>
                                                                 <?php } ?>
                                                             </tr>
@@ -1919,13 +2121,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 $shelves = $rwCage[2];
                                                                 $storeStrtDte = $rwCage[3];
                                                                 $storeEndDte = $rwCage[4];
-                                                                ?>
-                                                                <tr id="oneItmStoresRow_<?php echo $cntrUsr; ?>">                                    
+                                                            ?>
+                                                                <tr id="oneItmStoresRow_<?php echo $cntrUsr; ?>">
                                                                     <td class="lovtd"><span><?php echo ($rwCage[0]); ?></span></td>
                                                                     <td class="lovtd">
                                                                         <?php if ($canEdt === true) { ?>
                                                                             <div class="">
-                                                                                <div class="input-group"  style="width:100%;">
+                                                                                <div class="input-group" style="width:100%;">
                                                                                     <input type="text" class="form-control" aria-label="..." id="oneItmStoresRow<?php echo $cntrUsr; ?>_StoreNm" value="<?php echo $storeName; ?>">
                                                                                     <input type="hidden" class="form-control" aria-label="..." id="oneItmStoresRow<?php echo $cntrUsr; ?>_StoreID" value="<?php echo $rwCage[5]; ?>">
                                                                                     <input type="hidden" class="form-control" aria-label="..." id="oneItmStoresRow<?php echo $cntrUsr; ?>_StockID" value="<?php echo $rwCage[7]; ?>">
@@ -1936,12 +2138,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             </div>
                                                                         <?php } else { ?>
                                                                             <span><?php echo $storeName; ?></span>
-                                                                        <?php } ?> 
+                                                                        <?php } ?>
                                                                     </td>
                                                                     <td class="lovtd">
                                                                         <?php if ($canEdt === true) { ?>
                                                                             <div class="">
-                                                                                <div class="input-group"  style="width:100%;">
+                                                                                <div class="input-group" style="width:100%;">
                                                                                     <input type="text" class="form-control" aria-label="..." id="oneItmStoresRow<?php echo $cntrUsr; ?>_ShlvNm" value="<?php echo $shelves; ?>">
                                                                                     <input type="hidden" class="form-control" aria-label="..." id="oneItmStoresRow<?php echo $cntrUsr; ?>_ShlvIDs" value="<?php echo $rwCage[6]; ?>">
                                                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Store Shelves', 'oneItmStoresRow<?php echo $cntrUsr; ?>_StoreID', '', '', 'check', true, '<?php echo $shelves; ?>', 'oneItmStoresRow<?php echo $cntrUsr; ?>_ShlvIDs', 'oneItmStoresRow<?php echo $cntrUsr; ?>_ShlvNm', 'clear', 1, '');">
@@ -1951,36 +2153,36 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             </div>
                                                                         <?php } else { ?>
                                                                             <span><?php echo $shelves; ?></span>
-                                                                        <?php } ?> 
+                                                                        <?php } ?>
                                                                     </td>
-                                                                    <td class="lovtd">                                                                            
+                                                                    <td class="lovtd">
                                                                         <?php
                                                                         if ($canEdt === true) {
-                                                                            ?>
+                                                                        ?>
                                                                             <div class="">
                                                                                 <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%;">
                                                                                     <input class="form-control" size="16" type="text" id="oneItmStoresRow<?php echo $cntrUsr; ?>_StrtDte" value="<?php echo $storeStrtDte; ?>" readonly="true">
                                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                                                                </div>                                                                
+                                                                                </div>
                                                                             </div>
                                                                         <?php } else { ?>
                                                                             <span><?php echo $storeStrtDte; ?></span>
-                                                                        <?php } ?> 
+                                                                        <?php } ?>
                                                                     </td>
                                                                     <td class="lovtd">
                                                                         <?php if ($canEdt === true) {
-                                                                            ?>
+                                                                        ?>
                                                                             <div class="">
                                                                                 <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%;">
                                                                                     <input class="form-control" size="16" type="text" id="oneItmStoresRow<?php echo $cntrUsr; ?>_EndDte" value="<?php echo $storeEndDte; ?>" readonly="true">
                                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                                                                </div>                                                                
+                                                                                </div>
                                                                             </div>
                                                                         <?php } else { ?>
                                                                             <span><?php echo $storeEndDte; ?></span>
-                                                                        <?php } ?>  
+                                                                        <?php } ?>
                                                                     </td>
                                                                     <?php if ($canEdt === true) { ?>
                                                                         <td class="lovtd">
@@ -1991,35 +2193,36 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <?php } ?>
                                                                     <?php
                                                                     if ($canVwRcHstry === true) {
-                                                                        ?>
+                                                                    ?>
                                                                         <td class="lovtd">
                                                                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php
-                                                                            echo urlencode(encrypt1(($rwCage[7] . "|inv.inv_stock|stock_id"),
-                                                                                            $smplTokenWord1));
-                                                                            ?>');" style="padding:2px !important;">
+                                                                                                                                                                                                                                    echo urlencode(encrypt1(($rwCage[7] . "|inv.inv_stock|stock_id"),
+                                                                                                                                                                                                                                        $smplTokenWord1
+                                                                                                                                                                                                                                    ));
+                                                                                                                                                                                                                                    ?>');" style="padding:2px !important;">
                                                                                 <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                             </button>
                                                                         </td>
                                                                     <?php } ?>
                                                                 </tr>
-                                                                <?php
+                                                            <?php
                                                             }
                                                             ?>
                                                         </tbody>
-                                                    </table> 
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="invItmsExtInfo" class="tab-pane fade hideNotice" style="border:none !important;padding:0px !important;">                                             
+                                        <div id="invItmsExtInfo" class="tab-pane fade hideNotice" style="border:none !important;padding:0px !important;">
                                             <div class="form-group">
                                                 <div class="col-sm-12">
                                                     <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
                                                         <label for="invItmExtrInfo" class="control-label">Extra Information:</label>
                                                     </div>
-                                                    <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">     
+                                                    <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                         <?php
                                                         if ($canEdt === true) {
-                                                            ?>
+                                                        ?>
                                                             <textarea rows="4" name="invItmExtrInfo" id="invItmExtrInfo" class="form-control"><?php echo $invItmExtrInfo; ?></textarea>
                                                         <?php } else { ?>
                                                             <span><?php echo $invItmExtrInfo; ?></span>
@@ -2032,10 +2235,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
                                                         <label for="invItmOthrDesc" class="control-label">Other Description:</label>
                                                     </div>
-                                                    <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">     
+                                                    <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                         <?php
                                                         if ($canEdt === true) {
-                                                            ?>
+                                                        ?>
                                                             <textarea rows="6" name="invItmOthrDesc" id="invItmOthrDesc" class="form-control"><?php echo $invItmOthrDesc; ?></textarea>
                                                         <?php } else { ?>
                                                             <span><?php echo $invItmOthrDesc; ?></span>
@@ -2044,11 +2247,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="invItmsUOM" class="tab-pane fade hideNotice" style="border:none !important;padding:0px !important;">                                             
+                                        <div id="invItmsUOM" class="tab-pane fade hideNotice" style="border:none !important;padding:0px !important;">
                                             <?php
                                             $nwRowHtmlAB = "<tr id=\"oneItmUOMsRow__WWW123WWW\">"
-                                                    . "<td class=\"lovtd\"><span>New</span></td>"
-                                                    . "<td class=\"lovtd\">
+                                                . "<td class=\"lovtd\"><span>New</span></td>"
+                                                . "<td class=\"lovtd\">
                                                             <div class=\"\">
                                                                 <div class=\"input-group\"  style=\"width:100%;\">
                                                                     <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"oneItmUOMsRow_WWW123WWW_UOMNm\" value=\"\">
@@ -2094,17 +2297,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="col-md-12">
                                                     <?php
                                                     if ($canEdt === true) {
-                                                        ?>
-                                                        <button id="addNwUOMBtn" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowAfta('oneItmUOMsTable', 0, '<?php echo $nwRowHtml; ?>');" data-toggle="tooltip" data-placement="bottom" title = "New Item UOM">
+                                                    ?>
+                                                        <button id="addNwUOMBtn" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowAfta('oneItmUOMsTable', 0, '<?php echo $nwRowHtml; ?>');" data-toggle="tooltip" data-placement="bottom" title="New Item UOM">
                                                             <img src="cmn_images/add1-64.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             Add UOM
                                                         </button>
                                                     <?php } ?>
-                                                    <button id="refreshItmBtn2" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneINVItmsForm(<?php echo $sbmtdItmID; ?>, 'ReloadDialog');" data-toggle="tooltip" data-placement="bottom" title = "Reload Item Details">
+                                                    <button id="refreshItmBtn2" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneINVItmsForm(<?php echo $sbmtdItmID; ?>, 'ReloadDialog');" data-toggle="tooltip" data-placement="bottom" title="Reload Item Details">
                                                         <img src="cmn_images/refresh.bmp" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                         Refresh
                                                     </button>
-                                                </div>                                            
+                                                </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12">
@@ -2112,15 +2315,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <thead>
                                                             <tr>
                                                                 <th style="max-width:50px;width:50px;">No.</th>
-                                                                <th >UOM</th>
-                                                                <th >Conversion Factor</th>
-                                                                <th >Sort Order</th>
-                                                                <th >Selling Price</th>
-                                                                <th >Price Less Tax</th>
+                                                                <th>UOM</th>
+                                                                <th>Conversion Factor</th>
+                                                                <th>Sort Order</th>
+                                                                <th>Selling Price</th>
+                                                                <th>Price Less Tax</th>
                                                                 <th style="max-width:30px;width:30px;">&nbsp;</th>
                                                                 <?php
                                                                 if ($canVwRcHstry === true) {
-                                                                    ?>
+                                                                ?>
                                                                     <th>...</th>
                                                                 <?php } ?>
                                                             </tr>
@@ -2138,14 +2341,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 $uomSortOrdr = (float) $rwCage[3];
                                                                 $uomSllngPrice = (float) $rwCage[6];
                                                                 $uomPriceLsTx = (float) $rwCage[7];
-                                                                ?>
-                                                                <tr id="oneItmUOMsRow_<?php echo $cntrUsr; ?>">                                    
+                                                            ?>
+                                                                <tr id="oneItmUOMsRow_<?php echo $cntrUsr; ?>">
                                                                     <td class="lovtd"><span><?php echo ($rwCage[0]); ?></span></td>
                                                                     <td class="lovtd">
                                                                         <?php if ($canEdt === true) {
-                                                                            ?>
+                                                                        ?>
                                                                             <div class="">
-                                                                                <div class="input-group"  style="width:100%;">
+                                                                                <div class="input-group" style="width:100%;">
                                                                                     <input type="text" class="form-control" aria-label="..." id="oneItmUOMsRow<?php echo $cntrUsr; ?>_UOMNm" value="<?php echo $itmUOM1; ?>">
                                                                                     <input type="hidden" class="form-control" aria-label="..." id="oneItmUOMsRow<?php echo $cntrUsr; ?>_UOMID" value="<?php echo $itmUOMID; ?>">
                                                                                     <input type="hidden" class="form-control" aria-label="..." id="oneItmUOMsRow<?php echo $cntrUsr; ?>_LineID" value="<?php echo $itmUOMLineID; ?>">
@@ -2156,54 +2359,54 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             </div>
                                                                         <?php } else { ?>
                                                                             <span><?php echo $itmUOM1; ?></span>
-                                                                        <?php } ?> 
+                                                                        <?php } ?>
                                                                     </td>
                                                                     <td class="lovtd">
                                                                         <?php
                                                                         if ($canEdt === true) {
-                                                                            ?>
-                                                                            <div class="">                                                                                
+                                                                        ?>
+                                                                            <div class="">
                                                                                 <input type="number" class="form-control rqrdFld" aria-label="..." id="oneItmUOMsRow<?php echo $cntrUsr; ?>_CnvrsnFctr" value="<?php echo $uomCnvrsnFctr; ?>">
                                                                             </div>
                                                                         <?php } else { ?>
                                                                             <span><?php echo $uomCnvrsnFctr; ?></span>
-                                                                        <?php } ?> 
+                                                                        <?php } ?>
                                                                     </td>
-                                                                    <td class="lovtd">                                                                            
+                                                                    <td class="lovtd">
                                                                         <?php
                                                                         if ($canEdt === true) {
-                                                                            ?>
-                                                                            <div class="">                                                                                
+                                                                        ?>
+                                                                            <div class="">
                                                                                 <input type="number" class="form-control rqrdFld" aria-label="..." id="oneItmUOMsRow<?php echo $cntrUsr; ?>_SortOrdr" value="<?php echo $uomSortOrdr; ?>">
                                                                             </div>
                                                                         <?php } else { ?>
                                                                             <span><?php echo $uomSortOrdr; ?></span>
-                                                                        <?php } ?> 
+                                                                        <?php } ?>
                                                                     </td>
-                                                                    <td class="lovtd">                                                                            
+                                                                    <td class="lovtd">
                                                                         <?php
                                                                         if ($canEdt === true) {
-                                                                            ?>
-                                                                            <div class="">                                                                                
+                                                                        ?>
+                                                                            <div class="">
                                                                                 <input type="number" class="form-control rqrdFld" aria-label="..." id="oneItmUOMsRow<?php echo $cntrUsr; ?>_SllgnPrce" value="<?php echo $uomSllngPrice; ?>">
                                                                             </div>
                                                                         <?php } else { ?>
                                                                             <span><?php echo $uomSllngPrice; ?></span>
-                                                                        <?php } ?>   
+                                                                        <?php } ?>
                                                                     </td>
-                                                                    <td class="lovtd">                                                                            
+                                                                    <td class="lovtd">
                                                                         <?php
                                                                         if ($canEdt === true) {
-                                                                            ?>
-                                                                            <div class="">                                                                                
+                                                                        ?>
+                                                                            <div class="">
                                                                                 <input type="number" class="form-control" aria-label="..." id="oneItmUOMsRow<?php echo $cntrUsr; ?>_PriceLsTx" value="<?php echo $uomPriceLsTx; ?>" readonly="true">
                                                                             </div>
                                                                         <?php } else { ?>
                                                                             <span><?php echo $uomPriceLsTx; ?></span>
-                                                                        <?php } ?>   
+                                                                        <?php } ?>
                                                                     </td>
                                                                     <?php if ($canEdt === true) {
-                                                                        ?>
+                                                                    ?>
                                                                         <td class="lovtd">
                                                                             <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delINVItmUoMs('oneItmUOMsRow_<?php echo $cntrUsr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Item UOM">
                                                                                 <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
@@ -2212,26 +2415,27 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <?php } ?>
                                                                     <?php
                                                                     if ($canVwRcHstry === true) {
-                                                                        ?>
+                                                                    ?>
                                                                         <td class="lovtd">
                                                                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php
-                                                                            echo urlencode(encrypt1(($rwCage[4] . "|inv.itm_uoms|itm_uom_id"),
-                                                                                            $smplTokenWord1));
-                                                                            ?>');" style="padding:2px !important;">
+                                                                                                                                                                                                                                    echo urlencode(encrypt1(($rwCage[4] . "|inv.itm_uoms|itm_uom_id"),
+                                                                                                                                                                                                                                        $smplTokenWord1
+                                                                                                                                                                                                                                    ));
+                                                                                                                                                                                                                                    ?>');" style="padding:2px !important;">
                                                                                 <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                             </button>
                                                                         </td>
                                                                     <?php } ?>
                                                                 </tr>
-                                                                <?php
+                                                            <?php
                                                             }
                                                             ?>
                                                         </tbody>
-                                                    </table> 
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="invItmsDrugLbl" class="tab-pane fade hideNotice" style="border:none !important;padding:0px !important;">                                                                                            
+                                        <div id="invItmsDrugLbl" class="tab-pane fade hideNotice" style="border:none !important;padding:0px !important;">
                                             <div class="form-group">
                                                 <div class="col-sm-12">
                                                     <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
@@ -2240,14 +2444,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                         <?php
                                                         if ($canEdt === true) {
-                                                            ?>                                   
-                                                            <input type="text" name="invItmGnrcNm" id="invItmGnrcNm" class="form-control" value="<?php echo $invItmGnrcNm; ?>">                                                                        
+                                                        ?>
+                                                            <input type="text" name="invItmGnrcNm" id="invItmGnrcNm" class="form-control" value="<?php echo $invItmGnrcNm; ?>">
                                                         <?php } else { ?>
                                                             <span><?php echo $invItmGnrcNm; ?></span>
                                                         <?php } ?>
                                                     </div>
                                                 </div>
-                                            </div>                                                                                            
+                                            </div>
                                             <div class="form-group">
                                                 <div class="col-sm-12">
                                                     <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
@@ -2256,51 +2460,51 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                         <?php
                                                         if ($canEdt === true) {
-                                                            ?>                                   
-                                                            <input type="text" name="invItmTradeNm" id="invItmTradeNm" class="form-control" value="<?php echo $invItmTradeNm; ?>">                                                                        
+                                                        ?>
+                                                            <input type="text" name="invItmTradeNm" id="invItmTradeNm" class="form-control" value="<?php echo $invItmTradeNm; ?>">
                                                         <?php } else { ?>
                                                             <span><?php echo $invItmTradeNm; ?></span>
                                                         <?php } ?>
                                                     </div>
                                                 </div>
-                                            </div> 
+                                            </div>
                                             <div class="form-group">
                                                 <div class="col-sm-12">
                                                     <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
                                                         <label for="invItmUslDsge" class="control-label">Usual Dosage:</label>
                                                     </div>
-                                                    <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">     
+                                                    <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                         <?php
                                                         if ($canEdt === true) {
-                                                            ?>
+                                                        ?>
                                                             <textarea rows="3" name="invItmUslDsge" id="invItmUslDsge" class="form-control"><?php echo $invItmUslDsge; ?></textarea>
                                                         <?php } else { ?>
                                                             <span><?php echo $invItmUslDsge; ?></span>
                                                         <?php } ?>
                                                     </div>
                                                 </div>
-                                            </div> 
+                                            </div>
                                             <div class="form-group">
                                                 <div class="col-sm-12">
                                                     <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
                                                         <label for="invItmMaxDsge" class="control-label">Maximum Dosage:</label>
                                                     </div>
-                                                    <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">     
+                                                    <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                         <?php if ($canEdt === true) {
-                                                            ?>
+                                                        ?>
                                                             <textarea rows="3" name="invItmMaxDsge" id="invItmMaxDsge" class="form-control"><?php echo $invItmMaxDsge; ?></textarea>
                                                         <?php } else { ?>
                                                             <span><?php echo $invItmMaxDsge; ?></span>
                                                         <?php } ?>
                                                     </div>
                                                 </div>
-                                            </div> 
+                                            </div>
                                             <div class="form-group">
                                                 <div class="col-sm-12">
                                                     <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
                                                         <label for="invItmCntrIndctns" class="control-label">Contraindications:</label>
                                                     </div>
-                                                    <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">     
+                                                    <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                         <?php if ($canEdt === true) { ?>
                                                             <textarea rows="3" name="invItmCntrIndctns" id="invItmCntrIndctns" class="form-control"><?php echo $invItmCntrIndctns; ?></textarea>
                                                         <?php } else { ?>
@@ -2308,13 +2512,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <?php } ?>
                                                     </div>
                                                 </div>
-                                            </div> 
+                                            </div>
                                             <div class="form-group">
                                                 <div class="col-sm-12">
                                                     <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
                                                         <label for="invItmFoodIntrctns" class="control-label">Food Interactions:</label>
                                                     </div>
-                                                    <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">     
+                                                    <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                                         <?php if ($canEdt === true) { ?>
                                                             <textarea rows="3" name="invItmFoodIntrctns" id="invItmFoodIntrctns" class="form-control"><?php echo $invItmFoodIntrctns; ?></textarea>
                                                         <?php } else { ?>
@@ -2324,11 +2528,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="invItmsDrugIntrctns" class="tab-pane fade hideNotice" style="border:none !important;padding:0px !important;">                                                                                         
+                                        <div id="invItmsDrugIntrctns" class="tab-pane fade hideNotice" style="border:none !important;padding:0px !important;">
                                             <?php
                                             $nwRowHtml = "<tr id=\"oneItmDrugIntrctnsRow__WWW123WWW\">"
-                                                    . "<td class=\"lovtd\"><span>New</span></td>"
-                                                    . "<td class=\"lovtd\">
+                                                . "<td class=\"lovtd\"><span>New</span></td>"
+                                                . "<td class=\"lovtd\">
                                                                             <div class=\"\">
                                                                                 <div class=\"input-group\"  style=\"width:100%;\">
                                                                                     <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"oneItmDrugIntrctnsRow_WWW123WWW_DrugNm\" value=\"\">
@@ -2350,8 +2554,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 <select data-placeholder=\"Select...\" class=\"form-control chosen-select\" id=\"oneItmDrugIntrctnsRow_WWW123WWW_Action\">";
 
                                             $valslctdArry = array("", "", "", "");
-                                            $srchInsArrys = array("Disallow if combination found", "Warn if combination found", "Disallow if combination not found",
-                                                "Warn if combination not found");
+                                            $srchInsArrys = array(
+                                                "Disallow if combination found", "Warn if combination found", "Disallow if combination not found",
+                                                "Warn if combination not found"
+                                            );
                                             for ($z = 0; $z < count($srchInsArrys); $z++) {
                                                 $nwRowHtml .= "<option value=\"" . $srchInsArrys[$z] . "\" " . $valslctdArry[$z] . ">" . $srchInsArrys[$z] . "</option>";
                                             }
@@ -2371,17 +2577,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <?php if ($canEdt === true) {
-                                                        ?>
-                                                        <button id="addNwDrugIntrctnBtn" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowAfta('oneItmDrugIntrctnsTable', 0, '<?php echo $nwRowHtml; ?>');" data-toggle="tooltip" data-placement="bottom" title = "New Drug Interaction">
+                                                    ?>
+                                                        <button id="addNwDrugIntrctnBtn" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowAfta('oneItmDrugIntrctnsTable', 0, '<?php echo $nwRowHtml; ?>');" data-toggle="tooltip" data-placement="bottom" title="New Drug Interaction">
                                                             <img src="cmn_images/add1-64.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             Add Drug Interaction
                                                         </button>
                                                     <?php } ?>
-                                                    <button id="refreshItmBtn3" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneINVItmsForm(<?php echo $sbmtdItmID; ?>, 'ReloadDialog');" data-toggle="tooltip" data-placement="bottom" title = "Reload Item Details">
+                                                    <button id="refreshItmBtn3" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneINVItmsForm(<?php echo $sbmtdItmID; ?>, 'ReloadDialog');" data-toggle="tooltip" data-placement="bottom" title="Reload Item Details">
                                                         <img src="cmn_images/refresh.bmp" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                         Refresh
                                                     </button>
-                                                </div>                                            
+                                                </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12">
@@ -2389,13 +2595,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <thead>
                                                             <tr>
                                                                 <th style="max-width:50px;width:50px;">No.</th>
-                                                                <th >Drug</th>
-                                                                <th >Interaction Effect</th>
-                                                                <th >Action</th>
+                                                                <th>Drug</th>
+                                                                <th>Interaction Effect</th>
+                                                                <th>Action</th>
                                                                 <th style="max-width:30px;width:30px;">&nbsp;</th>
                                                                 <?php
                                                                 if ($canVwRcHstry === true) {
-                                                                    ?>
+                                                                ?>
                                                                     <th>...</th>
                                                                 <?php } ?>
                                                             </tr>
@@ -2411,15 +2617,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 $actionDrug = $rwCage[3];
                                                                 $scndDrugID = $rwCage[4];
                                                                 $drugIntrctnID = $rwCage[5];
-                                                                ?>
-                                                                <tr id="oneItmDrugIntrctnsRow_<?php echo $cntrUsr; ?>">                                    
+                                                            ?>
+                                                                <tr id="oneItmDrugIntrctnsRow_<?php echo $cntrUsr; ?>">
                                                                     <td class="lovtd"><span><?php echo ($rwCage[0]); ?></span></td>
                                                                     <td class="lovtd">
                                                                         <?php
                                                                         if ($canEdt === true) {
-                                                                            ?>
+                                                                        ?>
                                                                             <div class="">
-                                                                                <div class="input-group"  style="width:100%;">
+                                                                                <div class="input-group" style="width:100%;">
                                                                                     <input type="text" class="form-control" aria-label="..." id="oneItmDrugIntrctnsRow<?php echo $cntrUsr; ?>_DrugNm" value="<?php echo $drugName; ?>">
                                                                                     <input type="hidden" class="form-control" aria-label="..." id="oneItmDrugIntrctnsRow<?php echo $cntrUsr; ?>_DrugID" value="<?php echo $scndDrugID; ?>">
                                                                                     <input type="hidden" class="form-control" aria-label="..." id="oneItmDrugIntrctnsRow<?php echo $cntrUsr; ?>_LineID" value="<?php echo $drugIntrctnID; ?>">
@@ -2430,46 +2636,48 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             </div>
                                                                         <?php } else { ?>
                                                                             <span><?php echo $drugName; ?></span>
-                                                                        <?php } ?> 
+                                                                        <?php } ?>
                                                                     </td>
                                                                     <td class="lovtd">
                                                                         <?php
                                                                         if ($canEdt === true) {
-                                                                            ?>
+                                                                        ?>
                                                                             <div class="">
-                                                                                <textarea class="form-control" aria-label="..." id="oneItmDrugIntrctnsRow<?php echo $cntrUsr; ?>_Intrctn" rows="3"><?php echo $intrctnEffct; ?></textarea>                                                                                    
+                                                                                <textarea class="form-control" aria-label="..." id="oneItmDrugIntrctnsRow<?php echo $cntrUsr; ?>_Intrctn" rows="3"><?php echo $intrctnEffct; ?></textarea>
                                                                             </div>
                                                                         <?php } else { ?>
                                                                             <span><?php echo $intrctnEffct; ?></span>
-                                                                        <?php } ?> 
+                                                                        <?php } ?>
                                                                     </td>
-                                                                    <td class="lovtd">                                                                            
+                                                                    <td class="lovtd">
                                                                         <?php
                                                                         if ($canEdt === true) {
-                                                                            ?>
+                                                                        ?>
                                                                             <div class="">
                                                                                 <select data-placeholder="Select..." class="form-control chosen-select" id="oneItmDrugIntrctnsRow<?php echo $cntrUsr; ?>_Action">
                                                                                     <?php
                                                                                     $valslctdArry = array("", "", "", "");
-                                                                                    $srchInsArrys = array("Disallow if combination found",
+                                                                                    $srchInsArrys = array(
+                                                                                        "Disallow if combination found",
                                                                                         "Warn if combination found",
                                                                                         "Disallow if combination not found",
-                                                                                        "Warn if combination not found");
+                                                                                        "Warn if combination not found"
+                                                                                    );
                                                                                     for ($z = 0; $z < count($srchInsArrys); $z++) {
                                                                                         if ($actionDrug == $srchInsArrys[$z]) {
                                                                                             $valslctdArry[$z] = "selected";
                                                                                         }
-                                                                                        ?>
+                                                                                    ?>
                                                                                         <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                                                                     <?php } ?>
-                                                                                </select>                                                                
+                                                                                </select>
                                                                             </div>
                                                                         <?php } else { ?>
                                                                             <span><?php echo $actionDrug; ?></span>
-                                                                        <?php } ?> 
+                                                                        <?php } ?>
                                                                     </td>
                                                                     <?php if ($canEdt === true) {
-                                                                        ?>
+                                                                    ?>
                                                                         <td class="lovtd">
                                                                             <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delINVItmDrgIntrctns('oneItmDrugIntrctnsRow_<?php echo $cntrUsr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Drug Interaction">
                                                                                 <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
@@ -2478,22 +2686,23 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <?php } ?>
                                                                     <?php
                                                                     if ($canVwRcHstry === true) {
-                                                                        ?>
+                                                                    ?>
                                                                         <td class="lovtd">
                                                                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php
-                                                                            echo urlencode(encrypt1(($rwCage[5] . "|inv.inv_drug_interactions|drug_intrctn_id"),
-                                                                                            $smplTokenWord1));
-                                                                            ?>');" style="padding:2px !important;">
+                                                                                                                                                                                                                                    echo urlencode(encrypt1(($rwCage[5] . "|inv.inv_drug_interactions|drug_intrctn_id"),
+                                                                                                                                                                                                                                        $smplTokenWord1
+                                                                                                                                                                                                                                    ));
+                                                                                                                                                                                                                                    ?>');" style="padding:2px !important;">
                                                                                 <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                             </button>
                                                                         </td>
                                                                     <?php } ?>
                                                                 </tr>
-                                                                <?php
+                                                            <?php
                                                             }
                                                             ?>
                                                         </tbody>
-                                                    </table> 
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
@@ -2508,8 +2717,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <?php } ?>
                         </div>
                     </div>
-                </form>                    
-                <?php
+                </form>
+            <?php
             } else if ($vwtyp == 101) {
                 //New Store Item Form 
                 $canEdt = test_prmssns($dfltPrvldgs[31], $mdlNm) || test_prmssns($dfltPrvldgs[32], $mdlNm);
@@ -2651,7 +2860,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         $nwFileName = encrypt1($row[46], $smplTokenWord1) . "." . $extension;
                     }
                 }
-                ?>
+            ?>
                 <form class="form-horizontal" id='storeItmStpForm' action='' method='post' accept-charset='UTF-8'>
                     <div class="row" style="padding: 0px 15px 0px 15px !important;">
                         <div class="col-md-12" style="padding: 0px 5px 0px 5px !important;">
@@ -2661,7 +2870,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="invItemNm" class="control-label">Item Name:</label>
                                     </div>
                                     <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                        <?php if ($canEdt === true) { ?> 
+                                        <?php if ($canEdt === true) { ?>
                                             <input type="text" name="invItemNm" id="invItemNm" class="form-control" value="<?php echo $invItemNm; ?>" style="width:100% !important;" readonly="true">
                                             <input type="hidden" name="sbmtdItmID" id="sbmtdItmID" class="form-control" value="<?php echo $sbmtdItmID; ?>">
                                         <?php } else { ?>
@@ -2675,7 +2884,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
                                         <label for="invItemDesc" class="control-label">Item Description:</label>
                                     </div>
-                                    <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">     
+                                    <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                         <?php if ($canEdt === true) { ?>
                                             <textarea rows="1" name="invItemDesc" id="invItemDesc" class="form-control" readonly="true"><?php echo $invItemDesc; ?></textarea>
                                         <?php } else { ?>
@@ -2690,13 +2899,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="invTxCodeName" class="control-label">Tax Code:</label>
                                     </div>
                                     <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                        <?php if ($canEdt === true) { ?>                                   
+                                        <?php if ($canEdt === true) { ?>
                                             <div class="input-group" style="width:100% !important;">
                                                 <input type="text" name="invTxCodeName" id="invTxCodeName" class="form-control" value="<?php echo $invTxCodeName; ?>" readonly="true" style="width:100% !important;">
                                                 <input type="hidden" name="invTxCodeID" id="invTxCodeID" class="form-control" value="<?php echo $invTxCodeID; ?>">
                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Tax Codes', '', '', '', 'radio', true, '', 'invTxCodeID', 'invTxCodeName', 'clear', 0, '', function () {
                                                                                 var aa112 = 1;
-                                                                            });"> 
+                                                                            });">
                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                 </label>
                                             </div>
@@ -2712,7 +2921,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="invValCrncyNm" class="control-label">Value Currency:</label>
                                     </div>
                                     <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                        <?php if ($canEdt === true) { ?>                                   
+                                        <?php if ($canEdt === true) { ?>
                                             <div class="input-group" style="width:100% !important;">
                                                 <input type="text" name="invValCrncyNm" id="invValCrncyNm" class="form-control" value="<?php echo $invValCrncyNm; ?>" readonly="true" style="width:100% !important;">
                                                 <input type="hidden" name="invValCrncyID" id="invValCrncyID" class="form-control" value="<?php echo $invValCrncyID; ?>">
@@ -2729,8 +2938,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="invPriceLessTax" class="control-label">Price Less Tax:</label>
                                     </div>
                                     <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                        <?php if ($canEdt === true) { ?>                                   
-                                            <input type="number" name="invPriceLessTax" id="invPriceLessTax" class="form-control" value="<?php echo $invPriceLessTax; ?>" placeholder="0.00" readonly="true">                                                                        
+                                        <?php if ($canEdt === true) { ?>
+                                            <input type="number" name="invPriceLessTax" id="invPriceLessTax" class="form-control" value="<?php echo $invPriceLessTax; ?>" placeholder="0.00" readonly="true">
                                         <?php } else { ?>
                                             <span><?php echo $invPriceLessTax; ?></span>
                                         <?php } ?>
@@ -2743,8 +2952,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="invSllngPrice" class="control-label">Selling Price:</label>
                                     </div>
                                     <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                        <?php if ($canEdt === true) { ?>                                   
-                                            <input type="number" name="invSllngPrice" id="invSllngPrice" class="form-control rqrdFld" value="<?php echo $invSllngPrice; ?>" placeholder="0.00">                                                                        
+                                        <?php if ($canEdt === true) { ?>
+                                            <input type="number" name="invSllngPrice" id="invSllngPrice" class="form-control rqrdFld" value="<?php echo $invSllngPrice; ?>" placeholder="0.00">
                                         <?php } else { ?>
                                             <span><?php echo $invSllngPrice; ?></span>
                                         <?php } ?>
@@ -2757,8 +2966,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="invLtstCostPrice" class="control-label">Average Cost Price:</label>
                                     </div>
                                     <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                        <?php if ($canEdt === true) { ?>                                   
-                                            <input type="number" name="invLtstCostPrice" id="invLtstCostPrice" class="form-control" value="<?php echo $invLtstCostPrice; ?>" placeholder="0.00" readonly="true">                                                                        
+                                        <?php if ($canEdt === true) { ?>
+                                            <input type="number" name="invLtstCostPrice" id="invLtstCostPrice" class="form-control" value="<?php echo $invLtstCostPrice; ?>" placeholder="0.00" readonly="true">
                                         <?php } else { ?>
                                             <span><?php echo $invLtstCostPrice; ?></span>
                                         <?php } ?>
@@ -2771,8 +2980,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="invNwPrftAmnt" class="control-label">Profit Amount:</label>
                                     </div>
                                     <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                        <?php if ($canEdt === true) { ?>                                   
-                                            <input type="number" name="invNwPrftAmnt" id="invNwPrftAmnt" class="form-control" value="<?php echo $invNwPrftAmnt; ?>" placeholder="0.00" readonly="true">                                                                        
+                                        <?php if ($canEdt === true) { ?>
+                                            <input type="number" name="invNwPrftAmnt" id="invNwPrftAmnt" class="form-control" value="<?php echo $invNwPrftAmnt; ?>" placeholder="0.00" readonly="true">
                                         <?php } else { ?>
                                             <span><?php echo $invNwPrftAmnt; ?></span>
                                         <?php } ?>
@@ -2785,8 +2994,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="invNewSllngPrice" class="control-label">New Selling Price:</label>
                                     </div>
                                     <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                        <?php if ($canEdt === true) { ?>                                   
-                                            <input type="number" name="invNewSllngPrice" id="invNewSllngPrice" class="form-control" value="<?php echo $invNewSllngPrice; ?>" placeholder="0.00" readonly="true">                                                                        
+                                        <?php if ($canEdt === true) { ?>
+                                            <input type="number" name="invNewSllngPrice" id="invNewSllngPrice" class="form-control" value="<?php echo $invNewSllngPrice; ?>" placeholder="0.00" readonly="true">
                                         <?php } else { ?>
                                             <span><?php echo $invNewSllngPrice; ?></span>
                                         <?php } ?>
@@ -2799,39 +3008,41 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="invPrftMrgnPrcnt" class="control-label">Profit Margin(%):</label>
                                     </div>
                                     <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                        <?php if ($canEdt === true) { ?>                                   
-                                            <input type="text" name="invPrftMrgnPrcnt" id="invPrftMrgnPrcnt" class="form-control" value="<?php echo $invPrftMrgnPrcnt . "%"; ?>" placeholder="0.00" readonly="true">                                                                        
+                                        <?php if ($canEdt === true) { ?>
+                                            <input type="text" name="invPrftMrgnPrcnt" id="invPrftMrgnPrcnt" class="form-control" value="<?php echo $invPrftMrgnPrcnt . "%"; ?>" placeholder="0.00" readonly="true">
                                         <?php } else { ?>
                                             <span><?php echo $invPrftMrgnPrcnt . "%"; ?></span>
                                         <?php } ?>
                                     </div>
                                 </div>
-                            </div>                                                    
+                            </div>
                             <div class="form-group" style="display:none;">
                                 <div class="col-sm-12">
                                     <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
                                         <label for="invPrftMrgnAmnt" class="control-label">Profit Margin:</label>
                                     </div>
                                     <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                        <?php if ($canEdt === true) { ?>                                   
-                                            <input type="number" name="invPrftMrgnAmnt" id="invPrftMrgnAmnt" class="form-control" value="<?php echo $invPrftMrgnAmnt; ?>" placeholder="0.00" readonly="true">                                                                        
+                                        <?php if ($canEdt === true) { ?>
+                                            <input type="number" name="invPrftMrgnAmnt" id="invPrftMrgnAmnt" class="form-control" value="<?php echo $invPrftMrgnAmnt; ?>" placeholder="0.00" readonly="true">
                                         <?php } else { ?>
                                             <span><?php echo $invPrftMrgnAmnt; ?></span>
                                         <?php } ?>
                                     </div>
                                 </div>
                             </div>
-                        </div> 
+                        </div>
                     </div>
-                    <div class="row" style="padding:1px 15px 1px 15px !important;"><hr style="margin:3px 0px 3px 0px;"></div>
+                    <div class="row" style="padding:1px 15px 1px 15px !important;">
+                        <hr style="margin:3px 0px 3px 0px;">
+                    </div>
                     <div class="row" style="float:right;padding-right: 30px;margin-top: 5px;">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <?php if ($canEdt === true) { ?>
-                            <button type="button" class="btn btn-primary" onclick="saveINVItmPricesForm('<?php echo $rowIDAttrb; ?>');">Overwrite Selling Price</button> 
+                            <button type="button" class="btn btn-primary" onclick="saveINVItmPricesForm('<?php echo $rowIDAttrb; ?>');">Overwrite Selling Price</button>
                         <?php } ?>
                     </div>
-                </form>                    
-                <?php
+                </form>
+            <?php
             } else if ($vwtyp == 2) {
                 if (!$canAdd && !$canEdt) {
                     restricted();
@@ -2855,7 +3066,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $fnccurid = getOrgFuncCurID($orgID);
                     $fnccurnm = getPssblValNm($fnccurid);
                 }
-                ?>
+            ?>
                 <div class="row">
                     <input type="hidden" class="form-control" aria-label="..." id="oneINVQtyBrkRowIDAttrb" value="<?php echo $rowIDAttrb; ?>">
                     <div class="col-md-12">
@@ -2908,55 +3119,63 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     }
                                     $ttlPrce += $whlPrtVal * $unitPrce;
                                     $nwQty += $cnvrtdQty;
-                                    ?>
-                                    <tr id="oneINVQtyBrkRow_<?php echo $cntr; ?>">                                    
+                                ?>
+                                    <tr id="oneINVQtyBrkRow_<?php echo $cntr; ?>">
                                         <td class="lovtd"><span><?php echo ($cntr); ?></span></td>
                                         <td class="lovtd">
                                             <span><?php echo $row[1] ?></span>
                                             <input type="hidden" class="form-control" aria-label="..." id="oneINVQtyBrkRow<?php echo $cntr; ?>_ItmUomID" value="<?php echo $row[2]; ?>" style="width:100% !important;">
                                             <input type="hidden" class="form-control" aria-label="..." id="oneINVQtyBrkRow<?php echo $cntr; ?>_UntVal" value="<?php echo $unitPrce; ?>" style="width:100% !important;">
-                                            <input type="hidden" class="form-control" aria-label="..." id="oneINVQtyBrkRow<?php echo $cntr; ?>_CnvFctr" value="<?php echo $row[4]; ?>" style="width:100% !important;">                                                                                                
+                                            <input type="hidden" class="form-control" aria-label="..." id="oneINVQtyBrkRow<?php echo $cntr; ?>_CnvFctr" value="<?php echo $row[4]; ?>" style="width:100% !important;">
                                         </td>
                                         <td class="lovtd" style="text-align: right;">
                                             <input type="text" class="form-control invUmbQty" aria-label="..." id="oneINVQtyBrkRow<?php echo $cntr; ?>_BaseQty" name="oneINVQtyBrkRow<?php echo $cntr; ?>_BaseQty" value="<?php
-                                            echo number_format($whlPrtVal, 0);
-                                            ?>"  onchange="calcScmUomBrkdwnRowVal('oneINVQtyBrkRow_<?php echo $cntr; ?>');" onkeypress="invTrnsUomFormKeyPress(event, 'oneINVQtyBrkRow_<?php echo $cntr; ?>');" style="width:100% !important;text-align: right;">   
+                                                                                                                                                                                                                            echo number_format($whlPrtVal, 0);
+                                                                                                                                                                                                                            ?>" onchange="calcScmUomBrkdwnRowVal('oneINVQtyBrkRow_<?php echo $cntr; ?>');" onkeypress="invTrnsUomFormKeyPress(event, 'oneINVQtyBrkRow_<?php echo $cntr; ?>');" style="width:100% !important;text-align: right;">
                                         </td>
                                         <td class="lovtd" style="text-align: right;">
                                             <input type="text" class="form-control invUmbEqQty" aria-label="..." id="oneINVQtyBrkRow<?php echo $cntr; ?>_EquivQty" name="oneINVQtyBrkRow<?php echo $cntr; ?>_EquivQty" value="<?php
-                                            echo number_format($cnvrtdQty, 0);
-                                            ?>" style="width:100% !important;text-align: right;" readonly="true"> 
+                                                                                                                                                                                                                                echo number_format($cnvrtdQty, 0);
+                                                                                                                                                                                                                                ?>" style="width:100% !important;text-align: right;" readonly="true">
                                         </td>
                                         <td class="lovtd" style="text-align: right;">
                                             <input type="text" class="form-control invUmbTtl" aria-label="..." id="oneINVQtyBrkRow<?php echo $cntr; ?>_TtlVal" name="oneINVQtyBrkRow<?php echo $cntr; ?>_TtlVal" value="<?php
-                                            echo number_format($whlPrtVal * $unitPrce, 2);
-                                            ?>" style="width:100% !important;text-align: right;" readonly="true">                                                    
+                                                                                                                                                                                                                        echo number_format($whlPrtVal * $unitPrce, 2);
+                                                                                                                                                                                                                        ?>" style="width:100% !important;text-align: right;" readonly="true">
                                         </td>
                                     </tr>
                                 <?php } ?>
                             </tbody>
-                            <tfoot>                                                            
+                            <tfoot>
                                 <tr>
                                     <th>&nbsp;</th>
                                     <th>&nbsp;</th>
                                     <th>TOTALS:</th>
                                     <th style="text-align: right;">
                                         <?php
-                                        echo "<span style=\"color:blue;\" id=\"myCptrdQtyTtlBtn\">" . number_format($nwQty, 0,
-                                                '.', ',') . "</span>";
+                                        echo "<span style=\"color:blue;\" id=\"myCptrdQtyTtlBtn\">" . number_format(
+                                            $nwQty,
+                                            0,
+                                            '.',
+                                            ','
+                                        ) . "</span>";
                                         ?>
                                         <input type="hidden" id="myCptrdQtyTtlVal" value="<?php echo $nwQty; ?>">
                                     </th>
                                     <th style="text-align: right;">
                                         <?php
-                                        echo "<span style=\"color:blue;\" id=\"myCptrdUmValsTtlBtn\">" . number_format($ttlPrce,
-                                                2, '.', ',') . "</span>";
+                                        echo "<span style=\"color:blue;\" id=\"myCptrdUmValsTtlBtn\">" . number_format(
+                                            $ttlPrce,
+                                            2,
+                                            '.',
+                                            ','
+                                        ) . "</span>";
                                         ?>
                                         <input type="hidden" id="myCptrdUmValsTtlVal" value="<?php echo $ttlPrce; ?>">
                                     </th>
                                 </tr>
                             </tfoot>
-                        </table>   
+                        </table>
                     </div>
                 </div>
                 <div class="row">
@@ -2967,7 +3186,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                     </div>
                 </div>
-                <?php
+            <?php
             } else if ($vwtyp == 3) {
                 $itemID = isset($_POST['sbmtdItemID']) ? cleanInputData($_POST['sbmtdItemID']) : 0;
                 $varTtlQty = isset($_POST['varTtlQty']) ? cleanInputData($_POST['varTtlQty']) : 0;
@@ -2986,7 +3205,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $fnccurid = getOrgFuncCurID($orgID);
                     $fnccurnm = getPssblValNm($fnccurid);
                 }
-                ?>
+            ?>
                 <div class="row">
                     <input type="hidden" class="form-control" aria-label="..." id="oneINVQtyBrkRowIDAttrb" value="<?php echo $rowIDAttrb; ?>">
                     <div class="col-md-12">
@@ -3039,49 +3258,57 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     }
                                     $ttlPrce += $whlPrtVal * $unitPrce;
                                     $nwQty += $cnvrtdQty;
-                                    ?>
-                                    <tr id="oneINVQtyBrkRow_<?php echo $cntr; ?>">                                    
+                                ?>
+                                    <tr id="oneINVQtyBrkRow_<?php echo $cntr; ?>">
                                         <td class="lovtd"><span><?php echo ($cntr); ?></span></td>
                                         <td class="lovtd">
                                             <span><?php echo $row[1] ?></span>
                                             <input type="hidden" class="form-control" aria-label="..." id="oneINVQtyBrkRow<?php echo $cntr; ?>_ItmUomID" value="<?php echo $row[2]; ?>" style="width:100% !important;">
                                             <input type="hidden" class="form-control" aria-label="..." id="oneINVQtyBrkRow<?php echo $cntr; ?>_UntVal" value="<?php echo $unitPrce; ?>" style="width:100% !important;">
-                                            <input type="hidden" class="form-control" aria-label="..." id="oneINVQtyBrkRow<?php echo $cntr; ?>_CnvFctr" value="<?php echo $row[4]; ?>" style="width:100% !important;">                                                                                                
+                                            <input type="hidden" class="form-control" aria-label="..." id="oneINVQtyBrkRow<?php echo $cntr; ?>_CnvFctr" value="<?php echo $row[4]; ?>" style="width:100% !important;">
                                         </td>
                                         <td class="lovtd" style="text-align: right;">
-                                            <span><?php echo number_format($whlPrtVal, 0); ?></span> 
+                                            <span><?php echo number_format($whlPrtVal, 0); ?></span>
                                         </td>
                                         <td class="lovtd" style="text-align: right;">
                                             <span><?php echo number_format($cnvrtdQty, 0); ?></span>
                                         </td>
                                         <td class="lovtd" style="text-align: right;">
-                                            <span><?php echo number_format($whlPrtVal * $unitPrce, 2); ?></span>                                                  
+                                            <span><?php echo number_format($whlPrtVal * $unitPrce, 2); ?></span>
                                         </td>
                                     </tr>
                                 <?php } ?>
                             </tbody>
-                            <tfoot>                                                            
+                            <tfoot>
                                 <tr>
                                     <th>&nbsp;</th>
                                     <th>&nbsp;</th>
                                     <th>TOTALS:</th>
                                     <th style="text-align: right;">
                                         <?php
-                                        echo "<span style=\"color:blue;\" id=\"myCptrdQtyTtlBtn\">" . number_format($nwQty, 0,
-                                                '.', ',') . "</span>";
+                                        echo "<span style=\"color:blue;\" id=\"myCptrdQtyTtlBtn\">" . number_format(
+                                            $nwQty,
+                                            0,
+                                            '.',
+                                            ','
+                                        ) . "</span>";
                                         ?>
                                         <input type="hidden" id="myCptrdQtyTtlVal" value="<?php echo $nwQty; ?>">
                                     </th>
                                     <th style="text-align: right;">
                                         <?php
-                                        echo "<span style=\"color:blue;\" id=\"myCptrdUmValsTtlBtn\">" . number_format($ttlPrce,
-                                                2, '.', ',') . "</span>";
+                                        echo "<span style=\"color:blue;\" id=\"myCptrdUmValsTtlBtn\">" . number_format(
+                                            $ttlPrce,
+                                            2,
+                                            '.',
+                                            ','
+                                        ) . "</span>";
                                         ?>
                                         <input type="hidden" id="myCptrdUmValsTtlVal" value="<?php echo $ttlPrce; ?>">
                                     </th>
                                 </tr>
                             </tfoot>
-                        </table>   
+                        </table>
                     </div>
                 </div>
                 <div class="row">
@@ -3091,8 +3318,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                     </div>
                 </div>
-                <?php
+            <?php
             } else if ($vwtyp == 4) {
+                //Display Items List During Sales
                 $error = "";
                 $searchAll = true;
                 $srchFor = isset($_POST['searchfor']) ? cleanInputData($_POST['searchfor']) : '';
@@ -3125,19 +3353,30 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $pageNo = ceil($total / $lmtSze);
                 }
                 $curIdx = $pageNo - 1;
-                $result = get_StoreItems($srchFor, $srchIn, $curIdx, $lmtSze, $orgID, $sbmtdStoreID, $sbmtdDocType, $qCnsgnOnlyB,
-                        $sbmtdItemID, $sbmtdCstmrSiteID);
+                $result = get_StoreItems(
+                    $srchFor,
+                    $srchIn,
+                    $curIdx,
+                    $lmtSze,
+                    $orgID,
+                    $sbmtdStoreID,
+                    $sbmtdDocType,
+                    $qCnsgnOnlyB,
+                    $sbmtdItemID,
+                    $sbmtdCstmrSiteID
+                );
                 $cntr = 0;
                 $ttlAvlblQTY = 0;
                 $ttlRsvdQTY = 0;
                 $ttlQTY = 0;
                 $ttlSP = 0;
                 $ttlCP = 0;
-                ?> 
+            ?>
                 <form id='scmSalesInvItmsForm' action='' method='post' accept-charset='UTF-8'>
                     <!--ROW ID-->
-                    <input class="form-control" id="tblRowID" type = "hidden" placeholder="ROW ID"/>                     
-                    <fieldset class=""><legend class="basic_person_lg1" style="color: #003245">STORE ITEMS</legend>
+                    <input class="form-control" id="tblRowID" type="hidden" placeholder="ROW ID" />
+                    <fieldset class="">
+                        <legend class="basic_person_lg1" style="color: #003245">STORE ITEMS</legend>
                         <div class="row" style="margin-bottom:0px;">
                             <?php
                             $colClassType1 = "col-md-2";
@@ -3146,15 +3385,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             ?>
                             <div class="<?php echo $colClassType3; ?>" style="padding:0px 15px 0px 15px !important;">
                                 <div class="input-group">
-                                    <input class="form-control" id="scmSalesInvItmsSrchFor" type = "text" placeholder="Search For" value="<?php
-                                    echo trim(str_replace("%", " ", $srchFor));
-                                    ?>" onkeyup="enterKeyFuncScmSalesInvItms(event, '', '#myFormsModalLxBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
-                                    <input id="scmSalesInvItmsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
-                                    <input id="sbmtdItemID" type = "hidden" value="<?php echo $sbmtdItemID; ?>">
-                                    <input id="sbmtdStoreID" type = "hidden" value="<?php echo $sbmtdStoreID; ?>">
-                                    <input id="sbmtdDocType" type = "hidden" value="<?php echo $sbmtdDocType; ?>">
-                                    <input id="sbmtdCallBackFunc" type = "hidden" value="<?php echo $sbmtdCallBackFunc; ?>">
-                                    <input id="sbmtdRowIDAttrb" type = "hidden" value="<?php echo $sbmtdRowIDAttrb; ?>">
+                                    <input class="form-control" id="scmSalesInvItmsSrchFor" type="text" placeholder="Search For" value="<?php
+                                                                                                                                        echo trim(str_replace("%", " ", $srchFor));
+                                                                                                                                        ?>" onkeyup="enterKeyFuncScmSalesInvItms(event, '', '#myFormsModalLxBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                    <input id="scmSalesInvItmsPageNo" type="hidden" value="<?php echo $pageNo; ?>">
+                                    <input id="sbmtdItemID" type="hidden" value="<?php echo $sbmtdItemID; ?>">
+                                    <input id="sbmtdStoreID" type="hidden" value="<?php echo $sbmtdStoreID; ?>">
+                                    <input id="sbmtdDocType" type="hidden" value="<?php echo $sbmtdDocType; ?>">
+                                    <input id="sbmtdCallBackFunc" type="hidden" value="<?php echo $sbmtdCallBackFunc; ?>">
+                                    <input id="sbmtdRowIDAttrb" type="hidden" value="<?php echo $sbmtdRowIDAttrb; ?>">
                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getScmSalesInvItms('clear', '#myFormsModalLxBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
                                         <span class="glyphicon glyphicon-remove"></span>
                                     </label>
@@ -3170,12 +3409,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             if ($srchIn == $srchInsArrys[$z]) {
                                                 $valslctdArry[$z] = "selected";
                                             }
-                                            ?>
+                                        ?>
                                             <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                         <?php } ?>
                                     </select>
                                     <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
-                                    <select data-placeholder="Select..." class="form-control chosen-select" id="scmSalesInvItmsDsplySze" style="min-width:70px !important;">                            
+                                    <select data-placeholder="Select..." class="form-control chosen-select" id="scmSalesInvItmsDsplySze" style="min-width:70px !important;">
                                         <?php
                                         $valslctdArry = array("", "", "", "", "", "", "", "", "", "", "");
                                         $dsplySzeArry = array(1, 5, 10, 15, 20, 30, 50, 100, 500, 1000, 1000000);
@@ -3185,12 +3424,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             } else {
                                                 $valslctdArry[$y] = "";
                                             }
-                                            ?>
-                                            <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
-                                            <?php
+                                        ?>
+                                            <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>
+                                        <?php
                                         }
                                         ?>
-                                    </select> 
+                                    </select>
                                 </div>
                             </div>
                             <div class="<?php echo $colClassType1; ?>">
@@ -3209,23 +3448,23 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </ul>
                                 </nav>
                             </div>
-                            <div class = "<?php echo $colClassType1; ?>" style = "padding:5px 1px 0px 1px !important;">
-                                <div class = "form-check" style = "font-size: 12px !important;">
-                                    <label class = "form-check-label">
+                            <div class="<?php echo $colClassType1; ?>" style="padding:5px 1px 0px 1px !important;">
+                                <div class="form-check" style="font-size: 12px !important;">
+                                    <label class="form-check-label">
                                         <?php
                                         $shwCnsgnOnlyChkd = "";
                                         if ($qCnsgnOnlyB == true) {
                                             $shwCnsgnOnlyChkd = "checked=\"true\"";
                                         }
                                         ?>
-                                        <input type="checkbox" class="form-check-input" onclick="getScmSalesInvItms('', '#myFormsModalLxBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="scmSalesInvItmsShwCnsgnOnly" name="scmSalesInvItmsShwCnsgnOnly"  <?php echo $shwCnsgnOnlyChkd; ?>>
+                                        <input type="checkbox" class="form-check-input" onclick="getScmSalesInvItms('', '#myFormsModalLxBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="scmSalesInvItmsShwCnsgnOnly" name="scmSalesInvItmsShwCnsgnOnly" <?php echo $shwCnsgnOnlyChkd; ?>>
                                         Show Consignments
                                     </label>
-                                </div>                            
+                                </div>
                             </div>
-                        </div> 
-                        <div class="row"> 
-                            <div  class="col-md-12">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
                                 <table class="table table-striped table-bordered table-responsive" id="scmSalesInvItmsHdrsTable" cellspacing="0" width="100%" style="width:100%;">
                                     <thead>
                                         <tr>
@@ -3234,12 +3473,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <th style="max-width:275px;width:275px;">Item Code/Description</th>
                                             <th style="text-align:right;min-width:220px;width:220px;">Category</th>
                                             <th style="text-align:center;max-width:55px;width:55px;">UOM.</th>
-                                            <th style="text-align:right;">Consignment No.</th>	
+                                            <th style="text-align:right;">Consignment No.</th>
                                             <th style="text-align:right;">Available QTY</th>
                                             <th style="text-align:right;display:none;">Reserved QTY</th>
                                             <th style="text-align:right;display:none;">Total QTY</th>
                                             <th style="text-align:right;">Selling Price</th>
-                                            <th style="text-align:right;">Cost Price</th>
+                                            <?php if ($canVwCstPrc === true) { ?>
+                                                <th style="text-align:right;">Cost Price</th>
+                                            <?php } ?>
                                             <th>Store</th>
                                             <!--<th>Shelves</th>-->
                                             <th>Tax/Discount Code</th>
@@ -3284,24 +3525,27 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $ttlQTY += $trnsLnTtlQty;
                                             $ttlSP += ($trnsLnAvlblQty * $trnsLnSellPrice);
                                             $ttlCP += ($trnsLnAvlblQty * $trnsLnCostPrice);
-                                            ?>
+                                        ?>
                                             <tr id="scmSalesInvItmsHdrsRow_<?php echo $cntr; ?>" class="hand_cursor">
                                                 <td class="lovtd" style="text-align:center;">
                                                     <input type="checkbox" name="scmSalesInvItmsHdrsRow<?php echo $cntr; ?>_CheckBox" value="scmSalesInvItmsHdrsRow_<?php echo $cntr; ?>">
-                                                </td>                                     
-                                                <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td> 
-                                                <td class="lovtd"><?php echo $trnsLnItmNm; ?></td> 
-                                                <td class="lovtd"><?php
-                                                    echo $trnsLnCtgryNm . str_replace(" (" . $trnsLnCtgryNm . ")", "", " (" . $trnsLnItmType . ")");
-                                                    ?></td>                                                                 
+                                                </td>
+                                                <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                                <td class="lovtd"><?php echo $trnsLnItmNm; ?></td>
+                                                <td class="lovtd">
+                                                    <?php echo $trnsLnCtgryNm . str_replace(" (" . $trnsLnCtgryNm . ")", "", " (" . $trnsLnItmType . ")");
+                                                                    ?>
+                                                </td>
                                                 <td class="lovtd" style="max-width:55px;width:55px;text-align: center;">
-                                                    <input type="hidden" id="scmSalesInvItmsHdrsRow<?php echo $cntr; ?>_UomID" value="<?php echo $trnsLnUomID; ?>">  
+                                                    <input type="hidden" id="scmSalesInvItmsHdrsRow<?php echo $cntr; ?>_UomID" value="<?php echo $trnsLnUomID; ?>">
                                                     <input type="hidden" id="scmSalesInvItmsHdrsRow<?php echo $cntr; ?>_QTY" value="<?php echo $trnsLnAvlblQty; ?>">
                                                     <input type="hidden" id="scmSalesInvItmsHdrsRow<?php echo $cntr; ?>_ItmID" value="<?php echo $trnsLnItmID; ?>">
                                                     <input type="hidden" id="scmSalesInvItmsHdrsRow<?php echo $cntr; ?>_ItmNm" value="<?php echo $trnsLnItmNm; ?>">
                                                     <input type="hidden" id="scmSalesInvItmsHdrsRow<?php echo $cntr; ?>_UomNm" value="<?php echo $trnsLnUomNm; ?>">
                                                     <input type="hidden" id="scmSalesInvItmsHdrsRow<?php echo $cntr; ?>_SellPrice" value="<?php echo $trnsLnSellPrice; ?>">
-                                                    <input type="hidden" id="scmSalesInvItmsHdrsRow<?php echo $cntr; ?>_CostPrice" value="<?php echo $trnsLnCostPrice; ?>">
+                                                    <?php if (strpos($sbmtdDocType, "Sales") !== FALSE || strpos($sbmtdDocType, "Invoice") !== FALSE) { ?>
+                                                        <input type="hidden" id="scmSalesInvItmsHdrsRow<?php echo $cntr; ?>_CostPrice" value="<?php echo $trnsLnCostPrice; ?>">
+                                                    <?php } ?>
                                                     <input type="hidden" id="scmSalesInvItmsHdrsRow<?php echo $cntr; ?>_CnsgnNo" value="<?php echo $trnsLnCnsgnNo; ?>">
                                                     <input type="hidden" id="scmSalesInvItmsHdrsRow<?php echo $cntr; ?>_TaxID" value="<?php echo $trnsLnTaxID; ?>">
                                                     <input type="hidden" id="scmSalesInvItmsHdrsRow<?php echo $cntr; ?>_DscntID" value="<?php echo $trnsLnDscntID; ?>">
@@ -3318,7 +3562,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <label class="btn btn-default btn-file" onclick="getOneScmUOMBrkdwnForm(-1, 3, 'scmSalesInvItmsHdrsRow_<?php echo $cntr; ?>');">
                                                             <span class="" id="scmSalesInvItmsHdrsRow<?php echo $cntr; ?>_UomNm1"><?php echo $trnsLnUomNm; ?></span>
                                                         </label>
-                                                    </div>                                              
+                                                    </div>
                                                 </td>
                                                 <td class="lovtd" style="text-align:right;"><?php echo $trnsLnCnsgnNo; ?></td>
                                                 <?php
@@ -3328,28 +3572,28 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 }
                                                 ?>
                                                 <td class="lovtd" style="text-align:right;font-weight: bold;<?php echo $style1; ?>"><?php
-                                                    echo $trnsLnAvlblQty;
-                                                    ?>
+                                                                                                                                    echo $trnsLnAvlblQty;
+                                                                                                                                    ?>
                                                 </td>
                                                 <td class="lovtd" style="text-align:right;font-weight: bold;display:none;"><?php echo $trnsLnRsvdQty; ?></td>
                                                 <td class="lovtd" style="text-align:right;font-weight: bold;color:blue;display:none;"><?php
-                                                    echo $trnsLnTtlQty;
-                                                    ?>
+                                                                                                                                        echo $trnsLnTtlQty;
+                                                                                                                                        ?>
                                                 </td>
                                                 <td class="lovtd" style="text-align:right;font-weight: bold;"><?php
-                                                    echo number_format($trnsLnSellPrice, 2);
-                                                    ?></td>
-                                                <td class="lovtd" style="text-align:right;font-weight: bold;"><?php
-                                                    echo number_format($trnsLnCostPrice, 2);
-                                                    ?></td>
+                                                                                                                echo number_format($trnsLnSellPrice, 2);
+                                                                                                                ?></td>
+                                                <?php if ($canVwCstPrc === true) { ?>
+                                                    <td class="lovtd" style="text-align:right;font-weight: bold;"><?php echo number_format($trnsLnCostPrice, 2); ?></td>
+                                                <?php } ?>
                                                 <td class="lovtd"><?php echo $trnsLnStoreNm; ?></td>
                                                 <td class="lovtd"><?php echo trim($trnsLnTaxNm . ", " . $trnsLnDscntNm . "," . $trnsLnChrgNm, ", "); ?></td>
                                             </tr>
-                                            <?php
+                                        <?php
                                         }
                                         ?>
                                     </tbody>
-                                    <tfoot>                                                            
+                                    <tfoot>
                                         <tr>
                                             <th>&nbsp;</th>
                                             <th>&nbsp;</th>
@@ -3377,21 +3621,23 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 echo "<span style=\"color:red;font-weight:bold;font-size:14px;\">" . number_format($ttlSP, 2, '.', ',') . "</span>";
                                                 ?>
                                             </th>
-                                            <th style="text-align: right;">
-                                                <?php
-                                                echo "<span style=\"color:red;font-weight:bold;font-size:14px;\">" . number_format($ttlCP, 2, '.', ',') . "</span>";
-                                                ?>
-                                            </th>
-                                            <th style="">&nbsp;</th>                                           
+                                            <?php if ($canVwCstPrc === true) { ?>
+                                                <th style="text-align: right;">
+                                                    <?php
+                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\">" . number_format($ttlCP, 2, '.', ',') . "</span>";
+                                                    ?>
+                                                </th>
+                                            <?php } ?>
+                                            <th style="">&nbsp;</th>
                                             <!--<th style="">&nbsp;</th>                                           -->
                                             <th style="">&nbsp;</th>
                                         </tr>
                                     </tfoot>
                                 </table>
-                            </div>                     
+                            </div>
                         </div>
                         <div class="row" style="float:right;padding-right: 15px;">
-                            <button type="button" class="btn btn-default" data-dismiss="modal"  onclick="$('#myFormsModalLx').modal('hide');">Close</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="$('#myFormsModalLx').modal('hide');">Close</button>
                             <?php if (strpos($sbmtdDocType, "Receipt") !== FALSE) { ?>
                                 <button type="button" class="btn btn-primary" onclick="applySlctdSalesInvItms('<?php echo $sbmtdRowIDAttrb; ?>', '<?php echo $qCnsgnOnly; ?>', 'oneScmCnsgnRcptSmryLinesTable', <?php echo $sbmtdCallBackFunc; ?>);">Apply Selection</button>
                             <?php } else if (strpos($sbmtdDocType, "Purchase") !== FALSE) { ?>
@@ -3404,7 +3650,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                     </fieldset>
                 </form>
-                <?php
+            <?php
             } else if ($vwtyp == 5) {
                 //get Item Details
                 header("content-type:application/json");
@@ -3425,8 +3671,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 if ($sbmtdStoreID <= 0 && $qCnsgnOnlyB == false) {
                     $sbmtdStoreID = $selectedStoreID;
                 }
-                $result = get_OneStoreItemDets($srchFor, $orgID, $sbmtdStoreID, $sbmtdDocType, $qCnsgnOnlyB, $sbmtdItemID,
-                        $sbmtdCstmrSiteID);
+                $result = get_OneStoreItemDets(
+                    $srchFor,
+                    $orgID,
+                    $sbmtdStoreID,
+                    $sbmtdDocType,
+                    $qCnsgnOnlyB,
+                    $sbmtdItemID,
+                    $sbmtdCstmrSiteID
+                );
 
                 if ($row = loc_db_fetch_array($result)) {
                     $arr_content['ln_ItmID'] = (float) $row[0];
@@ -3466,9 +3719,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 echo json_encode($arr_content);
                 exit();
             } else if ($vwtyp == 500) {
-                ?>
-                <div class="row"><!-- ROW 1 -->
-                    <div class="col-lg-12">  
+            ?>
+                <div class="row">
+                    <!-- ROW 1 -->
+                    <div class="col-lg-12">
                         <div class="row" id="allItmPymntPlansDetailInfo" style="padding:0px 15px 0px 15px !important">
                             <?php
                             $trnsStatus = "Incomplete";
@@ -3506,7 +3760,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 }
                                 $curIdx = $pageNo - 1;
                                 $result2 = getItmPymntPlansTbl($isEnabledOnly, $srchFor, $srchIn, $curIdx, $lmtSze, $orgID, $searchAll, $sortBy, $itmID);
-                                ?>
+                            ?>
                                 <div class="row" style="padding:0px 15px 0px 15px !important">
                                     <legend class="basic_person_lg1" style="color: #003245">PAYMENT PLANS</legend>
                                     <?php
@@ -3516,7 +3770,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         $colClassType2 = "col-lg-3";
                                         $colClassType3 = "col-lg-4";
                                         $nwRowHtml = urlencode("<tr id=\"allItmPymntPlansRow__WWW123WWW\">"
-                                                . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>
+                                            . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>
                                                 <td class=\"lovtd\">
                                                     <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"allItmPymntPlansRow_WWW123WWW_ItmPymntPlansID\" value=\"-1\" style=\"width:100% !important;\"> 
                                                     <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"allItmPymntPlansRow_WWW123WWW_ItmID\" value=\"<?php echo $itmID; ?>\" style=\"width:100% !important;\">                                                                         
@@ -3543,7 +3797,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     </button>
                                                 </td>
                                             </tr>");
-                                        ?>
+                                    ?>
                                         <div class="<?php echo $colClassType1; ?>" style="padding:0px 1px 0px 3px !important;">
                                             <?php if ($trnsStatus == "Incomplete" || $trnsStatus == "Withdrawn" || $trnsStatus == "Rejected") { ?>
                                                 <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('allItmPymntPlansTable', 0, '<?php echo $nwRowHtml; ?>');" data-toggle="tooltip" data-placement="bottom" title="Add Payment Plan">
@@ -3551,7 +3805,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </button>
                                             <?php } ?>
                                         </div>
-                                        <?php
+                                    <?php
                                     } else {
                                         $colClassType1 = "col-lg-3";
                                         $colClassType2 = "col-lg-6";
@@ -3561,7 +3815,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                           $colClassType3 = "col-lg-3"; */
                                     }
                                     ?>
-                    <!--<div class="<?php echo $colClassType2; ?>" style="padding:0px 3px 0px 3px !important;">
+                                    <!--<div class="<?php echo $colClassType2; ?>" style="padding:0px 3px 0px 3px !important;">
                     <div class="input-group">
                     <input class="form-control" id="allItmPymntPlansSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" 
                     onkeyup="enterKeyFuncAllItmPymntPlans(event, '', '#allItmPymntPlansDetailInfo', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdItmPymntPlansITEMID=<?php echo $itmID; ?>');">
@@ -3586,7 +3840,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         if ($srchIn == $srchInsArrys[$z]) {
                                             $valslctdArry[$z] = "selected";
                                         }
-                                        ?>
+                                    ?>
                                                 <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                     <?php } ?>
                     </select>
@@ -3601,11 +3855,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         } else {
                                             $valslctdArry[$y] = "";
                                         }
-                                        ?>
+                                    ?>
                                                     <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
                                         <?php
                                     }
-                                    ?>
+                                        ?>
                     </select>
                     </div>
                     </div>
@@ -3629,9 +3883,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
                                     <input type="hidden" class="form-control" aria-label="..." id="sbmtdItmDesc" name="recCnt" value="<?php echo $sbmtdItmDesc; ?>">
                                     <input type="hidden" class="form-control" aria-label="..." id="recCnt" name="recCnt" value="">
-                                    <input type="hidden" class="form-control" aria-label="..." id="gnrlOrgID" name="gnrlOrgID" value="<?php echo $orgID; ?>">                                                    
+                                    <input type="hidden" class="form-control" aria-label="..." id="gnrlOrgID" name="gnrlOrgID" value="<?php echo $orgID; ?>">
                                     <input type="hidden" class="form-control" aria-label="..." id="sbmtdItmPymntPlansITEMID" name="sbmtdItmPymntPlansITEMID" value="<?php echo $itmID; ?>">
-                                    <div class="<?php echo $colClassType1; ?>" style="padding:0px 1px 0px 3px !important;"> 
+                                    <div class="<?php echo $colClassType1; ?>" style="padding:0px 1px 0px 3px !important;">
                                         <div style="float:right !important;">
                                             <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="saveItmPymntPlans();" data-toggle="tooltip" data-placement="bottom" title="Save Payment Plan(s)">
                                                 <img src="cmn_images/FloppyDisk.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">&nbsp;Save
@@ -3639,7 +3893,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row" style="padding:0px 15px 0px 15px !important">                  
+                                <div class="row" style="padding:0px 15px 0px 15px !important">
                                     <div class="col-md-12" style="padding:0px 3px 0px 3px !important">
                                         <table class="table table-striped table-bordered table-responsive" id="allItmPymntPlansTable" cellspacing="0" width="100%" style="width:100%;min-width: 300px !important;">
                                             <thead>
@@ -3658,24 +3912,24 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 $cntr = 0;
                                                 while ($row2 = loc_db_fetch_array($result2)) {
                                                     $cntr += 1;
-                                                    ?>
-                                                    <tr id="allItmPymntPlansRow_<?php echo $cntr; ?>">                                    
+                                                ?>
+                                                    <tr id="allItmPymntPlansRow_<?php echo $cntr; ?>">
                                                         <td class="lovtd"><span><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
                                                         <td class="lovtd">
-                                                            <input type="hidden" class="form-control" aria-label="..." id="allItmPymntPlansRow<?php echo $cntr; ?>_ItmPymntPlansID" value="<?php echo $row2[0]; ?>" style="width:100% !important;"> 
-                                                            <input type="hidden" class="form-control" aria-label="..." id="allItmPymntPlansRow<?php echo $cntr; ?>_ItmID" value="<?php echo $itmID; ?>" style="width:100% !important;">                                                                         
-                                                            <input type="text" class="form-control rqrdFld" aria-label="..." id="allItmPymntPlansRow<?php echo $cntr; ?>_PlanName" name="allItmPymntPlansRow<?php echo $cntr; ?>_PlanName" value="<?php echo $row2[1]; ?>" readonly="readonly">                                                                        
+                                                            <input type="hidden" class="form-control" aria-label="..." id="allItmPymntPlansRow<?php echo $cntr; ?>_ItmPymntPlansID" value="<?php echo $row2[0]; ?>" style="width:100% !important;">
+                                                            <input type="hidden" class="form-control" aria-label="..." id="allItmPymntPlansRow<?php echo $cntr; ?>_ItmID" value="<?php echo $itmID; ?>" style="width:100% !important;">
+                                                            <input type="text" class="form-control rqrdFld" aria-label="..." id="allItmPymntPlansRow<?php echo $cntr; ?>_PlanName" name="allItmPymntPlansRow<?php echo $cntr; ?>_PlanName" value="<?php echo $row2[1]; ?>" readonly="readonly">
                                                         </td>
-                                                        <td class="lovtd"> 
-                                                            <input type="number" min="1" class="form-control rqrdFld" aria-label="..." id="allItmPymntPlansRow<?php echo $cntr; ?>_PlanPrice" name="allItmPymntPlansRow<?php echo $cntr; ?>_PlanPrice" value="<?php echo $row2[3]; ?>"> 
-                                                        </td>
-                                                        <td class="lovtd"> 
-                                                            <input type="number" min="0" class="form-control rqrdFld" aria-label="..." id="allItmPymntPlansRow<?php echo $cntr; ?>_NoOfPymnts" name="allItmPymntPlansRow<?php echo $cntr; ?>_NoOfPymnts" value="<?php echo $row2[2]; ?>">
-                                                        </td>                                            
                                                         <td class="lovtd">
-                                                            <input type="number" min="0" class="form-control rqrdFld" aria-label="..." id="allItmPymntPlansRow<?php echo $cntr; ?>_InitDpst" name="allItmPymntPlansRow<?php echo $cntr; ?>_InitDpst" value="<?php echo $row2[5]; ?>">                                                               
+                                                            <input type="number" min="1" class="form-control rqrdFld" aria-label="..." id="allItmPymntPlansRow<?php echo $cntr; ?>_PlanPrice" name="allItmPymntPlansRow<?php echo $cntr; ?>_PlanPrice" value="<?php echo $row2[3]; ?>">
                                                         </td>
-                                                        <td class="lovtd">  
+                                                        <td class="lovtd">
+                                                            <input type="number" min="0" class="form-control rqrdFld" aria-label="..." id="allItmPymntPlansRow<?php echo $cntr; ?>_NoOfPymnts" name="allItmPymntPlansRow<?php echo $cntr; ?>_NoOfPymnts" value="<?php echo $row2[2]; ?>">
+                                                        </td>
+                                                        <td class="lovtd">
+                                                            <input type="number" min="0" class="form-control rqrdFld" aria-label="..." id="allItmPymntPlansRow<?php echo $cntr; ?>_InitDpst" name="allItmPymntPlansRow<?php echo $cntr; ?>_InitDpst" value="<?php echo $row2[5]; ?>">
+                                                        </td>
+                                                        <td class="lovtd">
                                                             <select class="form-control" aria-label="..." id="allItmPymntPlansRow<?php echo $cntr; ?>_IsEnbld" name="allItmPymntPlansRow<?php echo $cntr; ?>_IsEnbld">
                                                                 <?php
                                                                 $sltdYes = "";
@@ -3687,8 +3941,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 }
                                                                 ?>
                                                                 <option value="Yes" <?php echo $sltdYes; ?>>Yes</option>
-                                                                <option value="No" <?php echo $sltdNo; ?>>No</option>    
-                                                            </select>		
+                                                                <option value="No" <?php echo $sltdNo; ?>>No</option>
+                                                            </select>
                                                         </td>
                                                         <?php if ($trnsStatus == "Incomplete" || $trnsStatus == "Withdrawn" || $trnsStatus == "Rejected") { ?>
                                                             <td class="lovtd">
@@ -3698,24 +3952,24 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             </td>
                                                         <?php } ?>
                                                     </tr>
-                                                    <?php
+                                                <?php
                                                 }
                                                 ?>
                                             </tbody>
-                                        </table>                        
-                                    </div>                
+                                        </table>
+                                    </div>
                                 </div>
-                                <?php
+                            <?php
                             } else {
-                                ?>
+                            ?>
                                 <span>No Results Found</span>
-                                <?php
+                            <?php
                             }
-                            ?> 
-                        </div>  
+                            ?>
+                        </div>
                     </div>
-                </div>        
-                <?php
+                </div>
+<?php
             }
         }
     }

@@ -46,7 +46,7 @@ $dfltPrvldgs = array("View Inventory Manager",
     /* 93 */ "View Item Production", "Add Item Production", "Edit Item Production", "Delete Item Production",
     /* 97 */ "Setup Production Processes", "Apply Adhoc Discounts",
     /* 99 */ "View Production Runs", "Add Production Runs", "Edit Production Runs", "Delete Production Runs",
-    /* 103 */ "Can Edit Unit Price", "View only Branch-Related Documents");
+    /* 103 */ "Can Edit Unit Price", "View only Branch-Related Documents", "Can View Cost Price");
 
 $prsnid = $_SESSION['PRSN_ID'];
 $orgID = $_SESSION['ORG_ID'];
@@ -61,6 +61,7 @@ if ($accbFSRptStoreID > 0 && getUserStorePkeyID($accbFSRptStoreID) > 0) {
 $gnrlTrnsDteDMYHMS = getFrmtdDB_Date_time();
 $gnrlTrnsDteYMDHMS = cnvrtDMYTmToYMDTm($gnrlTrnsDteDMYHMS);
 $gnrlTrnsDteYMD = substr($gnrlTrnsDteYMDHMS, 0, 10);
+$gnrlTrnsDteDMY= substr($gnrlTrnsDteDMYHMS, 0, 11);
 
 $invPrmSnsRstl = getInvPgPrmssns($prsnid, $orgID, $usrID);
 $fnccurid = $invPrmSnsRstl[0];
@@ -280,4 +281,3 @@ if ($lgn_num > 0 && $canview === true) {
 } else {
     restricted();
 }
-?>

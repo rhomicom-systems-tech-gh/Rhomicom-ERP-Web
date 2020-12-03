@@ -168,7 +168,7 @@ $smplTokenWordRhoKey = "92o2oG@-RhOmIxewARBe1ERPs58WEBrteC21This is a General Ke
     . "Tech. !Ltd Web/Mobile Portal @7612364BANKINGGhdfjwegSolutionsyr782L36429orbjkasdbhi";
 
 $superAdminConfigFilePathLoc = str_replace("/mailer", "", str_replace("/wsdls", "", str_replace("/xchange", "", str_replace("/self", "", str_replace("/dwnlds", "", dirname($_SERVER['SCRIPT_FILENAME'])))))) . "/dwnlds/pem/superAdminConfigFilePathLoc.rhocnfg";
-$superAdminConfigFilePath = "/opt/apache/rho_git_erp/adbs/superAdminConfigFile.rhocnfg";
+$superAdminConfigFilePath = "/opt/apache/adbs/superAdminConfigFile.rhocnfg";
 if (file_exists($superAdminConfigFilePathLoc)) {
     $text = file_get_contents($superAdminConfigFilePathLoc);
     $dcdedTxt = decrypt($text, $smplTokenWordRhoKey);

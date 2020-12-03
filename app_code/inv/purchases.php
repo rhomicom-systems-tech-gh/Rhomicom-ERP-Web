@@ -554,7 +554,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     exit();
                 }
                 $orgnlScmPrchsDocID = $sbmtdScmPrchsDocID;
-                $scmPrchsDocDfltTrnsDte = $gnrlTrnsDteDMYHMS;
+                $scmPrchsDocDfltTrnsDte = $gnrlTrnsDteDMY;//HMS
                 $scmPrchsDocCreator = $uName;
                 $scmPrchsDocCreatorID = $usrID;
                 $scmPrchsDocBrnchID = $brnchLocID;

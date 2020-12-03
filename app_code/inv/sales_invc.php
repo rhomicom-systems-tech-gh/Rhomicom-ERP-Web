@@ -105,7 +105,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         }
                     }
                     $orgnlScmSalesInvcID = $sbmtdScmSalesInvcID;
-                    $scmSalesInvcDfltTrnsDte = $gnrlTrnsDteDMYHMS;
+                    $scmSalesInvcDfltTrnsDte = $gnrlTrnsDteDMY;//HMS
                     $scmSalesInvcCreator = $uName;
                     $scmSalesInvcCreatorID = $usrID;
                     $gnrtdTrnsNo = "";
@@ -913,7 +913,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     }
                                 }
                                 $orgnlScmSalesInvcID = $sbmtdScmSalesInvcID;
-                                $scmSalesInvcDfltTrnsDte = $gnrlTrnsDteDMYHMS;
+                                $scmSalesInvcDfltTrnsDte = $gnrlTrnsDteDMY;//HMS
                                 $scmSalesInvcCreator = $uName;
                                 $scmSalesInvcCreatorID = $usrID;
                                 $gnrtdTrnsNo = "";
@@ -2736,7 +2736,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     exit();
                 }
                 $orgnlScmSalesInvcID = $sbmtdScmSalesInvcID;
-                $scmSalesInvcDfltTrnsDte = $gnrlTrnsDteDMYHMS;
+                $scmSalesInvcDfltTrnsDte = $gnrlTrnsDteDMY;//HMS
                 $scmSalesInvcCreator = $uName;
                 $scmSalesInvcCreatorID = $usrID;
                 $scmSalesInvcBrnchID = $brnchLocID;
