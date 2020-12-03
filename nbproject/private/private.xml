@@ -41,6 +41,11 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/xampp/htdocs/rho_git_erp/app_code/mcf/edit_customer_accounts.php</file>
+            <file>file:/C:/xampp/htdocs/rho_git_erp/app/accb/accb.js</file>
+            <file>file:/C:/xampp/htdocs/rho_git_erp/app/cmncde/cmncde.js</file>
+            <file>file:/C:/xampp/htdocs/rho_git_erp/app_code/cmncde/connect_pg.php</file>
+        </group>
     </open-files>
 </project-private>

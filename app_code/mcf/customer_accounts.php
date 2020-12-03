@@ -750,7 +750,21 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <input class="form-control rqrdFld" id="acctNoFind" style="font-size: 13px !important;font-weight: bold !important;" placeholder="Enter Account Number" type = "text" min="0" placeholder="" value="<?php echo $acctNoFind; ?>" onkeypress="getAccountStatementKD(event)"/>
                                         <input type="hidden" id="acctNoFindAccId" value="<?php echo $acctNoID; ?>">
                                         <input type="hidden" id="acctNoFindRawTxt" value="<?php echo ''; ?>">
-                                        <label class="btn btn-primary btn-file input-group-addon" onclick="dsplyAllBankCustsLov2();">
+                                        <!--<label class="btn btn-primary btn-file input-group-addon" onclick="dsplyAllBankCustsLov2();">-->
+                                        <label class="btn btn-primary btn-file input-group-addon" onclick="
+                                                //var gnrlOrgID = typeof $('#gnrlOrgID').val() === 'undefined' ? -1 : $('#gnrlOrgID').val();
+                                                var branchSrchIn = typeof $('#branchSrchIn').val() === 'undefined' ? 'All Branhes' : $('#branchSrchIn').val();
+
+                                                if(branchSrchIn === 'All Branches'){
+                                                    branchSrchIn = '';
+                                                } else {
+                                                    branchSrchIn = 'branchSrchIn';
+                                                }
+
+                                                getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'MCF All Customer Accounts', 'gnrlOrgID', branchSrchIn, '', 'radio', true, '', 'acctNoFindAccId', 'acctNoFindRawTxt', 'clear', 1, '', function () {
+                                                     $('#acctNoFind').val($('#acctNoFindRawTxt').val().split(' [')[0]);
+                                                     getAccountStatement2('', '#allmodules', 2, 2.3);
+                                                }); ">
                                             <span class="glyphicon glyphicon-th-list"></span>
                                         </label>
                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getAccountStatement('', '#allmodules', 'grp=17&typ=1&pg=2&subPgNo=2.3')">
