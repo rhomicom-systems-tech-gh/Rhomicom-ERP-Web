@@ -501,7 +501,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <div class="input-group" style="width:100% !important;">
                                                                         <input type="text" class="form-control" aria-label="..." id="bnkBranch" value="<?php echo $branch; ?>" readonly>
                                                                         <input type="hidden" id="bnkBranchID" value="<?php echo $row[19]; ?>"> 
-                                                                        <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
+                                                                        <!--<input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">120220-->
                                                                         <label style="display:none !important;" class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Sites/Locations New', 'gnrlOrgID', '', '', 'radio', true, '', 'bnkBranchID', 'bnkBranch', 'clear', 1, '');">
                                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                                         </label>
@@ -594,7 +594,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <div  class="col-md-8">
                                                                     <div class="input-group">
                                                                         <input type="text" class="form-control" aria-label="..." id="groupName" value="<?php echo getAllwdGrpVal($row[25], $row[26]); ?>" readonly="">
-                                                                        <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
+                                                                        <!--<input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">120220-->
                                                                         <input type="hidden" id="groupID" value="<?php echo $row[26]; ?>">
                                                                         <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'groupID', 'groupName', 'clear', 1, '');">
                                                                             <span class="glyphicon glyphicon-th-list"></span>
@@ -770,7 +770,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="row"><!-- ROW 3 -->
                                                                 <div style="text-align:left !important;">
                                                                     <?php if(test_prmssns($dfltPrvldgs[87], $mdlNm) === true && ($trnsStatus == "Incomplete" || $trnsStatus == "Rejected" || $trnsStatus == "Withdrawn")) { ?>
-                                                                    <button type="button" class="btn btn-default" id="getSigntryBtn" style="margin-bottom: 5px;" onclick="getLienForm('myLovModal', 'myLovModalBody', 'myLovModalTitle', 'acctLienForm', '', 'Add Lien', 13, <?php echo $subPgNo; ?>, 6, 'ADD', - 1);">
+                                                                    <button type="button" class="btn btn-default" id="addLienBtn" style="margin-bottom: 5px;" onclick="getLienForm('myLovModal', 'myLovModalBody', 'myLovModalTitle', 'acctLienForm', '', 'Add Lien', 13, <?php echo $subPgNo; ?>, 6, 'ADD', - 1);">
                                                                         <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                         Add Lien
                                                                     </button>
@@ -980,8 +980,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <input type="text" class="form-control" aria-label="..." id="bnkCustomer" value="" readonly>
                                                                     <input type="hidden" id="bnkCustomerID" value="-1">
                                                                     <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
-                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="onClickCustName();">
-                                                                        <span class="glyphicon glyphicon-th-list"></span>
+                                                                    <!--<label class="btn btn-primary btn-file input-group-addon" onclick="onClickCustName();">-->
+                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal','myLovModalTitle','myLovModalBody','All Bank Customers','gnrlOrgID','custType','','radio',true,'','bnkCustomerID','bnkCustomer','clear',1,'',function(){$('#acctTitle').val($('#bnkCustomer').val())});">
+                                                                        <span class="glyphicon glyphicon-th-list" onclick=""></span>
                                                                     </label>
                                                                 </div>
                                                             </div>
@@ -1175,7 +1176,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <div class="input-group" style="width:100% !important;">
                                                                     <input type="text" class="form-control" aria-label="..." id="bnkBranch" value="<?php echo $prsnBranch; ?>" readonly>
                                                                     <input type="hidden" id="bnkBranchID" value="<?php echo $prsnBranchID; ?>"> 
-                                                                    <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
+                                                                    <!--<input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">20022020-->
                                                                     <label style="display:none !important;" class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Sites/Locations New', 'gnrlOrgID', '', '', 'radio', true, '', 'bnkBranchID', 'bnkBranch', 'clear', 1, '');">
                                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                                     </label>
@@ -1237,7 +1238,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div  class="col-md-8">
                                                                 <div class="input-group">
                                                                     <input type="text" class="form-control" aria-label="..." id="groupName" value="" readonly="">
-                                                                    <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
+                                                                    <!--<input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">20022020-->
                                                                     <input type="hidden" id="groupID" value="-1">
                                                                     <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'groupID', 'groupName', 'clear', 1, '');">
                                                                         <span class="glyphicon glyphicon-th-list"></span>
@@ -1313,7 +1314,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <div  class="col-md-12">
                                                         <div class="row"><!-- ROW 3 -->
                                                             <div style="text-align:left !important;">
-                                                                <button style="display:none !important;" type="button" class="btn btn-default" id="getSigntryBtn" style="margin-bottom: 5px;" onclick="getLienForm('myLovModal', 'myLovModalBody', 'myLovModalTitle', 'acctLienForm', '', 'Add Lien', 13, <?php echo $subPgNo; ?>, 6, 'ADD', - 1);">
+                                                                <button style="display:none !important;" type="button" class="btn btn-default" id="addLienBtn" style="margin-bottom: 5px;" onclick="getLienForm('myLovModal', 'myLovModalBody', 'myLovModalTitle', 'acctLienForm', '', 'Add Lien', 13, <?php echo $subPgNo; ?>, 6, 'ADD', - 1);">
                                                                     <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                     Add Lien
                                                                 </button>
