@@ -1901,7 +1901,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="input-group" style="width:100% !important;">
                                                                 <input type="text" name="invAssetAcntNm" id="invAssetAcntNm" class="form-control rqrdFld" value="<?php echo $invAssetAcntNm; ?>" readonly="true" style="width:100% !important;">
                                                                 <input type="hidden" name="invAssetAcntID" id="invAssetAcntID" class="form-control" value="<?php echo $invAssetAcntID; ?>">
-                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Asset Accounts', '', '', '', 'radio', true, '', 'invAssetAcntID', 'invAssetAcntNm', 'clear', 0, '', function () {
+                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Asset Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'invAssetAcntID', 'invAssetAcntNm', 'clear', 0, '', function () {
                                                                                                 var aa112 = 1;
                                                                                             });">
                                                                     <span class="glyphicon glyphicon-th-list"></span>
@@ -1923,7 +1923,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="input-group" style="width:100% !important;">
                                                                 <input type="text" name="invCogsAcntNm" id="invCogsAcntNm" class="form-control rqrdFld" value="<?php echo $invCogsAcntNm; ?>" readonly="true" style="width:100% !important;">
                                                                 <input type="hidden" name="invCogsAcntID" id="invCogsAcntID" class="form-control" value="<?php echo $invCogsAcntID; ?>">
-                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Contra Revenue Accounts', '', '', '', 'radio', true, '', 'invCogsAcntID', 'invCogsAcntNm', 'clear', 0, '', function () {
+                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Contra Revenue Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'invCogsAcntID', 'invCogsAcntNm', 'clear', 0, '', function () {
                                                                                                 var aa112 = 1;
                                                                                             });">
                                                                     <span class="glyphicon glyphicon-th-list"></span>
@@ -1945,7 +1945,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="input-group" style="width:100% !important;">
                                                                 <input type="text" name="invSRvnuAcntNm" id="invSRvnuAcntNm" class="form-control rqrdFld" value="<?php echo $invSRvnuAcntNm; ?>" readonly="true" style="width:100% !important;">
                                                                 <input type="hidden" name="invSRvnuAcntID" id="invSRvnuAcntID" class="form-control" value="<?php echo $invSRvnuAcntID; ?>">
-                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Revenue Accounts', '', '', '', 'radio', true, '', 'invSRvnuAcntID', 'invSRvnuAcntNm', 'clear', 0, '', function () {
+                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Revenue Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'invSRvnuAcntID', 'invSRvnuAcntNm', 'clear', 0, '', function () {
                                                                                                 var aa112 = 1;
                                                                                             });">
                                                                     <span class="glyphicon glyphicon-th-list"></span>
@@ -1967,7 +1967,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="input-group" style="width:100% !important;">
                                                                 <input type="text" name="invSRetrnAcntNm" id="invSRetrnAcntNm" class="form-control rqrdFld" value="<?php echo $invSRetrnAcntNm; ?>" readonly="true" style="width:100% !important;">
                                                                 <input type="hidden" name="invSRetrnAcntID" id="invSRetrnAcntID" class="form-control" value="<?php echo $invSRetrnAcntID; ?>">
-                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Contra Revenue Accounts', '', '', '', 'radio', true, '', 'invSRetrnAcntID', 'invSRetrnAcntNm', 'clear', 0, '', function () {
+                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Contra Revenue Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'invSRetrnAcntID', 'invSRetrnAcntNm', 'clear', 0, '', function () {
                                                                                                 var aa112 = 1;
                                                                                             });">
                                                                     <span class="glyphicon glyphicon-th-list"></span>
@@ -1989,7 +1989,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="input-group" style="width:100% !important;">
                                                                 <input type="text" name="invPRetrnAcntNm" id="invPRetrnAcntNm" class="form-control rqrdFld" value="<?php echo $invPRetrnAcntNm; ?>" readonly="true" style="width:100% !important;">
                                                                 <input type="hidden" name="invPRetrnAcntID" id="invPRetrnAcntID" class="form-control" value="<?php echo $invPRetrnAcntID; ?>">
-                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Contra Expense Accounts', '', '', '', 'radio', true, '', 'invPRetrnAcntID', 'invPRetrnAcntNm', 'clear', 0, '', function () {
+                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Contra Expense Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'invPRetrnAcntID', 'invPRetrnAcntNm', 'clear', 0, '', function () {
                                                                                                 var aa112 = 1;
                                                                                             });">
                                                                     <span class="glyphicon glyphicon-th-list"></span>
@@ -2011,7 +2011,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="input-group" style="width:100% !important;">
                                                                 <input type="text" name="invExpnsAcntNm" id="invExpnsAcntNm" class="form-control rqrdFld" value="<?php echo $invExpnsAcntNm; ?>" readonly="true" style="width:100% !important;">
                                                                 <input type="hidden" name="invExpnsAcntID" id="invExpnsAcntID" class="form-control" value="<?php echo $invExpnsAcntID; ?>">
-                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Expense Accounts', '', '', '', 'radio', true, '', 'invExpnsAcntID', 'invExpnsAcntNm', 'clear', 0, '', function () {
+                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Expense Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'invExpnsAcntID', 'invExpnsAcntNm', 'clear', 0, '', function () {
                                                                                                 var aa112 = 1;
                                                                                             });">
                                                                     <span class="glyphicon glyphicon-th-list"></span>

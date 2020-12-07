@@ -406,7 +406,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <?php if ($canEdt) { ?>                                                        
                                                     <div class="input-group">
                                                         <input class="form-control rqrdFld" id="allDfltAcntsRow<?php echo $cntr; ?>_GLAcntNm" style="font-size: 13px !important;font-weight: bold !important;" placeholder="Enter GL Account Number" type = "text" min="0" placeholder="" value="<?php echo $dfltAccntName; ?>" readonly="true"/>
-                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', '', '', '', 'radio', true, '', 'allDfltAcntsRow<?php echo $cntr; ?>_GLAcntID', 'allDfltAcntsRow<?php echo $cntr; ?>_GLAcntNm', 'clear', 1, '', function () {});">
+                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'allDfltAcntsRow<?php echo $cntr; ?>_GLAcntID', 'allDfltAcntsRow<?php echo $cntr; ?>_GLAcntNm', 'clear', 1, '', function () {});">
                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                         </label>
                                                     </div>

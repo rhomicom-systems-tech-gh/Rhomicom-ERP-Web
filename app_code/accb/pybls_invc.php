@@ -1793,7 +1793,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="input-group">
                                                                 <input class="form-control" id="accbPyblsInvcDfltBalsAcnt" style="font-size: 13px !important;font-weight: bold !important;" placeholder="Enter GL Account Number" type = "text" min="0" placeholder="" value="<?php echo $accbPyblsInvcDfltBalsAcnt; ?>" readonly="true"/>
                                                                 <input type="hidden" id="accbPyblsInvcDfltBalsAcntID" value="<?php echo $accbPyblsInvcDfltBalsAcntID; ?>">
-                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Liability Accounts', '', '', '', 'radio', true, '', 'accbPyblsInvcDfltBalsAcntID', 'accbPyblsInvcDfltBalsAcnt', 'clear', 1, '', function () {});">
+                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Liability Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbPyblsInvcDfltBalsAcntID', 'accbPyblsInvcDfltBalsAcnt', 'clear', 1, '', function () {});">
                                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                                 </label>
                                                             </div>

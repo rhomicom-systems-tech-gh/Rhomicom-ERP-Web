@@ -19536,7 +19536,664 @@ function rfrshSaveAccntBdgts() {
         },
     });
 }
+/*Import Export Assets Register*/
+function exprtAssetRgstr() {
+    var exprtMsg =
+        '<form role="form">' +
+        '<p style="color:#000;">' +
+        "How many Accounts will you like to Export?" +
+        "<br/>1=No Accounts(Empty Template)" +
+        "<br/>2=All Accounts" +
+        "<br/>3-Infinity=Specify the exact number of Accounts to Export<br/>" +
+        "</p>" +
+        '<div class="form-group" style="margin-bottom:10px !important;">' +
+        '<div class="input-group">' +
+        '<span class="input-group-addon" id="basic-addon1">' +
+        '<i class="fa fa-sort-numeric-asc fa-fw fa-border"></i></span>' +
+        '<input type="number" class="form-control" placeholder="" aria-describedby="basic-addon1" id="recsToExprt" name="recsToExprt" onkeyup="" tabindex="0" autofocus>' +
+        "</div>" +
+        "</div>" +
+        '<p style="font-size:12px;" id="msgAreaExprt">&nbsp;' +
+        "</p>" +
+        "</form>";
 
+    BootstrapDialog.show({
+        size: BootstrapDialog.SIZE_SMALL,
+        type: BootstrapDialog.TYPE_DEFAULT,
+        title: "Export Accounts!",
+        message: exprtMsg,
+        animate: true,
+        closable: true,
+        closeByBackdrop: false,
+        closeByKeyboard: false,
+        onshow: function (dialogItself) { },
+        onshown: function (dialogItself) {
+            exprtBtn = dialogItself.getButton("btn_exprt_rpt");
+            $("#recsToExprt").focus();
+        },
+        buttons: [
+            {
+                label: "Cancel",
+                icon: "glyphicon glyphicon-menu-left",
+                cssClass: "btn-default",
+                action: function (dialogItself) {
+                    window.clearInterval(prgstimerid2);
+                    dialogItself.close();
+                    window.clearInterval(prgstimerid2);
+                    ClearAllIntervals();
+                },
+            },
+            {
+                id: "btn_exprt_rpt",
+                label: "Export",
+                icon: "glyphicon glyphicon-menu-right",
+                cssClass: "btn-primary",
+                action: function (dialogItself) {
+                    /*Validate Input and Do Ajax if OK*/
+                    var inptNum = $("#recsToExprt").val();
+                    if (!isNumber(inptNum)) {
+                        var dialog = bootbox.alert({
+                            title: "Exporting Accounts",
+                            size: "small",
+                            message: "Please provide a valid Number!",
+                            callback: function () { },
+                        });
+                        return false;
+                    } else {
+                        var $button = this;
+                        $button.disable();
+                        $button.spin();
+                        dialogItself.setClosable(false);
+                        document.getElementById("msgAreaExprt").innerHTML =
+                            '<img style="width:165px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;" src=\'cmn_images/ajax-loader2.gif\'/><br/><span style="color:blue;font-size:11px;text-align: left;margin-top:0px;">Working on Export...Please Wait...</span>';
+                        getMsgAsyncSilent("grp=1&typ=11&q=Check Session",function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 6,
+                                    typ: 1,
+                                    pg: 1,
+                                    q: "UPDATE",
+                                    actyp: 3,
+                                    inptNum: inptNum,
+                                },
+                            });
+                            prgstimerid2 = window.setInterval(rfrshAssetRgstrPrcs,1000);
+                        });
+                    }
+                },
+            },
+        ],
+    });
+}
+
+function rfrshAssetRgstrPrcs() {
+    $.ajax({
+        method: "POST",
+        url: "index.php",
+        data: {
+            grp: 6,
+            typ: 1,
+            pg: 1,
+            q: "UPDATE",
+            actyp: 4,
+        },
+        success: function (data) {
+            if (data.percent >= 100) {
+                if (data.message.indexOf("Error") !== -1) {
+                    $("#msgAreaExprt").html(data.message);
+                } else {
+                    $("#msgAreaExprt").html(
+                        data.message +
+                        '<br/><a href="' +
+                        data.dwnld_url +
+                        '">Click to Download File!</a>'
+                    );
+                }
+                exprtBtn.enable();
+                exprtBtn.stopSpin();
+                window.clearInterval(prgstimerid2);
+                window.clearInterval(prgstimerid2);
+                ClearAllIntervals();
+            } else {
+                $("#msgAreaExprt").html(
+                    '<img style="width:165px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;" src="cmn_images/ajax-loader2.gif"/>' +
+                    data.message
+                );
+                document.getElementById("msgAreaExprt").innerHTML =
+                    '<img style="width:165px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;" src="cmn_images/ajax-loader2.gif"/>' +
+                    data.message;
+            }
+        },
+        error: function (jqXHR,textStatus,errorThrown) {
+            console.log(textStatus + " " + errorThrown);
+            console.warn(jqXHR.responseText);
+        },
+    });
+}
+
+function importAssetRgstr() {
+    var dataToSend = "";
+    var isFileValid = true;
+    var dialog1 = bootbox.confirm({
+        title: "Import Accounts?",
+        size: "small",
+        message:
+            '<p style="text-align:center;">Are you sure you want to <span style="color:green;font-weight:bold;font-style:italic;">IMPORT ACCOUNTS</span> to overwrite existing ones?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: "btn-success",
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: "btn-danger",
+            },
+        },
+        callback: function (result) {
+            if (result === true) {
+                if (isReaderAPIAvlbl()) {
+                    $("#allOtherFileInput6").val("");
+                    $("#allOtherFileInput6").off("change");
+                    $("#allOtherFileInput6").change(function () {
+                        var fileName = $(this).val();
+                        var input = document.getElementById("allOtherFileInput6");
+                        var file = input.files[0];
+                        /* read the file metadata*/
+                        var output = "";
+                        output +=
+                            '<span style="font-weight:bold;">' +
+                            escape(file.name) +
+                            "</span><br />\n";
+                        output += " - FileType: " + (file.type || "n/a") + "<br />\n";
+                        output += " - FileSize: " + file.size + " bytes<br />\n";
+                        output +=
+                            " - LastModified: " +
+                            (file.lastModifiedDate
+                                ? file.lastModifiedDate.toLocaleDateString()
+                                : "n/a") +
+                            "<br />\n";
+
+                        var reader = new FileReader();
+                        BootstrapDialog.show({
+                            size: BootstrapDialog.SIZE_LARGE,
+                            type: BootstrapDialog.TYPE_DEFAULT,
+                            title: "Validating Selected File",
+                            message:
+                                '<div id="myProgress"><div id="myBar"></div></div><div id="myInformation"><i class="fa fa-spin fa-spinner"></i> Validating Selected File...Please Wait...</div><br/><div id="fileInformation">' +
+                                output +
+                                "</div>",
+                            animate: true,
+                            closable: true,
+                            closeByBackdrop: false,
+                            closeByKeyboard: false,
+                            onshow: function (dialogItself) {
+                                setTimeout(function () {
+                                    var $footerButton = dialogItself.getButton("btn-srvr-prcs");
+                                    $footerButton.disable();
+                                    /* read the file content*/
+                                    reader.onerror = function (evt) {
+                                        switch (evt.target.error.code) {
+                                            case evt.target.error.NOT_FOUND_ERR:
+                                                alert("File Not Found!");
+                                                break;
+                                            case evt.target.error.NOT_READABLE_ERR:
+                                                alert("File is not readable");
+                                                break;
+                                            case evt.target.error.ABORT_ERR:
+                                                break; 
+                                            default:
+                                                alert("An error occurred reading this file.");
+                                        }
+                                    };
+                                    reader.onprogress = function (evt) {
+                                        /* evt is an ProgressEvent.*/
+                                        if (evt.lengthComputable) {
+                                            var percentLoaded = Math.round(
+                                                (evt.loaded / evt.total) * 100
+                                            );
+                                            /* Increase the progress bar length.*/
+                                            var elem = document.getElementById("myBar");
+                                            elem.style.width = percentLoaded + "%";
+                                            if (percentLoaded < 100) {
+                                                $("#myInformation").html(
+                                                    '<span style="color:green;"><i class="fa fa-spin fa-spinner"></i>' +
+                                                    percentLoaded +
+                                                    "% Validating Selected File...Please Wait...</span>"
+                                                );
+                                            } else {
+                                                $("#myInformation").html(
+                                                    '<span style="color:green;"><i class="fa fa-check"></i>' +
+                                                    percentLoaded +
+                                                    "% Validating Selected File Completed!</span>"
+                                                );
+
+                                                var $footerButton = dialogItself.getButton(
+                                                    "btn-srvr-prcs"
+                                                );
+                                                if (isFileValid == true) {
+                                                    $footerButton.enable();
+                                                } else {
+                                                    $footerButton.disable();
+                                                }
+                                            }
+                                        }
+                                    };
+                                    reader.onabort = function (e) {
+                                        alert("File read cancelled");
+                                    };
+                                    reader.onloadstart = function (e) {
+                                        var elem = document.getElementById("myBar");
+                                        elem.style.width = "1%";
+                                        $("#myInformation").html(
+                                            '<span style="color:green;"><i class="fa fa-spin fa-spinner"></i>1% Started Importing Accounts...Please Wait...</span>'
+                                        );
+                                    };
+                                    reader.onload = function (event) {
+                                        try {
+                                            var csv = event.target.result;
+                                            var data = $.csv.toArrays(csv);
+                                            var rwCntr = 0;
+                                            var colCntr = 0;
+                                            var vldRwCntr = 0;
+                                            var accntnumber = "";
+                                            var accntName = "";
+                                            var accntDesc = "";
+                                            var accntType = "";
+                                            var prntAccntName = "";
+                                            var isParentAccnt = "";
+                                            var isRetErngAccnt = "";
+                                            var isNetIncmAccnt = "";
+                                            var isContraAccnt = "";
+                                            var reportLineNo = "";
+                                            var hasSubledgers = "";
+                                            var cntrlAccntName = "";
+                                            var accntCrncyCode = "";
+                                            var isSuspenseAccnt = "";
+                                            var accntClsfctn = "";
+                                            var sgmnt1Value = "";
+                                            var sgmnt2Value = "";
+                                            var sgmnt3Value = "";
+                                            var sgmnt4Value = "";
+                                            var sgmnt5Value = "";
+                                            var sgmnt6Value = "";
+                                            var sgmnt7Value = "";
+                                            var sgmnt8Value = "";
+                                            var sgmnt9Value = "";
+                                            var sgmnt10Value = "";
+                                            var mappedGrpAccntNum = "";
+                                            for (var row in data) {
+                                                for (var item in data[row]) {
+                                                    colCntr++;
+                                                    switch (colCntr) {
+                                                        case 1:
+                                                            accntnumber = data[row][item];
+                                                            break;
+                                                        case 2:
+                                                            accntName = data[row][item];
+                                                            break;
+                                                        case 3:
+                                                            accntDesc = data[row][item];
+                                                            break;
+                                                        case 4:
+                                                            accntType = data[row][item];
+                                                            break;
+                                                        case 5:
+                                                            prntAccntName = data[row][item];
+                                                            break;
+                                                        case 6:
+                                                            isParentAccnt = data[row][item];
+                                                            break;
+                                                        case 7:
+                                                            isRetErngAccnt = data[row][item];
+                                                            break;
+                                                        case 8:
+                                                            isNetIncmAccnt = data[row][item];
+                                                            break;
+                                                        case 9:
+                                                            isContraAccnt = data[row][item];
+                                                            break;
+                                                        case 10:
+                                                            reportLineNo = data[row][item];
+                                                            break;
+                                                        case 11:
+                                                            hasSubledgers = data[row][item];
+                                                            break;
+                                                        case 12:
+                                                            cntrlAccntName = data[row][item];
+                                                            break;
+                                                        case 13:
+                                                            accntCrncyCode = data[row][item];
+                                                            break;
+                                                        case 14:
+                                                            isSuspenseAccnt = data[row][item];
+                                                            break;
+                                                        case 15:
+                                                            accntClsfctn = data[row][item];
+                                                            break;
+                                                        case 16:
+                                                            sgmnt1Value = data[row][item];
+                                                            break;
+                                                        case 17:
+                                                            sgmnt2Value = data[row][item];
+                                                            break;
+                                                        case 18:
+                                                            sgmnt3Value = data[row][item];
+                                                            break;
+                                                        case 19:
+                                                            sgmnt4Value = data[row][item];
+                                                            break;
+                                                        case 20:
+                                                            sgmnt5Value = data[row][item];
+                                                            break;
+                                                        case 21:
+                                                            sgmnt6Value = data[row][item];
+                                                            break;
+                                                        case 22:
+                                                            sgmnt7Value = data[row][item];
+                                                            break;
+                                                        case 23:
+                                                            sgmnt8Value = data[row][item];
+                                                            break;
+                                                        case 24:
+                                                            sgmnt9Value = data[row][item];
+                                                            break;
+                                                        case 25:
+                                                            sgmnt10Value = data[row][item];
+                                                            break;
+                                                        case 26:
+                                                            mappedGrpAccntNum = data[row][item];
+                                                            break;
+                                                        default:
+                                                            var dialog = bootbox.alert({
+                                                                title: "Error-Validating Selected File",
+                                                                size: "small",
+                                                                message:
+                                                                    '<span style="color:red;font-weight:bold:">An error occurred reading this file.Invalid Column in File!</span>',
+                                                                callback: function () {
+                                                                    isFileValid = false;
+                                                                    reader.abort();
+                                                                },
+                                                            });
+                                                    }
+                                                }
+                                                if (rwCntr === 0) {
+                                                    if (
+                                                        accntnumber.toUpperCase() ===
+                                                        "Account Number**".toUpperCase() &&
+                                                        accntName.toUpperCase() ===
+                                                        "Account Name**".toUpperCase() &&
+                                                        accntType.toUpperCase() ===
+                                                        "Account Type**".toUpperCase() &&
+                                                        mappedGrpAccntNum.toUpperCase() ===
+                                                        "Mapped Group Org Account No.".toUpperCase()
+                                                    ) {
+                                                        /*alert(number.toUpperCase() + "|" + processName.toUpperCase() + "|" + isEnbld.toUpperCase());*/
+                                                    } else {
+                                                        var dialog = bootbox.alert({
+                                                            title: "Error-Import Accounts",
+                                                            size: "small",
+                                                            message:
+                                                                '<span style="color:red;font-weight:bold:">Invalid File Selected!</span>',
+                                                            callback: function () {
+                                                                isFileValid = false;
+                                                                reader.abort();
+                                                            },
+                                                        });
+                                                    }
+                                                }
+                                                if (
+                                                    accntnumber.trim() !== "" &&
+                                                    accntName.trim() !== "" &&
+                                                    accntType.trim() !== "" &&
+                                                    accntCrncyCode.trim() !== ""
+                                                ) {
+                                                    dataToSend =
+                                                        dataToSend +
+                                                        accntnumber
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        accntName
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        accntDesc
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        accntType
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        prntAccntName
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        isParentAccnt
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        isRetErngAccnt
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        isNetIncmAccnt
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        isContraAccnt
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        reportLineNo
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        hasSubledgers
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        cntrlAccntName
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        accntCrncyCode
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        isSuspenseAccnt
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        accntClsfctn
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        sgmnt1Value
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        sgmnt2Value
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        sgmnt3Value
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        sgmnt4Value
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        sgmnt5Value
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        sgmnt6Value
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        sgmnt7Value
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        sgmnt8Value
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        sgmnt9Value
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        sgmnt10Value
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        mappedGrpAccntNum
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "|";
+                                                    vldRwCntr++;
+                                                }
+                                                colCntr = 0;
+                                                rwCntr++;
+                                            }
+                                            output +=
+                                                '<br/><span style="color:blue;font-weight:bold;">No. of Valid Rows:' +
+                                                vldRwCntr;
+                                            output += "<br/>Total No. of Rows:" + rwCntr + "</span>";
+                                            $("#fileInformation").html(output);
+                                        } catch (err) {
+                                            var dialog = bootbox.alert({
+                                                title: "Error-Import Accounts",
+                                                size: "small",
+                                                message: "Error:" + err.message,
+                                                callback: function () {
+                                                    isFileValid = false;
+                                                    reader.abort();
+                                                },
+                                            });
+                                        }
+                                    };
+                                    reader.readAsText(file);
+                                },500);
+                            },
+                            buttons: [
+                                {
+                                    label: "Cancel",
+                                    icon: "glyphicon glyphicon-menu-left",
+                                    cssClass: "btn-default",
+                                    action: function (dialogItself) {
+                                        isFileValid = false;
+                                        reader.abort();
+                                        dialogItself.close();
+                                    },
+                                },
+                                {
+                                    id: "btn-srvr-prcs",
+                                    label: "Start Server Processing",
+                                    icon: "glyphicon glyphicon-menu-right",
+                                    cssClass: "btn-primary",
+                                    action: function (dialogItself) {
+                                        if (isFileValid == true) {
+                                            dialogItself.close();
+                                            saveAssetRgstrExcl(dataToSend);
+                                        } else {
+                                            var dialog = bootbox.alert({
+                                                title: "Error-Import Accounts",
+                                                size: "small",
+                                                message:
+                                                    '<span style="color:red;font-weight:bold:">Invalid File Selected!</span>',
+                                                callback: function () { },
+                                            });
+                                        }
+                                    },
+                                },
+                            ],
+                        });
+                    });
+                    performFileClick("allOtherFileInput6");
+                }
+            }
+        },
+    });
+}
+
+function saveAssetRgstrExcl(dataToSend) {
+    if (dataToSend.trim() === "") {
+        bootbox.alert({
+            title: "System Alert!",
+            size: "small",
+            message:
+                '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                'font-weight:bold;">No Data to Send!</span></p>',
+        });
+        return false;
+    }
+    var dialog = bootbox.alert({
+        title: "Importing Accounts",
+        size: "small",
+        message:
+            '<div id="myProgress1"><div id="myBar1"></div></div><div id="myInformation1"><i class="fa fa-spin fa-spinner"></i> Importing Accounts...Please Wait...</div>',
+        callback: function () {
+            clearInterval(prgstimerid2);
+            window.clearInterval(prgstimerid2);
+            getAccbAcntChrt("clear","#allmodules","grp=6&typ=1&pg=1&vtyp=0");
+            ClearAllIntervals();
+        },
+    });
+    dialog.init(function () {
+        getMsgAsyncSilent("grp=1&typ=11&q=Check Session",function () {
+            $body = $("body");
+            $body.removeClass("mdlloading");
+            $.ajax({
+                method: "POST",
+                url: "index.php",
+                data: {
+                    grp: 6,
+                    typ: 1,
+                    pg: 1,
+                    q: "UPDATE",
+                    actyp: 101,
+                    dataToSend: dataToSend,
+                },
+            });
+            prgstimerid2 = window.setInterval(rfrshSaveAssetRgstr,1000);
+        });
+    });
+}
+
+function rfrshSaveAssetRgstr() {
+    $.ajax({
+        method: "POST",
+        url: "index.php",
+        data: {
+            grp: 6,
+            typ: 1,
+            pg: 1,
+            q: "UPDATE",
+            actyp: 102,
+        },
+        success: function (data) {
+            var elem = document.getElementById("myBar1");
+            elem.style.width = data.percent + "%";
+            $("#myInformation1").html(data.message);
+            if (data.percent >= 100) {
+                window.clearInterval(prgstimerid2);
+                window.clearInterval(prgstimerid2);
+                ClearAllIntervals();
+            }
+        },
+        error: function (jqXHR,textStatus,errorThrown) {
+            console.log(textStatus + " " + errorThrown);
+            console.warn(jqXHR.responseText);
+        },
+    });
+}
 /*Investment Transactions - Fund Management*/
 function getPayInvstTrans(actionText,slctr,linkArgs) {
     var srchFor =
