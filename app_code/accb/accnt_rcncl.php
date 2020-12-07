@@ -222,7 +222,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         <input type="hidden" class="form-control" aria-label="..." id="rcnclAccntID" name="rcnclAccntID" value="-1">
                                                                         <input type="hidden" class="form-control" aria-label="..." id="rcnclAccntNm" name="accbFSRptAcntNum1" value="">
                                                                         <input type="hidden" class="form-control" aria-label="..." id="nwRowHtml2" name="nwRowHtml2" value="<?php echo $nwRowHtml2; ?>">
-                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', '', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
+                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
                                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                                         </label>
                                                                     </div>

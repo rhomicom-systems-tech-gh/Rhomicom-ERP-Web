@@ -306,7 +306,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt10ValID" name="accbFSRptSgmnt10ValID" value="<?php echo $accbFSRptSgmnt10ValID; ?>">
                                                                         <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt" name="accbFSRptSgmnt" value="">
                                                                         <input type="hidden" class="form-control" aria-label="..." id="accbFSRptAcntNum1" name="accbFSRptAcntNum1" value="">
-                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', '', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
+                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
                                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                                         </label>
                                                                     </div>
@@ -1837,7 +1837,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt10ValID" name="accbFSRptSgmnt10ValID" value="<?php echo $accbFSRptSgmnt10ValID; ?>">
                                                 <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt" name="accbFSRptSgmnt" value="">
                                                 <input type="hidden" class="form-control" aria-label="..." id="accbFSRptAcntNum1" name="accbFSRptAcntNum1" value="">
-                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', '', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
+                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                 </label>
                                             </div>
@@ -2130,7 +2130,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt10ValID" name="accbFSRptSgmnt10ValID" value="<?php echo $accbFSRptSgmnt10ValID; ?>">
                                                 <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt" name="accbFSRptSgmnt" value="">
                                                 <input type="hidden" class="form-control" aria-label="..." id="accbFSRptAcntNum1" name="accbFSRptAcntNum1" value="">
-                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', '', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
+                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                 </label>
                                             </div>
@@ -2456,7 +2456,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt10ValID" name="accbFSRptSgmnt10ValID" value="<?php echo $accbFSRptSgmnt10ValID; ?>">
                                                 <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt" name="accbFSRptSgmnt" value="">
                                                 <input type="hidden" class="form-control" aria-label="..." id="accbFSRptAcntNum1" name="accbFSRptAcntNum1" value="">
-                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', '', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
+                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                 </label>
                                             </div>
@@ -2747,7 +2747,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt10ValID" name="accbFSRptSgmnt10ValID" value="<?php echo $accbFSRptSgmnt10ValID; ?>">
                                                 <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt" name="accbFSRptSgmnt" value="">
                                                 <input type="hidden" class="form-control" aria-label="..." id="accbFSRptAcntNum1" name="accbFSRptAcntNum1" value="">
-                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', '', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
+                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                 </label>
                                             </div>
@@ -3099,7 +3099,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt10ValID" name="accbFSRptSgmnt10ValID" value="<?php echo $accbFSRptSgmnt10ValID; ?>">
                                                 <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt" name="accbFSRptSgmnt" value="">
                                                 <input type="hidden" class="form-control" aria-label="..." id="accbFSRptAcntNum1" name="accbFSRptAcntNum1" value="">
-                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', '', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
+                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                 </label>
                                             </div>
@@ -3786,7 +3786,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="accbFSRptAcntNum" class="control-label col-md-12" style="padding:5px 1px 0px 1px !important;display:none;">GL Account:</label>
                                         <div  class="col-md-12" style="padding:5px 1px 0px 1px !important;display:none;">
                                             <div class="input-group">
-                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', '', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
+                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                 </label>
                                             </div>
@@ -4103,7 +4103,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt10ValID" name="accbFSRptSgmnt10ValID" value="<?php echo $accbFSRptSgmnt10ValID; ?>">
                                                 <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt" name="accbFSRptSgmnt" value="">
                                                 <input type="hidden" class="form-control" aria-label="..." id="accbFSRptAcntNum1" name="accbFSRptAcntNum1" value="">
-                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', '', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
+                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                 </label>
                                             </div>

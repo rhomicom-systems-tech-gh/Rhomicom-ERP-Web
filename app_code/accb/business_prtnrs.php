@@ -857,7 +857,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <div class="input-group">
                                                                         <input type="text" name="cstmrLbltyAcntNm" id="cstmrLbltyAcntNm" class="form-control rqrdFld" value="<?php echo $cstmrLbltyAcntNm; ?>" readonly="true">
                                                                         <input type="hidden" name="cstmrLbltyAcntID" id="cstmrLbltyAcntID" class="form-control" value="<?php echo $cstmrLbltyAcntID; ?>">
-                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Liability Accounts', '', '', '', 'radio', true, '', 'cstmrLbltyAcntID', 'cstmrLbltyAcntNm', 'clear', 0, '', function () {
+                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Liability Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'cstmrLbltyAcntID', 'cstmrLbltyAcntNm', 'clear', 0, '', function () {
                                                                                     var aa112 = 1;
                                                                                 });">
                                                                             <span class="glyphicon glyphicon-th-list"></span>
@@ -881,7 +881,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <div class="input-group">
                                                                         <input type="text" name="cstmrRcvblsAcntNm" id="cstmrRcvblsAcntNm" class="form-control rqrdFld" value="<?php echo $cstmrRcvblsAcntNm; ?>" readonly="true">
                                                                         <input type="hidden" name="cstmrRcvblsAcntID" id="cstmrRcvblsAcntID" class="form-control" value="<?php echo $cstmrRcvblsAcntID; ?>">
-                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Asset Accounts', '', '', '', 'radio', true, '', 'cstmrRcvblsAcntID', 'cstmrRcvblsAcntNm', 'clear', 0, '', function () {
+                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Asset Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'cstmrRcvblsAcntID', 'cstmrRcvblsAcntNm', 'clear', 0, '', function () {
                                                                                     var aa112 = 1;
                                                                                 });">
                                                                             <span class="glyphicon glyphicon-th-list"></span>

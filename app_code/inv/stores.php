@@ -512,7 +512,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="input-group">
                                                     <input type="text" name="lnkdGLAccountNm" id="lnkdGLAccountNm" class="form-control" value="<?php echo $lnkdGLAccountNm; ?>" readonly="true">
                                                     <input type="hidden" name="lnkdGLAccountID" id="lnkdGLAccountID" class="form-control" value="<?php echo $lnkdGLAccountID; ?>">
-                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Asset Accounts', '', '', '', 'radio', true, '', 'lnkdGLAccountID', 'lnkdGLAccountNm', 'clear', 0, '', function () {
+                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Asset Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'lnkdGLAccountID', 'lnkdGLAccountNm', 'clear', 0, '', function () {
                                                                 var aa112 = 1;
                                                             });"> 
                                                         <span class="glyphicon glyphicon-th-list"></span>
@@ -1070,7 +1070,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="input-group">
                                                     <input type="text" name="lnkdCgGLAccountNm" id="lnkdCgGLAccountNm" class="form-control rqrdFld" value="<?php echo $lnkdGLAccountNm; ?>" readonly="true">
                                                     <input type="hidden" name="lnkdCgGLAccountID" id="lnkdCgGLAccountID" class="form-control" value="<?php echo $lnkdGLAccountID; ?>">
-                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Asset Accounts', '', '', '', 'radio', true, '', 'lnkdCgGLAccountID', 'lnkdCgGLAccountNm', 'clear', 0, '', function () {
+                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Asset Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'lnkdCgGLAccountID', 'lnkdCgGLAccountNm', 'clear', 0, '', function () {
                                                                 var aa112 = 1;
                                                             });"> 
                                                         <span class="glyphicon glyphicon-th-list"></span>
