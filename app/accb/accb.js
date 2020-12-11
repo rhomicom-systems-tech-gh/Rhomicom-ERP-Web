@@ -7820,96 +7820,32 @@ function enterKeyFuncAccbAstHdr(e,actionText,slctr,linkArgs) {
 }
 
 function saveAccbAstHdrForm() {
-    var accbAstHdrID =
-        typeof $("#accbAstHdrID").val() === "undefined"
-            ? "-1"
-            : $("#accbAstHdrID").val();
-    var accbAstHdrName =
-        typeof $("#accbAstHdrName").val() === "undefined"
-            ? ""
-            : $("#accbAstHdrName").val();
-    var accbAstHdrDesc =
-        typeof $("#accbAstHdrDesc").val() === "undefined"
-            ? ""
-            : $("#accbAstHdrDesc").val();
-    var accbAstHdrInvItemID =
-        typeof $("#accbAstHdrInvItemID").val() === "undefined"
-            ? "-1"
-            : $("#accbAstHdrInvItemID").val();
-    var accbAstHdrClsfctn =
-        typeof $("#accbAstHdrClsfctn").val() === "undefined"
-            ? ""
-            : $("#accbAstHdrClsfctn").val();
-    var accbAstHdrCtgry =
-        typeof $("#accbAstHdrCtgry").val() === "undefined"
-            ? ""
-            : $("#accbAstHdrCtgry").val();
-    var accbAstHdrDivGrpID =
-        typeof $("#accbAstHdrDivGrpID").val() === "undefined"
-            ? "-1"
-            : $("#accbAstHdrDivGrpID").val();
+    var accbAstHdrID = typeof $("#accbAstHdrID").val() === "undefined" ? "-1" : $("#accbAstHdrID").val();
+    var accbAstHdrName = typeof $("#accbAstHdrName").val() === "undefined" ? "" : $("#accbAstHdrName").val();
+    var accbAstHdrDesc = typeof $("#accbAstHdrDesc").val() === "undefined" ? "" : $("#accbAstHdrDesc").val();
+    var accbAstHdrInvItemID = typeof $("#accbAstHdrInvItemID").val() === "undefined" ? "-1" : $("#accbAstHdrInvItemID").val();
+    var accbAstHdrClsfctn = typeof $("#accbAstHdrClsfctn").val() === "undefined" ? "" : $("#accbAstHdrClsfctn").val();
+    var accbAstHdrCtgry = typeof $("#accbAstHdrCtgry").val() === "undefined" ? "" : $("#accbAstHdrCtgry").val();
+    var accbAstHdrDivGrpID = typeof $("#accbAstHdrDivGrpID").val() === "undefined" ? "-1" : $("#accbAstHdrDivGrpID").val();
 
-    var accbAstHdrSiteID =
-        typeof $("#accbAstHdrSiteID").val() === "undefined"
-            ? "-1"
-            : $("#accbAstHdrSiteID").val();
-    var accbAstHdrBuildLoc =
-        typeof $("#accbAstHdrBuildLoc").val() === "undefined"
-            ? ""
-            : $("#accbAstHdrBuildLoc").val();
-    var accbAstHdrRoomNum =
-        typeof $("#accbAstHdrRoomNum").val() === "undefined"
-            ? ""
-            : $("#accbAstHdrRoomNum").val();
-    var accbAstHdrPrsnID =
-        typeof $("#accbAstHdrPrsnID").val() === "undefined"
-            ? "-1"
-            : $("#accbAstHdrPrsnID").val();
-    var accbAstHdrTagNum =
-        typeof $("#accbAstHdrTagNum").val() === "undefined"
-            ? ""
-            : $("#accbAstHdrTagNum").val();
-    var accbAstHdrSerialNum =
-        typeof $("#accbAstHdrSerialNum").val() === "undefined"
-            ? ""
-            : $("#accbAstHdrSerialNum").val();
-    var accbAstHdrBarCode =
-        typeof $("#accbAstHdrBarCode").val() === "undefined"
-            ? ""
-            : $("#accbAstHdrBarCode").val();
-    var accbAstHdrStrtDte =
-        typeof $("#accbAstHdrStrtDte").val() === "undefined"
-            ? ""
-            : $("#accbAstHdrStrtDte").val();
-    var accbAstHdrEndDte =
-        typeof $("#accbAstHdrEndDte").val() === "undefined"
-            ? ""
-            : $("#accbAstHdrEndDte").val();
-    var accbAstHdrAstAcntID =
-        typeof $("#accbAstHdrAstAcntID").val() === "undefined"
-            ? "-1"
-            : $("#accbAstHdrAstAcntID").val();
-    var accbAstHdrDprcAcntID =
-        typeof $("#accbAstHdrDprcAcntID").val() === "undefined"
-            ? "-1"
-            : $("#accbAstHdrDprcAcntID").val();
-    var accbAstHdrExpnsAcntID =
-        typeof $("#accbAstHdrExpnsAcntID").val() === "undefined"
-            ? "-1"
-            : $("#accbAstHdrExpnsAcntID").val();
-    var accbAstHdrSlvgValue =
-        typeof $("#accbAstHdrSlvgValue").val() === "undefined"
-            ? "0"
-            : $("#accbAstHdrSlvgValue").val();
-    var accbAstHdrSQLFrmlr =
-        typeof $("#accbAstHdrSQLFrmlr").val() === "undefined"
-            ? "0"
-            : $("#accbAstHdrSQLFrmlr").val();
+    var accbAstHdrSiteID = typeof $("#accbAstHdrSiteID").val() === "undefined" ? "-1" : $("#accbAstHdrSiteID").val();
+    var accbAstHdrBuildLoc = typeof $("#accbAstHdrBuildLoc").val() === "undefined" ? "" : $("#accbAstHdrBuildLoc").val();
+    var accbAstHdrRoomNum = typeof $("#accbAstHdrRoomNum").val() === "undefined" ? "" : $("#accbAstHdrRoomNum").val();
+    var accbAstHdrPrsnID = typeof $("#accbAstHdrPrsnID").val() === "undefined" ? "-1" : $("#accbAstHdrPrsnID").val();
+    var accbAstHdrTagNum = typeof $("#accbAstHdrTagNum").val() === "undefined" ? "" : $("#accbAstHdrTagNum").val();
+    var accbAstHdrSerialNum = typeof $("#accbAstHdrSerialNum").val() === "undefined" ? "" : $("#accbAstHdrSerialNum").val();
+    var accbAstHdrBarCode = typeof $("#accbAstHdrBarCode").val() === "undefined" ? "" : $("#accbAstHdrBarCode").val();
+    var accbAstHdrStrtDte = typeof $("#accbAstHdrStrtDte").val() === "undefined" ? "" : $("#accbAstHdrStrtDte").val();
+    var accbAstHdrEndDte = typeof $("#accbAstHdrEndDte").val() === "undefined" ? "" : $("#accbAstHdrEndDte").val();
+    var accbAstHdrAstAcntID = typeof $("#accbAstHdrAstAcntID").val() === "undefined" ? "-1" : $("#accbAstHdrAstAcntID").val();
+    var accbAstHdrDprcAcntID = typeof $("#accbAstHdrDprcAcntID").val() === "undefined" ? "-1" : $("#accbAstHdrDprcAcntID").val();
+    var accbAstHdrExpnsAcntID = typeof $("#accbAstHdrExpnsAcntID").val() === "undefined" ? "-1" : $("#accbAstHdrExpnsAcntID").val();
+    var accbAstHdrRvnuAcntID = typeof $("#accbAstHdrRvnuAcntID").val() === "undefined" ? "-1" : $("#accbAstHdrRvnuAcntID").val();
+    var accbAstHdrMntncsAcntID = typeof $("#accbAstHdrMntncsAcntID").val() === "undefined" ? "-1" : $("#accbAstHdrMntncsAcntID").val();
+    var accbAstHdrSlvgValue = typeof $("#accbAstHdrSlvgValue").val() === "undefined" ? "0" : $("#accbAstHdrSlvgValue").val();
+    var accbAstHdrSQLFrmlr = typeof $("#accbAstHdrSQLFrmlr").val() === "undefined" ? "0" : $("#accbAstHdrSQLFrmlr").val();
 
-    var accbAstHdrAutoDprctn =
-        typeof $("input[name='accbAstHdrAutoDprctn']:checked").val() === "undefined"
-            ? "NO"
-            : $("input[name='accbAstHdrAutoDprctn']:checked").val();
+    var accbAstHdrAutoDprctn = typeof $("input[name='accbAstHdrAutoDprctn']:checked").val() === "undefined" ? "NO" : $("input[name='accbAstHdrAutoDprctn']:checked").val();
     var errMsg = "";
     if (accbAstHdrName.trim() === "" || accbAstHdrDesc.trim() === "") {
         errMsg +=
@@ -7946,7 +7882,9 @@ function saveAccbAstHdrForm() {
     if (
         Number(accbAstHdrAstAcntID.replace(/[^-?0-9\.]/g,"")) <= 0 ||
         Number(accbAstHdrDprcAcntID.replace(/[^-?0-9\.]/g,"")) <= 0 ||
-        Number(accbAstHdrExpnsAcntID.replace(/[^-?0-9\.]/g,"")) <= 0
+        Number(accbAstHdrExpnsAcntID.replace(/[^-?0-9\.]/g,"")) <= 0 ||
+        Number(accbAstHdrRvnuAcntID.replace(/[^-?0-9\.]/g,"")) <= 0 ||
+        Number(accbAstHdrMntncsAcntID.replace(/[^-?0-9\.]/g,"")) <= 0
     ) {
         errMsg +=
             '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
@@ -8120,6 +8058,10 @@ function saveAccbAstHdrForm() {
     formData.append("accbAstHdrAstAcntID",accbAstHdrAstAcntID);
     formData.append("accbAstHdrDprcAcntID",accbAstHdrDprcAcntID);
     formData.append("accbAstHdrExpnsAcntID",accbAstHdrExpnsAcntID);
+
+    formData.append("accbAstHdrRvnuAcntID",accbAstHdrRvnuAcntID);
+    formData.append("accbAstHdrMntncsAcntID",accbAstHdrMntncsAcntID);
+
     formData.append("accbAstHdrSlvgValue",accbAstHdrSlvgValue);
     formData.append("accbAstHdrSQLFrmlr",accbAstHdrSQLFrmlr);
     formData.append("accbAstHdrAutoDprctn",accbAstHdrAutoDprctn);
@@ -8370,6 +8312,7 @@ function getOneAccbAssetTransForm(pKeyID,sbmtdAssetID,actionTxt) {
                 getAccbAstHdr("clear","#assetDetlsTrans","grp=6&typ=1&pg=9&vtyp=2");
                 $(e.currentTarget).unbind();
             });
+            autoSlctAsstAcnt();
         }
     );
 }
@@ -8697,6 +8640,100 @@ function delAccbAssetTrans(rowIDAttrb) {
             }
         },
     });
+}
+
+function autoSlctAsstAcnt() {
+    var sbmtdAssetID = typeof $("#sbmtdAssetID").val() === "undefined" ? "-1" : $("#sbmtdAssetID").val();
+    var sbmtdAssetTransID = typeof $("#sbmtdAssetTransID").val() === "undefined" ? "-1" : $("#sbmtdAssetTransID").val();
+    var astTrnsType = typeof $("#astTrnsType").val() === "undefined" ? "" : $("#astTrnsType").val();
+    var astTrnsAccountID1 = typeof $("#astTrnsAccountID1").val() === "undefined" ? "-1" : $("#astTrnsAccountID1").val();
+    var astTrnsAccountID2 = typeof $("#astTrnsAccountID2").val() === "undefined" ? "-1" : $("#astTrnsAccountID2").val();
+    if (Number(sbmtdAssetTransID.replace(/[^-?0-9\.]/g,'')) <= 0
+        || Number(astTrnsAccountID1.replace(/[^-?0-9\.]/g,'')) <= 0
+        || Number(astTrnsAccountID2.replace(/[^-?0-9\.]/g,'')) <= 0) {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
+            $body = $("body");
+            $body.removeClass("mdlloadingDiag");
+            $body.removeClass("mdlloading");
+            var obj;
+            var formData = new FormData();
+            formData.append('grp',6);
+            formData.append('typ',1);
+            formData.append('pg',9);
+            formData.append('q','VIEW');
+            formData.append('vtyp',202);
+            formData.append('sbmtdAssetID',sbmtdAssetID);
+            formData.append('sbmtdAssetTransID',sbmtdAssetTransID);
+            formData.append('astTrnsType',astTrnsType);
+            $.ajax({
+                url: 'index.php',
+                method: 'POST',
+                data: formData,
+                async: true,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data.message.indexOf("Success") !== -1) {
+                        if (astTrnsType == '1Initial Value') {
+                            $("#astTrnsIncrsDcrs1").val("Increase");
+                            $("#astTrnsAccountID1").val(data.AssetAcntID);
+                            $("#astTrnsAccountNm1").val(data.AssetAcntNm);
+                            $("#astTrnsIncrsDcrs2").val("Decrease");
+                            $("#astTrnsAccountID2").val(data.BlcngAcntID);
+                            $("#astTrnsAccountNm2").val(data.BlcngAcntNm); IsDprctnContra
+                        } else if (astTrnsType == '2Depreciate Asset' || astTrnsType == '4Retire Asset') {
+                            if (data.IsDprctnContra == "1") {
+                                $("#astTrnsIncrsDcrs1").val("Increase");
+                            } else {
+                                $("#astTrnsIncrsDcrs1").val("Decrease");
+                            }
+                            $("#astTrnsAccountID1").val(data.DprctnAcntID);
+                            $("#astTrnsAccountNm1").val(data.DprctnAcntNm);
+                            $("#astTrnsIncrsDcrs2").val("Increase");
+                            $("#astTrnsAccountID2").val(data.DprctnExpnsAcntID);
+                            $("#astTrnsAccountNm2").val(data.DprctnExpnsAcntNm);
+                            if (astTrnsType == '4Retire Asset') {
+                                $("#astTrnsAmount").val(data.NetBookValue);
+                            }
+                        } else if (astTrnsType == '3Appreciate Asset') {
+                            if (data.IsDprctnContra == "1") {
+                                $("#astTrnsIncrsDcrs1").val("Decrease");
+                            } else {
+                                $("#astTrnsIncrsDcrs1").val("Increase");
+                            }
+                            $("#astTrnsAccountID1").val(data.DprctnAcntID);
+                            $("#astTrnsAccountNm1").val(data.DprctnAcntNm);
+                            $("#astTrnsIncrsDcrs2").val("Increase");
+                            $("#astTrnsAccountID2").val(data.RvnuAcntID);
+                            $("#astTrnsAccountNm2").val(data.RvnuAcntNm);
+                        } else if (astTrnsType == '5Sale of Asset') {
+                            $("#astTrnsIncrsDcrs1").val("Increase");
+                            $("#astTrnsAccountID1").val(data.RvnuAcntID);
+                            $("#astTrnsAccountNm1").val(data.RvnuAcntNm);
+                            $("#astTrnsIncrsDcrs2").val("Increase");
+                            $("#astTrnsAccountID2").val(data.BlcngAcntID);
+                            $("#astTrnsAccountNm2").val(data.BlcngAcntNm);
+                        } else if (astTrnsType == '6Maintenance of Asset') {
+                            $("#astTrnsIncrsDcrs1").val("Increase");
+                            $("#astTrnsAccountID1").val(data.MntncAcntID);
+                            $("#astTrnsAccountNm1").val(data.MntncAcntNm);
+                            $("#astTrnsIncrsDcrs2").val("Decrease");
+                            $("#astTrnsAccountID2").val(data.BlcngAcntID);
+                            $("#astTrnsAccountNm2").val(data.BlcngAcntNm);
+                        }
+                        /* Accounts Needed: 
+                            1. Maintenance Expense Account 
+                            2. Asset Sale Revenue Account
+                        */
+                    }
+                },
+                error: function (jqXHR,textStatus,errorThrown) {
+                    console.warn(jqXHR.responseText);
+                }
+            });
+        });
+    }
 }
 
 function getAccbAstPmRec(actionText,slctr,linkArgs,accbAssetID) {
@@ -16730,7 +16767,7 @@ function importAccntChart() {
                                                 alert("File is not readable");
                                                 break;
                                             case evt.target.error.ABORT_ERR:
-                                                break; 
+                                                break;
                                             default:
                                                 alert("An error occurred reading this file.");
                                         }
@@ -17405,7 +17442,7 @@ function importAccntDetTrns(sbmtdJrnlBatchID) {
                                                 alert("File is not readable");
                                                 break;
                                             case evt.target.error.ABORT_ERR:
-                                                break; 
+                                                break;
                                             default:
                                                 alert("An error occurred reading this file.");
                                         }
@@ -17968,7 +18005,7 @@ function importAccntEditTrns(sbmtdJrnlBatchID) {
                                                 alert("File is not readable");
                                                 break;
                                             case evt.target.error.ABORT_ERR:
-                                                break; 
+                                                break;
                                             default:
                                                 alert("An error occurred reading this file.");
                                         }
@@ -18551,7 +18588,7 @@ function importAccntSmmryTrns(sbmtdJrnlBatchID) {
                                                 alert("File is not readable");
                                                 break;
                                             case evt.target.error.ABORT_ERR:
-                                                break; 
+                                                break;
                                             default:
                                                 alert("An error occurred reading this file.");
                                         }
@@ -19159,7 +19196,7 @@ function importAccntBdgts() {
                                                 alert("File is not readable");
                                                 break;
                                             case evt.target.error.ABORT_ERR:
-                                                break; 
+                                                break;
                                             default:
                                                 alert("An error occurred reading this file.");
                                         }
@@ -19541,10 +19578,10 @@ function exprtAssetRgstr() {
     var exprtMsg =
         '<form role="form">' +
         '<p style="color:#000;">' +
-        "How many Accounts will you like to Export?" +
-        "<br/>1=No Accounts(Empty Template)" +
-        "<br/>2=All Accounts" +
-        "<br/>3-Infinity=Specify the exact number of Accounts to Export<br/>" +
+        "How many Assets will you like to Export?" +
+        "<br/>1=No Assets(Empty Template)" +
+        "<br/>2=All Assets" +
+        "<br/>3-Infinity=Specify the exact number of Assets to Export<br/>" +
         "</p>" +
         '<div class="form-group" style="margin-bottom:10px !important;">' +
         '<div class="input-group">' +
@@ -19560,7 +19597,7 @@ function exprtAssetRgstr() {
     BootstrapDialog.show({
         size: BootstrapDialog.SIZE_SMALL,
         type: BootstrapDialog.TYPE_DEFAULT,
-        title: "Export Accounts!",
+        title: "Export Assets!",
         message: exprtMsg,
         animate: true,
         closable: true,
@@ -19593,7 +19630,7 @@ function exprtAssetRgstr() {
                     var inptNum = $("#recsToExprt").val();
                     if (!isNumber(inptNum)) {
                         var dialog = bootbox.alert({
-                            title: "Exporting Accounts",
+                            title: "Exporting Assets",
                             size: "small",
                             message: "Please provide a valid Number!",
                             callback: function () { },
@@ -19615,9 +19652,9 @@ function exprtAssetRgstr() {
                                 data: {
                                     grp: 6,
                                     typ: 1,
-                                    pg: 1,
+                                    pg: 9,
                                     q: "UPDATE",
-                                    actyp: 3,
+                                    actyp: 903,
                                     inptNum: inptNum,
                                 },
                             });
@@ -19637,9 +19674,9 @@ function rfrshAssetRgstrPrcs() {
         data: {
             grp: 6,
             typ: 1,
-            pg: 1,
+            pg: 9,
             q: "UPDATE",
-            actyp: 4,
+            actyp: 904,
         },
         success: function (data) {
             if (data.percent >= 100) {
@@ -19679,10 +19716,10 @@ function importAssetRgstr() {
     var dataToSend = "";
     var isFileValid = true;
     var dialog1 = bootbox.confirm({
-        title: "Import Accounts?",
+        title: "Import Assets?",
         size: "small",
         message:
-            '<p style="text-align:center;">Are you sure you want to <span style="color:green;font-weight:bold;font-style:italic;">IMPORT ACCOUNTS</span> to overwrite existing ones?<br/>Action cannot be Undone!</p>',
+            '<p style="text-align:center;">Are you sure you want to <span style="color:green;font-weight:bold;font-style:italic;">IMPORT ASSETS</span> to overwrite existing ones?<br/>Action cannot be Undone!</p>',
         buttons: {
             confirm: {
                 label: '<i class="fa fa-check"></i> Yes',
@@ -19744,7 +19781,7 @@ function importAssetRgstr() {
                                                 alert("File is not readable");
                                                 break;
                                             case evt.target.error.ABORT_ERR:
-                                                break; 
+                                                break;
                                             default:
                                                 alert("An error occurred reading this file.");
                                         }
@@ -19789,7 +19826,7 @@ function importAssetRgstr() {
                                         var elem = document.getElementById("myBar");
                                         elem.style.width = "1%";
                                         $("#myInformation").html(
-                                            '<span style="color:green;"><i class="fa fa-spin fa-spinner"></i>1% Started Importing Accounts...Please Wait...</span>'
+                                            '<span style="color:green;"><i class="fa fa-spin fa-spinner"></i>1% Started Importing Assets...Please Wait...</span>'
                                         );
                                     };
                                     reader.onload = function (event) {
@@ -19799,113 +19836,142 @@ function importAssetRgstr() {
                                             var rwCntr = 0;
                                             var colCntr = 0;
                                             var vldRwCntr = 0;
-                                            var accntnumber = "";
-                                            var accntName = "";
-                                            var accntDesc = "";
-                                            var accntType = "";
-                                            var prntAccntName = "";
-                                            var isParentAccnt = "";
-                                            var isRetErngAccnt = "";
-                                            var isNetIncmAccnt = "";
-                                            var isContraAccnt = "";
-                                            var reportLineNo = "";
-                                            var hasSubledgers = "";
-                                            var cntrlAccntName = "";
-                                            var accntCrncyCode = "";
-                                            var isSuspenseAccnt = "";
-                                            var accntClsfctn = "";
-                                            var sgmnt1Value = "";
-                                            var sgmnt2Value = "";
-                                            var sgmnt3Value = "";
-                                            var sgmnt4Value = "";
-                                            var sgmnt5Value = "";
-                                            var sgmnt6Value = "";
-                                            var sgmnt7Value = "";
-                                            var sgmnt8Value = "";
-                                            var sgmnt9Value = "";
-                                            var sgmnt10Value = "";
-                                            var mappedGrpAccntNum = "";
+                                            var assetnumber = "";
+                                            var assetDesc = "";
+                                            var assetClsfctn = "";
+                                            var assetCtgry = "";
+                                            var assetTagNo = "";
+                                            var assetSerialNo = "";
+                                            var assetBarCodeNo = "";
+                                            var assetDivGrp = "";
+                                            var assetSiteBrnch = "";
+                                            var assetBuildng = "";
+                                            var assetFloorNum = "";
+                                            var assetPrsnLocID = "";
+                                            var assetLnkdInvCode = "";
+                                            var assetAcntNum = "";
+                                            var assetAprtnDepNum = "";
+                                            var assetExpnsAcntNum = "";
+                                            var assetRvnuAcntNum = "";
+                                            var assetMntncAcntNum = "";
+                                            var assetStrtDte = "";
+                                            var assetEndDte = "";
+                                            var assetSalvageVal = "";
+                                            var assetAutoDep = "";
+                                            var assetSQLFrmlr = "";
+                                            var assetTransType = "";
+                                            var assetTransDesc = "";
+                                            var assetTransAmnt = "";
+                                            var assetCurCode = "";
+                                            var assetIncrsDcrs1 = "";
+                                            var assetCostAcntNum = "";
+                                            var assetIncrsDcrs2 = "";
+                                            var assetBalsAcntNum = "";
+                                            var assetTransDte = "";
+                                            var assetExchRate = "";
+
                                             for (var row in data) {
                                                 for (var item in data[row]) {
                                                     colCntr++;
                                                     switch (colCntr) {
                                                         case 1:
-                                                            accntnumber = data[row][item];
+                                                            assetnumber = data[row][item];
                                                             break;
                                                         case 2:
-                                                            accntName = data[row][item];
+                                                            assetDesc = data[row][item];
                                                             break;
                                                         case 3:
-                                                            accntDesc = data[row][item];
+                                                            assetClsfctn = data[row][item];
                                                             break;
                                                         case 4:
-                                                            accntType = data[row][item];
+                                                            assetCtgry = data[row][item];
                                                             break;
                                                         case 5:
-                                                            prntAccntName = data[row][item];
+                                                            assetTagNo = data[row][item];
                                                             break;
                                                         case 6:
-                                                            isParentAccnt = data[row][item];
+                                                            assetSerialNo = data[row][item];
                                                             break;
                                                         case 7:
-                                                            isRetErngAccnt = data[row][item];
+                                                            assetBarCodeNo = data[row][item];
                                                             break;
                                                         case 8:
-                                                            isNetIncmAccnt = data[row][item];
+                                                            assetDivGrp = data[row][item];
                                                             break;
                                                         case 9:
-                                                            isContraAccnt = data[row][item];
+                                                            assetSiteBrnch = data[row][item];
                                                             break;
                                                         case 10:
-                                                            reportLineNo = data[row][item];
+                                                            assetBuildng = data[row][item];
                                                             break;
                                                         case 11:
-                                                            hasSubledgers = data[row][item];
+                                                            assetFloorNum = data[row][item];
                                                             break;
                                                         case 12:
-                                                            cntrlAccntName = data[row][item];
+                                                            assetPrsnLocID = data[row][item];
                                                             break;
                                                         case 13:
-                                                            accntCrncyCode = data[row][item];
+                                                            assetLnkdInvCode = data[row][item];
                                                             break;
                                                         case 14:
-                                                            isSuspenseAccnt = data[row][item];
+                                                            assetAcntNum = data[row][item];
                                                             break;
                                                         case 15:
-                                                            accntClsfctn = data[row][item];
+                                                            assetAprtnDepNum = data[row][item];
                                                             break;
                                                         case 16:
-                                                            sgmnt1Value = data[row][item];
+                                                            assetExpnsAcntNum = data[row][item];
                                                             break;
                                                         case 17:
-                                                            sgmnt2Value = data[row][item];
+                                                            assetRvnuAcntNum = data[row][item];
                                                             break;
                                                         case 18:
-                                                            sgmnt3Value = data[row][item];
+                                                            assetMntncAcntNum = data[row][item];
                                                             break;
                                                         case 19:
-                                                            sgmnt4Value = data[row][item];
+                                                            assetStrtDte = data[row][item];
                                                             break;
                                                         case 20:
-                                                            sgmnt5Value = data[row][item];
+                                                            assetEndDte = data[row][item];
                                                             break;
                                                         case 21:
-                                                            sgmnt6Value = data[row][item];
+                                                            assetSalvageVal = data[row][item];
                                                             break;
                                                         case 22:
-                                                            sgmnt7Value = data[row][item];
+                                                            assetAutoDep = data[row][item];
                                                             break;
                                                         case 23:
-                                                            sgmnt8Value = data[row][item];
+                                                            assetSQLFrmlr = data[row][item];
                                                             break;
                                                         case 24:
-                                                            sgmnt9Value = data[row][item];
+                                                            assetTransType = data[row][item];
                                                             break;
                                                         case 25:
-                                                            sgmnt10Value = data[row][item];
+                                                            assetTransDesc = data[row][item];
                                                             break;
                                                         case 26:
-                                                            mappedGrpAccntNum = data[row][item];
+                                                            assetTransAmnt = data[row][item];
+                                                            break;
+                                                        case 27:
+                                                            assetCurCode = data[row][item];
+                                                            break;
+                                                        case 28:
+                                                            assetIncrsDcrs1 = data[row][item];
+                                                            break;
+                                                        case 29:
+                                                            assetCostAcntNum = data[row][item];
+                                                            break;
+                                                        case 30:
+                                                            assetIncrsDcrs2 = data[row][item];
+                                                            break;
+                                                        case 31:
+                                                            assetBalsAcntNum = data[row][item];
+                                                            break;
+                                                        case 32:
+                                                            assetTransDte = data[row][item];
+                                                            break;
+                                                        case 33:
+                                                            assetExchRate = data[row][item];
                                                             break;
                                                         default:
                                                             var dialog = bootbox.alert({
@@ -19922,19 +19988,19 @@ function importAssetRgstr() {
                                                 }
                                                 if (rwCntr === 0) {
                                                     if (
-                                                        accntnumber.toUpperCase() ===
-                                                        "Account Number**".toUpperCase() &&
-                                                        accntName.toUpperCase() ===
-                                                        "Account Name**".toUpperCase() &&
-                                                        accntType.toUpperCase() ===
-                                                        "Account Type**".toUpperCase() &&
-                                                        mappedGrpAccntNum.toUpperCase() ===
-                                                        "Mapped Group Org Account No.".toUpperCase()
+                                                        assetnumber.toUpperCase() ===
+                                                        "Asset Number/Code**".toUpperCase() &&
+                                                        assetDesc.toUpperCase() ===
+                                                        "Asset Description**".toUpperCase() &&
+                                                        assetTagNo.toUpperCase() ===
+                                                        "Tag Number*".toUpperCase() &&
+                                                        assetSQLFrmlr.toUpperCase() ===
+                                                        "SQL Formula**".toUpperCase()
                                                     ) {
                                                         /*alert(number.toUpperCase() + "|" + processName.toUpperCase() + "|" + isEnbld.toUpperCase());*/
                                                     } else {
                                                         var dialog = bootbox.alert({
-                                                            title: "Error-Import Accounts",
+                                                            title: "Error-Import Assets",
                                                             size: "small",
                                                             message:
                                                                 '<span style="color:red;font-weight:bold:">Invalid File Selected!</span>',
@@ -19946,114 +20012,142 @@ function importAssetRgstr() {
                                                     }
                                                 }
                                                 if (
-                                                    accntnumber.trim() !== "" &&
-                                                    accntName.trim() !== "" &&
-                                                    accntType.trim() !== "" &&
-                                                    accntCrncyCode.trim() !== ""
+                                                    assetnumber.trim() !== "" &&
+                                                    assetDesc.trim() !== "" &&
+                                                    assetClsfctn.trim() !== "" &&
+                                                    assetCtgry.trim() !== ""
                                                 ) {
                                                     dataToSend =
                                                         dataToSend +
-                                                        accntnumber
+                                                        assetnumber
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        accntName
+                                                        assetDesc
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        accntDesc
+                                                        assetClsfctn
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        accntType
+                                                        assetCtgry
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        prntAccntName
+                                                        assetTagNo
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        isParentAccnt
+                                                        assetSerialNo
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        isRetErngAccnt
+                                                        assetBarCodeNo
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        isNetIncmAccnt
+                                                        assetDivGrp
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        isContraAccnt
+                                                        assetSiteBrnch
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        reportLineNo
+                                                        assetBuildng
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        hasSubledgers
+                                                        assetFloorNum
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        cntrlAccntName
+                                                        assetPrsnLocID
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        accntCrncyCode
+                                                        assetLnkdInvCode
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        isSuspenseAccnt
+                                                        assetAcntNum
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        accntClsfctn
+                                                        assetAprtnDepNum
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        sgmnt1Value
+                                                        assetExpnsAcntNum
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        sgmnt2Value
+                                                        assetRvnuAcntNum
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        sgmnt3Value
+                                                        assetMntncAcntNum
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        sgmnt4Value
+                                                        assetStrtDte
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        sgmnt5Value
+                                                        assetEndDte
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        sgmnt6Value
+                                                        assetSalvageVal
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        sgmnt7Value
+                                                        assetAutoDep
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        sgmnt8Value
+                                                        assetSQLFrmlr
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        sgmnt9Value
+                                                        assetTransType
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        sgmnt10Value
+                                                        assetTransDesc
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "~" +
-                                                        mappedGrpAccntNum
+                                                        assetTransAmnt
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        assetCurCode
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        assetIncrsDcrs1
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        assetCostAcntNum
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        assetIncrsDcrs2
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        assetBalsAcntNum
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        assetTransDte
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        assetExchRate
                                                             .replace(/(~)/g,"{-;-;}")
                                                             .replace(/(\|)/g,"{:;:;}") +
                                                         "|";
@@ -20069,7 +20163,7 @@ function importAssetRgstr() {
                                             $("#fileInformation").html(output);
                                         } catch (err) {
                                             var dialog = bootbox.alert({
-                                                title: "Error-Import Accounts",
+                                                title: "Error-Import Assets",
                                                 size: "small",
                                                 message: "Error:" + err.message,
                                                 callback: function () {
@@ -20104,7 +20198,7 @@ function importAssetRgstr() {
                                             saveAssetRgstrExcl(dataToSend);
                                         } else {
                                             var dialog = bootbox.alert({
-                                                title: "Error-Import Accounts",
+                                                title: "Error-Import Assets",
                                                 size: "small",
                                                 message:
                                                     '<span style="color:red;font-weight:bold:">Invalid File Selected!</span>',
@@ -20135,14 +20229,14 @@ function saveAssetRgstrExcl(dataToSend) {
         return false;
     }
     var dialog = bootbox.alert({
-        title: "Importing Accounts",
+        title: "Importing Assets",
         size: "small",
         message:
-            '<div id="myProgress1"><div id="myBar1"></div></div><div id="myInformation1"><i class="fa fa-spin fa-spinner"></i> Importing Accounts...Please Wait...</div>',
+            '<div id="myProgress1"><div id="myBar1"></div></div><div id="myInformation1"><i class="fa fa-spin fa-spinner"></i> Importing Assets...Please Wait...</div>',
         callback: function () {
             clearInterval(prgstimerid2);
             window.clearInterval(prgstimerid2);
-            getAccbAcntChrt("clear","#allmodules","grp=6&typ=1&pg=1&vtyp=0");
+            getAccbAssets("clear","#allmodules","grp=6&typ=1&pg=9&vtyp=0");
             ClearAllIntervals();
         },
     });
@@ -20156,9 +20250,9 @@ function saveAssetRgstrExcl(dataToSend) {
                 data: {
                     grp: 6,
                     typ: 1,
-                    pg: 1,
+                    pg: 9,
                     q: "UPDATE",
-                    actyp: 101,
+                    actyp: 901,
                     dataToSend: dataToSend,
                 },
             });
@@ -20174,9 +20268,9 @@ function rfrshSaveAssetRgstr() {
         data: {
             grp: 6,
             typ: 1,
-            pg: 1,
+            pg: 9,
             q: "UPDATE",
-            actyp: 102,
+            actyp: 902,
         },
         success: function (data) {
             var elem = document.getElementById("myBar1");
@@ -20194,28 +20288,14 @@ function rfrshSaveAssetRgstr() {
         },
     });
 }
+
 /*Investment Transactions - Fund Management*/
 function getPayInvstTrans(actionText,slctr,linkArgs) {
-    var srchFor =
-        typeof $("#payInvstTransSrchFor").val() === "undefined"
-            ? "%"
-            : $("#payInvstTransSrchFor").val();
-    var srchIn =
-        typeof $("#payInvstTransSrchIn").val() === "undefined"
-            ? "Both"
-            : $("#payInvstTransSrchIn").val();
-    var pageNo =
-        typeof $("#payInvstTransPageNo").val() === "undefined"
-            ? 1
-            : $("#payInvstTransPageNo").val();
-    var limitSze =
-        typeof $("#payInvstTransDsplySze").val() === "undefined"
-            ? 10
-            : $("#payInvstTransDsplySze").val();
-    var sortBy =
-        typeof $("#payInvstTransSortBy").val() === "undefined"
-            ? ""
-            : $("#payInvstTransSortBy").val();
+    var srchFor = typeof $("#payInvstTransSrchFor").val() === "undefined" ? "%" : $("#payInvstTransSrchFor").val();
+    var srchIn = typeof $("#payInvstTransSrchIn").val() === "undefined" ? "Both" : $("#payInvstTransSrchIn").val();
+    var pageNo = typeof $("#payInvstTransPageNo").val() === "undefined" ? 1 : $("#payInvstTransPageNo").val();
+    var limitSze = typeof $("#payInvstTransDsplySze").val() === "undefined" ? 10 : $("#payInvstTransDsplySze").val();
+    var sortBy = typeof $("#payInvstTransSortBy").val() === "undefined" ? "" : $("#payInvstTransSortBy").val();
     var qShwUsrOnly = $("#payInvstTransShwUsrOnly:checked").length > 0;
     var qShwUnpstdOnly = $("#payInvstTransShwUnpstdOnly:checked").length > 0;
     if (actionText == "clear") {

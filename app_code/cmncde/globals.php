@@ -1,7 +1,6 @@
 <?php
+$rhoFutureDateDMYHMS = "31-DEC-4000 23:59:59";
 
-//require_once 'phpwkhtmltopdf/vendor/autoload.php';
-//use mikehaertl\wkhtmlto\Pdf;
 function getStrPlural($inputStr)
 {
     $rturnStr = $inputStr . "s";
