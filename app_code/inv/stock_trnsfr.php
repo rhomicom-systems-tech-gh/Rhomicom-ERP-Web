@@ -30,7 +30,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     restricted();
                 }
             } else if ($actyp == 5) {
-                
+                /* Delete Doc Attachment Line */
+                $pKeyID = isset($_POST['attchmentID']) ? cleanInputData($_POST['attchmentID']) : -1;
+                $pKeyNm = isset($_POST['docTrnsNum']) ? cleanInputData($_POST['docTrnsNum']) : "";
+                if ($canDel) {
+                    echo deleteCnsgnRcptDoc($pKeyID, $pKeyNm);
+                } else {
+                    restricted();
+                }
             }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {
@@ -87,12 +94,28 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     exit();
                 }
                 if ($sbmtdScmStockTrnsfrID <= 0) {
-                    createStockTrnsfrHdr($orgID, $scmStockTrnsfrDocNum, $scmStockTrnsfrDesc, $scmStockTrnsfrDfltTrnsDte, $scmStockTrnsfrSrcStoreID,
-                            $scmStockTrnsfrDestStoreID, $apprvlStatus, $scmStockTrnsfrTtlAmnt);
+                    createStockTrnsfrHdr(
+                        $orgID,
+                        $scmStockTrnsfrDocNum,
+                        $scmStockTrnsfrDesc,
+                        $scmStockTrnsfrDfltTrnsDte,
+                        $scmStockTrnsfrSrcStoreID,
+                        $scmStockTrnsfrDestStoreID,
+                        $apprvlStatus,
+                        $scmStockTrnsfrTtlAmnt
+                    );
                     $sbmtdScmStockTrnsfrID = (float) getGnrlRecID("inv.inv_stock_transfer_hdr", "rcpt_number", "transfer_hdr_id", $scmStockTrnsfrDocNum, $orgID);
                 } else if ($sbmtdScmStockTrnsfrID > 0) {
-                    updtStockTrnsfrHdr($sbmtdScmStockTrnsfrID, $scmStockTrnsfrDocNum, $scmStockTrnsfrDesc, $scmStockTrnsfrDfltTrnsDte,
-                            $scmStockTrnsfrSrcStoreID, $scmStockTrnsfrDestStoreID, $apprvlStatus, $scmStockTrnsfrTtlAmnt);
+                    updtStockTrnsfrHdr(
+                        $sbmtdScmStockTrnsfrID,
+                        $scmStockTrnsfrDocNum,
+                        $scmStockTrnsfrDesc,
+                        $scmStockTrnsfrDfltTrnsDte,
+                        $scmStockTrnsfrSrcStoreID,
+                        $scmStockTrnsfrDestStoreID,
+                        $apprvlStatus,
+                        $scmStockTrnsfrTtlAmnt
+                    );
                 }
                 $afftctd = 0;
                 $afftctd1 = 0;
@@ -121,11 +144,32 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 //Create Transfer Doc Lines
                                 if ($ln_LineDesc != "" && $ln_ItmID > 0 && $ln_QTY > 0) {
                                     if ($ln_TrnsLnID <= 0) {
-                                        $afftctd += createStockTrnsfrLine($ln_QTY, $ln_UnitPrice, "Good", $sbmtdScmStockTrnsfrID, $ln_ExtraDesc, $ln_ItmID,
-                                                $scmStockTrnsfrDestStoreID, $ln_CnsgnIDs, $ttlAmnt, $scmStockTrnsfrSrcStoreID);
+                                        $afftctd += createStockTrnsfrLine(
+                                            $ln_QTY,
+                                            $ln_UnitPrice,
+                                            "Good",
+                                            $sbmtdScmStockTrnsfrID,
+                                            $ln_ExtraDesc,
+                                            $ln_ItmID,
+                                            $scmStockTrnsfrDestStoreID,
+                                            $ln_CnsgnIDs,
+                                            $ttlAmnt,
+                                            $scmStockTrnsfrSrcStoreID
+                                        );
                                     } else {
-                                        $afftctd += updtStockTrnsfrLine($ln_TrnsLnID, $ln_QTY, $ln_UnitPrice, "Good", $sbmtdScmStockTrnsfrID, $ln_ExtraDesc,
-                                                $ln_ItmID, $scmStockTrnsfrDestStoreID, $ln_CnsgnIDs, $ttlAmnt, $scmStockTrnsfrSrcStoreID);
+                                        $afftctd += updtStockTrnsfrLine(
+                                            $ln_TrnsLnID,
+                                            $ln_QTY,
+                                            $ln_UnitPrice,
+                                            "Good",
+                                            $sbmtdScmStockTrnsfrID,
+                                            $ln_ExtraDesc,
+                                            $ln_ItmID,
+                                            $scmStockTrnsfrDestStoreID,
+                                            $ln_CnsgnIDs,
+                                            $ttlAmnt,
+                                            $scmStockTrnsfrSrcStoreID
+                                        );
                                     }
                                 }
                             } else {
@@ -137,8 +181,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $errMsg = "";
                 if ($exitErrMsg != "") {
                     $exitErrMsg = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>Document Successfully Saved!"
-                            . "<br/>" . $afftctd . " Transaction(s) Saved Successfully!"
-                            . "<br/><span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>" . $exitErrMsg . "</span>";
+                        . "<br/>" . $afftctd . " Transaction(s) Saved Successfully!"
+                        . "<br/><span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>" . $exitErrMsg . "</span>";
                 } else {
                     $exitErrMsg = "";
                     if ($shdSbmt == 2) {
@@ -152,7 +196,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                           updtRcvblsDocApprvl($sbmtdAccbRcvblsInvcID, "Approved", "Cancel"); */
                     } else {
                         $exitErrMsg .= "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>Document Successfully Saved!"
-                                . "<br/>" . $afftctd . " Document Transaction(s) Saved Successfully!";
+                            . "<br/>" . $afftctd . " Document Transaction(s) Saved Successfully!";
                     }
                 }
                 $arr_content['percent'] = 100;
@@ -178,8 +222,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 if ($attchmentID > 0) {
                     uploadDaStockTrnsfrDoc($attchmentID, $nwImgLoc, $errMsg);
                 } else {
-                    $attchmentID = getNewStockTrnsfrDocID();
-                    createStockTrnsfrDoc($attchmentID, $pkID, $docCtrgrName, "");
+                    $attchmentID = getNewCnsgnRcptDocID();
+                    createCnsgnRcptDoc($attchmentID, $pkID, "TRANSFER", $docCtrgrName, "");
                     uploadDaStockTrnsfrDoc($attchmentID, $nwImgLoc, $errMsg);
                 }
                 $arr_content['attchID'] = $attchmentID;
@@ -282,11 +326,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $colClassType1 = "col-md-2";
                     $colClassType2 = "col-md-5";
                     $colClassType3 = "col-md-5";
-                    ?> 
+?>
                     <form id='scmStockTrnsfrForm' action='' method='post' accept-charset='UTF-8'>
                         <!--ROW ID-->
-                        <input class="form-control" id="tblRowID" type = "hidden" placeholder="ROW ID"/>                     
-                        <fieldset class=""><legend class="basic_person_lg1" style="color: #003245">STOCK TRANSFERS</legend>
+                        <input class="form-control" id="tblRowID" type="hidden" placeholder="ROW ID" />
+                        <fieldset class="">
+                            <legend class="basic_person_lg1" style="color: #003245">STOCK TRANSFERS</legend>
                             <div class="row" style="margin-bottom:0px;">
                                 <?php
                                 $colClassType1 = "col-md-2";
@@ -295,10 +340,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 ?>
                                 <div class="<?php echo $colClassType3; ?>" style="padding:0px 15px 0px 15px !important;">
                                     <div class="input-group">
-                                        <input class="form-control" id="scmStockTrnsfrSrchFor" type = "text" placeholder="Search For" value="<?php
-                                        echo trim(str_replace("%", " ", $srchFor));
-                                        ?>" onkeyup="enterKeyFuncScmStockTrnsfr(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
-                                        <input id="scmStockTrnsfrPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                                        <input class="form-control" id="scmStockTrnsfrSrchFor" type="text" placeholder="Search For" value="<?php
+                                                                                                                                            echo trim(str_replace("%", " ", $srchFor));
+                                                                                                                                            ?>" onkeyup="enterKeyFuncScmStockTrnsfr(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
+                                        <input id="scmStockTrnsfrPageNo" type="hidden" value="<?php echo $pageNo; ?>">
                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getScmStockTrnsfr('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0');">
                                             <span class="glyphicon glyphicon-remove"></span>
                                         </label>
@@ -309,18 +354,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <select data-placeholder="Select..." class="form-control chosen-select" id="scmStockTrnsfrSrchIn">
                                             <?php
                                             $valslctdArry = array("", "", "", "");
-                                            $srchInsArrys = array("Document Number", "Document Description",
-                                                "Status", "Created By");
+                                            $srchInsArrys = array(
+                                                "Document Number", "Document Description",
+                                                "Status", "Created By"
+                                            );
                                             for ($z = 0; $z < count($srchInsArrys); $z++) {
                                                 if ($srchIn == $srchInsArrys[$z]) {
                                                     $valslctdArry[$z] = "selected";
                                                 }
-                                                ?>
+                                            ?>
                                                 <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                             <?php } ?>
                                         </select>
                                         <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
-                                        <select data-placeholder="Select..." class="form-control chosen-select" id="scmStockTrnsfrDsplySze" style="min-width:70px !important;">                            
+                                        <select data-placeholder="Select..." class="form-control chosen-select" id="scmStockTrnsfrDsplySze" style="min-width:70px !important;">
                                             <?php
                                             $valslctdArry = array("", "", "", "", "", "", "", "");
                                             $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000, 1000000);
@@ -330,12 +377,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 } else {
                                                     $valslctdArry[$y] = "";
                                                 }
-                                                ?>
-                                                <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
-                                                <?php
+                                            ?>
+                                                <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>
+                                            <?php
                                             }
                                             ?>
-                                        </select> 
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="<?php echo $colClassType1; ?>">
@@ -354,50 +401,50 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </ul>
                                     </nav>
                                 </div>
-                            </div>   
-                            <div class="row " style="margin-bottom:2px;padding:2px 15px 2px 15px !important">   
+                            </div>
+                            <div class="row " style="margin-bottom:2px;padding:2px 15px 2px 15px !important">
                                 <div class="col-md-12" style="padding:2px 1px 2px 1px !important;border-top:1px solid #ddd;border-bottom:1px solid #ddd;">
-                                    <?php if ($canAdd === true) { ?>   
-                                        <div class="col-md-6" style="padding:0px 0px 0px 0px !important;">                      
+                                    <?php if ($canAdd === true) { ?>
+                                        <div class="col-md-6" style="padding:0px 0px 0px 0px !important;">
                                             <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="getOneScmStockTrnsfrForm(-1, 1, 'ShowDialog');" data-toggle="tooltip" data-placement="bottom" title="Add New Stock Transfer">
                                                 <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 NEW STOCK TRANSFER
-                                            </button> 
-                                        </div>  
+                                            </button>
+                                        </div>
                                     <?php }
                                     ?>
                                     <div class="col-md-3" style="padding:5px 1px 0px 1px !important;display:none;">
-                                        <div class = "form-check" style = "font-size: 12px !important;">
-                                            <label class = "form-check-label">
+                                        <div class="form-check" style="font-size: 12px !important;">
+                                            <label class="form-check-label">
                                                 <?php
                                                 $shwUnpaidOnlyChkd = "";
                                                 if ($qShwUnpaidOnly == true) {
                                                     $shwUnpaidOnlyChkd = "checked=\"true\"";
                                                 }
                                                 ?>
-                                                <input type="checkbox" class="form-check-input" onclick="getScmStockTrnsfr('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="scmStockTrnsfrShwUnpaidOnly" name="scmStockTrnsfrShwUnpaidOnly"  <?php echo $shwUnpaidOnlyChkd; ?>>
+                                                <input type="checkbox" class="form-check-input" onclick="getScmStockTrnsfr('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="scmStockTrnsfrShwUnpaidOnly" name="scmStockTrnsfrShwUnpaidOnly" <?php echo $shwUnpaidOnlyChkd; ?>>
                                                 Show Approved but Unpaid
                                             </label>
-                                        </div> 
+                                        </div>
                                     </div>
-                                    <div class = "col-md-3" style = "padding:5px 1px 0px 1px !important;display:none;">
-                                        <div class = "form-check" style = "font-size: 12px !important;">
-                                            <label class = "form-check-label">
+                                    <div class="col-md-3" style="padding:5px 1px 0px 1px !important;display:none;">
+                                        <div class="form-check" style="font-size: 12px !important;">
+                                            <label class="form-check-label">
                                                 <?php
                                                 $shwUnpstdOnlyChkd = "";
                                                 if ($qShwUnpstdOnly == true) {
                                                     $shwUnpstdOnlyChkd = "checked=\"true\"";
                                                 }
                                                 ?>
-                                                <input type="checkbox" class="form-check-input" onclick="getScmStockTrnsfr('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="scmStockTrnsfrShwUnpstdOnly" name="scmStockTrnsfrShwUnpstdOnly"  <?php echo $shwUnpstdOnlyChkd; ?>>
+                                                <input type="checkbox" class="form-check-input" onclick="getScmStockTrnsfr('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="scmStockTrnsfrShwUnpstdOnly" name="scmStockTrnsfrShwUnpstdOnly" <?php echo $shwUnpstdOnlyChkd; ?>>
                                                 Show Only Unposted
                                             </label>
-                                        </div>                            
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row"> 
-                                <div  class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12">
                                     <table class="table table-striped table-bordered table-responsive" id="scmStockTrnsfrHdrsTable" cellspacing="0" width="100%" style="width:100%;">
                                         <thead>
                                             <tr>
@@ -407,7 +454,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <th>Source Store</th>
                                                 <th>Destination Store</th>
                                                 <th style="max-width:115px;width:115px;">Date Transferred</th>
-                                                <th style="text-align:center;max-width:40px;width:40px;">CUR.</th>	
+                                                <th style="text-align:center;max-width:40px;width:40px;">CUR.</th>
                                                 <th style="text-align:right;min-width:120px;width:120px;">Total Amount</th>
                                                 <th style="max-width:115px;width:115px;">Transfer Status</th>
                                                 <?php if ($canDel === true) { ?>
@@ -422,13 +469,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <?php
                                             while ($row = loc_db_fetch_array($result)) {
                                                 $cntr += 1;
-                                                ?>
-                                                <tr id="scmStockTrnsfrHdrsRow_<?php echo $cntr; ?>">                                    
-                                                    <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>    
+                                            ?>
+                                                <tr id="scmStockTrnsfrHdrsRow_<?php echo $cntr; ?>">
+                                                    <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
                                                     <td class="lovtd">
-                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View/Edit Invoice" 
-                                                                onclick="getOneScmStockTrnsfrForm(<?php echo $row[0]; ?>, 1, 'ShowDialog');" style="padding:2px !important;" style="padding:2px !important;">                                                                
-                                                                    <?php if ($canAdd === true) { ?>                                
+                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View/Edit Invoice" onclick="getOneScmStockTrnsfrForm(<?php echo $row[0]; ?>, 1, 'ShowDialog');" style="padding:2px !important;" style="padding:2px !important;">
+                                                            <?php if ($canAdd === true) { ?>
                                                                 <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             <?php } else { ?>
                                                                 <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
@@ -441,8 +487,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td class="lovtd"><?php echo $row[2]; ?></td>
                                                     <td class="lovtd" style="text-align:center;font-weight: bold;color:black;"><?php echo $row[4]; ?></td>
                                                     <td class="lovtd" style="text-align:right;font-weight: bold;color:blue;"><?php
-                                                        echo number_format((float) $row[5], 2);
-                                                        ?>
+                                                                                                                                echo number_format((float) $row[5], 2);
+                                                                                                                                ?>
                                                     </td>
                                                     <?php
                                                     $style1 = "color:red;";
@@ -452,7 +498,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         $style1 = "color:#0d0d0d;";
                                                     }
                                                     ?>
-                                                    <td class="lovtd" style="font-weight:bold;<?php echo $style1; ?>"><?php echo $row[6]; ?></td>  
+                                                    <td class="lovtd" style="font-weight:bold;<?php echo $style1; ?>"><?php echo $row[6]; ?></td>
                                                     <?php if ($canDel === true) { ?>
                                                         <td class="lovtd">
                                                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Delete Transaction" onclick="delScmStockTrnsfr('scmStockTrnsfrHdrsRow_<?php echo $cntr; ?>');" style="padding:2px !important;" style="padding:2px !important;">
@@ -463,26 +509,26 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <?php } ?>
                                                     <?php
                                                     if ($canVwRcHstry === true) {
-                                                        ?>
+                                                    ?>
                                                         <td class="lovtd">
                                                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php
-                                                            echo urlencode(encrypt1(($row[0] . "|inv.inv_stock_transfer_hdr|transfer_hdr_id"), $smplTokenWord1));
-                                                            ?>');" style="padding:2px !important;">
+                                                                                                                                                                                                                    echo urlencode(encrypt1(($row[0] . "|inv.inv_stock_transfer_hdr|transfer_hdr_id"), $smplTokenWord1));
+                                                                                                                                                                                                                    ?>');" style="padding:2px !important;">
                                                                 <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             </button>
                                                         </td>
                                                     <?php } ?>
                                                 </tr>
-                                                <?php
+                                            <?php
                                             }
                                             ?>
                                         </tbody>
                                     </table>
-                                </div>                     
+                                </div>
                             </div>
                         </fieldset>
                     </form>
-                    <?php
+                <?php
                 }
             } else if ($vwtyp == 1) {
                 //New Stock Transfer Form
@@ -494,7 +540,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     exit();
                 }
                 $orgnlScmStockTrnsfrID = $sbmtdScmStockTrnsfrID;
-                $scmStockTrnsfrDfltTrnsDte = $gnrlTrnsDteDMY;//HMS
+                $scmStockTrnsfrDfltTrnsDte = $gnrlTrnsDteDMY; //HMS
                 $scmStockTrnsfrCreator = $uName;
                 $scmStockTrnsfrCreatorID = $usrID;
                 $scmStockTrnsfrSrcStoreID = -1;
@@ -554,10 +600,22 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
                     $docTypPrfx = $docTypPrfxs[findArryIdx($docTypes, "Stock Transfer")];
                     $gnrtdTrnsNo1 = $docTypPrfx . "-" . $usrTrnsCode . "-" . $dte . "-";
-                    $gnrtdTrnsNo = $gnrtdTrnsNo1 . str_pad(((getRecCount_LstNum("inv.inv_stock_transfer_hdr", "rcpt_number", "transfer_hdr_id",
-                                            $gnrtdTrnsNo1 . "%") + 1) . ""), 3, '0', STR_PAD_LEFT);
-                    createStockTrnsfrHdr($orgID, $gnrtdTrnsNo, $scmStockTrnsfrDesc, $scmStockTrnsfrDfltTrnsDte, $scmStockTrnsfrSrcStoreID,
-                            $scmStockTrnsfrDestStoreID, $rqStatus, $scmStockTrnsfrTtlAmnt);
+                    $gnrtdTrnsNo = $gnrtdTrnsNo1 . str_pad(((getRecCount_LstNum(
+                        "inv.inv_stock_transfer_hdr",
+                        "rcpt_number",
+                        "transfer_hdr_id",
+                        $gnrtdTrnsNo1 . "%"
+                    ) + 1) . ""), 3, '0', STR_PAD_LEFT);
+                    createStockTrnsfrHdr(
+                        $orgID,
+                        $gnrtdTrnsNo,
+                        $scmStockTrnsfrDesc,
+                        $scmStockTrnsfrDfltTrnsDte,
+                        $scmStockTrnsfrSrcStoreID,
+                        $scmStockTrnsfrDestStoreID,
+                        $rqStatus,
+                        $scmStockTrnsfrTtlAmnt
+                    );
                     $sbmtdScmStockTrnsfrID = getGnrlRecID("inv.inv_stock_transfer_hdr", "rcpt_number", "transfer_hdr_id", $gnrtdTrnsNo, $orgID);
                 }
                 $reportName = getEnbldPssblValDesc("Sales Invoice", getLovID("Document Custom Print Process Names"));
@@ -599,7 +657,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label style="margin-bottom:0px !important;">Status:</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="hidden" id="scmStockTrnsfrApprvlStatus" value="<?php echo $rqStatus; ?>">                              
+                                        <input type="hidden" id="scmStockTrnsfrApprvlStatus" value="<?php echo $rqStatus; ?>">
                                         <button type="button" class="btn btn-default" style="height:34px;width:100% !important;" id="myScmStockTrnsfrStatusBtn">
                                             <span style="color:<?php echo $rqstatusColor; ?>;font-weight: bold;height:34px;">
                                                 <?php
@@ -608,15 +666,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </span>
                                         </button>
                                     </div>
-                                </div> 
+                                </div>
                             </div>
-                            <div class="col-md-4">                                                        
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="col-md-4">
                                         <label style="margin-bottom:0px !important;">Remark / Narration:</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <div class="input-group"  style="width:100%;">
+                                        <div class="input-group" style="width:100%;">
                                             <textarea class="form-control rqrdFld" rows="5" cols="20" id="scmStockTrnsfrDesc" name="scmStockTrnsfrDesc" <?php echo $mkRmrkReadOnly; ?> style="text-align:left !important;"><?php echo $scmStockTrnsfrDesc; ?></textarea>
                                             <input class="form-control" type="hidden" id="scmStockTrnsfrDesc1" value="<?php echo $scmStockTrnsfrDesc; ?>">
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('scmStockTrnsfrDesc');" style="max-width:30px;width:30px;">
@@ -624,14 +682,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </label>
                                         </div>
                                     </div>
-                                </div>  
+                                </div>
                             </div>
-                            <div class = "col-md-4">                            
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="scmStockTrnsfrSrcStore" class="control-label col-md-4" style="padding:0px 10px 0px 10px !important;">Source Store:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <div class="input-group">
-                                            <input class="form-control rqrdFld" id="scmStockTrnsfrSrcStore" style="font-size: 13px !important;font-weight: bold !important;" placeholder="Source Store" type = "text" placeholder="" value="<?php echo $scmStockTrnsfrSrcStore; ?>" readonly="true"/>
+                                            <input class="form-control rqrdFld" id="scmStockTrnsfrSrcStore" style="font-size: 13px !important;font-weight: bold !important;" placeholder="Source Store" type="text" placeholder="" value="<?php echo $scmStockTrnsfrSrcStore; ?>" readonly="true" />
                                             <input type="hidden" id="scmStockTrnsfrSrcStoreID" value="<?php echo $scmStockTrnsfrSrcStoreID; ?>">
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Users\' Sales Stores', 'allOtherInputOrgID', 'allOtherInputUsrID', '', 'radio', true, '<?php echo $scmStockTrnsfrSrcStoreID; ?>', 'scmStockTrnsfrSrcStoreID', 'scmStockTrnsfrSrcStore', 'clear', 0, '', function () {
                                                                         chngStockTrnsfrStores();
@@ -640,12 +698,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </label>
                                         </div>
                                     </div>
-                                </div>                            
+                                </div>
                                 <div class="form-group">
                                     <label for="scmStockTrnsfrDestStore" class="control-label col-md-4" style="padding:0px 10px 0px 10px !important;">Destination Store:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <div class="input-group">
-                                            <input class="form-control rqrdFld" id="scmStockTrnsfrDestStore" style="font-size: 13px !important;font-weight: bold !important;" placeholder="Destination Store" type = "text" placeholder="" value="<?php echo $scmStockTrnsfrDestStore; ?>" readonly="true"/>
+                                            <input class="form-control rqrdFld" id="scmStockTrnsfrDestStore" style="font-size: 13px !important;font-weight: bold !important;" placeholder="Destination Store" type="text" placeholder="" value="<?php echo $scmStockTrnsfrDestStore; ?>" readonly="true" />
                                             <input type="hidden" id="scmStockTrnsfrDestStoreID" value="<?php echo $scmStockTrnsfrDestStoreID; ?>">
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Users\' Sales Stores', 'allOtherInputOrgID', 'allOtherInputUsrID', '', 'radio', true, '<?php echo $scmStockTrnsfrDestStoreID; ?>', 'scmStockTrnsfrDestStoreID', 'scmStockTrnsfrDestStore', 'clear', 0, '', function () {
                                                                         chngStockTrnsfrStores();
@@ -654,14 +712,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </label>
                                         </div>
                                     </div>
-                                </div>  
-                                    <?php /*getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Currencies', '', '', '', 'radio', true, '<?php echo $scmStockTrnsfrInvcCur; ?>', 'scmStockTrnsfrInvcCur', '', 'clear', 0, '', function () {
+                                </div>
+                                <?php /*getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Currencies', '', '', '', 'radio', true, '<?php echo $scmStockTrnsfrInvcCur; ?>', 'scmStockTrnsfrInvcCur', '', 'clear', 0, '', function () {
                                                                         $('#scmStockTrnsfrInvcCur1').html($('#scmStockTrnsfrInvcCur').val());
                                                                         $('#scmStockTrnsfrInvcCur2').html($('#scmStockTrnsfrInvcCur').val());
                                                                         $('#scmStockTrnsfrInvcCur3').html($('#scmStockTrnsfrInvcCur').val());
                                                                         $('#scmStockTrnsfrInvcCur4').html($('#scmStockTrnsfrInvcCur').val());
                                                                         $('#scmStockTrnsfrInvcCur5').html($('#scmStockTrnsfrInvcCur').val());
-                                                                    });*/ ?> 
+                                                                    });*/ ?>
                                 <div class="form-group">
                                     <div class="col-md-4">
                                         <label style="margin-bottom:0px !important;">Transfer Total:</label>
@@ -671,11 +729,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label class="btn btn-primary btn-file input-group-addon active" onclick="">
                                                 <span class="" style="font-size: 20px !important;" id="scmStockTrnsfrInvcCur1"><?php echo $scmStockTrnsfrInvcCur; ?></span>
                                             </label>
-                                            <input type="hidden" id="scmStockTrnsfrInvcCur" value="<?php echo $scmStockTrnsfrInvcCur; ?>"> 
-                                            <input type="hidden" id="scmStockTrnsfrInvcCurID" value="<?php echo $scmStockTrnsfrInvcCurID; ?>"> 
+                                            <input type="hidden" id="scmStockTrnsfrInvcCur" value="<?php echo $scmStockTrnsfrInvcCur; ?>">
+                                            <input type="hidden" id="scmStockTrnsfrInvcCurID" value="<?php echo $scmStockTrnsfrInvcCurID; ?>">
                                             <input class="form-control" type="text" id="scmStockTrnsfrTtlAmnt" value="<?php
-                                            echo number_format($scmStockTrnsfrTtlAmnt, 2);
-                                            ?>" style="font-weight:bold;width:100%;font-size:18px !important;" onchange="fmtAsNumber('scmStockTrnsfrTtlAmnt');" readonly="true"/>
+                                                                                                                        echo number_format($scmStockTrnsfrTtlAmnt, 2);
+                                                                                                                        ?>" style="font-weight:bold;width:100%;font-size:18px !important;" onchange="fmtAsNumber('scmStockTrnsfrTtlAmnt');" readonly="true" />
                                         </div>
                                     </div>
                                 </div>
@@ -685,14 +743,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <fieldset class="">
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="custDiv" style="padding:0px !important;min-height: 30px !important;"> 
+                                <div class="custDiv" style="padding:0px !important;min-height: 30px !important;">
                                     <div class="tab-content" style="padding:3px 5px 2px 5px!important;">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <?php
                                                 $edtPriceRdOnly = "";
                                                 $nwRowHtml33 = "<tr id=\"oneScmStockTrnsfrSmryRow__WWW123WWW\" onclick=\"$('#allOtherInputData99').val($('#oneScmStockTrnsfrSmryLinesTable tr').index(this));\">"
-                                                        . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>                          
+                                                    . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>                          
                                                            <td class=\"lovtd\"  style=\"\">  
                                                             <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"oneScmStockTrnsfrSmryRow_WWW123WWW_TrnsLnID\" value=\"-1\" style=\"width:100% !important;\">
                                                             <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"oneScmStockTrnsfrSmryRow_WWW123WWW_ItmID\" value=\"-1\" style=\"width:100% !important;\">  
@@ -752,65 +810,65 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         </td>
                                                     </tr>";
                                                 $nwRowHtml33 = urlencode($nwRowHtml33);
-                                                ?> 
+                                                ?>
                                                 <div class="col-md-12" style="padding:0px 0px 0px 0px !important;">
                                                     <div class="col-md-6" style="padding:0px 0px 0px 0px !important;float:left;">
                                                         <?php if ($canEdt) { ?>
                                                             <input type="hidden" id="nwSalesDocLineHtm" value="<?php echo $nwRowHtml33; ?>">
-                                                            <button id="addNwScmStockTrnsfrSmryBtn" type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="insertNewScmSalesInvcRows('oneScmStockTrnsfrSmryLinesTable', 0, '<?php echo $nwRowHtml33; ?>');" data-toggle="tooltip" data-placement="bottom" title = "New Transaction Line">
+                                                            <button id="addNwScmStockTrnsfrSmryBtn" type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="insertNewScmSalesInvcRows('oneScmStockTrnsfrSmryLinesTable', 0, '<?php echo $nwRowHtml33; ?>');" data-toggle="tooltip" data-placement="bottom" title="New Transaction Line">
                                                                 <img src="cmn_images/add1-64.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
-                                                            </button>                                 
+                                                            </button>
                                                         <?php } ?>
-                                                        <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getOneScmStockTrnsfrDocsForm(<?php echo $sbmtdScmStockTrnsfrID; ?>, 20);" data-toggle="tooltip" data-placement="bottom" title = "Attached Documents">
+                                                        <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getOneScmStockTrnsfrDocsForm(<?php echo $sbmtdScmStockTrnsfrID; ?>, 20);" data-toggle="tooltip" data-placement="bottom" title="Attached Documents">
                                                             <img src="cmn_images/adjunto.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
-                                                        </button> 
+                                                        </button>
                                                         <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getOneScmStockTrnsfrForm(<?php echo $sbmtdScmStockTrnsfrID; ?>, 1, 'ReloadDialog');"><img src="cmn_images/refresh.bmp" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;"></button>
-                                                        <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;"  onclick="getSilentRptsRnSts(<?php echo $rptID; ?>, -1, '<?php echo $paramStr; ?>');" style="width:100% !important;">
+                                                        <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getSilentRptsRnSts(<?php echo $rptID; ?>, -1, '<?php echo $paramStr; ?>');" style="width:100% !important;">
                                                             <img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             Print
                                                         </button>
                                                         <button type="button" class="btn btn-default" style="height:30px;margin-bottom: 1px;">
                                                             <span style="font-weight:bold;color:black;">Total: </span>
-                                                            <span style="color:red;font-weight: bold;" id="myCptrdStockTrnsfrValsTtlBtn"><?php echo $scmStockTrnsfrInvcCur; ?> 
+                                                            <span style="color:red;font-weight: bold;" id="myCptrdStockTrnsfrValsTtlBtn"><?php echo $scmStockTrnsfrInvcCur; ?>
                                                                 <?php
                                                                 echo number_format($scmStockTrnsfrTtlAmnt, 2);
                                                                 ?>
                                                             </span>
                                                             <input type="hidden" id="myCptrdStockTrnsfrValsTtlVal" value="<?php echo $scmStockTrnsfrTtlAmnt; ?>">
                                                         </button>
-                                                    </div> 
+                                                    </div>
                                                     <div class="col-md-6" style="padding:0px 0px 0px 0px !important;">
-                                                        <div class="" style="padding:0px 0px 0px 0px;float:right !important;"> 
+                                                        <div class="" style="padding:0px 0px 0px 0px;float:right !important;">
                                                             <?php
                                                             if ($rqStatus == "Incomplete") {
-                                                                ?>
+                                                            ?>
                                                                 <?php if ($canEdt) { ?>
-                                                                    <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveScmStockTrnsfrForm('<?php echo $fnccurnm; ?>', 0);"><img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Save&nbsp;</button>    
+                                                                    <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveScmStockTrnsfrForm('<?php echo $fnccurnm; ?>', 0);"><img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Save&nbsp;</button>
                                                                 <?php } ?>
                                                                 <?php if ($canRvwApprvDocs) { ?>
                                                                     <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveScmStockTrnsfrForm('<?php echo $fnccurnm; ?>', 2);" data-toggle="tooltip" data-placement="bottom" title="Finalize Document">
                                                                         <img src="cmn_images/tick_64.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Finalize
                                                                     </button>
-                                                                    <?php
+                                                                <?php
                                                                 }
                                                             } else if ($rqStatus == "Transfer Successful") {
                                                                 ?>
                                                                 <?php if ($cancelDocs) { ?>
-                                                                    <button id="fnlzeRvrslScmStockTrnsfrBtn" type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveScmStockTrnsfrRvrslForm('<?php echo $fnccurnm; ?>', 1);"><img src="cmn_images/90.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Cancel Document&nbsp;</button>  
+                                                                    <button id="fnlzeRvrslScmStockTrnsfrBtn" type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveScmStockTrnsfrRvrslForm('<?php echo $fnccurnm; ?>', 1);"><img src="cmn_images/90.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Cancel Document&nbsp;</button>
                                                                     <!--<button id="fnlzeBadDebtScmStockTrnsfrBtn" type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveScmStockTrnsfrRvrslForm('<?php echo $fnccurnm; ?>', 2);"  data-toggle="tooltip" data-placement="bottom" title="Declare as Bad Debt">
-                                                                    <img src="cmn_images/90.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Bad Debt&nbsp;</button>-->                                                                   
-                                                                    <?php
+                                                                    <img src="cmn_images/90.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Bad Debt&nbsp;</button>-->
+                                                            <?php
                                                                 }
                                                             }
                                                             ?>
                                                         </div>
-                                                    </div>                    
-                                                </div> 
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="custDiv" style="padding:0px !important;min-height: 40px !important;" id="oneScmStockTrnsfrLnsTblSctn"> 
+                                <div class="custDiv" style="padding:0px !important;min-height: 40px !important;" id="oneScmStockTrnsfrLnsTblSctn">
                                     <div class="tab-content" style="padding:5px !important;padding-top:7px !important;">
                                         <div id="stockTrnsfrDetLines" class="tab-pane fadein active" style="border:none !important;padding:0px !important;">
                                             <div class="row" style="padding:0px 13px 0px 13px !important;">
@@ -834,7 +892,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <th style="max-width:30px;width:30px;text-align: center;">...</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>   
+                                                        <tbody>
                                                             <?php
                                                             $cntr = 0;
                                                             $resultRw = get_StockTrnsfrDocDet($sbmtdScmStockTrnsfrID);
@@ -864,18 +922,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     $trsctnLnExtrDesc = $rowRw[14];
                                                                     $trsctnLnSrcStckBals = (float) $rowRw[15];
                                                                     $cntr += 1;
-                                                                    ?>
-                                                                    <tr id="oneScmStockTrnsfrSmryRow_<?php echo $cntr; ?>" onclick="$('#allOtherInputData99').val($('#oneScmStockTrnsfrSmryLinesTable tr').index(this));">                                    
-                                                                        <td class="lovtd"><span><?php echo ($cntr); ?></span></td>                                              
-                                                                        <td class="lovtd"  style="">  
+                                                            ?>
+                                                                    <tr id="oneScmStockTrnsfrSmryRow_<?php echo $cntr; ?>" onclick="$('#allOtherInputData99').val($('#oneScmStockTrnsfrSmryLinesTable tr').index(this));">
+                                                                        <td class="lovtd"><span><?php echo ($cntr); ?></span></td>
+                                                                        <td class="lovtd" style="">
                                                                             <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_TrnsLnID" value="<?php echo $trsctnLnID; ?>" style="width:100% !important;">
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_ItmID" value="<?php echo $trsctnLnItmID; ?>" style="width:100% !important;">  
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_StoreID" value="<?php echo $trsctnLnSrcStoreID; ?>" style="width:100% !important;"> 
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_DestStoreID" value="<?php echo $trsctnLnDestStoreID; ?>" style="width:100% !important;"> 
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_CnsgnIDs" value="<?php echo $trsctnLnCnsgnIDs; ?>" style="width:100% !important;"> 
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_ItmID" value="<?php echo $trsctnLnItmID; ?>" style="width:100% !important;">
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_StoreID" value="<?php echo $trsctnLnSrcStoreID; ?>" style="width:100% !important;">
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_DestStoreID" value="<?php echo $trsctnLnDestStoreID; ?>" style="width:100% !important;">
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_CnsgnIDs" value="<?php echo $trsctnLnCnsgnIDs; ?>" style="width:100% !important;">
                                                                             <?php
                                                                             if ($canEdt === true) {
-                                                                                ?>
+                                                                            ?>
                                                                                 <div class="input-group" style="width:100% !important;">
                                                                                     <input type="text" class="form-control rqrdFld jbDetAccRate jbDetDesc" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_LineDesc" name="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_LineDesc" value="<?php echo $trsctnLnItmNm; ?>" style="width:100% !important;" <?php echo $mkReadOnly; ?> onkeypress="gnrlFldKeyPress(event, 'oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_LineDesc', 'oneScmStockTrnsfrSmryLinesTable', 'jbDetAccRate');" onblur="afterSalesInvcItmSlctn('oneScmStockTrnsfrSmryRow_<?php echo $cntr; ?>');" onchange="autoCreateSalesLns = 99;">
                                                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getScmSalesInvcItems('oneScmStockTrnsfrSmryRow_<?php echo $cntr; ?>', 'ShowDialog', 'Stock Transfer', 'false', function () {
@@ -885,57 +943,56 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     </label>
                                                                                 </div>
                                                                             <?php } else {
-                                                                                ?>
+                                                                            ?>
                                                                                 <span><?php echo $trsctnLnItmNm; ?></span>
-                                                                                <?php
+                                                                            <?php
                                                                             }
                                                                             ?>
                                                                         </td>
                                                                         <td class="lovtd">
-                                                                            <input type="text" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_SrcStore" name="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_SrcStore" value="<?php echo $trsctnLnSrcStoreNm; ?>" style="width:100% !important;" readonly="true">                                                    
+                                                                            <input type="text" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_SrcStore" name="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_SrcStore" value="<?php echo $trsctnLnSrcStoreNm; ?>" style="width:100% !important;" readonly="true">
                                                                         </td>
                                                                         <?php if ($rqStatus == "Incomplete") { ?>
                                                                             <td class="lovtd" style="text-align: right;">
                                                                                 <input type="text" class="form-control jbDetAccRate1" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_SrcQTY" name="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_SrcQTY" value="<?php
-                                                                                echo $trsctnLnSrcStckBals;
-                                                                                ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_SrcQTY', 'oneScmStockTrnsfrSmryLinesTable', 'jbDetAccRate1');" style="width:100% !important;text-align: right;" readonly="true">                                                    
+                                                                                                                                                                                                                                                                                    echo $trsctnLnSrcStckBals;
+                                                                                                                                                                                                                                                                                    ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_SrcQTY', 'oneScmStockTrnsfrSmryLinesTable', 'jbDetAccRate1');" style="width:100% !important;text-align: right;" readonly="true">
                                                                             </td>
                                                                         <?php } ?>
                                                                         <td class="lovtd" style="text-align: right;">
                                                                             <input type="text" class="form-control rqrdFld jbDetAccRate" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_QTY" name="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_QTY" value="<?php
-                                                                            echo $trsctnLnQty;
-                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_QTY', 'oneScmStockTrnsfrSmryLinesTable', 'jbDetAccRate');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl('oneScmStockTrnsfrSmryLinesTable');">                                                    
-                                                                        </td>                                               
+                                                                                                                                                                                                                                                                                echo $trsctnLnQty;
+                                                                                                                                                                                                                                                                                ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_QTY', 'oneScmStockTrnsfrSmryLinesTable', 'jbDetAccRate');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl('oneScmStockTrnsfrSmryLinesTable');">
+                                                                        </td>
                                                                         <td class="lovtd" style="max-width:35px;width:35px;text-align: center;">
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_UomID" value="<?php echo $trsctnLnUomID; ?>" style="width:100% !important;">  
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_UomID" value="<?php echo $trsctnLnUomID; ?>" style="width:100% !important;">
                                                                             <div class="" style="width:100% !important;">
                                                                                 <label class="btn btn-primary btn-file" onclick="getOneScmUOMBrkdwnForm(<?php echo $sbmtdScmStockTrnsfrID; ?>, 2, 'oneScmStockTrnsfrSmryRow_<?php echo $cntr; ?>');">
                                                                                     <span class="" id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_UomNm1"><?php echo $trsctnLnUomNm; ?></span>
                                                                                 </label>
-                                                                            </div>                                              
+                                                                            </div>
                                                                         </td>
                                                                         <td class="lovtd">
                                                                             <input type="text" class="form-control jbDetDbt" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_UnitPrice" name="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_UnitPrice" value="<?php
-                                                                            echo number_format($trsctnLnUnitPrice, 5);
-                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_UnitPrice', 'oneScmStockTrnsfrSmryLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl('oneScmStockTrnsfrSmryLinesTable');">                                                    
+                                                                                                                                                                                                                                                                                echo number_format($trsctnLnUnitPrice, 5);
+                                                                                                                                                                                                                                                                                ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_UnitPrice', 'oneScmStockTrnsfrSmryLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl('oneScmStockTrnsfrSmryLinesTable');">
                                                                         </td>
                                                                         <td class="lovtd">
                                                                             <input type="text" class="form-control jbDetCrdt" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_LineAmt" name="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_LineAmt" value="<?php
-                                                                            echo number_format($trsctnLnAmnt, 2);
-                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_LineAmt', 'oneScmStockTrnsfrSmryLinesTable', 'jbDetCrdt');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl('oneScmStockTrnsfrSmryLinesTable');">                                                    
-                                                                        </td> 
-                                                                        <td class="lovtd">
-                                                                            <input type="text" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_CnsgnNos" value="<?php echo $trsctnLnCnsgnIDs; ?>" style="width:100% !important;" readonly="true"> 
+                                                                                                                                                                                                                                                                            echo number_format($trsctnLnAmnt, 2);
+                                                                                                                                                                                                                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_LineAmt', 'oneScmStockTrnsfrSmryLinesTable', 'jbDetCrdt');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl('oneScmStockTrnsfrSmryLinesTable');">
                                                                         </td>
                                                                         <td class="lovtd">
-                                                                            <input type="text" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_DestStore" name="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_DestStore" value="<?php echo $trsctnLnDestStoreNm; ?>" style="width:100% !important;" readonly="true">                                                    
-                                                                        </td>  
+                                                                            <input type="text" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_CnsgnNos" value="<?php echo $trsctnLnCnsgnIDs; ?>" style="width:100% !important;" readonly="true">
+                                                                        </td>
+                                                                        <td class="lovtd">
+                                                                            <input type="text" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_DestStore" name="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_DestStore" value="<?php echo $trsctnLnDestStoreNm; ?>" style="width:100% !important;" readonly="true">
+                                                                        </td>
                                                                         <td class="lovtd" style="text-align: center;">
-                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Item Consignments" 
-                                                                                    onclick="getScmSalesInvcItems('oneScmStockTrnsfrSmryRow_<?php echo $cntr; ?>', 'ShowDialog', 'Stock Transfer', 'true', function () {
+                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Item Consignments" onclick="getScmSalesInvcItems('oneScmStockTrnsfrSmryRow_<?php echo $cntr; ?>', 'ShowDialog', 'Stock Transfer', 'true', function () {
                                                                                                                         var a = 1;
-                                                                                                                    });" style="padding:2px !important;"> 
-                                                                                <img src="cmn_images/chcklst3.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                                                                                    });" style="padding:2px !important;">
+                                                                                <img src="cmn_images/chcklst3.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                             </button>
                                                                         </td>
                                                                         <td class="lovtd" style="text-align: center;">
@@ -944,7 +1001,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             </button>
                                                                         </td>
                                                                     </tr>
-                                                                    <?php
+                                                                <?php
                                                                 }
                                                             } else {
                                                                 $trsctnLnID = -1;
@@ -966,17 +1023,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 $trsctnLnSrcStckBals = 0;
                                                                 $cntr += 1;
                                                                 ?>
-                                                                <tr id="oneScmStockTrnsfrSmryRow_<?php echo $cntr; ?>" onclick="$('#allOtherInputData99').val($('#oneScmStockTrnsfrSmryLinesTable tr').index(this));">                                    
-                                                                    <td class="lovtd"><span><?php echo ($cntr); ?></span></td>                                              
-                                                                    <td class="lovtd"  style="">  
+                                                                <tr id="oneScmStockTrnsfrSmryRow_<?php echo $cntr; ?>" onclick="$('#allOtherInputData99').val($('#oneScmStockTrnsfrSmryLinesTable tr').index(this));">
+                                                                    <td class="lovtd"><span><?php echo ($cntr); ?></span></td>
+                                                                    <td class="lovtd" style="">
                                                                         <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_TrnsLnID" value="<?php echo $trsctnLnID; ?>" style="width:100% !important;">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_ItmID" value="<?php echo $trsctnLnItmID; ?>" style="width:100% !important;">  
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_StoreID" value="<?php echo $trsctnLnSrcStoreID; ?>" style="width:100% !important;"> 
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_DestStoreID" value="<?php echo $trsctnLnDestStoreID; ?>" style="width:100% !important;"> 
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_CnsgnIDs" value="<?php echo $trsctnLnCnsgnIDs; ?>" style="width:100% !important;"> 
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_ItmID" value="<?php echo $trsctnLnItmID; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_StoreID" value="<?php echo $trsctnLnSrcStoreID; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_DestStoreID" value="<?php echo $trsctnLnDestStoreID; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_CnsgnIDs" value="<?php echo $trsctnLnCnsgnIDs; ?>" style="width:100% !important;">
                                                                         <?php
                                                                         if ($canEdt === true) {
-                                                                            ?>
+                                                                        ?>
                                                                             <div class="input-group" style="width:100% !important;">
                                                                                 <input type="text" class="form-control rqrdFld jbDetAccRate jbDetDesc" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_LineDesc" name="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_LineDesc" value="<?php echo $trsctnLnItmNm; ?>" style="width:100% !important;" <?php echo $mkReadOnly; ?> onkeypress="gnrlFldKeyPress(event, 'oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_LineDesc', 'oneScmStockTrnsfrSmryLinesTable', 'jbDetAccRate');" onblur="afterSalesInvcItmSlctn('oneScmStockTrnsfrSmryRow_<?php echo $cntr; ?>');" onchange="autoCreateSalesLns = 99;">
                                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getScmSalesInvcItems('oneScmStockTrnsfrSmryRow_<?php echo $cntr; ?>', 'ShowDialog', 'Stock Transfer', 'false', function () {
@@ -986,57 +1043,56 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 </label>
                                                                             </div>
                                                                         <?php } else {
-                                                                            ?>
+                                                                        ?>
                                                                             <span><?php echo $trsctnLnItmNm; ?></span>
-                                                                            <?php
+                                                                        <?php
                                                                         }
                                                                         ?>
                                                                     </td>
                                                                     <td class="lovtd">
-                                                                        <input type="text" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_SrcStore" name="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_SrcStore" value="<?php echo $trsctnLnSrcStoreNm; ?>" style="width:100% !important;" readonly="true">                                                    
+                                                                        <input type="text" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_SrcStore" name="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_SrcStore" value="<?php echo $trsctnLnSrcStoreNm; ?>" style="width:100% !important;" readonly="true">
                                                                     </td>
                                                                     <?php if ($rqStatus == "Incomplete") { ?>
                                                                         <td class="lovtd" style="text-align: right;">
                                                                             <input type="text" class="form-control jbDetAccRate1" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_SrcQTY" name="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_SrcQTY" value="<?php
-                                                                            echo $trsctnLnSrcStckBals;
-                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_SrcQTY', 'oneScmStockTrnsfrSmryLinesTable', 'jbDetAccRate1');" style="width:100% !important;text-align: right;" readonly="true">                                                    
+                                                                                                                                                                                                                                                                                echo $trsctnLnSrcStckBals;
+                                                                                                                                                                                                                                                                                ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_SrcQTY', 'oneScmStockTrnsfrSmryLinesTable', 'jbDetAccRate1');" style="width:100% !important;text-align: right;" readonly="true">
                                                                         </td>
                                                                     <?php } ?>
                                                                     <td class="lovtd" style="text-align: right;">
                                                                         <input type="text" class="form-control rqrdFld jbDetAccRate" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_QTY" name="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_QTY" value="<?php
-                                                                        echo $trsctnLnQty;
-                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_QTY', 'oneScmStockTrnsfrSmryLinesTable', 'jbDetAccRate');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl('oneScmStockTrnsfrSmryLinesTable');">                                                    
-                                                                    </td>                                               
+                                                                                                                                                                                                                                                                            echo $trsctnLnQty;
+                                                                                                                                                                                                                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_QTY', 'oneScmStockTrnsfrSmryLinesTable', 'jbDetAccRate');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl('oneScmStockTrnsfrSmryLinesTable');">
+                                                                    </td>
                                                                     <td class="lovtd" style="max-width:35px;width:35px;text-align: center;">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_UomID" value="<?php echo $trsctnLnUomID; ?>" style="width:100% !important;">  
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_UomID" value="<?php echo $trsctnLnUomID; ?>" style="width:100% !important;">
                                                                         <div class="" style="width:100% !important;">
                                                                             <label class="btn btn-primary btn-file" onclick="getOneScmUOMBrkdwnForm(<?php echo $sbmtdScmStockTrnsfrID; ?>, 2, 'oneScmStockTrnsfrSmryRow_<?php echo $cntr; ?>');">
                                                                                 <span class="" id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_UomNm1"><?php echo $trsctnLnUomNm; ?></span>
                                                                             </label>
-                                                                        </div>                                              
+                                                                        </div>
                                                                     </td>
                                                                     <td class="lovtd">
                                                                         <input type="text" class="form-control jbDetDbt" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_UnitPrice" name="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_UnitPrice" value="<?php
-                                                                        echo number_format($trsctnLnUnitPrice, 5);
-                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_UnitPrice', 'oneScmStockTrnsfrSmryLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl('oneScmStockTrnsfrSmryLinesTable');">                                                    
+                                                                                                                                                                                                                                                                            echo number_format($trsctnLnUnitPrice, 5);
+                                                                                                                                                                                                                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_UnitPrice', 'oneScmStockTrnsfrSmryLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl('oneScmStockTrnsfrSmryLinesTable');">
                                                                     </td>
                                                                     <td class="lovtd">
                                                                         <input type="text" class="form-control jbDetCrdt" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_LineAmt" name="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_LineAmt" value="<?php
-                                                                        echo number_format($trsctnLnAmnt, 2);
-                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_LineAmt', 'oneScmStockTrnsfrSmryLinesTable', 'jbDetCrdt');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl('oneScmStockTrnsfrSmryLinesTable');">                                                    
-                                                                    </td> 
-                                                                    <td class="lovtd">
-                                                                        <input type="text" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_CnsgnNos" value="<?php echo $trsctnLnCnsgnIDs; ?>" style="width:100% !important;" readonly="true"> 
+                                                                                                                                                                                                                                                                        echo number_format($trsctnLnAmnt, 2);
+                                                                                                                                                                                                                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_LineAmt', 'oneScmStockTrnsfrSmryLinesTable', 'jbDetCrdt');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl('oneScmStockTrnsfrSmryLinesTable');">
                                                                     </td>
                                                                     <td class="lovtd">
-                                                                        <input type="text" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_DestStore" name="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_DestStore" value="<?php echo $trsctnLnDestStoreNm; ?>" style="width:100% !important;" readonly="true">                                                    
-                                                                    </td>   
+                                                                        <input type="text" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_CnsgnNos" value="<?php echo $trsctnLnCnsgnIDs; ?>" style="width:100% !important;" readonly="true">
+                                                                    </td>
+                                                                    <td class="lovtd">
+                                                                        <input type="text" class="form-control" aria-label="..." id="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_DestStore" name="oneScmStockTrnsfrSmryRow<?php echo $cntr; ?>_DestStore" value="<?php echo $trsctnLnDestStoreNm; ?>" style="width:100% !important;" readonly="true">
+                                                                    </td>
                                                                     <td class="lovtd" style="text-align: center;">
-                                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Item Consignments" 
-                                                                                onclick="getScmSalesInvcItems('oneScmStockTrnsfrSmryRow_<?php echo $cntr; ?>', 'ShowDialog', 'Stock Transfer', 'true', function () {
+                                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Item Consignments" onclick="getScmSalesInvcItems('oneScmStockTrnsfrSmryRow_<?php echo $cntr; ?>', 'ShowDialog', 'Stock Transfer', 'true', function () {
                                                                                                                 var a = 1;
-                                                                                                            });" style="padding:2px !important;"> 
-                                                                            <img src="cmn_images/chcklst3.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                                                                            });" style="padding:2px !important;">
+                                                                            <img src="cmn_images/chcklst3.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                         </button>
                                                                     </td>
                                                                     <td class="lovtd" style="text-align: center;">
@@ -1045,29 +1101,33 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         </button>
                                                                     </td>
                                                                 </tr>
-                                                                <?php
+                                                            <?php
                                                             }
                                                             ?>
                                                         </tbody>
-                                                        <tfoot>                                                            
+                                                        <tfoot>
                                                             <tr>
                                                                 <th>&nbsp;</th>
                                                                 <th>&nbsp;</th>
                                                                 <th>&nbsp;</th>
                                                                 <?php if ($rqStatus == "Incomplete") { ?>
                                                                     <th style="">&nbsp;</th>
-                                                                <?php } ?>                                           
+                                                                <?php } ?>
                                                                 <th style="">&nbsp;</th>
                                                                 <th>TOTALS:</th>
                                                                 <th>&nbsp;</th>
                                                                 <th style="text-align: right;">
                                                                     <?php
-                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdRIJbSmryAmtTtlBtn\">" . number_format($ttlTrsctnEntrdAmnt,
-                                                                            2, '.', ',') . "</span>";
+                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdRIJbSmryAmtTtlBtn\">" . number_format(
+                                                                        $ttlTrsctnEntrdAmnt,
+                                                                        2,
+                                                                        '.',
+                                                                        ','
+                                                                    ) . "</span>";
                                                                     ?>
                                                                     <input type="hidden" id="myCptrdRIJbSmryAmtTtlVal" value="<?php echo $ttlTrsctnEntrdAmnt; ?>">
-                                                                </th>                                           
-                                                                <th style="">&nbsp;</th>                                           
+                                                                </th>
+                                                                <th style="">&nbsp;</th>
                                                                 <th style="">&nbsp;</th>
                                                                 <th style="">&nbsp;</th>
                                                                 <th style="">&nbsp;</th>
@@ -1083,7 +1143,186 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                     </fieldset>
                 </form>
-                <?php
+<?php
+            } else if ($vwtyp == 20) {
+                /* All Attached Documents */
+                //sbmtdScmStockTrnsfrID
+                $sbmtdScmStockTrnsfrID = isset($_POST['sbmtdScmStockTrnsfrID']) ? cleanInputData($_POST['sbmtdScmStockTrnsfrID']) : -1;
+                if (!$canAdd || ($sbmtdScmStockTrnsfrID > 0 && !$canEdt)) {
+                    restricted();
+                    exit();
+                }
+                $pkID = $sbmtdScmStockTrnsfrID;
+                $total = get_Total_CnsgnRcpt_Attachments($srchFor, $pkID, "TRANSFER");
+                if ($pageNo > ceil($total / $lmtSze)) {
+                    $pageNo = 1;
+                } else if ($pageNo < 1) {
+                    $pageNo = ceil($total / $lmtSze);
+                }
+                $curIdx = $pageNo - 1;
+                $attchSQL = "";
+                $result2 = get_CnsgnRcpt_Attachments($srchFor, $curIdx, $lmtSze, $pkID, "TRANSFER", $attchSQL);
+                $colClassType1 = "col-lg-2";
+                $colClassType2 = "col-lg-3";
+                $colClassType3 = "col-lg-4";
+            ?>
+                <fieldset class="" style="padding:10px 0px 5px 0px !important;">
+                    <form class="" id="attchdStockTrnsfrDocsTblForm">
+                        <div class="row">
+                            <?php
+                            $nwRowHtml = urlencode("<tr id=\"attchdStockTrnsfrDocsRow__WWW123WWW\">"
+                                . "<td class=\"lovtd\"><span>New</span></td>"
+                                . "<td class=\"lovtd\">
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                              <div class=\"input-group\" style=\"width:100% !important;\">
+                                                <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"attchdStockTrnsfrDocsRow_WWW123WWW_DocCtgryNm\" value=\"\">
+                                                <input class=\"form-control\" aria-label=\"...\" id=\"attchdStockTrnsfrDocsRow_WWW123WWW_DocFile\" type=\"file\" style=\"visibility:hidden;height:5px !important;display:none;\" />     
+                                                <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Attachment Document Categories', '', '', '', 'radio', true, '', 'attchdStockTrnsfrDocsRow_WWW123WWW_DocCtgryNm', 'attchdStockTrnsfrDocsRow_WWW123WWW_DocCtgryNm', 'clear', 0, '');\">
+                                                    <span class=\"glyphicon glyphicon-th-list\"></span>
+                                                </label>
+                                              </div>
+                                              </div>
+                                              <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"attchdStockTrnsfrDocsRow_WWW123WWW_AttchdDocsID\" value=\"-1\" style=\"\">                                               
+                                          </td>
+                                          <td class=\"lovtd\">
+                                                <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"uploadFileToStockTrnsfrDocs('attchdStockTrnsfrDocsRow_WWW123WWW_DocFile','attchdStockTrnsfrDocsRow_WWW123WWW_AttchdDocsID','attchdStockTrnsfrDocsRow_WWW123WWW_DocCtgryNm'," . $pkID . ",'attchdStockTrnsfrDocsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Download Document\">
+                                                    <img src=\"cmn_images/openfileicon.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\"> Upload
+                                                </button>
+                                          </td>
+                                          <td class=\"lovtd\">
+                                                <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delAttchdStockTrnsfrDoc('attchdStockTrnsfrDocsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Document\">
+                                                    <img src=\"cmn_images/no.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
+                                                </button>
+                                          </td>
+                                        </tr>");
+                            ?>
+                            <div class="<?php echo $colClassType3; ?>" style="padding:0px 1px 0px 1px !important;">
+                                <div class="col-md-12">
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('attchdStockTrnsfrDocsTable', 0, '<?php echo $nwRowHtml; ?>');" style="width:100% !important;">
+                                        <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                        New Document
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
+                                <div class="input-group">
+                                    <input class="form-control" id="attchdStockTrnsfrDocsSrchFor" type="text" placeholder="Search For" value="<?php
+                                                                                                                                            echo trim(str_replace("%", " ", $srchFor));
+                                                                                                                                            ?>" onkeyup="enterKeyFuncAttchdStockTrnsfrDocs(event, '', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmStockTrnsfrID=<?php echo $sbmtdScmStockTrnsfrID; ?>', 'ReloadDialog');">
+                                    <input id="attchdStockTrnsfrDocsPageNo" type="hidden" value="<?php echo $pageNo; ?>">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdStockTrnsfrDocs('clear', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmStockTrnsfrID=<?php echo $sbmtdScmStockTrnsfrID; ?>', 'ReloadDialog');">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </label>
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdStockTrnsfrDocs('', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmStockTrnsfrID=<?php echo $sbmtdScmStockTrnsfrID; ?>', 'ReloadDialog');">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="<?php echo $colClassType2; ?>">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
+                                    <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
+                                    <select data-placeholder="Select..." class="form-control chosen-select" id="attchdStockTrnsfrDocsDsplySze" style="min-width:70px !important;">
+                                        <?php
+                                        $valslctdArry = array("", "", "", "", "", "", "", "");
+                                        $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
+                                        for ($y = 0; $y < count($dsplySzeArry); $y++) {
+                                            if ($lmtSze == $dsplySzeArry[$y]) {
+                                                $valslctdArry[$y] = "selected";
+                                            } else {
+                                                $valslctdArry[$y] = "";
+                                            }
+                                        ?>
+                                            <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="<?php echo $colClassType1; ?>">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination" style="margin: 0px !important;">
+                                        <li>
+                                            <a class="rhopagination" href="javascript:getAttchdStockTrnsfrDocs('previous', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmStockTrnsfrID=<?php echo $sbmtdScmStockTrnsfrID; ?>','ReloadDialog');" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="rhopagination" href="javascript:getAttchdStockTrnsfrDocs('next', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmStockTrnsfrID=<?php echo $sbmtdScmStockTrnsfrID; ?>','ReloadDialog');" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-striped table-bordered table-responsive" id="attchdStockTrnsfrDocsTable" cellspacing="0" width="100%" style="width:100%;min-width: 400px !important;">
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Doc. Name/Description</th>
+                                            <th>&nbsp;</th>
+                                            <th>&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $cntr = 0;
+                                        while ($row2 = loc_db_fetch_array($result2)) {
+                                            $cntr += 1;
+                                            $doc_src = $ftp_base_db_fldr . "/Rcpts/" . $row2[3];
+                                            $doc_src_encrpt = encrypt1($doc_src, $smplTokenWord1);
+                                            if (file_exists($doc_src)) {
+                                                //file exists!
+                                            } else {
+                                                //file does not exist.
+                                                $doc_src_encrpt = "None";
+                                            }
+                                        ?>
+                                            <tr id="attchdStockTrnsfrDocsRow_<?php echo $cntr; ?>">
+                                                <td class="lovtd"><span><?php
+                                                                        echo ($curIdx * $lmtSze) + ($cntr);
+                                                                        ?></span></td>
+                                                <td class="lovtd">
+                                                    <span><?php echo $row2[2]; ?></span>
+                                                    <input type="hidden" class="form-control" aria-label="..." id="attchdStockTrnsfrDocsRow<?php echo $cntr; ?>_AttchdDocsID" value="<?php echo $row2[0]; ?>" style="width:100% !important;">
+                                                </td>
+                                                <td class="lovtd">
+                                                    <?php
+                                                    if ($doc_src_encrpt == "None") {
+                                                    ?>
+                                                        <span style="font-weight: bold;color:#FF0000;">
+                                                            <?php
+                                                            echo "File Not Found!";
+                                                            ?>
+                                                        </span>
+                                                    <?php
+                                                    } else {
+                                                    ?>
+                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="doAjax('grp=1&typ=11&q=Download&fnm=<?php echo $doc_src_encrpt; ?>', '', 'Redirect', '', '', '');" data-toggle="tooltip" data-placement="bottom" title="Download Document">
+                                                            <img src="cmn_images/dwldicon.png" style="height:15px; width:auto; position: relative; vertical-align: middle;"> Download
+                                                        </button>
+                                                    <?php } ?>
+                                                </td>
+                                                <td class="lovtd">
+                                                    <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delAttchdStockTrnsfrDoc('attchdStockTrnsfrDocsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Document">
+                                                        <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        <?php
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </form>
+                </fieldset>
+<?php
             }
         }
     }
