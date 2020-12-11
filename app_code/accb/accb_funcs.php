@@ -5922,7 +5922,7 @@ function deleteAssetHdrNDet($valLnid, $docNum)
     $delSQL = "DELETE FROM accb.accb_fa_assets_rgstr WHERE asset_id = " . $valLnid;
     $affctd4 = execUpdtInsSQL($delSQL, $docNum);
 
-    if ($affctd1 > 0) {
+    if ($affctd4 > 0) {
         $dsply = "";
         $dsply .= "<br/>Successfully Executed the ff-";
         $dsply .= "<br/>Deleted $affctd4 Asset/Investment(s)!";
@@ -6014,10 +6014,8 @@ function get_AssetPMRecs($searchWord, $searchIn, $offset, $limit_size, $hdrID)
     }
 
     $strSql = "SELECT asset_pm_rec_id, measurement_type, uom, 
-to_char(to_timestamp(record_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS'), 
-starting_fig, ending_fig, is_pm_done, 
-exact_pm_action_done, comments_remarks, 
-       asset_id 
+        to_char(to_timestamp(record_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS'), 
+        starting_fig, ending_fig, is_pm_done, exact_pm_action_done, comments_remarks, asset_id 
   FROM accb.accb_fa_assets_pm_recs a " .
         "WHERE((a.asset_id = " . $hdrID . ")" . $whrcls .
         ") ORDER BY record_date DESC LIMIT " . $limit_size .
