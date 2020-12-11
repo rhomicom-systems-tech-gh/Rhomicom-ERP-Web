@@ -54,8 +54,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 } else {
                     restricted();
                 }
-            } else if ($actyp == 5) {
-                
+            } else if ($actyp == 5) {                
+                /* Delete Doc Attachment Line */
+                $pKeyID = isset($_POST['attchmentID']) ? cleanInputData($_POST['attchmentID']) : -1;
+                $pKeyNm = isset($_POST['docTrnsNum']) ? cleanInputData($_POST['docTrnsNum']) : "";
+                if ($canDel) {
+                    echo deleteSalesInvcDoc($pKeyID, $pKeyNm);
+                } else {
+                    restricted();
+                }
             }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {

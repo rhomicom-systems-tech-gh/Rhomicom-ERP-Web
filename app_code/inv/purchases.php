@@ -42,7 +42,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     restricted();
                 }
             } else if ($actyp == 5) {
-                
+                /* Delete Doc Attachment Line */
+                $pKeyID = isset($_POST['attchmentID']) ? cleanInputData($_POST['attchmentID']) : -1;
+                $pKeyNm = isset($_POST['docTrnsNum']) ? cleanInputData($_POST['docTrnsNum']) : "";
+                if ($canDel) {
+                    echo deleteCnsgnRcptDoc($pKeyID, $pKeyNm);
+                } else {
+                    restricted();
+                }
             }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {
@@ -67,7 +74,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 }
                 $scmPrchsDocSpplrID = isset($_POST['scmPrchsDocSpplrID']) ? (float) cleanInputData($_POST['scmPrchsDocSpplrID']) : -1;
                 $scmPrchsDocSpplrSiteID = isset($_POST['scmPrchsDocSpplrSiteID']) ? (float) cleanInputData($_POST['scmPrchsDocSpplrSiteID'])
-                            : -1;
+                    : -1;
                 $scmPrchsDocDesc = isset($_POST['scmPrchsDocDesc']) ? cleanInputData($_POST['scmPrchsDocDesc']) : '';
                 $scmPrchsDocPayTerms = isset($_POST['scmPrchsDocPayTerms']) ? cleanInputData($_POST['scmPrchsDocPayTerms']) : '';
                 $srcPrchsDocDocID = isset($_POST['srcPrchsDocDocID']) ? (float) cleanInputData($_POST['srcPrchsDocDocID']) : -1;
@@ -113,15 +120,48 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     exit();
                 }
                 if ($sbmtdScmPrchsDocID <= 0) {
-                    createPrchsDocHdr($orgID, $scmPrchsDocDocNum, $scmPrchsDocDesc, $scmPrchsDocVchType, $scmPrchsDocDfltTrnsDte,
-                            $scmPrchsDocPayTerms, $scmPrchsDocSpplrID, $scmPrchsDocSpplrSiteID, $apprvlStatus, $nxtApprvlActn,
-                            $srcPrchsDocDocID, $scmPrchsDocInvcCurID, $scmPrchsDocExRate, $scmPrchsDocNeedByDte, $scmPrchsDocBrnchID);
-                    $sbmtdScmPrchsDocID = getGnrlRecID("scm.scm_prchs_docs_hdr", "purchase_doc_num", "prchs_doc_hdr_id", $scmPrchsDocDocNum,
-                            $orgID);
+                    createPrchsDocHdr(
+                        $orgID,
+                        $scmPrchsDocDocNum,
+                        $scmPrchsDocDesc,
+                        $scmPrchsDocVchType,
+                        $scmPrchsDocDfltTrnsDte,
+                        $scmPrchsDocPayTerms,
+                        $scmPrchsDocSpplrID,
+                        $scmPrchsDocSpplrSiteID,
+                        $apprvlStatus,
+                        $nxtApprvlActn,
+                        $srcPrchsDocDocID,
+                        $scmPrchsDocInvcCurID,
+                        $scmPrchsDocExRate,
+                        $scmPrchsDocNeedByDte,
+                        $scmPrchsDocBrnchID
+                    );
+                    $sbmtdScmPrchsDocID = getGnrlRecID(
+                        "scm.scm_prchs_docs_hdr",
+                        "purchase_doc_num",
+                        "prchs_doc_hdr_id",
+                        $scmPrchsDocDocNum,
+                        $orgID
+                    );
                 } else if ($sbmtdScmPrchsDocID > 0) {
-                    updtPrchsDocHdr($sbmtdScmPrchsDocID, $scmPrchsDocDocNum, $scmPrchsDocDesc, $scmPrchsDocVchType, $scmPrchsDocDfltTrnsDte,
-                            $scmPrchsDocPayTerms, $scmPrchsDocSpplrID, $scmPrchsDocSpplrSiteID, $apprvlStatus, $nxtApprvlActn,
-                            $srcPrchsDocDocID, $scmPrchsDocInvcCurID, $scmPrchsDocExRate, $scmPrchsDocNeedByDte, $scmPrchsDocBrnchID);
+                    updtPrchsDocHdr(
+                        $sbmtdScmPrchsDocID,
+                        $scmPrchsDocDocNum,
+                        $scmPrchsDocDesc,
+                        $scmPrchsDocVchType,
+                        $scmPrchsDocDfltTrnsDte,
+                        $scmPrchsDocPayTerms,
+                        $scmPrchsDocSpplrID,
+                        $scmPrchsDocSpplrSiteID,
+                        $apprvlStatus,
+                        $nxtApprvlActn,
+                        $srcPrchsDocDocID,
+                        $scmPrchsDocInvcCurID,
+                        $scmPrchsDocExRate,
+                        $scmPrchsDocNeedByDte,
+                        $scmPrchsDocBrnchID
+                    );
                 }
                 $afftctd = 0;
                 $afftctd1 = 0;
@@ -152,12 +192,34 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 //Create Sales Doc Lines
                                 if ($ln_LineDesc != "" && $ln_ItmID > 0 && $ln_QTY > 0) {
                                     if ($ln_TrnsLnID <= 0) {
-                                        $afftctd += createPrchsDocLn($sbmtdScmPrchsDocID, $ln_ItmID, $ln_QTY, $ln_UnitPrice, $ln_StoreID,
-                                                $scmPrchsDocInvcCurID, $ln_SrcDocLnID, $ln_LineDesc, $ln_TaxID, $ln_DscntID, $ln_ChrgID);
+                                        $afftctd += createPrchsDocLn(
+                                            $sbmtdScmPrchsDocID,
+                                            $ln_ItmID,
+                                            $ln_QTY,
+                                            $ln_UnitPrice,
+                                            $ln_StoreID,
+                                            $scmPrchsDocInvcCurID,
+                                            $ln_SrcDocLnID,
+                                            $ln_LineDesc,
+                                            $ln_TaxID,
+                                            $ln_DscntID,
+                                            $ln_ChrgID
+                                        );
                                     } else {
-                                        $afftctd += updatePrchsDocLn($ln_TrnsLnID, $sbmtdScmPrchsDocID, $ln_ItmID, $ln_QTY, $ln_UnitPrice,
-                                                $ln_StoreID, $scmPrchsDocInvcCurID, $ln_SrcDocLnID, $ln_LineDesc, $ln_TaxID, $ln_DscntID,
-                                                $ln_ChrgID);
+                                        $afftctd += updatePrchsDocLn(
+                                            $ln_TrnsLnID,
+                                            $sbmtdScmPrchsDocID,
+                                            $ln_ItmID,
+                                            $ln_QTY,
+                                            $ln_UnitPrice,
+                                            $ln_StoreID,
+                                            $scmPrchsDocInvcCurID,
+                                            $ln_SrcDocLnID,
+                                            $ln_LineDesc,
+                                            $ln_TaxID,
+                                            $ln_DscntID,
+                                            $ln_ChrgID
+                                        );
                                     }
                                 }
                             } else {
@@ -166,10 +228,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         }
                     }
                 }
-//Final Approval
+                //Final Approval
                 if ($shdSbmt !== 2) {
-                    $errMsg1 = reCalcPrchsDocSmmrys($sbmtdScmPrchsDocID, $scmPrchsDocVchType, $scmPrchsDocSpplrID, $scmPrchsDocInvcCurID,
-                            $apprvlStatus);
+                    $errMsg1 = reCalcPrchsDocSmmrys(
+                        $sbmtdScmPrchsDocID,
+                        $scmPrchsDocVchType,
+                        $scmPrchsDocSpplrID,
+                        $scmPrchsDocInvcCurID,
+                        $apprvlStatus
+                    );
                     if (strpos($errMsg1, "ERROR") !== FALSE) {
                         $exitErrMsg .= "<br/>" . $errMsg1;
                     }
@@ -177,8 +244,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $errMsg = "";
                 if ($exitErrMsg != "") {
                     $exitErrMsg = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>Document Successfully Saved!"
-                            . "<br/>" . $afftctd . " Transaction(s) Saved Successfully!"
-                            . "<br/><span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>" . $exitErrMsg . "</span>";
+                        . "<br/>" . $afftctd . " Transaction(s) Saved Successfully!"
+                        . "<br/><span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>" . $exitErrMsg . "</span>";
                 } else {
                     $exitErrMsg = "";
                     if ($shdSbmt == 2) {
@@ -192,7 +259,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                           updtRcvblsDocApprvl($sbmtdAccbRcvblsInvcID, "Approved", "Cancel"); */
                     } else {
                         $exitErrMsg .= "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>Document Successfully Saved!"
-                                . "<br/>" . $afftctd . " Document Transaction(s) Saved Successfully!";
+                            . "<br/>" . $afftctd . " Document Transaction(s) Saved Successfully!";
                     }
                 }
                 $arr_content['percent'] = 100;
@@ -218,15 +285,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 if ($attchmentID > 0) {
                     uploadDaPrchsDocDoc($attchmentID, $nwImgLoc, $errMsg);
                 } else {
-                    $attchmentID = getNewPrchsDocDocID();
-                    createPrchsDocDoc($attchmentID, $pkID, $docCtrgrName, "");
+                    $attchmentID = getNewCnsgnRcptDocID();
+                    createCnsgnRcptDoc($attchmentID, $pkID, "PURCHASE", $docCtrgrName, "");
                     uploadDaPrchsDocDoc($attchmentID, $nwImgLoc, $errMsg);
                 }
                 $arr_content['attchID'] = $attchmentID;
                 if (strpos($errMsg, "Document Stored Successfully!<br/>") === FALSE) {
                     $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>" . $errMsg;
                 } else {
-                    $doc_src = $ftp_base_db_fldr . "/Sales/" . $nwImgLoc;
+                    $doc_src = $ftp_base_db_fldr . "/Prchs/" . $nwImgLoc;
                     $doc_src_encrpt = encrypt1($doc_src, $smplTokenWord1);
                     if (file_exists($doc_src)) {
                         //file exists!
@@ -323,11 +390,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $colClassType1 = "col-md-2";
                     $colClassType2 = "col-md-5";
                     $colClassType3 = "col-md-5";
-                    ?> 
+?>
                     <form id='scmPrchsDocForm' action='' method='post' accept-charset='UTF-8'>
                         <!--ROW ID-->
-                        <input class="form-control" id="tblRowID" type = "hidden" placeholder="ROW ID"/>                     
-                        <fieldset class=""><legend class="basic_person_lg1" style="color: #003245">PURCHASING DOCUMENTS</legend>
+                        <input class="form-control" id="tblRowID" type="hidden" placeholder="ROW ID" />
+                        <fieldset class="">
+                            <legend class="basic_person_lg1" style="color: #003245">PURCHASING DOCUMENTS</legend>
                             <div class="row" style="margin-bottom:0px;">
                                 <?php
                                 $colClassType1 = "col-md-2";
@@ -336,11 +404,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 ?>
                                 <div class="<?php echo $colClassType3; ?>" style="padding:0px 15px 0px 15px !important;">
                                     <div class="input-group">
-                                        <input class="form-control" id="scmPrchsDocSrchFor" type = "text" placeholder="Search For" value="<?php
-                                        echo trim(str_replace("%", " ", $srchFor));
-                                        ?>" onkeyup="enterKeyFuncScmPrchsDoc(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
-                                        <input id="scmPrchsDocPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
-                                        <input id="sbmtdScmPrchsReqID" type = "hidden" value="-1">
+                                        <input class="form-control" id="scmPrchsDocSrchFor" type="text" placeholder="Search For" value="<?php
+                                                                                                                                        echo trim(str_replace("%", " ", $srchFor));
+                                                                                                                                        ?>" onkeyup="enterKeyFuncScmPrchsDoc(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
+                                        <input id="scmPrchsDocPageNo" type="hidden" value="<?php echo $pageNo; ?>">
+                                        <input id="sbmtdScmPrchsReqID" type="hidden" value="-1">
                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getScmPrchsDoc('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0');">
                                             <span class="glyphicon glyphicon-remove"></span>
                                         </label>
@@ -351,18 +419,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <select data-placeholder="Select..." class="form-control chosen-select" id="scmPrchsDocSrchIn">
                                             <?php
                                             $valslctdArry = array("", "", "", "", "", "", "");
-                                            $srchInsArrys = array("Document Number", "Document Description",
-                                                "Supplier Name", "Requisition Number", "Approval Status", "Created By", "Branch");
+                                            $srchInsArrys = array(
+                                                "Document Number", "Document Description",
+                                                "Supplier Name", "Requisition Number", "Approval Status", "Created By", "Branch"
+                                            );
                                             for ($z = 0; $z < count($srchInsArrys); $z++) {
                                                 if ($srchIn == $srchInsArrys[$z]) {
                                                     $valslctdArry[$z] = "selected";
                                                 }
-                                                ?>
+                                            ?>
                                                 <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                             <?php } ?>
                                         </select>
                                         <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
-                                        <select data-placeholder="Select..." class="form-control chosen-select" id="scmPrchsDocDsplySze" style="min-width:70px !important;">                            
+                                        <select data-placeholder="Select..." class="form-control chosen-select" id="scmPrchsDocDsplySze" style="min-width:70px !important;">
                                             <?php
                                             $valslctdArry = array("", "", "", "", "", "", "", "");
                                             $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000, 1000000);
@@ -372,12 +442,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 } else {
                                                     $valslctdArry[$y] = "";
                                                 }
-                                                ?>
-                                                <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
-                                                <?php
+                                            ?>
+                                                <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>
+                                            <?php
                                             }
                                             ?>
-                                        </select> 
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="<?php echo $colClassType1; ?>">
@@ -396,59 +466,59 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </ul>
                                     </nav>
                                 </div>
-                            </div>   
-                            <div class="row " style="margin-bottom:2px;padding:2px 15px 2px 15px !important">   
+                            </div>
+                            <div class="row " style="margin-bottom:2px;padding:2px 15px 2px 15px !important">
                                 <div class="col-md-12" style="padding:2px 1px 2px 1px !important;border-top:1px solid #ddd;border-bottom:1px solid #ddd;">
-                                    <?php if ($canAdd === true) { ?>   
-                                        <div class="col-md-6" style="padding:0px 0px 0px 0px !important;">                      
+                                    <?php if ($canAdd === true) { ?>
+                                        <div class="col-md-6" style="padding:0px 0px 0px 0px !important;">
                                             <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="getOneScmPrchsDocForm(-1, 1, 'ShowDialog', 'Purchase Order');" data-toggle="tooltip" data-placement="bottom" title="Add New Purchase Order">
                                                 <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 NEW PO
-                                            </button>                 
+                                            </button>
                                             <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="getOneScmPrchsDocForm(-1, 1, 'ShowDialog', 'Purchase Requisition');" data-toggle="tooltip" data-placement="bottom" title="Add New Purchase Requisition">
                                                 <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 NEW PR
-                                            </button>                 
+                                            </button>
                                             <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Approved Requisitions', 'allOtherInputOrgID', '', '', 'radio', true, '', 'sbmtdScmPrchsReqID', '', 'clear', 1, '', function () {
                                                         getOneScmPrchsDocForm(-1, 1, 'ShowDialog', 'Purchase Order');
                                                     });" data-toggle="tooltip" data-placement="bottom" title="Add New Purchase Order from Purchase Requisition">
                                                 <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 NEW PO FROM PR
                                             </button>
-                                        </div>  
+                                        </div>
                                     <?php } ?>
                                     <div class="col-md-3" style="padding:5px 1px 0px 1px !important;display:none;">
-                                        <div class = "form-check" style = "font-size: 12px !important;">
-                                            <label class = "form-check-label">
+                                        <div class="form-check" style="font-size: 12px !important;">
+                                            <label class="form-check-label">
                                                 <?php
                                                 $shwUnpaidOnlyChkd = "";
                                                 if ($qShwUnpaidOnly == true) {
                                                     $shwUnpaidOnlyChkd = "checked=\"true\"";
                                                 }
                                                 ?>
-                                                <input type="checkbox" class="form-check-input" onclick="getScmPrchsDoc('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="scmPrchsDocShwUnpaidOnly" name="scmPrchsDocShwUnpaidOnly"  <?php echo $shwUnpaidOnlyChkd; ?>>
+                                                <input type="checkbox" class="form-check-input" onclick="getScmPrchsDoc('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="scmPrchsDocShwUnpaidOnly" name="scmPrchsDocShwUnpaidOnly" <?php echo $shwUnpaidOnlyChkd; ?>>
                                                 Show Approved but Unpaid
                                             </label>
-                                        </div> 
+                                        </div>
                                     </div>
-                                    <div class = "col-md-3" style = "padding:5px 1px 0px 1px !important;display:none;">
-                                        <div class = "form-check" style = "font-size: 12px !important;">
-                                            <label class = "form-check-label">
+                                    <div class="col-md-3" style="padding:5px 1px 0px 1px !important;display:none;">
+                                        <div class="form-check" style="font-size: 12px !important;">
+                                            <label class="form-check-label">
                                                 <?php
                                                 $shwUnpstdOnlyChkd = "";
                                                 if ($qShwUnpstdOnly == true) {
                                                     $shwUnpstdOnlyChkd = "checked=\"true\"";
                                                 }
                                                 ?>
-                                                <input type="checkbox" class="form-check-input" onclick="getScmPrchsDoc('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="scmPrchsDocShwUnpstdOnly" name="scmPrchsDocShwUnpstdOnly"  <?php echo $shwUnpstdOnlyChkd; ?>>
+                                                <input type="checkbox" class="form-check-input" onclick="getScmPrchsDoc('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="scmPrchsDocShwUnpstdOnly" name="scmPrchsDocShwUnpstdOnly" <?php echo $shwUnpstdOnlyChkd; ?>>
                                                 Show Only Unposted
                                             </label>
-                                        </div>                            
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row"> 
-                                <div  class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12">
                                     <table class="table table-striped table-bordered table-responsive" id="scmPrchsDocHdrsTable" cellspacing="0" width="100%" style="width:100%;">
                                         <thead>
                                             <tr>
@@ -456,7 +526,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <th style="max-width:30px;width:30px;">...</th>
                                                 <th>Document Number/Type - Transaction Description</th>
                                                 <th style="max-width:75px;width:75px;">Branch</th>
-                                                <th style="text-align:center;max-width:30px;width:30px;">CUR.</th>	
+                                                <th style="text-align:center;max-width:30px;width:30px;">CUR.</th>
                                                 <th style="text-align:right;min-width:100px;width:100px;">Total Amount</th>
                                                 <th style="max-width:75px;width:75px;">Document Status</th>
                                                 <?php if ($canDel === true) { ?>
@@ -471,15 +541,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <?php
                                             while ($row = loc_db_fetch_array($result)) {
                                                 $cntr += 1;
-                                                ?>
-                                                <tr id="scmPrchsDocHdrsRow_<?php echo $cntr; ?>">                                    
-                                                    <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>    
+                                            ?>
+                                                <tr id="scmPrchsDocHdrsRow_<?php echo $cntr; ?>">
+                                                    <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
                                                     <td class="lovtd">
-                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View/Edit Document" 
-                                                                onclick="getOneScmPrchsDocForm(<?php echo $row[0]; ?>, 1, 'ShowDialog', '<?php echo $row[2]; ?>');" style="padding:2px !important;" style="padding:2px !important;">                                                                
-                                                                    <?php
-                                                                    if ($canAdd === true) {
-                                                                        ?>                                
+                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View/Edit Document" onclick="getOneScmPrchsDocForm(<?php echo $row[0]; ?>, 1, 'ShowDialog', '<?php echo $row[2]; ?>');" style="padding:2px !important;" style="padding:2px !important;">
+                                                            <?php
+                                                            if ($canAdd === true) {
+                                                            ?>
                                                                 <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             <?php } else { ?>
                                                                 <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
@@ -490,8 +559,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td class="lovtd"><?php echo $row[9]; ?></td>
                                                     <td class="lovtd" style="text-align:center;font-weight: bold;color:black;"><?php echo $row[4]; ?></td>
                                                     <td class="lovtd" style="text-align:right;font-weight: bold;color:blue;"><?php
-                                                        echo number_format((float) $row[5], 2);
-                                                        ?>
+                                                                                                                                echo number_format((float) $row[5], 2);
+                                                                                                                                ?>
                                                     </td>
                                                     <?php
                                                     $style1 = "color:red;";
@@ -501,7 +570,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         $style1 = "color:#0d0d0d;";
                                                     }
                                                     ?>
-                                                    <td class="lovtd" style="font-weight:bold;<?php echo $style1; ?>"><?php echo $row[6]; ?></td>  
+                                                    <td class="lovtd" style="font-weight:bold;<?php echo $style1; ?>"><?php echo $row[6]; ?></td>
                                                     <?php if ($canDel === true) { ?>
                                                         <td class="lovtd">
                                                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Delete Transaction" onclick="delScmPrchsDoc('scmPrchsDocHdrsRow_<?php echo $cntr; ?>');" style="padding:2px !important;" style="padding:2px !important;">
@@ -512,27 +581,28 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <?php } ?>
                                                     <?php
                                                     if ($canVwRcHstry === true) {
-                                                        ?>
+                                                    ?>
                                                         <td class="lovtd">
                                                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php
-                                                            echo urlencode(encrypt1(($row[0] . "|scm.scm_prchs_docs_det|prchs_doc_hdr_id"),
-                                                                            $smplTokenWord1));
-                                                            ?>');" style="padding:2px !important;">
+                                                                                                                                                                                                                    echo urlencode(encrypt1(($row[0] . "|scm.scm_prchs_docs_det|prchs_doc_hdr_id"),
+                                                                                                                                                                                                                        $smplTokenWord1
+                                                                                                                                                                                                                    ));
+                                                                                                                                                                                                                    ?>');" style="padding:2px !important;">
                                                                 <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             </button>
                                                         </td>
                                                     <?php } ?>
                                                 </tr>
-                                                <?php
+                                            <?php
                                             }
                                             ?>
                                         </tbody>
                                     </table>
-                                </div>                     
+                                </div>
                             </div>
                         </fieldset>
                     </form>
-                    <?php
+                <?php
                 }
             } else if ($vwtyp == 1) {
                 //New Purchase Order Form
@@ -554,7 +624,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     exit();
                 }
                 $orgnlScmPrchsDocID = $sbmtdScmPrchsDocID;
-                $scmPrchsDocDfltTrnsDte = $gnrlTrnsDteDMY;//HMS
+                $scmPrchsDocDfltTrnsDte = $gnrlTrnsDteDMY; //HMS
                 $scmPrchsDocCreator = $uName;
                 $scmPrchsDocCreatorID = $usrID;
                 $scmPrchsDocBrnchID = $brnchLocID;
@@ -635,8 +705,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 $mkRmrkReadOnly = "readonly=\"true\"";
                             }
                         }
-                        $errMsg1 = reCalcPrchsDocSmmrys($sbmtdScmPrchsDocID, $scmPrchsDocVchType, $scmPrchsDocSpplrID,
-                                $scmPrchsDocInvcCurID, $rqStatus);
+                        $errMsg1 = reCalcPrchsDocSmmrys(
+                            $sbmtdScmPrchsDocID,
+                            $scmPrchsDocVchType,
+                            $scmPrchsDocSpplrID,
+                            $scmPrchsDocInvcCurID,
+                            $rqStatus
+                        );
                         $rslt = get_One_PrchsDocAmounts($sbmtdScmPrchsDocID);
                         if ($rw = loc_db_fetch_array($rslt)) {
                             $scmPrchsDocTtlAmnt = (float) $rw[0];
@@ -653,8 +728,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
                     $docTypPrfx = $docTypPrfxs[findArryIdx($docTypes, $scmPrchsDocVchType)];
                     $gnrtdTrnsNo1 = $docTypPrfx . "-" . $usrTrnsCode . "-" . $dte . "-";
-                    $gnrtdTrnsNo = $gnrtdTrnsNo1 . str_pad(((getRecCount_LstNum("scm.scm_prchs_docs_hdr", "purchase_doc_num",
-                                            "prchs_doc_hdr_id", $gnrtdTrnsNo1 . "%") + 1) . ""), 3, '0', STR_PAD_LEFT);
+                    $gnrtdTrnsNo = $gnrtdTrnsNo1 . str_pad(((getRecCount_LstNum(
+                        "scm.scm_prchs_docs_hdr",
+                        "purchase_doc_num",
+                        "prchs_doc_hdr_id",
+                        $gnrtdTrnsNo1 . "%"
+                    ) + 1) . ""), 3, '0', STR_PAD_LEFT);
                     if ($srcPrchsDocDocID > 0) {
                         $result = get_One_PrchsDocDocHdr($srcPrchsDocDocID);
                         if ($row = loc_db_fetch_array($result)) {
@@ -678,10 +757,23 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             }
                         }
                     }
-                    $sbmtdScmPrchsDocID = createPrchsDocHdr($orgID, $gnrtdTrnsNo, $scmPrchsDocDesc, $scmPrchsDocVchType,
-                            $scmPrchsDocDfltTrnsDte, $scmPrchsDocPayTerms, $scmPrchsDocSpplrID, $scmPrchsDocSpplrSiteID, $rqStatus,
-                            $rqStatusNext, $srcPrchsDocDocID, $scmPrchsDocInvcCurID, $scmPrchsDocExRate, $scmPrchsDocNeedByDte,
-                            $scmPrchsDocBrnchID);
+                    $sbmtdScmPrchsDocID = createPrchsDocHdr(
+                        $orgID,
+                        $gnrtdTrnsNo,
+                        $scmPrchsDocDesc,
+                        $scmPrchsDocVchType,
+                        $scmPrchsDocDfltTrnsDte,
+                        $scmPrchsDocPayTerms,
+                        $scmPrchsDocSpplrID,
+                        $scmPrchsDocSpplrSiteID,
+                        $rqStatus,
+                        $rqStatusNext,
+                        $srcPrchsDocDocID,
+                        $scmPrchsDocInvcCurID,
+                        $scmPrchsDocExRate,
+                        $scmPrchsDocNeedByDte,
+                        $scmPrchsDocBrnchID
+                    );
                 }
                 $reportName = getEnbldPssblValDesc("Sales Invoice", getLovID("Document Custom Print Process Names"));
                 $reportTitle = str_replace("Purchase Order", "Payment Voucher", $scmPrchsDocVchType);
@@ -734,12 +826,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <div class="col-md-8">
                                         <input type="text" class="form-control" aria-label="..." id="scmPrchsDocVchType" name="scmPrchsDocVchType" value="<?php echo $scmPrchsDocVchType; ?>" readonly="true">
                                     </div>
-                                </div>   
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="scmPrchsDocSpplr" class="control-label col-md-4">Supplier:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <div class="input-group">
                                             <input type="text" class="form-control" aria-label="..." id="scmPrchsDocSpplr" name="scmPrchsDocSpplr" value="<?php echo $scmPrchsDocSpplr; ?>" readonly="true">
                                             <input type="hidden" id="scmPrchsDocSpplrID" value="<?php echo $scmPrchsDocSpplrID; ?>">
@@ -754,10 +846,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </label>
                                         </div>
                                     </div>
-                                </div>  
+                                </div>
                                 <div class="form-group">
                                     <label for="scmPrchsDocSpplrSite" class="control-label col-md-4">Site:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <div class="input-group">
                                             <input type="text" class="form-control" aria-label="..." id="scmPrchsDocSpplrSite" name="scmPrchsDocSpplrSite" value="<?php echo $scmPrchsDocSpplrSite; ?>" readonly="true">
                                             <input class="form-control" type="hidden" id="scmPrchsDocSpplrSiteID" value="<?php echo $scmPrchsDocSpplrSiteID; ?>">
@@ -766,13 +858,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </label>
                                         </div>
                                     </div>
-                                </div>                                                               
+                                </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
                                         <label style="margin-bottom:0px !important;">Remark / Narration:</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <div class="input-group"  style="width:100%;">
+                                        <div class="input-group" style="width:100%;">
                                             <textarea class="form-control rqrdFld" rows="1" cols="20" id="scmPrchsDocDesc" name="scmPrchsDocDesc" <?php echo $mkRmrkReadOnly; ?> style="text-align:left !important;min-height: 30px !important;height: 30px !important;"><?php echo $scmPrchsDocDesc; ?></textarea>
                                             <input class="form-control" type="hidden" id="scmPrchsDocDesc1" value="<?php echo $scmPrchsDocDesc; ?>">
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('scmPrchsDocDesc');" style="max-width:30px;width:30px;">
@@ -786,27 +878,27 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label style="margin-bottom:0px !important;">Payment Terms:</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <div class="input-group"  style="width:100%;">
+                                        <div class="input-group" style="width:100%;">
                                             <textarea class="form-control" rows="1" cols="20" id="scmPrchsDocPayTerms" name="scmPrchsDocPayTerms" <?php echo $mkReadOnly; ?> style="text-align:left !important;min-height: 30px !important;height: 30px !important;"><?php echo $scmPrchsDocPayTerms; ?></textarea>
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('scmPrchsDocPayTerms');" style="max-width:30px;width:30px;">
                                                 <span class="glyphicon glyphicon-search"></span>
                                             </label>
                                         </div>
                                     </div>
-                                </div>  
+                                </div>
                             </div>
-                            <div class = "col-md-4">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="srcPrchsDocDocNum" class="control-label col-md-4">Source Doc. No.:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <input type="hidden" class="form-control" aria-label="..." id="srcPrchsDocDocTyp" name="srcPrchsDocDocTyp" value="<?php echo $srcPrchsDocDocTyp; ?>">
                                         <input type="hidden" id="srcPrchsDocDocID" value="<?php echo $srcPrchsDocDocID; ?>"><?php
-                                        $lovNm = "";
-                                        if ($scmPrchsDocVchType == "Purchase Requisition") {
-                                            $lovNm = "Approved Purchase Orders";
-                                        }
-                                        if (!($scmPrchsDocVchType == "Purchase Requisition" || $scmPrchsDocVchType == "Purchase Order")) {
-                                            ?>
+                                                                                                                            $lovNm = "";
+                                                                                                                            if ($scmPrchsDocVchType == "Purchase Requisition") {
+                                                                                                                                $lovNm = "Approved Purchase Orders";
+                                                                                                                            }
+                                                                                                                            if (!($scmPrchsDocVchType == "Purchase Requisition" || $scmPrchsDocVchType == "Purchase Order")) {
+                                                                                                                            ?>
                                             <div class="input-group">
                                                 <input type="text" class="form-control" aria-label="..." id="srcPrchsDocDocNum" name="srcPrchsDocDocNum" value="<?php echo $srcPrchsDocDocNum; ?>" readonly="true" style="width:100%;">
                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', '<?php echo $lovNm; ?>', 'allOtherInputOrgID', 'scmPrchsDocSpplrID', 'scmPrchsDocInvcCur', 'radio', true, '', 'srcPrchsDocDocID', 'srcPrchsDocDocNum', 'clear', 1, '', function () {});" data-toggle="tooltip" title="Existing Document Number">
@@ -815,9 +907,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </div>
                                         <?php } else { ?>
                                             <input type="text" class="form-control" aria-label="..." id="srcPrchsDocDocNum" name="srcPrchsDocDocNum" value="<?php echo $srcPrchsDocDocNum; ?>" readonly="true" style="width:100%;">
-                <?php } ?>
+                                        <?php } ?>
                                     </div>
-                                </div>   
+                                </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
                                         <label style="margin-bottom:0px !important;">Document Total:</label>
@@ -833,11 +925,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     });">
                                                 <span class="" style="font-size: 20px !important;" id="scmPrchsDocInvcCur1"><?php echo $scmPrchsDocInvcCur; ?></span>
                                             </label>
-                                            <input type="hidden" id="scmPrchsDocInvcCur" value="<?php echo $scmPrchsDocInvcCur; ?>"> 
-                                            <input type="hidden" id="scmPrchsDocInvcCurID" value="<?php echo $scmPrchsDocInvcCurID; ?>"> 
+                                            <input type="hidden" id="scmPrchsDocInvcCur" value="<?php echo $scmPrchsDocInvcCur; ?>">
+                                            <input type="hidden" id="scmPrchsDocInvcCurID" value="<?php echo $scmPrchsDocInvcCurID; ?>">
                                             <input class="form-control" type="text" id="scmPrchsDocTtlAmnt" value="<?php
-                                                   echo number_format($scmPrchsDocTtlAmnt, 2);
-                                                   ?>" style="font-weight:bold;width:100%;font-size:18px !important;" onchange="fmtAsNumber('scmPrchsDocTtlAmnt');" readonly="true"/>
+                                                                                                                    echo number_format($scmPrchsDocTtlAmnt, 2);
+                                                                                                                    ?>" style="font-weight:bold;width:100%;font-size:18px !important;" onchange="fmtAsNumber('scmPrchsDocTtlAmnt');" readonly="true" />
                                         </div>
                                     </div>
                                 </div>
@@ -852,8 +944,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <span class="" style="font-size: 20px !important;" id="scmPrchsDocFuncCur"><?php echo "&nbsp;to " . $fnccurnm; ?></span>
                                             </label>
                                             <input type="text" class="form-control" aria-label="..." id="scmPrchsDocExRate" name="scmPrchsDocExRate" value="<?php
-                                                   echo number_format($scmPrchsDocExRate, 4);
-                                                   ?>" style="font-size: 18px !important;font-weight:bold;width:100%;" <?php echo $mkReadOnly; ?>>
+                                                                                                                                                            echo number_format($scmPrchsDocExRate, 4);
+                                                                                                                                                            ?>" style="font-size: 18px !important;font-weight:bold;width:100%;" <?php echo $mkReadOnly; ?>>
                                         </div>
                                     </div>
                                 </div>
@@ -862,7 +954,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label style="margin-bottom:0px !important;">Status:</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="hidden" id="scmPrchsDocApprvlStatus" value="<?php echo $rqStatus; ?>">                              
+                                        <input type="hidden" id="scmPrchsDocApprvlStatus" value="<?php echo $rqStatus; ?>">
                                         <button type="button" class="btn btn-default" style="height:30px;width:100% !important;" id="myScmPrchsDocStatusBtn">
                                             <span style="color:<?php echo $rqstatusColor; ?>;font-weight: bold;height:30px;">
                                                 <?php
@@ -878,14 +970,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <fieldset class="">
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="custDiv" style="padding:0px !important;min-height: 30px !important;"> 
+                                <div class="custDiv" style="padding:0px !important;min-height: 30px !important;">
                                     <div class="tab-content" style="padding:3px 5px 2px 5px!important;">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <?php
                                                 $edtPriceRdOnly = "";
                                                 $nwRowHtml33 = "<tr id=\"oneScmPrchsDocSmryRow__WWW123WWW\" onclick=\"$('#allOtherInputData99').val($('#oneScmPrchsDocSmryLinesTable tr').index(this));\">"
-                                                        . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>                          
+                                                    . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>                          
                                                            <td class=\"lovtd\"  style=\"\">  
                                                                         <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"oneScmPrchsDocSmryRow_WWW123WWW_TrnsLnID\" value=\"-1\" style=\"width:100% !important;\">
                                                                         <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"oneScmPrchsDocSmryRow_WWW123WWW_ItmID\" value=\"-1\" style=\"width:100% !important;\">  
@@ -952,37 +1044,37 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         </td>
                                                     </tr>";
                                                 $nwRowHtml33 = urlencode($nwRowHtml33);
-                                                ?> 
+                                                ?>
                                                 <div class="col-md-12" style="padding:0px 0px 0px 0px !important;">
                                                     <div class="col-md-4" style="padding:0px 0px 0px 0px !important;float:left;">
-                <?php if ($canEdt) { ?>
+                                                        <?php if ($canEdt) { ?>
                                                             <input type="hidden" id="nwSalesDocLineHtm" value="<?php echo $nwRowHtml33; ?>">
-                                                            <button id="addNwScmPrchsDocSmryBtn" type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="insertNewScmSalesInvcRows('oneScmPrchsDocSmryLinesTable', 0, '<?php echo $nwRowHtml33; ?>');" data-toggle="tooltip" data-placement="bottom" title = "New Transaction Line">
+                                                            <button id="addNwScmPrchsDocSmryBtn" type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="insertNewScmSalesInvcRows('oneScmPrchsDocSmryLinesTable', 0, '<?php echo $nwRowHtml33; ?>');" data-toggle="tooltip" data-placement="bottom" title="New Transaction Line">
                                                                 <img src="cmn_images/add1-64.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
-                                                            </button>                                 
-                <?php } ?>
-                                                        <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getOneScmPrchsDocDocsForm(<?php echo $sbmtdScmPrchsDocID; ?>, 20);" data-toggle="tooltip" data-placement="bottom" title = "Attached Documents">
+                                                            </button>
+                                                        <?php } ?>
+                                                        <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getOneScmPrchsDocDocsForm(<?php echo $sbmtdScmPrchsDocID; ?>, 20);" data-toggle="tooltip" data-placement="bottom" title="Attached Documents">
                                                             <img src="cmn_images/adjunto.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
-                                                        </button> 
+                                                        </button>
                                                         <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getOneScmPrchsDocForm(<?php echo $sbmtdScmPrchsDocID; ?>, 1, 'ReloadDialog');"><img src="cmn_images/refresh.bmp" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;"></button>
-                                                        <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;"  onclick="getSilentRptsRnSts(<?php echo $rptID; ?>, -1, '<?php echo $paramStr; ?>');" style="width:100% !important;">
+                                                        <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getSilentRptsRnSts(<?php echo $rptID; ?>, -1, '<?php echo $paramStr; ?>');" style="width:100% !important;">
                                                             <img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             Print
                                                         </button>
                                                         <button type="button" class="btn btn-default" style="height:30px;margin-bottom: 1px;">
                                                             <span style="font-weight:bold;color:black;">Total: </span>
-                                                            <span style="color:red;font-weight: bold;" id="myCptrdPrchsDocValsTtlBtn"><?php echo $scmPrchsDocInvcCur; ?> 
+                                                            <span style="color:red;font-weight: bold;" id="myCptrdPrchsDocValsTtlBtn"><?php echo $scmPrchsDocInvcCur; ?>
                                                                 <?php
                                                                 echo number_format($scmPrchsDocTtlAmnt, 2);
                                                                 ?>
                                                             </span>
                                                             <input type="hidden" id="myCptrdPrchsDocValsTtlVal" value="<?php echo $scmPrchsDocTtlAmnt; ?>">
                                                         </button>
-                                                    </div>  
-                                                    <div class="col-md-4" style="padding:0px 10px 0px 10px !important;"> 
+                                                    </div>
+                                                    <div class="col-md-4" style="padding:0px 10px 0px 10px !important;">
                                                         <div class="form-group">
                                                             <label for="scmPrchsDocBrnchNm" class="control-label col-md-4" style="padding:5px 10px 0px 13px !important;">Branch:</label>
-                                                            <div  class="col-md-8" style="padding:0px 23px 0px 11px !important;">
+                                                            <div class="col-md-8" style="padding:0px 23px 0px 11px !important;">
                                                                 <div class="input-group">
                                                                     <input type="text" class="form-control" aria-label="..." id="scmPrchsDocBrnchNm" name="scmPrchsDocBrnchNm" value="<?php echo $scmPrchsDocBrnchNm; ?>" readonly="true">
                                                                     <input class="form-control" type="hidden" id="scmPrchsDocBrnchID" value="<?php echo $scmPrchsDocBrnchID; ?>">
@@ -992,39 +1084,39 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>  
+                                                    </div>
                                                     <div class="col-md-4" style="padding:0px 15px 0px 0px !important;">
-                                                        <div class="" style="padding:0px 0px 0px 0px;float:right !important;"> 
+                                                        <div class="" style="padding:0px 0px 0px 0px;float:right !important;">
                                                             <?php
                                                             if ($rqStatus == "Not Validated") {
-                                                                ?>
+                                                            ?>
                                                                 <?php if ($canEdt) { ?>
-                                                                    <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveScmPrchsDocForm('<?php echo $fnccurnm; ?>', 0);"><img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Save&nbsp;</button>    
+                                                                    <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveScmPrchsDocForm('<?php echo $fnccurnm; ?>', 0);"><img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Save&nbsp;</button>
                                                                 <?php } ?>
-                    <?php if ($canRvwApprvDocs) { ?>
+                                                                <?php if ($canRvwApprvDocs) { ?>
                                                                     <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveScmPrchsDocForm('<?php echo $fnccurnm; ?>', 2);" data-toggle="tooltip" data-placement="bottom" title="Finalize Document">
                                                                         <img src="cmn_images/tick_64.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Finalize
                                                                     </button>
-                                                                    <?php
+                                                                <?php
                                                                 }
                                                             } else if ($rqStatus == "Approved") {
                                                                 if ($cancelDocs) {
-                                                                    ?>
-                                                                    <button id="fnlzeRvrslScmPrchsDocBtn" type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveScmPrchsDocRvrslForm('<?php echo $fnccurnm; ?>', 1);"><img src="cmn_images/90.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Cancel Document&nbsp;</button>  
+                                                                ?>
+                                                                    <button id="fnlzeRvrslScmPrchsDocBtn" type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveScmPrchsDocRvrslForm('<?php echo $fnccurnm; ?>', 1);"><img src="cmn_images/90.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Cancel Document&nbsp;</button>
                                                                     <!--<button id="fnlzeBadDebtScmPrchsDocBtn" type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveScmPrchsDocRvrslForm('<?php echo $fnccurnm; ?>', 2);"  data-toggle="tooltip" data-placement="bottom" title="Declare as Bad Debt">
-                                                                    <img src="cmn_images/90.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Bad Debt&nbsp;</button>-->                                                                   
-                                                                    <?php
+                                                                    <img src="cmn_images/90.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Bad Debt&nbsp;</button>-->
+                                                            <?php
                                                                 }
                                                             }
                                                             ?>
                                                         </div>
-                                                    </div>                    
-                                                </div> 
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="custDiv" style="padding:0px !important;min-height: 40px !important;" id="oneScmPrchsDocLnsTblSctn"> 
+                                <div class="custDiv" style="padding:0px !important;min-height: 40px !important;" id="oneScmPrchsDocLnsTblSctn">
                                     <div class="tab-content" style="padding:5px !important;padding-top:7px !important;">
                                         <div id="PrchsDocDetLines" class="tab-pane fadein active" style="border:none !important;padding:0px !important;">
                                             <div class="row" style="padding:0px 13px 0px 13px !important;">
@@ -1040,11 +1132,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <th style="max-width:170px;width:120px;text-align: right;">Total Amount</th>
                                                                 <?php
                                                                 if ($scmPrchsDocVchType == "Purchase Order") {
-                                                                    ?>
+                                                                ?>
                                                                     <th style="max-width:50px;width:50px;text-align: right;">Source QTY</th>
                                                                 <?php } else { ?>
                                                                     <th style="max-width:50px;width:50px;text-align: right;">QTY in POs</th>
-                <?php } ?>
+                                                                <?php } ?>
                                                                 <th style="max-width:30px;width:30px;text-align: center;">CS</th>
                                                                 <th style="max-width:30px;width:30px;text-align: center;">TX</th>
                                                                 <th style="max-width:30px;width:30px;text-align: center;">DC</th>
@@ -1052,7 +1144,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <th style="max-width:30px;width:30px;text-align: center;">...</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>   
+                                                        <tbody>
                                                             <?php
                                                             $cntr = 0;
                                                             $resultRw = get_PrchsDocDocDet($sbmtdScmPrchsDocID);
@@ -1084,17 +1176,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     $trsctnLnUomNm = $rowRw[14];
                                                                     $trsctnLnDesc = $rowRw[15];
                                                                     $cntr += 1;
-                                                                    ?>
-                                                                    <tr id="oneScmPrchsDocSmryRow_<?php echo $cntr; ?>" onclick="$('#allOtherInputData99').val($('#oneScmPrchsDocSmryLinesTable tr').index(this));">                                    
-                                                                        <td class="lovtd"><span><?php echo ($cntr); ?></span></td>                                              
-                                                                        <td class="lovtd"  style="">  
+                                                            ?>
+                                                                    <tr id="oneScmPrchsDocSmryRow_<?php echo $cntr; ?>" onclick="$('#allOtherInputData99').val($('#oneScmPrchsDocSmryLinesTable tr').index(this));">
+                                                                        <td class="lovtd"><span><?php echo ($cntr); ?></span></td>
+                                                                        <td class="lovtd" style="">
                                                                             <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_TrnsLnID" value="<?php echo $trsctnLnID; ?>" style="width:100% !important;">
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_ItmID" value="<?php echo $trsctnLnItmID; ?>" style="width:100% !important;">  
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_StoreID" value="<?php echo $trsctnLnStoreID; ?>" style="width:100% !important;">  
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_SrcDocLnID" value="<?php echo $trsctnLnSrcLnID; ?>" style="width:100% !important;">  
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_ItmID" value="<?php echo $trsctnLnItmID; ?>" style="width:100% !important;">
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_StoreID" value="<?php echo $trsctnLnStoreID; ?>" style="width:100% !important;">
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_SrcDocLnID" value="<?php echo $trsctnLnSrcLnID; ?>" style="width:100% !important;">
                                                                             <?php
                                                                             if ($canEdt === true) {
-                                                                                ?>
+                                                                            ?>
                                                                                 <div class="input-group" style="width:100% !important;">
                                                                                     <input type="text" class="form-control rqrdFld jbDetAccRate jbDetDesc" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_LineDesc" name="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_LineDesc" value="<?php echo $trsctnLnDesc; ?>" style="width:100% !important;" <?php echo $mkReadOnly; ?> onkeypress="gnrlFldKeyPress(event, 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_LineDesc', 'oneScmPrchsDocSmryLinesTable', 'jbDetAccRate');" onblur="afterSalesInvcItmSlctn('oneScmPrchsDocSmryRow_<?php echo $cntr; ?>');" onchange="autoCreateSalesLns = 99;">
                                                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getScmSalesInvcItems('oneScmPrchsDocSmryRow_<?php echo $cntr; ?>', 'ShowDialog', '<?php echo $scmPrchsDocVchType; ?>', 'false', function () {
@@ -1104,67 +1196,63 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     </label>
                                                                                 </div>
                                                                             <?php } else {
-                                                                                ?>
+                                                                            ?>
                                                                                 <span><?php echo $trsctnLnDesc; ?></span>
-                                                                                <?php
+                                                                            <?php
                                                                             }
                                                                             ?>
-                                                                        </td> 
+                                                                        </td>
                                                                         <td class="lovtd" style="text-align: right;">
                                                                             <input type="text" class="form-control rqrdFld jbDetAccRate" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_QTY" name="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_QTY" value="<?php
-                                                                                   echo $trsctnLnQty;
-                                                                                   ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_QTY', 'oneScmPrchsDocSmryLinesTable', 'jbDetAccRate');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl('oneScmPrchsDocSmryLinesTable');">                                                    
-                                                                        </td>                                               
+                                                                                                                                                                                                                                                                            echo $trsctnLnQty;
+                                                                                                                                                                                                                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_QTY', 'oneScmPrchsDocSmryLinesTable', 'jbDetAccRate');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl('oneScmPrchsDocSmryLinesTable');">
+                                                                        </td>
                                                                         <td class="lovtd" style="max-width:35px;width:35px;text-align: center;">
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_UomID" value="<?php echo $trsctnLnUomID; ?>" style="width:100% !important;">  
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_UomID" value="<?php echo $trsctnLnUomID; ?>" style="width:100% !important;">
                                                                             <div class="" style="width:100% !important;">
                                                                                 <label class="btn btn-primary btn-file" onclick="getOneScmUOMBrkdwnForm(<?php echo $sbmtdScmPrchsDocID; ?>, 2, 'oneScmPrchsDocSmryRow_<?php echo $cntr; ?>');">
                                                                                     <span class="" id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_UomNm1"><?php echo $trsctnLnUomNm; ?></span>
                                                                                 </label>
-                                                                            </div>                                              
+                                                                            </div>
                                                                         </td>
                                                                         <td class="lovtd">
                                                                             <input type="text" class="form-control jbDetDbt" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_UnitPrice" name="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_UnitPrice" value="<?php
-                                                                                   echo number_format($trsctnLnUnitPrice, 5);
-                                                                                   ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_UnitPrice', 'oneScmPrchsDocSmryLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl('oneScmPrchsDocSmryLinesTable');">                                                    
+                                                                                                                                                                                                                                                                            echo number_format($trsctnLnUnitPrice, 5);
+                                                                                                                                                                                                                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_UnitPrice', 'oneScmPrchsDocSmryLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl('oneScmPrchsDocSmryLinesTable');">
                                                                         </td>
                                                                         <td class="lovtd">
                                                                             <input type="text" class="form-control jbDetCrdt" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_LineAmt" name="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_LineAmt" value="<?php
-                                                                                   echo number_format($trsctnLnAmnt, 2);
-                                                                                   ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_LineAmt', 'oneScmPrchsDocSmryLinesTable', 'jbDetCrdt');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl('oneScmPrchsDocSmryLinesTable');">                                                    
-                                                                        </td> 
+                                                                                                                                                                                                                                                                        echo number_format($trsctnLnAmnt, 2);
+                                                                                                                                                                                                                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_LineAmt', 'oneScmPrchsDocSmryLinesTable', 'jbDetCrdt');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl('oneScmPrchsDocSmryLinesTable');">
+                                                                        </td>
                                                                         <td class="lovtd" style="text-align: right;">
                                                                             <input type="text" class="form-control jbDetAccRate1" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_SrcQTY" name="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_SrcQTY" value="<?php
-                                                                                   echo $trsctnLnAvlblQty;
-                                                                                   ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_SrcQTY', 'oneScmPrchsDocSmryLinesTable', 'jbDetAccRate1');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl('oneScmPrchsDocSmryLinesTable');">                                                    
-                                                                        </td>   
+                                                                                                                                                                                                                                                                        echo $trsctnLnAvlblQty;
+                                                                                                                                                                                                                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_SrcQTY', 'oneScmPrchsDocSmryLinesTable', 'jbDetAccRate1');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl('oneScmPrchsDocSmryLinesTable');">
+                                                                        </td>
                                                                         <td class="lovtd" style="text-align: center;">
-                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Item Consignments" 
-                                                                                    onclick="getScmSalesInvcItems('oneScmPrchsDocSmryRow_<?php echo $cntr; ?>', 'ShowDialog', '<?php echo $scmPrchsDocVchType; ?>', 'true', function () {
+                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Item Consignments" onclick="getScmSalesInvcItems('oneScmPrchsDocSmryRow_<?php echo $cntr; ?>', 'ShowDialog', '<?php echo $scmPrchsDocVchType; ?>', 'true', function () {
                                                                                                 var a = 1;
-                                                                                            });" style="padding:2px !important;"> 
-                                                                                <img src="cmn_images/chcklst3.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                                                            });" style="padding:2px !important;">
+                                                                                <img src="cmn_images/chcklst3.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                             </button>
-                                                                        </td>    
+                                                                        </td>
                                                                         <td class="lovtd" style="text-align: center;">
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_TaxID" value="<?php echo $trsctnLnTxID; ?>" style="width:100% !important;">  
-                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Tax Codes" 
-                                                                                    onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Tax Codes', 'allOtherInputOrgID', '', '', 'radio', true, '<?php echo $trsctnLnTxID; ?>', 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_TaxID', '', 'clear', 1, '');" style="padding:2px !important;"> 
-                                                                                <img src="cmn_images/tax-icon420x500.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_TaxID" value="<?php echo $trsctnLnTxID; ?>" style="width:100% !important;">
+                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Tax Codes" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Tax Codes', 'allOtherInputOrgID', '', '', 'radio', true, '<?php echo $trsctnLnTxID; ?>', 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_TaxID', '', 'clear', 1, '');" style="padding:2px !important;">
+                                                                                <img src="cmn_images/tax-icon420x500.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                             </button>
-                                                                        </td>   
+                                                                        </td>
                                                                         <td class="lovtd" style="text-align: center;">
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_DscntID" value="<?php echo $trsctnLnDscntID; ?>" style="width:100% !important;">  
-                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Discounts" 
-                                                                                    onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Discount Codes', 'allOtherInputOrgID', '', '', 'radio', true, '<?php echo $trsctnLnDscntID; ?>', 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_DscntID', '', 'clear', 1, '');" style="padding:2px !important;"> 
-                                                                                <img src="cmn_images/dscnt_456356.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_DscntID" value="<?php echo $trsctnLnDscntID; ?>" style="width:100% !important;">
+                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Discounts" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Discount Codes', 'allOtherInputOrgID', '', '', 'radio', true, '<?php echo $trsctnLnDscntID; ?>', 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_DscntID', '', 'clear', 1, '');" style="padding:2px !important;">
+                                                                                <img src="cmn_images/dscnt_456356.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                             </button>
-                                                                        </td>  
+                                                                        </td>
                                                                         <td class="lovtd" style="text-align: center;">
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_ChrgID" value="<?php echo $trsctnLnChrgID; ?>" style="width:100% !important;">  
-                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Extra Charges" 
-                                                                                    onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Extra Charges', 'allOtherInputOrgID', '', '', 'radio', true, '<?php echo $trsctnLnChrgID; ?>', 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_ChrgID', '', 'clear', 1, '');" style="padding:2px !important;"> 
-                                                                                <img src="cmn_images/truck571d7f45.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_ChrgID" value="<?php echo $trsctnLnChrgID; ?>" style="width:100% !important;">
+                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Extra Charges" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Extra Charges', 'allOtherInputOrgID', '', '', 'radio', true, '<?php echo $trsctnLnChrgID; ?>', 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_ChrgID', '', 'clear', 1, '');" style="padding:2px !important;">
+                                                                                <img src="cmn_images/truck571d7f45.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                             </button>
                                                                         </td>
                                                                         <td class="lovtd" style="text-align: center;">
@@ -1173,7 +1261,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             </button>
                                                                         </td>
                                                                     </tr>
-                                                                    <?php
+                                                                <?php
                                                                 }
                                                             } else {
                                                                 $trsctnLnID = -1;
@@ -1194,16 +1282,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 $trsctnLnDesc = "";
                                                                 $cntr += 1;
                                                                 ?>
-                                                                <tr id="oneScmPrchsDocSmryRow_<?php echo $cntr; ?>" onclick="$('#allOtherInputData99').val($('#oneScmPrchsDocSmryLinesTable tr').index(this));">                                    
-                                                                    <td class="lovtd"><span><?php echo ($cntr); ?></span></td>                                              
-                                                                    <td class="lovtd"  style="">  
+                                                                <tr id="oneScmPrchsDocSmryRow_<?php echo $cntr; ?>" onclick="$('#allOtherInputData99').val($('#oneScmPrchsDocSmryLinesTable tr').index(this));">
+                                                                    <td class="lovtd"><span><?php echo ($cntr); ?></span></td>
+                                                                    <td class="lovtd" style="">
                                                                         <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_TrnsLnID" value="<?php echo $trsctnLnID; ?>" style="width:100% !important;">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_ItmID" value="<?php echo $trsctnLnItmID; ?>" style="width:100% !important;">  
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_StoreID" value="<?php echo $trsctnLnStoreID; ?>" style="width:100% !important;">  
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_SrcDocLnID" value="<?php echo $trsctnLnSrcLnID; ?>" style="width:100% !important;">  
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_ItmID" value="<?php echo $trsctnLnItmID; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_StoreID" value="<?php echo $trsctnLnStoreID; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_SrcDocLnID" value="<?php echo $trsctnLnSrcLnID; ?>" style="width:100% !important;">
                                                                         <?php
                                                                         if ($canEdt === true) {
-                                                                            ?>
+                                                                        ?>
                                                                             <div class="input-group" style="width:100% !important;">
                                                                                 <input type="text" class="form-control rqrdFld jbDetAccRate jbDetDesc" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_LineDesc" name="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_LineDesc" value="<?php echo $trsctnLnDesc; ?>" style="width:100% !important;" <?php echo $mkReadOnly; ?> onkeypress="gnrlFldKeyPress(event, 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_LineDesc', 'oneScmPrchsDocSmryLinesTable', 'jbDetAccRate');" onblur="afterSalesInvcItmSlctn('oneScmPrchsDocSmryRow_<?php echo $cntr; ?>');" onchange="autoCreateSalesLns = 99;">
                                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getScmSalesInvcItems('oneScmPrchsDocSmryRow_<?php echo $cntr; ?>', 'ShowDialog', '<?php echo $scmPrchsDocVchType; ?>', 'false', function () {
@@ -1213,67 +1301,63 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 </label>
                                                                             </div>
                                                                         <?php } else {
-                                                                            ?>
+                                                                        ?>
                                                                             <span><?php echo $trsctnLnDesc; ?></span>
-                                                                            <?php
+                                                                        <?php
                                                                         }
                                                                         ?>
-                                                                    </td> 
+                                                                    </td>
                                                                     <td class="lovtd" style="text-align: right;">
                                                                         <input type="text" class="form-control rqrdFld jbDetAccRate" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_QTY" name="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_QTY" value="<?php
-                                                                               echo $trsctnLnQty;
-                                                                               ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_QTY', 'oneScmPrchsDocSmryLinesTable', 'jbDetAccRate');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl('oneScmPrchsDocSmryLinesTable');">                                                    
-                                                                    </td>                                               
+                                                                                                                                                                                                                                                                        echo $trsctnLnQty;
+                                                                                                                                                                                                                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_QTY', 'oneScmPrchsDocSmryLinesTable', 'jbDetAccRate');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl('oneScmPrchsDocSmryLinesTable');">
+                                                                    </td>
                                                                     <td class="lovtd" style="max-width:35px;width:35px;text-align: center;">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_UomID" value="<?php echo $trsctnLnUomID; ?>" style="width:100% !important;">  
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_UomID" value="<?php echo $trsctnLnUomID; ?>" style="width:100% !important;">
                                                                         <div class="" style="width:100% !important;">
                                                                             <label class="btn btn-primary btn-file" onclick="getOneScmUOMBrkdwnForm(<?php echo $sbmtdScmPrchsDocID; ?>, 2, 'oneScmPrchsDocSmryRow_<?php echo $cntr; ?>');">
                                                                                 <span class="" id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_UomNm1"><?php echo $trsctnLnUomNm; ?></span>
                                                                             </label>
-                                                                        </div>                                              
+                                                                        </div>
                                                                     </td>
                                                                     <td class="lovtd">
                                                                         <input type="text" class="form-control jbDetDbt" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_UnitPrice" name="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_UnitPrice" value="<?php
-                                                                               echo number_format($trsctnLnUnitPrice, 5);
-                                                                               ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_UnitPrice', 'oneScmPrchsDocSmryLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl('oneScmPrchsDocSmryLinesTable');">                                                    
+                                                                                                                                                                                                                                                                        echo number_format($trsctnLnUnitPrice, 5);
+                                                                                                                                                                                                                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_UnitPrice', 'oneScmPrchsDocSmryLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl('oneScmPrchsDocSmryLinesTable');">
                                                                     </td>
                                                                     <td class="lovtd">
                                                                         <input type="text" class="form-control jbDetCrdt" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_LineAmt" name="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_LineAmt" value="<?php
-                                                                               echo number_format($trsctnLnAmnt, 2);
-                                                                               ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_LineAmt', 'oneScmPrchsDocSmryLinesTable', 'jbDetCrdt');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl('oneScmPrchsDocSmryLinesTable');">                                                    
-                                                                    </td> 
+                                                                                                                                                                                                                                                                    echo number_format($trsctnLnAmnt, 2);
+                                                                                                                                                                                                                                                                    ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_LineAmt', 'oneScmPrchsDocSmryLinesTable', 'jbDetCrdt');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl('oneScmPrchsDocSmryLinesTable');">
+                                                                    </td>
                                                                     <td class="lovtd" style="text-align: right;">
                                                                         <input type="text" class="form-control jbDetAccRate1" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_SrcQTY" name="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_SrcQTY" value="<?php
-                                                                               echo $trsctnLnAvlblQty;
-                                                                               ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_SrcQTY', 'oneScmPrchsDocSmryLinesTable', 'jbDetAccRate1');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl('oneScmPrchsDocSmryLinesTable');">                                                    
-                                                                    </td>   
+                                                                                                                                                                                                                                                                    echo $trsctnLnAvlblQty;
+                                                                                                                                                                                                                                                                    ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_SrcQTY', 'oneScmPrchsDocSmryLinesTable', 'jbDetAccRate1');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl('oneScmPrchsDocSmryLinesTable');">
+                                                                    </td>
                                                                     <td class="lovtd" style="text-align: center;">
-                                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Item Consignments" 
-                                                                                onclick="getScmSalesInvcItems('oneScmPrchsDocSmryRow_<?php echo $cntr; ?>', 'ShowDialog', '<?php echo $scmPrchsDocVchType; ?>', 'true', function () {
+                                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Item Consignments" onclick="getScmSalesInvcItems('oneScmPrchsDocSmryRow_<?php echo $cntr; ?>', 'ShowDialog', '<?php echo $scmPrchsDocVchType; ?>', 'true', function () {
                                                                                             var a = 1;
-                                                                                        });" style="padding:2px !important;"> 
-                                                                            <img src="cmn_images/chcklst3.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                                                        });" style="padding:2px !important;">
+                                                                            <img src="cmn_images/chcklst3.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                         </button>
-                                                                    </td>    
+                                                                    </td>
                                                                     <td class="lovtd" style="text-align: center;">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_TaxID" value="<?php echo $trsctnLnTxID; ?>" style="width:100% !important;">  
-                                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Tax Codes" 
-                                                                                onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Tax Codes', 'allOtherInputOrgID', '', '', 'radio', true, '<?php echo $trsctnLnTxID; ?>', 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_TaxID', '', 'clear', 1, '');" style="padding:2px !important;"> 
-                                                                            <img src="cmn_images/tax-icon420x500.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_TaxID" value="<?php echo $trsctnLnTxID; ?>" style="width:100% !important;">
+                                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Tax Codes" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Tax Codes', 'allOtherInputOrgID', '', '', 'radio', true, '<?php echo $trsctnLnTxID; ?>', 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_TaxID', '', 'clear', 1, '');" style="padding:2px !important;">
+                                                                            <img src="cmn_images/tax-icon420x500.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                         </button>
-                                                                    </td>   
+                                                                    </td>
                                                                     <td class="lovtd" style="text-align: center;">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_DscntID" value="<?php echo $trsctnLnDscntID; ?>" style="width:100% !important;">  
-                                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Discounts" 
-                                                                                onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Discount Codes', 'allOtherInputOrgID', '', '', 'radio', true, '<?php echo $trsctnLnDscntID; ?>', 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_DscntID', '', 'clear', 1, '');" style="padding:2px !important;"> 
-                                                                            <img src="cmn_images/dscnt_456356.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_DscntID" value="<?php echo $trsctnLnDscntID; ?>" style="width:100% !important;">
+                                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Discounts" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Discount Codes', 'allOtherInputOrgID', '', '', 'radio', true, '<?php echo $trsctnLnDscntID; ?>', 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_DscntID', '', 'clear', 1, '');" style="padding:2px !important;">
+                                                                            <img src="cmn_images/dscnt_456356.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                         </button>
-                                                                    </td>  
+                                                                    </td>
                                                                     <td class="lovtd" style="text-align: center;">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_ChrgID" value="<?php echo $trsctnLnChrgID; ?>" style="width:100% !important;">  
-                                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Extra Charges" 
-                                                                                onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Extra Charges', 'allOtherInputOrgID', '', '', 'radio', true, '<?php echo $trsctnLnChrgID; ?>', 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_ChrgID', '', 'clear', 1, '');" style="padding:2px !important;"> 
-                                                                            <img src="cmn_images/truck571d7f45.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmryRow<?php echo $cntr; ?>_ChrgID" value="<?php echo $trsctnLnChrgID; ?>" style="width:100% !important;">
+                                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Extra Charges" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Extra Charges', 'allOtherInputOrgID', '', '', 'radio', true, '<?php echo $trsctnLnChrgID; ?>', 'oneScmPrchsDocSmryRow<?php echo $cntr; ?>_ChrgID', '', 'clear', 1, '');" style="padding:2px !important;">
+                                                                            <img src="cmn_images/truck571d7f45.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                         </button>
                                                                     </td>
                                                                     <td class="lovtd" style="text-align: center;">
@@ -1282,11 +1366,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         </button>
                                                                     </td>
                                                                 </tr>
-                                                                <?php
+                                                            <?php
                                                             }
                                                             ?>
                                                         </tbody>
-                                                        <tfoot>                                                            
+                                                        <tfoot>
                                                             <tr>
                                                                 <th>&nbsp;</th>
                                                                 <th>&nbsp;</th>
@@ -1295,13 +1379,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <th>&nbsp;</th>
                                                                 <th style="text-align: right;">
                                                                     <?php
-                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdRIJbSmryAmtTtlBtn\">" . number_format($ttlTrsctnEntrdAmnt,
-                                                                            2, '.', ',') . "</span>";
+                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdRIJbSmryAmtTtlBtn\">" . number_format(
+                                                                        $ttlTrsctnEntrdAmnt,
+                                                                        2,
+                                                                        '.',
+                                                                        ','
+                                                                    ) . "</span>";
                                                                     ?>
                                                                     <input type="hidden" id="myCptrdRIJbSmryAmtTtlVal" value="<?php echo $ttlTrsctnEntrdAmnt; ?>">
                                                                 </th>
-                                                                <th style="">&nbsp;</th>                                           
-                                                                <th style="">&nbsp;</th>                                           
+                                                                <th style="">&nbsp;</th>
+                                                                <th style="">&nbsp;</th>
                                                                 <th style="">&nbsp;</th>
                                                                 <th style="">&nbsp;</th>
                                                                 <th style="">&nbsp;</th>
@@ -1318,7 +1406,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <th style="text-align:right;">Amount</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>   
+                                                        <tbody>
                                                             <?php
                                                             $cntr = 0;
                                                             $resultRw = get_DocSmryLns($sbmtdScmPrchsDocID, $scmPrchsDocVchType);
@@ -1334,24 +1422,24 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 $trsctnCodeBhndID = (int) $rowRw[3];
                                                                 $shdAutoCalc = $rowRw[4];
                                                                 $cntr += 1;
-                                                                ?>
-                                                                <tr id="oneScmPrchsDocSmry1Row_<?php echo $cntr; ?>">                                                 
-                                                                    <td class="lovtd"  style="">  
+                                                            ?>
+                                                                <tr id="oneScmPrchsDocSmry1Row_<?php echo $cntr; ?>">
+                                                                    <td class="lovtd" style="">
                                                                         <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmry1Row<?php echo $cntr; ?>_TrnsLnID" value="<?php echo $trsctnLineID; ?>" style="width:100% !important;">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmry1Row<?php echo $cntr; ?>_CodeBhndID" value="<?php echo $trsctnCodeBhndID; ?>" style="width:100% !important;">  
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmPrchsDocSmry1Row<?php echo $cntr; ?>_CodeBhndID" value="<?php echo $trsctnCodeBhndID; ?>" style="width:100% !important;">
                                                                         <span><?php echo $trsctnLineDesc; ?></span>
-                                                                    </td> 
+                                                                    </td>
                                                                     <td class="lovtd" style="text-align:right;">
                                                                         <span><?php
-                                                                            echo number_format($entrdAmnt, 2);
-                                                                            ?></span>
-                                                                    </td>  
+                                                                                echo number_format($entrdAmnt, 2);
+                                                                                ?></span>
+                                                                    </td>
                                                                 </tr>
-                                                                <?php
+                                                            <?php
                                                             }
                                                             ?>
                                                         </tbody>
-                                                        <tfoot>                                                            
+                                                        <tfoot>
                                                             <tr>
                                                                 <th>&nbsp;</th>
                                                                 <th>&nbsp;</th>
@@ -1367,7 +1455,185 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                     </fieldset>
                 </form>
-                <?php
+            <?php
+            } else if ($vwtyp == 20) {
+                /* All Attached Documents */
+                $sbmtdScmPrchsDocID = isset($_POST['sbmtdScmPrchsDocID']) ? cleanInputData($_POST['sbmtdScmPrchsDocID']) : -1;
+                if (!$canAdd || ($sbmtdScmPrchsDocID > 0 && !$canEdt)) {
+                    restricted();
+                    exit();
+                }
+                $pkID = $sbmtdScmPrchsDocID;
+                $total = get_Total_CnsgnRcpt_Attachments($srchFor, $pkID, "PURCHASE");
+                if ($pageNo > ceil($total / $lmtSze)) {
+                    $pageNo = 1;
+                } else if ($pageNo < 1) {
+                    $pageNo = ceil($total / $lmtSze);
+                }
+                $curIdx = $pageNo - 1;
+                $attchSQL = "";
+                $result2 = get_CnsgnRcpt_Attachments($srchFor, $curIdx, $lmtSze, $pkID, "PURCHASE", $attchSQL);
+                $colClassType1 = "col-lg-2";
+                $colClassType2 = "col-lg-3";
+                $colClassType3 = "col-lg-4";
+            ?>
+                <fieldset class="" style="padding:10px 0px 5px 0px !important;">
+                    <form class="" id="attchdPrchsDocDocsTblForm">
+                        <div class="row">
+                            <?php
+                            $nwRowHtml = urlencode("<tr id=\"attchdPrchsDocDocsRow__WWW123WWW\">"
+                                . "<td class=\"lovtd\"><span>New</span></td>"
+                                . "<td class=\"lovtd\">
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                              <div class=\"input-group\" style=\"width:100% !important;\">
+                                                <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"attchdPrchsDocDocsRow_WWW123WWW_DocCtgryNm\" value=\"\">
+                                                <input class=\"form-control\" aria-label=\"...\" id=\"attchdPrchsDocDocsRow_WWW123WWW_DocFile\" type=\"file\" style=\"visibility:hidden;height:5px !important;display:none;\" />     
+                                                <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Attachment Document Categories', '', '', '', 'radio', true, '', 'attchdPrchsDocDocsRow_WWW123WWW_DocCtgryNm', 'attchdPrchsDocDocsRow_WWW123WWW_DocCtgryNm', 'clear', 0, '');\">
+                                                    <span class=\"glyphicon glyphicon-th-list\"></span>
+                                                </label>
+                                              </div>
+                                              </div>
+                                              <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"attchdPrchsDocDocsRow_WWW123WWW_AttchdDocsID\" value=\"-1\" style=\"\">                                               
+                                          </td>
+                                          <td class=\"lovtd\">
+                                                <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"uploadFileToPrchsDocDocs('attchdPrchsDocDocsRow_WWW123WWW_DocFile','attchdPrchsDocDocsRow_WWW123WWW_AttchdDocsID','attchdPrchsDocDocsRow_WWW123WWW_DocCtgryNm'," . $pkID . ",'attchdPrchsDocDocsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Download Document\">
+                                                    <img src=\"cmn_images/openfileicon.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\"> Upload
+                                                </button>
+                                          </td>
+                                          <td class=\"lovtd\">
+                                                <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delAttchdPrchsDocDoc('attchdPrchsDocDocsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Document\">
+                                                    <img src=\"cmn_images/no.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
+                                                </button>
+                                          </td>
+                                        </tr>");
+                            ?>
+                            <div class="<?php echo $colClassType3; ?>" style="padding:0px 1px 0px 1px !important;">
+                                <div class="col-md-12">
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('attchdPrchsDocDocsTable', 0, '<?php echo $nwRowHtml; ?>');" style="width:100% !important;">
+                                        <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                        New Document
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
+                                <div class="input-group">
+                                    <input class="form-control" id="attchdPrchsDocDocsSrchFor" type="text" placeholder="Search For" value="<?php
+                                                                                                                                            echo trim(str_replace("%", " ", $srchFor));
+                                                                                                                                            ?>" onkeyup="enterKeyFuncAttchdPrchsDocDocs(event, '', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmPrchsDocID=<?php echo $sbmtdScmPrchsDocID; ?>', 'ReloadDialog');">
+                                    <input id="attchdPrchsDocDocsPageNo" type="hidden" value="<?php echo $pageNo; ?>">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdPrchsDocDocs('clear', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmPrchsDocID=<?php echo $sbmtdScmPrchsDocID; ?>', 'ReloadDialog');">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </label>
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdPrchsDocDocs('', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmPrchsDocID=<?php echo $sbmtdScmPrchsDocID; ?>', 'ReloadDialog');">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="<?php echo $colClassType2; ?>">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
+                                    <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
+                                    <select data-placeholder="Select..." class="form-control chosen-select" id="attchdPrchsDocDocsDsplySze" style="min-width:70px !important;">
+                                        <?php
+                                        $valslctdArry = array("", "", "", "", "", "", "", "");
+                                        $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
+                                        for ($y = 0; $y < count($dsplySzeArry); $y++) {
+                                            if ($lmtSze == $dsplySzeArry[$y]) {
+                                                $valslctdArry[$y] = "selected";
+                                            } else {
+                                                $valslctdArry[$y] = "";
+                                            }
+                                        ?>
+                                            <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="<?php echo $colClassType1; ?>">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination" style="margin: 0px !important;">
+                                        <li>
+                                            <a class="rhopagination" href="javascript:getAttchdPrchsDocDocs('previous', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmPrchsDocID=<?php echo $sbmtdScmPrchsDocID; ?>','ReloadDialog');" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="rhopagination" href="javascript:getAttchdPrchsDocDocs('next', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmPrchsDocID=<?php echo $sbmtdScmPrchsDocID; ?>','ReloadDialog');" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-striped table-bordered table-responsive" id="attchdPrchsDocDocsTable" cellspacing="0" width="100%" style="width:100%;min-width: 400px !important;">
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Doc. Name/Description</th>
+                                            <th>&nbsp;</th>
+                                            <th>&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $cntr = 0;
+                                        while ($row2 = loc_db_fetch_array($result2)) {
+                                            $cntr += 1;
+                                            $doc_src = $ftp_base_db_fldr . "/Prchs/" . $row2[3];
+                                            $doc_src_encrpt = encrypt1($doc_src, $smplTokenWord1);
+                                            if (file_exists($doc_src)) {
+                                                //file exists!
+                                            } else {
+                                                //file does not exist.
+                                                $doc_src_encrpt = "None";
+                                            }
+                                        ?>
+                                            <tr id="attchdPrchsDocDocsRow_<?php echo $cntr; ?>">
+                                                <td class="lovtd"><span><?php
+                                                                        echo ($curIdx * $lmtSze) + ($cntr);
+                                                                        ?></span></td>
+                                                <td class="lovtd">
+                                                    <span><?php echo $row2[2]; ?></span>
+                                                    <input type="hidden" class="form-control" aria-label="..." id="attchdPrchsDocDocsRow<?php echo $cntr; ?>_AttchdDocsID" value="<?php echo $row2[0]; ?>" style="width:100% !important;">
+                                                </td>
+                                                <td class="lovtd">
+                                                    <?php
+                                                    if ($doc_src_encrpt == "None") {
+                                                    ?>
+                                                        <span style="font-weight: bold;color:#FF0000;">
+                                                            <?php
+                                                            echo "File Not Found!";
+                                                            ?>
+                                                        </span>
+                                                    <?php
+                                                    } else {
+                                                    ?>
+                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="doAjax('grp=1&typ=11&q=Download&fnm=<?php echo $doc_src_encrpt; ?>', '', 'Redirect', '', '', '');" data-toggle="tooltip" data-placement="bottom" title="Download Document">
+                                                            <img src="cmn_images/dwldicon.png" style="height:15px; width:auto; position: relative; vertical-align: middle;"> Download
+                                                        </button>
+                                                    <?php } ?>
+                                                </td>
+                                                <td class="lovtd">
+                                                    <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delAttchdPrchsDocDoc('attchdPrchsDocDocsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Document">
+                                                        <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        <?php
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </form>
+                </fieldset>
+<?php
             }
         }
     }
