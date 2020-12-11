@@ -5440,14 +5440,35 @@ function get_One_AssetHdr($hdrID)
        dpr_aprc_accnt_id, accb.get_accnt_num(dpr_aprc_accnt_id) || '.' || accb.get_accnt_name(dpr_aprc_accnt_id) depreacc,
        expns_rvnu_accnt_id, accb.get_accnt_num(expns_rvnu_accnt_id) || '.' || accb.get_accnt_name(expns_rvnu_accnt_id) expnsacc,
        inv_item_id, inv.get_invitm_name(inv_item_id), 
-       sql_formula, asset_salvage_value, enbl_auto_dprctn
+       sql_formula, asset_salvage_value, enbl_auto_dprctn,
+       rvnu_accnt_id, accb.get_accnt_num(rvnu_accnt_id) || '.' || accb.get_accnt_name(rvnu_accnt_id) revnuacc,
+       mntnc_exp_accnt_id, accb.get_accnt_num(mntnc_exp_accnt_id) || '.' || accb.get_accnt_name(mntnc_exp_accnt_id) mntncacc
   FROM accb.accb_fa_assets_rgstr a " .
         "WHERE((a.asset_id = " . $hdrID . "))";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_One_AssetHdrNTrns($lmit)
+
+function get_One_AssetAccnts($hdrID)
+{
+    $strSql = "SELECT asset_accnt_id, accb.get_accnt_num(asset_accnt_id) || '.' || accb.get_accnt_name(asset_accnt_id) assetacc,
+       dpr_aprc_accnt_id, accb.get_accnt_num(dpr_aprc_accnt_id) || '.' || accb.get_accnt_name(dpr_aprc_accnt_id) depreacc,
+       expns_rvnu_accnt_id, accb.get_accnt_num(expns_rvnu_accnt_id) || '.' || accb.get_accnt_name(expns_rvnu_accnt_id) expnsacc,
+        round(accb.get_asset_trns_typ_amnt(a.asset_id,'1Initial Value')
+        + accb.get_asset_trns_typ_amnt(a.asset_id,'3Appreciate Asset')
+        - accb.get_asset_trns_typ_amnt(a.asset_id,'2Depreciate Asset')
+        - accb.get_asset_trns_typ_amnt(a.asset_id,'4Retire Asset'),2) net_book_val,
+       rvnu_accnt_id, accb.get_accnt_num(rvnu_accnt_id) || '.' || accb.get_accnt_name(rvnu_accnt_id) revnuacc,
+       mntnc_exp_accnt_id, accb.get_accnt_num(mntnc_exp_accnt_id) || '.' || accb.get_accnt_name(mntnc_exp_accnt_id) mntncacc,
+            inv_item_id, inv.get_invitm_name(inv_item_id), sql_formula, asset_salvage_value, enbl_auto_dprctn
+  FROM accb.accb_fa_assets_rgstr a " .
+        "WHERE((a.asset_id = " . $hdrID . "))";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_One_AssetHdrNTrns($org_ID, $lmit)
 {
     $extrWhr = "";
     if ($lmit >= 0) {
@@ -5456,30 +5477,70 @@ function get_One_AssetHdrNTrns($lmit)
         $extrWhr = "";
     }
 
-    $strSql = "SELECT a.asset_id, a.asset_code_name, a.asset_desc, a.asset_classification, 
-       a.asset_category, a.asset_div_grp_id, org.get_div_name(a.asset_div_grp_id), 
-       a.asset_site_id, org.get_site_name(a.asset_site_id), a.asset_building_loc, 
-       a.asset_room_no, a.asset_caretaker, 
-       prs.get_prsn_loc_id(a.asset_caretaker), 
-       a.tag_number, a.serial_number, a.barcode, 
+    $strSql = "SELECT a.asset_code_name, a.asset_desc, a.asset_classification, a.asset_category, 
+       a.tag_number, a.serial_number, a.barcode, org.get_div_name(a.asset_div_grp_id), 
+       org.get_site_name(a.asset_site_id), a.asset_building_loc, a.asset_room_no, prs.get_prsn_loc_id(a.asset_caretaker), 
+       inv.get_invitm_name(a.inv_item_id), accb.get_accnt_num(a.asset_accnt_id) assetacc,
+       accb.get_accnt_num(a.dpr_aprc_accnt_id) depreacc,
+       accb.get_accnt_num(a.expns_rvnu_accnt_id) expnsacc,
+       accb.get_accnt_num(a.rvnu_accnt_id) rvnuacc,
+       accb.get_accnt_num(a.mntnc_exp_accnt_id) mntncsacc,
        to_char(to_timestamp(a.asset_life_start_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') startdte, 
        to_char(to_timestamp(a.asset_life_end_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') enddte, 
-       a.asset_accnt_id, accb.get_accnt_num(a.asset_accnt_id) assetacc,
-       dpr_aprc_accnt_id, accb.get_accnt_num(a.dpr_aprc_accnt_id) depreacc,
-       expns_rvnu_accnt_id, accb.get_accnt_num(a.expns_rvnu_accnt_id) expnsacc,
-       a.inv_item_id, inv.get_invitm_name(a.inv_item_id), 
-       a.sql_formula, a.asset_salvage_value, 
-       CASE WHEN a.enbl_auto_dprctn = '1' THEN 'YES' ELSE 'NO' END, 
-       b.trns_type, b.line_desc, b.incrs_dcrs1, accb.get_accnt_num(b.cost_accnt_id), b.incrs_dcrs2, 
-       accb.get_accnt_num(b.bals_leg_accnt_id), 
-       to_char(to_timestamp(b.trns_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS'), 
-       b.trns_amount, gst.get_pssbl_val(b.entrd_curr_id), b.func_curr_rate 
-       FROM accb.accb_fa_assets_rgstr a, accb.accb_fa_asset_trns b " .
-        "WHERE(a.asset_id = b.asset_id) 
-      ORDER BY a.asset_code_name, b.trns_type" . $extrWhr;
-
+       a.asset_salvage_value, (CASE WHEN a.enbl_auto_dprctn = '1' THEN 'YES' ELSE 'NO' END) auto_dep, 
+       a.sql_formula, b.trns_type, b.line_desc,b.trns_amount, gst.get_pssbl_val(b.entrd_curr_id),
+       b.incrs_dcrs1, accb.get_accnt_num(b.cost_accnt_id), b.incrs_dcrs2, accb.get_accnt_num(b.bals_leg_accnt_id),
+       to_char(to_timestamp(b.trns_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS'), b.func_curr_rate,
+       a.asset_accnt_id,a.dpr_aprc_accnt_id,a.expns_rvnu_accnt_id, a.inv_item_id, a.asset_id, a.asset_div_grp_id, 
+       a.asset_caretaker, a.asset_site_id 
+       FROM accb.accb_fa_assets_rgstr a
+       LEFT OUTER JOIN accb.accb_fa_asset_trns b ON (a.asset_id = b.asset_id) 
+       WHERE a.org_id = $org_ID ORDER BY a.asset_code_name, b.trns_type" . $extrWhr;
+    
     $result = executeSQLNoParams($strSql);
     return $result;
+}
+
+function getAccbDivGrpID($divName, $inOrgID) {
+    $strSQL = "SELECT div_id FROM org.org_divs_groups WHERE lower(div_code_name) = lower('"
+            . loc_db_escape_string($divName) . "') and org_id = " . $inOrgID;
+    $result = executeSQLNoParams($strSQL);
+    while ($row = loc_db_fetch_array($result)) {
+        return (int) $row[0];
+    }
+    return -1;
+//$conn
+}
+
+function getAccbSiteID($sitename, $orgid) {
+    $sqlStr = "select location_id from org.org_sites_locations where lower(location_code_name) = '" .
+            loc_db_escape_string($sitename) . "' and org_id = " . $orgid;
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (int) $row[0];
+    }
+    return -1;
+}
+
+function getAccbINVItmID($itemNm, $orgid)
+{
+    $sqlStr = "select item_id from inv.inv_itm_list where lower(trim(item_code)) = '" .
+        loc_db_escape_string(strtolower($itemNm)) . "' and org_id = " . $orgid;
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return -1;
+}
+
+function getAccbAccntId($accnt_num, $orgid) {
+    $sqlStr = "select accnt_id from accb.accb_chart_of_accnts where lower(trim(accnt_num)) = '" .
+        loc_db_escape_string(strtolower($accnt_num)) . "' and org_id = " . $orgid;
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return -1;
 }
 
 function getNewAssetLnID()
@@ -5624,7 +5685,9 @@ function createAssetHdr(
     $invItmID,
     $sqlFormula,
     $salvageVal,
-    $autoDprct
+    $autoDprct,
+    $rvnuAcntID,
+    $mntncsAcntID
 ) {
     global $usrID;
     if ($strtDte != "") {
@@ -5644,7 +5707,7 @@ function createAssetHdr(
             asset_life_start_date, asset_life_end_date, asset_accnt_id, dpr_aprc_accnt_id, 
             expns_rvnu_accnt_id, created_by, creation_date, last_update_by, 
             last_update_date, inv_item_id, sql_formula, asset_salvage_value, 
-            org_id, enbl_auto_dprctn) " .
+            org_id, enbl_auto_dprctn,rvnu_accnt_id,mntnc_exp_accnt_id) " .
         "VALUES ('" . loc_db_escape_string($assetNum) .
         "', '" . loc_db_escape_string($assetDesc) .
         "', '" . loc_db_escape_string($assetClsf) .
@@ -5665,7 +5728,9 @@ function createAssetHdr(
         ", " . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $invItmID .
         ", '" . loc_db_escape_string($sqlFormula) .
         "', " . $salvageVal .
-        ", " . $orgid . ", '" . cnvrtBoolToBitStr($autoDprct) . "')";
+        ", " . $orgid . ", '" . cnvrtBoolToBitStr($autoDprct) . "', " . $rvnuAcntID .
+        ", " . $mntncsAcntID .
+        ")";
     return execUpdtInsSQL($insSQL);
 }
 
@@ -5691,7 +5756,9 @@ function updtAssetHdr(
     $invItmID,
     $sqlFormula,
     $salvageVal,
-    $autoDprct
+    $autoDprct,
+    $rvnuAcntID,
+    $mntncsAcntID
 ) {
     global $usrID;
     if ($strtDte != "") {
@@ -5726,7 +5793,9 @@ function updtAssetHdr(
         ", sql_formula='" . loc_db_escape_string($sqlFormula) .
         "', asset_salvage_value = " . $salvageVal .
         ", enbl_auto_dprctn = '" . cnvrtBoolToBitStr($autoDprct) .
-        "' WHERE asset_id = " . $hdrID;
+        "',rvnu_accnt_id=" . $rvnuAcntID .
+        ",mntnc_exp_accnt_id=" . $mntncsAcntID .
+        " WHERE asset_id = " . $hdrID;
     return execUpdtInsSQL($insSQL);
 }
 

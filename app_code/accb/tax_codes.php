@@ -635,7 +635,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class=\"input-group\" style=\"width:100% !important;\">
                                                                 <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"accbTaxCodeAdtTblsRow_WWW123WWW_CodeBhndID\" name=\"accbTaxCodeAdtTblsRow_WWW123WWW_CodeBhndID\" value=\"-1\"> 
                                                                 <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"accbTaxCodeAdtTblsRow_WWW123WWW_LineDesc\" name=\"accbTaxCodeAdtTblsRow_WWW123WWW_LineDesc\" value=\"\" style=\"width:100% !important;\">
-                                                                <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getAccbTxCdeLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'accbTxCdeType', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbTaxCodeAdtTblsRow_WWW123WWW_LineDesc', 'accbTaxCodeAdtTblsRow_WWW123WWW_CodeBhndID', 'clear', 1, '');\">
+                                                                <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getAccbTxCdeLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'accbTxCdeType', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbTaxCodeAdtTblsRow_WWW123WWW_CodeBhndID', 'accbTaxCodeAdtTblsRow_WWW123WWW_LineDesc', 'clear', 1, '');\">
                                                                     <span class=\"glyphicon glyphicon-th-list\"></span>
                                                                 </label>
                                                             </div>
@@ -1064,7 +1064,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class=\"input-group\" style=\"width:100% !important;\">
                                                                 <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"accbTaxCodeAdtTblsRow_WWW123WWW_CodeBhndID\" name=\"accbTaxCodeAdtTblsRow_WWW123WWW_CodeBhndID\" value=\"-1\"> 
                                                                 <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"accbTaxCodeAdtTblsRow_WWW123WWW_LineDesc\" name=\"accbTaxCodeAdtTblsRow_WWW123WWW_LineDesc\" value=\"\" style=\"width:100% !important;\">
-                                                                <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getAccbTxCdeLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'accbTxCdeType', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbTaxCodeAdtTblsRow_WWW123WWW_LineDesc', 'accbTaxCodeAdtTblsRow_WWW123WWW_CodeBhndID', 'clear', 1, '');\">
+                                                                <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getAccbTxCdeLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'accbTxCdeType', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbTaxCodeAdtTblsRow_WWW123WWW_CodeBhndID', 'accbTaxCodeAdtTblsRow_WWW123WWW_LineDesc', 'clear', 1, '');\">
                                                                     <span class=\"glyphicon glyphicon-th-list\"></span>
                                                                 </label>
                                                             </div>

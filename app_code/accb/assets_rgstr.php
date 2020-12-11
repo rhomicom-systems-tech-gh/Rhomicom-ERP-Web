@@ -76,6 +76,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $accbAstHdrAstAcntID = isset($_POST['accbAstHdrAstAcntID']) ? (int) cleanInputData($_POST['accbAstHdrAstAcntID']) : -1;
                 $accbAstHdrDprcAcntID = isset($_POST['accbAstHdrDprcAcntID']) ? (int) cleanInputData($_POST['accbAstHdrDprcAcntID']) : -1;
                 $accbAstHdrExpnsAcntID = isset($_POST['accbAstHdrExpnsAcntID']) ? (int) cleanInputData($_POST['accbAstHdrExpnsAcntID']) : -1;
+                $accbAstHdrRvnuAcntID = isset($_POST['accbAstHdrRvnuAcntID']) ? (int) cleanInputData($_POST['accbAstHdrRvnuAcntID']) : -1;
+                $accbAstHdrMntncsAcntID = isset($_POST['accbAstHdrMntncsAcntID']) ? (int) cleanInputData($_POST['accbAstHdrMntncsAcntID']) : -1;
                 $accbAstHdrSlvgValue = isset($_POST['accbAstHdrSlvgValue']) ? (float) cleanInputData($_POST['accbAstHdrSlvgValue']) : 0.00;
 
                 $accbAstHdrSQLFrmlr = isset($_POST['accbAstHdrSQLFrmlr']) ? cleanInputData($_POST['accbAstHdrSQLFrmlr']) : "";
@@ -103,7 +105,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 if ($accbAstHdrSQLFrmlr == "") {
                     $exitErrMsg .= "SQL Formula cannot be Empty!<br/>";
                 }
-                if ($accbAstHdrAstAcntID <= 0 || $accbAstHdrDprcAcntID <= 0 || $accbAstHdrExpnsAcntID <= 0) {
+                if (
+                    $accbAstHdrAstAcntID <= 0 || $accbAstHdrDprcAcntID <= 0 || $accbAstHdrExpnsAcntID <= 0
+                    || $accbAstHdrRvnuAcntID <= 0 || $accbAstHdrMntncsAcntID <= 0
+                ) {
                     $exitErrMsg .= "Asset GL Accounts must all be provided!<br/>";
                 }
                 if (trim($exitErrMsg) !== "") {
@@ -138,7 +143,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $accbAstHdrInvItemID,
                             $accbAstHdrSQLFrmlr,
                             $accbAstHdrSlvgValue,
-                            $accbAstHdrAutoDprctn
+                            $accbAstHdrAutoDprctn,
+                            $accbAstHdrRvnuAcntID,
+                            $accbAstHdrMntncsAcntID
                         );
                         $accbAstHdrID = (float) getGnrlRecID("accb.accb_fa_assets_rgstr", "asset_code_name", "asset_id", $accbAstHdrName, $orgID);
                     } else {
@@ -164,7 +171,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $accbAstHdrInvItemID,
                             $accbAstHdrSQLFrmlr,
                             $accbAstHdrSlvgValue,
-                            $accbAstHdrAutoDprctn
+                            $accbAstHdrAutoDprctn,
+                            $accbAstHdrRvnuAcntID,
+                            $accbAstHdrMntncsAcntID
                         );
                     }
                     $afftctd = 0;
@@ -486,41 +495,72 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $total = count($variousRows);
                     for ($z = 0; $z < $total; $z++) {
                         $crntRow = explode("~", $variousRows[$z]);
-                        if (count($crntRow) == 26) {
-                            $sbmtdAccbGrpOrgID = -1;
-                            $acbAccountNum = trim(cleanInputData1($crntRow[0]));
-                            $acbAccountNumDesc = trim((cleanInputData1($crntRow[1])));
-                            $acbAcntAcntType = trim(cleanInputData1($crntRow[3]));
-                            $acbPrntAccountNum = trim(cleanInputData1($crntRow[4]));
-                            $acbPrntAccountNumID = getAccntID($acbPrntAccountNum, $orgID);
-                            $acbAcntIsPrntAcnt = strtoupper(trim(cleanInputData1($crntRow[5]))) === "YES" ? TRUE : FALSE;
-                            $acbAcntIsRetErngsAcnt = strtoupper(trim(cleanInputData1($crntRow[6]))) === "YES" ? TRUE : FALSE;
-                            $acbAcntIsNetIncmAcnt = strtoupper(trim(cleanInputData1($crntRow[7]))) === "YES" ? TRUE : FALSE;
-                            $acbAcntIsContraAcnt = strtoupper(trim(cleanInputData1($crntRow[8]))) === "YES" ? TRUE : FALSE;
-                            $acbAcntHsSubldgrAcnt = strtoupper(trim(cleanInputData1($crntRow[10]))) === "YES" ? TRUE : FALSE;
-                            $acbAcntCtrlAcnt = trim(cleanInputData1($crntRow[11]));
-                            $acbAcntCtrlAcntID = getAccntID($acbAcntCtrlAcnt, $orgID);
-                            $acbAcntCurncy = trim(cleanInputData1($crntRow[12]));
-                            $acbAcntCurncyID = getPssblValID($acbAcntCurncy, getLovID("Currencies"));
-                            $acbAcntIsSuspnsAcnt = strtoupper(trim(cleanInputData1($crntRow[13]))) === "YES" ? TRUE : FALSE;
-                            $acbAcntIsEnabled = TRUE;
-                            $acbAcntAcntClsfctn = trim(cleanInputData1($crntRow[14]));
+                        if (count($crntRow) == 33) {
+                            $accbAstHdrID = -1;
+                            $accbAstHdrName = ltrim(trim(cleanInputData1($crntRow[0])), '\'');
+                            $accbAstHdrDesc = trim(cleanInputData1($crntRow[1]));
+                            $accbAstHdrClsfctn = trim(cleanInputData1($crntRow[2]));
+                            $accbAstHdrCtgry = trim(cleanInputData1($crntRow[3]));
+                            $accbAstHdrTagNum = ltrim(trim(cleanInputData1($crntRow[4])), '\'');
+                            $accbAstHdrSerialNum = ltrim(trim(cleanInputData1($crntRow[5])), '\'');
+                            $accbAstHdrBarCode = ltrim(trim(cleanInputData1($crntRow[6])), '\'');
+                            $accbAstHdrDivGrp = trim(cleanInputData1($crntRow[7]));
 
-                            $accntSgmnt1ValID = getSegmentValID(trim(cleanInputData1($crntRow[15])), $orgID);
-                            $accntSgmnt2ValID = getSegmentValID(trim(cleanInputData1($crntRow[16])), $orgID);
-                            $accntSgmnt3ValID = getSegmentValID(trim(cleanInputData1($crntRow[17])), $orgID);
-                            $accntSgmnt4ValID = getSegmentValID(trim(cleanInputData1($crntRow[18])), $orgID);
-                            $accntSgmnt5ValID = getSegmentValID(trim(cleanInputData1($crntRow[19])), $orgID);
-                            $accntSgmnt6ValID = getSegmentValID(trim(cleanInputData1($crntRow[20])), $orgID);
-                            $accntSgmnt7ValID = getSegmentValID(trim(cleanInputData1($crntRow[21])), $orgID);
-                            $accntSgmnt8ValID = getSegmentValID(trim(cleanInputData1($crntRow[22])), $orgID);
-                            $accntSgmnt9ValID = getSegmentValID(trim(cleanInputData1($crntRow[23])), $orgID);
-                            $accntSgmnt10ValID = getSegmentValID(trim(cleanInputData1($crntRow[24])), $orgID);
-                            $acbAcntMppdAcnt = trim(cleanInputData1($crntRow[25]));
-                            $acbAcntMppdAcntID = getAccntID($acbAcntMppdAcnt, $orgID);
+                            $accbAstHdrSite = trim(cleanInputData1($crntRow[8]));
+                            $accbAstHdrBuildLoc = trim(cleanInputData1($crntRow[9]));
+                            $accbAstHdrRoomNum = trim(cleanInputData1($crntRow[10]));
+                            $accbAstHdrPrsnLocID = trim(cleanInputData1($crntRow[11]));
+
+                            $accbAstHdrInvItem = ltrim(trim(cleanInputData1($crntRow[12])), '\'');
+
+                            $accbAstHdrAstAcnt = ltrim(trim(cleanInputData1($crntRow[13])), '\'');
+                            $accbAstHdrDprcAcnt = ltrim(trim(cleanInputData1($crntRow[14])), '\'');
+                            $accbAstHdrExpnsAcnt = ltrim(trim(cleanInputData1($crntRow[15])), '\'');
+                            $accbAstHdrRvnuAcnt = ltrim(trim(cleanInputData1($crntRow[16])), '\'');
+                            $accbAstHdrMntncsAcnt = ltrim(trim(cleanInputData1($crntRow[17])), '\'');
+
+                            $accbAstHdrStrtDte = ltrim(trim(cleanInputData1($crntRow[18])), '\'');
+                            $accbAstHdrEndDte = ltrim(trim(cleanInputData1($crntRow[19])), '\'');
+
+                            $accbAstHdrSlvgValue = trim(cleanInputData1($crntRow[20]));
+                            $accbAstHdrAutoDprctn = strtoupper(trim(cleanInputData1($crntRow[21]))) === "YES" ? TRUE : FALSE;
+
+                            $accbAstHdrSQLFrmlr = trim(cleanInputData1($crntRow[22]));
+
+                            //$slctdExtraInfoLines = trim(cleanInputData1($crntRow[0]));
+                            //$slctdMeasurmntTyps = trim(cleanInputData1($crntRow[0]));
+                            $sbmtdAssetTransID = -1;
+                            $astTrnsType = trim(cleanInputData1($crntRow[23]));
+                            $astTrnsDesc = trim(cleanInputData1($crntRow[24]));
+                            $astTrnsAmount = trim(cleanInputData1($crntRow[25]));
+                            $astTrnsCurNm = trim(cleanInputData1($crntRow[26]));
+
+                            $astTrnsIncrsDcrs1 = trim(cleanInputData1($crntRow[27]));
+                            $astTrnsAccount1 = ltrim(trim(cleanInputData1($crntRow[28])), '\'');
+                            $astTrnsIncrsDcrs2 = trim(cleanInputData1($crntRow[29]));
+                            $astTrnsAccount2 =  ltrim(trim(cleanInputData1($crntRow[30])), '\'');
+                            $astTrnsDate = ltrim(trim(cleanInputData1($crntRow[31])), '\'');
+                            $astTrnsFuncCurRate = trim(cleanInputData1($crntRow[32]));
+
+                            $astTrnsAccountID2 = -1;
+                            $astTrnsAccountID1 = -1;
+                            $astTrnsCurID = -1;
+                            $accbAstHdrMntncsAcntID = -1;
+                            $accbAstHdrRvnuAcntID = -1;
+                            $accbAstHdrExpnsAcntID = -1;
+                            $accbAstHdrDprcAcntID = -1;
+                            $accbAstHdrAstAcntID = -1;
+                            $accbAstHdrInvItemID = -1;
+                            $accbAstHdrPrsnID = -1;
+                            $accbAstHdrSiteID = -1;
+                            $accbAstHdrDivGrpID = -1;
 
                             if ($z == 0) {
-                                if (strtoupper($acbAccountNum) == strtoupper("Account Number**") && strtoupper($acbAccountNumDesc) == strtoupper("Account Name**") && strtoupper($acbAcntMppdAcnt) == strtoupper("Mapped Group Org Account No.")) {
+                                if (
+                                    strtoupper($accbAstHdrName) == strtoupper("Asset Number/Code**")
+                                    && strtoupper($accbAstHdrMntncsAcnt) == strtoupper("Maintenance Account No.**")
+                                    && strtoupper($astTrnsFuncCurRate) == strtoupper("Exchange Rate**")
+                                ) {
                                     continue;
                                 } else {
                                     $arr_content['percent'] = 100;
@@ -528,177 +568,173 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     //.strtoupper($number) ."|". strtoupper($processName) ."|". strtoupper($isEnbld1 == "IS ENABLED?");
                                     $arr_content['msgcount'] = $total;
                                     file_put_contents(
-                                        $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_accntsimprt_progress.rho",
+                                        $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AsstsRgstrimport_progress.rho",
                                         json_encode($arr_content)
                                     );
                                     break;
                                 }
-                            }
+                            } else {
+                                $astTrnsAccountID2 =  getAccbAccntId($astTrnsAccount2, $orgID);
+                                $astTrnsAccountID1 = getAccbAccntId($astTrnsAccount1, $orgID);
+                                if ($astTrnsCurNm == "") {
+                                    $astTrnsCurNm = $fnccurnm;
+                                }
+                                $astTrnsCurID = getPssblValID($astTrnsCurNm, getLovID("Currencies"));
+                                $accbAstHdrMntncsAcntID = getAccbAccntId($accbAstHdrMntncsAcnt, $orgID);
+                                $accbAstHdrRvnuAcntID = getAccbAccntId($accbAstHdrRvnuAcnt, $orgID);
+                                $accbAstHdrExpnsAcntID = getAccbAccntId($accbAstHdrExpnsAcnt, $orgID);
+                                $accbAstHdrDprcAcntID = getAccbAccntId($accbAstHdrDprcAcnt, $orgID);
+                                $accbAstHdrAstAcntID = getAccbAccntId($accbAstHdrAstAcnt, $orgID);
+                                $accbAstHdrInvItemID = getAccbINVItmID($accbAstHdrInvItem, $orgID);
+                                $accbAstHdrPrsnID = getPersonID($accbAstHdrPrsnLocID, $orgID);
+                                $accbAstHdrSiteID = getAccbSiteID($accbAstHdrSite, $orgID);
+                                $accbAstHdrDivGrpID = getAccbDivGrpID($accbAstHdrDivGrp, $orgID);
 
+                                $astTrnsAmount = (float) $astTrnsAmount;
+                                $accbAstHdrSlvgValue = (float) $accbAstHdrSlvgValue;
+                                $astTrnsFuncCurRate = (float) $astTrnsFuncCurRate;
+                                if ($astTrnsFuncCurRate == 0) {
+                                    $astTrnsFuncCurRate = 1;
+                                }
+                            }
                             $exitErrMsg = "";
-                            if ($acbAccountNum == "" || $acbAccountNumDesc == "") {
-                                $exitErrMsg .= "Please enter Account Number and Description!<br/>";
+                            if ($accbAstHdrName == "" || $accbAstHdrDesc == "") {
+                                $exitErrMsg .= "Please enter Asset/Investment Name and Description!<br/>";
                             }
-                            if ($acbAcntAcntType == "") {
-                                $exitErrMsg .= "Please select an account Type!<br/>";
+                            if ($accbAstHdrClsfctn == "" || $accbAstHdrCtgry == "") {
+                                $exitErrMsg .= "Please enter Asset/Investment Classification and Category!<br/>";
                             }
-                            if ($acbAcntIsRetErngsAcnt == true && $acbAcntIsPrntAcnt == true) {
-                                $exitErrMsg .= "A Parent account cannot be used as Retained Earnings Account!<br/>";
+                            if ($accbAstHdrStrtDte == "") {
+                                $accbAstHdrStrtDte = $gnrlTrnsDteDMYHMS;
                             }
-                            if ($acbAcntIsRetErngsAcnt == true && $acbAcntIsContraAcnt == true) {
-                                $exitErrMsg .= "A contra account cannot be used as Retained Earnings Account!<br/>";
+                            if ($accbAstHdrEndDte == "") {
+                                $accbAstHdrEndDte = $rhoFutureDateDMYHMS;
                             }
-                            if ($acbAcntIsRetErngsAcnt == true && $acbAcntIsEnabled == false) {
-                                $exitErrMsg .= "A Retained Earnings Account cannot be disabled!<br/>";
+                            if ($accbAstHdrSQLFrmlr == "") {
+                                $accbAstHdrSQLFrmlr = "Select 0.00";
                             }
-
-                            if ($acbAcntIsSuspnsAcnt == true && $acbAcntAcntType != "A -ASSET") {
-                                $exitErrMsg .= "The account type of the Suspense Account must be ASSET<br/>";
+                            if (trim($exitErrMsg) !== "") {
+                                $arr_content['percent'] = 100;
+                                $arr_content['accbAstHdrID'] = $accbAstHdrID;
+                                $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>" . $exitErrMsg . "</span>";
+                                file_put_contents(
+                                    $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AsstsRgstrimport_progress.rho",
+                                    json_encode($arr_content)
+                                );
+                                break;
                             }
-
-                            if ($acbAcntIsRetErngsAcnt == true && $acbAcntAcntType != "EQ-EQUITY") {
-                                $exitErrMsg .= "The account type of a Retained Earnings Account must be NET WORTH<br/>";
+                            $accbAstHdrID = (float) getGnrlRecID("accb.accb_fa_assets_rgstr", "asset_code_name", "asset_id", $accbAstHdrName, $orgID);
+                            if ($accbAstHdrID <= 0) {
+                                $affctd +=  createAssetHdr(
+                                    $orgID,
+                                    $accbAstHdrStrtDte,
+                                    $accbAstHdrEndDte,
+                                    $accbAstHdrName,
+                                    $accbAstHdrClsfctn,
+                                    $accbAstHdrDesc,
+                                    $accbAstHdrCtgry,
+                                    $accbAstHdrDivGrpID,
+                                    $accbAstHdrSiteID,
+                                    $accbAstHdrBuildLoc,
+                                    $accbAstHdrRoomNum,
+                                    $accbAstHdrPrsnID,
+                                    $accbAstHdrTagNum,
+                                    $accbAstHdrSerialNum,
+                                    $accbAstHdrBarCode,
+                                    $accbAstHdrAstAcntID,
+                                    $accbAstHdrDprcAcntID,
+                                    $accbAstHdrExpnsAcntID,
+                                    $accbAstHdrInvItemID,
+                                    $accbAstHdrSQLFrmlr,
+                                    $accbAstHdrSlvgValue,
+                                    $accbAstHdrAutoDprctn,
+                                    $accbAstHdrRvnuAcntID,
+                                    $accbAstHdrMntncsAcntID
+                                );
+                                $accbAstHdrID = (float) getGnrlRecID("accb.accb_fa_assets_rgstr", "asset_code_name", "asset_id", $accbAstHdrName, $orgID);
+                            } else {
+                                $affctd +=  updtAssetHdr(
+                                    $accbAstHdrID,
+                                    $accbAstHdrStrtDte,
+                                    $accbAstHdrEndDte,
+                                    $accbAstHdrName,
+                                    $accbAstHdrClsfctn,
+                                    $accbAstHdrDesc,
+                                    $accbAstHdrCtgry,
+                                    $accbAstHdrDivGrpID,
+                                    $accbAstHdrSiteID,
+                                    $accbAstHdrBuildLoc,
+                                    $accbAstHdrRoomNum,
+                                    $accbAstHdrPrsnID,
+                                    $accbAstHdrTagNum,
+                                    $accbAstHdrSerialNum,
+                                    $accbAstHdrBarCode,
+                                    $accbAstHdrAstAcntID,
+                                    $accbAstHdrDprcAcntID,
+                                    $accbAstHdrExpnsAcntID,
+                                    $accbAstHdrInvItemID,
+                                    $accbAstHdrSQLFrmlr,
+                                    $accbAstHdrSlvgValue,
+                                    $accbAstHdrAutoDprctn,
+                                    $accbAstHdrRvnuAcntID,
+                                    $accbAstHdrMntncsAcntID
+                                );
                             }
-                            if ($acbAcntIsNetIncmAcnt == true && $acbAcntIsPrntAcnt == true) {
-                                $exitErrMsg .= "A Parent account cannot be used as Net Income Account!<br/>";
-                            }
-                            if ($acbAcntIsNetIncmAcnt == true && $acbAcntIsContraAcnt == true) {
-                                $exitErrMsg .= "A contra account cannot be used as Net Income Account!<br/>";
-                            }
-                            if ($acbAcntIsNetIncmAcnt == true && $acbAcntIsEnabled == false) {
-                                $exitErrMsg .= "A Net Income Account cannot be disabled!<br/>";
-                            }
-                            if ($acbAcntIsNetIncmAcnt == true && $acbAcntAcntType != "EQ-EQUITY") {
-                                $exitErrMsg .= "The account type of a Net Income Account must be NET WORTH<br/>";
-                            }
-                            if ($acbAcntIsRetErngsAcnt == true && $acbAcntIsNetIncmAcnt == true) {
-                                $exitErrMsg .= "Same Account cannot be Retained Earnings and Net Income at same time!<br/>";
-                            }
-                            if ($acbAcntIsRetErngsAcnt == true && $acbAcntHsSubldgrAcnt == true) {
-                                $exitErrMsg .= "Retained Earnings account cannot have sub-ledgers!<br/>";
-                            }
-                            if ($acbAcntIsNetIncmAcnt == true && $acbAcntHsSubldgrAcnt == true) {
-                                $exitErrMsg .= "Net Income account cannot have sub-ledgers!<br/>";
-                            }
-                            if ($acbAcntIsContraAcnt == true && $acbAcntHsSubldgrAcnt == true) {
-                                $exitErrMsg .= "The system does not support Sub-Ledgers on Contra-Accounts!<br/>";
-                            }
-                            if ($acbAcntIsPrntAcnt == true && $acbAcntHsSubldgrAcnt == true) {
-                                $exitErrMsg .= "Parent Account cannot have sub-ledgers!<br/>";
-                            }
-                            if ($acbAcntCtrlAcntID > 0 && $acbAcntHsSubldgrAcnt == true) {
-                                $exitErrMsg .= "The system does not support Control Accounts reporting to other Control Account!<br/>";
-                            }
-                            if ($acbAcntCtrlAcntID > 0 && $acbPrntAccountNumID > 0) {
-                                $exitErrMsg .= "An Account with a Control Account cannot have a Parent Account as well!<br/>";
-                            }
-                            if ($acbAcntCurncyID <= 0) {
-                                $exitErrMsg .= "Account Currency Cannot be Empty!<br/>";
-                            }
-                            if ($acbAcntMppdAcntID > 0) {
-                                if (getAccntType($acbAcntMppdAcntID) != trim(substr($acbAcntAcntType, 0, 2))) {
-                                    $exitErrMsg .= "Account Type does not match that of the Mapped Account<br/>";
+                            //Import Transactions
+                            $exitErrMsg = "";
+                            if ($astTrnsDesc != "" && ($astTrnsAmount) != 0) {
+                                if ($astTrnsDate == "") {
+                                    $astTrnsDate = $gnrlTrnsDteDMYHMS;
                                 }
-                            }
-                            if ($acbPrntAccountNumID > 0) {
-                                if (getAccntType($acbPrntAccountNumID) != trim(substr($acbAcntAcntType, 0, 2))) {
-                                    $exitErrMsg .= "Account Type does not match that of the Parent Account<br/>";
-                                }
-                            }
-                            $oldAccntID = getAccntID($acbAccountNum, $orgID);
-                            $sbmtdAccountID = $oldAccntID;
-                            if ($oldAccntID > 0 && $oldAccntID != $sbmtdAccountID) {
-                                $exitErrMsg .= "New Account Number is already in use in this Organization!<br/>";
-                            }
-                            $oldAccntID2 = getAccntID($acbAccountNumDesc, $orgID);
-                            if ($oldAccntID2 > 0 && $oldAccntID2 != $sbmtdAccountID) {
-                                $exitErrMsg .= "New Account Name/Description is already in use in this Organization!<br/>";
-                            }
-                            $accntType = "";
-                            if ($acbAcntAcntType != "") {
-                                $accntType = trim(substr($acbAcntAcntType, 0, 2));
-                            }
-                            $oldCmbntnID = getAccountCmbntnID(
-                                $orgID,
-                                $accntSgmnt1ValID,
-                                $accntSgmnt2ValID,
-                                $accntSgmnt3ValID,
-                                $accntSgmnt4ValID,
-                                $accntSgmnt5ValID,
-                                $accntSgmnt6ValID,
-                                $accntSgmnt7ValID,
-                                $accntSgmnt8ValID,
-                                $accntSgmnt9ValID,
-                                $accntSgmnt10ValID
-                            );
-                            if ($oldCmbntnID > 0 && $oldCmbntnID != $sbmtdAccountID) {
-                                $exitErrMsg .= "This combination of Segment Values is already present in this Organization!<br/>";
-                            }
-
-                            if ($exitErrMsg == "") {
-                                if ($sbmtdAccountID <= 0) {
-                                    $affctd += createChrt(
-                                        $orgID,
-                                        $acbAccountNum,
-                                        $acbAccountNumDesc,
-                                        $acbAccountNumDesc,
-                                        $acbAcntIsContraAcnt,
-                                        $acbPrntAccountNumID,
-                                        $accntType,
-                                        $acbAcntIsPrntAcnt,
-                                        $acbAcntIsEnabled,
-                                        $acbAcntIsRetErngsAcnt,
-                                        $acbAcntIsNetIncmAcnt,
-                                        100,
-                                        $acbAcntHsSubldgrAcnt,
-                                        $acbAcntCtrlAcntID,
-                                        $acbAcntCurncyID,
-                                        $acbAcntIsSuspnsAcnt,
-                                        $acbAcntAcntClsfctn,
-                                        $accntSgmnt1ValID,
-                                        $accntSgmnt2ValID,
-                                        $accntSgmnt3ValID,
-                                        $accntSgmnt4ValID,
-                                        $accntSgmnt5ValID,
-                                        $accntSgmnt6ValID,
-                                        $accntSgmnt7ValID,
-                                        $accntSgmnt8ValID,
-                                        $accntSgmnt9ValID,
-                                        $accntSgmnt10ValID,
-                                        $acbAcntMppdAcntID
+                                if (trim($exitErrMsg) !== "") {
+                                    $arr_content['percent'] = 100;
+                                    $arr_content['sbmtdAssetTransID'] = $sbmtdAssetTransID;
+                                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>" . $exitErrMsg . "</span>";
+                                    file_put_contents(
+                                        $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AsstsRgstrimport_progress.rho",
+                                        json_encode($arr_content)
                                     );
-                                    $sbmtdAccountID = getAccntID($acbAccountNum, $orgID);
-                                } else if ($sbmtdAccountID > 0) {
-                                    $affctd += updateChrtDet(
-                                        $orgID,
-                                        $sbmtdAccountID,
-                                        $acbAccountNum,
-                                        $acbAccountNumDesc,
-                                        $acbAccountNumDesc,
-                                        $acbAcntIsContraAcnt,
-                                        $acbPrntAccountNumID,
-                                        $accntType,
-                                        $acbAcntIsPrntAcnt,
-                                        $acbAcntIsEnabled,
-                                        $acbAcntIsRetErngsAcnt,
-                                        $acbAcntIsNetIncmAcnt,
-                                        100,
-                                        $acbAcntHsSubldgrAcnt,
-                                        $acbAcntCtrlAcntID,
-                                        $acbAcntCurncyID,
-                                        $acbAcntIsSuspnsAcnt,
-                                        $acbAcntAcntClsfctn,
-                                        $accntSgmnt1ValID,
-                                        $accntSgmnt2ValID,
-                                        $accntSgmnt3ValID,
-                                        $accntSgmnt4ValID,
-                                        $accntSgmnt5ValID,
-                                        $accntSgmnt6ValID,
-                                        $accntSgmnt7ValID,
-                                        $accntSgmnt8ValID,
-                                        $accntSgmnt9ValID,
-                                        $accntSgmnt10ValID,
-                                        $acbAcntMppdAcntID
+                                    break;
+                                }
+                                if ($astTrnsFuncCurRate == 1 || $astTrnsFuncCurRate == 0) {
+                                    $astTrnsFuncCurRate = round(get_LtstExchRate($astTrnsCurID, $fnccurid, $astTrnsDate), 4);
+                                }
+                                $funcCurrAmnt = $astTrnsAmount * $astTrnsFuncCurRate;
+                                $sbmtdAssetTransID = getAssetTrnsID($astTrnsType, $astTrnsDate, $astTrnsDesc);
+                                if ($sbmtdAssetTransID <= 0) {
+                                    $sbmtdAssetTransID = getNewAssetLnID();
+                                    createAssetTrns(
+                                        $sbmtdAssetTransID,
+                                        $sbmtdAssetID,
+                                        $astTrnsType,
+                                        $astTrnsDesc,
+                                        $astTrnsAmount,
+                                        $astTrnsCurID,
+                                        $astTrnsIncrsDcrs1,
+                                        $astTrnsAccountID1,
+                                        $astTrnsIncrsDcrs2,
+                                        $astTrnsAccountID2,
+                                        $fnccurid,
+                                        $astTrnsFuncCurRate,
+                                        $funcCurrAmnt,
+                                        $astTrnsDate
+                                    );
+                                } else {
+                                    updtAssetTrns(
+                                        $sbmtdAssetTransID,
+                                        $sbmtdAssetID,
+                                        $astTrnsType,
+                                        $astTrnsDesc,
+                                        $astTrnsAmount,
+                                        $astTrnsCurID,
+                                        $astTrnsIncrsDcrs1,
+                                        $astTrnsAccountID1,
+                                        $astTrnsIncrsDcrs2,
+                                        $astTrnsAccountID2,
+                                        $fnccurid,
+                                        $astTrnsFuncCurRate,
+                                        $funcCurrAmnt,
+                                        $astTrnsDate
                                     );
                                 }
                             }
@@ -706,13 +742,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         $percent = round((($z + 1) / $total) * 100, 2);
                         $arr_content['percent'] = $percent;
                         if ($percent >= 100) {
-                            $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span> 100% Completed!..." . $affctd . " out of " . $total . " Account(s) imported.";
+                            $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span> 100% Completed!..." . $affctd . " out of " . $total . " Asset(s) processed.";
                             $arr_content['msgcount'] = $total;
                         } else {
-                            $arr_content['message'] = "<i class=\"fa fa-spin fa-spinner\"></i> Importing Accounts...Please Wait..." . ($z + 1) . " out of " . $total . " Account(s) imported.";
+                            $arr_content['message'] = "<i class=\"fa fa-spin fa-spinner\"></i> Importing Assets...Please Wait..." . ($z + 1) . " out of " . $total . " Asset(s) processed.";
                         }
                         file_put_contents(
-                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_accntsimprt_progress.rho",
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AsstsRgstrimport_progress.rho",
                             json_encode($arr_content)
                         );
                     }
@@ -721,12 +757,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $arr_content['percent'] = $percent;
                     $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> 100% Completed...An Error Occured!<br/>$errMsg</span>";
                     $arr_content['msgcount'] = "";
-                    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_accntsimprt_progress.rho", json_encode($arr_content));
+                    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AsstsRgstrimport_progress.rho", json_encode($arr_content));
                 }
             } else if ($actyp == 902) {
                 //Checked Importing Process Status                
                 header('Content-Type: application/json');
-                $file = $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_accntsimprt_progress.rho";
+                $file = $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AsstsRgstrimport_progress.rho";
                 if (file_exists($file)) {
                     $text = file_get_contents($file);
                     echo $text;
@@ -746,11 +782,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $errMsg = "Invalid Option!";
                 if ($inptNum >= 0) {
                     $hdngs = array(
-                        "Account Number**", "Account Name**", "Account Description", "Account Type**", "Parent Account Name",
-                        "Is Parent?(YES/NO)", "Is Retained Earnings?(YES/NO)", "Is Net Income Account?(YES/NO)", "Is Contra Account?(YES/NO)",
-                        "Reporting Line No.", "Has SubLedgers?(YES/NO)", "Control Account Name", "Account Currency Code**",
-                        "Is Suspense Account?(YES/NO)", "Account Classification", "Segment 1 Value", "Segment 2 Value", "Segment 3 Value", "Segment 4 Value", "Segment 5 Value", "Segment 6 Value", "Segment 7 Value", "Segment 8 Value", "Segment 9 Value", "Segment 10 Value",
-                        "Mapped Group Org Account No."
+                        "Asset Number/Code**", "Asset Description**", "Asset Classification**", "Asset Category**",
+                        "Tag Number*", "Serial Number*", "Barcode*",
+                        "Location (Division/Group)", "Location (Site/Branch)", "Location (Building)",
+                        "Location (Floor/Room No.)", "Location (Caretaker ID No.)",
+                        "Inventory Item Code",
+                        "Asset Account No.**", "Appr/Depr Account No.**",
+                        "Expense Account No.**", "Revenue Account No.**", "Maintenance Account No.**",
+                        "Start Date**", "End Date", "Salvage Value(Sn)",
+                        "Enable Auto Depreciation(YES/NO)", "SQL Formula**", "Transaction Type**",
+                        "Transaction Description**", "Amount**", "Curr. Code**", "Increase/Decrease**", "Costing Acc. No.**",
+                        "Increase/Decrease**", "Balancing Acc. No.**", "Transaction Date**", "Exchange Rate**"
                     );
                     $limit_size = 0;
                     if ($inptNum > 2) {
@@ -760,8 +802,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     }
                     $rndm = getRandomNum(10001, 9999999);
                     $dteNm = date('dMY_His');
-                    $nwFileNm = $fldrPrfx . "dwnlds/tmp/AccntChartExprt_" . $dteNm . "_" . $rndm . ".csv";
-                    $dwnldUrl = $app_url . "dwnlds/tmp/AccntChartExprt_" . $dteNm . "_" . $rndm . ".csv";
+                    $nwFileNm = $fldrPrfx . "dwnlds/tmp/AccbAstHdrExprt_" . $dteNm . "_" . $rndm . ".csv";
+                    $dwnldUrl = $app_url . "dwnlds/tmp/AccbAstHdrExprt_" . $dteNm . "_" . $rndm . ".csv";
                     $opndfile = fopen($nwFileNm, "w");
                     fputcsv($opndfile, $hdngs);
                     if ($limit_size <= 0) {
@@ -770,7 +812,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!... Accounts Chart Template Exported.</span>";
                         $arr_content['msgcount'] = 0;
                         file_put_contents(
-                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccntChartexprt_progress.rho",
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccbAstHdrexprt_progress.rho",
                             json_encode($arr_content)
                         );
 
@@ -779,15 +821,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     }
                     $z = 0;
                     $crntRw = "";
-                    $result = get_ChartsToExprt($orgID, $limit_size);
+                    $result = get_One_AssetHdrNTrns($orgID, $limit_size);
                     $total = loc_db_num_rows($result);
                     $fieldCntr = loc_db_num_fields($result);
                     while ($row = loc_db_fetch_array($result)) {
                         $crntRw = array(
-                            "" . $row[0], $row[1], $row[2], getFullAcntType($row[3]), $row[4], cnvrtBitStrToYN($row[5]), cnvrtBitStrToYN($row[6]),
-                            cnvrtBitStrToYN($row[7]), cnvrtBitStrToYN($row[8]), $row[9], cnvrtBitStrToYN($row[10]), $row[11],
-                            $row[12], cnvrtBitStrToYN($row[13]), $row[14], $row[15], $row[16], $row[17], $row[18], $row[19], $row[20], $row[21],
-                            $row[22], $row[23], $row[24], $row[25]
+                            "'" . $row[0], $row[1], $row[2], $row[3], "'" . $row[4], "'" . $row[5], "'" . $row[6],
+                            $row[7], $row[8], $row[9], $row[10], $row[11],
+                            "'" . $row[12], "'" . $row[13], "'" . $row[14], "'" . $row[15], "'" . $row[16], "'" . $row[17], "'" . $row[18],
+                            "'" . $row[19], $row[20], $row[21], $row[22], $row[23], $row[24], $row[25], $row[26], $row[27],
+                            "'" . $row[28], $row[29], "'" . $row[30], "'" . $row[31], $row[32]
                         );
                         fputcsv($opndfile, $crntRw);
                         //file_put_contents($nwFileNm, $crntRw, FILE_APPEND | LOCK_EX);
@@ -803,7 +846,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 1) . " out of " . $total . " Account(s) exported.</span>";
                         }
                         file_put_contents(
-                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccntChartexprt_progress.rho",
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccbAstHdrexprt_progress.rho",
                             json_encode($arr_content)
                         );
                         $z++;
@@ -816,14 +859,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $arr_content['msgcount'] = "";
                     $arr_content['dwnld_url'] = "";
                     file_put_contents(
-                        $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccntChartexprt_progress.rho",
+                        $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccbAstHdrexprt_progress.rho",
                         json_encode($arr_content)
                     );
                 }
             } else if ($actyp == 904) {
                 //Checked Exporting Process Status                
                 header('Content-Type: application/json');
-                $file = $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccntChartexprt_progress.rho";
+                $file = $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccbAstHdrexprt_progress.rho";
                 if (file_exists($file)) {
                     $text = file_get_contents($file);
                     echo $text;
@@ -897,11 +940,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                 New Asset/Investment
                                                             </button>
-                                                            <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="" data-toggle="tooltip" title="Import Asset Lines">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="exprtAssetRgstr();" data-toggle="tooltip" title="Export Asset Lines">
                                                                 <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                 Export
                                                             </button>
-                                                            <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="" data-toggle="tooltip" title="Import Asset Lines">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="importAssetRgstr();" data-toggle="tooltip" title="Import Asset Lines">
                                                                 <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                 Import
                                                             </button>
@@ -1242,6 +1285,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 $accbAstHdrDprcAcntNm = "";
                                                                 $accbAstHdrExpnsAcntID = -1;
                                                                 $accbAstHdrExpnsAcntNm = "";
+                                                                $accbAstHdrRvnuAcntID = -1;
+                                                                $accbAstHdrRvnuAcntNm = "";
+                                                                $accbAstHdrMntncsAcntID = -1;
+                                                                $accbAstHdrMntncsAcntNm = "";
                                                                 $accbAstHdrInvItemID = -1;
                                                                 $accbAstHdrInvItemNm = "";
 
@@ -1280,6 +1327,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         $accbAstHdrDprcAcntNm = $row1[21];
                                                                         $accbAstHdrExpnsAcntID = $row1[22];
                                                                         $accbAstHdrExpnsAcntNm = $row1[23];
+
+                                                                        $accbAstHdrRvnuAcntID = $row1[29];
+                                                                        $accbAstHdrRvnuAcntNm = $row1[30];
+                                                                        $accbAstHdrMntncsAcntID = $row1[31];
+                                                                        $accbAstHdrMntncsAcntNm = $row1[32];
+
                                                                         $accbAstHdrInvItemID = $row1[24];
                                                                         $accbAstHdrInvItemNm = $row1[25];
 
@@ -1311,7 +1364,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     <?php
                                                                                     if ($canEdt === true) {
                                                                                     ?>
-                                                                                        <textarea class="form-control rqrdFld" rows="3" cols="20" id="accbAstHdrDesc" name="accbAstHdrDesc" <?php echo $mkRmrkReadOnly; ?> style="text-align:left !important;"><?php echo $accbAstHdrDesc; ?></textarea>
+                                                                                        <textarea class="form-control rqrdFld" rows="4" cols="20" id="accbAstHdrDesc" name="accbAstHdrDesc" <?php echo $mkRmrkReadOnly; ?> style="text-align:left !important;"><?php echo $accbAstHdrDesc; ?></textarea>
                                                                                     <?php } else {
                                                                                     ?>
                                                                                         <span><?php echo $accbAstHdrDesc; ?></span>
@@ -1412,6 +1465,21 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
+                                                                            <div class="form-group form-group-sm col-md-12" style="padding:0px 0px 0px 0px !important;">
+                                                                                <label for="accbAstHdrAutoDprctn" class="control-label col-lg-6">Enable Auto-Depreciation?:</label>
+                                                                                <div class="col-lg-6">
+                                                                                    <?php
+                                                                                    $chkdYes = "";
+                                                                                    $chkdNo = "checked=\"\"";
+                                                                                    if ($accbAstHdrAutoDprctn == "1") {
+                                                                                        $chkdNo = "";
+                                                                                        $chkdYes = "checked=\"\"";
+                                                                                    }
+                                                                                    ?>
+                                                                                    <label class="radio-inline"><input type="radio" name="accbAstHdrAutoDprctn" value="YES" <?php echo $chkdYes; ?>>YES</label>
+                                                                                    <label class="radio-inline"><input type="radio" name="accbAstHdrAutoDprctn" value="NO" <?php echo $chkdNo; ?>>NO</label>
+                                                                                </div>
+                                                                            </div>
                                                                         </fieldset>
                                                                     </div>
                                                                     <div class="col-md-6" style="padding:0px 0px 0px 1px !important;">
@@ -1477,7 +1545,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 </div>
                                                                             </div>
                                                                             <div class="form-group form-group-sm col-md-12" style="padding:0px 0px 0px 0px !important;">
-                                                                                <label for="accbAstHdrDprcAcntNm" class="control-label col-md-4">Appreciation/ Depreciation:</label>
+                                                                                <label for="accbAstHdrDprcAcntNm" class="control-label col-md-4">Appreciation or Depreciation:</label>
                                                                                 <div class="col-md-8">
                                                                                     <div class="input-group">
                                                                                         <input class="form-control rqrdFld" id="accbAstHdrDprcAcntNm" style="font-size: 13px !important;font-weight: bold !important;" placeholder="Select Appreciation/Depreciation Account" type="text" value="<?php echo $accbAstHdrDprcAcntNm; ?>" readonly="true" />
@@ -1489,12 +1557,36 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 </div>
                                                                             </div>
                                                                             <div class="form-group form-group-sm col-md-12" style="padding:0px 0px 0px 0px !important;">
-                                                                                <label for="accbAstHdrExpnsAcntNm" class="control-label col-md-4">Expense/ Revenue:</label>
+                                                                                <label for="accbAstHdrExpnsAcntNm" class="control-label col-md-4">Depreciation Expense:</label>
                                                                                 <div class="col-md-8">
                                                                                     <div class="input-group">
-                                                                                        <input class="form-control rqrdFld" id="accbAstHdrExpnsAcntNm" style="font-size: 13px !important;font-weight: bold !important;" placeholder="Select Expense/Revenue Account" type="text" value="<?php echo $accbAstHdrExpnsAcntNm; ?>" readonly="true" />
+                                                                                        <input class="form-control rqrdFld" id="accbAstHdrExpnsAcntNm" style="font-size: 13px !important;font-weight: bold !important;" placeholder="Select Depreciation Expense Account" type="text" value="<?php echo $accbAstHdrExpnsAcntNm; ?>" readonly="true" />
                                                                                         <input type="hidden" id="accbAstHdrExpnsAcntID" value="<?php echo $accbAstHdrExpnsAcntID; ?>">
-                                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Transaction Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbAstHdrExpnsAcntID', 'accbAstHdrExpnsAcntNm', 'clear', 1, '', function () {});">
+                                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Expense Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbAstHdrExpnsAcntID', 'accbAstHdrExpnsAcntNm', 'clear', 1, '', function () {});">
+                                                                                            <span class="glyphicon glyphicon-th-list"></span>
+                                                                                        </label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group form-group-sm col-md-12" style="padding:0px 0px 0px 0px !important;">
+                                                                                <label for="accbAstHdrAstAcntNm" class="control-label col-md-4">Revenue Account:</label>
+                                                                                <div class="col-md-8">
+                                                                                    <div class="input-group">
+                                                                                        <input class="form-control rqrdFld" id="accbAstHdrRvnuAcntNm" style="font-size: 13px !important;font-weight: bold !important;" placeholder="Select Asset Sale/Appreciation Revenue Account" type="text" value="<?php echo $accbAstHdrRvnuAcntNm; ?>" readonly="true" />
+                                                                                        <input type="hidden" id="accbAstHdrRvnuAcntID" value="<?php echo $accbAstHdrRvnuAcntID; ?>">
+                                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Revenue Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbAstHdrRvnuAcntID', 'accbAstHdrRvnuAcntNm', 'clear', 1, '', function () {});">
+                                                                                            <span class="glyphicon glyphicon-th-list"></span>
+                                                                                        </label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group form-group-sm col-md-12" style="padding:0px 0px 0px 0px !important;">
+                                                                                <label for="accbAstHdrMntncsAcntNm" class="control-label col-md-4">Maintenance Account:</label>
+                                                                                <div class="col-md-8">
+                                                                                    <div class="input-group">
+                                                                                        <input class="form-control rqrdFld" id="accbAstHdrMntncsAcntNm" style="font-size: 13px !important;font-weight: bold !important;" placeholder="Select Asset Maintenance Account" type="text" value="<?php echo $accbAstHdrMntncsAcntNm; ?>" readonly="true" />
+                                                                                        <input type="hidden" id="accbAstHdrMntncsAcntID" value="<?php echo $accbAstHdrMntncsAcntID; ?>">
+                                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Expense Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbAstHdrMntncsAcntID', 'accbAstHdrMntncsAcntNm', 'clear', 1, '', function () {});">
                                                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                                                         </label>
                                                                                     </div>
@@ -1504,21 +1596,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 <label for="accbAstHdrSlvgValue" class="control-label col-lg-4">Salvage Value (Sn):</label>
                                                                                 <div class="col-lg-8">
                                                                                     <input type="text" class="form-control rqrdFld" aria-label="..." id="accbAstHdrSlvgValue" name="accbAstHdrSlvgValue" value="<?php echo $accbAstHdrSlvgValue; ?>" style="width:100% !important;">
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="form-group form-group-sm col-md-12" style="padding:0px 0px 0px 0px !important;">
-                                                                                <label for="accbAstHdrAutoDprctn" class="control-label col-lg-6">Enable Auto-Depreciation?:</label>
-                                                                                <div class="col-lg-6">
-                                                                                    <?php
-                                                                                    $chkdYes = "";
-                                                                                    $chkdNo = "checked=\"\"";
-                                                                                    if ($accbAstHdrAutoDprctn == "1") {
-                                                                                        $chkdNo = "";
-                                                                                        $chkdYes = "checked=\"\"";
-                                                                                    }
-                                                                                    ?>
-                                                                                    <label class="radio-inline"><input type="radio" name="accbAstHdrAutoDprctn" value="YES" <?php echo $chkdYes; ?>>YES</label>
-                                                                                    <label class="radio-inline"><input type="radio" name="accbAstHdrAutoDprctn" value="NO" <?php echo $chkdNo; ?>>NO</label>
                                                                                 </div>
                                                                             </div>
                                                                         </fieldset>
@@ -2058,7 +2135,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <input type="hidden" name="sbmtdAssetID" id="sbmtdAssetID" class="form-control" value="<?php echo $sbmtdAssetID; ?>">
                                                 <input type="hidden" name="sbmtdAssetTransID" id="sbmtdAssetTransID" class="form-control" value="<?php echo $sbmtdAssetTransID; ?>">
                                                 <?php if ($canEdt === true) { ?>
-                                                    <select class="form-control" id="astTrnsType">
+                                                    <select class="form-control" id="astTrnsType" onchange="autoSlctAsstAcnt();">
                                                         <?php
                                                         $valslctdArry = array("", "", "", "", "", "");
                                                         $valuesArrys = array(
@@ -2266,6 +2343,64 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     </div>
                 </form>
             <?php
+            } else if ($vwtyp == 202) {
+                header("content-type:application/json");
+                //Get Asset Asset Account and Name
+                //Get Asset Depreciation/Appreciation Account and Name
+                //Get Asset Expense/Revenue Account and Name
+                /*
+                1Initial Value = Increase Asset Acnt (Decrease Bank/Cash or Increase Payable)
+                2Depreciate Asset = Increase Asset Depreciation Acnt (Increase Depreciation Expense)
+                3Appreciate Asset = Increase Asset Appreciation Acnt (Increase Appreciation Revenue)
+                4Retire Asset = Decrease Asset Accnt (Increase Expense)
+                5Sale of Asset = Decrease Asset Accnt (Increase Revenue)
+                6Maintenance of Asset = Increase Asset Acnt (Decrease Bank/Cash or Increase Payable)
+                */
+                /* Accounts Needed: 
+                    1. Maintenance Expense Account 
+                    2. Asset Sale Revenue Account
+                */
+                $astTrnsType = isset($_POST['astTrnsType']) ? cleanInputData($_POST['astTrnsType']) : "";
+                $sbmtdAssetID = isset($_POST['sbmtdAssetID']) ? (float) cleanInputData($_POST['sbmtdAssetID']) : -1;
+                $result = get_One_AssetAccnts($sbmtdAssetID);
+
+                $arr_content['AssetAcntID'] = -1;
+                $arr_content['AssetAcntNm'] = "";
+                $arr_content['DprctnAcntID'] = -1;
+                $arr_content['DprctnAcntNm'] = "";
+                $arr_content['DprctnExpnsAcntID'] = -1;
+                $arr_content['DprctnExpnsAcntNm'] = "";
+                $arr_content['RvnuAcntID'] = -1;
+                $arr_content['RvnuAcntNm'] = "";
+                $arr_content['MntncAcntID'] = -1;
+                $arr_content['MntncAcntNm'] = "";
+                $arr_content['NetBookValue'] = "0.00";
+                $arr_content['BlcngAcntID'] = -1;
+                $arr_content['BlcngAcntNm'] = "";
+                $arr_content['IsDprctnContra'] = "0";
+
+                while ($rowRw = loc_db_fetch_array($result)) {
+                    $arr_content['AssetAcntID'] = $rowRw[0];
+                    $arr_content['AssetAcntNm'] = $rowRw[1];
+                    $arr_content['DprctnAcntID'] = $rowRw[2];
+                    $arr_content['DprctnAcntNm'] = $rowRw[3];
+                    $arr_content['DprctnExpnsAcntID'] = $rowRw[4];
+                    $arr_content['DprctnExpnsAcntNm'] = $rowRw[5];
+                    $arr_content['NetBookValue'] = (float) $rowRw[6];
+                    $arr_content['RvnuAcntID'] = $rowRw[7];
+                    $arr_content['RvnuAcntNm'] = $rowRw[8];
+                    $arr_content['MntncAcntID'] = $rowRw[9];
+                    $arr_content['MntncAcntNm'] = $rowRw[10];
+                    $blcngAcntID = get_DfltCheckAcnt($orgID);
+                    $arr_content['BlcngAcntID'] = $blcngAcntID;
+                    $arr_content['BlcngAcntNm'] = getAccntNum($blcngAcntID) . "." . getAccntName($blcngAcntID);
+                    $arr_content['IsDprctnContra'] = isAccntContra((int)$rowRw[2]);
+                }
+
+                $errMsg = "Success";
+                $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>" . $errMsg;
+                echo json_encode($arr_content);
+                exit();
             } else if ($vwtyp == 3) {
                 $mkReadOnly = "";
                 $mkRmrkReadOnly = "";
@@ -2302,11 +2437,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                     New PM Record
                                 </button>
-                                <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="" data-toggle="tooltip" title="Import Asset Lines">
+                                <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="" data-toggle="tooltip" title="Export PM Records">
                                     <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                     Export
                                 </button>
-                                <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="" data-toggle="tooltip" title="Import Asset Lines">
+                                <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="" data-toggle="tooltip" title="Import PM Records">
                                     <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                     Import
                                 </button>

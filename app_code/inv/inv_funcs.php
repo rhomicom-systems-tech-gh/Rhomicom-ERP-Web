@@ -7586,13 +7586,11 @@ function createCreditAnalysisSalesInvoice($cnsmrCreditID, $sbmtdScmSalesInvcID, 
             );
 
             $errMsg1 = reCalcSalesInvcSmmrys($sbmtdScmSalesInvcID, $scmSalesInvcVchType, $myCustID, $scmSalesInvcInvcCurID, $rqStatus);
-
             //UPDATE LINES WITH CREDIT_ITEM LINES WITH SALES INVOICE LINE IDS
             $updtSQL5 = " UPDATE scm.scm_cnsmr_credit_items SET src_invc_det_ln_id = $ln_TrnsLnID  WHERE credit_itm_id = $creditItmId";
             $cnta5 = execUpdtInsSQL($updtSQL5);
-
             //UPDATE INITIAL DEPOSIT
-            /* $updtSQL6 = " UPDATE scm.scm_sales_invc_det SET extra_desc = 'Initial Deposit: $initDpst' WHERE invc_det_ln_id = $ln_TrnsLnID";
+            /*$updtSQL6 = " UPDATE scm.scm_sales_invc_det SET extra_desc = 'Initial Deposit: $initDpst' WHERE invc_det_ln_id = $ln_TrnsLnID";
               $cnta6 = execUpdtInsSQL($updtSQL6); */
         }
     }
