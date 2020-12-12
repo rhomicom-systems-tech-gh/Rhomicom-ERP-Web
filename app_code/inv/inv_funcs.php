@@ -5375,6 +5375,337 @@ function get_CnsgnRcptDocDet($hdrID, $lmtSze = 50)
     return $result;
 }
 
+/*Consignment Receipt Attachments */
+function get_CnsgnRcpt_Attachments($searchWord, $offset, $limit_size, $batchID, $docHdrTyp, &$attchSQL)
+{
+    $strSql = "SELECT a.attchmnt_id, a.doc_hdr_id, a.attchmnt_desc, a.file_name " .
+        "FROM inv.inv_doc_attchmnts a " .
+        "WHERE(a.attchmnt_desc ilike '" . loc_db_escape_string($searchWord) .
+        "' and a.doc_hdr_id = " . $batchID . " AND doc_hdr_type = '". loc_db_escape_string($docHdrTyp) .
+        "') ORDER BY a.attchmnt_id LIMIT " . $limit_size .
+        " OFFSET " . (abs($offset * $limit_size));
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_Total_CnsgnRcpt_Attachments($searchWord, $batchID,$docHdrTyp)
+{
+    $strSql = "SELECT count(1) " .
+        "FROM inv.inv_doc_attchmnts a " .
+        "WHERE(a.attchmnt_desc ilike '" . loc_db_escape_string($searchWord) .
+        "' and a.doc_hdr_id = " . $batchID . " AND doc_hdr_type = '". loc_db_escape_string($docHdrTyp) .
+        "')";
+    $result = executeSQLNoParams($strSql);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
+
+function getCnsgnRcptAttchmtDocs($batchid,$docHdrTyp)
+{
+    $sqlStr = "SELECT attchmnt_id, file_name, attchmnt_desc
+        FROM inv.inv_doc_attchmnts 
+        WHERE 1=1 AND doc_hdr_type = '". loc_db_escape_string($docHdrTyp) .
+        "' AND file_name != '' AND doc_hdr_id = " . $batchid;
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function updateCnsgnRcptDocFlNm($attchmnt_id, $file_name)
+{
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $insSQL = "UPDATE inv.inv_doc_attchmnts SET file_name='"
+        . loc_db_escape_string($file_name) .
+        "', last_update_by=" . $usrID .
+        ", last_update_date='" . $dateStr . "'
+                WHERE attchmnt_id=" . $attchmnt_id;
+    return execUpdtInsSQL($insSQL);
+}
+
+function getNewCnsgnRcptDocID()
+{
+    $strSql = "select nextval('inv.inv_doc_attchmnts_attchmnt_id_seq')";
+    $result = executeSQLNoParams($strSql);
+
+    if (loc_db_num_rows($result) > 0) {
+        $row = loc_db_fetch_array($result);
+        return $row[0];
+    }
+    return -1;
+}
+
+function createCnsgnRcptDoc($attchmnt_id, $hdrid, $hdrType, $attchmnt_desc, $file_name)
+{
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO inv.inv_doc_attchmnts(
+            attchmnt_id, doc_hdr_id, doc_hdr_type, attchmnt_desc, file_name, created_by, 
+            creation_date, last_update_by, last_update_date)
+             VALUES (" . $attchmnt_id . ", " . $hdrid . ",'"
+        . loc_db_escape_string($hdrType) . "','"
+        . loc_db_escape_string($attchmnt_desc) . "','"
+        . loc_db_escape_string($file_name) . "',"
+        . $usrID . ",'" . $dateStr . "'," . $usrID . ",'" . $dateStr . "')";
+    return execUpdtInsSQL($insSQL);
+}
+
+function deleteCnsgnRcptDoc($pkeyID, $docTrnsNum = "")
+{
+    $insSQL = "DELETE FROM inv.inv_doc_attchmnts WHERE attchmnt_id = " . $pkeyID;
+    //echo $insSQL;
+    $affctd1 = execUpdtInsSQL($insSQL, "Trns. No:" . $docTrnsNum);
+    if ($affctd1 > 0) {
+        $dsply = "Successfully Deleted the ff Records-";
+        $dsply .= "<br/>$affctd1 Attached Document(s)!";
+        return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
+    } else {
+        $dsply = "No Record Deleted";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+}
+
+function uploadDaCnsgnRcptDoc($attchmntID, &$nwImgLoc, &$errMsg)
+{
+    global $tmpDest;
+    global $ftp_base_db_fldr;
+    global $usrID;
+    global $fldrPrfx;
+    global $smplTokenWord1;
+
+    $msg = "";
+    $allowedExts = array(
+        'png', 'jpg', 'gif', 'jpeg', 'bmp', 'pdf', 'xls', 'xlsx',
+        'doc', 'docx', 'ppt', 'pptx', 'txt', 'csv'
+    );
+
+    if (isset($_FILES["daCnsgnRcptAttchmnt"])) {
+        $flnm = $_FILES["daCnsgnRcptAttchmnt"]["name"];
+        $temp = explode(".", $flnm);
+        $extension = end($temp);
+        if ($_FILES["daCnsgnRcptAttchmnt"]["error"] > 0) {
+            $msg .= "Return Code: " . $_FILES["daCnsgnRcptAttchmnt"]["error"] . "<br>";
+        } else {
+            $msg .= "Uploaded File: " . $_FILES["daCnsgnRcptAttchmnt"]["name"] . "<br>";
+            $msg .= "Type: " . $_FILES["daCnsgnRcptAttchmnt"]["type"] . "<br>";
+            $msg .= "Size: " . round(($_FILES["daCnsgnRcptAttchmnt"]["size"]) / (1024 * 1024), 2) . " MB<br>";
+            //$msg .= "Temp file: " . $_FILES["daCnsgnRcptAttchmnt"]["tmp_name"] . "<br>";
+            if ((($_FILES["daCnsgnRcptAttchmnt"]["type"] == "image/gif") || ($_FILES["daCnsgnRcptAttchmnt"]["type"] == "image/jpeg") || ($_FILES["daCnsgnRcptAttchmnt"]["type"] == "image/jpg") || ($_FILES["daCnsgnRcptAttchmnt"]["type"] == "image/pjpeg") || ($_FILES["daCnsgnRcptAttchmnt"]["type"] == "image/x-png") || ($_FILES["daCnsgnRcptAttchmnt"]["type"] == "image/png") || in_array($extension, $allowedExts)) && ($_FILES["daCnsgnRcptAttchmnt"]["size"] < 10000000)) {
+                $nwFileName = encrypt1($attchmntID . "." . $extension, $smplTokenWord1) . "." . $extension;
+                $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
+                move_uploaded_file($_FILES["daCnsgnRcptAttchmnt"]["tmp_name"], $img_src);
+                $ftp_src = $ftp_base_db_fldr . "/Rcpts/$attchmntID" . "." . $extension;
+                if (file_exists($img_src)) {
+                    copy("$img_src", "$ftp_src");
+                    $dateStr = getDB_Date_time();
+                    $updtSQL = "UPDATE inv.inv_doc_attchmnts
+                            SET file_name='" . $attchmntID . "." . $extension .
+                        "', last_update_by=" . $usrID .
+                        ", last_update_date='" . $dateStr .
+                        "' WHERE attchmnt_id=" . $attchmntID;
+                    execUpdtInsSQL($updtSQL);
+                }
+                $msg .= "Document Stored Successfully!<br/>";
+                $nwImgLoc = "$attchmntID" . "." . $extension;
+                $errMsg = $msg;
+                return TRUE;
+            } else {
+                $msg .= "Invalid file!<br/>File Size must be below 10MB and<br/>File Type must be in the ff:<br/>" . implode(
+                    ", ",
+                    $allowedExts
+                );
+                $nwImgLoc = $msg;
+                $errMsg = $msg;
+            }
+        }
+    }
+    $msg .= "<br/>Invalid file";
+    $nwImgLoc = $msg;
+    $errMsg = $msg;
+    return FALSE;
+}
+
+function uploadDaCnsgnRtrnDoc($attchmntID, &$nwImgLoc, &$errMsg)
+{
+    global $tmpDest;
+    global $ftp_base_db_fldr;
+    global $usrID;
+    global $fldrPrfx;
+    global $smplTokenWord1;
+
+    $msg = "";
+    $allowedExts = array(
+        'png', 'jpg', 'gif', 'jpeg', 'bmp', 'pdf', 'xls', 'xlsx',
+        'doc', 'docx', 'ppt', 'pptx', 'txt', 'csv'
+    );
+
+    if (isset($_FILES["daCnsgnRtrnAttchmnt"])) {
+        $flnm = $_FILES["daCnsgnRtrnAttchmnt"]["name"];
+        $temp = explode(".", $flnm);
+        $extension = end($temp);
+        if ($_FILES["daCnsgnRtrnAttchmnt"]["error"] > 0) {
+            $msg .= "Return Code: " . $_FILES["daCnsgnRtrnAttchmnt"]["error"] . "<br>";
+        } else {
+            $msg .= "Uploaded File: " . $_FILES["daCnsgnRtrnAttchmnt"]["name"] . "<br>";
+            $msg .= "Type: " . $_FILES["daCnsgnRtrnAttchmnt"]["type"] . "<br>";
+            $msg .= "Size: " . round(($_FILES["daCnsgnRtrnAttchmnt"]["size"]) / (1024 * 1024), 2) . " MB<br>";
+            //$msg .= "Temp file: " . $_FILES["daCnsgnRtrnAttchmnt"]["tmp_name"] . "<br>";
+            if ((($_FILES["daCnsgnRtrnAttchmnt"]["type"] == "image/gif") || ($_FILES["daCnsgnRtrnAttchmnt"]["type"] == "image/jpeg") || ($_FILES["daCnsgnRtrnAttchmnt"]["type"] == "image/jpg") || ($_FILES["daCnsgnRtrnAttchmnt"]["type"] == "image/pjpeg") || ($_FILES["daCnsgnRtrnAttchmnt"]["type"] == "image/x-png") || ($_FILES["daCnsgnRtrnAttchmnt"]["type"] == "image/png") || in_array($extension, $allowedExts)) && ($_FILES["daCnsgnRtrnAttchmnt"]["size"] < 10000000)) {
+                $nwFileName = encrypt1($attchmntID . "." . $extension, $smplTokenWord1) . "." . $extension;
+                $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
+                move_uploaded_file($_FILES["daCnsgnRtrnAttchmnt"]["tmp_name"], $img_src);
+                $ftp_src = $ftp_base_db_fldr . "/Rcpts/$attchmntID" . "." . $extension;
+                if (file_exists($img_src)) {
+                    copy("$img_src", "$ftp_src");
+                    $dateStr = getDB_Date_time();
+                    $updtSQL = "UPDATE inv.inv_doc_attchmnts
+                            SET file_name='" . $attchmntID . "." . $extension .
+                        "', last_update_by=" . $usrID .
+                        ", last_update_date='" . $dateStr .
+                        "' WHERE attchmnt_id=" . $attchmntID;
+                    execUpdtInsSQL($updtSQL);
+                }
+                $msg .= "Document Stored Successfully!<br/>";
+                $nwImgLoc = "$attchmntID" . "." . $extension;
+                $errMsg = $msg;
+                return TRUE;
+            } else {
+                $msg .= "Invalid file!<br/>File Size must be below 10MB and<br/>File Type must be in the ff:<br/>" . implode(
+                    ", ",
+                    $allowedExts
+                );
+                $nwImgLoc = $msg;
+                $errMsg = $msg;
+            }
+        }
+    }
+    $msg .= "<br/>Invalid file";
+    $nwImgLoc = $msg;
+    $errMsg = $msg;
+    return FALSE;
+}
+
+function uploadDaStockTrnsfrDoc($attchmntID, &$nwImgLoc, &$errMsg)
+{
+    global $tmpDest;
+    global $ftp_base_db_fldr;
+    global $usrID;
+    global $fldrPrfx;
+    global $smplTokenWord1;
+
+    $msg = "";
+    $allowedExts = array(
+        'png', 'jpg', 'gif', 'jpeg', 'bmp', 'pdf', 'xls', 'xlsx',
+        'doc', 'docx', 'ppt', 'pptx', 'txt', 'csv'
+    );
+
+    if (isset($_FILES["daStockTrnsfrAttchmnt"])) {
+        $flnm = $_FILES["daStockTrnsfrAttchmnt"]["name"];
+        $temp = explode(".", $flnm);
+        $extension = end($temp);
+        if ($_FILES["daStockTrnsfrAttchmnt"]["error"] > 0) {
+            $msg .= "Return Code: " . $_FILES["daStockTrnsfrAttchmnt"]["error"] . "<br>";
+        } else {
+            $msg .= "Uploaded File: " . $_FILES["daStockTrnsfrAttchmnt"]["name"] . "<br>";
+            $msg .= "Type: " . $_FILES["daStockTrnsfrAttchmnt"]["type"] . "<br>";
+            $msg .= "Size: " . round(($_FILES["daStockTrnsfrAttchmnt"]["size"]) / (1024 * 1024), 2) . " MB<br>";
+            //$msg .= "Temp file: " . $_FILES["daStockTrnsfrAttchmnt"]["tmp_name"] . "<br>";
+            if ((($_FILES["daStockTrnsfrAttchmnt"]["type"] == "image/gif") || ($_FILES["daStockTrnsfrAttchmnt"]["type"] == "image/jpeg") || ($_FILES["daStockTrnsfrAttchmnt"]["type"] == "image/jpg") || ($_FILES["daStockTrnsfrAttchmnt"]["type"] == "image/pjpeg") || ($_FILES["daStockTrnsfrAttchmnt"]["type"] == "image/x-png") || ($_FILES["daStockTrnsfrAttchmnt"]["type"] == "image/png") || in_array($extension, $allowedExts)) && ($_FILES["daStockTrnsfrAttchmnt"]["size"] < 10000000)) {
+                $nwFileName = encrypt1($attchmntID . "." . $extension, $smplTokenWord1) . "." . $extension;
+                $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
+                move_uploaded_file($_FILES["daStockTrnsfrAttchmnt"]["tmp_name"], $img_src);
+                $ftp_src = $ftp_base_db_fldr . "/Rcpts/$attchmntID" . "." . $extension;
+                if (file_exists($img_src)) {
+                    copy("$img_src", "$ftp_src");
+                    $dateStr = getDB_Date_time();
+                    $updtSQL = "UPDATE inv.inv_doc_attchmnts
+                            SET file_name='" . $attchmntID . "." . $extension .
+                        "', last_update_by=" . $usrID .
+                        ", last_update_date='" . $dateStr .
+                        "' WHERE attchmnt_id=" . $attchmntID;
+                    execUpdtInsSQL($updtSQL);
+                }
+                $msg .= "Document Stored Successfully!<br/>";
+                $nwImgLoc = "$attchmntID" . "." . $extension;
+                $errMsg = $msg;
+                return TRUE;
+            } else {
+                $msg .= "Invalid file!<br/>File Size must be below 10MB and<br/>File Type must be in the ff:<br/>" . implode(
+                    ", ",
+                    $allowedExts
+                );
+                $nwImgLoc = $msg;
+                $errMsg = $msg;
+            }
+        }
+    }
+    $msg .= "<br/>Invalid file";
+    $nwImgLoc = $msg;
+    $errMsg = $msg;
+    return FALSE;
+}
+
+function uploadDaPrchsDocDoc($attchmntID, &$nwImgLoc, &$errMsg)
+{
+    global $tmpDest;
+    global $ftp_base_db_fldr;
+    global $usrID;
+    global $fldrPrfx;
+    global $smplTokenWord1;
+
+    $msg = "";
+    $allowedExts = array(
+        'png', 'jpg', 'gif', 'jpeg', 'bmp', 'pdf', 'xls', 'xlsx',
+        'doc', 'docx', 'ppt', 'pptx', 'txt', 'csv'
+    );
+
+    if (isset($_FILES["daPrchsDocAttchmnt"])) {
+        $flnm = $_FILES["daPrchsDocAttchmnt"]["name"];
+        $temp = explode(".", $flnm);
+        $extension = end($temp);
+        if ($_FILES["daPrchsDocAttchmnt"]["error"] > 0) {
+            $msg .= "Return Code: " . $_FILES["daPrchsDocAttchmnt"]["error"] . "<br>";
+        } else {
+            $msg .= "Uploaded File: " . $_FILES["daPrchsDocAttchmnt"]["name"] . "<br>";
+            $msg .= "Type: " . $_FILES["daPrchsDocAttchmnt"]["type"] . "<br>";
+            $msg .= "Size: " . round(($_FILES["daPrchsDocAttchmnt"]["size"]) / (1024 * 1024), 2) . " MB<br>";
+            //$msg .= "Temp file: " . $_FILES["daPrchsDocAttchmnt"]["tmp_name"] . "<br>";
+            if ((($_FILES["daPrchsDocAttchmnt"]["type"] == "image/gif") || ($_FILES["daPrchsDocAttchmnt"]["type"] == "image/jpeg") || ($_FILES["daPrchsDocAttchmnt"]["type"] == "image/jpg") || ($_FILES["daPrchsDocAttchmnt"]["type"] == "image/pjpeg") || ($_FILES["daPrchsDocAttchmnt"]["type"] == "image/x-png") || ($_FILES["daPrchsDocAttchmnt"]["type"] == "image/png") || in_array($extension, $allowedExts)) && ($_FILES["daPrchsDocAttchmnt"]["size"] < 10000000)) {
+                $nwFileName = encrypt1($attchmntID . "." . $extension, $smplTokenWord1) . "." . $extension;
+                $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
+                move_uploaded_file($_FILES["daPrchsDocAttchmnt"]["tmp_name"], $img_src);
+                $ftp_src = $ftp_base_db_fldr . "/Prchs/$attchmntID" . "." . $extension;
+                if (file_exists($img_src)) {
+                    copy("$img_src", "$ftp_src");
+                    $dateStr = getDB_Date_time();
+                    $updtSQL = "UPDATE inv.inv_doc_attchmnts
+                            SET file_name='" . $attchmntID . "." . $extension .
+                        "', last_update_by=" . $usrID .
+                        ", last_update_date='" . $dateStr .
+                        "' WHERE attchmnt_id=" . $attchmntID;
+                    execUpdtInsSQL($updtSQL);
+                }
+                $msg .= "Document Stored Successfully!<br/>";
+                $nwImgLoc = "$attchmntID" . "." . $extension;
+                $errMsg = $msg;
+                return TRUE;
+            } else {
+                $msg .= "Invalid file!<br/>File Size must be below 10MB and<br/>File Type must be in the ff:<br/>" . implode(
+                    ", ",
+                    $allowedExts
+                );
+                $nwImgLoc = $msg;
+                $errMsg = $msg;
+            }
+        }
+    }
+    $msg .= "<br/>Invalid file";
+    $nwImgLoc = $msg;
+    $errMsg = $msg;
+    return FALSE;
+}
+
 function get_Basic_CnsgnRtrn($searchWord, $searchIn, $offset, $limit_size, $orgID, $shwUnpstdOnly, $shwUnpaidOnly)
 {
     execUpdtInsSQL("UPDATE inv.inv_consgmt_rcpt_rtns_hdr SET doc_curr_id=org.get_orgfunc_crncy_id(" . $orgID . ") WHERE doc_curr_id<=0");

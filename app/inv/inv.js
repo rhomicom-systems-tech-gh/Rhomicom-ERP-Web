@@ -4199,7 +4199,7 @@ function getlnkdEvtAccbRILovEvnt(elementID, titleElementID, modalBodyID, lovNm, 
 
 function getOneScmSalesInvcDocsForm(pKeyID, vwtype) {
     var lnkArgs = 'grp=12&typ=1&pg=1&vtyp=' + vwtype + '&sbmtdScmSalesInvcID=' + pKeyID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModaly', 'ShowDialog', 'Receivables Attached Documents', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+    doAjaxWthCallBck(lnkArgs, 'myFormsModaly', 'ShowDialog', 'Sales Attached Documents', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
         var table1 = $('#attchdSalesInvcDocsTable').DataTable({
             "paging": false,
             "ordering": false,
@@ -5760,7 +5760,7 @@ function getOneScmPrchsDocForm(pKeyID, vwtype, actionTxt, scmPrchsDocVchType) {
     }
     var sbmtdScmPrchsReqID = typeof $('#sbmtdScmPrchsReqID').val() === 'undefined' ? '-1' : $('#sbmtdScmPrchsReqID').val();
     var lnkArgs = 'grp=12&typ=1&pg=2&vtyp=' + vwtype + '&sbmtdScmPrchsDocID=' + pKeyID + '&scmPrchsDocVchType=' + scmPrchsDocVchType + '&sbmtdScmPrchsReqID=' + sbmtdScmPrchsReqID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalLg', actionTxt, 'Sales Document Details (ID:' + pKeyID + ')', 'myFormsModalTitleLg', 'myFormsModalBodyLg', function () {
+    doAjaxWthCallBck(lnkArgs, 'myFormsModalLg', actionTxt, 'Purchasing Document Details (ID:' + pKeyID + ')', 'myFormsModalTitleLg', 'myFormsModalBodyLg', function () {
         $('.form_date_tme').datetimepicker({
             format: "dd-M-yyyy hh:ii:ss",
             language: 'en',
@@ -6299,6 +6299,232 @@ function saveScmPrchsDocRvrslForm(funcCur, shdSbmt, invcSrc) {
     });
 }
 
+/**Pu Attachments */
+function getOneScmPrchsDocDocsForm(pKeyID, vwtype) {
+    var lnkArgs = 'grp=12&typ=1&pg=2&vtyp=' + vwtype + '&sbmtdScmPrchsDocID=' + pKeyID;
+    doAjaxWthCallBck(lnkArgs, 'myFormsModaly', 'ShowDialog', 'Purchasing Attached Documents', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+        var table1 = $('#attchdPrchsDocDocsTable').DataTable({
+            "paging": false,
+            "ordering": false,
+            "info": false,
+            "bFilter": false,
+            "scrollX": false
+        });
+        $('#attchdPrchsDocDocsTable').wrap('<div class="dataTables_scroll"/>');
+        $('[data-toggle="tooltip"]').tooltip();
+        $('#attchdPrchsDocDocsTblForm').submit(function (e) {
+            e.preventDefault();
+            return false;
+        });
+    });
+}
+
+function uploadFileToPrchsDocDocs(inptElmntID, attchIDElmntID, docNmElmntID, sbmtdHdrID, rowIDAttrb) {
+    var docCtrgrName = $('#' + docNmElmntID).val();
+    var errMsg = "";
+    if (docCtrgrName.trim() === '') {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+            'font-weight:bold;color:red;">Doc. Name/Description cannot be empty!</span></p>';
+    }
+    if (sbmtdHdrID <= 0) {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+            'font-weight:bold;color:red;">Attachments must be done on a saved Document/Transaction!</span></p>';
+    }
+    if (rhotrim(errMsg, '; ') !== '') {
+        bootbox.alert({
+            title: 'System Alert!',
+            size: 'small',
+            message: errMsg
+        });
+        return false;
+    }
+    $("#" + inptElmntID).val('');
+    $("#" + inptElmntID).off('change');
+    $("#" + inptElmntID).change(function () {
+        var fileName = $(this).val();
+        var input = document.getElementById(inptElmntID);
+        sendFileToPrchsDocDocs(input.files[0], docNmElmntID, attchIDElmntID, sbmtdHdrID, function (data) {
+            $("#" + attchIDElmntID).val(data.attchID);
+            var dialog = bootbox.alert({
+                title: 'Server Response!',
+                size: 'small',
+                message: '<div id="myInformation">' + data.message + '</div>',
+                callback: function () {
+                    if (data.message.indexOf("Success") !== -1) {}
+                }
+            });
+        });
+    });
+    performFileClick(inptElmntID);
+}
+
+function sendFileToPrchsDocDocs(file, docNmElmntID, attchIDElmntID, sbmtdHdrID, callBackFunc) {
+    var data1 = new FormData();
+    data1.append('daPrchsDocAttchmnt', file);
+    data1.append('grp', 12);
+    data1.append('typ', 1);
+    data1.append('pg', 2);
+    data1.append('q', 'UPDATE');
+    data1.append('actyp', 20);
+    data1.append('docCtrgrName', $('#' + docNmElmntID).val());
+    data1.append('attchmentID', $('#' + attchIDElmntID).val());
+    data1.append('sbmtdScmPrchsDocID', sbmtdHdrID);
+    var dialog1 = bootbox.alert({
+        title: 'Uploading File...',
+        size: 'small',
+        message: '<p><i class="fa fa-spin fa-spinner"></i> Uploading File...Please Wait...</p>'
+    });
+    dialog1.init(function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+            $body = $("body");
+            $body.removeClass("mdlloading");
+            $.ajax({
+                url: "index.php",
+                type: 'POST',
+                data: data1,
+                async: true,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    dialog1.modal('hide');
+                    callBackFunc(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus + " " + errorThrown);
+                    console.warn(jqXHR.responseText);
+                }
+            });
+        });
+    });
+}
+
+function getAttchdPrchsDocDocs(actionText, slctr, linkArgs, actionDialog) {
+    if (typeof actionDialog === 'undefined' || actionDialog === null) {
+        actionDialog = 'ShowDialog';
+    }
+    var srchFor = typeof $("#attchdPrchsDocDocsSrchFor").val() === 'undefined' ? '%' : $("#attchdPrchsDocDocsSrchFor").val();
+    var srchIn = typeof $("#attchdPrchsDocDocsSrchIn").val() === 'undefined' ? 'Both' : $("#attchdPrchsDocDocsSrchIn").val();
+    var pageNo = typeof $("#attchdPrchsDocDocsPageNo").val() === 'undefined' ? 1 : $("#attchdPrchsDocDocsPageNo").val();
+    var limitSze = typeof $("#attchdPrchsDocDocsDsplySze").val() === 'undefined' ? 10 : $("#attchdPrchsDocDocsDsplySze").val();
+    var sortBy = typeof $("#attchdPrchsDocDocsSortBy").val() === 'undefined' ? '' : $("#attchdPrchsDocDocsSortBy").val();
+    if (actionText == 'clear') {
+        srchFor = "%";
+        pageNo = 1;
+    } else if (actionText == 'next') {
+        pageNo = parseInt(pageNo) + 1;
+    } else if (actionText == 'previous') {
+        pageNo = parseInt(pageNo) - 1;
+    }
+    linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
+    doAjaxWthCallBck(linkArgs, 'myFormsModaly', actionDialog, 'Purchase Document Attached Documents', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+        if (!$.fn.DataTable.isDataTable('#attchdPrchsDocDocsTable')) {
+            var table1 = $('#attchdPrchsDocDocsTable').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "bFilter": false,
+                "scrollX": false
+            });
+            $('#attchdPrchsDocDocsTable').wrap('<div class="dataTables_scroll"/>');
+        }
+        $('[data-toggle="tooltip"]').tooltip();
+        $('#attchdPrchsDocDocsTblForm').submit(function (e) {
+            e.preventDefault();
+            return false;
+        });
+    });
+}
+
+function enterKeyFuncAttchdPrchsDocDocs(e, actionText, slctr, linkArgs, actionDialog) {
+    if (typeof actionDialog === 'undefined' || actionDialog === null) {
+        actionDialog = 'ShowDialog';
+    }
+    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+    if (charCode == 13) {
+        getAttchdPrchsDocDocs(actionText, slctr, linkArgs, actionDialog);
+    }
+}
+
+function delAttchdPrchsDocDoc(rowIDAttrb) {
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var sbmtdHdrID = typeof $("#sbmtdScmPrchsDocID").val() === 'undefined' ? -1 : $("#sbmtdScmPrchsDocID").val();
+    var docNum = typeof $("#scmPrchsDocDocNum").val() === 'undefined' ? '' : $("#scmPrchsDocDocNum").val();
+    var pKeyID = -1;
+    if (typeof $('#attchdPrchsDocDocsRow' + rndmNum + '_AttchdDocsID').val() === 'undefined') {
+        /*Do Nothing allnoticesRow<?php echo $cntr; ?> 
+        attchdPrchsDocDocsRow2_AttchdDocsID
+        */
+    } else {
+        pKeyID = $('#attchdPrchsDocDocsRow' + rndmNum + '_AttchdDocsID').val();
+    }
+    var dialog = bootbox.confirm({
+        title: 'Delete Document?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">DELETE</span> this Document?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true) {
+                var dialog1 = bootbox.alert({
+                    title: 'Delete Document?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Document...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 12,
+                                    typ: 1,
+                                    pg: 2,
+                                    q: 'DELETE',
+                                    actyp: 5,
+                                    attchmentID: pKeyID,
+                                    sbmtdHdrID: sbmtdHdrID,
+                                    docTrnsNum: docNum
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                        if (result1.indexOf("Success") !== -1) {
+                                            $("#" + rowIDAttrb).remove();
+                                        }
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                }
+                            });
+                        });
+                    } else {
+                        setTimeout(function () {
+                            $("#" + rowIDAttrb).remove();
+                            dialog1.find('.bootbox-body').html('Row Removed Successfully!');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
+}
+/**Consignment Receipts */
 function getScmCnsgnRcpt(actionText, slctr, linkArgs) {
     var srchFor = typeof $("#scmCnsgnRcptSrchFor").val() === 'undefined' ? '%' : $("#scmCnsgnRcptSrchFor").val();
     var srchIn = typeof $("#scmCnsgnRcptSrchIn").val() === 'undefined' ? 'Both' : $("#scmCnsgnRcptSrchIn").val();
@@ -6984,6 +7210,232 @@ function saveScmCnsgnRcptRvrslForm(funcCur, shdSbmt, invcSrc, sbmtdScmCnsgnRcptI
     });
 }
 
+/**Consignment Receipt Attachments */
+function getOneScmCnsgnRcptDocsForm(pKeyID, vwtype) {
+    var lnkArgs = 'grp=12&typ=1&pg=6&vtyp=' + vwtype + '&sbmtdScmCnsgnRcptID=' + pKeyID;
+    doAjaxWthCallBck(lnkArgs, 'myFormsModaly', 'ShowDialog', 'Goods Receipt Attached Documents', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+        var table1 = $('#attchdCnsgnRcptDocsTable').DataTable({
+            "paging": false,
+            "ordering": false,
+            "info": false,
+            "bFilter": false,
+            "scrollX": false
+        });
+        $('#attchdCnsgnRcptDocsTable').wrap('<div class="dataTables_scroll"/>');
+        $('[data-toggle="tooltip"]').tooltip();
+        $('#attchdCnsgnRcptDocsTblForm').submit(function (e) {
+            e.preventDefault();
+            return false;
+        });
+    });
+}
+
+function uploadFileToCnsgnRcptDocs(inptElmntID, attchIDElmntID, docNmElmntID, sbmtdHdrID, rowIDAttrb) {
+    var docCtrgrName = $('#' + docNmElmntID).val();
+    var errMsg = "";
+    if (docCtrgrName.trim() === '') {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+            'font-weight:bold;color:red;">Doc. Name/Description cannot be empty!</span></p>';
+    }
+    if (sbmtdHdrID <= 0) {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+            'font-weight:bold;color:red;">Attachments must be done on a saved Document/Transaction!</span></p>';
+    }
+    if (rhotrim(errMsg, '; ') !== '') {
+        bootbox.alert({
+            title: 'System Alert!',
+            size: 'small',
+            message: errMsg
+        });
+        return false;
+    }
+    $("#" + inptElmntID).val('');
+    $("#" + inptElmntID).off('change');
+    $("#" + inptElmntID).change(function () {
+        var fileName = $(this).val();
+        var input = document.getElementById(inptElmntID);
+        sendFileToCnsgnRcptDocs(input.files[0], docNmElmntID, attchIDElmntID, sbmtdHdrID, function (data) {
+            $("#" + attchIDElmntID).val(data.attchID);
+            var dialog = bootbox.alert({
+                title: 'Server Response!',
+                size: 'small',
+                message: '<div id="myInformation">' + data.message + '</div>',
+                callback: function () {
+                    if (data.message.indexOf("Success") !== -1) {}
+                }
+            });
+        });
+    });
+    performFileClick(inptElmntID);
+}
+
+function sendFileToCnsgnRcptDocs(file, docNmElmntID, attchIDElmntID, sbmtdHdrID, callBackFunc) {
+    var data1 = new FormData();
+    data1.append('daCnsgnRcptAttchmnt', file);
+    data1.append('grp', 12);
+    data1.append('typ', 1);
+    data1.append('pg', 6);
+    data1.append('q', 'UPDATE');
+    data1.append('actyp', 20);
+    data1.append('docCtrgrName', $('#' + docNmElmntID).val());
+    data1.append('attchmentID', $('#' + attchIDElmntID).val());
+    data1.append('sbmtdScmCnsgnRcptID', sbmtdHdrID);
+    var dialog1 = bootbox.alert({
+        title: 'Uploading File...',
+        size: 'small',
+        message: '<p><i class="fa fa-spin fa-spinner"></i> Uploading File...Please Wait...</p>'
+    });
+    dialog1.init(function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+            $body = $("body");
+            $body.removeClass("mdlloading");
+            $.ajax({
+                url: "index.php",
+                type: 'POST',
+                data: data1,
+                async: true,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    dialog1.modal('hide');
+                    callBackFunc(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus + " " + errorThrown);
+                    console.warn(jqXHR.responseText);
+                }
+            });
+        });
+    });
+}
+
+function getAttchdCnsgnRcptDocs(actionText, slctr, linkArgs, actionDialog) {
+    if (typeof actionDialog === 'undefined' || actionDialog === null) {
+        actionDialog = 'ShowDialog';
+    }
+    var srchFor = typeof $("#attchdCnsgnRcptDocsSrchFor").val() === 'undefined' ? '%' : $("#attchdCnsgnRcptDocsSrchFor").val();
+    var srchIn = typeof $("#attchdCnsgnRcptDocsSrchIn").val() === 'undefined' ? 'Both' : $("#attchdCnsgnRcptDocsSrchIn").val();
+    var pageNo = typeof $("#attchdCnsgnRcptDocsPageNo").val() === 'undefined' ? 1 : $("#attchdCnsgnRcptDocsPageNo").val();
+    var limitSze = typeof $("#attchdCnsgnRcptDocsDsplySze").val() === 'undefined' ? 10 : $("#attchdCnsgnRcptDocsDsplySze").val();
+    var sortBy = typeof $("#attchdCnsgnRcptDocsSortBy").val() === 'undefined' ? '' : $("#attchdCnsgnRcptDocsSortBy").val();
+    if (actionText == 'clear') {
+        srchFor = "%";
+        pageNo = 1;
+    } else if (actionText == 'next') {
+        pageNo = parseInt(pageNo) + 1;
+    } else if (actionText == 'previous') {
+        pageNo = parseInt(pageNo) - 1;
+    }
+    linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
+    doAjaxWthCallBck(linkArgs, 'myFormsModaly', actionDialog, 'Receivable Invoice Attached Documents', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+        if (!$.fn.DataTable.isDataTable('#attchdCnsgnRcptDocsTable')) {
+            var table1 = $('#attchdCnsgnRcptDocsTable').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "bFilter": false,
+                "scrollX": false
+            });
+            $('#attchdCnsgnRcptDocsTable').wrap('<div class="dataTables_scroll"/>');
+        }
+        $('[data-toggle="tooltip"]').tooltip();
+        $('#attchdCnsgnRcptDocsTblForm').submit(function (e) {
+            e.preventDefault();
+            return false;
+        });
+    });
+}
+
+function enterKeyFuncAttchdCnsgnRcptDocs(e, actionText, slctr, linkArgs, actionDialog) {
+    if (typeof actionDialog === 'undefined' || actionDialog === null) {
+        actionDialog = 'ShowDialog';
+    }
+    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+    if (charCode == 13) {
+        getAttchdCnsgnRcptDocs(actionText, slctr, linkArgs, actionDialog);
+    }
+}
+
+function delAttchdCnsgnRcptDoc(rowIDAttrb) {
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var sbmtdHdrID = typeof $("#sbmtdScmCnsgnRcptID").val() === 'undefined' ? -1 : $("#sbmtdScmCnsgnRcptID").val();
+    var docNum = typeof $("#scmCnsgnRcptDocNum").val() === 'undefined' ? '' : $("#scmCnsgnRcptDocNum").val();
+    var pKeyID = -1;
+    if (typeof $('#attchdCnsgnRcptDocsRow' + rndmNum + '_AttchdDocsID').val() === 'undefined') {
+        /*Do Nothing allnoticesRow<?php echo $cntr; ?> 
+        attchdCnsgnRcptDocsRow2_AttchdDocsID
+        */
+    } else {
+        pKeyID = $('#attchdCnsgnRcptDocsRow' + rndmNum + '_AttchdDocsID').val();
+    }
+    var dialog = bootbox.confirm({
+        title: 'Delete Document?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">DELETE</span> this Document?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true) {
+                var dialog1 = bootbox.alert({
+                    title: 'Delete Document?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Document...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 12,
+                                    typ: 1,
+                                    pg: 6,
+                                    q: 'DELETE',
+                                    actyp: 5,
+                                    attchmentID: pKeyID,
+                                    sbmtdHdrID: sbmtdHdrID,
+                                    docTrnsNum: docNum
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                        if (result1.indexOf("Success") !== -1) {
+                                            $("#" + rowIDAttrb).remove();
+                                        }
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                }
+                            });
+                        });
+                    } else {
+                        setTimeout(function () {
+                            $("#" + rowIDAttrb).remove();
+                            dialog1.find('.bootbox-body').html('Row Removed Successfully!');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
+}
+/**Consignment Receipt Returns */
 function getScmCnsgnRtrn(actionText, slctr, linkArgs) {
     var srchFor = typeof $("#scmCnsgnRtrnSrchFor").val() === 'undefined' ? '%' : $("#scmCnsgnRtrnSrchFor").val();
     var srchIn = typeof $("#scmCnsgnRtrnSrchIn").val() === 'undefined' ? 'Both' : $("#scmCnsgnRtrnSrchIn").val();
@@ -7548,6 +8000,232 @@ function saveScmCnsgnRtrnRvrslForm(funcCur, shdSbmt) {
     });
 }
 
+/**Consignment Receipt Returns Attachments */
+function getOneScmCnsgnRtrnDocsForm(pKeyID, vwtype) {
+    var lnkArgs = 'grp=12&typ=1&pg=7&vtyp=' + vwtype + '&sbmtdScmCnsgnRtrnID=' + pKeyID;
+    doAjaxWthCallBck(lnkArgs, 'myFormsModaly', 'ShowDialog', 'Goods Return Attached Documents', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+        var table1 = $('#attchdCnsgnRtrnDocsTable').DataTable({
+            "paging": false,
+            "ordering": false,
+            "info": false,
+            "bFilter": false,
+            "scrollX": false
+        });
+        $('#attchdCnsgnRtrnDocsTable').wrap('<div class="dataTables_scroll"/>');
+        $('[data-toggle="tooltip"]').tooltip();
+        $('#attchdCnsgnRtrnDocsTblForm').submit(function (e) {
+            e.preventDefault();
+            return false;
+        });
+    });
+}
+
+function uploadFileToCnsgnRtrnDocs(inptElmntID, attchIDElmntID, docNmElmntID, sbmtdHdrID, rowIDAttrb) {
+    var docCtrgrName = $('#' + docNmElmntID).val();
+    var errMsg = "";
+    if (docCtrgrName.trim() === '') {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+            'font-weight:bold;color:red;">Doc. Name/Description cannot be empty!</span></p>';
+    }
+    if (sbmtdHdrID <= 0) {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+            'font-weight:bold;color:red;">Attachments must be done on a saved Document/Transaction!</span></p>';
+    }
+    if (rhotrim(errMsg, '; ') !== '') {
+        bootbox.alert({
+            title: 'System Alert!',
+            size: 'small',
+            message: errMsg
+        });
+        return false;
+    }
+    $("#" + inptElmntID).val('');
+    $("#" + inptElmntID).off('change');
+    $("#" + inptElmntID).change(function () {
+        var fileName = $(this).val();
+        var input = document.getElementById(inptElmntID);
+        sendFileToCnsgnRtrnDocs(input.files[0], docNmElmntID, attchIDElmntID, sbmtdHdrID, function (data) {
+            $("#" + attchIDElmntID).val(data.attchID);
+            var dialog = bootbox.alert({
+                title: 'Server Response!',
+                size: 'small',
+                message: '<div id="myInformation">' + data.message + '</div>',
+                callback: function () {
+                    if (data.message.indexOf("Success") !== -1) {}
+                }
+            });
+        });
+    });
+    performFileClick(inptElmntID);
+}
+
+function sendFileToCnsgnRtrnDocs(file, docNmElmntID, attchIDElmntID, sbmtdHdrID, callBackFunc) {
+    var data1 = new FormData();
+    data1.append('daCnsgnRtrnAttchmnt', file);
+    data1.append('grp', 12);
+    data1.append('typ', 1);
+    data1.append('pg', 7);
+    data1.append('q', 'UPDATE');
+    data1.append('actyp', 20);
+    data1.append('docCtrgrName', $('#' + docNmElmntID).val());
+    data1.append('attchmentID', $('#' + attchIDElmntID).val());
+    data1.append('sbmtdScmCnsgnRtrnID', sbmtdHdrID);
+    var dialog1 = bootbox.alert({
+        title: 'Uploading File...',
+        size: 'small',
+        message: '<p><i class="fa fa-spin fa-spinner"></i> Uploading File...Please Wait...</p>'
+    });
+    dialog1.init(function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+            $body = $("body");
+            $body.removeClass("mdlloading");
+            $.ajax({
+                url: "index.php",
+                type: 'POST',
+                data: data1,
+                async: true,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    dialog1.modal('hide');
+                    callBackFunc(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus + " " + errorThrown);
+                    console.warn(jqXHR.responseText);
+                }
+            });
+        });
+    });
+}
+
+function getAttchdCnsgnRtrnDocs(actionText, slctr, linkArgs, actionDialog) {
+    if (typeof actionDialog === 'undefined' || actionDialog === null) {
+        actionDialog = 'ShowDialog';
+    }
+    var srchFor = typeof $("#attchdCnsgnRtrnDocsSrchFor").val() === 'undefined' ? '%' : $("#attchdCnsgnRtrnDocsSrchFor").val();
+    var srchIn = typeof $("#attchdCnsgnRtrnDocsSrchIn").val() === 'undefined' ? 'Both' : $("#attchdCnsgnRtrnDocsSrchIn").val();
+    var pageNo = typeof $("#attchdCnsgnRtrnDocsPageNo").val() === 'undefined' ? 1 : $("#attchdCnsgnRtrnDocsPageNo").val();
+    var limitSze = typeof $("#attchdCnsgnRtrnDocsDsplySze").val() === 'undefined' ? 10 : $("#attchdCnsgnRtrnDocsDsplySze").val();
+    var sortBy = typeof $("#attchdCnsgnRtrnDocsSortBy").val() === 'undefined' ? '' : $("#attchdCnsgnRtrnDocsSortBy").val();
+    if (actionText == 'clear') {
+        srchFor = "%";
+        pageNo = 1;
+    } else if (actionText == 'next') {
+        pageNo = parseInt(pageNo) + 1;
+    } else if (actionText == 'previous') {
+        pageNo = parseInt(pageNo) - 1;
+    }
+    linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
+    doAjaxWthCallBck(linkArgs, 'myFormsModaly', actionDialog, 'Receipt Return Attached Documents', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+        if (!$.fn.DataTable.isDataTable('#attchdCnsgnRtrnDocsTable')) {
+            var table1 = $('#attchdCnsgnRtrnDocsTable').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "bFilter": false,
+                "scrollX": false
+            });
+            $('#attchdCnsgnRtrnDocsTable').wrap('<div class="dataTables_scroll"/>');
+        }
+        $('[data-toggle="tooltip"]').tooltip();
+        $('#attchdCnsgnRtrnDocsTblForm').submit(function (e) {
+            e.preventDefault();
+            return false;
+        });
+    });
+}
+
+function enterKeyFuncAttchdCnsgnRtrnDocs(e, actionText, slctr, linkArgs, actionDialog) {
+    if (typeof actionDialog === 'undefined' || actionDialog === null) {
+        actionDialog = 'ShowDialog';
+    }
+    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+    if (charCode == 13) {
+        getAttchdCnsgnRtrnDocs(actionText, slctr, linkArgs, actionDialog);
+    }
+}
+
+function delAttchdCnsgnRtrnDoc(rowIDAttrb) {
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var sbmtdHdrID = typeof $("#sbmtdScmCnsgnRtrnID").val() === 'undefined' ? -1 : $("#sbmtdScmCnsgnRtrnID").val();
+    var docNum = typeof $("#scmCnsgnRtrnDocNum").val() === 'undefined' ? '' : $("#scmCnsgnRtrnDocNum").val();
+    var pKeyID = -1;
+    if (typeof $('#attchdCnsgnRtrnDocsRow' + rndmNum + '_AttchdDocsID').val() === 'undefined') {
+        /*Do Nothing allnoticesRow<?php echo $cntr; ?> 
+        attchdCnsgnRtrnDocsRow2_AttchdDocsID
+        */
+    } else {
+        pKeyID = $('#attchdCnsgnRtrnDocsRow' + rndmNum + '_AttchdDocsID').val();
+    }
+    var dialog = bootbox.confirm({
+        title: 'Delete Document?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">DELETE</span> this Document?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true) {
+                var dialog1 = bootbox.alert({
+                    title: 'Delete Document?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Document...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 12,
+                                    typ: 1,
+                                    pg: 7,
+                                    q: 'DELETE',
+                                    actyp: 5,
+                                    attchmentID: pKeyID,
+                                    sbmtdHdrID: sbmtdHdrID,
+                                    docTrnsNum: docNum
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                        if (result1.indexOf("Success") !== -1) {
+                                            $("#" + rowIDAttrb).remove();
+                                        }
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                }
+                            });
+                        });
+                    } else {
+                        setTimeout(function () {
+                            $("#" + rowIDAttrb).remove();
+                            dialog1.find('.bootbox-body').html('Row Removed Successfully!');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
+}
+/**Stock Transfers */
 function getScmStockTrnsfr(actionText, slctr, linkArgs) {
     var srchFor = typeof $("#scmStockTrnsfrSrchFor").val() === 'undefined' ? '%' : $("#scmStockTrnsfrSrchFor").val();
     var srchIn = typeof $("#scmStockTrnsfrSrchIn").val() === 'undefined' ? 'Both' : $("#scmStockTrnsfrSrchIn").val();
@@ -8150,12 +8828,237 @@ function chngStockTrnsfrStores() {
     });
 }
 
+/**Stock Transfer Attachments */
+function getOneScmStockTrnsfrDocsForm(pKeyID, vwtype) {
+    var lnkArgs = 'grp=12&typ=1&pg=11&vtyp=' + vwtype + '&sbmtdScmStockTrnsfrID=' + pKeyID;
+    doAjaxWthCallBck(lnkArgs, 'myFormsModaly', 'ShowDialog', 'Stock Transfer Attached Documents', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+        var table1 = $('#attchdStockTrnsfrDocsTable').DataTable({
+            "paging": false,
+            "ordering": false,
+            "info": false,
+            "bFilter": false,
+            "scrollX": false
+        });
+        $('#attchdStockTrnsfrDocsTable').wrap('<div class="dataTables_scroll"/>');
+        $('[data-toggle="tooltip"]').tooltip();
+        $('#attchdStockTrnsfrDocsTblForm').submit(function (e) {
+            e.preventDefault();
+            return false;
+        });
+    });
+}
+
+function uploadFileToStockTrnsfrDocs(inptElmntID, attchIDElmntID, docNmElmntID, sbmtdHdrID, rowIDAttrb) {
+    var docCtrgrName = $('#' + docNmElmntID).val();
+    var errMsg = "";
+    if (docCtrgrName.trim() === '') {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+            'font-weight:bold;color:red;">Doc. Name/Description cannot be empty!</span></p>';
+    }
+    if (sbmtdHdrID <= 0) {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+            'font-weight:bold;color:red;">Attachments must be done on a saved Document/Transaction!</span></p>';
+    }
+    if (rhotrim(errMsg, '; ') !== '') {
+        bootbox.alert({
+            title: 'System Alert!',
+            size: 'small',
+            message: errMsg
+        });
+        return false;
+    }
+    $("#" + inptElmntID).val('');
+    $("#" + inptElmntID).off('change');
+    $("#" + inptElmntID).change(function () {
+        var fileName = $(this).val();
+        var input = document.getElementById(inptElmntID);
+        sendFileToStockTrnsfrDocs(input.files[0], docNmElmntID, attchIDElmntID, sbmtdHdrID, function (data) {
+            $("#" + attchIDElmntID).val(data.attchID);
+            var dialog = bootbox.alert({
+                title: 'Server Response!',
+                size: 'small',
+                message: '<div id="myInformation">' + data.message + '</div>',
+                callback: function () {
+                    if (data.message.indexOf("Success") !== -1) {}
+                }
+            });
+        });
+    });
+    performFileClick(inptElmntID);
+}
+
+function sendFileToStockTrnsfrDocs(file, docNmElmntID, attchIDElmntID, sbmtdHdrID, callBackFunc) {
+    var data1 = new FormData();
+    data1.append('daStockTrnsfrAttchmnt', file);
+    data1.append('grp', 12);
+    data1.append('typ', 1);
+    data1.append('pg', 11);
+    data1.append('q', 'UPDATE');
+    data1.append('actyp', 20);
+    data1.append('docCtrgrName', $('#' + docNmElmntID).val());
+    data1.append('attchmentID', $('#' + attchIDElmntID).val());
+    data1.append('sbmtdScmStockTrnsfrID', sbmtdHdrID);
+    var dialog1 = bootbox.alert({
+        title: 'Uploading File...',
+        size: 'small',
+        message: '<p><i class="fa fa-spin fa-spinner"></i> Uploading File...Please Wait...</p>'
+    });
+    dialog1.init(function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+            $body = $("body");
+            $body.removeClass("mdlloading");
+            $.ajax({
+                url: "index.php",
+                type: 'POST',
+                data: data1,
+                async: true,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    dialog1.modal('hide');
+                    callBackFunc(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus + " " + errorThrown);
+                    console.warn(jqXHR.responseText);
+                }
+            });
+        });
+    });
+}
+
+function getAttchdStockTrnsfrDocs(actionText, slctr, linkArgs, actionDialog) {
+    if (typeof actionDialog === 'undefined' || actionDialog === null) {
+        actionDialog = 'ShowDialog';
+    }
+    var srchFor = typeof $("#attchdStockTrnsfrDocsSrchFor").val() === 'undefined' ? '%' : $("#attchdStockTrnsfrDocsSrchFor").val();
+    var srchIn = typeof $("#attchdStockTrnsfrDocsSrchIn").val() === 'undefined' ? 'Both' : $("#attchdStockTrnsfrDocsSrchIn").val();
+    var pageNo = typeof $("#attchdStockTrnsfrDocsPageNo").val() === 'undefined' ? 1 : $("#attchdStockTrnsfrDocsPageNo").val();
+    var limitSze = typeof $("#attchdStockTrnsfrDocsDsplySze").val() === 'undefined' ? 10 : $("#attchdStockTrnsfrDocsDsplySze").val();
+    var sortBy = typeof $("#attchdStockTrnsfrDocsSortBy").val() === 'undefined' ? '' : $("#attchdStockTrnsfrDocsSortBy").val();
+    if (actionText == 'clear') {
+        srchFor = "%";
+        pageNo = 1;
+    } else if (actionText == 'next') {
+        pageNo = parseInt(pageNo) + 1;
+    } else if (actionText == 'previous') {
+        pageNo = parseInt(pageNo) - 1;
+    }
+    linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
+    doAjaxWthCallBck(linkArgs, 'myFormsModaly', actionDialog, 'Receipt Return Attached Documents', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+        if (!$.fn.DataTable.isDataTable('#attchdStockTrnsfrDocsTable')) {
+            var table1 = $('#attchdStockTrnsfrDocsTable').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "bFilter": false,
+                "scrollX": false
+            });
+            $('#attchdStockTrnsfrDocsTable').wrap('<div class="dataTables_scroll"/>');
+        }
+        $('[data-toggle="tooltip"]').tooltip();
+        $('#attchdStockTrnsfrDocsTblForm').submit(function (e) {
+            e.preventDefault();
+            return false;
+        });
+    });
+}
+
+function enterKeyFuncAttchdStockTrnsfrDocs(e, actionText, slctr, linkArgs, actionDialog) {
+    if (typeof actionDialog === 'undefined' || actionDialog === null) {
+        actionDialog = 'ShowDialog';
+    }
+    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+    if (charCode == 13) {
+        getAttchdStockTrnsfrDocs(actionText, slctr, linkArgs, actionDialog);
+    }
+}
+
+function delAttchdStockTrnsfrDoc(rowIDAttrb) {
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var sbmtdHdrID = typeof $("#sbmtdScmStockTrnsfrID").val() === 'undefined' ? -1 : $("#sbmtdScmStockTrnsfrID").val();
+    var docNum = typeof $("#scmStockTrnsfrDocNum").val() === 'undefined' ? '' : $("#scmStockTrnsfrDocNum").val();
+    var pKeyID = -1;
+    if (typeof $('#attchdStockTrnsfrDocsRow' + rndmNum + '_AttchdDocsID').val() === 'undefined') {
+        /*Do Nothing allnoticesRow<?php echo $cntr; ?> 
+        attchdStockTrnsfrDocsRow2_AttchdDocsID
+        */
+    } else {
+        pKeyID = $('#attchdStockTrnsfrDocsRow' + rndmNum + '_AttchdDocsID').val();
+    }
+    var dialog = bootbox.confirm({
+        title: 'Delete Document?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">DELETE</span> this Document?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true) {
+                var dialog1 = bootbox.alert({
+                    title: 'Delete Document?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Document...Please Wait...</p>',
+                    callback: function () {
+                        $("body").css("padding-right", "0px");
+                    }
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 12,
+                                    typ: 1,
+                                    pg: 11,
+                                    q: 'DELETE',
+                                    actyp: 5,
+                                    attchmentID: pKeyID,
+                                    sbmtdHdrID: sbmtdHdrID,
+                                    docTrnsNum: docNum
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                        if (result1.indexOf("Success") !== -1) {
+                                            $("#" + rowIDAttrb).remove();
+                                        }
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                }
+                            });
+                        });
+                    } else {
+                        setTimeout(function () {
+                            $("#" + rowIDAttrb).remove();
+                            dialog1.find('.bootbox-body').html('Row Removed Successfully!');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
+}
+
 function setCurStore() {
     var accbFSRptStoreID = typeof $("#accbFSRptStoreID").val() === 'undefined' ? '-1' : $("#accbFSRptStoreID").val();
     var accbFSRptStore = typeof $("#accbFSRptStore").val() === 'undefined' ? '' : $("#accbFSRptStore").val();
     openATab('#allmodules', 'grp=12&typ=1&vtyp=0&accbFSRptStoreID=' + accbFSRptStoreID);
 }
-
 
 function getHotlChckinDoc(actionText, slctr, linkArgs) {
     var srchFor = typeof $("#hotlChckinDocSrchFor").val() === 'undefined' ? '%' : $("#hotlChckinDocSrchFor").val();

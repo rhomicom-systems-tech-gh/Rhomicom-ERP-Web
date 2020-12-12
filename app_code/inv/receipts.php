@@ -30,7 +30,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     restricted();
                 }
             } else if ($actyp == 5) {
-                
+                /* Delete Doc Attachment Line */
+                $pKeyID = isset($_POST['attchmentID']) ? cleanInputData($_POST['attchmentID']) : -1;
+                $pKeyNm = isset($_POST['docTrnsNum']) ? cleanInputData($_POST['docTrnsNum']) : "";
+                if ($canDel) {
+                    echo deleteCnsgnRcptDoc($pKeyID, $pKeyNm);
+                } else {
+                    restricted();
+                }
             }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {
@@ -101,12 +108,36 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     exit();
                 }
                 if ($sbmtdScmCnsgnRcptID <= 0) {
-                    createCnsgnRcpHdr($orgID, $scmCnsgnRcptDocNum, $scmCnsgnRcptDesc, $scmCnsgnRcptDfltTrnsDte, $scmCnsgnRcptSpplrID, $scmCnsgnRcptSpplrSiteID, $apprvlStatus,
-                            $nxtApprvlActn, $srcCnsgnRcptDocID, $scmCnsgnRcptDfltBalsAcntID, $scmCnsgnRcptInvcCurID, $scmCnsgnRcptExRate);
+                    createCnsgnRcpHdr(
+                        $orgID,
+                        $scmCnsgnRcptDocNum,
+                        $scmCnsgnRcptDesc,
+                        $scmCnsgnRcptDfltTrnsDte,
+                        $scmCnsgnRcptSpplrID,
+                        $scmCnsgnRcptSpplrSiteID,
+                        $apprvlStatus,
+                        $nxtApprvlActn,
+                        $srcCnsgnRcptDocID,
+                        $scmCnsgnRcptDfltBalsAcntID,
+                        $scmCnsgnRcptInvcCurID,
+                        $scmCnsgnRcptExRate
+                    );
                     $sbmtdScmCnsgnRcptID = getGnrlRecID("inv.inv_consgmt_rcpt_hdr", "rcpt_number", "rcpt_id", $scmCnsgnRcptDocNum, $orgID);
                 } else if ($sbmtdScmCnsgnRcptID > 0) {
-                    updtCnsgnRcpHdr($sbmtdScmCnsgnRcptID, $scmCnsgnRcptDocNum, $scmCnsgnRcptDesc, $scmCnsgnRcptDfltTrnsDte, $scmCnsgnRcptSpplrID, $scmCnsgnRcptSpplrSiteID,
-                            $apprvlStatus, $nxtApprvlActn, $srcCnsgnRcptDocID, $scmCnsgnRcptDfltBalsAcntID, $scmCnsgnRcptInvcCurID, $scmCnsgnRcptExRate);
+                    updtCnsgnRcpHdr(
+                        $sbmtdScmCnsgnRcptID,
+                        $scmCnsgnRcptDocNum,
+                        $scmCnsgnRcptDesc,
+                        $scmCnsgnRcptDfltTrnsDte,
+                        $scmCnsgnRcptSpplrID,
+                        $scmCnsgnRcptSpplrSiteID,
+                        $apprvlStatus,
+                        $nxtApprvlActn,
+                        $srcCnsgnRcptDocID,
+                        $scmCnsgnRcptDfltBalsAcntID,
+                        $scmCnsgnRcptInvcCurID,
+                        $scmCnsgnRcptExRate
+                    );
                 }
                 $afftctd = 0;
                 $afftctd1 = 0;
@@ -147,11 +178,36 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 //Create Sales Doc Lines
                                 if ($ln_LineDesc != "" && $ln_ItmID > 0 && $ln_QTY > 0) {
                                     if ($ln_TrnsLnID <= 0) {
-                                        $afftctd += createCnsgnRcptLine($ln_QTY, $ln_UnitPrice, $ln_ExpryDte, $ln_ManDte, $ln_TagNo, $ln_SerialNo, $ln_PODocLnID, $ln_CnsgnCdtn,
-                                                $ln_ExtraDesc, $ln_ItmID, $ln_StoreID, $sbmtdScmCnsgnRcptID);
+                                        $afftctd += createCnsgnRcptLine(
+                                            $ln_QTY,
+                                            $ln_UnitPrice,
+                                            $ln_ExpryDte,
+                                            $ln_ManDte,
+                                            $ln_TagNo,
+                                            $ln_SerialNo,
+                                            $ln_PODocLnID,
+                                            $ln_CnsgnCdtn,
+                                            $ln_ExtraDesc,
+                                            $ln_ItmID,
+                                            $ln_StoreID,
+                                            $sbmtdScmCnsgnRcptID
+                                        );
                                     } else {
-                                        $afftctd += updtCnsgnRcptLine($ln_TrnsLnID, $ln_QTY, $ln_UnitPrice, $ln_ExpryDte, $ln_ManDte, $ln_TagNo, $ln_SerialNo, $ln_PODocLnID,
-                                                $ln_CnsgnCdtn, $ln_ExtraDesc, $ln_ItmID, $ln_StoreID, $sbmtdScmCnsgnRcptID);
+                                        $afftctd += updtCnsgnRcptLine(
+                                            $ln_TrnsLnID,
+                                            $ln_QTY,
+                                            $ln_UnitPrice,
+                                            $ln_ExpryDte,
+                                            $ln_ManDte,
+                                            $ln_TagNo,
+                                            $ln_SerialNo,
+                                            $ln_PODocLnID,
+                                            $ln_CnsgnCdtn,
+                                            $ln_ExtraDesc,
+                                            $ln_ItmID,
+                                            $ln_StoreID,
+                                            $sbmtdScmCnsgnRcptID
+                                        );
                                     }
                                 }
                             } else {
@@ -163,8 +219,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $errMsg = "";
                 if ($exitErrMsg != "") {
                     $exitErrMsg = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>Document Successfully Saved!"
-                            . "<br/>" . $afftctd . " Transaction(s) Saved Successfully!"
-                            . "<br/><span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>" . $exitErrMsg . "</span>";
+                        . "<br/>" . $afftctd . " Transaction(s) Saved Successfully!"
+                        . "<br/><span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>" . $exitErrMsg . "</span>";
                 } else {
                     $exitErrMsg = "";
                     if ($shdSbmt == 2) {
@@ -178,7 +234,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                           updtRcvblsDocApprvl($sbmtdAccbRcvblsInvcID, "Approved", "Cancel"); */
                     } else {
                         $exitErrMsg .= "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>Document Successfully Saved!"
-                                . "<br/>" . $afftctd . " Document Transaction(s) Saved Successfully!";
+                            . "<br/>" . $afftctd . " Document Transaction(s) Saved Successfully!";
                     }
                 }
                 $arr_content['percent'] = 100;
@@ -205,14 +261,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     uploadDaCnsgnRcptDoc($attchmentID, $nwImgLoc, $errMsg);
                 } else {
                     $attchmentID = getNewCnsgnRcptDocID();
-                    createCnsgnRcptDoc($attchmentID, $pkID, $docCtrgrName, "");
+                    createCnsgnRcptDoc($attchmentID, $pkID, "RECEIPT", $docCtrgrName, "");
                     uploadDaCnsgnRcptDoc($attchmentID, $nwImgLoc, $errMsg);
                 }
                 $arr_content['attchID'] = $attchmentID;
                 if (strpos($errMsg, "Document Stored Successfully!<br/>") === FALSE) {
                     $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>" . $errMsg;
                 } else {
-                    $doc_src = $ftp_base_db_fldr . "/Sales/" . $nwImgLoc;
+                    $doc_src = $ftp_base_db_fldr . "/Rcpts/" . $nwImgLoc;
                     $doc_src_encrpt = encrypt1($doc_src, $smplTokenWord1);
                     if (file_exists($doc_src)) {
                         //file exists!
@@ -309,11 +365,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $colClassType1 = "col-md-2";
                     $colClassType2 = "col-md-5";
                     $colClassType3 = "col-md-5";
-                    ?> 
+?>
                     <form id='scmCnsgnRcptForm' action='' method='post' accept-charset='UTF-8'>
                         <!--ROW ID-->
-                        <input class="form-control" id="tblRowID" type = "hidden" placeholder="ROW ID"/>                     
-                        <fieldset class=""><legend class="basic_person_lg1" style="color: #003245">CONSIGNMENT RECEIPTS</legend>
+                        <input class="form-control" id="tblRowID" type="hidden" placeholder="ROW ID" />
+                        <fieldset class="">
+                            <legend class="basic_person_lg1" style="color: #003245">CONSIGNMENT RECEIPTS</legend>
                             <div class="row" style="margin-bottom:0px;">
                                 <?php
                                 $colClassType1 = "col-md-2";
@@ -322,11 +379,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 ?>
                                 <div class="<?php echo $colClassType3; ?>" style="padding:0px 15px 0px 15px !important;">
                                     <div class="input-group">
-                                        <input class="form-control" id="scmCnsgnRcptSrchFor" type = "text" placeholder="Search For" value="<?php
-                                        echo trim(str_replace("%", " ", $srchFor));
-                                        ?>" onkeyup="enterKeyFuncScmCnsgnRcpt(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
-                                        <input id="scmCnsgnRcptPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
-                                        <input id="sbmtdScmCnsgnRcptPOID" type = "hidden" value="-1">
+                                        <input class="form-control" id="scmCnsgnRcptSrchFor" type="text" placeholder="Search For" value="<?php
+                                                                                                                                            echo trim(str_replace("%", " ", $srchFor));
+                                                                                                                                            ?>" onkeyup="enterKeyFuncScmCnsgnRcpt(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
+                                        <input id="scmCnsgnRcptPageNo" type="hidden" value="<?php echo $pageNo; ?>">
+                                        <input id="sbmtdScmCnsgnRcptPOID" type="hidden" value="-1">
                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getScmCnsgnRcpt('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0');">
                                             <span class="glyphicon glyphicon-remove"></span>
                                         </label>
@@ -337,18 +394,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <select data-placeholder="Select..." class="form-control chosen-select" id="scmCnsgnRcptSrchIn">
                                             <?php
                                             $valslctdArry = array("", "", "", "", "");
-                                            $srchInsArrys = array("Document Number", "Document Description",
-                                                "Supplier Name", "Approval Status", "Created By");
+                                            $srchInsArrys = array(
+                                                "Document Number", "Document Description",
+                                                "Supplier Name", "Approval Status", "Created By"
+                                            );
                                             for ($z = 0; $z < count($srchInsArrys); $z++) {
                                                 if ($srchIn == $srchInsArrys[$z]) {
                                                     $valslctdArry[$z] = "selected";
                                                 }
-                                                ?>
+                                            ?>
                                                 <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                             <?php } ?>
                                         </select>
                                         <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
-                                        <select data-placeholder="Select..." class="form-control chosen-select" id="scmCnsgnRcptDsplySze" style="min-width:70px !important;">                            
+                                        <select data-placeholder="Select..." class="form-control chosen-select" id="scmCnsgnRcptDsplySze" style="min-width:70px !important;">
                                             <?php
                                             $valslctdArry = array("", "", "", "", "", "", "", "");
                                             $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000, 1000000);
@@ -358,12 +417,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 } else {
                                                     $valslctdArry[$y] = "";
                                                 }
-                                                ?>
-                                                <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
-                                                <?php
+                                            ?>
+                                                <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>
+                                            <?php
                                             }
                                             ?>
-                                        </select> 
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="<?php echo $colClassType1; ?>">
@@ -382,56 +441,56 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </ul>
                                     </nav>
                                 </div>
-                            </div>   
-                            <div class="row " style="margin-bottom:2px;padding:2px 15px 2px 15px !important">   
+                            </div>
+                            <div class="row " style="margin-bottom:2px;padding:2px 15px 2px 15px !important">
                                 <div class="col-md-12" style="padding:2px 1px 2px 1px !important;border-top:1px solid #ddd;border-bottom:1px solid #ddd;">
-                                    <?php if ($canAdd === true) { ?>   
-                                        <div class="col-md-6" style="padding:0px 0px 0px 0px !important;"> 
+                                    <?php if ($canAdd === true) { ?>
+                                        <div class="col-md-6" style="padding:0px 0px 0px 0px !important;">
                                             <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="getOneScmCnsgnRcptForm(-1, 1, 'ShowDialog', 'Miscellaneous Receipt');" data-toggle="tooltip" data-placement="bottom" title="Add New Miscellaneous Receipt">
                                                 <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 NEW MISC. RECEIPT
-                                            </button>                     
+                                            </button>
                                             <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Approved Purchase Orders', 'allOtherInputOrgID', '', '', 'radio', true, '', 'sbmtdScmCnsgnRcptPOID', '', 'clear', 1, '', function () {
                                                         getOneScmCnsgnRcptForm(-1, 1, 'ShowDialog', 'Purchase Order Receipt');
                                                     });" data-toggle="tooltip" data-placement="bottom" title="Add New Purchase Order Receipt">
                                                 <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 NEW PO RECEIPT
-                                            </button>                 
-                                        </div>  
+                                            </button>
+                                        </div>
                                     <?php }
                                     ?>
                                     <div class="col-md-3" style="padding:5px 1px 0px 1px !important;display:none;">
-                                        <div class = "form-check" style = "font-size: 12px !important;">
-                                            <label class = "form-check-label">
+                                        <div class="form-check" style="font-size: 12px !important;">
+                                            <label class="form-check-label">
                                                 <?php
                                                 $shwUnpaidOnlyChkd = "";
                                                 if ($qShwUnpaidOnly == true) {
                                                     $shwUnpaidOnlyChkd = "checked=\"true\"";
                                                 }
                                                 ?>
-                                                <input type="checkbox" class="form-check-input" onclick="getScmCnsgnRcpt('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="scmCnsgnRcptShwUnpaidOnly" name="scmCnsgnRcptShwUnpaidOnly"  <?php echo $shwUnpaidOnlyChkd; ?>>
+                                                <input type="checkbox" class="form-check-input" onclick="getScmCnsgnRcpt('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="scmCnsgnRcptShwUnpaidOnly" name="scmCnsgnRcptShwUnpaidOnly" <?php echo $shwUnpaidOnlyChkd; ?>>
                                                 Show Approved but Unpaid
                                             </label>
-                                        </div> 
+                                        </div>
                                     </div>
-                                    <div class = "col-md-3" style = "padding:5px 1px 0px 1px !important;display:none;">
-                                        <div class = "form-check" style = "font-size: 12px !important;">
-                                            <label class = "form-check-label">
+                                    <div class="col-md-3" style="padding:5px 1px 0px 1px !important;display:none;">
+                                        <div class="form-check" style="font-size: 12px !important;">
+                                            <label class="form-check-label">
                                                 <?php
                                                 $shwUnpstdOnlyChkd = "";
                                                 if ($qShwUnpstdOnly == true) {
                                                     $shwUnpstdOnlyChkd = "checked=\"true\"";
                                                 }
                                                 ?>
-                                                <input type="checkbox" class="form-check-input" onclick="getScmCnsgnRcpt('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="scmCnsgnRcptShwUnpstdOnly" name="scmCnsgnRcptShwUnpstdOnly"  <?php echo $shwUnpstdOnlyChkd; ?>>
+                                                <input type="checkbox" class="form-check-input" onclick="getScmCnsgnRcpt('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="scmCnsgnRcptShwUnpstdOnly" name="scmCnsgnRcptShwUnpstdOnly" <?php echo $shwUnpstdOnlyChkd; ?>>
                                                 Show Only Unposted
                                             </label>
-                                        </div>                            
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row"> 
-                                <div  class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12">
                                     <table class="table table-striped table-bordered table-responsive" id="scmCnsgnRcptHdrsTable" cellspacing="0" width="100%" style="width:100%;">
                                         <thead>
                                             <tr>
@@ -439,7 +498,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <th style="max-width:30px;width:30px;">...</th>
                                                 <th>Document Number/Type - Transaction Description</th>
                                                 <th style="max-width:115px;width:115px;">Date Received</th>
-                                                <th style="text-align:center;max-width:40px;width:40px;">CUR.</th>	
+                                                <th style="text-align:center;max-width:40px;width:40px;">CUR.</th>
                                                 <th style="text-align:right;min-width:120px;width:120px;">Total Amount</th>
                                                 <th style="max-width:115px;width:115px;">Document Status</th>
                                                 <?php if ($canDel === true) { ?>
@@ -454,13 +513,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <?php
                                             while ($row = loc_db_fetch_array($result)) {
                                                 $cntr += 1;
-                                                ?>
-                                                <tr id="scmCnsgnRcptHdrsRow_<?php echo $cntr; ?>">                                    
-                                                    <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>    
+                                            ?>
+                                                <tr id="scmCnsgnRcptHdrsRow_<?php echo $cntr; ?>">
+                                                    <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
                                                     <td class="lovtd">
-                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View/Edit Invoice" 
-                                                                onclick="getOneScmCnsgnRcptForm(<?php echo $row[0]; ?>, 1, 'ShowDialog', '<?php echo $row[2]; ?>');" style="padding:2px !important;" style="padding:2px !important;">                                                                
-                                                                    <?php if ($canAdd === true) { ?>                                
+                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View/Edit Invoice" onclick="getOneScmCnsgnRcptForm(<?php echo $row[0]; ?>, 1, 'ShowDialog', '<?php echo $row[2]; ?>');" style="padding:2px !important;" style="padding:2px !important;">
+                                                            <?php if ($canAdd === true) { ?>
                                                                 <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             <?php } else { ?>
                                                                 <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
@@ -471,8 +529,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td class="lovtd"><?php echo $row[2]; ?></td>
                                                     <td class="lovtd" style="text-align:center;font-weight: bold;color:black;"><?php echo $row[4]; ?></td>
                                                     <td class="lovtd" style="text-align:right;font-weight: bold;color:blue;"><?php
-                                                        echo number_format((float) $row[5], 2);
-                                                        ?>
+                                                                                                                                echo number_format((float) $row[5], 2);
+                                                                                                                                ?>
                                                     </td>
                                                     <?php
                                                     $style1 = "color:red;";
@@ -482,7 +540,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         $style1 = "color:#0d0d0d;";
                                                     }
                                                     ?>
-                                                    <td class="lovtd" style="font-weight:bold;<?php echo $style1; ?>"><?php echo $row[6]; ?></td>  
+                                                    <td class="lovtd" style="font-weight:bold;<?php echo $style1; ?>"><?php echo $row[6]; ?></td>
                                                     <?php if ($canDel === true) { ?>
                                                         <td class="lovtd">
                                                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Delete Transaction" onclick="delScmCnsgnRcpt('scmCnsgnRcptHdrsRow_<?php echo $cntr; ?>');" style="padding:2px !important;" style="padding:2px !important;">
@@ -493,26 +551,26 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <?php } ?>
                                                     <?php
                                                     if ($canVwRcHstry === true) {
-                                                        ?>
+                                                    ?>
                                                         <td class="lovtd">
                                                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php
-                                                            echo urlencode(encrypt1(($row[0] . "|inv.inv_consgmt_rcpt_hdr|rcpt_id"), $smplTokenWord1));
-                                                            ?>');" style="padding:2px !important;">
+                                                                                                                                                                                                                    echo urlencode(encrypt1(($row[0] . "|inv.inv_consgmt_rcpt_hdr|rcpt_id"), $smplTokenWord1));
+                                                                                                                                                                                                                    ?>');" style="padding:2px !important;">
                                                                 <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             </button>
                                                         </td>
                                                     <?php } ?>
                                                 </tr>
-                                                <?php
+                                            <?php
                                             }
                                             ?>
                                         </tbody>
                                     </table>
-                                </div>                     
+                                </div>
                             </div>
                         </fieldset>
                     </form>
-                    <?php
+                <?php
                 }
             } else if ($vwtyp == 1) {
                 //New Receipt Form
@@ -529,7 +587,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     exit();
                 }
                 $orgnlScmCnsgnRcptID = $sbmtdScmCnsgnRcptID;
-                $scmCnsgnRcptDfltTrnsDte = $gnrlTrnsDteDMY;//HMS
+                $scmCnsgnRcptDfltTrnsDte = $gnrlTrnsDteDMY; //HMS
                 $scmCnsgnRcptCreator = $uName;
                 $scmCnsgnRcptCreatorID = $usrID;
                 $gnrtdTrnsNo = "";
@@ -659,8 +717,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $docTypPrfxs = array("PO-RCPT", "MISC-RCPT");
                     $docTypPrfx = $docTypPrfxs[findArryIdx($docTypes, $scmCnsgnRcptType)];
                     $gnrtdTrnsNo1 = $docTypPrfx . "-" . $usrTrnsCode . "-" . $dte . "-";
-                    $gnrtdTrnsNo = $gnrtdTrnsNo1 . str_pad(((getRecCount_LstNum("inv.inv_consgmt_rcpt_hdr", "rcpt_number", "rcpt_id", $gnrtdTrnsNo1 . "%") + 1) . ""), 3, '0',
-                                    STR_PAD_LEFT);
+                    $gnrtdTrnsNo = $gnrtdTrnsNo1 . str_pad(((getRecCount_LstNum("inv.inv_consgmt_rcpt_hdr", "rcpt_number", "rcpt_id", $gnrtdTrnsNo1 . "%") + 1) . ""),
+                        3,
+                        '0',
+                        STR_PAD_LEFT
+                    );
                     $scmCnsgnRcptDfltBalsAcnt = getAccntNum($scmCnsgnRcptDfltBalsAcntID) . "." . getAccntName($scmCnsgnRcptDfltBalsAcntID);
                     $scmCnsgnRcptInvcCurID = (int) getGnrlRecNm("accb.accb_chart_of_accnts", "accnt_id", "crncy_id", $scmCnsgnRcptDfltBalsAcntID);
                     if ($scmCnsgnRcptInvcCurID > 0) {
@@ -689,8 +750,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $scmCnsgnRcptTtlAmnt = ((float) $row[14]);
                         }
                     }
-                    $sbmtdScmCnsgnRcptID = createCnsgnRcpHdr($orgID, $gnrtdTrnsNo, $scmCnsgnRcptDesc, $scmCnsgnRcptDfltTrnsDte, $scmCnsgnRcptSpplrID, $scmCnsgnRcptSpplrSiteID,
-                            $rqStatus, $rqStatusNext, $srcCnsgnRcptDocID, $scmCnsgnRcptDfltBalsAcntID, $scmCnsgnRcptInvcCurID, $scmCnsgnRcptExRate);
+                    $sbmtdScmCnsgnRcptID = createCnsgnRcpHdr(
+                        $orgID,
+                        $gnrtdTrnsNo,
+                        $scmCnsgnRcptDesc,
+                        $scmCnsgnRcptDfltTrnsDte,
+                        $scmCnsgnRcptSpplrID,
+                        $scmCnsgnRcptSpplrSiteID,
+                        $rqStatus,
+                        $rqStatusNext,
+                        $srcCnsgnRcptDocID,
+                        $scmCnsgnRcptDfltBalsAcntID,
+                        $scmCnsgnRcptInvcCurID,
+                        $scmCnsgnRcptExRate
+                    );
                 }
                 $scmCnsgnRcptOustndngAmnt = $scmCnsgnRcptTtlAmnt - $scmCnsgnRcptPaidAmnt;
                 $scmCnsgnRcptOustndngStyle = "color:red;";
@@ -747,20 +820,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <div class="col-md-8">
                                         <input type="text" class="form-control" aria-label="..." id="scmCnsgnRcptType" name="scmCnsgnRcptType" value="<?php echo $scmCnsgnRcptType; ?>" readonly="true">
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="form-group">
                                     <label for="srcCnsgnRcptDocNum" class="control-label col-md-4">Source Doc. No.:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <input type="hidden" class="form-control" aria-label="..." id="srcCnsgnRcptDocTyp" name="srcCnsgnRcptDocTyp" value="<?php echo $srcCnsgnRcptDocTyp; ?>">
                                         <input type="hidden" id="srcCnsgnRcptDocID" value="<?php echo $srcCnsgnRcptDocID; ?>">
                                         <input type="text" class="form-control" aria-label="..." id="srcCnsgnRcptDocNum" name="srcCnsgnRcptDocNum" value="<?php echo $srcCnsgnRcptDocNum; ?>" readonly="true" style="width:100%;">
                                     </div>
-                                </div>  
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="scmCnsgnRcptSpplr" class="control-label col-md-4">Supplier:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <div class="input-group">
                                             <input type="text" class="form-control" aria-label="..." id="scmCnsgnRcptSpplr" name="scmCnsgnRcptSpplr" value="<?php echo $scmCnsgnRcptSpplr; ?>" readonly="true">
                                             <input type="hidden" id="scmCnsgnRcptSpplrID" value="<?php echo $scmCnsgnRcptSpplrID; ?>">
@@ -775,10 +848,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </label>
                                         </div>
                                     </div>
-                                </div>  
+                                </div>
                                 <div class="form-group">
                                     <label for="scmCnsgnRcptSpplrSite" class="control-label col-md-4">Site:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <div class="input-group">
                                             <input type="text" class="form-control" aria-label="..." id="scmCnsgnRcptSpplrSite" name="scmCnsgnRcptSpplrSite" value="<?php echo $scmCnsgnRcptSpplrSite; ?>" readonly="true">
                                             <input class="form-control" type="hidden" id="scmCnsgnRcptSpplrSiteID" value="<?php echo $scmCnsgnRcptSpplrSiteID; ?>">
@@ -787,13 +860,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </label>
                                         </div>
                                     </div>
-                                </div>                                                               
+                                </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
                                         <label style="margin-bottom:0px !important;">Remark / Narration:</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <div class="input-group"  style="width:100%;">
+                                        <div class="input-group" style="width:100%;">
                                             <textarea class="form-control" rows="1" cols="20" id="scmCnsgnRcptDesc" name="scmCnsgnRcptDesc" <?php echo $mkRmrkReadOnly; ?> style="text-align:left !important;"><?php echo $scmCnsgnRcptDesc; ?></textarea>
                                             <input class="form-control" type="hidden" id="scmCnsgnRcptDesc1" value="<?php echo $scmCnsgnRcptDesc; ?>">
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('scmCnsgnRcptDesc');" style="max-width:30px;width:30px;">
@@ -807,7 +880,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label style="margin-bottom:0px !important;">Status:</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="hidden" id="scmCnsgnRcptApprvlStatus" value="<?php echo $rqStatus; ?>">                              
+                                        <input type="hidden" id="scmCnsgnRcptApprvlStatus" value="<?php echo $rqStatus; ?>">
                                         <button type="button" class="btn btn-default" style="height:37px;width:100% !important;" id="myScmCnsgnRcptStatusBtn">
                                             <span style="color:<?php echo $rqstatusColor; ?>;font-weight: bold;height:37px;">
                                                 <?php
@@ -818,7 +891,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </div>
                                 </div>
                             </div>
-                            <div class = "col-md-4">   
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="col-md-4" style="padding:0px 10px 0px 10px !important;">
                                         <label style="margin-bottom:0px !important;">Receipt Total:</label>
@@ -834,11 +907,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     });">
                                                 <span class="" style="font-size: 20px !important;" id="scmCnsgnRcptInvcCur1"><?php echo $scmCnsgnRcptInvcCur; ?></span>
                                             </label>
-                                            <input type="hidden" id="scmCnsgnRcptInvcCur" value="<?php echo $scmCnsgnRcptInvcCur; ?>"> 
-                                            <input type="hidden" id="scmCnsgnRcptInvcCurID" value="<?php echo $scmCnsgnRcptInvcCurID; ?>"> 
+                                            <input type="hidden" id="scmCnsgnRcptInvcCur" value="<?php echo $scmCnsgnRcptInvcCur; ?>">
+                                            <input type="hidden" id="scmCnsgnRcptInvcCurID" value="<?php echo $scmCnsgnRcptInvcCurID; ?>">
                                             <input class="form-control" type="text" id="scmCnsgnRcptTtlAmnt" value="<?php
-                                            echo number_format($scmCnsgnRcptTtlAmnt, 2);
-                                            ?>" style="font-weight:bold;width:100%;font-size:18px !important;" onchange="fmtAsNumber('scmCnsgnRcptTtlAmnt');" readonly="true"/>
+                                                                                                                    echo number_format($scmCnsgnRcptTtlAmnt, 2);
+                                                                                                                    ?>" style="font-weight:bold;width:100%;font-size:18px !important;" onchange="fmtAsNumber('scmCnsgnRcptTtlAmnt');" readonly="true" />
                                         </div>
                                     </div>
                                 </div>
@@ -853,8 +926,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <span class="" style="font-size: 20px !important;" id="scmCnsgnRcptInvcCur6"><?php echo "&nbsp;to " . $fnccurnm; ?></span>
                                             </label>
                                             <input type="text" class="form-control" aria-label="..." id="scmCnsgnRcptExRate" name="scmCnsgnRcptExRate" value="<?php
-                                            echo number_format($scmCnsgnRcptExRate, 4);
-                                            ?>" style="font-size: 18px !important;font-weight:bold;width:100%;" <?php echo $mkReadOnly; ?>>
+                                                                                                                                                                echo number_format($scmCnsgnRcptExRate, 4);
+                                                                                                                                                                ?>" style="font-size: 18px !important;font-weight:bold;width:100%;" <?php echo $mkReadOnly; ?>>
                                         </div>
                                     </div>
                                 </div>
@@ -862,7 +935,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <label for="scmCnsgnRcptGLBatch" class="control-label col-md-4" style="padding:0px 10px 0px 10px !important;">GL Batch Name:</label>
                                     <div class="col-md-8">
                                         <div class="input-group">
-                                            <input class="form-control" id="scmCnsgnRcptGLBatch" style="font-size: 13px !important;font-weight: bold !important;" placeholder="" type = "text" placeholder="" value="<?php echo $scmCnsgnRcptGLBatch; ?>" readonly="true"/>
+                                            <input class="form-control" id="scmCnsgnRcptGLBatch" style="font-size: 13px !important;font-weight: bold !important;" placeholder="" type="text" placeholder="" value="<?php echo $scmCnsgnRcptGLBatch; ?>" readonly="true" />
                                             <input type="hidden" id="scmCnsgnRcptGLBatchID" value="<?php echo $scmCnsgnRcptGLBatchID; ?>">
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="getOneJrnlBatchForm(<?php echo $scmCnsgnRcptGLBatchID; ?>, 1, 'ReloadDialog',<?php echo $sbmtdScmCnsgnRcptID; ?>, 'Sales Invoice');">
                                                 <img src="cmn_images/openfileicon.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Open
@@ -872,21 +945,21 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </div>
                                 <div class="form-group">
                                     <label for="scmCnsgnRcptRcvblDoc" class="control-label col-md-4" style="padding:0px 10px 0px 10px !important;">Payable Doc.</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <div class="input-group">
-                                            <input class="form-control" id="scmCnsgnRcptRcvblDoc" style="font-size: 13px !important;font-weight: bold !important;" placeholder="" type = "text" placeholder="" value="<?php echo $scmCnsgnRcptRcvblDoc; ?>" readonly="true"/>
+                                            <input class="form-control" id="scmCnsgnRcptRcvblDoc" style="font-size: 13px !important;font-weight: bold !important;" placeholder="" type="text" placeholder="" value="<?php echo $scmCnsgnRcptRcvblDoc; ?>" readonly="true" />
                                             <input type="hidden" id="scmCnsgnRcptRcvblDocID" value="<?php echo $scmCnsgnRcptRcvblDocID; ?>">
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="getOneAccbPyblsInvcForm(<?php echo $scmCnsgnRcptRcvblDocID; ?>, 1, 'ReloadDialog', '<?php echo $scmCnsgnRcptRcvblDocType; ?>',<?php echo $sbmtdScmCnsgnRcptID; ?>, 'Receipt');">
                                                 <img src="cmn_images/openfileicon.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Open
                                             </label>
                                         </div>
                                     </div>
-                                </div>                            
+                                </div>
                                 <div class="form-group">
                                     <label for="scmCnsgnRcptDfltBalsAcnt" class="control-label col-md-4" style="padding:0px 10px 0px 10px !important;">Payable Account:</label>
-                                    <div  class="col-md-8">
+                                    <div class="col-md-8">
                                         <div class="input-group">
-                                            <input class="form-control" id="scmCnsgnRcptDfltBalsAcnt" style="font-size: 13px !important;font-weight: bold !important;" placeholder="Enter GL Account Number" type = "text" min="0" placeholder="" value="<?php echo $scmCnsgnRcptDfltBalsAcnt; ?>" readonly="true"/>
+                                            <input class="form-control" id="scmCnsgnRcptDfltBalsAcnt" style="font-size: 13px !important;font-weight: bold !important;" placeholder="Enter GL Account Number" type="text" min="0" placeholder="" value="<?php echo $scmCnsgnRcptDfltBalsAcnt; ?>" readonly="true" />
                                             <input type="hidden" id="scmCnsgnRcptDfltBalsAcntID" value="<?php echo $scmCnsgnRcptDfltBalsAcntID; ?>">
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Liability Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'scmCnsgnRcptDfltBalsAcntID', 'scmCnsgnRcptDfltBalsAcnt', 'clear', 1, '', function () {});">
                                                 <span class="glyphicon glyphicon-th-list"></span>
@@ -900,7 +973,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <fieldset class="">
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="custDiv" style="padding:0px !important;min-height: 30px !important;"> 
+                                <div class="custDiv" style="padding:0px !important;min-height: 30px !important;">
                                     <div class="tab-content" style="padding:3px 5px 2px 5px!important;">
                                         <div class="row">
                                             <div class="col-md-12">
@@ -909,7 +982,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 $trsctnLnStoreNm = getStoreNm($trsctnLnStoreID);
                                                 $edtPriceRdOnly = "";
                                                 $nwRowHtml33 = "<tr id=\"oneScmCnsgnRcptSmryRow__WWW123WWW\" onclick=\"$('#allOtherInputData99').val($('#oneScmCnsgnRcptSmryLinesTable tr').index(this));\">"
-                                                        . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>                          
+                                                    . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>                          
                                                            <td class=\"lovtd\"  style=\"\">  
                                                                             <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"oneScmCnsgnRcptSmryRow_WWW123WWW_TrnsLnID\" value=\"-1\" style=\"width:100% !important;\">
                                                                             <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"oneScmCnsgnRcptSmryRow_WWW123WWW_ItmID\" value=\"-1\" style=\"width:100% !important;\">  
@@ -998,33 +1071,33 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         </td>
                                                     </tr>";
                                                 $nwRowHtml33 = urlencode($nwRowHtml33);
-                                                ?> 
+                                                ?>
                                                 <div class="col-md-12" style="padding:0px 0px 0px 0px !important;">
                                                     <div class="col-md-6" style="padding:0px 0px 0px 0px !important;float:left;">
                                                         <?php if ($canEdt) { ?>
                                                             <input type="hidden" id="nwSalesDocLineHtm" value="<?php echo $nwRowHtml33; ?>">
-                                                            <button id="addNwScmCnsgnRcptSmryBtn" type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="insertNewScmSalesInvcRows('oneScmCnsgnRcptSmryLinesTable', 0, '<?php echo $nwRowHtml33; ?>');" data-toggle="tooltip" data-placement="bottom" title = "New Transaction Line">
+                                                            <button id="addNwScmCnsgnRcptSmryBtn" type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="insertNewScmSalesInvcRows('oneScmCnsgnRcptSmryLinesTable', 0, '<?php echo $nwRowHtml33; ?>');" data-toggle="tooltip" data-placement="bottom" title="New Transaction Line">
                                                                 <img src="cmn_images/add1-64.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
-                                                            </button>                                 
+                                                            </button>
                                                         <?php } ?>
-                                                        <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getOneScmCnsgnRcptDocsForm(<?php echo $sbmtdScmCnsgnRcptID; ?>, 20);" data-toggle="tooltip" data-placement="bottom" title = "Attached Documents">
+                                                        <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getOneScmCnsgnRcptDocsForm(<?php echo $sbmtdScmCnsgnRcptID; ?>, 20);" data-toggle="tooltip" data-placement="bottom" title="Attached Documents">
                                                             <img src="cmn_images/adjunto.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
-                                                        </button> 
+                                                        </button>
                                                         <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getOneScmCnsgnRcptForm(<?php echo $sbmtdScmCnsgnRcptID; ?>, 1, 'ReloadDialog', '<?php echo $scmCnsgnRcptType; ?>', '<?php echo $scmCnsgnRcptSRC; ?>',<?php echo $sbmtdScmCnsgnRcptITEMID; ?>);"><img src="cmn_images/refresh.bmp" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;"></button>
-                                                        <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;"  onclick="getSilentRptsRnSts(<?php echo $rptID; ?>, -1, '<?php echo $paramStr; ?>');" style="width:100% !important;">
+                                                        <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getSilentRptsRnSts(<?php echo $rptID; ?>, -1, '<?php echo $paramStr; ?>');" style="width:100% !important;">
                                                             <img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             Print
                                                         </button>
                                                         <button type="button" class="btn btn-default" style="height:30px;margin-bottom: 1px;">
                                                             <span style="font-weight:bold;color:black;">Total: </span>
-                                                            <span style="color:red;font-weight: bold;" id="myCptrdCnsgnRcptValsTtlBtn"><?php echo $scmCnsgnRcptInvcCur; ?> 
+                                                            <span style="color:red;font-weight: bold;" id="myCptrdCnsgnRcptValsTtlBtn"><?php echo $scmCnsgnRcptInvcCur; ?>
                                                                 <?php
                                                                 echo number_format($scmCnsgnRcptTtlAmnt, 2);
                                                                 ?>
                                                             </span>
                                                             <input type="hidden" id="myCptrdCnsgnRcptValsTtlVal" value="<?php echo $scmCnsgnRcptTtlAmnt; ?>">
                                                         </button>
-                                                        <select data-placeholder="Select..." class="form-control chosen-select" id="scmCnsgnRcptDsplySze1" style="max-width:70px !important;display:inline-block;" onchange="getOneScmCnsgnRcptForm(<?php echo $sbmtdScmCnsgnRcptID; ?>, 1, 'ReloadDialog', '<?php echo $scmCnsgnRcptType; ?>', '<?php echo $scmCnsgnRcptSRC; ?>',<?php echo $sbmtdScmCnsgnRcptITEMID; ?>);" data-toggle="tooltip" title="No. of Records to Display">                            
+                                                        <select data-placeholder="Select..." class="form-control chosen-select" id="scmCnsgnRcptDsplySze1" style="max-width:70px !important;display:inline-block;" onchange="getOneScmCnsgnRcptForm(<?php echo $sbmtdScmCnsgnRcptID; ?>, 1, 'ReloadDialog', '<?php echo $scmCnsgnRcptType; ?>', '<?php echo $scmCnsgnRcptSRC; ?>',<?php echo $sbmtdScmCnsgnRcptITEMID; ?>);" data-toggle="tooltip" title="No. of Records to Display">
                                                             <?php
                                                             $valslctdArry = array("", "", "", "", "", "", "", "", "", "", "");
                                                             $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000, 50000, 1000000000);
@@ -1034,43 +1107,43 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 } else {
                                                                     $valslctdArry[$y] = "";
                                                                 }
-                                                                ?>
-                                                                <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
-                                                                <?php
+                                                            ?>
+                                                                <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>
+                                                            <?php
                                                             }
                                                             ?>
                                                         </select>
-                                                    </div> 
+                                                    </div>
                                                     <div class="col-md-6" style="padding:0px 0px 0px 0px !important;">
-                                                        <div class="" style="padding:0px 0px 0px 0px;float:right !important;"> 
+                                                        <div class="" style="padding:0px 0px 0px 0px;float:right !important;">
                                                             <?php
                                                             if ($rqStatus == "Incomplete") {
-                                                                ?>
+                                                            ?>
                                                                 <?php if ($canEdt) { ?>
-                                                                    <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveScmCnsgnRcptForm('<?php echo $fnccurnm; ?>', 0, '<?php echo $scmCnsgnRcptSRC; ?>',<?php echo $sbmtdScmCnsgnRcptITEMID; ?>);"><img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Save&nbsp;</button>    
+                                                                    <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveScmCnsgnRcptForm('<?php echo $fnccurnm; ?>', 0, '<?php echo $scmCnsgnRcptSRC; ?>',<?php echo $sbmtdScmCnsgnRcptITEMID; ?>);"><img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Save&nbsp;</button>
                                                                 <?php } ?>
                                                                 <?php if ($canRvwApprvDocs) { ?>
                                                                     <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveScmCnsgnRcptForm('<?php echo $fnccurnm; ?>', 2, '<?php echo $scmCnsgnRcptSRC; ?>',<?php echo $sbmtdScmCnsgnRcptITEMID; ?>);" data-toggle="tooltip" data-placement="bottom" title="Finalize Document">
                                                                         <img src="cmn_images/tick_64.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Finalize
                                                                     </button>
-                                                                    <?php
+                                                                <?php
                                                                 }
                                                             } else if ($rqStatus == "Received") {
                                                                 if ($cancelDocs) {
-                                                                    ?>
-                                                                    <button id="fnlzeRvrslScmCnsgnRcptBtn" type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveScmCnsgnRcptRvrslForm('<?php echo $fnccurnm; ?>', 1, '<?php echo $scmCnsgnRcptSRC; ?>',<?php echo $sbmtdScmCnsgnRcptITEMID; ?>);"><img src="cmn_images/90.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Cancel Receipt&nbsp;</button>  
-                                                                    <?php
+                                                                ?>
+                                                                    <button id="fnlzeRvrslScmCnsgnRcptBtn" type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveScmCnsgnRcptRvrslForm('<?php echo $fnccurnm; ?>', 1, '<?php echo $scmCnsgnRcptSRC; ?>',<?php echo $sbmtdScmCnsgnRcptITEMID; ?>);"><img src="cmn_images/90.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Cancel Receipt&nbsp;</button>
+                                                            <?php
                                                                 }
                                                             }
                                                             ?>
                                                         </div>
-                                                    </div>                    
-                                                </div> 
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="custDiv" style="padding:0px !important;min-height: 40px !important;" id="oneScmCnsgnRcptLnsTblSctn"> 
+                                <div class="custDiv" style="padding:0px !important;min-height: 40px !important;" id="oneScmCnsgnRcptLnsTblSctn">
                                     <div class="tab-content" style="padding:5px !important;padding-top:7px !important;">
                                         <div id="cnsgnRcptDetLines" class="tab-pane fadein active" style="border:none !important;padding:0px !important;">
                                             <div class="row" style="padding:0px 13px 0px 13px !important;">
@@ -1096,7 +1169,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <th style="max-width:30px;width:30px;text-align: center;">...</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>   
+                                                        <tbody>
                                                             <?php
                                                             $cntr = 0;
                                                             $resultRw = get_CnsgnRcptDocDet($sbmtdScmCnsgnRcptID, $lmtSze);
@@ -1130,18 +1203,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     $trsctnLnUomID = (float) $rowRw[17];
                                                                     $trsctnLnUomNm = $rowRw[18];
                                                                     $cntr += 1;
-                                                                    ?>
-                                                                    <tr id="oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>" onclick="$('#allOtherInputData99').val($('#oneScmCnsgnRcptSmryLinesTable tr').index(this));">                                    
-                                                                        <td class="lovtd"><span><?php echo ($cntr); ?></span></td>                                              
-                                                                        <td class="lovtd"  style="">  
+                                                            ?>
+                                                                    <tr id="oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>" onclick="$('#allOtherInputData99').val($('#oneScmCnsgnRcptSmryLinesTable tr').index(this));">
+                                                                        <td class="lovtd"><span><?php echo ($cntr); ?></span></td>
+                                                                        <td class="lovtd" style="">
                                                                             <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_TrnsLnID" value="<?php echo $trsctnLnID; ?>" style="width:100% !important;">
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ItmID" value="<?php echo $trsctnLnItmID; ?>" style="width:100% !important;">  
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_StoreID" value="<?php echo $trsctnLnStoreID; ?>" style="width:100% !important;"> 
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_CnsgnID" value="<?php echo $trsctnLnCnsgnID; ?>" style="width:100% !important;">    
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_PODocLnID" value="<?php echo $trsctnLnPoLnID; ?>" style="width:100% !important;">  
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ItmID" value="<?php echo $trsctnLnItmID; ?>" style="width:100% !important;">
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_StoreID" value="<?php echo $trsctnLnStoreID; ?>" style="width:100% !important;">
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_CnsgnID" value="<?php echo $trsctnLnCnsgnID; ?>" style="width:100% !important;">
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_PODocLnID" value="<?php echo $trsctnLnPoLnID; ?>" style="width:100% !important;">
                                                                             <?php
                                                                             if ($canEdt === true) {
-                                                                                ?>
+                                                                            ?>
                                                                                 <div class="input-group" style="width:100% !important;">
                                                                                     <input type="text" class="form-control rqrdFld jbDetAccRate jbDetDesc" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineDesc" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineDesc" value="<?php echo $trsctnLnItmNm; ?>" style="width:100% !important;" <?php echo $mkReadOnly; ?> onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineDesc', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetAccRate');" onblur="afterSalesInvcItmSlctn('oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>');" onchange="autoCreateSalesLns = 99;">
                                                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getScmSalesInvcItems('oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>', 'ShowDialog', '<?php echo $scmCnsgnRcptType; ?>', 'false', function () {});">
@@ -1149,39 +1222,39 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     </label>
                                                                                 </div>
                                                                             <?php } else {
-                                                                                ?>
+                                                                            ?>
                                                                                 <span><?php echo $trsctnLnItmNm; ?></span>
-                                                                                <?php
+                                                                            <?php
                                                                             }
                                                                             ?>
-                                                                        </td> 
+                                                                        </td>
                                                                         <td class="lovtd" style="text-align: right;">
                                                                             <input type="text" class="form-control rqrdFld jbDetAccRate" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_QTY" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_QTY" value="<?php
-                                                                            echo $trsctnLnQty;
-                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_QTY', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetAccRate');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl();">                                                    
-                                                                        </td>                                               
+                                                                                                                                                                                                                                                                            echo $trsctnLnQty;
+                                                                                                                                                                                                                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_QTY', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetAccRate');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl();">
+                                                                        </td>
                                                                         <td class="lovtd" style="max-width:35px;width:35px;text-align: center;">
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UomID" value="<?php echo $trsctnLnUomID; ?>" style="width:100% !important;">  
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UomID" value="<?php echo $trsctnLnUomID; ?>" style="width:100% !important;">
                                                                             <div class="" style="width:100% !important;">
                                                                                 <label class="btn btn-primary btn-file" onclick="getOneScmUOMBrkdwnForm(<?php echo $sbmtdScmCnsgnRcptID; ?>, 2, 'oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>');">
                                                                                     <span class="" id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UomNm1"><?php echo $trsctnLnUomNm; ?></span>
                                                                                 </label>
-                                                                            </div>                                              
+                                                                            </div>
                                                                         </td>
                                                                         <td class="lovtd">
                                                                             <input type="text" class="form-control jbDetDbt" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UnitPrice" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UnitPrice" value="<?php
-                                                                            echo number_format($trsctnLnUnitPrice, 5);
-                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UnitPrice', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" <?php echo $edtPriceRdOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl();">                                                    
+                                                                                                                                                                                                                                                                            echo number_format($trsctnLnUnitPrice, 5);
+                                                                                                                                                                                                                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UnitPrice', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" <?php echo $edtPriceRdOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl();">
                                                                         </td>
                                                                         <td class="lovtd">
                                                                             <input type="text" class="form-control jbDetCrdt" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineAmt" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineAmt" value="<?php
-                                                                            echo number_format($trsctnLnAmnt, 2);
-                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineAmt', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetCrdt');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl();">                                                    
-                                                                        </td>                                            
-                                                                        <td class="lovtd"  style="">  
+                                                                                                                                                                                                                                                                        echo number_format($trsctnLnAmnt, 2);
+                                                                                                                                                                                                                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineAmt', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetCrdt');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl();">
+                                                                        </td>
+                                                                        <td class="lovtd" style="">
                                                                             <?php
                                                                             if ($canEdt === true) {
-                                                                                ?>
+                                                                            ?>
                                                                                 <div class="input-group" style="width:100% !important;">
                                                                                     <input type="text" class="form-control rqrdFld" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_StoreNm" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_StoreNm" value="<?php echo $trsctnLnStoreNm; ?>" style="width:100% !important;" readonly="true" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineDesc', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetAccRate');">
                                                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Users\' Sales Stores', 'allOtherInputOrgID', 'allOtherInputUsrID', '', 'radio', true, '<?php echo $trsctnLnStoreID; ?>', 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_StoreID', 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_StoreNm', 'clear', 0, '');">
@@ -1189,48 +1262,48 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     </label>
                                                                                 </div>
                                                                             <?php } else {
-                                                                                ?>
+                                                                            ?>
                                                                                 <span><?php echo $trsctnLnStoreNm; ?></span>
-                                                                                <?php
+                                                                            <?php
                                                                             }
                                                                             ?>
                                                                         </td>
                                                                         <td class="lovtd">
                                                                             <?php
                                                                             if ($canEdt === true) {
-                                                                                ?>
+                                                                            ?>
                                                                                 <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd" style="width:100% !important;">
                                                                                     <input class="form-control" size="16" type="text" id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ManDte" value="<?php echo $trsctnLnManDte; ?>" readonly="">
                                                                                     <!--<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>-->
                                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                                                                </div> 
+                                                                                </div>
                                                                             <?php } else { ?>
                                                                                 <span><?php echo $trsctnLnManDte; ?></span>
-                                                                            <?php } ?>                                                         
+                                                                            <?php } ?>
                                                                         </td>
                                                                         <td class="lovtd">
                                                                             <?php
                                                                             if ($canEdt === true) {
-                                                                                ?>
+                                                                            ?>
                                                                                 <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd" style="width:100% !important;">
                                                                                     <input class="form-control" size="16" type="text" id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ExpryDte" value="<?php echo $trsctnLnExpDte; ?>" readonly="">
                                                                                     <!--<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>-->
                                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                                                                </div> 
+                                                                                </div>
                                                                             <?php } else { ?>
                                                                                 <span><?php echo $trsctnLnExpDte; ?></span>
-                                                                            <?php } ?>                                                         
+                                                                            <?php } ?>
                                                                         </td>
                                                                         <td class="lovtd">
-                                                                            <input type="text" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_TagNo" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_TagNo" value="<?php echo $trsctnLnTagNo; ?>" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?>>                                                    
-                                                                        </td> 
+                                                                            <input type="text" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_TagNo" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_TagNo" value="<?php echo $trsctnLnTagNo; ?>" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?>>
+                                                                        </td>
                                                                         <td class="lovtd">
-                                                                            <input type="text" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_SerialNo" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_SerialNo" value="<?php echo $trsctnLnSerialNo; ?>" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?>>                                                    
-                                                                        </td>                                            
-                                                                        <td class="lovtd"  style="">  
+                                                                            <input type="text" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_SerialNo" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_SerialNo" value="<?php echo $trsctnLnSerialNo; ?>" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?>>
+                                                                        </td>
+                                                                        <td class="lovtd" style="">
                                                                             <?php
                                                                             if ($canEdt === true) {
-                                                                                ?>
+                                                                            ?>
                                                                                 <div class="input-group" style="width:100% !important;">
                                                                                     <input type="text" class="form-control rqrdFld" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_CnsgnCdtn" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_CnsgnCdtn" value="<?php echo $trsctnLnCnsgnCndtn; ?>" style="width:100% !important;" readonly="true" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineDesc', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetAccRate');">
                                                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Consignment Conditions', '', '', '', 'radio', true, '', 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_CnsgnCdtn', '', 'clear', 1, '');" data-toggle="tooltip" title="Existing Consignment Condition">
@@ -1238,27 +1311,25 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     </label>
                                                                                 </div>
                                                                             <?php } else {
-                                                                                ?>
+                                                                            ?>
                                                                                 <span><?php echo $trsctnLnCnsgnCndtn; ?></span>
-                                                                                <?php
+                                                                            <?php
                                                                             }
                                                                             ?>
-                                                                        </td>   
+                                                                        </td>
                                                                         <td class="lovtd">
-                                                                            <input type="text" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ExtraDesc" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ExtraDesc" value="<?php echo "[CS No.:" . $trsctnLnCnsgnID . "]" . $trsctnLnRmrks; ?>" style="width:100% !important;text-align: left;" <?php echo $mkReadOnly; ?>>                                                    
-                                                                        </td>  
+                                                                            <input type="text" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ExtraDesc" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ExtraDesc" value="<?php echo "[CS No.:" . $trsctnLnCnsgnID . "]" . $trsctnLnRmrks; ?>" style="width:100% !important;text-align: left;" <?php echo $mkReadOnly; ?>>
+                                                                        </td>
                                                                         <td class="lovtd" style="text-align: center;">
-                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Item Consignments" 
-                                                                                    onclick="getScmSalesInvcItems('oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>', 'ShowDialog', '<?php echo $scmCnsgnRcptType; ?>', 'true', function () {
+                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Item Consignments" onclick="getScmSalesInvcItems('oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>', 'ShowDialog', '<?php echo $scmCnsgnRcptType; ?>', 'true', function () {
                                                                                                 var a = 1;
-                                                                                            });" style="padding:2px !important;"> 
-                                                                                <img src="cmn_images/chcklst3.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                                                            });" style="padding:2px !important;">
+                                                                                <img src="cmn_images/chcklst3.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                             </button>
-                                                                        </td>  
+                                                                        </td>
                                                                         <td class="lovtd" style="text-align: center;">
-                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View/Edit Item's New Selling Price" 
-                                                                                    onclick="getOneINVItmPricesForm('oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>', 'ShowDialog');" style="padding:2px !important;"> 
-                                                                                <img src="cmn_images/payment_256.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View/Edit Item's New Selling Price" onclick="getOneINVItmPricesForm('oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>', 'ShowDialog');" style="padding:2px !important;">
+                                                                                <img src="cmn_images/payment_256.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                             </button>
                                                                         </td>
                                                                         <td class="lovtd" style="text-align: center;">
@@ -1267,7 +1338,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             </button>
                                                                         </td>
                                                                     </tr>
-                                                                    <?php
+                                                                <?php
                                                                 }
                                                             } else if ($sbmtdScmCnsgnRcptITEMID > 0) {
                                                                 $error = "";
@@ -1299,8 +1370,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     $pageNo = ceil($total / $lmtSze);
                                                                 }
                                                                 $curIdx = $pageNo - 1;
-                                                                $result = get_StoreItems($srchFor, $srchIn, $curIdx, $lmtSze, $orgID, $sbmtdStoreID, $sbmtdDocType, $qCnsgnOnlyB,
-                                                                        $sbmtdItemID, $sbmtdCstmrSiteID);
+                                                                $result = get_StoreItems(
+                                                                    $srchFor,
+                                                                    $srchIn,
+                                                                    $curIdx,
+                                                                    $lmtSze,
+                                                                    $orgID,
+                                                                    $sbmtdStoreID,
+                                                                    $sbmtdDocType,
+                                                                    $qCnsgnOnlyB,
+                                                                    $sbmtdItemID,
+                                                                    $sbmtdCstmrSiteID
+                                                                );
                                                                 $cntr = 0;
                                                                 while ($row = loc_db_fetch_array($result)) {
                                                                     $trsctnLnID = -1;
@@ -1325,18 +1406,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     $trsctnLnUomID = (float) $row[18];
                                                                     $trsctnLnUomNm = $row[19];
                                                                     $cntr += 1;
-                                                                    ?>
-                                                                    <tr id="oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>" onclick="$('#allOtherInputData99').val($('#oneScmCnsgnRcptSmryLinesTable tr').index(this));">                                    
-                                                                        <td class="lovtd"><span><?php echo ($cntr); ?></span></td>                                              
-                                                                        <td class="lovtd"  style="">  
+                                                                ?>
+                                                                    <tr id="oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>" onclick="$('#allOtherInputData99').val($('#oneScmCnsgnRcptSmryLinesTable tr').index(this));">
+                                                                        <td class="lovtd"><span><?php echo ($cntr); ?></span></td>
+                                                                        <td class="lovtd" style="">
                                                                             <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_TrnsLnID" value="<?php echo $trsctnLnID; ?>" style="width:100% !important;">
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ItmID" value="<?php echo $trsctnLnItmID; ?>" style="width:100% !important;">  
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_StoreID" value="<?php echo $trsctnLnStoreID; ?>" style="width:100% !important;"> 
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_CnsgnID" value="<?php echo $trsctnLnCnsgnID; ?>" style="width:100% !important;">    
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_PODocLnID" value="<?php echo $trsctnLnPoLnID; ?>" style="width:100% !important;">  
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ItmID" value="<?php echo $trsctnLnItmID; ?>" style="width:100% !important;">
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_StoreID" value="<?php echo $trsctnLnStoreID; ?>" style="width:100% !important;">
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_CnsgnID" value="<?php echo $trsctnLnCnsgnID; ?>" style="width:100% !important;">
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_PODocLnID" value="<?php echo $trsctnLnPoLnID; ?>" style="width:100% !important;">
                                                                             <?php
                                                                             if ($canEdt === true) {
-                                                                                ?>
+                                                                            ?>
                                                                                 <div class="input-group" style="width:100% !important;">
                                                                                     <input type="text" class="form-control rqrdFld jbDetAccRate jbDetDesc" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineDesc" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineDesc" value="<?php echo $trsctnLnItmNm; ?>" style="width:100% !important;" <?php echo $mkReadOnly; ?> onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineDesc', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetAccRate');" onblur="afterSalesInvcItmSlctn('oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>');" onchange="autoCreateSalesLns = 99;">
                                                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getScmSalesInvcItems('oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>', 'ShowDialog', '<?php echo $scmCnsgnRcptType; ?>', 'false', function () {
@@ -1346,39 +1427,39 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     </label>
                                                                                 </div>
                                                                             <?php } else {
-                                                                                ?>
+                                                                            ?>
                                                                                 <span><?php echo $trsctnLnItmNm; ?></span>
-                                                                                <?php
+                                                                            <?php
                                                                             }
                                                                             ?>
-                                                                        </td> 
+                                                                        </td>
                                                                         <td class="lovtd" style="text-align: right;">
                                                                             <input type="text" class="form-control rqrdFld jbDetAccRate" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_QTY" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_QTY" value="<?php
-                                                                            echo $trsctnLnQty;
-                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_QTY', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetAccRate');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl();">                                                    
-                                                                        </td>                                               
+                                                                                                                                                                                                                                                                            echo $trsctnLnQty;
+                                                                                                                                                                                                                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_QTY', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetAccRate');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl();">
+                                                                        </td>
                                                                         <td class="lovtd" style="max-width:35px;width:35px;text-align: center;">
-                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UomID" value="<?php echo $trsctnLnUomID; ?>" style="width:100% !important;">  
+                                                                            <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UomID" value="<?php echo $trsctnLnUomID; ?>" style="width:100% !important;">
                                                                             <div class="" style="width:100% !important;">
                                                                                 <label class="btn btn-primary btn-file" onclick="getOneScmUOMBrkdwnForm(<?php echo $sbmtdScmCnsgnRcptID; ?>, 2, 'oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>');">
                                                                                     <span class="" id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UomNm1"><?php echo $trsctnLnUomNm; ?></span>
                                                                                 </label>
-                                                                            </div>                                              
+                                                                            </div>
                                                                         </td>
                                                                         <td class="lovtd">
                                                                             <input type="text" class="form-control jbDetDbt" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UnitPrice" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UnitPrice" value="<?php
-                                                                            echo number_format($trsctnLnUnitPrice, 5);
-                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UnitPrice', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" <?php echo $edtPriceRdOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl();">                                                    
+                                                                                                                                                                                                                                                                            echo number_format($trsctnLnUnitPrice, 5);
+                                                                                                                                                                                                                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UnitPrice', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" <?php echo $edtPriceRdOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl();">
                                                                         </td>
                                                                         <td class="lovtd">
                                                                             <input type="text" class="form-control jbDetCrdt" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineAmt" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineAmt" value="<?php
-                                                                            echo number_format($trsctnLnAmnt, 2);
-                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineAmt', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetCrdt');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl();">                                                    
-                                                                        </td>                                            
-                                                                        <td class="lovtd"  style="">  
+                                                                                                                                                                                                                                                                        echo number_format($trsctnLnAmnt, 2);
+                                                                                                                                                                                                                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineAmt', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetCrdt');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl();">
+                                                                        </td>
+                                                                        <td class="lovtd" style="">
                                                                             <?php
                                                                             if ($canEdt === true) {
-                                                                                ?>
+                                                                            ?>
                                                                                 <div class="input-group" style="width:100% !important;">
                                                                                     <input type="text" class="form-control rqrdFld" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_StoreNm" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_StoreNm" value="<?php echo $trsctnLnStoreNm; ?>" style="width:100% !important;" readonly="true" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineDesc', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetAccRate');">
                                                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Users\' Sales Stores', 'allOtherInputOrgID', 'allOtherInputUsrID', '', 'radio', true, '<?php echo $trsctnLnStoreID; ?>', 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_StoreID', 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_StoreNm', 'clear', 0, '');">
@@ -1386,48 +1467,48 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     </label>
                                                                                 </div>
                                                                             <?php } else {
-                                                                                ?>
+                                                                            ?>
                                                                                 <span><?php echo $trsctnLnStoreNm; ?></span>
-                                                                                <?php
+                                                                            <?php
                                                                             }
                                                                             ?>
                                                                         </td>
                                                                         <td class="lovtd">
                                                                             <?php
                                                                             if ($canEdt === true) {
-                                                                                ?>
+                                                                            ?>
                                                                                 <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd" style="width:100% !important;">
                                                                                     <input class="form-control" size="16" type="text" id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ManDte" value="<?php echo $trsctnLnManDte; ?>" readonly="">
                                                                                     <!--<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>-->
                                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                                                                </div> 
+                                                                                </div>
                                                                             <?php } else { ?>
                                                                                 <span><?php echo $trsctnLnManDte; ?></span>
-                                                                            <?php } ?>                                                         
+                                                                            <?php } ?>
                                                                         </td>
                                                                         <td class="lovtd">
                                                                             <?php
                                                                             if ($canEdt === true) {
-                                                                                ?>
+                                                                            ?>
                                                                                 <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd" style="width:100% !important;">
                                                                                     <input class="form-control" size="16" type="text" id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ExpryDte" value="<?php echo $trsctnLnExpDte; ?>" readonly="">
                                                                                     <!--<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>-->
                                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                                                                </div> 
+                                                                                </div>
                                                                             <?php } else { ?>
                                                                                 <span><?php echo $trsctnLnExpDte; ?></span>
-                                                                            <?php } ?>                                                         
+                                                                            <?php } ?>
                                                                         </td>
                                                                         <td class="lovtd">
-                                                                            <input type="text" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_TagNo" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_TagNo" value="<?php echo $trsctnLnTagNo; ?>" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?>>                                                    
-                                                                        </td> 
+                                                                            <input type="text" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_TagNo" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_TagNo" value="<?php echo $trsctnLnTagNo; ?>" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?>>
+                                                                        </td>
                                                                         <td class="lovtd">
-                                                                            <input type="text" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_SerialNo" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_SerialNo" value="<?php echo $trsctnLnSerialNo; ?>" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?>>                                                    
-                                                                        </td>                                            
-                                                                        <td class="lovtd"  style="">  
+                                                                            <input type="text" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_SerialNo" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_SerialNo" value="<?php echo $trsctnLnSerialNo; ?>" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?>>
+                                                                        </td>
+                                                                        <td class="lovtd" style="">
                                                                             <?php
                                                                             if ($canEdt === true) {
-                                                                                ?>
+                                                                            ?>
                                                                                 <div class="input-group" style="width:100% !important;">
                                                                                     <input type="text" class="form-control rqrdFld" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_CnsgnCdtn" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_CnsgnCdtn" value="<?php echo $trsctnLnCnsgnCndtn; ?>" style="width:100% !important;" readonly="true" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineDesc', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetAccRate');">
                                                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Consignment Conditions', '', '', '', 'radio', true, '', 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_CnsgnCdtn', '', 'clear', 1, '');" data-toggle="tooltip" title="Existing Consignment Condition">
@@ -1435,27 +1516,25 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     </label>
                                                                                 </div>
                                                                             <?php } else {
-                                                                                ?>
+                                                                            ?>
                                                                                 <span><?php echo $trsctnLnCnsgnCndtn; ?></span>
-                                                                                <?php
+                                                                            <?php
                                                                             }
                                                                             ?>
-                                                                        </td>   
+                                                                        </td>
                                                                         <td class="lovtd">
-                                                                            <input type="text" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ExtraDesc" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ExtraDesc" value="<?php echo "[CS No.:" . $trsctnLnCnsgnID . "]" . $trsctnLnRmrks; ?>" style="width:100% !important;text-align: left;" <?php echo $mkReadOnly; ?>>                                                    
-                                                                        </td>  
+                                                                            <input type="text" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ExtraDesc" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ExtraDesc" value="<?php echo "[CS No.:" . $trsctnLnCnsgnID . "]" . $trsctnLnRmrks; ?>" style="width:100% !important;text-align: left;" <?php echo $mkReadOnly; ?>>
+                                                                        </td>
                                                                         <td class="lovtd" style="text-align: center;">
-                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Item Consignments" 
-                                                                                    onclick="getScmSalesInvcItems('oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>', 'ShowDialog', '<?php echo $scmCnsgnRcptType; ?>', 'true', function () {
+                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Item Consignments" onclick="getScmSalesInvcItems('oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>', 'ShowDialog', '<?php echo $scmCnsgnRcptType; ?>', 'true', function () {
                                                                                                 var a = 1;
-                                                                                            });" style="padding:2px !important;"> 
-                                                                                <img src="cmn_images/chcklst3.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                                                            });" style="padding:2px !important;">
+                                                                                <img src="cmn_images/chcklst3.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                             </button>
-                                                                        </td>  
+                                                                        </td>
                                                                         <td class="lovtd" style="text-align: center;">
-                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View/Edit Item's New Selling Price" 
-                                                                                    onclick="getOneINVItmPricesForm('oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>', 'ShowDialog');" style="padding:2px !important;"> 
-                                                                                <img src="cmn_images/payment_256.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View/Edit Item's New Selling Price" onclick="getOneINVItmPricesForm('oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>', 'ShowDialog');" style="padding:2px !important;">
+                                                                                <img src="cmn_images/payment_256.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                             </button>
                                                                         </td>
                                                                         <td class="lovtd" style="text-align: center;">
@@ -1464,7 +1543,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             </button>
                                                                         </td>
                                                                     </tr>
-                                                                    <?php
+                                                                <?php
                                                                 }
                                                             } else {
                                                                 $trsctnLnID = -1;
@@ -1490,17 +1569,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 $trsctnLnUomNm = "each";
                                                                 $cntr += 1;
                                                                 ?>
-                                                                <tr id="oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>" onclick="$('#allOtherInputData99').val($('#oneScmCnsgnRcptSmryLinesTable tr').index(this));">                                    
-                                                                    <td class="lovtd"><span><?php echo ($cntr); ?></span></td>                                              
-                                                                    <td class="lovtd"  style="">  
+                                                                <tr id="oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>" onclick="$('#allOtherInputData99').val($('#oneScmCnsgnRcptSmryLinesTable tr').index(this));">
+                                                                    <td class="lovtd"><span><?php echo ($cntr); ?></span></td>
+                                                                    <td class="lovtd" style="">
                                                                         <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_TrnsLnID" value="<?php echo $trsctnLnID; ?>" style="width:100% !important;">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ItmID" value="<?php echo $trsctnLnItmID; ?>" style="width:100% !important;">  
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_StoreID" value="<?php echo $trsctnLnStoreID; ?>" style="width:100% !important;"> 
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_CnsgnID" value="<?php echo $trsctnLnCnsgnID; ?>" style="width:100% !important;">    
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_PODocLnID" value="<?php echo $trsctnLnPoLnID; ?>" style="width:100% !important;">  
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ItmID" value="<?php echo $trsctnLnItmID; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_StoreID" value="<?php echo $trsctnLnStoreID; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_CnsgnID" value="<?php echo $trsctnLnCnsgnID; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_PODocLnID" value="<?php echo $trsctnLnPoLnID; ?>" style="width:100% !important;">
                                                                         <?php
                                                                         if ($canEdt === true) {
-                                                                            ?>
+                                                                        ?>
                                                                             <div class="input-group" style="width:100% !important;">
                                                                                 <input type="text" class="form-control rqrdFld jbDetAccRate jbDetDesc" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineDesc" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineDesc" value="<?php echo $trsctnLnItmNm; ?>" style="width:100% !important;" <?php echo $mkReadOnly; ?> onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineDesc', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetAccRate');" onblur="afterSalesInvcItmSlctn('oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>');" onchange="autoCreateSalesLns = 99;">
                                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getScmSalesInvcItems('oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>', 'ShowDialog', '<?php echo $scmCnsgnRcptType; ?>', 'false', function () {
@@ -1510,39 +1589,39 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 </label>
                                                                             </div>
                                                                         <?php } else {
-                                                                            ?>
+                                                                        ?>
                                                                             <span><?php echo $trsctnLnItmNm; ?></span>
-                                                                            <?php
+                                                                        <?php
                                                                         }
                                                                         ?>
-                                                                    </td> 
+                                                                    </td>
                                                                     <td class="lovtd" style="text-align: right;">
                                                                         <input type="text" class="form-control rqrdFld jbDetAccRate" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_QTY" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_QTY" value="<?php
-                                                                        echo $trsctnLnQty;
-                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_QTY', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetAccRate');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl();">                                                    
-                                                                    </td>                                               
+                                                                                                                                                                                                                                                                        echo $trsctnLnQty;
+                                                                                                                                                                                                                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_QTY', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetAccRate');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl();">
+                                                                    </td>
                                                                     <td class="lovtd" style="max-width:35px;width:35px;text-align: center;">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UomID" value="<?php echo $trsctnLnUomID; ?>" style="width:100% !important;">  
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UomID" value="<?php echo $trsctnLnUomID; ?>" style="width:100% !important;">
                                                                         <div class="" style="width:100% !important;">
                                                                             <label class="btn btn-primary btn-file" onclick="getOneScmUOMBrkdwnForm(<?php echo $sbmtdScmCnsgnRcptID; ?>, 2, 'oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>');">
                                                                                 <span class="" id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UomNm1"><?php echo $trsctnLnUomNm; ?></span>
                                                                             </label>
-                                                                        </div>                                              
+                                                                        </div>
                                                                     </td>
                                                                     <td class="lovtd">
                                                                         <input type="text" class="form-control jbDetDbt" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UnitPrice" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UnitPrice" value="<?php
-                                                                        echo number_format($trsctnLnUnitPrice, 5);
-                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UnitPrice', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" <?php echo $edtPriceRdOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl();">                                                    
+                                                                                                                                                                                                                                                                        echo number_format($trsctnLnUnitPrice, 5);
+                                                                                                                                                                                                                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_UnitPrice', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" <?php echo $edtPriceRdOnly; ?> onchange="calcAllScmCnsgnRcptSmryTtl();">
                                                                     </td>
                                                                     <td class="lovtd">
                                                                         <input type="text" class="form-control jbDetCrdt" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineAmt" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineAmt" value="<?php
-                                                                        echo number_format($trsctnLnAmnt, 2);
-                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineAmt', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetCrdt');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl();">                                                    
-                                                                    </td>                                            
-                                                                    <td class="lovtd"  style="">  
+                                                                                                                                                                                                                                                                    echo number_format($trsctnLnAmnt, 2);
+                                                                                                                                                                                                                                                                    ?>" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineAmt', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetCrdt');" style="width:100% !important;text-align: right;" readonly="true" onchange="calcAllScmCnsgnRcptSmryTtl();">
+                                                                    </td>
+                                                                    <td class="lovtd" style="">
                                                                         <?php
                                                                         if ($canEdt === true) {
-                                                                            ?>
+                                                                        ?>
                                                                             <div class="input-group" style="width:100% !important;">
                                                                                 <input type="text" class="form-control rqrdFld" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_StoreNm" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_StoreNm" value="<?php echo $trsctnLnStoreNm; ?>" style="width:100% !important;" readonly="true" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineDesc', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetAccRate');">
                                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Users\' Sales Stores', 'allOtherInputOrgID', 'allOtherInputUsrID', '', 'radio', true, '<?php echo $trsctnLnStoreID; ?>', 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_StoreID', 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_StoreNm', 'clear', 0, '');">
@@ -1550,48 +1629,48 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 </label>
                                                                             </div>
                                                                         <?php } else {
-                                                                            ?>
+                                                                        ?>
                                                                             <span><?php echo $trsctnLnStoreNm; ?></span>
-                                                                            <?php
+                                                                        <?php
                                                                         }
                                                                         ?>
                                                                     </td>
                                                                     <td class="lovtd">
                                                                         <?php
                                                                         if ($canEdt === true) {
-                                                                            ?>
+                                                                        ?>
                                                                             <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd" style="width:100% !important;">
                                                                                 <input class="form-control" size="16" type="text" id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ManDte" value="<?php echo $trsctnLnManDte; ?>" readonly="">
                                                                                 <!--<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>-->
                                                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                                                            </div> 
+                                                                            </div>
                                                                         <?php } else { ?>
                                                                             <span><?php echo $trsctnLnManDte; ?></span>
-                                                                        <?php } ?>                                                         
+                                                                        <?php } ?>
                                                                     </td>
                                                                     <td class="lovtd">
                                                                         <?php
                                                                         if ($canEdt === true) {
-                                                                            ?>
+                                                                        ?>
                                                                             <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd" style="width:100% !important;">
                                                                                 <input class="form-control" size="16" type="text" id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ExpryDte" value="<?php echo $trsctnLnExpDte; ?>" readonly="">
                                                                                 <!--<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>-->
                                                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                                                            </div> 
+                                                                            </div>
                                                                         <?php } else { ?>
                                                                             <span><?php echo $trsctnLnExpDte; ?></span>
-                                                                        <?php } ?>                                                         
+                                                                        <?php } ?>
                                                                     </td>
                                                                     <td class="lovtd">
-                                                                        <input type="text" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_TagNo" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_TagNo" value="<?php echo $trsctnLnTagNo; ?>" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?>>                                                    
-                                                                    </td> 
+                                                                        <input type="text" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_TagNo" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_TagNo" value="<?php echo $trsctnLnTagNo; ?>" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?>>
+                                                                    </td>
                                                                     <td class="lovtd">
-                                                                        <input type="text" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_SerialNo" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_SerialNo" value="<?php echo $trsctnLnSerialNo; ?>" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?>>                                                    
-                                                                    </td>                                            
-                                                                    <td class="lovtd"  style="">  
+                                                                        <input type="text" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_SerialNo" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_SerialNo" value="<?php echo $trsctnLnSerialNo; ?>" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?>>
+                                                                    </td>
+                                                                    <td class="lovtd" style="">
                                                                         <?php
                                                                         if ($canEdt === true) {
-                                                                            ?>
+                                                                        ?>
                                                                             <div class="input-group" style="width:100% !important;">
                                                                                 <input type="text" class="form-control rqrdFld" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_CnsgnCdtn" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_CnsgnCdtn" value="<?php echo $trsctnLnCnsgnCndtn; ?>" style="width:100% !important;" readonly="true" onkeypress="gnrlFldKeyPress(event, 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_LineDesc', 'oneScmCnsgnRcptSmryLinesTable', 'jbDetAccRate');">
                                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Consignment Conditions', '', '', '', 'radio', true, '', 'oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_CnsgnCdtn', '', 'clear', 1, '');" data-toggle="tooltip" title="Existing Consignment Condition">
@@ -1599,27 +1678,25 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 </label>
                                                                             </div>
                                                                         <?php } else {
-                                                                            ?>
+                                                                        ?>
                                                                             <span><?php echo $trsctnLnCnsgnCndtn; ?></span>
-                                                                            <?php
+                                                                        <?php
                                                                         }
                                                                         ?>
-                                                                    </td>   
+                                                                    </td>
                                                                     <td class="lovtd">
-                                                                        <input type="text" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ExtraDesc" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ExtraDesc" value="<?php echo "[CS No.:" . $trsctnLnCnsgnID . "]" . $trsctnLnRmrks; ?>" style="width:100% !important;text-align: left;" <?php echo $mkReadOnly; ?>>                                                    
-                                                                    </td>  
+                                                                        <input type="text" class="form-control" aria-label="..." id="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ExtraDesc" name="oneScmCnsgnRcptSmryRow<?php echo $cntr; ?>_ExtraDesc" value="<?php echo "[CS No.:" . $trsctnLnCnsgnID . "]" . $trsctnLnRmrks; ?>" style="width:100% !important;text-align: left;" <?php echo $mkReadOnly; ?>>
+                                                                    </td>
                                                                     <td class="lovtd" style="text-align: center;">
-                                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Item Consignments" 
-                                                                                onclick="getScmSalesInvcItems('oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>', 'ShowDialog', '<?php echo $scmCnsgnRcptType; ?>', 'true', function () {
+                                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Item Consignments" onclick="getScmSalesInvcItems('oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>', 'ShowDialog', '<?php echo $scmCnsgnRcptType; ?>', 'true', function () {
                                                                                             var a = 1;
-                                                                                        });" style="padding:2px !important;"> 
-                                                                            <img src="cmn_images/chcklst3.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                                                        });" style="padding:2px !important;">
+                                                                            <img src="cmn_images/chcklst3.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                         </button>
-                                                                    </td>  
+                                                                    </td>
                                                                     <td class="lovtd" style="text-align: center;">
-                                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View/Edit Item's New Selling Price" 
-                                                                                onclick="getOneINVItmPricesForm('oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>', 'ShowDialog');" style="padding:2px !important;"> 
-                                                                            <img src="cmn_images/payment_256.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View/Edit Item's New Selling Price" onclick="getOneINVItmPricesForm('oneScmCnsgnRcptSmryRow_<?php echo $cntr; ?>', 'ShowDialog');" style="padding:2px !important;">
+                                                                            <img src="cmn_images/payment_256.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                         </button>
                                                                     </td>
                                                                     <td class="lovtd" style="text-align: center;">
@@ -1628,11 +1705,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         </button>
                                                                     </td>
                                                                 </tr>
-                                                                <?php
+                                                            <?php
                                                             }
                                                             ?>
                                                         </tbody>
-                                                        <tfoot>                                                            
+                                                        <tfoot>
                                                             <tr>
                                                                 <th>&nbsp;</th>
                                                                 <th>&nbsp;</th>
@@ -1641,17 +1718,21 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <th>&nbsp;</th>
                                                                 <th style="text-align: right;">
                                                                     <?php
-                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdRIJbSmryAmtTtlBtn\">" . number_format($ttlTrsctnEntrdAmnt,
-                                                                            2, '.', ',') . "</span>";
+                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdRIJbSmryAmtTtlBtn\">" . number_format(
+                                                                        $ttlTrsctnEntrdAmnt,
+                                                                        2,
+                                                                        '.',
+                                                                        ','
+                                                                    ) . "</span>";
                                                                     ?>
                                                                     <input type="hidden" id="myCptrdRIJbSmryAmtTtlVal" value="<?php echo $ttlTrsctnEntrdAmnt; ?>">
                                                                 </th>
-                                                                <th style="">&nbsp;</th>                                           
-                                                                <th style="">&nbsp;</th>                                           
                                                                 <th style="">&nbsp;</th>
                                                                 <th style="">&nbsp;</th>
                                                                 <th style="">&nbsp;</th>
-                                                                <th style="">&nbsp;</th>                                           
+                                                                <th style="">&nbsp;</th>
+                                                                <th style="">&nbsp;</th>
+                                                                <th style="">&nbsp;</th>
                                                                 <th style="">&nbsp;</th>
                                                                 <th style="">&nbsp;</th>
                                                                 <th style="">&nbsp;</th>
@@ -1668,7 +1749,185 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                     </fieldset>
                 </form>
-                <?php
+            <?php
+            } else if ($vwtyp == 20) {
+                /* All Attached Documents */
+                $sbmtdScmCnsgnRcptID = isset($_POST['sbmtdScmCnsgnRcptID']) ? cleanInputData($_POST['sbmtdScmCnsgnRcptID']) : -1;
+                if (!$canAdd || ($sbmtdScmCnsgnRcptID > 0 && !$canEdt)) {
+                    restricted();
+                    exit();
+                }
+                $pkID = $sbmtdScmCnsgnRcptID;
+                $total = get_Total_CnsgnRcpt_Attachments($srchFor, $pkID, "RECEIPT");
+                if ($pageNo > ceil($total / $lmtSze)) {
+                    $pageNo = 1;
+                } else if ($pageNo < 1) {
+                    $pageNo = ceil($total / $lmtSze);
+                }
+                $curIdx = $pageNo - 1;
+                $attchSQL = "";
+                $result2 = get_CnsgnRcpt_Attachments($srchFor, $curIdx, $lmtSze, $pkID, "RECEIPT", $attchSQL);
+                $colClassType1 = "col-lg-2";
+                $colClassType2 = "col-lg-3";
+                $colClassType3 = "col-lg-4";
+            ?>
+                <fieldset class="" style="padding:10px 0px 5px 0px !important;">
+                    <form class="" id="attchdCnsgnRcptDocsTblForm">
+                        <div class="row">
+                            <?php
+                            $nwRowHtml = urlencode("<tr id=\"attchdCnsgnRcptDocsRow__WWW123WWW\">"
+                                . "<td class=\"lovtd\"><span>New</span></td>"
+                                . "<td class=\"lovtd\">
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                              <div class=\"input-group\" style=\"width:100% !important;\">
+                                                <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"attchdCnsgnRcptDocsRow_WWW123WWW_DocCtgryNm\" value=\"\">
+                                                <input class=\"form-control\" aria-label=\"...\" id=\"attchdCnsgnRcptDocsRow_WWW123WWW_DocFile\" type=\"file\" style=\"visibility:hidden;height:5px !important;display:none;\" />     
+                                                <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Attachment Document Categories', '', '', '', 'radio', true, '', 'attchdCnsgnRcptDocsRow_WWW123WWW_DocCtgryNm', 'attchdCnsgnRcptDocsRow_WWW123WWW_DocCtgryNm', 'clear', 0, '');\">
+                                                    <span class=\"glyphicon glyphicon-th-list\"></span>
+                                                </label>
+                                              </div>
+                                              </div>
+                                              <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"attchdCnsgnRcptDocsRow_WWW123WWW_AttchdDocsID\" value=\"-1\" style=\"\">                                               
+                                          </td>
+                                          <td class=\"lovtd\">
+                                                <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"uploadFileToCnsgnRcptDocs('attchdCnsgnRcptDocsRow_WWW123WWW_DocFile','attchdCnsgnRcptDocsRow_WWW123WWW_AttchdDocsID','attchdCnsgnRcptDocsRow_WWW123WWW_DocCtgryNm'," . $pkID . ",'attchdCnsgnRcptDocsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Download Document\">
+                                                    <img src=\"cmn_images/openfileicon.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\"> Upload
+                                                </button>
+                                          </td>
+                                          <td class=\"lovtd\">
+                                                <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delAttchdCnsgnRcptDoc('attchdCnsgnRcptDocsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Document\">
+                                                    <img src=\"cmn_images/no.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
+                                                </button>
+                                          </td>
+                                        </tr>");
+                            ?>
+                            <div class="<?php echo $colClassType3; ?>" style="padding:0px 1px 0px 1px !important;">
+                                <div class="col-md-12">
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('attchdCnsgnRcptDocsTable', 0, '<?php echo $nwRowHtml; ?>');" style="width:100% !important;">
+                                        <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                        New Document
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
+                                <div class="input-group">
+                                    <input class="form-control" id="attchdCnsgnRcptDocsSrchFor" type="text" placeholder="Search For" value="<?php
+                                                                                                                                            echo trim(str_replace("%", " ", $srchFor));
+                                                                                                                                            ?>" onkeyup="enterKeyFuncAttchdCnsgnRcptDocs(event, '', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmCnsgnRcptID=<?php echo $sbmtdScmCnsgnRcptID; ?>', 'ReloadDialog');">
+                                    <input id="attchdCnsgnRcptDocsPageNo" type="hidden" value="<?php echo $pageNo; ?>">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdCnsgnRcptDocs('clear', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmCnsgnRcptID=<?php echo $sbmtdScmCnsgnRcptID; ?>', 'ReloadDialog');">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </label>
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdCnsgnRcptDocs('', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmCnsgnRcptID=<?php echo $sbmtdScmCnsgnRcptID; ?>', 'ReloadDialog');">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="<?php echo $colClassType2; ?>">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
+                                    <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
+                                    <select data-placeholder="Select..." class="form-control chosen-select" id="attchdCnsgnRcptDocsDsplySze" style="min-width:70px !important;">
+                                        <?php
+                                        $valslctdArry = array("", "", "", "", "", "", "", "");
+                                        $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
+                                        for ($y = 0; $y < count($dsplySzeArry); $y++) {
+                                            if ($lmtSze == $dsplySzeArry[$y]) {
+                                                $valslctdArry[$y] = "selected";
+                                            } else {
+                                                $valslctdArry[$y] = "";
+                                            }
+                                        ?>
+                                            <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="<?php echo $colClassType1; ?>">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination" style="margin: 0px !important;">
+                                        <li>
+                                            <a class="rhopagination" href="javascript:getAttchdCnsgnRcptDocs('previous', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmCnsgnRcptID=<?php echo $sbmtdScmCnsgnRcptID; ?>','ReloadDialog');" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="rhopagination" href="javascript:getAttchdCnsgnRcptDocs('next', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmCnsgnRcptID=<?php echo $sbmtdScmCnsgnRcptID; ?>','ReloadDialog');" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-striped table-bordered table-responsive" id="attchdCnsgnRcptDocsTable" cellspacing="0" width="100%" style="width:100%;min-width: 400px !important;">
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Doc. Name/Description</th>
+                                            <th>&nbsp;</th>
+                                            <th>&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $cntr = 0;
+                                        while ($row2 = loc_db_fetch_array($result2)) {
+                                            $cntr += 1;
+                                            $doc_src = $ftp_base_db_fldr . "/Rcpts/" . $row2[3];
+                                            $doc_src_encrpt = encrypt1($doc_src, $smplTokenWord1);
+                                            if (file_exists($doc_src)) {
+                                                //file exists!
+                                            } else {
+                                                //file does not exist.
+                                                $doc_src_encrpt = "None";
+                                            }
+                                        ?>
+                                            <tr id="attchdCnsgnRcptDocsRow_<?php echo $cntr; ?>">
+                                                <td class="lovtd"><span><?php
+                                                                        echo ($curIdx * $lmtSze) + ($cntr);
+                                                                        ?></span></td>
+                                                <td class="lovtd">
+                                                    <span><?php echo $row2[2]; ?></span>
+                                                    <input type="hidden" class="form-control" aria-label="..." id="attchdCnsgnRcptDocsRow<?php echo $cntr; ?>_AttchdDocsID" value="<?php echo $row2[0]; ?>" style="width:100% !important;">
+                                                </td>
+                                                <td class="lovtd">
+                                                    <?php
+                                                    if ($doc_src_encrpt == "None") {
+                                                    ?>
+                                                        <span style="font-weight: bold;color:#FF0000;">
+                                                            <?php
+                                                            echo "File Not Found!";
+                                                            ?>
+                                                        </span>
+                                                    <?php
+                                                    } else {
+                                                    ?>
+                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="doAjax('grp=1&typ=11&q=Download&fnm=<?php echo $doc_src_encrpt; ?>', '', 'Redirect', '', '', '');" data-toggle="tooltip" data-placement="bottom" title="Download Document">
+                                                            <img src="cmn_images/dwldicon.png" style="height:15px; width:auto; position: relative; vertical-align: middle;"> Download
+                                                        </button>
+                                                    <?php } ?>
+                                                </td>
+                                                <td class="lovtd">
+                                                    <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delAttchdCnsgnRcptDoc('attchdCnsgnRcptDocsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Document">
+                                                        <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        <?php
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </form>
+                </fieldset>
+<?php
             }
         }
     }

@@ -30,7 +30,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     restricted();
                 }
             } else if ($actyp == 5) {
-                
+                /* Delete Doc Attachment Line */
+                $pKeyID = isset($_POST['attchmentID']) ? cleanInputData($_POST['attchmentID']) : -1;
+                $pKeyNm = isset($_POST['docTrnsNum']) ? cleanInputData($_POST['docTrnsNum']) : "";
+                if ($canDel) {
+                    echo deleteCnsgnRcptDoc($pKeyID, $pKeyNm);
+                } else {
+                    restricted();
+                }
             }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {
@@ -200,15 +207,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 if ($attchmentID > 0) {
                     uploadDaCnsgnRtrnDoc($attchmentID, $nwImgLoc, $errMsg);
                 } else {
-                    $attchmentID = getNewCnsgnRtrnDocID();
-                    createCnsgnRtrnDoc($attchmentID, $pkID, $docCtrgrName, "");
+                    $attchmentID = getNewCnsgnRcptDocID();
+                    createCnsgnRcptDoc($attchmentID, $pkID, "RETURN", $docCtrgrName, "");
                     uploadDaCnsgnRtrnDoc($attchmentID, $nwImgLoc, $errMsg);
                 }
                 $arr_content['attchID'] = $attchmentID;
                 if (strpos($errMsg, "Document Stored Successfully!<br/>") === FALSE) {
                     $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>" . $errMsg;
                 } else {
-                    $doc_src = $ftp_base_db_fldr . "/Sales/" . $nwImgLoc;
+                    $doc_src = $ftp_base_db_fldr . "/Rcpts/" . $nwImgLoc;
                     $doc_src_encrpt = encrypt1($doc_src, $smplTokenWord1);
                     if (file_exists($doc_src)) {
                         //file exists!
@@ -1093,6 +1100,185 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     </fieldset>
                 </form>
                 <?php
+            } else if ($vwtyp == 20) {
+                /* All Attached Documents */
+                //sbmtdScmCnsgnRtrnID
+                $sbmtdScmCnsgnRtrnID = isset($_POST['sbmtdScmCnsgnRtrnID']) ? cleanInputData($_POST['sbmtdScmCnsgnRtrnID']) : -1;
+                if (!$canAdd || ($sbmtdScmCnsgnRtrnID > 0 && !$canEdt)) {
+                    restricted();
+                    exit();
+                }
+                $pkID = $sbmtdScmCnsgnRtrnID;
+                $total = get_Total_CnsgnRcpt_Attachments($srchFor, $pkID, "RETURN");
+                if ($pageNo > ceil($total / $lmtSze)) {
+                    $pageNo = 1;
+                } else if ($pageNo < 1) {
+                    $pageNo = ceil($total / $lmtSze);
+                }
+                $curIdx = $pageNo - 1;
+                $attchSQL = "";
+                $result2 = get_CnsgnRcpt_Attachments($srchFor, $curIdx, $lmtSze, $pkID, "RETURN", $attchSQL);
+                $colClassType1 = "col-lg-2";
+                $colClassType2 = "col-lg-3";
+                $colClassType3 = "col-lg-4";
+            ?>
+                <fieldset class="" style="padding:10px 0px 5px 0px !important;">
+                    <form class="" id="attchdCnsgnRtrnDocsTblForm">
+                        <div class="row">
+                            <?php
+                            $nwRowHtml = urlencode("<tr id=\"attchdCnsgnRtrnDocsRow__WWW123WWW\">"
+                                . "<td class=\"lovtd\"><span>New</span></td>"
+                                . "<td class=\"lovtd\">
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                              <div class=\"input-group\" style=\"width:100% !important;\">
+                                                <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"attchdCnsgnRtrnDocsRow_WWW123WWW_DocCtgryNm\" value=\"\">
+                                                <input class=\"form-control\" aria-label=\"...\" id=\"attchdCnsgnRtrnDocsRow_WWW123WWW_DocFile\" type=\"file\" style=\"visibility:hidden;height:5px !important;display:none;\" />     
+                                                <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Attachment Document Categories', '', '', '', 'radio', true, '', 'attchdCnsgnRtrnDocsRow_WWW123WWW_DocCtgryNm', 'attchdCnsgnRtrnDocsRow_WWW123WWW_DocCtgryNm', 'clear', 0, '');\">
+                                                    <span class=\"glyphicon glyphicon-th-list\"></span>
+                                                </label>
+                                              </div>
+                                              </div>
+                                              <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"attchdCnsgnRtrnDocsRow_WWW123WWW_AttchdDocsID\" value=\"-1\" style=\"\">                                               
+                                          </td>
+                                          <td class=\"lovtd\">
+                                                <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"uploadFileToCnsgnRtrnDocs('attchdCnsgnRtrnDocsRow_WWW123WWW_DocFile','attchdCnsgnRtrnDocsRow_WWW123WWW_AttchdDocsID','attchdCnsgnRtrnDocsRow_WWW123WWW_DocCtgryNm'," . $pkID . ",'attchdCnsgnRtrnDocsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Download Document\">
+                                                    <img src=\"cmn_images/openfileicon.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\"> Upload
+                                                </button>
+                                          </td>
+                                          <td class=\"lovtd\">
+                                                <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delAttchdCnsgnRtrnDoc('attchdCnsgnRtrnDocsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Document\">
+                                                    <img src=\"cmn_images/no.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
+                                                </button>
+                                          </td>
+                                        </tr>");
+                            ?>
+                            <div class="<?php echo $colClassType3; ?>" style="padding:0px 1px 0px 1px !important;">
+                                <div class="col-md-12">
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('attchdCnsgnRtrnDocsTable', 0, '<?php echo $nwRowHtml; ?>');" style="width:100% !important;">
+                                        <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                        New Document
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
+                                <div class="input-group">
+                                    <input class="form-control" id="attchdCnsgnRtrnDocsSrchFor" type="text" placeholder="Search For" value="<?php
+                                                                                                                                            echo trim(str_replace("%", " ", $srchFor));
+                                                                                                                                            ?>" onkeyup="enterKeyFuncAttchdCnsgnRtrnDocs(event, '', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmCnsgnRtrnID=<?php echo $sbmtdScmCnsgnRtrnID; ?>', 'ReloadDialog');">
+                                    <input id="attchdCnsgnRtrnDocsPageNo" type="hidden" value="<?php echo $pageNo; ?>">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdCnsgnRtrnDocs('clear', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmCnsgnRtrnID=<?php echo $sbmtdScmCnsgnRtrnID; ?>', 'ReloadDialog');">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </label>
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdCnsgnRtrnDocs('', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmCnsgnRtrnID=<?php echo $sbmtdScmCnsgnRtrnID; ?>', 'ReloadDialog');">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="<?php echo $colClassType2; ?>">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
+                                    <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
+                                    <select data-placeholder="Select..." class="form-control chosen-select" id="attchdCnsgnRtrnDocsDsplySze" style="min-width:70px !important;">
+                                        <?php
+                                        $valslctdArry = array("", "", "", "", "", "", "", "");
+                                        $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
+                                        for ($y = 0; $y < count($dsplySzeArry); $y++) {
+                                            if ($lmtSze == $dsplySzeArry[$y]) {
+                                                $valslctdArry[$y] = "selected";
+                                            } else {
+                                                $valslctdArry[$y] = "";
+                                            }
+                                        ?>
+                                            <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="<?php echo $colClassType1; ?>">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination" style="margin: 0px !important;">
+                                        <li>
+                                            <a class="rhopagination" href="javascript:getAttchdCnsgnRtrnDocs('previous', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmCnsgnRtrnID=<?php echo $sbmtdScmCnsgnRtrnID; ?>','ReloadDialog');" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="rhopagination" href="javascript:getAttchdCnsgnRtrnDocs('next', '#myFormsModalyBody', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdScmCnsgnRtrnID=<?php echo $sbmtdScmCnsgnRtrnID; ?>','ReloadDialog');" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-striped table-bordered table-responsive" id="attchdCnsgnRtrnDocsTable" cellspacing="0" width="100%" style="width:100%;min-width: 400px !important;">
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Doc. Name/Description</th>
+                                            <th>&nbsp;</th>
+                                            <th>&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $cntr = 0;
+                                        while ($row2 = loc_db_fetch_array($result2)) {
+                                            $cntr += 1;
+                                            $doc_src = $ftp_base_db_fldr . "/Rcpts/" . $row2[3];
+                                            $doc_src_encrpt = encrypt1($doc_src, $smplTokenWord1);
+                                            if (file_exists($doc_src)) {
+                                                //file exists!
+                                            } else {
+                                                //file does not exist.
+                                                $doc_src_encrpt = "None";
+                                            }
+                                        ?>
+                                            <tr id="attchdCnsgnRtrnDocsRow_<?php echo $cntr; ?>">
+                                                <td class="lovtd"><span><?php
+                                                                        echo ($curIdx * $lmtSze) + ($cntr);
+                                                                        ?></span></td>
+                                                <td class="lovtd">
+                                                    <span><?php echo $row2[2]; ?></span>
+                                                    <input type="hidden" class="form-control" aria-label="..." id="attchdCnsgnRtrnDocsRow<?php echo $cntr; ?>_AttchdDocsID" value="<?php echo $row2[0]; ?>" style="width:100% !important;">
+                                                </td>
+                                                <td class="lovtd">
+                                                    <?php
+                                                    if ($doc_src_encrpt == "None") {
+                                                    ?>
+                                                        <span style="font-weight: bold;color:#FF0000;">
+                                                            <?php
+                                                            echo "File Not Found!";
+                                                            ?>
+                                                        </span>
+                                                    <?php
+                                                    } else {
+                                                    ?>
+                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="doAjax('grp=1&typ=11&q=Download&fnm=<?php echo $doc_src_encrpt; ?>', '', 'Redirect', '', '', '');" data-toggle="tooltip" data-placement="bottom" title="Download Document">
+                                                            <img src="cmn_images/dwldicon.png" style="height:15px; width:auto; position: relative; vertical-align: middle;"> Download
+                                                        </button>
+                                                    <?php } ?>
+                                                </td>
+                                                <td class="lovtd">
+                                                    <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delAttchdCnsgnRtrnDoc('attchdCnsgnRtrnDocsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Document">
+                                                        <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        <?php
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </form>
+                </fieldset>
+<?php
             }
         }
     }
