@@ -1698,8 +1698,8 @@ function getWkfMsgRtngData($wfkRtngID)
        routing_id, msg_status, action_to_perform, is_action_done, who_prfmd_action, 
        date_action_ws_prfmd, status_aftr_action, nxt_action_to_prfm, 
        last_update_by, last_update_date, who_prfms_next_action, action_comments, 
-       to_prsns_hrchy_level 
-       from wkf.wkf_actual_msgs_routng where routing_id = " . $wfkRtngID;
+       to_prsns_hrchy_level, prs.get_prsn_name(a.to_prsn_id)||' ('||prs.get_prsn_loc_id(a.to_prsn_id)||')' 
+       from wkf.wkf_actual_msgs_routng a where routing_id = " . $wfkRtngID;
     $result = executeSQLNoParams($sqlStr);
     return $result;
 }
@@ -1931,7 +1931,7 @@ function createWelcomeMsg($username)
     routWkfMsg($msg_id, -1, $prsnid, $userID, 'Initiated', 'Acknowledge');
 }
 
-function createSysInboxMsg($prsnid, $msghdr, $msgbody, $attchmnts = "", $attchmnts_desc = "")
+function createSysInboxMsg($prsnid, $msghdr, $msgbody, $attchmnts = "", $attchmnts_desc = "", $fromPrsnID=-1)
 {
     global $app_url;
     global $fldrPrfx;
@@ -1967,7 +1967,7 @@ function createSysInboxMsg($prsnid, $msghdr, $msgbody, $attchmnts = "", $attchmn
       }
       logSessionErrs($msgs); */
     createWkfMsg($msg_id, $msghdr, $msgbody, $usrID, $appID, $msgtyp, $msgsts, $srcdoctyp, $srcdocid, $hrchyid, $attchmnts, $attchmnts_desc);
-    routWkfMsg($msg_id, -1, $prsnid, $usrID, 'Initiated', 'Acknowledge');
+    routWkfMsg($msg_id, $fromPrsnID, $prsnid, $usrID, 'Initiated', 'Acknowledge');
 }
 
 function createWkfMsg(

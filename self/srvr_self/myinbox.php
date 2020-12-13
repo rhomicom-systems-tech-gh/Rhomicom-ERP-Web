@@ -13,7 +13,7 @@ $srchFor = "%";
 $srchIn = "Person From";
 $RoutingID = -1;
 $qNonLgn = "true";
-$qNonAknwldg = "true";
+$qNonAknwldg = "false";
 if (isset($_POST['qNonLgn'])) {
     $qNonLgn = cleanInputData($_POST['qNonLgn']);
 }
@@ -346,6 +346,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <img src="../cmn_images/reassign_users.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                     RE-ASSIGN SELECTED LINES
                                                 </button>
+                                                <button type="button" class="btn btn-default btn-sm" onclick="sendGeneralMessage2();">
+                                                    <img src="../cmn_images/Mail.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                    SEND MESSAGE
+                                                </button>
                                             </div>
                                             <div class="col-sm-2 form-group mb-0" style="padding:5px 1px 0px 1px !important;">
                                                 <?php
@@ -407,6 +411,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <th>...</th>
                                                         <th>...</th>
                                                         <th>...</th>
+                                                        <th>...</th>
                                                         <th>Subject</th>
                                                         <th>Source App</th>
                                                         <th>From</th>
@@ -461,6 +466,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <td class="lovtd mailbox-star">
                                                                 <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Request for Information" onclick="directInfoRqst('myInbxRow_<?php echo $cntr; ?>');" style="padding:2px !important;" style="padding:2px !important;">
                                                                     <img src="../cmn_images/info.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                </button>
+                                                            </td>
+                                                            <td class="lovtd mailbox-star">
+                                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Reply to Message" onclick="sendGeneralMessage3('myInbxRow_<?php echo $cntr; ?>');" style="padding:2px !important;" style="padding:2px !important;">
+                                                                    <img src="../cmn_images/reply_Mail.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                 </button>
                                                             </td>
                                                             <?php if ($row[10] == "1") { ?>
@@ -1031,7 +1041,7 @@ function get_MyInbx($searchFor, $searchIn, $offset, $limit_size) {
       a.is_action_done mt, c.app_name mt, c.source_module mt, 
       CASE WHEN a.to_prsn_id<=0 THEN 'System Administrator' 
         ELSE prs.get_prsn_name(a.to_prsn_id) || ' (' || prs.get_prsn_loc_id(a.to_prsn_id) || ')' 
-        END \"to\", b.msg_typ message_type, prs.get_prsn_loc_id(a.from_prsn_id) locid 
+        END \"to\", b.msg_typ message_type, prs.get_prsn_loc_id(a.from_prsn_id) locid, a.from_prsn_id, a.to_prsn_id 
   FROM wkf.wkf_actual_msgs_routng a, wkf.wkf_actual_msgs_hdr b, wkf.wkf_apps c
 WHERE ((c.app_id=b.app_id) AND (a.msg_id=b.msg_id)" . $extrWhr . $wherecls .
             ") ORDER BY a.date_sent DESC LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);

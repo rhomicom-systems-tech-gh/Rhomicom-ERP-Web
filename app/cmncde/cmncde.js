@@ -1,6 +1,6 @@
 var tableSg1;
 
-function getCstmrSpplrForm(pKeyID, pKeyTitle, actionTxt, callBackFunc, pKeyElmntID) {
+function getCstmrSpplrForm(pKeyID,pKeyTitle,actionTxt,callBackFunc,pKeyElmntID) {
     if (typeof callBackFunc === 'undefined' || callBackFunc === null) {
         callBackFunc = function () {
             var tstabcd = 1;
@@ -13,7 +13,7 @@ function getCstmrSpplrForm(pKeyID, pKeyTitle, actionTxt, callBackFunc, pKeyElmnt
         pKeyID = typeof $("#" + pKeyElmntID).val() === 'undefined' ? '-1' : $("#" + pKeyElmntID).val();
     }
     var lnkArgs = 'grp=6&typ=1&pg=13&vtyp=1&sbmtdCstmrSpplrID=' + pKeyID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalLx', actionTxt, pKeyTitle, 'myFormsModalLxTitle', 'myFormsModalLxBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalLx',actionTxt,pKeyTitle,'myFormsModalLxTitle','myFormsModalLxBody',function () {
         $('#vaultCstmrStpForm').submit(function (e) {
             e.preventDefault();
             return false;
@@ -55,7 +55,7 @@ function getCstmrSpplrForm(pKeyID, pKeyTitle, actionTxt, callBackFunc, pKeyElmnt
         });
         $('#allOtherInputData99').val(0);
         $('#myFormsModalLx').off('hidden.bs.modal');
-        $('#myFormsModalLx').one('hidden.bs.modal', function (e) {
+        $('#myFormsModalLx').one('hidden.bs.modal',function (e) {
             $('#myFormsModalLxTitle').html('');
             $('#myFormsModalLxBody').html('');
             callBackFunc();
@@ -67,18 +67,18 @@ function getCstmrSpplrForm(pKeyID, pKeyTitle, actionTxt, callBackFunc, pKeyElmnt
 function afterCstmrLnkdPrsnSlct() {
     var cstmrSpplrLnkdPrsnID = typeof $("#cstmrSpplrLnkdPrsnID").val() === 'undefined' ? '-1' : $("#cstmrSpplrLnkdPrsnID").val();
     var cstmrSpplrLnkdPrsn = typeof $("#cstmrSpplrLnkdPrsn").val() === 'undefined' ? '' : $("#cstmrSpplrLnkdPrsn").val();
-    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+    getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
         $body = $("body");
         $body.removeClass("mdlloadingDiag");
         $body.removeClass("mdlloading");
         var obj;
         var formData = new FormData();
-        formData.append('grp', 6);
-        formData.append('typ', 1);
-        formData.append('pg', 13);
-        formData.append('q', 'VIEW');
-        formData.append('vtyp', 5);
-        formData.append('cstmrSpplrLnkdPrsnID', cstmrSpplrLnkdPrsnID);
+        formData.append('grp',6);
+        formData.append('typ',1);
+        formData.append('pg',13);
+        formData.append('q','VIEW');
+        formData.append('vtyp',5);
+        formData.append('cstmrSpplrLnkdPrsnID',cstmrSpplrLnkdPrsnID);
         $.ajax({
             url: 'index.php',
             method: 'POST',
@@ -96,7 +96,7 @@ function afterCstmrLnkdPrsnSlct() {
                     $("#cstmrSpplrDesc").val(cstmrSpplrLnkdPrsn);
                 }
             },
-            error: function (jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR,textStatus,errorThrown) {
                 console.warn(jqXHR.responseText);
             }
         });
@@ -142,11 +142,11 @@ function saveCstmrsForm() {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Customer/Supplier Date Established cannot be empty!</span></p>';
     }
-    if (Number(cstmrLbltyAcntID.replace(/[^-?0-9\.]/g, '')) <= 0) {
+    if (Number(cstmrLbltyAcntID.replace(/[^-?0-9\.]/g,'')) <= 0) {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Customer/Supplier Liability Account cannot be empty!</span></p>';
     }
-    if (Number(cstmrRcvblsAcntID.replace(/[^-?0-9\.]/g, '')) <= 0) {
+    if (Number(cstmrRcvblsAcntID.replace(/[^-?0-9\.]/g,'')) <= 0) {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Customer/Supplier Receivables Account cannot be empty!</span></p>';
     }
@@ -160,7 +160,7 @@ function saveCstmrsForm() {
     }
     var cstmrListOfSrvcs = "";
     var isVld = true;
-    $('#oneCstmrSrvcsTable').find('tr').each(function (i, el) {
+    $('#oneCstmrSrvcsTable').find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -181,7 +181,7 @@ function saveCstmrsForm() {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Please fix all Line Errors!</span></p>';
     }
-    if (rhotrim(errMsg, '; ') !== '') {
+    if (rhotrim(errMsg,'; ') !== '') {
         bootbox.alert({
             title: 'System Alert!',
             /*size: 'small',*/
@@ -197,41 +197,41 @@ function saveCstmrsForm() {
         callback: function () {
             if (shdClose > 0) {
                 /*$('#myFormsModalNrml').modal('hide');*/
-                getCstmrSpplrForm(sbmtdCstmrSpplrID, 'Create/Edit Supplier', 'ReloadDialog');
+                getCstmrSpplrForm(sbmtdCstmrSpplrID,'Create/Edit Supplier','ReloadDialog');
             }
         }
     });
     var formData = new FormData();
-    formData.append('daCstmrPicture', $('#daCstmrPicture')[0].files[0]);
-    formData.append('grp', 6);
-    formData.append('typ', 1);
-    formData.append('pg', 13);
-    formData.append('q', 'UPDATE');
-    formData.append('actyp', 1);
-    formData.append('sbmtdCstmrSpplrID', sbmtdCstmrSpplrID);
-    formData.append('cstmrSpplrNm', cstmrSpplrNm);
-    formData.append('cstmrSpplrDesc', cstmrSpplrDesc);
-    formData.append('cstmrSpplrType', cstmrSpplrType);
-    formData.append('cstmrSpplrClsfctn', cstmrSpplrClsfctn);
-    formData.append('cstmrSpplrLnkdPrsnID', cstmrSpplrLnkdPrsnID);
-    formData.append('cstmrSpplrGender', cstmrSpplrGender);
-    formData.append('cstmrSpplrDOB', cstmrSpplrDOB);
-    formData.append('isCstmrEnbld', isCstmrEnbld);
-    formData.append('cstmrLbltyAcntID', cstmrLbltyAcntID);
-    formData.append('cstmrRcvblsAcntID', cstmrRcvblsAcntID);
-    formData.append('cstmrCmpnyBrandNm', cstmrCmpnyBrandNm);
-    formData.append('cstmrOrgType', cstmrOrgType);
-    formData.append('cstmrRegNum', cstmrRegNum);
-    formData.append('cstmrDateIncprtd', cstmrDateIncprtd);
-    formData.append('cstmrIncprtnType', cstmrIncprtnType);
-    formData.append('cstmrVatNumber', cstmrVatNumber);
-    formData.append('cstmrTinNumber', cstmrTinNumber);
-    formData.append('cstmrSsnitRegNum', cstmrSsnitRegNum);
-    formData.append('cstmrNumEmployees', cstmrNumEmployees);
-    formData.append('cstmrDescSrvcs', cstmrDescSrvcs);
-    formData.append('cstmrListOfSrvcs', cstmrListOfSrvcs);
+    formData.append('daCstmrPicture',$('#daCstmrPicture')[0].files[0]);
+    formData.append('grp',6);
+    formData.append('typ',1);
+    formData.append('pg',13);
+    formData.append('q','UPDATE');
+    formData.append('actyp',1);
+    formData.append('sbmtdCstmrSpplrID',sbmtdCstmrSpplrID);
+    formData.append('cstmrSpplrNm',cstmrSpplrNm);
+    formData.append('cstmrSpplrDesc',cstmrSpplrDesc);
+    formData.append('cstmrSpplrType',cstmrSpplrType);
+    formData.append('cstmrSpplrClsfctn',cstmrSpplrClsfctn);
+    formData.append('cstmrSpplrLnkdPrsnID',cstmrSpplrLnkdPrsnID);
+    formData.append('cstmrSpplrGender',cstmrSpplrGender);
+    formData.append('cstmrSpplrDOB',cstmrSpplrDOB);
+    formData.append('isCstmrEnbld',isCstmrEnbld);
+    formData.append('cstmrLbltyAcntID',cstmrLbltyAcntID);
+    formData.append('cstmrRcvblsAcntID',cstmrRcvblsAcntID);
+    formData.append('cstmrCmpnyBrandNm',cstmrCmpnyBrandNm);
+    formData.append('cstmrOrgType',cstmrOrgType);
+    formData.append('cstmrRegNum',cstmrRegNum);
+    formData.append('cstmrDateIncprtd',cstmrDateIncprtd);
+    formData.append('cstmrIncprtnType',cstmrIncprtnType);
+    formData.append('cstmrVatNumber',cstmrVatNumber);
+    formData.append('cstmrTinNumber',cstmrTinNumber);
+    formData.append('cstmrSsnitRegNum',cstmrSsnitRegNum);
+    formData.append('cstmrNumEmployees',cstmrNumEmployees);
+    formData.append('cstmrDescSrvcs',cstmrDescSrvcs);
+    formData.append('cstmrListOfSrvcs',cstmrListOfSrvcs);
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -249,7 +249,7 @@ function saveCstmrsForm() {
                         sbmtdCstmrSpplrID = result.cstmrid;
                     }
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     console.log(textStatus + " " + errorThrown);
                     console.warn(jqXHR.responseText);
                 }
@@ -258,12 +258,12 @@ function saveCstmrsForm() {
     });
 }
 
-function getOneCstmrSitesForm(pKeyID, actionTxt) {
+function getOneCstmrSitesForm(pKeyID,actionTxt) {
     if (typeof actionTxt === 'undefined' || actionTxt === null) {
         actionTxt = 'ShowDialog';
     }
     var lnkArgs = 'grp=6&typ=1&pg=13&vtyp=2&srcMenu=VMS&sbmtdSiteID=' + pKeyID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModaln', actionTxt, 'Site (ID:' + pKeyID + ')', 'myFormsModalnTitle', 'myFormsModalnBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModaln',actionTxt,'Site (ID:' + pKeyID + ')','myFormsModalnTitle','myFormsModalnBody',function () {
         $('#cstmrSiteForm').submit(function (e) {
             e.preventDefault();
             return false;
@@ -283,7 +283,7 @@ function getOneCstmrSitesForm(pKeyID, actionTxt) {
             forceParse: true
         });
         $('#myFormsModalNrml').off('hidden.bs.modal');
-        $('#myFormsModalNrml').one('hidden.bs.modal', function (e) {
+        $('#myFormsModalNrml').one('hidden.bs.modal',function (e) {
             $('#myFormsModalNrmlTitle').html('');
             $('#myFormsModalNrmlBody').html('');
             $(e.currentTarget).unbind();
@@ -325,11 +325,11 @@ function saveCstmrSitesForm() {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Contact Person cannot be empty!</span></p>';
     }
-    if (Number(sbmtdCstmrSpplrID.replace(/[^-?0-9\.]/g, '')) <= 0) {
+    if (Number(sbmtdCstmrSpplrID.replace(/[^-?0-9\.]/g,'')) <= 0) {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Linked Customer/Supplier cannot be empty!</span></p>';
     }
-    if (rhotrim(errMsg, '; ') !== '') {
+    if (rhotrim(errMsg,'; ') !== '') {
         bootbox.alert({
             title: 'System Alert!',
             /*size: 'small',*/
@@ -345,42 +345,42 @@ function saveCstmrSitesForm() {
         callback: function () {
             if (shdClose > 0) {
                 /*$('#myFormsModalNrml').modal('hide');*/
-                getOneCstmrSitesForm(sbmtdSiteID, 'ReloadDialog');
+                getOneCstmrSitesForm(sbmtdSiteID,'ReloadDialog');
             }
         }
     });
     var formData = new FormData();
-    formData.append('grp', 6);
-    formData.append('typ', 1);
-    formData.append('pg', 13);
-    formData.append('q', 'UPDATE');
-    formData.append('actyp', 2);
-    formData.append('sbmtdCstmrSpplrID', sbmtdCstmrSpplrID);
-    formData.append('sbmtdSiteID', sbmtdSiteID);
-    formData.append('csSiteName', csSiteName);
-    formData.append('csSiteDesc', csSiteDesc);
-    formData.append('isCsSiteEnbld', isCsSiteEnbld);
-    formData.append('csSiteBllngAddress', csSiteBllngAddress);
-    formData.append('csSiteShpngAddress', csSiteShpngAddress);
-    formData.append('csSiteCntctPrsn', csSiteCntctPrsn);
-    formData.append('csSiteCntctNos', csSiteCntctNos);
-    formData.append('csSiteEmailAdrs', csSiteEmailAdrs);
-    formData.append('csSiteWthTxCodeID', csSiteWthTxCodeID);
-    formData.append('csSiteDscntCodeID', csSiteDscntCodeID);
-    formData.append('csSiteCountry', csSiteCountry);
-    formData.append('csSiteIDType', csSiteIDType);
-    formData.append('csSiteIDNum', csSiteIDNum);
-    formData.append('csSiteDateIsd', csSiteDateIsd);
-    formData.append('csSiteExpryDate', csSiteExpryDate);
-    formData.append('csSiteOtherInfo', csSiteOtherInfo);
-    formData.append('csSiteBankNm', csSiteBankNm);
-    formData.append('csSiteBrnchNm', csSiteBrnchNm);
-    formData.append('csSiteAcntNum', csSiteAcntNum);
-    formData.append('csSiteCrncy', csSiteCrncy);
-    formData.append('csSiteSwftCode', csSiteSwftCode);
-    formData.append('csSiteIbanCode', csSiteIbanCode);
+    formData.append('grp',6);
+    formData.append('typ',1);
+    formData.append('pg',13);
+    formData.append('q','UPDATE');
+    formData.append('actyp',2);
+    formData.append('sbmtdCstmrSpplrID',sbmtdCstmrSpplrID);
+    formData.append('sbmtdSiteID',sbmtdSiteID);
+    formData.append('csSiteName',csSiteName);
+    formData.append('csSiteDesc',csSiteDesc);
+    formData.append('isCsSiteEnbld',isCsSiteEnbld);
+    formData.append('csSiteBllngAddress',csSiteBllngAddress);
+    formData.append('csSiteShpngAddress',csSiteShpngAddress);
+    formData.append('csSiteCntctPrsn',csSiteCntctPrsn);
+    formData.append('csSiteCntctNos',csSiteCntctNos);
+    formData.append('csSiteEmailAdrs',csSiteEmailAdrs);
+    formData.append('csSiteWthTxCodeID',csSiteWthTxCodeID);
+    formData.append('csSiteDscntCodeID',csSiteDscntCodeID);
+    formData.append('csSiteCountry',csSiteCountry);
+    formData.append('csSiteIDType',csSiteIDType);
+    formData.append('csSiteIDNum',csSiteIDNum);
+    formData.append('csSiteDateIsd',csSiteDateIsd);
+    formData.append('csSiteExpryDate',csSiteExpryDate);
+    formData.append('csSiteOtherInfo',csSiteOtherInfo);
+    formData.append('csSiteBankNm',csSiteBankNm);
+    formData.append('csSiteBrnchNm',csSiteBrnchNm);
+    formData.append('csSiteAcntNum',csSiteAcntNum);
+    formData.append('csSiteCrncy',csSiteCrncy);
+    formData.append('csSiteSwftCode',csSiteSwftCode);
+    formData.append('csSiteIbanCode',csSiteIbanCode);
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -398,7 +398,7 @@ function saveCstmrSitesForm() {
                         sbmtdSiteID = result.cstmrsiteid;
                     }
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     console.log(textStatus + " " + errorThrown);
                     console.warn(jqXHR.responseText);
                 }
@@ -440,12 +440,12 @@ function delCstmrs(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Trade Partner...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -466,9 +466,9 @@ function delCstmrs(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -477,7 +477,7 @@ function delCstmrs(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -518,12 +518,12 @@ function delCstmrsSites(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Site...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -544,9 +544,9 @@ function delCstmrsSites(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -555,7 +555,7 @@ function delCstmrsSites(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -595,14 +595,14 @@ function delCstmrsSrvcOffrd(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Service...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     setTimeout(function () {
                         $("#" + rowIDAttrb).remove();
                         dialog1.find('.bootbox-body').html('Row Removed Successfully!<br/><span style="font-weight:bold;font-style:italic;color:red;">NB: You must click on SAVE for CHANGES to take EFFECT!</span>');
-                    }, 500);
+                    },500);
                     $('#allOtherInputData99').val(0);
                 });
             }
@@ -610,9 +610,9 @@ function delCstmrsSrvcOffrd(rowIDAttrb) {
     });
 }
 
-function getOneCstmrsDocsForm(pKeyID, vwtype) {
+function getOneCstmrsDocsForm(pKeyID,vwtype) {
     var lnkArgs = 'grp=6&typ=1&pg=13&vtyp=' + vwtype + '&sbmtdAccbCstmrsID=' + pKeyID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModaly', 'ShowDialog', 'Trade Partner\'s Attached Documents', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModaly','ShowDialog','Trade Partner\'s Attached Documents','myFormsModalyTitle','myFormsModalyBody',function () {
         var table1 = $('#attchdCstmrsDocsTable').DataTable({
             "paging": false,
             "ordering": false,
@@ -629,7 +629,7 @@ function getOneCstmrsDocsForm(pKeyID, vwtype) {
     });
 }
 
-function uploadFileToCstmrsDocs(inptElmntID, attchIDElmntID, docNmElmntID, sbmtdHdrID, rowIDAttrb) {
+function uploadFileToCstmrsDocs(inptElmntID,attchIDElmntID,docNmElmntID,sbmtdHdrID,rowIDAttrb) {
     var docCtrgrName = $('#' + docNmElmntID).val();
     var errMsg = "";
     if (docCtrgrName.trim() === '') {
@@ -640,7 +640,7 @@ function uploadFileToCstmrsDocs(inptElmntID, attchIDElmntID, docNmElmntID, sbmtd
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Attachments must be done on a saved Document/Transaction!</span></p>';
     }
-    if (rhotrim(errMsg, '; ') !== '') {
+    if (rhotrim(errMsg,'; ') !== '') {
         bootbox.alert({
             title: 'System Alert!',
             size: 'small',
@@ -653,14 +653,14 @@ function uploadFileToCstmrsDocs(inptElmntID, attchIDElmntID, docNmElmntID, sbmtd
     $("#" + inptElmntID).change(function () {
         var fileName = $(this).val();
         var input = document.getElementById(inptElmntID);
-        sendFileToCstmrsDocs(input.files[0], docNmElmntID, attchIDElmntID, sbmtdHdrID, function (data) {
+        sendFileToCstmrsDocs(input.files[0],docNmElmntID,attchIDElmntID,sbmtdHdrID,function (data) {
             $("#" + attchIDElmntID).val(data.attchID);
             var dialog = bootbox.alert({
                 title: 'Server Response!',
                 size: 'small',
                 message: '<div id="myInformation">' + data.message + '</div>',
                 callback: function () {
-                    if (data.message.indexOf("Success") !== -1) {}
+                    if (data.message.indexOf("Success") !== -1) { }
                 }
             });
         });
@@ -668,24 +668,24 @@ function uploadFileToCstmrsDocs(inptElmntID, attchIDElmntID, docNmElmntID, sbmtd
     performFileClick(inptElmntID);
 }
 
-function sendFileToCstmrsDocs(file, docNmElmntID, attchIDElmntID, sbmtdHdrID, callBackFunc) {
+function sendFileToCstmrsDocs(file,docNmElmntID,attchIDElmntID,sbmtdHdrID,callBackFunc) {
     var data1 = new FormData();
-    data1.append('daCstmrAttchmnt', file);
-    data1.append('grp', 6);
-    data1.append('typ', 1);
-    data1.append('pg', 13);
-    data1.append('q', 'UPDATE');
-    data1.append('actyp', 20);
-    data1.append('docCtrgrName', $('#' + docNmElmntID).val());
-    data1.append('attchmentID', $('#' + attchIDElmntID).val());
-    data1.append('sbmtdAccbCstmrsID', sbmtdHdrID);
+    data1.append('daCstmrAttchmnt',file);
+    data1.append('grp',6);
+    data1.append('typ',1);
+    data1.append('pg',13);
+    data1.append('q','UPDATE');
+    data1.append('actyp',20);
+    data1.append('docCtrgrName',$('#' + docNmElmntID).val());
+    data1.append('attchmentID',$('#' + attchIDElmntID).val());
+    data1.append('sbmtdAccbCstmrsID',sbmtdHdrID);
     var dialog1 = bootbox.alert({
         title: 'Uploading File...',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Uploading File...Please Wait...</p>'
     });
     dialog1.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -700,7 +700,7 @@ function sendFileToCstmrsDocs(file, docNmElmntID, attchIDElmntID, sbmtdHdrID, ca
                     dialog1.modal('hide');
                     callBackFunc(data);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     console.log(textStatus + " " + errorThrown);
                     console.warn(jqXHR.responseText);
                 }
@@ -709,7 +709,7 @@ function sendFileToCstmrsDocs(file, docNmElmntID, attchIDElmntID, sbmtdHdrID, ca
     });
 }
 
-function getAttchdCstmrsDocs(actionText, slctr, linkArgs, actionDialog) {
+function getAttchdCstmrsDocs(actionText,slctr,linkArgs,actionDialog) {
     if (typeof actionDialog === 'undefined' || actionDialog === null) {
         actionDialog = 'ShowDialog';
     }
@@ -727,7 +727,7 @@ function getAttchdCstmrsDocs(actionText, slctr, linkArgs, actionDialog) {
         pageNo = parseInt(pageNo) - 1;
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    doAjaxWthCallBck(linkArgs, 'myFormsModaly', actionDialog, 'Petty Cash Attached Documents', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+    doAjaxWthCallBck(linkArgs,'myFormsModaly',actionDialog,'Petty Cash Attached Documents','myFormsModalyTitle','myFormsModalyBody',function () {
         if (!$.fn.DataTable.isDataTable('#attchdCstmrsDocsTable')) {
             var table1 = $('#attchdCstmrsDocsTable').DataTable({
                 "paging": false,
@@ -746,13 +746,13 @@ function getAttchdCstmrsDocs(actionText, slctr, linkArgs, actionDialog) {
     });
 }
 
-function enterKeyFuncAttchdCstmrsDocs(e, actionText, slctr, linkArgs, actionDialog) {
+function enterKeyFuncAttchdCstmrsDocs(e,actionText,slctr,linkArgs,actionDialog) {
     if (typeof actionDialog === 'undefined' || actionDialog === null) {
         actionDialog = 'ShowDialog';
     }
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getAttchdCstmrsDocs(actionText, slctr, linkArgs, actionDialog);
+        getAttchdCstmrsDocs(actionText,slctr,linkArgs,actionDialog);
     }
 }
 
@@ -787,12 +787,12 @@ function delAttchdCstmrsDoc(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Document...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -814,9 +814,9 @@ function delAttchdCstmrsDoc(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -825,7 +825,7 @@ function delAttchdCstmrsDoc(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -839,11 +839,11 @@ function getRecHstry(encdMsg) {
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Getting Record History...Please Wait...</p>',
         callback: function () {
-            $("body").css("padding-right", "0px");
+            $("body").css("padding-right","0px");
         }
     });
     dialog1.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -858,9 +858,9 @@ function getRecHstry(encdMsg) {
                 success: function (result1) {
                     setTimeout(function () {
                         dialog1.find('.bootbox-body').html(result1);
-                    }, 500);
+                    },500);
                 },
-                error: function (jqXHR1, textStatus1, errorThrown1) {
+                error: function (jqXHR1,textStatus1,errorThrown1) {
                     dialog1.find('.bootbox-body').html(errorThrown1);
                 }
             });
@@ -868,7 +868,7 @@ function getRecHstry(encdMsg) {
     });
 }
 
-function getSegmentValuesForm(pKeyID, pKeyTitle, actionTxt, callBackFunc) {
+function getSegmentValuesForm(pKeyID,pKeyTitle,actionTxt,callBackFunc) {
     if (typeof callBackFunc === 'undefined' || callBackFunc === null) {
         callBackFunc = function () {
             var tstabcd = 1;
@@ -878,7 +878,7 @@ function getSegmentValuesForm(pKeyID, pKeyTitle, actionTxt, callBackFunc) {
         actionTxt = 'ShowDialog';
     }
     var lnkArgs = 'grp=5&typ=1&pg=1&vtyp=9&sbmtdSegmentID=' + pKeyID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalLgY', actionTxt, pKeyTitle, 'myFormsModalLgYTitle', 'myFormsModalLgYBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalLgY',actionTxt,pKeyTitle,'myFormsModalLgYTitle','myFormsModalLgYBody',function () {
         $('.form_date').datetimepicker({
             format: "dd-M-yyyy",
             language: 'en',
@@ -919,9 +919,9 @@ function getSegmentValuesForm(pKeyID, pKeyTitle, actionTxt, callBackFunc) {
             return false;
         });
 
-        $('#allSgmntValsTable tbody').off('click', 'tr');
-        $('#allSgmntValsTable tbody').off('mouseenter', 'tr');
-        $('#allSgmntValsTable tbody').on('click', 'tr', function () {
+        $('#allSgmntValsTable tbody').off('click','tr');
+        $('#allSgmntValsTable tbody').off('mouseenter','tr');
+        $('#allSgmntValsTable tbody').on('click','tr',function () {
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
 
@@ -932,11 +932,11 @@ function getSegmentValuesForm(pKeyID, pKeyTitle, actionTxt, callBackFunc) {
             }
             var rndmNum = $(this).attr('id').split("_")[1];
             var segValID = typeof $('#allSgmntValsRow' + rndmNum + '_SgmntValID').val() === 'undefined' ? -1 : $('#allSgmntValsRow' + rndmNum + '_SgmntValID').val();
-            getOneSgmntValForm(segValID, 11);
+            getOneSgmntValForm(segValID,11);
         });
 
         $('#allSgmntValsTable tbody')
-            .on('mouseenter', 'tr', function () {
+            .on('mouseenter','tr',function () {
                 if ($(this).hasClass('highlight')) {
                     $(this).removeClass('highlight');
                 } else {
@@ -946,7 +946,7 @@ function getSegmentValuesForm(pKeyID, pKeyTitle, actionTxt, callBackFunc) {
             });
 
         $('#myFormsModalLgY').off('hidden.bs.modal');
-        $('#myFormsModalLgY').one('hidden.bs.modal', function (e) {
+        $('#myFormsModalLgY').one('hidden.bs.modal',function (e) {
             $('#myFormsModalLgYTitle').html('');
             $('#myFormsModalLgYBody').html('');
             callBackFunc();
@@ -955,7 +955,7 @@ function getSegmentValuesForm(pKeyID, pKeyTitle, actionTxt, callBackFunc) {
     });
 }
 
-function getOneSgmntValForm(sbmtdSegValID, vwtype, sbmtdSegmentID, callBackFunc) {
+function getOneSgmntValForm(sbmtdSegValID,vwtype,sbmtdSegmentID,callBackFunc) {
     if (typeof sbmtdSegmentID === 'undefined' || callBackFunc === null) {
         sbmtdSegmentID = -1;
     }
@@ -965,7 +965,7 @@ function getOneSgmntValForm(sbmtdSegValID, vwtype, sbmtdSegmentID, callBackFunc)
         };
     }
     var lnkArgs = 'grp=5&typ=1&pg=1&vtyp=' + vwtype + '&sbmtdSegValID=' + sbmtdSegValID + '&sbmtdSegmentID=' + sbmtdSegmentID;
-    doAjaxWthCallBck(lnkArgs, 'sgmntValsDetailInfo', 'PasteDirect', '', '', '', function () {
+    doAjaxWthCallBck(lnkArgs,'sgmntValsDetailInfo','PasteDirect','','','',function () {
         $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip();
 
@@ -1007,10 +1007,10 @@ function getOneSgmntValForm(sbmtdSegValID, vwtype, sbmtdSegmentID, callBackFunc)
                 e.preventDefault();
                 return false;
             });
-            $('#allSgmntValsTable tbody').off('click', 'tr');
-            $('#allSgmntValsTable tbody').off('mouseenter', 'tr');
+            $('#allSgmntValsTable tbody').off('click','tr');
+            $('#allSgmntValsTable tbody').off('mouseenter','tr');
 
-            $('#allSgmntValsTable tbody').on('click', 'tr', function () {
+            $('#allSgmntValsTable tbody').on('click','tr',function () {
                 if ($(this).hasClass('selected')) {
                     $(this).removeClass('selected');
 
@@ -1021,10 +1021,10 @@ function getOneSgmntValForm(sbmtdSegValID, vwtype, sbmtdSegmentID, callBackFunc)
                 }
                 var rndmNum = $(this).attr('id').split("_")[1];
                 var segValID = typeof $('#allSgmntValsRow' + rndmNum + '_SgmntValID').val() === 'undefined' ? -1 : $('#allSgmntValsRow' + rndmNum + '_SgmntValID').val();
-                getOneSgmntValForm(segValID, 11);
+                getOneSgmntValForm(segValID,11);
             });
             $('#allSgmntValsTable tbody')
-                .on('mouseenter', 'tr', function () {
+                .on('mouseenter','tr',function () {
                     if ($(this).hasClass('highlight')) {
                         $(this).removeClass('highlight');
                     } else {
@@ -1034,7 +1034,7 @@ function getOneSgmntValForm(sbmtdSegValID, vwtype, sbmtdSegmentID, callBackFunc)
                 });
 
             $('#myFormsModalLgY').off('hidden.bs.modal');
-            $('#myFormsModalLgY').one('hidden.bs.modal', function (e) {
+            $('#myFormsModalLgY').one('hidden.bs.modal',function (e) {
                 $('#myFormsModalLgYTitle').html('');
                 $('#myFormsModalLgYBody').html('');
                 callBackFunc();
@@ -1104,7 +1104,7 @@ function saveSgmntValForm() {
     var slctdSegmentClsfctns = "";
     var isVld = true;
     var errMsg = "";
-    $('#allSgmntClsfctnsTable').find('tr').each(function (i, el) {
+    $('#allSgmntClsfctnsTable').find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -1118,14 +1118,14 @@ function saveSgmntValForm() {
                 } else {
                     $('#allSgmntClsfctnsRow' + rndmNum + '_MajClsfctn').removeClass('rho-error');
                     $('#allSgmntClsfctnsRow' + rndmNum + '_MinClsfctn').removeClass('rho-error');
-                    slctdSegmentClsfctns = slctdSegmentClsfctns + $('#allSgmntClsfctnsRow' + rndmNum + '_ClsfctnID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#allSgmntClsfctnsRow' + rndmNum + '_MajClsfctn').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#allSgmntClsfctnsRow' + rndmNum + '_MinClsfctn').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                    slctdSegmentClsfctns = slctdSegmentClsfctns + $('#allSgmntClsfctnsRow' + rndmNum + '_ClsfctnID').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#allSgmntClsfctnsRow' + rndmNum + '_MajClsfctn').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#allSgmntClsfctnsRow' + rndmNum + '_MinClsfctn').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "|";
                 }
             }
         }
     });
-    if (rhotrim(errMsg, '; ') !== '') {
+    if (rhotrim(errMsg,'; ') !== '') {
         bootbox.alert({
             title: 'System Alert!',
             /*size: 'small',*/
@@ -1137,50 +1137,50 @@ function saveSgmntValForm() {
         title: 'Save Segment Values',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Segment Values...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
-    formData.append('grp', 5);
-    formData.append('typ', 1);
-    formData.append('pg', 1);
-    formData.append('q', 'UPDATE');
-    formData.append('actyp', 8);
-    formData.append('sgValOrgDetOrgID', sgValOrgDetOrgID);
-    formData.append('segmentValueID', segmentValueID);
-    formData.append('sbmtdSegmentID', sbmtdSegmentID);
-    formData.append('segmentValue', segmentValue);
-    formData.append('segmentValueDesc', segmentValueDesc);
+    formData.append('grp',5);
+    formData.append('typ',1);
+    formData.append('pg',1);
+    formData.append('q','UPDATE');
+    formData.append('actyp',8);
+    formData.append('sgValOrgDetOrgID',sgValOrgDetOrgID);
+    formData.append('segmentValueID',segmentValueID);
+    formData.append('sbmtdSegmentID',sbmtdSegmentID);
+    formData.append('segmentValue',segmentValue);
+    formData.append('segmentValueDesc',segmentValueDesc);
 
-    formData.append('dpndntSegmentID', dpndntSegmentID);
-    formData.append('sbmtdSegmentClsfctn', sbmtdSegmentClsfctn);
-    formData.append('prntSegmentValueID', prntSegmentValueID);
-    formData.append('prntSegmentValue', prntSegmentValue);
-    formData.append('prntSegmentValueID', prntSegmentValueID);
-    formData.append('dpndntSegmentValueID', dpndntSegmentValueID);
-    formData.append('dpndntSegmentValue', dpndntSegmentValue);
-    formData.append('sgValLnkdSiteLocID', sgValLnkdSiteLocID);
-    formData.append('sgValLnkdSiteLoc', sgValLnkdSiteLoc);
-    formData.append('sgValAllwdGrpType', sgValAllwdGrpType);
-    formData.append('sgValAllwdGrpID', sgValAllwdGrpID);
-    formData.append('sgValAllwdGrpValue', sgValAllwdGrpValue);
-    formData.append('sgValIsEnabled', sgValIsEnabled);
-    formData.append('sgValCmbntnsAllwd', sgValCmbntnsAllwd);
-    formData.append('sgValIsPrntAcnt', sgValIsPrntAcnt);
-    formData.append('sgValIsContraAcnt', sgValIsContraAcnt);
+    formData.append('dpndntSegmentID',dpndntSegmentID);
+    formData.append('sbmtdSegmentClsfctn',sbmtdSegmentClsfctn);
+    formData.append('prntSegmentValueID',prntSegmentValueID);
+    formData.append('prntSegmentValue',prntSegmentValue);
+    formData.append('prntSegmentValueID',prntSegmentValueID);
+    formData.append('dpndntSegmentValueID',dpndntSegmentValueID);
+    formData.append('dpndntSegmentValue',dpndntSegmentValue);
+    formData.append('sgValLnkdSiteLocID',sgValLnkdSiteLocID);
+    formData.append('sgValLnkdSiteLoc',sgValLnkdSiteLoc);
+    formData.append('sgValAllwdGrpType',sgValAllwdGrpType);
+    formData.append('sgValAllwdGrpID',sgValAllwdGrpID);
+    formData.append('sgValAllwdGrpValue',sgValAllwdGrpValue);
+    formData.append('sgValIsEnabled',sgValIsEnabled);
+    formData.append('sgValCmbntnsAllwd',sgValCmbntnsAllwd);
+    formData.append('sgValIsPrntAcnt',sgValIsPrntAcnt);
+    formData.append('sgValIsContraAcnt',sgValIsContraAcnt);
 
-    formData.append('sgValIsRetErngsAcnt', sgValIsRetErngsAcnt);
-    formData.append('sgValIsNetIncmAcnt', sgValIsNetIncmAcnt);
-    formData.append('sgValIsSuspnsAcnt', sgValIsSuspnsAcnt);
-    formData.append('sgValHsSubldgrAcnt', sgValHsSubldgrAcnt);
-    formData.append('sgValAcntType', sgValAcntType);
-    formData.append('sgValAcntClsfctn', sgValAcntClsfctn);
-    formData.append('sgValCtrlAcntID', sgValCtrlAcntID);
-    formData.append('sgValCtrlAcnt', sgValCtrlAcnt);
-    formData.append('sgValMppdAcntID', sgValMppdAcntID);
-    formData.append('sgValMppdAcnt', sgValMppdAcnt);
-    formData.append('slctdSegmentClsfctns', slctdSegmentClsfctns);
+    formData.append('sgValIsRetErngsAcnt',sgValIsRetErngsAcnt);
+    formData.append('sgValIsNetIncmAcnt',sgValIsNetIncmAcnt);
+    formData.append('sgValIsSuspnsAcnt',sgValIsSuspnsAcnt);
+    formData.append('sgValHsSubldgrAcnt',sgValHsSubldgrAcnt);
+    formData.append('sgValAcntType',sgValAcntType);
+    formData.append('sgValAcntClsfctn',sgValAcntClsfctn);
+    formData.append('sgValCtrlAcntID',sgValCtrlAcntID);
+    formData.append('sgValCtrlAcnt',sgValCtrlAcnt);
+    formData.append('sgValMppdAcntID',sgValMppdAcntID);
+    formData.append('sgValMppdAcnt',sgValMppdAcnt);
+    formData.append('slctdSegmentClsfctns',slctdSegmentClsfctns);
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -1195,11 +1195,11 @@ function saveSgmntValForm() {
                     setTimeout(function () {
                         dialog.find('.bootbox-body').html(data.message);
                         if (data.message.indexOf("Success") !== -1) {
-                            getAllSgmntVals('', '#myFormsModalLgYBody', 'grp=5&typ=1&pg=1&vtyp=9&sbmtdSegmentID=' + sbmtdSegmentID + '&segmentValue=' + segmentValue);
+                            getAllSgmntVals('','#myFormsModalLgYBody','grp=5&typ=1&pg=1&vtyp=9&sbmtdSegmentID=' + sbmtdSegmentID + '&segmentValue=' + segmentValue);
                         }
-                    }, 500);
+                    },500);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     console.log(textStatus + " " + errorThrown);
                     console.warn(jqXHR.responseText);
                 }
@@ -1208,7 +1208,7 @@ function saveSgmntValForm() {
     });
 }
 
-function getAllSgmntVals(actionText, slctr, linkArgs) {
+function getAllSgmntVals(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#allSgmntValsSrchFor").val() === 'undefined' ? '%' : $("#allSgmntValsSrchFor").val();
     var srchIn = typeof $("#allSgmntValsSrchIn").val() === 'undefined' ? 'Both' : $("#allSgmntValsSrchIn").val();
     var pageNo = typeof $("#allSgmntValsPageNo").val() === 'undefined' ? 1 : $("#allSgmntValsPageNo").val();
@@ -1224,13 +1224,13 @@ function getAllSgmntVals(actionText, slctr, linkArgs) {
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn +
         "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function enterKeyFuncSgmntVals(e, actionText, slctr, linkArgs) {
+function enterKeyFuncSgmntVals(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getAllSgmntVals(actionText, slctr, linkArgs);
+        getAllSgmntVals(actionText,slctr,linkArgs);
     }
 }
 
@@ -1269,12 +1269,12 @@ function delSgmntVals(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting ' + msgPrt + '...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -1295,9 +1295,9 @@ function delSgmntVals(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -1306,7 +1306,7 @@ function delSgmntVals(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -1349,12 +1349,12 @@ function delSgValRptClsfctn(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting ' + msgPrt + '...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -1375,9 +1375,9 @@ function delSgValRptClsfctn(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -1386,7 +1386,7 @@ function delSgValRptClsfctn(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -1394,7 +1394,7 @@ function delSgValRptClsfctn(rowIDAttrb) {
     });
 }
 
-function getAccountsDetForm(pKeyID, pKeyTitle, actionTxt, callBackFunc) {
+function getAccountsDetForm(pKeyID,pKeyTitle,actionTxt,callBackFunc) {
     if (typeof callBackFunc === 'undefined' || callBackFunc === null) {
         callBackFunc = function () {
             var tstabcd = 1;
@@ -1404,7 +1404,7 @@ function getAccountsDetForm(pKeyID, pKeyTitle, actionTxt, callBackFunc) {
         actionTxt = 'ShowDialog';
     }
     var lnkArgs = 'grp=6&typ=1&pg=1&vtyp=1&sbmtdAccountID=' + pKeyID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalLx', actionTxt, pKeyTitle, 'myFormsModalLxTitle', 'myFormsModalLxBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalLx',actionTxt,pKeyTitle,'myFormsModalLxTitle','myFormsModalLxBody',function () {
         $('.form_date').datetimepicker({
             format: "dd-M-yyyy",
             language: 'en',
@@ -1435,7 +1435,7 @@ function getAccountsDetForm(pKeyID, pKeyTitle, actionTxt, callBackFunc) {
         });
 
         $('#myFormsModalLx').off('hidden.bs.modal');
-        $('#myFormsModalLx').one('hidden.bs.modal', function (e) {
+        $('#myFormsModalLx').one('hidden.bs.modal',function (e) {
             $('#myFormsModalLxTitle').html('');
             $('#myFormsModalLxBody').html('');
             callBackFunc();
@@ -1479,12 +1479,12 @@ function delAcbRptClsfctn(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting ' + msgPrt + '...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -1505,9 +1505,9 @@ function delAcbRptClsfctn(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -1516,7 +1516,7 @@ function delAcbRptClsfctn(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -1524,7 +1524,7 @@ function delAcbRptClsfctn(rowIDAttrb) {
     });
 }
 
-function getAcntSgmtBrkdwnForm(pKeyID, vwtype, sgValElmntIDPrfx, accntNumElmntID, accntNameElmntID, actionTxt) {
+function getAcntSgmtBrkdwnForm(pKeyID,vwtype,sgValElmntIDPrfx,accntNumElmntID,accntNameElmntID,actionTxt) {
     if (typeof actionTxt === 'undefined' || actionTxt === null) {
         actionTxt = 'ShowDialog';
     }
@@ -1545,7 +1545,7 @@ function getAcntSgmtBrkdwnForm(pKeyID, vwtype, sgValElmntIDPrfx, accntNumElmntID
     var lnkArgs = 'grp=6&typ=1&pg=1&vtyp=' + vwtype + '&sbmtdAccountID=' + pKeyID +
         '&slctdSgmntValIDs=' + slctdSgmntValIDs + '&sgValElmntIDPrfx=' + sgValElmntIDPrfx +
         '&accntNumElmntID=' + accntNumElmntID + '&accntNameElmntID=' + accntNameElmntID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalx', actionTxt, 'Account Segments Breakdown', 'myFormsModalxTitle', 'myFormsModalxBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalx',actionTxt,'Account Segments Breakdown','myFormsModalxTitle','myFormsModalxBody',function () {
         if (!$.fn.DataTable.isDataTable('#accntSgmntsBrkDwnTable')) {
             var table1 = $('#accntSgmntsBrkDwnTable').DataTable({
                 "paging": false,
@@ -1560,10 +1560,10 @@ function getAcntSgmtBrkdwnForm(pKeyID, vwtype, sgValElmntIDPrfx, accntNumElmntID
     });
 }
 
-function applyNewAcntSgmtBrkdwn(modalID, sgValElmntIDPrfx, accntNumElmntID, accntNameElmntID) {
+function applyNewAcntSgmtBrkdwn(modalID,sgValElmntIDPrfx,accntNumElmntID,accntNameElmntID) {
     var slctdSgmntsAccntNum = "";
     var slctdSgmntsAccntName = "";
-    $('#accntSgmntsBrkDwnTable').find('tr').each(function (i, el) {
+    $('#accntSgmntsBrkDwnTable').find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -1575,7 +1575,7 @@ function applyNewAcntSgmtBrkdwn(modalID, sgValElmntIDPrfx, accntNumElmntID, accn
                 var sgmntValueID = typeof $('#accntSgmntsBrkDwn' + rndmNum + '_SegValID').val() === 'undefined' ? -1 : $('#accntSgmntsBrkDwn' + rndmNum + '_SegValID').val();
 
                 $("#" + sgValElmntIDPrfx + '' + sgmntNumber + "ValID").val(sgmntValueID);
-                if (sgmntValue.trim() === '' && sgmntValueDesc.trim() === '') {} else {
+                if (sgmntValue.trim() === '' && sgmntValueDesc.trim() === '') { } else {
                     slctdSgmntsAccntNum = slctdSgmntsAccntNum + '' + sgmntValue;
                     slctdSgmntsAccntName = slctdSgmntsAccntName + ' ' + sgmntValueDesc;
                 }
@@ -1646,7 +1646,7 @@ function saveAccountsDetForm() {
     var slctdAccntClsfctns = "";
     var isVld = true;
     var errMsg = "";
-    $('#acbRptClsfctnsTable').find('tr').each(function (i, el) {
+    $('#acbRptClsfctnsTable').find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -1660,15 +1660,15 @@ function saveAccountsDetForm() {
                 } else {
                     $('#acbRptClsfctnsRow' + rndmNum + '_MajClsfctn').removeClass('rho-error');
                     $('#acbRptClsfctnsRow' + rndmNum + '_MinClsfctn').removeClass('rho-error');
-                    slctdAccntClsfctns = slctdAccntClsfctns + $('#acbRptClsfctnsRow' + rndmNum + '_ClsfctnID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#acbRptClsfctnsRow' + rndmNum + '_MajClsfctn').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#acbRptClsfctnsRow' + rndmNum + '_MinClsfctn').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                    slctdAccntClsfctns = slctdAccntClsfctns + $('#acbRptClsfctnsRow' + rndmNum + '_ClsfctnID').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#acbRptClsfctnsRow' + rndmNum + '_MajClsfctn').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#acbRptClsfctnsRow' + rndmNum + '_MinClsfctn').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "|";
                 }
 
             }
         }
     });
-    if (rhotrim(errMsg, '; ') !== '') {
+    if (rhotrim(errMsg,'; ') !== '') {
         bootbox.alert({
             title: 'System Alert!',
             /*size: 'small',*/
@@ -1680,52 +1680,52 @@ function saveAccountsDetForm() {
         title: 'Save Account',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Account...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
-    formData.append('grp', 6);
-    formData.append('typ', 1);
-    formData.append('pg', 1);
-    formData.append('q', 'UPDATE');
-    formData.append('actyp', 1);
-    formData.append('sbmtdAccbGrpOrgID', sbmtdAccbGrpOrgID);
-    formData.append('sbmtdAccountID', sbmtdAccountID);
-    formData.append('acbAccountNum', acbAccountNum);
-    formData.append('acbAccountNumDesc', acbAccountNumDesc);
-    formData.append('acbPrntAccountNumID', acbPrntAccountNumID);
+    formData.append('grp',6);
+    formData.append('typ',1);
+    formData.append('pg',1);
+    formData.append('q','UPDATE');
+    formData.append('actyp',1);
+    formData.append('sbmtdAccbGrpOrgID',sbmtdAccbGrpOrgID);
+    formData.append('sbmtdAccountID',sbmtdAccountID);
+    formData.append('acbAccountNum',acbAccountNum);
+    formData.append('acbAccountNumDesc',acbAccountNumDesc);
+    formData.append('acbPrntAccountNumID',acbPrntAccountNumID);
 
-    formData.append('acbPrntAccountNum', acbPrntAccountNum);
-    formData.append('acbAcntIsEnabled', acbAcntIsEnabled);
-    formData.append('acbAcntIsPrntAcnt', acbAcntIsPrntAcnt);
-    formData.append('acbAcntIsContraAcnt', acbAcntIsContraAcnt);
-    formData.append('acbAcntIsRetErngsAcnt', acbAcntIsRetErngsAcnt);
-    formData.append('acbAcntIsNetIncmAcnt', acbAcntIsNetIncmAcnt);
-    formData.append('acbAcntIsSuspnsAcnt', acbAcntIsSuspnsAcnt);
-    formData.append('acbAcntHsSubldgrAcnt', acbAcntHsSubldgrAcnt);
-    formData.append('acbAcntAcntType', acbAcntAcntType);
-    formData.append('acbAcntAcntClsfctn', acbAcntAcntClsfctn);
-    formData.append('acbAcntCtrlAcntID', acbAcntCtrlAcntID);
-    formData.append('acbAcntCtrlAcnt', acbAcntCtrlAcnt);
-    formData.append('acbAcntMppdAcntID', acbAcntMppdAcntID);
-    formData.append('acbAcntMppdAcnt', acbAcntMppdAcnt);
+    formData.append('acbPrntAccountNum',acbPrntAccountNum);
+    formData.append('acbAcntIsEnabled',acbAcntIsEnabled);
+    formData.append('acbAcntIsPrntAcnt',acbAcntIsPrntAcnt);
+    formData.append('acbAcntIsContraAcnt',acbAcntIsContraAcnt);
+    formData.append('acbAcntIsRetErngsAcnt',acbAcntIsRetErngsAcnt);
+    formData.append('acbAcntIsNetIncmAcnt',acbAcntIsNetIncmAcnt);
+    formData.append('acbAcntIsSuspnsAcnt',acbAcntIsSuspnsAcnt);
+    formData.append('acbAcntHsSubldgrAcnt',acbAcntHsSubldgrAcnt);
+    formData.append('acbAcntAcntType',acbAcntAcntType);
+    formData.append('acbAcntAcntClsfctn',acbAcntAcntClsfctn);
+    formData.append('acbAcntCtrlAcntID',acbAcntCtrlAcntID);
+    formData.append('acbAcntCtrlAcnt',acbAcntCtrlAcnt);
+    formData.append('acbAcntMppdAcntID',acbAcntMppdAcntID);
+    formData.append('acbAcntMppdAcnt',acbAcntMppdAcnt);
 
-    formData.append('acbAcntCurncyID', acbAcntCurncyID);
-    formData.append('acbAcntCurncy', acbAcntCurncy);
+    formData.append('acbAcntCurncyID',acbAcntCurncyID);
+    formData.append('acbAcntCurncy',acbAcntCurncy);
 
-    formData.append('accntSgmnt1ValID', accntSgmnt1ValID);
-    formData.append('accntSgmnt2ValID', accntSgmnt2ValID);
-    formData.append('accntSgmnt3ValID', accntSgmnt3ValID);
-    formData.append('accntSgmnt4ValID', accntSgmnt4ValID);
-    formData.append('accntSgmnt5ValID', accntSgmnt5ValID);
-    formData.append('accntSgmnt6ValID', accntSgmnt6ValID);
-    formData.append('accntSgmnt7ValID', accntSgmnt7ValID);
-    formData.append('accntSgmnt8ValID', accntSgmnt8ValID);
-    formData.append('accntSgmnt9ValID', accntSgmnt9ValID);
-    formData.append('accntSgmnt10ValID', accntSgmnt10ValID);
-    formData.append('slctdAccntClsfctns', slctdAccntClsfctns);
+    formData.append('accntSgmnt1ValID',accntSgmnt1ValID);
+    formData.append('accntSgmnt2ValID',accntSgmnt2ValID);
+    formData.append('accntSgmnt3ValID',accntSgmnt3ValID);
+    formData.append('accntSgmnt4ValID',accntSgmnt4ValID);
+    formData.append('accntSgmnt5ValID',accntSgmnt5ValID);
+    formData.append('accntSgmnt6ValID',accntSgmnt6ValID);
+    formData.append('accntSgmnt7ValID',accntSgmnt7ValID);
+    formData.append('accntSgmnt8ValID',accntSgmnt8ValID);
+    formData.append('accntSgmnt9ValID',accntSgmnt9ValID);
+    formData.append('accntSgmnt10ValID',accntSgmnt10ValID);
+    formData.append('slctdAccntClsfctns',slctdAccntClsfctns);
 
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -1741,14 +1741,14 @@ function saveAccountsDetForm() {
                         dialog.find('.bootbox-body').html(data.message);
                         if (data.message.indexOf("Success") !== -1) {
                             sbmtdAccountID = data.sbmtdAccountID;
-                            getAccountsDetForm(sbmtdAccountID, 'Accounts Detail Information', 'ReloadDialog',
+                            getAccountsDetForm(sbmtdAccountID,'Accounts Detail Information','ReloadDialog',
                                 function () {
-                                    getAccbAcntChrt('', '#allmodules', 'grp=6&typ=1&pg=1&vtyp=0');
+                                    getAccbAcntChrt('','#allmodules','grp=6&typ=1&pg=1&vtyp=0');
                                 });
                         }
-                    }, 500);
+                    },500);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     console.log(textStatus + " " + errorThrown);
                     console.warn(jqXHR.responseText);
                 }
@@ -1767,8 +1767,8 @@ function accbPymntsPayMthdChng() {
     }
 }
 
-function getOneAccbPayInvcForm(pKeyID, docType, actionTxt, pOrgnPayID, extraPKeyID, extraPKeyType,
-    dfltAmountTndrdFld, invcSrc, pCstmrSpplrElmtID, invCurElmntID, musAllwDues, srcCaller, extraInptParams) {
+function getOneAccbPayInvcForm(pKeyID,docType,actionTxt,pOrgnPayID,extraPKeyID,extraPKeyType,
+    dfltAmountTndrdFld,invcSrc,pCstmrSpplrElmtID,invCurElmntID,musAllwDues,srcCaller,extraInptParams) {
     if (typeof actionTxt === 'undefined' || actionTxt === null) {
         actionTxt = 'ShowDialog';
     }
@@ -1808,11 +1808,11 @@ function getOneAccbPayInvcForm(pKeyID, docType, actionTxt, pOrgnPayID, extraPKey
         srcCaller = 'SALES';
     }
     var lnkArgs = 'grp=6&typ=1&pg=12&vtyp=101&sbmtdDocumentID=' + pKeyID + '&sbmtdDocumentType=' + docType +
-        '&sbmtdAccbPymntsID=' + pOrgnPayID + '&dfltAmountTndrd=' + dfltAmountTndrd.replace(/[^-?0-9\.]/g, '') +
+        '&sbmtdAccbPymntsID=' + pOrgnPayID + '&dfltAmountTndrd=' + dfltAmountTndrd.replace(/[^-?0-9\.]/g,'') +
         '&accbPymntsInvcSpplrID=' + pCstmrSpplrID + '&accbPymntsInvcCur=' + invCurNm +
         '&sbmtdExtraPKeyID=' + extraPKeyID + '&sbmtdExtraPKeyType=' + extraPKeyType;
 
-    doAjaxWthCallBck(lnkArgs, 'myFormsModal', actionTxt, 'Pay Invoice (' + docType + ')', 'myFormsModalTitle', 'myFormsModalBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModal',actionTxt,'Pay Invoice (' + docType + ')','myFormsModalTitle','myFormsModalBody',function () {
         $('#accbPymntsPayInvcForm').submit(function (e) {
             e.preventDefault();
             return false;
@@ -1851,37 +1851,37 @@ function getOneAccbPayInvcForm(pKeyID, docType, actionTxt, pOrgnPayID, extraPKey
         $('#allOtherInputData99').val(0);
         accbPymntsPayMthdChng();
         $('#myFormsModal').off('hidden.bs.modal');
-        $('#myFormsModal').one('hidden.bs.modal', function (e) {
+        $('#myFormsModal').one('hidden.bs.modal',function (e) {
             $('#myFormsModalTitle').html('');
             $('#myFormsModalBody').html('');
             if (sbmtdAccbPymntsID > 0) {
                 if (docType === "Supplier Payments") {
-                    getOneAccbPymntsHstryForm(pKeyID, 103, 'ReloadDialog', pKeyID, 'Payable Invoice', 'Supplier Payments');
+                    getOneAccbPymntsHstryForm(pKeyID,103,'ReloadDialog',pKeyID,'Payable Invoice','Supplier Payments');
                 } else {
                     if (extraPKeyID > 0 && extraPKeyType === 'Sales Invoice') {
-                        getOneAccbPymntsHstryForm(pKeyID, 103, 'ReloadDialog', extraPKeyID, extraPKeyType, 'Customer Payments');
+                        getOneAccbPymntsHstryForm(pKeyID,103,'ReloadDialog',extraPKeyID,extraPKeyType,'Customer Payments');
                     } else {
-                        getOneAccbPymntsHstryForm(pKeyID, 103, 'ReloadDialog', pKeyID, 'Receivable Invoice', 'Customer Payments');
+                        getOneAccbPymntsHstryForm(pKeyID,103,'ReloadDialog',pKeyID,'Receivable Invoice','Customer Payments');
                     }
                 }
             } else if (docType === "Supplier Payments") {
-                getOneAccbPyblsInvcForm(pKeyID, 1, 'ReloadDialog');
+                getOneAccbPyblsInvcForm(pKeyID,1,'ReloadDialog');
             } else if (docType === "Customer Payments") {
                 if (srcCaller === 'QUICK_PAY') {
                     if (extraPKeyID > 0) {
-                        getOneScmSalesInvcForm(extraPKeyID, 3, 'ReloadDialog', extraPKeyType, musAllwDues, srcCaller);
+                        getOneScmSalesInvcForm(extraPKeyID,3,'ReloadDialog',extraPKeyType,musAllwDues,srcCaller);
                     }
                 } else {
                     if (invcSrc === 'QUICK_SALE') {
-                        getScmSalesInvc('', '#allmodules', 'grp=12&typ=1&pg=1&vtyp=1');
+                        getScmSalesInvc('','#allmodules','grp=12&typ=1&pg=1&vtyp=1');
                     } else {
                         if (extraPKeyID > 0 && extraPKeyType === 'Sales Invoice') {
-                            getOneScmSalesInvcForm(extraPKeyID, 3, 'ReloadDialog', extraPKeyType);
+                            getOneScmSalesInvcForm(extraPKeyID,3,'ReloadDialog',extraPKeyType);
                         } else if (extraPKeyID > 0 && extraPKeyType === 'Sales Invoice-Hospitality') {
                             var extraInptPrmArray = extraInptParams.split("|");
-                            getOneHotlChckinDocForm(extraPKeyID, 3, 'ReloadDialog', extraPKeyType, extraInptPrmArray[0], extraInptPrmArray[1], extraInptPrmArray[2], extraInptPrmArray[3], extraInptPrmArray[4]);
+                            getOneHotlChckinDocForm(extraPKeyID,3,'ReloadDialog',extraPKeyType,extraInptPrmArray[0],extraInptPrmArray[1],extraInptPrmArray[2],extraInptPrmArray[3],extraInptPrmArray[4]);
                         } else {
-                            getOneAccbRcvblsInvcForm(pKeyID, 1, 'ReloadDialog', '', extraPKeyID, extraPKeyType);
+                            getOneAccbRcvblsInvcForm(pKeyID,1,'ReloadDialog','',extraPKeyID,extraPKeyType);
                         }
                     }
                 }
@@ -1893,16 +1893,16 @@ function getOneAccbPayInvcForm(pKeyID, docType, actionTxt, pOrgnPayID, extraPKey
 
 function quickInvcPayAmntChng() {
     fmtAsNumber('accbPymntsGvnAmnt');
-    var accbPymntsGvnAmnt = typeof $("#accbPymntsGvnAmnt").val() === 'undefined' ? '0' : $("#accbPymntsGvnAmnt").val().replace(/[^-?0-9\.]/g, '');
-    var accbPymntsPaidAmnt = typeof $("#accbPymntsPaidAmnt").val() === 'undefined' ? '0' : $("#accbPymntsPaidAmnt").val().replace(/[^-?0-9\.]/g, '');
-    var accbPymntsChngBals = Number(accbPymntsPaidAmnt.replace(/[^-?0-9\.]/g, '')) - Number(accbPymntsGvnAmnt.replace(/[^-?0-9\.]/g, ''));
+    var accbPymntsGvnAmnt = typeof $("#accbPymntsGvnAmnt").val() === 'undefined' ? '0' : $("#accbPymntsGvnAmnt").val().replace(/[^-?0-9\.]/g,'');
+    var accbPymntsPaidAmnt = typeof $("#accbPymntsPaidAmnt").val() === 'undefined' ? '0' : $("#accbPymntsPaidAmnt").val().replace(/[^-?0-9\.]/g,'');
+    var accbPymntsChngBals = Number(accbPymntsPaidAmnt.replace(/[^-?0-9\.]/g,'')) - Number(accbPymntsGvnAmnt.replace(/[^-?0-9\.]/g,''));
     $("#accbPymntsChngBals").val(accbPymntsChngBals);
     if (accbPymntsChngBals <= 0) {
-        $('#accbPymntsChngBals').css('color', 'green');
-        $('#accbPymntsInvcCur3').css('color', 'green');
+        $('#accbPymntsChngBals').css('color','green');
+        $('#accbPymntsInvcCur3').css('color','green');
     } else {
-        $('#accbPymntsChngBals').css('color', 'red');
-        $('#accbPymntsInvcCur3').css('color', 'red');
+        $('#accbPymntsChngBals').css('color','red');
+        $('#accbPymntsInvcCur3').css('color','red');
     }
     fmtAsNumber('accbPymntsChngBals');
     $('#saveQuickInvPayBtn').focus();
@@ -1922,19 +1922,19 @@ function afterPrepayDocSlctnQckInvPay() {
     var accbPymntsPrepayDocIDs = typeof $("#accbPymntsPrepayDocID").val() === 'undefined' ? '-1' : $("#accbPymntsPrepayDocID").val();
     var accbPymntsPrepayDocLovNm = typeof $("#accbPymntsPrepayDocLovNm").val() === 'undefined' ? '' : $("#accbPymntsPrepayDocLovNm").val();
     if (accbPymntsPrepayDocIDs.trim() !== "-1") {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloadingDiag");
             $body.removeClass("mdlloading");
             var obj;
             var formData = new FormData();
-            formData.append('grp', 6);
-            formData.append('typ', 1);
-            formData.append('pg', 12);
-            formData.append('q', 'VIEW');
-            formData.append('vtyp', 102);
-            formData.append('accbPymntsPrepayDocIDs', accbPymntsPrepayDocIDs);
-            formData.append('accbPymntsPrepayDocLovNm', accbPymntsPrepayDocLovNm);
+            formData.append('grp',6);
+            formData.append('typ',1);
+            formData.append('pg',12);
+            formData.append('q','VIEW');
+            formData.append('vtyp',102);
+            formData.append('accbPymntsPrepayDocIDs',accbPymntsPrepayDocIDs);
+            formData.append('accbPymntsPrepayDocLovNm',accbPymntsPrepayDocLovNm);
             $.ajax({
                 url: 'index.php',
                 method: 'POST',
@@ -1950,7 +1950,7 @@ function afterPrepayDocSlctnQckInvPay() {
                         quickInvcPayAmntChng();
                     }
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     console.warn(jqXHR.responseText);
                 }
             });
@@ -1973,9 +1973,9 @@ function saveQuickInvPayForm() {
     var accbPymntsInvcSpplrID = typeof $("#accbPymntsInvcSpplrID").val() === 'undefined' ? -1 : $("#accbPymntsInvcSpplrID").val();
     var accbPymntsDesc = typeof $("#accbPymntsDesc").val() === 'undefined' ? '' : $("#accbPymntsDesc").val();
     var accbPymntsDfltTrnsDte = typeof $("#accbPymntsDfltTrnsDte").val() === 'undefined' ? '' : $("#accbPymntsDfltTrnsDte").val();
-    var accbPymntsGvnAmnt = typeof $("#accbPymntsGvnAmnt").val() === 'undefined' ? '0' : $("#accbPymntsGvnAmnt").val().replace(/[^-?0-9\.]/g, '');
-    var accbPymntsPaidAmnt = typeof $("#accbPymntsPaidAmnt").val() === 'undefined' ? '0' : $("#accbPymntsPaidAmnt").val().replace(/[^-?0-9\.]/g, '');
-    var accbPymntsChngBals = typeof $("#accbPymntsChngBals").val() === 'undefined' ? '0' : $("#accbPymntsChngBals").val().replace(/[^-?0-9\.]/g, '');
+    var accbPymntsGvnAmnt = typeof $("#accbPymntsGvnAmnt").val() === 'undefined' ? '0' : $("#accbPymntsGvnAmnt").val().replace(/[^-?0-9\.]/g,'');
+    var accbPymntsPaidAmnt = typeof $("#accbPymntsPaidAmnt").val() === 'undefined' ? '0' : $("#accbPymntsPaidAmnt").val().replace(/[^-?0-9\.]/g,'');
+    var accbPymntsChngBals = typeof $("#accbPymntsChngBals").val() === 'undefined' ? '0' : $("#accbPymntsChngBals").val().replace(/[^-?0-9\.]/g,'');
     fmtAsNumber('accbPymntsGvnAmnt').toFixed(2);
     fmtAsNumber('accbPymntsPaidAmnt').toFixed(2);
     fmtAsNumber('accbPymntsChngBals').toFixed(2);
@@ -1984,11 +1984,11 @@ function saveQuickInvPayForm() {
     var accbPymntsExpiryDate = typeof $("#accbPymntsExpiryDate").val() === 'undefined' ? '' : $("#accbPymntsExpiryDate").val();
     var accbPymntsSignCode = typeof $("#accbPymntsSignCode").val() === 'undefined' ? '' : $("#accbPymntsSignCode").val();
     var errMsg = "";
-    if (Number(accbPymntsPayMthdID.replace(/[^-?0-9\.]/g, '')) <= 0) {
+    if (Number(accbPymntsPayMthdID.replace(/[^-?0-9\.]/g,'')) <= 0) {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Payment Method cannot be empty!</span></p>';
     }
-    if (Number(accbPymntsGvnAmnt.replace(/[^-?0-9\.]/g, '')) === 0) {
+    if (Number(accbPymntsGvnAmnt.replace(/[^-?0-9\.]/g,'')) === 0) {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Amount Given cannot be empty!</span></p>';
     }
@@ -2005,7 +2005,7 @@ function saveQuickInvPayForm() {
             'font-weight:bold;color:red;">Cheque Name and Number cannot be empty for this Payment Method!</span></p>';
         $("#accbPymntsChqNumber").focus();
     }
-    if (rhotrim(errMsg, '; ') !== '') {
+    if (rhotrim(errMsg,'; ') !== '') {
         bootbox.alert({
             title: 'System Alert!',
             size: 'small',
@@ -2022,28 +2022,28 @@ function saveQuickInvPayForm() {
         }
     });
     var formData = new FormData();
-    formData.append('grp', 6);
-    formData.append('typ', 1);
-    formData.append('pg', 12);
-    formData.append('q', 'UPDATE');
-    formData.append('actyp', 5);
-    formData.append('accbPymntsPayMthdID', accbPymntsPayMthdID);
-    formData.append('accbPymntsPrepayDocIDs', accbPymntsPrepayDocIDs);
-    formData.append('accbPymntsInvcSpplrID', accbPymntsInvcSpplrID);
-    formData.append('accbPymntsDesc', accbPymntsDesc);
-    formData.append('accbPymntsDfltTrnsDte', accbPymntsDfltTrnsDte);
-    formData.append('accbPymntsGvnAmnt', accbPymntsGvnAmnt.replace(/[^-?0-9\.]/g, ''));
-    formData.append('accbPymntsPaidAmnt', accbPymntsPaidAmnt.replace(/[^-?0-9\.]/g, ''));
-    formData.append('accbPymntsChngBals', accbPymntsChngBals.replace(/[^-?0-9\.]/g, ''));
-    formData.append('accbPymntsChqName', accbPymntsChqName);
-    formData.append('accbPymntsChqNumber', accbPymntsChqNumber);
-    formData.append('accbPymntsExpiryDate', accbPymntsExpiryDate);
-    formData.append('accbPymntsSignCode', accbPymntsSignCode);
-    formData.append('sbmtdDocumentID', sbmtdDocumentID);
-    formData.append('sbmtdAccbPymntsID', sbmtdAccbPymntsID);
-    formData.append('sbmtdDocumentType', sbmtdDocumentType);
+    formData.append('grp',6);
+    formData.append('typ',1);
+    formData.append('pg',12);
+    formData.append('q','UPDATE');
+    formData.append('actyp',5);
+    formData.append('accbPymntsPayMthdID',accbPymntsPayMthdID);
+    formData.append('accbPymntsPrepayDocIDs',accbPymntsPrepayDocIDs);
+    formData.append('accbPymntsInvcSpplrID',accbPymntsInvcSpplrID);
+    formData.append('accbPymntsDesc',accbPymntsDesc);
+    formData.append('accbPymntsDfltTrnsDte',accbPymntsDfltTrnsDte);
+    formData.append('accbPymntsGvnAmnt',accbPymntsGvnAmnt.replace(/[^-?0-9\.]/g,''));
+    formData.append('accbPymntsPaidAmnt',accbPymntsPaidAmnt.replace(/[^-?0-9\.]/g,''));
+    formData.append('accbPymntsChngBals',accbPymntsChngBals.replace(/[^-?0-9\.]/g,''));
+    formData.append('accbPymntsChqName',accbPymntsChqName);
+    formData.append('accbPymntsChqNumber',accbPymntsChqNumber);
+    formData.append('accbPymntsExpiryDate',accbPymntsExpiryDate);
+    formData.append('accbPymntsSignCode',accbPymntsSignCode);
+    formData.append('sbmtdDocumentID',sbmtdDocumentID);
+    formData.append('sbmtdAccbPymntsID',sbmtdAccbPymntsID);
+    formData.append('sbmtdDocumentType',sbmtdDocumentType);
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -2064,9 +2064,9 @@ function saveQuickInvPayForm() {
                                 printPOSRcpt(sbmtdExtraPKeyID);
                             }
                         }
-                    }, 500);
+                    },500);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     console.log(textStatus + " " + errorThrown);
                     console.warn(jqXHR.responseText);
                 }
@@ -2082,12 +2082,12 @@ function printPOSRcpt(pKeyID) {
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Printing POS Receipt...Please Wait...</p>',
         callback: function () {
-            $("body").css("padding-right", "0px");
+            $("body").css("padding-right","0px");
         }
     });
     dialog1.init(function () {
         if (pKeyID > 0) {
-            getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+            getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                 $body = $("body");
                 $body.removeClass("mdlloading");
                 $.ajax({
@@ -2103,7 +2103,7 @@ function printPOSRcpt(pKeyID) {
                     },
                     success: function (result1) {
                         setTimeout(function () {
-                            var myWindow = window.open('', 'Receipt', 'height=600,width=900');
+                            var myWindow = window.open('','Receipt','height=600,width=900');
                             myWindow.document.write(urldecode(result1));
                             myWindow.document.close(); // necessary for IE >= 10
 
@@ -2113,9 +2113,9 @@ function printPOSRcpt(pKeyID) {
                                 myWindow.close();
                             };
                             dialog1.modal('hide');
-                        }, 5);
+                        },5);
                     },
-                    error: function (jqXHR1, textStatus1, errorThrown1) {
+                    error: function (jqXHR1,textStatus1,errorThrown1) {
                         dialog1.find('.bootbox-body').html(errorThrown1);
                     }
                 });
@@ -2123,7 +2123,7 @@ function printPOSRcpt(pKeyID) {
         } else {
             setTimeout(function () {
                 dialog1.find('.bootbox-body').html('No invoice Selected for Printing!');
-            }, 50);
+            },50);
         }
     });
 }
@@ -2134,12 +2134,12 @@ function printPayPOSRcpt(pKeyID) {
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Printing POS Receipt...Please Wait...</p>',
         callback: function () {
-            $("body").css("padding-right", "0px");
+            $("body").css("padding-right","0px");
         }
     });
     dialog1.init(function () {
         if (pKeyID > 0) {
-            getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+            getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                 $body = $("body");
                 $body.removeClass("mdlloading");
                 $.ajax({
@@ -2155,7 +2155,7 @@ function printPayPOSRcpt(pKeyID) {
                     },
                     success: function (result1) {
                         setTimeout(function () {
-                            var myWindow = window.open('', 'Receipt', 'height=600,width=900');
+                            var myWindow = window.open('','Receipt','height=600,width=900');
                             myWindow.document.write(urldecode(result1));
                             myWindow.document.close(); // necessary for IE >= 10
 
@@ -2165,9 +2165,9 @@ function printPayPOSRcpt(pKeyID) {
                                 myWindow.close();
                             };
                             dialog1.modal('hide');
-                        }, 5);
+                        },5);
                     },
-                    error: function (jqXHR1, textStatus1, errorThrown1) {
+                    error: function (jqXHR1,textStatus1,errorThrown1) {
                         dialog1.find('.bootbox-body').html(errorThrown1);
                     }
                 });
@@ -2175,12 +2175,12 @@ function printPayPOSRcpt(pKeyID) {
         } else {
             setTimeout(function () {
                 dialog1.find('.bootbox-body').html('No Transaction Selected for Printing!');
-            }, 50);
+            },50);
         }
     });
 }
 
-function getOneJrnlBatchForm(pKeyID, vwtype, actionTxt, extraPKeyID, extraPKeyType, destElmntID) {
+function getOneJrnlBatchForm(pKeyID,vwtype,actionTxt,extraPKeyID,extraPKeyType,destElmntID) {
     if (typeof actionTxt === 'undefined' || actionTxt === null) {
         actionTxt = 'ShowDialog';
     }
@@ -2203,7 +2203,7 @@ function getOneJrnlBatchForm(pKeyID, vwtype, actionTxt, extraPKeyID, extraPKeyTy
     var lnkArgs = 'grp=6&typ=1&pg=2&vtyp=' + vwtype + '&sbmtdJrnlBatchID=' + pKeyID +
         '&extraPKeyID=' + extraPKeyID + '&extraPKeyType=' + extraPKeyType + '&accbJrnlBatchDsplySze=' + accbJrnlBatchDsplySze;
     if (destElmntID.trim() === "") {
-        doAjaxWthCallBck(lnkArgs, 'myFormsModalLg', actionTxt, 'Journal Entry Batch Details (ID:' + pKeyID + ')', 'myFormsModalTitleLg', 'myFormsModalBodyLg', function () {
+        doAjaxWthCallBck(lnkArgs,'myFormsModalLg',actionTxt,'Journal Entry Batch Details (ID:' + pKeyID + ')','myFormsModalTitleLg','myFormsModalBodyLg',function () {
             //Check and Call Insert Empty Lines
             var addNwJrnlBatchDetHtml = typeof $("#addNwJrnlBatchDetHtml").val() === 'undefined' ? '' : $("#addNwJrnlBatchDetHtml").val();
             var addNwJrnlBatchEditHtml = typeof $("#addNwJrnlBatchEditHtml").val() === 'undefined' ? '' : $("#addNwJrnlBatchEditHtml").val();
@@ -2254,9 +2254,9 @@ function getOneJrnlBatchForm(pKeyID, vwtype, actionTxt, extraPKeyID, extraPKeyTy
             });
             if (extraPKeyID <= 0) {
                 $('#myFormsModalLg').off('hidden.bs.modal');
-                $('#myFormsModalLg').one('hidden.bs.modal', function (e) {
+                $('#myFormsModalLg').one('hidden.bs.modal',function (e) {
                     if (extraPKeyID <= 0) {
-                        getAccbJrnlEntrs('', '#allmodules', 'grp=6&typ=1&pg=2&vtyp=0');
+                        getAccbJrnlEntrs('','#allmodules','grp=6&typ=1&pg=2&vtyp=0');
                     }
                     $(e.currentTarget).unbind();
                 });
@@ -2336,7 +2336,7 @@ function getOneJrnlBatchForm(pKeyID, vwtype, actionTxt, extraPKeyID, extraPKeyTy
                     /*alert($('#jrnlBatchSmryLines').html());
                      alert($('#jrnlBatchSmryLines').text().trim().length);*/
                     if ($('#jrnlBatchSmryLines').text().trim().length <= 0) {
-                        return openATab(targ, linkArgs);
+                        return openATab(targ,linkArgs);
                     }
                 } else if (targ.indexOf('jrnlBatchEditLines') >= 0) {
                     $('#addNwJrnlBatchDetBtn').addClass('hideNotice');
@@ -2355,7 +2355,7 @@ function getOneJrnlBatchForm(pKeyID, vwtype, actionTxt, extraPKeyID, extraPKeyTy
                     $('#exprtNwJrnlBatchEditBtn').removeClass('hideNotice');
                     $('#imprtNwJrnlBatchEditBtn').removeClass('hideNotice');
                     if ($('#jrnlBatchEditLines').text().trim().length <= 0) {
-                        return openATab(targ, linkArgs);
+                        return openATab(targ,linkArgs);
                     }
                 } else {
                     $('#addNwJrnlBatchDetBtn').removeClass('hideNotice');
@@ -2394,7 +2394,7 @@ function getOneJrnlBatchForm(pKeyID, vwtype, actionTxt, extraPKeyID, extraPKeyTy
         });
     } else {
         lnkArgs = 'grp=6&typ=1&pg=5&vtyp=' + vwtype + '&sbmtdJrnlBatchID=' + pKeyID + '&accbJrnlBatchDsplySze=' + accbJrnlBatchDsplySze;
-        openATab(destElmntID, lnkArgs);
+        openATab(destElmntID,lnkArgs);
     }
 }
 
@@ -2404,16 +2404,16 @@ function calcAllJrnlBatchDetTtl() {
     var ttlRwAmount = 0;
     var ttlRwAmount1 = 0;
     var rate1;
-    $('#oneJrnlBatchDetLinesTable').find('tr').each(function (i, el) {
+    $('#oneJrnlBatchDetLinesTable').find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
             } else {
                 var rndmNum = $(el).attr('id').split("_")[1];
                 var prfxName = $(el).attr('id').split("_")[0];
-                ttlRwAmount = ($("#" + prfxName + rndmNum + "_DebitAmnt").val() + ',').replace(/,/g, "");
+                ttlRwAmount = ($("#" + prfxName + rndmNum + "_DebitAmnt").val() + ',').replace(/,/g,"");
                 ttlAmount = ttlAmount + Number(ttlRwAmount);
-                ttlRwAmount1 = ($("#" + prfxName + rndmNum + "_CreditAmnt").val() + ',').replace(/,/g, "");
+                ttlRwAmount1 = ($("#" + prfxName + rndmNum + "_CreditAmnt").val() + ',').replace(/,/g,"");
                 ttlAmount1 = ttlAmount1 + Number(ttlRwAmount1);
             }
         }
@@ -2424,7 +2424,7 @@ function calcAllJrnlBatchDetTtl() {
     $('#myCptrdJbCrdtsTtlVal').val(ttlAmount1.toFixed(2));
 }
 
-function getOneAccbPymntsHstryForm(pKeyID, vwtype, actionTxt, extraPKeyID, extraPKeyType, accbInvcVchType) {
+function getOneAccbPymntsHstryForm(pKeyID,vwtype,actionTxt,extraPKeyID,extraPKeyType,accbInvcVchType) {
     if (typeof actionTxt === 'undefined' || actionTxt === null) {
         actionTxt = 'ShowDialog';
     }
@@ -2439,12 +2439,12 @@ function getOneAccbPymntsHstryForm(pKeyID, vwtype, actionTxt, extraPKeyID, extra
     }
     var lnkArgs = 'grp=6&typ=1&pg=12&vtyp=' + vwtype + '&sbmtdAccbInvcID=' + pKeyID +
         '&extraPKeyID=' + extraPKeyID + '&extraPKeyType=' + extraPKeyType + "&accbInvcVchType=" + accbInvcVchType;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalLg', actionTxt, 'Payment Details (ID:' + pKeyID + ')', 'myFormsModalTitleLg', 'myFormsModalBodyLg', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalLg',actionTxt,'Payment Details (ID:' + pKeyID + ')','myFormsModalTitleLg','myFormsModalBodyLg',function () {
         $('#allOtherInputData99').val('0');
         $('#myFormsModalLg').off('hidden.bs.modal');
-        $('#myFormsModalLg').one('hidden.bs.modal', function (e) {
+        $('#myFormsModalLg').one('hidden.bs.modal',function (e) {
             if (extraPKeyID <= 0) {
-                getAccbPymnts('', '#allmodules', 'grp=6&typ=1&pg=12&vtyp=0');
+                getAccbPymnts('','#allmodules','grp=6&typ=1&pg=12&vtyp=0');
             }
             $(e.currentTarget).unbind();
         });
@@ -2463,7 +2463,7 @@ function getOneAccbPymntsHstryForm(pKeyID, vwtype, actionTxt, extraPKeyID, extra
 }
 
 
-function getOneAccbRcvblsInvcForm(pKeyID, vwtype, actionTxt, accbRcvblsInvcVchType, extraPKeyID, extraPKeyType) {
+function getOneAccbRcvblsInvcForm(pKeyID,vwtype,actionTxt,accbRcvblsInvcVchType,extraPKeyID,extraPKeyType) {
     if (typeof actionTxt === 'undefined' || actionTxt === null) {
         actionTxt = 'ShowDialog';
     }
@@ -2477,7 +2477,7 @@ function getOneAccbRcvblsInvcForm(pKeyID, vwtype, actionTxt, accbRcvblsInvcVchTy
         extraPKeyType = '';
     }
     var lnkArgs = 'grp=6&typ=1&pg=11&vtyp=' + vwtype + '&sbmtdAccbRcvblsInvcID=' + pKeyID + '&accbRcvblsInvcVchType=' + accbRcvblsInvcVchType + '&extraPKeyID=' + extraPKeyID + '&extraPKeyType=' + extraPKeyType;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalLg', actionTxt, 'Receivable Invoice Details (ID:' + pKeyID + ')', 'myFormsModalTitleLg', 'myFormsModalBodyLg', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalLg',actionTxt,'Receivable Invoice Details (ID:' + pKeyID + ')','myFormsModalTitleLg','myFormsModalBodyLg',function () {
         $('.form_date_tme').datetimepicker({
             format: "dd-M-yyyy hh:ii:ss",
             language: 'en',
@@ -2510,9 +2510,9 @@ function getOneAccbRcvblsInvcForm(pKeyID, vwtype, actionTxt, accbRcvblsInvcVchTy
             return false;
         });
         $('#myFormsModalLg').off('hidden.bs.modal');
-        $('#myFormsModalLg').one('hidden.bs.modal', function (e) {
+        $('#myFormsModalLg').one('hidden.bs.modal',function (e) {
             if (extraPKeyID <= 0) {
-                getAccbRcvblsInvc('', '#allmodules', 'grp=6&typ=1&pg=11&vtyp=0');
+                getAccbRcvblsInvc('','#allmodules','grp=6&typ=1&pg=11&vtyp=0');
             }
             $(e.currentTarget).unbind();
         });
@@ -2580,7 +2580,7 @@ function getOneAccbRcvblsInvcForm(pKeyID, vwtype, actionTxt, accbRcvblsInvcVchTy
 function calcAllAccbRcvblsInvcSmryTtl() {
     var ttlAmount = 0;
     var ttlRwAmount = 0;
-    $('#oneAccbRcvblsInvcSmryLinesTable').find('tr').each(function (i, el) {
+    $('#oneAccbRcvblsInvcSmryLinesTable').find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -2589,7 +2589,7 @@ function calcAllAccbRcvblsInvcSmryTtl() {
                 var prfxName = $(el).attr('id').split("_")[0];
                 var lineType = $("#" + prfxName + rndmNum + '_ItemType').val();
                 var lnsWHTax = $("#" + prfxName + rndmNum + '_IsWHTax').val();
-                ttlRwAmount = ($("#" + prfxName + rndmNum + "_EntrdAmt").val() + ',').replace(/,/g, "");
+                ttlRwAmount = ($("#" + prfxName + rndmNum + "_EntrdAmt").val() + ',').replace(/,/g,"");
                 ttlAmount = ttlAmount + Number(ttlRwAmount);
                 /*if (lineType == '3Discount' || (lineType == '2Tax' && lnsWHTax == '1')) {
                  ttlAmount = ttlAmount - Number(ttlRwAmount);
@@ -2603,12 +2603,12 @@ function calcAllAccbRcvblsInvcSmryTtl() {
     $('#myCptrdRIJbSmryAmtTtlBtn').text(addCommas(ttlAmount.toFixed(2)));
     $('#myCptrdRIJbSmryAmtTtlVal').val(ttlAmount.toFixed(2));
     $('#accbRcvblsInvcTtlAmnt').val(addCommas(ttlAmount.toFixed(2)));
-    var accbRcvblsInvcPaidAmnt = $('#accbRcvblsInvcPaidAmnt').val().replace(/,/g, "");
+    var accbRcvblsInvcPaidAmnt = $('#accbRcvblsInvcPaidAmnt').val().replace(/,/g,"");
     $('#accbRcvblsInvcOustndngAmnt').val(addCommas((ttlAmount - Number(accbRcvblsInvcPaidAmnt)).toFixed(2)));
 }
 
 
-function getOneAccbPyblsInvcForm(pKeyID, vwtype, actionTxt, accbPyblsInvcVchType, extraPKeyID, extraPKeyType) {
+function getOneAccbPyblsInvcForm(pKeyID,vwtype,actionTxt,accbPyblsInvcVchType,extraPKeyID,extraPKeyType) {
     if (typeof actionTxt === 'undefined' || actionTxt === null) {
         actionTxt = 'ShowDialog';
     }
@@ -2622,7 +2622,7 @@ function getOneAccbPyblsInvcForm(pKeyID, vwtype, actionTxt, accbPyblsInvcVchType
         extraPKeyType = '';
     }
     var lnkArgs = 'grp=6&typ=1&pg=10&vtyp=' + vwtype + '&sbmtdAccbPyblsInvcID=' + pKeyID + '&accbPyblsInvcVchType=' + accbPyblsInvcVchType + '&extraPKeyID=' + extraPKeyID + '&extraPKeyType=' + extraPKeyType;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalLg', actionTxt, 'Payables Invoice Details (ID:' + pKeyID + ')', 'myFormsModalTitleLg', 'myFormsModalBodyLg', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalLg',actionTxt,'Payables Invoice Details (ID:' + pKeyID + ')','myFormsModalTitleLg','myFormsModalBodyLg',function () {
         $('.form_date_tme').datetimepicker({
             format: "dd-M-yyyy hh:ii:ss",
             language: 'en',
@@ -2655,9 +2655,9 @@ function getOneAccbPyblsInvcForm(pKeyID, vwtype, actionTxt, accbPyblsInvcVchType
             return false;
         });
         $('#myFormsModalLg').off('hidden.bs.modal');
-        $('#myFormsModalLg').one('hidden.bs.modal', function (e) {
+        $('#myFormsModalLg').one('hidden.bs.modal',function (e) {
             if (extraPKeyID <= 0) {
-                getAccbPyblsInvc('', '#allmodules', 'grp=6&typ=1&pg=10&vtyp=0');
+                getAccbPyblsInvc('','#allmodules','grp=6&typ=1&pg=10&vtyp=0');
             }
             $(e.currentTarget).unbind();
         });
@@ -2725,7 +2725,7 @@ function getOneAccbPyblsInvcForm(pKeyID, vwtype, actionTxt, accbPyblsInvcVchType
 function calcAllAccbPyblsInvcSmryTtl() {
     var ttlAmount = 0;
     var ttlRwAmount = 0;
-    $('#oneAccbPyblsInvcSmryLinesTable').find('tr').each(function (i, el) {
+    $('#oneAccbPyblsInvcSmryLinesTable').find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -2734,7 +2734,7 @@ function calcAllAccbPyblsInvcSmryTtl() {
                 var prfxName = $(el).attr('id').split("_")[0];
                 var lineType = $("#" + prfxName + rndmNum + '_ItemType').val();
                 var lnsWHTax = $("#" + prfxName + rndmNum + '_IsWHTax').val();
-                ttlRwAmount = ($("#" + prfxName + rndmNum + "_EntrdAmt").val() + ',').replace(/,/g, "");
+                ttlRwAmount = ($("#" + prfxName + rndmNum + "_EntrdAmt").val() + ',').replace(/,/g,"");
                 ttlAmount = ttlAmount + Number(ttlRwAmount);
                 /*if (lineType == '3Discount' || (lineType == '2Tax' && lnsWHTax == '1')) {
                  ttlAmount = ttlAmount - Number(ttlRwAmount);
@@ -2748,17 +2748,17 @@ function calcAllAccbPyblsInvcSmryTtl() {
     $('#myCptrdPIJbSmryAmtTtlBtn').text(addCommas(ttlAmount.toFixed(2)));
     $('#myCptrdPIJbSmryAmtTtlVal').val(ttlAmount.toFixed(2));
     $('#accbPyblsInvcTtlAmnt').val(addCommas(ttlAmount.toFixed(2)));
-    var accbPyblsInvcPaidAmnt = $('#accbPyblsInvcPaidAmnt').val().replace(/,/g, "");
+    var accbPyblsInvcPaidAmnt = $('#accbPyblsInvcPaidAmnt').val().replace(/,/g,"");
     $('#accbPyblsInvcOustndngAmnt').val(addCommas((ttlAmount - Number(accbPyblsInvcPaidAmnt)).toFixed(2)));
 }
 
 
-function resetAccbFSRptRpts(slctr, linkArgs) {
+function resetAccbFSRptRpts(slctr,linkArgs) {
     shdHideFSRpt = 0;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function getAccbFSRptRpts(startRunng, slctr, linkArgs, startAcntID) {
+function getAccbFSRptRpts(startRunng,slctr,linkArgs,startAcntID) {
     var accbFSRptMaxAcntLvl = typeof $("#accbFSRptMaxAcntLvl").val() === 'undefined' ? 1 : $("#accbFSRptMaxAcntLvl").val();
     var accbFSRptSbmtdAccountID = typeof $("#accbFSRptSbmtdAccountID").val() === 'undefined' ? -1 : $("#accbFSRptSbmtdAccountID").val();
     var accbFSRptAcntNum = typeof $("#accbFSRptAcntNum").val() === 'undefined' ? '' : $("#accbFSRptAcntNum").val();
@@ -2845,7 +2845,7 @@ function getAccbFSRptRpts(startRunng, slctr, linkArgs, startAcntID) {
         "&accbFSRptCreatedByID=" + accbFSRptCreatedByID +
         "&accbFSRptCreatedBy=" + accbFSRptCreatedBy +
         "&accbFSRptUseCreationDte=" + accbFSRptUseCreationDte;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
     if (startAcntID >= 1) {
         shdHideFSRpt = 1;
     } else {
@@ -2897,7 +2897,7 @@ function autoLoadAddresses() {
         }
     });
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -2924,7 +2924,7 @@ function autoLoadAddresses() {
                     bulkMessageBody: bulkMessageBody
                 }
             });
-            prgstimerid = window.setInterval(rfrshGetAdrsPrgrs, 1000);
+            prgstimerid = window.setInterval(rfrshGetAdrsPrgrs,1000);
         });
     });
 }
@@ -2953,13 +2953,17 @@ function rfrshGetAdrsPrgrs() {
 }
 
 function autoQueueMsgs() {
+    var rho_msg_source = typeof $("#rho_msg_source").val() === 'undefined' ? '' : $("#rho_msg_source").val();
     var msgType = typeof $("#msgType").val() === 'undefined' ? '' : $("#msgType").val();
     var sndMsgOneByOne = typeof $("input[name='sndMsgOneByOne']:checked").val() === 'undefined' ? 'NO' : 'YES';
     var grpType = typeof $("#grpType").val() === 'undefined' ? '' : $("#grpType").val();
-    var groupID = typeof $("#groupID").val() === 'undefined' ? '' : $("#groupID").val();
+    var groupID = typeof $("#groupID").val() === 'undefined' ? '-1' : $("#groupID").val();
     var grpName = typeof $("#groupName").val() === 'undefined' ? '' : $("#groupName").val();
     var workPlaceID = typeof $("#workPlaceID").val() === 'undefined' ? -1 : $("#workPlaceID").val();
     var workPlaceSiteID = typeof $("#workPlaceSiteID").val() === 'undefined' ? -1 : $("#workPlaceSiteID").val();
+    if (rho_msg_source == "SELF-SERVICE-MSG" && Number(groupID.replace(/[^-?0-9\.]/g,"")) > 0) {
+        $("#mailTo").val(groupID + ";");
+    }
 
     var mailTo = typeof $("#mailTo").val() === 'undefined' ? '' : $("#mailTo").val();
     var mailCc = typeof $("#mailCc").val() === 'undefined' ? '' : $("#mailCc").val();
@@ -2967,14 +2971,15 @@ function autoQueueMsgs() {
     var mailAttchmnts = typeof $("#mailAttchmnts").val() === 'undefined' ? '' : $("#mailAttchmnts").val();
     var mailSubject = typeof $("#mailSubject").val() === 'undefined' ? '' : $("#mailSubject").val();
     var bulkMessageBody = typeof $("#bulkMessageBody").val() === 'undefined' ? '' : ($('#bulkMessageBody').summernote('code'));
-
     if (msgType === "SMS") {
-        bulkMessageBody = bulkMessageBody.replace(/<\/p>/gi, " ")
-            .replace(/<br\/?>/gi, " ")
-            .replace(/<\/?[^>]+(>|$)/g, "");
-        /*bulkMessageBody = bulkMessageBody.replace(/<\/p>/gi, "\n")
+        bulkMessageBody = bulkMessageBody.replace(/<\/p>/gi," ")
+            .replace(/<br\/?>/gi," ")
+            .replace(/<\/?[^>]+(>|$)/g,"");
+        /*
+          bulkMessageBody = bulkMessageBody.replace(/<\/p>/gi, "\n")
          .replace(/<br\/?>/gi, "\n")
-         .replace(/<\/?[^>]+(>|$)/g, "");*/
+         .replace(/<\/?[^>]+(>|$)/g, "");
+         */
     }
     if (mailSubject.trim() === '') {
         bootbox.alert({
@@ -2994,7 +2999,7 @@ function autoQueueMsgs() {
         });
         return false;
     }
-    if (rhotrim(mailTo, '; ') === '') {
+    if (rhotrim(mailTo,'; ') === '') {
         bootbox.alert({
             title: 'System Alert!',
             size: 'small',
@@ -3028,7 +3033,7 @@ function autoQueueMsgs() {
                     }
                 });
                 dialog.init(function () {
-                    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                    getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                         $body = $("body");
                         $body.removeClass("mdlloading");
                         $.ajax({
@@ -3055,7 +3060,7 @@ function autoQueueMsgs() {
                                 bulkMessageBody: bulkMessageBody
                             }
                         });
-                        prgstimerid1 = window.setInterval(rfrshQueueMsgsPrgrs, 1000);
+                        prgstimerid1 = window.setInterval(rfrshQueueMsgsPrgrs,1000);
                     });
                 });
             }
@@ -3107,7 +3112,7 @@ function clearMsgForm() {
                 $("#mailBcc").val('');
                 $("#mailAttchmnts").val('');
                 $("#mailSubject").val('');
-                $('#bulkMessageBody').summernote('code', '<p></p>');
+                $('#bulkMessageBody').summernote('code','<p></p>');
             }
         }
     });
@@ -3118,7 +3123,7 @@ function attchFileToMsg() {
     $("#allOtherFileInput3").change(function () {
         var fileName = $(this).val();
         var input = document.getElementById('allOtherFileInput3');
-        sendMsgsFile(input.files[0], function () {
+        sendMsgsFile(input.files[0],function () {
             var inptUrl = $("#allOtherInputData3").val();
             crntAttchMnts = crntAttchMnts + ";" + inptUrl;
             $("#mailAttchmnts").val(crntAttchMnts);
@@ -3127,9 +3132,9 @@ function attchFileToMsg() {
     performFileClick('allOtherFileInput3');
 }
 
-function sendMsgsFile(file, callBackFunc) {
+function sendMsgsFile(file,callBackFunc) {
     var data1 = new FormData();
-    data1.append("file", file);
+    data1.append("file",file);
     $.ajax({
         url: "dwnlds/uploader1.php",
         data: data1,
@@ -3141,13 +3146,13 @@ function sendMsgsFile(file, callBackFunc) {
             $("#allOtherInputData3").val(data);
             callBackFunc();
         },
-        error: function (jqXHR, textStatus, errorThrown) {
+        error: function (jqXHR,textStatus,errorThrown) {
             console.log(textStatus + " " + errorThrown);
         }
     });
 }
 
-function sendGeneralMessage(msgType, mailToElmtID, mailCcElmtID, mailSubjectElmtID, bulkMessageBodyElmtID, mailAttchmntsElmtID, elementID, actionAfter, titleMsg, titleElementID, modalBodyID) {
+function sendGeneralMessage(msgType,mailToElmtID,mailCcElmtID,mailSubjectElmtID,bulkMessageBodyElmtID,mailAttchmntsElmtID,elementID,actionAfter,titleMsg,titleElementID,modalBodyID) {
     if (typeof mailAttchmntsElmtID === 'undefined' || mailAttchmntsElmtID === null) {
         mailAttchmntsElmtID = 'XXX_RHO_UNDEFINED';
     }
@@ -3175,18 +3180,18 @@ function sendGeneralMessage(msgType, mailToElmtID, mailCcElmtID, mailSubjectElmt
     if (typeof modalBodyID === 'undefined' || modalBodyID === null) {
         modalBodyID = 'sndBlkMsgFormBody';
     }
-    doAjaxWthCallBck(linkArgs, elementID, actionAfter, titleMsg, titleElementID, modalBodyID, function () {
+    doAjaxWthCallBck(linkArgs,elementID,actionAfter,titleMsg,titleElementID,modalBodyID,function () {
         var fileLink = function (context) {
             var ui = $.summernote.ui;
             var button = ui.button({
                 contents: '<i class="fa fa-file"/> Upload',
-                tooltip: 'Upload File',
+                tooltip: 'Upload Inline Within File',
                 click: function () {
                     $(function () {
                         $("#allOtherFileInput1").change(function () {
                             var fileName = $(this).val();
                             var input = document.getElementById('allOtherFileInput1');
-                            sendNoticesFile(input.files[0], "", "", "OTHERS", function () {
+                            sendNoticesFile(input.files[0],"","","OTHERS",function () {
                                 var inptUrl = $("#allOtherInputData1").val();
                                 var inptText = $("#allOtherInputData2").val();
                                 var inptNwWndw = $("#allOtherInputData2").val();
@@ -3196,7 +3201,7 @@ function sendGeneralMessage(msgType, mailToElmtID, mailCcElmtID, mailSubjectElmt
                                 if (inptNwWndw === "") {
                                     inptNwWndw = true;
                                 }
-                                $('#bulkMessageBody').summernote('createLink', {
+                                $('#bulkMessageBody').summernote('createLink',{
                                     text: inptText,
                                     url: inptUrl,
                                     newWindow: inptNwWndw
@@ -3215,44 +3220,56 @@ function sendGeneralMessage(msgType, mailToElmtID, mailCcElmtID, mailSubjectElmt
             disableDragAndDrop: false,
             dialogsInBody: true,
             toolbar: [
-                ['style', ['style']],
-                ['style', ['bold', 'italic', 'underline', 'clear']],
-                ['font', ['strikethrough', 'superscript', 'subscript']],
-                ['fontsize', ['fontsize']],
-                ['fontname', ['fontname']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph', 'height']],
-                ['height', ['height']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video', 'hr']],
-                ['view', ['fullscreen', 'codeview']],
-                ['help', ['help']],
-                ['misc', ['print']],
-                ['mybutton', ['upload']]
+                ['style',['style']],
+                ['style',['bold','italic','underline','clear']],
+                ['font',['strikethrough','superscript','subscript']],
+                ['fontsize',['fontsize']],
+                ['fontname',['fontname']],
+                ['color',['color']],
+                ['para',['ul','ol','paragraph','height']],
+                ['height',['height']],
+                ['table',['table']],
+                ['insert',['link','picture','video','hr']],
+                ['view',['fullscreen','codeview']],
+                ['help',['help']],
+                ['misc',['print']],
+                ['mybutton',['upload']]
             ],
             buttons: {
                 upload: fileLink
             },
             callbacks: {
-                onImageUpload: function (file, editor, welEditable) {
-                    sendNoticesFile(file[0], editor, welEditable, "IMAGES", function () {
+                onImageUpload: function (file,editor,welEditable) {
+                    sendNoticesFile(file[0],editor,welEditable,"IMAGES",function () {
                         var inptUrl = $("#allOtherInputData1").val();
-                        $('#bulkMessageBody').summernote("insertImage", inptUrl, 'filename');
+                        $('#bulkMessageBody').summernote("insertImage",inptUrl,'filename');
                     });
                 }
             }
         });
         $('.note-editable').trigger('focus');
-        $('#bulkMessageBody').summernote('code', urldecode(bulkMessageBody));
+        $('#bulkMessageBody').summernote('code',urldecode(bulkMessageBody));
         $('#mailTo').val(urldecode(mailTo));
         $('#mailCc').val(urldecode(mailCc));
         $('#mailSubject').val(urldecode(mailSubject));
         $('#mailAttchmnts').val(mailAttchmnts);
+        $('button.note-btn').mouseup(function () {
+            $('.modal.in[style="display: block; padding-right: 6px;"][aria-hidden="false"]').css("cssText","z-index: 9998 !important;display: block; padding-right: 6px;");
+        });
+        $('button.note-btn').hover(function () {
+            $('.modal.in[style="display: block; padding-right: 6px;"][aria-hidden="false"]').css("cssText","z-index: 9998 !important;display: block; padding-right: 6px;");
+        },function () {
+            $('.modal.in[style="display: block; padding-right: 6px;"][aria-hidden="false"]').css("cssText","z-index: 9998 !important;display: block; padding-right: 6px;");
+        });
+
+        $('#' + elementID).off('hidden.bs.modal');
+        $('#' + elementID).one("hidden.bs.modal",function (e) {
+            $(e.currentTarget).unbind();
+        });
     });
 }
 
-
-function sendGeneralMessage1(msgType, mailTo, mailCc, mailSubject, bulkMessageBody, mailAttchmnts, elementID, actionAfter, titleMsg, titleElementID, modalBodyID) {
+function sendGeneralMessage1(msgType,mailTo,mailCc,mailSubject,bulkMessageBody,mailAttchmnts,elementID,actionAfter,titleMsg,titleElementID,modalBodyID) {
     var linkArgs = 'grp=8&typ=1&pg=7&vtyp=0&msgType=' + msgType + '&mailTo=' + mailTo + '&mailCc=' + mailCc + '&mailSubject=' + mailSubject + '&bulkMessageBody=' + bulkMessageBody + "&mailAttchmnts=" + mailAttchmnts;
     if (typeof msgType === 'undefined' || msgType === null) {
         msgType = 'Email';
@@ -3272,18 +3289,18 @@ function sendGeneralMessage1(msgType, mailTo, mailCc, mailSubject, bulkMessageBo
     if (typeof modalBodyID === 'undefined' || modalBodyID === null) {
         modalBodyID = 'sndBlkMsgFormBody';
     }
-    doAjaxWthCallBck(linkArgs, elementID, actionAfter, titleMsg, titleElementID, modalBodyID, function () {
+    doAjaxWthCallBck(linkArgs,elementID,actionAfter,titleMsg,titleElementID,modalBodyID,function () {
         var fileLink = function (context) {
             var ui = $.summernote.ui;
             var button = ui.button({
                 contents: '<i class="fa fa-file"/> Upload',
-                tooltip: 'Upload File',
+                tooltip: 'Upload File Inline Within Message Body',
                 click: function () {
                     $(function () {
                         $("#allOtherFileInput1").change(function () {
                             var fileName = $(this).val();
                             var input = document.getElementById('allOtherFileInput1');
-                            sendNoticesFile(input.files[0], "", "", "OTHERS", function () {
+                            sendNoticesFile(input.files[0],"","","OTHERS",function () {
                                 var inptUrl = $("#allOtherInputData1").val();
                                 var inptText = $("#allOtherInputData2").val();
                                 var inptNwWndw = $("#allOtherInputData2").val();
@@ -3293,7 +3310,7 @@ function sendGeneralMessage1(msgType, mailTo, mailCc, mailSubject, bulkMessageBo
                                 if (inptNwWndw === "") {
                                     inptNwWndw = true;
                                 }
-                                $('#bulkMessageBody').summernote('createLink', {
+                                $('#bulkMessageBody').summernote('createLink',{
                                     text: inptText,
                                     url: inptUrl,
                                     newWindow: inptNwWndw
@@ -3312,45 +3329,305 @@ function sendGeneralMessage1(msgType, mailTo, mailCc, mailSubject, bulkMessageBo
             disableDragAndDrop: false,
             dialogsInBody: true,
             toolbar: [
-                ['style', ['style']],
-                ['style', ['bold', 'italic', 'underline', 'clear']],
-                ['font', ['strikethrough', 'superscript', 'subscript']],
-                ['fontsize', ['fontsize']],
-                ['fontname', ['fontname']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph', 'height']],
-                ['height', ['height']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video', 'hr']],
-                ['view', ['fullscreen', 'codeview']],
-                ['help', ['help']],
-                ['misc', ['print']],
-                ['mybutton', ['upload']]
+                ['style',['style']],
+                ['style',['bold','italic','underline','clear']],
+                ['font',['strikethrough','superscript','subscript']],
+                ['fontsize',['fontsize']],
+                ['fontname',['fontname']],
+                ['color',['color']],
+                ['para',['ul','ol','paragraph','height']],
+                ['height',['height']],
+                ['table',['table']],
+                ['insert',['link','picture','video','hr']],
+                ['view',['fullscreen','codeview']],
+                ['help',['help']],
+                ['misc',['print']],
+                ['mybutton',['upload']]
             ],
             buttons: {
                 upload: fileLink
             },
             callbacks: {
-                onImageUpload: function (file, editor, welEditable) {
-                    sendNoticesFile(file[0], editor, welEditable, "IMAGES", function () {
+                onImageUpload: function (file,editor,welEditable) {
+                    sendNoticesFile(file[0],editor,welEditable,"IMAGES",function () {
                         var inptUrl = $("#allOtherInputData1").val();
-                        $('#bulkMessageBody').summernote("insertImage", inptUrl, 'filename');
+                        $('#bulkMessageBody').summernote("insertImage",inptUrl,'filename');
                     });
                 }
             }
         });
         $('.note-editable').trigger('focus');
-        $('#bulkMessageBody').summernote('code', urldecode(bulkMessageBody));
+        $('#bulkMessageBody').summernote('code',urldecode(bulkMessageBody));
         $('#mailTo').val(urldecode(mailTo));
         $('#mailCc').val(urldecode(mailCc));
         $('#mailSubject').val(urldecode(mailSubject));
         $('#mailAttchmnts').val(mailAttchmnts);
+        $('button.note-btn').mouseup(function () {
+            $('.modal.in[style="display: block; padding-right: 6px;"][aria-hidden="false"]').css("cssText","z-index: 9998 !important;display: block; padding-right: 6px;");
+        });
+        $('button.note-btn').hover(function () {
+            $('.modal.in[style="display: block; padding-right: 6px;"][aria-hidden="false"]').css("cssText","z-index: 9998 !important;display: block; padding-right: 6px;");
+        },function () {
+            $('.modal.in[style="display: block; padding-right: 6px;"][aria-hidden="false"]').css("cssText","z-index: 9998 !important;display: block; padding-right: 6px;");
+        });
+
+        $('#' + elementID).off('hidden.bs.modal');
+        $('#' + elementID).one("hidden.bs.modal",function (e) {
+            $(e.currentTarget).unbind();
+        });
+    });
+}
+/**Self-Service Msg */
+function sendGeneralMessage2(msgType,mailToElmtID,mailCcElmtID,mailSubjectElmtID,bulkMessageBodyElmtID,mailAttchmntsElmtID,elementID,actionAfter,titleMsg,titleElementID,modalBodyID) {
+    if (typeof mailAttchmntsElmtID === 'undefined' || mailAttchmntsElmtID === null) {
+        mailAttchmntsElmtID = 'XXX_RHO_UNDEFINED';
+    }
+    var mailTo = typeof $("#" + mailToElmtID).val() === 'undefined' ? '' : $("#" + mailToElmtID).val();
+    var mailCc = typeof $("#" + mailCcElmtID).val() === 'undefined' ? '' : $("#" + mailCcElmtID).val();
+    var mailSubject = typeof $("#" + mailSubjectElmtID).val() === 'undefined' ? '' : $("#" + mailSubjectElmtID).val();
+    var bulkMessageBody = typeof $("#" + bulkMessageBodyElmtID).val() === 'undefined' ? '' : $("#" + bulkMessageBodyElmtID).val();
+    var mailAttchmnts = typeof $("#" + mailAttchmntsElmtID).val() === 'undefined' ? '' : $("#" + mailAttchmntsElmtID).val();
+    var linkArgs = 'grp=8&typ=1&pg=7&vtyp=0&q=SELF-SERVICE-MSG&msgType=' + msgType + '&mailTo=' + mailTo + '&mailCc=' + mailCc + '&mailSubject=' + mailSubject + '&bulkMessageBody=' + bulkMessageBody + "&mailAttchmnts=" + mailAttchmnts;
+    if (typeof msgType === 'undefined' || msgType === null) {
+        msgType = 'Email';
+    }
+    if (typeof elementID === 'undefined' || elementID === null) {
+        elementID = 'sndBlkMsgForm';
+    }
+    if (typeof actionAfter === 'undefined' || actionAfter === null) {
+        actionAfter = 'ShowDialog';
+    }
+    if (typeof titleMsg === 'undefined' || titleMsg === null) {
+        titleMsg = 'Send Bulk Email/SMS';
+    }
+    if (typeof titleElementID === 'undefined' || titleElementID === null) {
+        titleElementID = 'sndBlkMsgFormTitle';
+    }
+    if (typeof modalBodyID === 'undefined' || modalBodyID === null) {
+        modalBodyID = 'sndBlkMsgFormBody';
+    }
+    doAjaxWthCallBck(linkArgs,elementID,actionAfter,titleMsg,titleElementID,modalBodyID,function () {
+        var fileLink = function (context) {
+            var ui = $.summernote.ui;
+            var button = ui.button({
+                contents: '<i class="fa fa-file"/> Upload',
+                tooltip: 'Upload File Inline Within Message Body',
+                click: function () {
+                    $(function () {
+                        $("#allOtherFileInput1").change(function () {
+                            var fileName = $(this).val();
+                            var input = document.getElementById('allOtherFileInput1');
+                            sendNoticesFile(input.files[0],"","","OTHERS",function () {
+                                var inptUrl = $("#allOtherInputData1").val();
+                                var inptText = $("#allOtherInputData2").val();
+                                var inptNwWndw = $("#allOtherInputData2").val();
+                                if (inptText === "") {
+                                    inptText = "Read More...";
+                                }
+                                if (inptNwWndw === "") {
+                                    inptNwWndw = true;
+                                }
+                                $('#bulkMessageBody').summernote('createLink',{
+                                    text: inptText,
+                                    url: inptUrl,
+                                    newWindow: inptNwWndw
+                                });
+                            });
+                        });
+                    });
+                    performFileClick('allOtherFileInput1');
+                }
+            });
+            return button.render();
+        };
+        $('#bulkMessageBody').summernote({
+            minHeight: 375,
+            focus: true,
+            disableDragAndDrop: false,
+            dialogsInBody: true,
+            toolbar: [
+                ['style',['style']],
+                ['style',['bold','italic','underline','clear']],
+                ['font',['strikethrough','superscript','subscript']],
+                ['fontsize',['fontsize']],
+                ['fontname',['fontname']],
+                ['color',['color']],
+                ['para',['ul','ol','paragraph','height']],
+                ['height',['height']],
+                ['table',['table']],
+                ['insert',['link','picture','video','hr']],
+                ['view',['fullscreen','codeview']],
+                ['help',['help']],
+                ['misc',['print']],
+                ['mybutton',['upload']]
+            ],
+            buttons: {
+                upload: fileLink
+            },
+            callbacks: {
+                onImageUpload: function (file,editor,welEditable) {
+                    sendNoticesFile(file[0],editor,welEditable,"IMAGES",function () {
+                        var inptUrl = $("#allOtherInputData1").val();
+                        $('#bulkMessageBody').summernote("insertImage",inptUrl,'filename');
+                    });
+                }
+            }
+        });
+        $('.note-editable').trigger('focus');
+        $('#bulkMessageBody').summernote('code',urldecode(bulkMessageBody));
+        $('#mailTo').val(urldecode(mailTo));
+        $('#mailCc').val(urldecode(mailCc));
+        $('#mailSubject').val(urldecode(mailSubject));
+        $('#mailAttchmnts').val(mailAttchmnts);
+        $('button.note-btn').mouseup(function () {
+            $('.modal.in[style="display: block; padding-right: 6px;"][aria-hidden="false"]').css("cssText","z-index: 9998 !important;display: block; padding-right: 6px;");
+        });
+        $('button.note-btn').hover(function () {
+            $('.modal.in[style="display: block; padding-right: 6px;"][aria-hidden="false"]').css("cssText","z-index: 9998 !important;display: block; padding-right: 6px;");
+        },function () {
+            $('.modal.in[style="display: block; padding-right: 6px;"][aria-hidden="false"]').css("cssText","z-index: 9998 !important;display: block; padding-right: 6px;");
+        });
+
+        $('#' + elementID).off('hidden.bs.modal');
+        $('#' + elementID).one("hidden.bs.modal",function (e) {
+            $(e.currentTarget).unbind();
+        });
     });
 }
 
-function getOneVmsDocsForm(pKeyID, trnsType, vwtype) {
+function sendGeneralMessage3(rowIDAttrb,msgType,mailToElmtID,mailCcElmtID,mailSubjectElmtID,bulkMessageBodyElmtID,mailAttchmntsElmtID,elementID,actionAfter,titleMsg,titleElementID,modalBodyID) {
+    if (typeof mailAttchmntsElmtID === 'undefined' || mailAttchmntsElmtID === null) {
+        mailAttchmntsElmtID = 'XXX_RHO_UNDEFINED';
+    }
+    if (typeof mailSubjectElmtID === 'undefined' || mailSubjectElmtID === null) {
+        mailSubjectElmtID = 'prevMailSubject';
+    }
+    if (typeof bulkMessageBodyElmtID === 'undefined' || bulkMessageBodyElmtID === null) {
+        bulkMessageBodyElmtID = 'prevBulkMessageBody';
+    }
+    var prfxNm = rowIDAttrb.split("_")[0];
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var RoutingID = $('#' + prfxNm + '' + rndmNum + '_RoutingID').val();
+
+    var rowCnt = 0;
+    var mailTo = typeof $("#" + mailToElmtID).val() === 'undefined' ? '' : $("#" + mailToElmtID).val();
+    var mailCc = typeof $("#" + mailCcElmtID).val() === 'undefined' ? '' : $("#" + mailCcElmtID).val();
+    var mailSubject = typeof $("#" + mailSubjectElmtID).val() === 'undefined' ? '' : $("#" + mailSubjectElmtID).val();
+    var bulkMessageBody = typeof $("#" + bulkMessageBodyElmtID).val() === 'undefined' ? '' : $("#" + bulkMessageBodyElmtID).val();
+    var mailAttchmnts = typeof $("#" + mailAttchmntsElmtID).val() === 'undefined' ? '' : $("#" + mailAttchmntsElmtID).val();
+    var linkArgs = 'grp=8&typ=1&pg=7&vtyp=0&q=SELF-SERVICE-MSG&msgType=' + msgType + '&mailTo=' + mailTo + '&mailCc=' + mailCc + '&mailSubject=' + mailSubject + '&bulkMessageBody=' + bulkMessageBody + "&mailAttchmnts=" + mailAttchmnts + "&RoutingID=" + RoutingID;
+    if (typeof msgType === 'undefined' || msgType === null) {
+        msgType = 'Email';
+    }
+    if (typeof elementID === 'undefined' || elementID === null) {
+        elementID = 'sndBlkMsgForm';
+    }
+    if (typeof actionAfter === 'undefined' || actionAfter === null) {
+        actionAfter = 'ShowDialog';
+    }
+    if (typeof titleMsg === 'undefined' || titleMsg === null) {
+        titleMsg = 'Send Bulk Email/SMS';
+    }
+    if (typeof titleElementID === 'undefined' || titleElementID === null) {
+        titleElementID = 'sndBlkMsgFormTitle';
+    }
+    if (typeof modalBodyID === 'undefined' || modalBodyID === null) {
+        modalBodyID = 'sndBlkMsgFormBody';
+    }
+    doAjaxWthCallBck(linkArgs,elementID,actionAfter,titleMsg,titleElementID,modalBodyID,function () {
+        var fileLink = function (context) {
+            var ui = $.summernote.ui;
+            var button = ui.button({
+                contents: '<i class="fa fa-file"/> Upload',
+                tooltip: 'Upload File Inline Within Message Body',
+                click: function () {
+                    $(function () {
+                        $("#allOtherFileInput1").change(function () {
+                            var fileName = $(this).val();
+                            var input = document.getElementById('allOtherFileInput1');
+                            sendNoticesFile(input.files[0],"","","OTHERS",function () {
+                                var inptUrl = $("#allOtherInputData1").val();
+                                var inptText = $("#allOtherInputData2").val();
+                                var inptNwWndw = $("#allOtherInputData2").val();
+                                if (inptText === "") {
+                                    inptText = "Read More...";
+                                }
+                                if (inptNwWndw === "") {
+                                    inptNwWndw = true;
+                                }
+                                $('#bulkMessageBody').summernote('createLink',{
+                                    text: inptText,
+                                    url: inptUrl,
+                                    newWindow: inptNwWndw
+                                });
+                            });
+                        });
+                    });
+                    performFileClick('allOtherFileInput1');
+                }
+            });
+            return button.render();
+        };
+        $('#bulkMessageBody').summernote({
+            minHeight: 375,
+            focus: true,
+            disableDragAndDrop: false,
+            dialogsInBody: true,
+            toolbar: [
+                ['style',['style']],
+                ['style',['bold','italic','underline','clear']],
+                ['font',['strikethrough','superscript','subscript']],
+                ['fontsize',['fontsize']],
+                ['fontname',['fontname']],
+                ['color',['color']],
+                ['para',['ul','ol','paragraph','height']],
+                ['height',['height']],
+                ['table',['table']],
+                ['insert',['link','picture','video','hr']],
+                ['view',['fullscreen','codeview']],
+                ['help',['help']],
+                ['misc',['print']],
+                ['mybutton',['upload']]
+            ],
+            buttons: {
+                upload: fileLink
+            },
+            callbacks: {
+                onImageUpload: function (file,editor,welEditable) {
+                    sendNoticesFile(file[0],editor,welEditable,"IMAGES",function () {
+                        var inptUrl = $("#allOtherInputData1").val();
+                        $('#bulkMessageBody').summernote("insertImage",inptUrl,'filename');
+                    });
+                }
+            }
+        });
+        var mailSubject = typeof $("#" + mailSubjectElmtID).val() === 'undefined' ? '' : $("#" + mailSubjectElmtID).val();
+        var bulkMessageBody = typeof $("#" + bulkMessageBodyElmtID).val() === 'undefined' ? '' : $("#" + bulkMessageBodyElmtID).val();
+        $('.note-editable').trigger('focus');
+        $('#bulkMessageBody').summernote('code',urldecode(bulkMessageBody));
+        $('#mailTo').val(urldecode(mailTo));
+        $('#mailCc').val(urldecode(mailCc));
+        $('#mailSubject').val(urldecode(mailSubject));
+        $('#mailAttchmnts').val(mailAttchmnts);
+        $('button.note-btn').mouseup(function () {
+            $('.modal.in[style="display: block; padding-right: 6px;"][aria-hidden="false"]').css("cssText","z-index: 9998 !important;display: block; padding-right: 6px;");
+        });
+        $('button.note-btn').hover(function () {
+            $('.modal.in[style="display: block; padding-right: 6px;"][aria-hidden="false"]').css("cssText","z-index: 9998 !important;display: block; padding-right: 6px;");
+        },function () {
+            $('.modal.in[style="display: block; padding-right: 6px;"][aria-hidden="false"]').css("cssText","z-index: 9998 !important;display: block; padding-right: 6px;");
+        });
+
+        $('#' + elementID).off('hidden.bs.modal');
+        $('#' + elementID).one("hidden.bs.modal",function (e) {
+            $(e.currentTarget).unbind();
+        });
+    });
+}
+
+function getOneVmsDocsForm(pKeyID,trnsType,vwtype) {
     var lnkArgs = 'grp=25&typ=1&pg=2&vtyp=' + vwtype + '&sbmtdVmsTrnsHdrID=' + pKeyID + '&trnsType=' + trnsType;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModaly', 'ShowDialog', 'VMS Trns. Attached Documents', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModaly','ShowDialog','VMS Trns. Attached Documents','myFormsModalyTitle','myFormsModalyBody',function () {
         var table1 = $('#attchdVMSDocsTable').DataTable({
             "paging": false,
             "ordering": false,
@@ -3367,10 +3644,10 @@ function getOneVmsDocsForm(pKeyID, trnsType, vwtype) {
     });
 }
 
-function getOneMcfDocsForm_Gnrl(pKeyID, trnsType, vwtype, formTitle) {
+function getOneMcfDocsForm_Gnrl(pKeyID,trnsType,vwtype,formTitle) {
     $('#allOtherInputData99').val('0');
     var lnkArgs = 'grp=17&typ=1&pg=8&vtyp=' + vwtype + '&sbmtdHdrID=' + pKeyID + '&docType=' + trnsType + '&subPgNo=' + vwtype + '.1';
-    doAjaxWthCallBck(lnkArgs, 'myFormsModaly', 'ShowDialog', formTitle, 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModaly','ShowDialog',formTitle,'myFormsModalyTitle','myFormsModalyBody',function () {
         var table1 = $('#attchdMCFDocsTable').DataTable({
             "paging": false,
             "ordering": false,
@@ -3387,7 +3664,7 @@ function getOneMcfDocsForm_Gnrl(pKeyID, trnsType, vwtype, formTitle) {
     });
 }
 
-function getOneMcfDocsForm(trnsType, vwtype) {
+function getOneMcfDocsForm(trnsType,vwtype) {
     var pKeyID = $('#acctTrnsId').val();
     if (pKeyID == "" || pKeyID == undefined) {
         pKeyID = -1;
@@ -3401,12 +3678,13 @@ function getOneMcfDocsForm(trnsType, vwtype) {
             title: "System Alert!",
             message: "Account Details required!",
             callback: function () {
-                /* your callback code */ }
+                /* your callback code */
+            }
         });
         return;
     }
     var lnkArgs = 'grp=17&typ=1&pg=8&vtyp=' + vwtype + '&sbmtdHdrID=' + pKeyID + '&docType=' + trnsType + '&subPgNo=' + vwtype + '.1&pAcctID=' + acctID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModaly', 'ShowDialog', 'Banking Attached Documents', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModaly','ShowDialog','Banking Attached Documents','myFormsModalyTitle','myFormsModalyBody',function () {
         var table1 = $('#attchdMCFDocsTable').DataTable({
             "paging": false,
             "ordering": false,
@@ -3424,7 +3702,7 @@ function getOneMcfDocsForm(trnsType, vwtype) {
     });
 }
 
-function getCashBreakdown(elementID, modalBodyID, titleElementID, formElementID, tRowElementID, formTitle, pgNo, subPgNo, vtyp, vtypActn) {
+function getCashBreakdown(elementID,modalBodyID,titleElementID,formElementID,tRowElementID,formTitle,pgNo,subPgNo,vtyp,vtypActn) {
     var pKeyID = $('#acctTrnsId').val();
     var mcfPymtCrncyNm = $('#mcfPymtCrncyNm').val();
     if (pKeyID == "" || pKeyID == undefined) {
@@ -3439,7 +3717,8 @@ function getCashBreakdown(elementID, modalBodyID, titleElementID, formElementID,
             title: "System Alert!",
             message: "Account Details required!",
             callback: function () {
-                /* your callback code */ }
+                /* your callback code */
+            }
         });
         return;
     }
@@ -3485,13 +3764,13 @@ function getCashBreakdown(elementID, modalBodyID, titleElementID, formElementID,
                 $('#tblRowElementID').val(tRowElementID);
             }
             $('#' + elementID).off('show.bs.modal');
-            $('#' + elementID).on('show.bs.modal', function (e) {
+            $('#' + elementID).on('show.bs.modal',function (e) {
                 $(this).find('.modal-body').css({
                     'max-height': '100%'
                 });
             });
             $body.removeClass("mdlloadingDiag");
-            $('#' + elementID).modal('show', {
+            $('#' + elementID).modal('show',{
                 backdrop: 'static'
             });
 
@@ -3578,7 +3857,7 @@ function getCashBreakdown(elementID, modalBodyID, titleElementID, formElementID,
                     });
 
                 $('#' + elementID).off('hidden.bs.modal');
-                $('#' + elementID).one('hidden.bs.modal', function (e) {
+                $('#' + elementID).one('hidden.bs.modal',function (e) {
                     $('#' + titleElementID).html('');
                     $('#' + modalBodyID).html('');
                     $(e.currentTarget).unbind();
@@ -3586,12 +3865,12 @@ function getCashBreakdown(elementID, modalBodyID, titleElementID, formElementID,
             });
         }
     };
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.open("POST","index.php",true);
+    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     xmlhttp.send("grp=17&typ=1&pg=" + pgNo + "&subPgNo=" + subPgNo + "&vtyp=" + vtyp + "&vtypActn=" + vtypActn + "&PKeyID=" + pKeyID + "&pAcctID=" + acctID + "&mcfPymtCrncyNm=" + mcfPymtCrncyNm);
 }
 
-function getCashBreakdown_LoanRepay(elementID, modalBodyID, titleElementID, formElementID, tRowElementID, formTitle, pgNo, subPgNo, vtyp, vtypActn) {
+function getCashBreakdown_LoanRepay(elementID,modalBodyID,titleElementID,formElementID,tRowElementID,formTitle,pgNo,subPgNo,vtyp,vtypActn) {
     var pKeyID = $('#acctTrnsId').val();
     var mcfPymtCrncyNm = $('#mcfPymtCrncyNm').val();
     if (pKeyID == "" || pKeyID == undefined) {
@@ -3606,7 +3885,8 @@ function getCashBreakdown_LoanRepay(elementID, modalBodyID, titleElementID, form
             title: "System Alert!",
             message: "Account Details required!",
             callback: function () {
-                /* your callback code */ }
+                /* your callback code */
+            }
         });
         return;
     }
@@ -3653,13 +3933,13 @@ function getCashBreakdown_LoanRepay(elementID, modalBodyID, titleElementID, form
                 $('#tblRowElementID').val(tRowElementID);
             }
             $('#' + elementID).off('show.bs.modal');
-            $('#' + elementID).on('show.bs.modal', function (e) {
+            $('#' + elementID).on('show.bs.modal',function (e) {
                 $(this).find('.modal-body').css({
                     'max-height': '100%'
                 });
             });
             $body.removeClass("mdlloadingDiag");
-            $('#' + elementID).modal('show', {
+            $('#' + elementID).modal('show',{
                 backdrop: 'static'
             });
             $(document).ready(function () {
@@ -3745,7 +4025,7 @@ function getCashBreakdown_LoanRepay(elementID, modalBodyID, titleElementID, form
                     });
 
                 $('#' + elementID).off('hidden.bs.modal');
-                $('#' + elementID).one('hidden.bs.modal', function (e) {
+                $('#' + elementID).one('hidden.bs.modal',function (e) {
                     $('#' + titleElementID).html('');
                     $('#' + modalBodyID).html('');
                     $(e.currentTarget).unbind();
@@ -3753,8 +4033,8 @@ function getCashBreakdown_LoanRepay(elementID, modalBodyID, titleElementID, form
             });
         }
     };
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.open("POST","index.php",true);
+    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     xmlhttp.send("grp=17&typ=1&pg=" + pgNo + "&subPgNo=" + subPgNo + "&vtyp=" + vtyp + "&vtypActn=" + vtypActn + "&PKeyID=" + pKeyID + "&pAcctID=" + acctID + "&mcfPymtCrncyNm=" + mcfPymtCrncyNm);
 }
 
@@ -3768,7 +4048,7 @@ function calcAllMcfCbTtl() {
     var rate1;
     var crncyNm = $('#mcfPymtCrncyNm').val();
     var mcfTlrTrnsType = typeof $('#mcfTlrTrnsType').val() === 'undefined' ? "DEPOSIT" : $('#mcfTlrTrnsType').val();
-    $('#cashBreakdownTblEDT').find('tr').each(function (i, el) {
+    $('#cashBreakdownTblEDT').find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -3776,7 +4056,7 @@ function calcAllMcfCbTtl() {
                 var rndmNum = $(el).attr('id').split("_")[1];
 
                 qty1 = $("#cashBreakdownRow_" + rndmNum + " .cbQty").val();
-                rate1 = $("#cashBreakdownRow_" + rndmNum + " .cbExchngRate").val().replace(/,/g, "");
+                rate1 = $("#cashBreakdownRow_" + rndmNum + " .cbExchngRate").val().replace(/,/g,"");
 
                 $tds = $("#cashBreakdownRow_" + rndmNum).find('td');
                 //val = $.trim($tds.eq(4).text()); OLD
@@ -3788,10 +4068,10 @@ function calcAllMcfCbTtl() {
                 var itemID = $.trim($tds.eq(6).text());
                 var rnngBals = typeof $('#cashBreakdownDenom_' + itemID + '').val() === 'undefined' ? '0' : $('#cashBreakdownDenom_' + itemID + '').val();
                 if (mcfTlrTrnsType.trim() == "DEPOSIT") {
-                    var newRnngBals = Number(rnngBals.replace(/[^-?0-9\.]/g, '')) + (Number(qty1) * Number(val));
+                    var newRnngBals = Number(rnngBals.replace(/[^-?0-9\.]/g,'')) + (Number(qty1) * Number(val));
                     $('#cashBreakdownRow' + i + '_RnngBal').val(addCommas(newRnngBals.toFixed(2)));
                 } else {
-                    var newRnngBals = Number(rnngBals.replace(/[^-?0-9\.]/g, '')) - (Number(qty1) * Number(val));
+                    var newRnngBals = Number(rnngBals.replace(/[^-?0-9\.]/g,'')) - (Number(qty1) * Number(val));
                     $('#cashBreakdownRow' + i + '_RnngBal').val(addCommas(newRnngBals.toFixed(2)));
                 }
             }
@@ -3808,7 +4088,7 @@ function calcAllMcfCbTtl() {
 function calcBlkCshRowsTtlVals() {
     var ttlAmount = 0;
     var ttlRowAmount = 0;
-    $('#oneVmsTrnsLnsTable').find('tr').each(function (i, el) {
+    $('#oneVmsTrnsLnsTable').find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -3818,8 +4098,8 @@ function calcBlkCshRowsTtlVals() {
                 var lineTrnsTyp1 = typeof $('#' + rowPrfxNm + rndmNum + '_TrnsType').val() === 'undefined' ? 'NotPresent' : $('#' + rowPrfxNm + rndmNum + '_TrnsType').val();
                 var ttlCptrd = typeof $('#' + rowPrfxNm + rndmNum + '_chqVal').val() === 'undefined' ? '0' : $('#' + rowPrfxNm + rndmNum + '_chqVal').val();
                 var exchngRate = typeof $('#' + rowPrfxNm + rndmNum + '_exchngRate').val() === 'undefined' ? '1' : $('#' + rowPrfxNm + rndmNum + '_exchngRate').val();
-                ttlRowAmount = (Number(ttlCptrd.replace(/[^-?0-9\.]/g, '')) * Number(exchngRate));
-                $('#' + rowPrfxNm + rndmNum + '_chqVal').val(addCommas(Number(ttlCptrd.replace(/[^-?0-9\.]/g, '')).toFixed(2)));
+                ttlRowAmount = (Number(ttlCptrd.replace(/[^-?0-9\.]/g,'')) * Number(exchngRate));
+                $('#' + rowPrfxNm + rndmNum + '_chqVal').val(addCommas(Number(ttlCptrd.replace(/[^-?0-9\.]/g,'')).toFixed(2)));
                 if (lineTrnsTyp1 === "WITHDRAWAL") {
                     ttlAmount = ttlAmount - ttlRowAmount;
                 } else {
@@ -3828,7 +4108,7 @@ function calcBlkCshRowsTtlVals() {
             }
         }
     });
-    $('#oneVmsBCashTrnsLnsTable').find('tr').each(function (i, el) {
+    $('#oneVmsBCashTrnsLnsTable').find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -3838,18 +4118,18 @@ function calcBlkCshRowsTtlVals() {
                 var lineTrnsTyp1 = typeof $('#' + rowPrfxNm + rndmNum + '_TrnsType').val() === 'undefined' ? 'NotPresent' : $('#' + rowPrfxNm + rndmNum + '_TrnsType').val();
                 var ttlCptrd = typeof $('#' + rowPrfxNm + rndmNum + '_chqVal').val() === 'undefined' ? '0' : $('#' + rowPrfxNm + rndmNum + '_chqVal').val();
                 var exchngRate = typeof $('#' + rowPrfxNm + rndmNum + '_exchngRate').val() === 'undefined' ? '1' : $('#' + rowPrfxNm + rndmNum + '_exchngRate').val();
-                ttlRowAmount = (Number(ttlCptrd.replace(/[^-?0-9\.]/g, '')) * Number(exchngRate.replace(/[^-?0-9\.]/g, '')));
-                $('#' + rowPrfxNm + rndmNum + '_chqVal').val(addCommas(Number(ttlCptrd.replace(/[^-?0-9\.]/g, '')).toFixed(2)));
+                ttlRowAmount = (Number(ttlCptrd.replace(/[^-?0-9\.]/g,'')) * Number(exchngRate.replace(/[^-?0-9\.]/g,'')));
+                $('#' + rowPrfxNm + rndmNum + '_chqVal').val(addCommas(Number(ttlCptrd.replace(/[^-?0-9\.]/g,'')).toFixed(2)));
                 var balsAfta = typeof $('#' + rowPrfxNm + rndmNum + '_BalsAfta').val() === 'undefined' ? '0' : $('#' + rowPrfxNm + rndmNum + '_BalsAfta').val();
                 var newBals = 0;
-                ttlRowAmount = (Number(ttlCptrd.replace(/[^-?0-9\.]/g, '')) * Number(exchngRate));
-                $('#' + rowPrfxNm + rndmNum + '_chqVal').val(addCommas(Number(ttlCptrd.replace(/[^-?0-9\.]/g, '')).toFixed(2)));
+                ttlRowAmount = (Number(ttlCptrd.replace(/[^-?0-9\.]/g,'')) * Number(exchngRate));
+                $('#' + rowPrfxNm + rndmNum + '_chqVal').val(addCommas(Number(ttlCptrd.replace(/[^-?0-9\.]/g,'')).toFixed(2)));
                 if (lineTrnsTyp1 === "WITHDRAWAL") {
                     ttlAmount = ttlAmount - ttlRowAmount;
-                    newBals = Number(balsAfta.replace(/[^-?0-9\.]/g, '')) - ttlRowAmount;
+                    newBals = Number(balsAfta.replace(/[^-?0-9\.]/g,'')) - ttlRowAmount;
                 } else {
                     ttlAmount = ttlAmount + ttlRowAmount;
-                    newBals = Number(balsAfta.replace(/[^-?0-9\.]/g, '')) + ttlRowAmount;
+                    newBals = Number(balsAfta.replace(/[^-?0-9\.]/g,'')) + ttlRowAmount;
                 }
                 $('#' + rowPrfxNm + rndmNum + '_BalsAftaD').val(addCommas(newBals.toFixed(2)));
             }
@@ -3857,7 +4137,7 @@ function calcBlkCshRowsTtlVals() {
     });
     var shdDoCashless = typeof $("#shdDoCashless").val() === 'undefined' ? '0' : $("#shdDoCashless").val();
     if (shdDoCashless !== '0') {
-        $('#oneTrnsfrMiscTrnsTable').find('tr').each(function (i, el) {
+        $('#oneTrnsfrMiscTrnsTable').find('tr').each(function (i,el) {
             if (i > 0) {
                 if (typeof $(el).attr('id') === 'undefined') {
                     /*Do Nothing*/
@@ -3867,9 +4147,9 @@ function calcBlkCshRowsTtlVals() {
                     var lineTrnsTyp1 = typeof $('#' + rowPrfxNm + rndmNum + '_TrnsTyp').val() === 'undefined' ? 'NotPresent' : $('#' + rowPrfxNm + rndmNum + '_TrnsTyp').val();
                     var ttlCptrd = typeof $('#' + rowPrfxNm + rndmNum + '_DstAmnt').val() === 'undefined' ? '0' : $('#' + rowPrfxNm + rndmNum + '_DstAmnt').val();
                     var exchngRate = typeof $('#' + rowPrfxNm + rndmNum + '_Rate').val() === 'undefined' ? '1' : $('#' + rowPrfxNm + rndmNum + '_Rate').val();
-                    ttlRowAmount = (Number(ttlCptrd.replace(/[^-?0-9\.]/g, '')) * Number(exchngRate.replace(/[^-?0-9\.]/g, '')));
-                    $('#' + rowPrfxNm + rndmNum + '_DstAmnt').val(addCommas(Number(ttlCptrd.replace(/[^-?0-9\.]/g, '')).toFixed(2)));
-                    ttlRowAmount = (Number(ttlCptrd.replace(/[^-?0-9\.]/g, '')) * Number(exchngRate));
+                    ttlRowAmount = (Number(ttlCptrd.replace(/[^-?0-9\.]/g,'')) * Number(exchngRate.replace(/[^-?0-9\.]/g,'')));
+                    $('#' + rowPrfxNm + rndmNum + '_DstAmnt').val(addCommas(Number(ttlCptrd.replace(/[^-?0-9\.]/g,'')).toFixed(2)));
+                    ttlRowAmount = (Number(ttlCptrd.replace(/[^-?0-9\.]/g,'')) * Number(exchngRate));
                     if (lineTrnsTyp1 === "WITHDRAWAL") {
                         ttlAmount = ttlAmount - ttlRowAmount;
                     } else {
@@ -3884,7 +4164,7 @@ function calcBlkCshRowsTtlVals() {
     $('#myCptrdValsTtlVal').val(ttlAmount.toFixed(2));
 }
 
-function getOneUOMBrkdwnForm(pKeyID, vwtype, rowIDAttrb) {
+function getOneUOMBrkdwnForm(pKeyID,vwtype,rowIDAttrb) {
     var rndmNum = rowIDAttrb.split("_")[1];
     var rowPrfxNm = rowIDAttrb.split("_")[0];
     var sbmtdTblRowID = 'oneVmsTrnsLnsTable';
@@ -3893,7 +4173,7 @@ function getOneUOMBrkdwnForm(pKeyID, vwtype, rowIDAttrb) {
     }
     var sbmtdItemID = $('#' + rowPrfxNm + rndmNum + '_ItmID').val();
     var varTtlQtyStr = $('#' + rowPrfxNm + rndmNum + '_Qty').val();
-    var varTtlQty = Number(varTtlQtyStr.replace(/[^-?0-9\.]/g, ''));
+    var varTtlQty = Number(varTtlQtyStr.replace(/[^-?0-9\.]/g,''));
     var sbmtdCrncyNm = typeof $("#vmsTrnsCrncyNm").val() === 'undefined' ? '' : $("#vmsTrnsCrncyNm").val();
 
     var lnkArgs = 'grp=25&typ=1&pg=2&vtyp=' + vwtype + '&sbmtdVmsTrnsHdrID=' + pKeyID +
@@ -3901,7 +4181,7 @@ function getOneUOMBrkdwnForm(pKeyID, vwtype, rowIDAttrb) {
         "&sbmtdRwNum=" + rndmNum + "&sbmtdCrncyNm=" + sbmtdCrncyNm +
         "&sbmtdTblRowID=" + sbmtdTblRowID + "&rowIDAttrb=" + rowIDAttrb;
 
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalx', 'ShowDialog', 'VMS Trns. QTY UOM Breakdown', 'myFormsModalxTitle', 'myFormsModalxBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalx','ShowDialog','VMS Trns. QTY UOM Breakdown','myFormsModalxTitle','myFormsModalxBody',function () {
         var table1 = $('#oneVmsQtyBrkDwnTable').DataTable({
             "paging": false,
             "ordering": false,
@@ -4114,7 +4394,7 @@ function afterShowBulk() {
         $(this).select();
     });
     $('#myFormsModalLg').off('hidden.bs.modal');
-    $('#myFormsModalLg').one('hidden.bs.modal', function (e) {
+    $('#myFormsModalLg').one('hidden.bs.modal',function (e) {
         $(e.currentTarget).unbind();
     });
     $('[data-toggle="tabajxblktrns"]').click(function (e) {
@@ -4237,7 +4517,7 @@ function afterShowTrsfr() {
         });
     });
     $('#myFormsModalLg').off('hidden.bs.modal');
-    $('#myFormsModalLg').one('hidden.bs.modal', function (e) {
+    $('#myFormsModalLg').one('hidden.bs.modal',function (e) {
         $('#myFormsModalBodyLg').html('');
         $('#myFormsModalTitleLg').html('');
         $(e.currentTarget).unbind();
@@ -4256,10 +4536,10 @@ function afterShowTrsfr() {
     $('#allOtherInputData99').val(0);
 }
 
-function getPrsnAdminCreate(daGender, daNationality, daReligion, daRelType, daRelCause, iDPrfxComboBox) {
-    loadScript("app/prs/prsn.js?v=" + jsFilesVrsn, function () {
-        loadScript("app/prs/prsn_admin.js?v=" + jsFilesVrsn, function () {
-            getBscProfileForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', 'Add Person Basic Profile (Direct)', -1, 23, 2, 'ADD', 'ShowDialog', daGender, daNationality, daReligion, daRelType, daRelCause, iDPrfxComboBox);
+function getPrsnAdminCreate(daGender,daNationality,daReligion,daRelType,daRelCause,iDPrfxComboBox) {
+    loadScript("app/prs/prsn.js?v=" + jsFilesVrsn,function () {
+        loadScript("app/prs/prsn_admin.js?v=" + jsFilesVrsn,function () {
+            getBscProfileForm('myFormsModalLg','myFormsModalBodyLg','myFormsModalTitleLg','dtAdmnBscPrsnPrflForm','Add Person Basic Profile (Direct)',-1,23,2,'ADD','ShowDialog',daGender,daNationality,daReligion,daRelType,daRelCause,iDPrfxComboBox);
         });
     });
 }
@@ -4270,15 +4550,15 @@ function getPrsnProfilePDF(pKeyID) {
         title: 'GET PDF',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Getting PDF...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
-    formData.append('grp', 8);
-    formData.append('typ', 1);
-    formData.append('pg', 5);
-    formData.append('q', 'VIEW');
-    formData.append('vtyp', 101);
-    formData.append('pKeyID', pKeyID);
+    formData.append('grp',8);
+    formData.append('typ',1);
+    formData.append('pg',5);
+    formData.append('q','VIEW');
+    formData.append('vtyp',101);
+    formData.append('pKeyID',pKeyID);
     var dwnldURL = "";
     var mailTo = "";
     var mailCc = "";
@@ -4286,7 +4566,7 @@ function getPrsnProfilePDF(pKeyID) {
     var bulkMessageBody = "";
     var mailAttchmnts = "";
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -4336,38 +4616,38 @@ function getPrsnProfilePDF(pKeyID) {
                                                                                  search: 'lorem ipsum'
                                                                                  }*/
                                     };
-                                    PDFObject.embed(dwnldURL, "#allRhoPDFDocDisplays", options);
+                                    PDFObject.embed(dwnldURL,"#allRhoPDFDocDisplays",options);
                                 },
                                 buttons: [{
-                                        label: 'CLOSE',
-                                        icon: 'glyphicon glyphicon-menu-left',
-                                        cssClass: 'btn-default',
-                                        action: function (dialogItself) {
-                                            var $button = this;
-                                            dialogItself.setClosable(true);
-                                            dialogItself.close();
-                                        }
-                                    }, {
-                                        id: 'popOKBtnSsn',
-                                        label: 'RELOAD PDF',
-                                        icon: 'glyphicon glyphicon glyphicon-refresh',
-                                        cssClass: 'btn-default',
-                                        action: function (dialogItself) {
-                                            popDialogItself = dialogItself;
-
-                                            var options = {
-                                                height: "550px"
-                                                /*,
-                                                                                                 page: '2',
-                                                                                                 pdfOpenParams: {
-                                                                                                 view: 'FitV',
-                                                                                                 pagemode: 'thumbs',
-                                                                                                 search: 'lorem ipsum'
-                                                                                                 }*/
-                                            };
-                                            PDFObject.embed(dwnldURL, "#allRhoPDFDocDisplays", options);
-                                        }
+                                    label: 'CLOSE',
+                                    icon: 'glyphicon glyphicon-menu-left',
+                                    cssClass: 'btn-default',
+                                    action: function (dialogItself) {
+                                        var $button = this;
+                                        dialogItself.setClosable(true);
+                                        dialogItself.close();
                                     }
+                                },{
+                                    id: 'popOKBtnSsn',
+                                    label: 'RELOAD PDF',
+                                    icon: 'glyphicon glyphicon glyphicon-refresh',
+                                    cssClass: 'btn-default',
+                                    action: function (dialogItself) {
+                                        popDialogItself = dialogItself;
+
+                                        var options = {
+                                            height: "550px"
+                                            /*,
+                                                                                             page: '2',
+                                                                                             pdfOpenParams: {
+                                                                                             view: 'FitV',
+                                                                                             pagemode: 'thumbs',
+                                                                                             search: 'lorem ipsum'
+                                                                                             }*/
+                                        };
+                                        PDFObject.embed(dwnldURL,"#allRhoPDFDocDisplays",options);
+                                    }
+                                }
                                     /*, {
                                                                          id: 'popOKBtnHtml',
                                                                          label: 'VIEW HTML',
@@ -4378,29 +4658,29 @@ function getPrsnProfilePDF(pKeyID) {
                                                                          window.open(dwnldURL.replace(/(.pdf)/gi, ".html"), '_blank');
                                                                          }
                                                                          }*/
-                                    , {
-                                        id: 'popOKBtnEmail',
-                                        label: 'SEND MAIL',
-                                        icon: 'glyphicon glyphicon-envelope',
-                                        cssClass: 'btn-primary',
-                                        action: function (dialogItself) {
-                                            popDialogItself = dialogItself;
-                                            sendGeneralMessage1('Email', mailTo, mailCc, mailSubject, bulkMessageBody, mailAttchmnts);
-                                            /*window.open(dwnldURL.replace(/(.pdf)/gi, ".html"), '_blank');*/
-                                            dialogItself.setClosable(true);
-                                            dialogItself.close();
-                                        }
+                                    ,{
+                                    id: 'popOKBtnEmail',
+                                    label: 'SEND MAIL',
+                                    icon: 'glyphicon glyphicon-envelope',
+                                    cssClass: 'btn-primary',
+                                    action: function (dialogItself) {
+                                        popDialogItself = dialogItself;
+                                        sendGeneralMessage1('Email',mailTo,mailCc,mailSubject,bulkMessageBody,mailAttchmnts);
+                                        /*window.open(dwnldURL.replace(/(.pdf)/gi, ".html"), '_blank');*/
+                                        dialogItself.setClosable(true);
+                                        dialogItself.close();
                                     }
+                                }
                                 ]
                             });
                         }
-                    }, 50);
+                    },50);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     console.log(textStatus + " " + errorThrown);
                     console.warn(jqXHR.responseText);
                 }
-            });            
+            });
         });
     });
 }

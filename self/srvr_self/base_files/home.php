@@ -135,6 +135,11 @@ $lighterColor4 = rhoHex2Rgba($bckcolorOnly1, 0.05);
         width: 105% !important;
     }
 
+    .note-modal {
+        z-index: 9998 !important;
+        /*1055*/
+    }
+
     .basic_person_lg {
         border: 1px solid #d0d0d0 !important;
         border-radius: 4px;
@@ -237,7 +242,7 @@ $lighterColor4 = rhoHex2Rgba($bckcolorOnly1, 0.05);
 
     .lovtd {
         padding: 1px 5px 1px 5px !important;
-        line-height: 1.42857143 !important;
+        line-height: 1.01 !important;/**1.42857143 */
         vertical-align: middle !important;
     }
 
