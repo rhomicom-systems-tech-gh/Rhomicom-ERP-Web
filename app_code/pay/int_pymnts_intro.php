@@ -3085,28 +3085,29 @@ function deleteBulkPayRun($payrunid, $payRunNm)
         $rvrslmspyid = getMsPyID($payRnNm . " (Reversal)", $orgID);
     }
 
-    $strSql = "SELECT count(1) FROM pay.pay_itm_trnsctns a WHERE(a.pymnt_vldty_status='VALID' and a.mass_pay_id = " . $orgnlMsPyID . " and a.src_py_trns_id<=0)";
+    $strSql = "SELECT count(1) FROM pay.pay_itm_trnsctns a WHERE(a.pymnt_vldty_status='VALID' and a.mass_pay_id = " . $orgnlMsPyID . " and a.src_py_trns_id<=0 and a.amount_paid!=0)";
     $result1 = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result1)) {
         $trnsCnt2 = (float) $row[0];
     }
-    $strSql2 = "SELECT count(1) FROM pay.pay_itm_trnsctns a WHERE(a.pymnt_vldty_status='VOID' and a.mass_pay_id = " . $rvrslmspyid . " and a.src_py_trns_id>0)";
+    $strSql2 = "SELECT count(1) FROM pay.pay_itm_trnsctns a WHERE(a.pymnt_vldty_status='VOID' and a.mass_pay_id = " . $rvrslmspyid . " and a.src_py_trns_id>0 and a.amount_paid!=0)";
     $result2 = executeSQLNoParams($strSql2);
     while ($row = loc_db_fetch_array($result2)) {
         $trnsCnt3 = (float) $row[0];
     }
-    $strSql3 = "Select count(a.interface_id) from pay.pay_gl_interface a, pay.pay_itm_trnsctns b where a.source_trns_id = b.pay_trns_id and b.mass_pay_id=" . $orgnlMsPyID . "";
+    $strSql3 = "Select count(a.interface_id) from pay.pay_gl_interface a, pay.pay_itm_trnsctns b where a.source_trns_id = b.pay_trns_id and a.gl_batch_id>0 and b.mass_pay_id=" . $orgnlMsPyID . "";
     $result3 = executeSQLNoParams($strSql3);
     while ($row = loc_db_fetch_array($result3)) {
         $trnsCnt4 = (float) $row[0];
     }
-    $strSql31 = "Select count(a.interface_id) from pay.pay_gl_interface a, pay.pay_itm_trnsctns b where a.source_trns_id = b.pay_trns_id and b.mass_pay_id=" . $rvrslmspyid . "";
+    $strSql31 = "Select count(a.interface_id) from pay.pay_gl_interface a, pay.pay_itm_trnsctns b where a.source_trns_id = b.pay_trns_id and a.gl_batch_id>0 and b.mass_pay_id=" . $rvrslmspyid . "";
     $result31 = executeSQLNoParams($strSql31);
     while ($row = loc_db_fetch_array($result31)) {
         $trnsCnt4 += (float) $row[0];
     }
     $isSentToGl = (float) getGnrlRecNm("pay.pay_mass_pay_run_hdr", "mass_pay_id", "sent_to_gl", $orgnlMsPyID);
     $isSentToGl += (float) getGnrlRecNm("pay.pay_mass_pay_run_hdr", "mass_pay_id", "sent_to_gl", $rvrslmspyid);
+    //echo "GL:".$isSentToGl."::".$trnsCnt4.":Bulk:".$isBlkPayRn."::".$trnsCnt2."::".$trnsCnt3;
     if (($isSentToGl > 0 && $trnsCnt4 > 0) || ($isBlkPayRn > 0 && ($trnsCnt2 > 0 || $trnsCnt3 > 0))) {
         $dsply = "No Record Deleted<br/>Cannot delete Payments which have been Run or Sent to GL and/or haven't been VOIDED!";
         return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
