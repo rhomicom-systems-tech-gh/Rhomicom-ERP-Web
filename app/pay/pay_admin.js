@@ -28,7 +28,7 @@ function prepareItemSets() {
     });
     $('#itemSetItmsTable').wrap('<div class="dataTables_scroll"/>');
 
-    $('#allItemSetsTable tbody').on('click', 'tr', function () {
+    $('#allItemSetsTable tbody').on('click','tr',function () {
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
 
@@ -39,11 +39,11 @@ function prepareItemSets() {
         }
         var rndmNum = $(this).attr('id').split("_")[1];
         var pkeyID = typeof $('#allItemSetsRow' + rndmNum + '_ItemSetID').val() === 'undefined' ? '%' : $('#allItemSetsRow' + rndmNum + '_ItemSetID').val();
-        getOneItemSetItms(pkeyID, 1);
+        getOneItemSetItms(pkeyID,1);
     });
 
     $('#allItemSetsTable tbody')
-        .on('mouseenter', 'tr', function () {
+        .on('mouseenter','tr',function () {
             if ($(this).hasClass('highlight')) {
                 $(this).removeClass('highlight');
             } else {
@@ -86,7 +86,7 @@ function prepareMassPay() {
     });
 
     $('#payMassPyTable tbody').off('click');
-    $('#payMassPyTable tbody').on('click', 'tr', function () {
+    $('#payMassPyTable tbody').on('click','tr',function () {
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
         } else {
@@ -95,12 +95,12 @@ function prepareMassPay() {
         }
         var rndmNum = $(this).attr('id').split("_")[1];
         var pkeyID = typeof $('#payMassPyRow' + rndmNum + '_CodeID').val() === 'undefined' ? '-1' : $('#payMassPyRow' + rndmNum + '_CodeID').val();
-        getOnePayMassPyForm(pkeyID, 1);
+        getOnePayMassPyForm(pkeyID,1);
     });
     $('#payMassPyTable tbody')
-        .off('mouseenter', 'tr');
+        .off('mouseenter','tr');
     $('#payMassPyTable tbody')
-        .on('mouseenter', 'tr', function () {
+        .on('mouseenter','tr',function () {
             if ($(this).hasClass('highlight')) {
                 $(this).removeClass('highlight');
             } else {
@@ -205,7 +205,7 @@ function preparePayItems() {
     });
 
     $('#payPayItmsTable tbody').off('click');
-    $('#payPayItmsTable tbody').on('click', 'tr', function () {
+    $('#payPayItmsTable tbody').on('click','tr',function () {
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
         } else {
@@ -214,12 +214,12 @@ function preparePayItems() {
         }
         var rndmNum = $(this).attr('id').split("_")[1];
         var pkeyID = typeof $('#payPayItmsRow' + rndmNum + '_ItemID').val() === 'undefined' ? '-1' : $('#payPayItmsRow' + rndmNum + '_ItemID').val();
-        getOnePayPayItmsForm(pkeyID, 0);
+        getOnePayPayItmsForm(pkeyID,0);
     });
     $('#payPayItmsTable tbody')
-        .off('mouseenter', 'tr');
+        .off('mouseenter','tr');
     $('#payPayItmsTable tbody')
-        .on('mouseenter', 'tr', function () {
+        .on('mouseenter','tr',function () {
             if ($(this).hasClass('highlight')) {
                 $(this).removeClass('highlight');
             } else {
@@ -310,7 +310,7 @@ function prepareGlobalVals() {
         forceParse: true
     });
     $('#payGlblValsTable tbody').off('click');
-    $('#payGlblValsTable tbody').on('click', 'tr', function () {
+    $('#payGlblValsTable tbody').on('click','tr',function () {
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
         } else {
@@ -319,12 +319,12 @@ function prepareGlobalVals() {
         }
         var rndmNum = $(this).attr('id').split("_")[1];
         var pkeyID = typeof $('#payGlblValsRow' + rndmNum + '_GBVID').val() === 'undefined' ? '-1' : $('#payGlblValsRow' + rndmNum + '_GBVID').val();
-        getOnePayGlblValsForm(pkeyID, 1);
+        getOnePayGlblValsForm(pkeyID,1);
     });
     $('#payGlblValsTable tbody')
-        .off('mouseenter', 'tr');
+        .off('mouseenter','tr');
     $('#payGlblValsTable tbody')
-        .on('mouseenter', 'tr', function () {
+        .on('mouseenter','tr',function () {
             if ($(this).hasClass('highlight')) {
                 $(this).removeClass('highlight');
             } else {
@@ -369,7 +369,7 @@ function preparePrsSets() {
     });
     $('#prsSetPrsnsTable').wrap('<div class="dataTables_scroll"/>');
 
-    $('#allPrsSetsTable tbody').on('click', 'tr', function () {
+    $('#allPrsSetsTable tbody').on('click','tr',function () {
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
 
@@ -380,10 +380,10 @@ function preparePrsSets() {
         }
         var rndmNum = $(this).attr('id').split("_")[1];
         var pkeyID = typeof $('#allPrsSetsRow' + rndmNum + '_PrsSetID').val() === 'undefined' ? '%' : $('#allPrsSetsRow' + rndmNum + '_PrsSetID').val();
-        getOnePrsnSetPrsns(pkeyID, 1);
+        getOnePrsnSetPrsns(pkeyID,1);
     });
     $('#allPrsSetsTable tbody')
-        .on('mouseenter', 'tr', function () {
+        .on('mouseenter','tr',function () {
             if ($(this).hasClass('highlight')) {
                 $(this).removeClass('highlight');
             } else {
@@ -448,7 +448,7 @@ function prepareQckPay() {
             var targ = $this.attr('href');
             var dttrgt = $this.attr('data-rhodata');
             var linkArgs = 'grp=7&typ=1' + dttrgt;
-            return openATab(targ, linkArgs);
+            return openATab(targ,linkArgs);
         });
     });
 
@@ -472,7 +472,7 @@ function prepareQckPay() {
         "scrollX": false
     });
     $('#prsnPyHstrysTable').wrap('<div class="dataTables_scroll"/>');
-    $('#qckPayPrsnsTable tbody').on('click', 'tr', function () {
+    $('#qckPayPrsnsTable tbody').on('click','tr',function () {
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
 
@@ -483,10 +483,10 @@ function prepareQckPay() {
         }
         var rndmNum = $(this).attr('id').split("_")[1];
         var pkeyID = typeof $('#qckPayPrsnsRow' + rndmNum + '_PrsnID').val() === 'undefined' ? '%' : $('#qckPayPrsnsRow' + rndmNum + '_PrsnID').val();
-        getOneQckPayPrsnForm(pkeyID, 1);
+        getOneQckPayPrsnForm(pkeyID,1);
     });
     $('#qckPayPrsnsTable tbody')
-        .on('mouseenter', 'tr', function () {
+        .on('mouseenter','tr',function () {
             if ($(this).hasClass('highlight')) {
                 $(this).removeClass('highlight');
             } else {
@@ -494,7 +494,7 @@ function prepareQckPay() {
                 $(this).addClass('highlight');
             }
         });
-    $('#prsnPyHstrysTable tbody').on('click', 'tr', function () {
+    $('#prsnPyHstrysTable tbody').on('click','tr',function () {
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
 
@@ -505,7 +505,7 @@ function prepareQckPay() {
         }
     });
     $('#prsnPyHstrysTable tbody')
-        .on('mouseenter', 'tr', function () {
+        .on('mouseenter','tr',function () {
             if ($(this).hasClass('highlight')) {
                 $(this).removeClass('highlight');
             } else {
@@ -516,10 +516,10 @@ function prepareQckPay() {
 }
 
 function rfrshQckPayPrsns() {
-    getQckPayPrsns('', '#allmodules', 'grp=7&typ=1&pg=4&vtyp=0');
+    getQckPayPrsns('','#allmodules','grp=7&typ=1&pg=4&vtyp=0');
 }
 
-function getQckPayPrsns(actionText, slctr, linkArgs) {
+function getQckPayPrsns(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#qckPayPrsnsSrchFor").val() === 'undefined' ? '%' : $("#qckPayPrsnsSrchFor").val();
     var srchIn = typeof $("#qckPayPrsnsSrchIn").val() === 'undefined' ? 'Both' : $("#qckPayPrsnsSrchIn").val();
     var pageNo = typeof $("#qckPayPrsnsPageNo").val() === 'undefined' ? 1 : $("#qckPayPrsnsPageNo").val();
@@ -539,19 +539,19 @@ function getQckPayPrsns(actionText, slctr, linkArgs) {
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" +
         pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy +
         "&sbmtdPrsnSetID=" + qckPayPrsnSetID + "&sbmtdItmSetID=" + qckPayItmSetID;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function enterKeyFuncQckPayPrsns(e, actionText, slctr, linkArgs) {
+function enterKeyFuncQckPayPrsns(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getQckPayPrsns(actionText, slctr, linkArgs);
+        getQckPayPrsns(actionText,slctr,linkArgs);
     }
 }
 
-function getOneQckPayPrsnForm(pKeyID, vwtype) {
+function getOneQckPayPrsnForm(pKeyID,vwtype) {
     var lnkArgs = 'grp=7&typ=1&pg=4&vtyp=' + vwtype + '&sbmtdPrsnSetMmbrID=' + pKeyID;
-    doAjaxWthCallBck(lnkArgs, 'qckPayPrsnsDetailInfo', 'PasteDirect', '', '', '', function () {
+    doAjaxWthCallBck(lnkArgs,'qckPayPrsnsDetailInfo','PasteDirect','','','',function () {
         $(function () {
             /*var numelms=$('[data-toggle="tabajxgst"]').size();*/
             $('[data-toggle="tabajxqpay"]').click(function (e) {
@@ -560,7 +560,7 @@ function getOneQckPayPrsnForm(pKeyID, vwtype) {
                 var targ = $this.attr('href');
                 var dttrgt = $this.attr('data-rhodata');
                 var linkArgs = 'grp=7&typ=1' + dttrgt;
-                return openATab(targ, linkArgs);
+                return openATab(targ,linkArgs);
             });
         });
         var table1 = $('#prsnPyHstrysTable').DataTable({
@@ -571,7 +571,7 @@ function getOneQckPayPrsnForm(pKeyID, vwtype) {
             "scrollX": false
         });
         $('#prsnPyHstrysTable').wrap('<div class="dataTables_scroll"/>');
-        $('#prsnPyHstrysTable tbody').on('click', 'tr', function () {
+        $('#prsnPyHstrysTable tbody').on('click','tr',function () {
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
 
@@ -582,7 +582,7 @@ function getOneQckPayPrsnForm(pKeyID, vwtype) {
             }
         });
         $('#prsnPyHstrysTable tbody')
-            .on('mouseenter', 'tr', function () {
+            .on('mouseenter','tr',function () {
                 if ($(this).hasClass('highlight')) {
                     $(this).removeClass('highlight');
                 } else {
@@ -593,7 +593,7 @@ function getOneQckPayPrsnForm(pKeyID, vwtype) {
     });
 }
 
-function getPrsnPyHstrys(actionText, slctr, linkArgs) {
+function getPrsnPyHstrys(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#prsnPyHstrysSrchFor").val() === 'undefined' ? '%' : $("#prsnPyHstrysSrchFor").val();
     var srchIn = typeof $("#prsnPyHstrysSrchIn").val() === 'undefined' ? 'Both' : $("#prsnPyHstrysSrchIn").val();
     var pageNo = typeof $("#prsnPyHstrysPageNo").val() === 'undefined' ? 1 : $("#prsnPyHstrysPageNo").val();
@@ -608,7 +608,7 @@ function getPrsnPyHstrys(actionText, slctr, linkArgs) {
         pageNo = parseInt(pageNo) - 1;
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    doAjaxWthCallBck(linkArgs, 'prsnPyHstrysList', 'PasteDirect', '', '', '', function () {
+    doAjaxWthCallBck(linkArgs,'prsnPyHstrysList','PasteDirect','','','',function () {
         var table1 = $('#prsnPyHstrysTable').DataTable({
             "paging": false,
             "ordering": false,
@@ -617,7 +617,7 @@ function getPrsnPyHstrys(actionText, slctr, linkArgs) {
             "scrollX": false
         });
         $('#prsnPyHstrysTable').wrap('<div class="dataTables_scroll"/>');
-        $('#prsnPyHstrysTable tbody').on('click', 'tr', function () {
+        $('#prsnPyHstrysTable tbody').on('click','tr',function () {
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
 
@@ -628,7 +628,7 @@ function getPrsnPyHstrys(actionText, slctr, linkArgs) {
             }
         });
         $('#prsnPyHstrysTable tbody')
-            .on('mouseenter', 'tr', function () {
+            .on('mouseenter','tr',function () {
                 if ($(this).hasClass('highlight')) {
                     $(this).removeClass('highlight');
                 } else {
@@ -639,16 +639,16 @@ function getPrsnPyHstrys(actionText, slctr, linkArgs) {
     });
 }
 
-function enterKeyFuncPrsnPyHstrys(e, actionText, slctr, linkArgs) {
+function enterKeyFuncPrsnPyHstrys(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getPrsnPyHstrys(actionText, slctr, linkArgs);
+        getPrsnPyHstrys(actionText,slctr,linkArgs);
     }
 }
 
-function getOnePrsnPyHstrysForm(pKeyID, pKeyID1, vwtype, sbmtdPrsnSetMmbrID, dialogTitle) {
+function getOnePrsnPyHstrysForm(pKeyID,pKeyID1,vwtype,sbmtdPrsnSetMmbrID,dialogTitle) {
     var lnkArgs = 'grp=7&typ=1&pg=1&vtyp=' + vwtype + '&sbmtdPyReqID=' + pKeyID1 + '&sbmtdMspyID=' + pKeyID + '&sbmtdPrsnSetMmbrID=' + sbmtdPrsnSetMmbrID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalLg', 'ShowDialog', dialogTitle, 'myFormsModalTitleLg', 'myFormsModalBodyLg', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalLg','ShowDialog',dialogTitle,'myFormsModalTitleLg','myFormsModalBodyLg',function () {
         var table1 = $('#myPayRnLinesTable').DataTable({
             "paging": false,
             "ordering": false,
@@ -662,7 +662,7 @@ function getOnePrsnPyHstrysForm(pKeyID, pKeyID1, vwtype, sbmtdPrsnSetMmbrID, dia
 
 }
 
-function getAllPrsnItms(actionText, slctr, linkArgs) {
+function getAllPrsnItms(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#prsnItmsSrchFor").val() === 'undefined' ? '%' : $("#prsnItmsSrchFor").val();
     var srchIn = typeof $("#prsnItmsSrchIn").val() === 'undefined' ? 'Both' : $("#prsnItmsSrchIn").val();
     var pageNo = typeof $("#prsnItmsPageNo").val() === 'undefined' ? 1 : $("#prsnItmsPageNo").val();
@@ -677,20 +677,20 @@ function getAllPrsnItms(actionText, slctr, linkArgs) {
         pageNo = parseInt(pageNo) - 1;
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function enterKeyFuncPrsnItms(e, actionText, slctr, linkArgs) {
+function enterKeyFuncPrsnItms(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getAllPrsnItms(actionText, slctr, linkArgs);
+        getAllPrsnItms(actionText,slctr,linkArgs);
     }
 }
 
 function savePrsnItmsForm() {
     var sbmtdPrsnSetMmbrID = typeof $("#qckPayPrsns_PrsnID").val() === 'undefined' ? '-1' : $("#qckPayPrsns_PrsnID").val();
     var slctdPrsnItems = "";
-    $('#prsnItmsTable').find('tr').each(function (i, el) {
+    $('#prsnItmsTable').find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -700,11 +700,11 @@ function savePrsnItmsForm() {
                     /*Do Nothing*/
                 } else {
                     slctdPrsnItems = slctdPrsnItems +
-                        $('#prsnItmsRow' + rndmNum + '_PKeyID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#prsnItmsRow' + rndmNum + '_PrsItmID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#prsnItmsRow' + rndmNum + '_PrsItmValID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#prsnItmsRow' + rndmNum + '_StrtDte').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#prsnItmsRow' + rndmNum + '_EndDte').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                        $('#prsnItmsRow' + rndmNum + '_PKeyID').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#prsnItmsRow' + rndmNum + '_PrsItmID').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#prsnItmsRow' + rndmNum + '_PrsItmValID').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#prsnItmsRow' + rndmNum + '_StrtDte').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#prsnItmsRow' + rndmNum + '_EndDte').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "|";
                 }
             }
         }
@@ -714,11 +714,11 @@ function savePrsnItmsForm() {
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Person Items...Please Wait...</p>',
         callback: function () {
-            getAllPrsnItms('', '#prsnPyItmsAsgndPage', 'grp=7&typ=1&pg=4&vtyp=3&sbmtdPrsnSetMmbrID=' + sbmtdPrsnSetMmbrID);;
+            getAllPrsnItms('','#prsnPyItmsAsgndPage','grp=7&typ=1&pg=4&vtyp=3&sbmtdPrsnSetMmbrID=' + sbmtdPrsnSetMmbrID);;
         }
     });
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -736,9 +736,9 @@ function savePrsnItmsForm() {
                 success: function (result) {
                     setTimeout(function () {
                         dialog.find('.bootbox-body').html(result);
-                    }, 500);
+                    },500);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     /*dialog.find('.bootbox-body').html(errorThrown);*/
                     console.warn(jqXHR.responseText);
                 }
@@ -780,7 +780,7 @@ function delPrsnItem(rowIDAttrb) {
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -801,9 +801,9 @@ function delPrsnItem(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -812,7 +812,7 @@ function delPrsnItem(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -823,7 +823,7 @@ function delPrsnItem(rowIDAttrb) {
 function savePrsnAccountForm() {
     var sbmtdPrsnSetMmbrID = typeof $("#qckPayPrsns_PrsnID").val() === 'undefined' ? '-1' : $("#qckPayPrsns_PrsnID").val();
     var slctdPrsnAccount = "";
-    $('#prsnBanksTable').find('tr').each(function (i, el) {
+    $('#prsnBanksTable').find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -833,14 +833,14 @@ function savePrsnAccountForm() {
                     /*Do Nothing*/
                 } else {
                     slctdPrsnAccount = slctdPrsnAccount +
-                        $('#prsnBanksRow' + rndmNum + '_PKeyID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#prsnBanksRow' + rndmNum + '_BankNm').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#prsnBanksRow' + rndmNum + '_BankBrnchs').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#prsnBanksRow' + rndmNum + '_AcntNm').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#prsnBanksRow' + rndmNum + '_AcntNum').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#prsnBanksRow' + rndmNum + '_AcntTyp').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#prsnBanksRow' + rndmNum + '_NetPrtn').val().replace(/[^-?0-9\.]/g, '').replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#prsnBanksRow' + rndmNum + '_PrtnUOM').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                        $('#prsnBanksRow' + rndmNum + '_PKeyID').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#prsnBanksRow' + rndmNum + '_BankNm').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#prsnBanksRow' + rndmNum + '_BankBrnchs').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#prsnBanksRow' + rndmNum + '_AcntNm').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#prsnBanksRow' + rndmNum + '_AcntNum').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#prsnBanksRow' + rndmNum + '_AcntTyp').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#prsnBanksRow' + rndmNum + '_NetPrtn').val().replace(/[^-?0-9\.]/g,'').replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#prsnBanksRow' + rndmNum + '_PrtnUOM').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "|";
                 }
             }
         }
@@ -850,11 +850,11 @@ function savePrsnAccountForm() {
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Person Accounts...Please Wait...</p>',
         callback: function () {
-            getAllPrsnItms('', '#prsnBankAcntsPage', 'grp=7&typ=1&pg=4&vtyp=4&sbmtdPrsnSetMmbrID=' + sbmtdPrsnSetMmbrID);
+            getAllPrsnItms('','#prsnBankAcntsPage','grp=7&typ=1&pg=4&vtyp=4&sbmtdPrsnSetMmbrID=' + sbmtdPrsnSetMmbrID);
         }
     });
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -872,9 +872,9 @@ function savePrsnAccountForm() {
                 success: function (result) {
                     setTimeout(function () {
                         dialog.find('.bootbox-body').html(result);
-                    }, 500);
+                    },500);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     /*dialog.find('.bootbox-body').html(errorThrown);*/
                     console.warn(jqXHR.responseText);
                 }
@@ -916,7 +916,7 @@ function delPrsnAccount(rowIDAttrb) {
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -937,9 +937,9 @@ function delPrsnAccount(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -948,7 +948,7 @@ function delPrsnAccount(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -956,7 +956,7 @@ function delPrsnAccount(rowIDAttrb) {
     });
 }
 
-function getAllPrsSets(actionText, slctr, linkArgs) {
+function getAllPrsSets(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#allPrsSetsSrchFor").val() === 'undefined' ? '%' : $("#allPrsSetsSrchFor").val();
     var srchIn = typeof $("#allPrsSetsSrchIn").val() === 'undefined' ? 'Both' : $("#allPrsSetsSrchIn").val();
     var pageNo = typeof $("#allPrsSetsPageNo").val() === 'undefined' ? 1 : $("#allPrsSetsPageNo").val();
@@ -971,19 +971,19 @@ function getAllPrsSets(actionText, slctr, linkArgs) {
         pageNo = parseInt(pageNo) - 1;
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function enterKeyFuncAllPrsSets(e, actionText, slctr, linkArgs) {
+function enterKeyFuncAllPrsSets(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getAllItemSets(actionText, slctr, linkArgs);
+        getAllItemSets(actionText,slctr,linkArgs);
     }
 }
 
-function getOnePrsnSetPrsns(pKeyID, vwtype) {
+function getOnePrsnSetPrsns(pKeyID,vwtype) {
     var lnkArgs = 'grp=7&typ=1&pg=6&vtyp=' + vwtype + '&sbmtdPrsnSetHdrID=' + pKeyID;
-    doAjaxWthCallBck(lnkArgs, 'allPrsSetsDetailInfo', 'PasteDirect', '', '', '', function () {
+    doAjaxWthCallBck(lnkArgs,'allPrsSetsDetailInfo','PasteDirect','','','',function () {
         var table1 = $('#prsSetPrsnsTable').DataTable({
             "paging": false,
             "ordering": false,
@@ -996,7 +996,7 @@ function getOnePrsnSetPrsns(pKeyID, vwtype) {
     });
 }
 
-function getAllPrsSetPrsns(actionText, slctr, linkArgs) {
+function getAllPrsSetPrsns(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#prsSetPrsnsSrchFor").val() === 'undefined' ? '%' : $("#prsSetPrsnsSrchFor").val();
     var srchIn = typeof $("#prsSetPrsnsSrchIn").val() === 'undefined' ? 'Both' : $("#prsSetPrsnsSrchIn").val();
     var pageNo = typeof $("#prsSetPrsnsPageNo").val() === 'undefined' ? 1 : $("#prsSetPrsnsPageNo").val();
@@ -1011,19 +1011,19 @@ function getAllPrsSetPrsns(actionText, slctr, linkArgs) {
         pageNo = parseInt(pageNo) - 1;
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function enterKeyFuncPrsSetPrsns(e, actionText, slctr, linkArgs) {
+function enterKeyFuncPrsSetPrsns(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getAllPrsSetPrsns(actionText, slctr, linkArgs);
+        getAllPrsSetPrsns(actionText,slctr,linkArgs);
     }
 }
 
-function getOnePrsSetForm(pKeyID, vwtype) {
+function getOnePrsSetForm(pKeyID,vwtype) {
     var lnkArgs = 'grp=7&typ=1&pg=6&vtyp=' + vwtype + '&sbmtdPrsnSetHdrID=' + pKeyID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalNrml', 'ShowDialog', 'Person Set Details (ID:' + pKeyID + ')', 'myFormsModalNrmlTitle', 'myFormsModalNrmlBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalNrml','ShowDialog','Person Set Details (ID:' + pKeyID + ')','myFormsModalNrmlTitle','myFormsModalNrmlBody',function () {
         var table1 = $('#prsSetAllwdRolesTable').DataTable({
             "paging": false,
             "ordering": false,
@@ -1039,7 +1039,7 @@ function getOnePrsSetForm(pKeyID, vwtype) {
     });
 }
 
-function savePrsnSetForm(actionText, slctr, linkArgs) {
+function savePrsnSetForm(actionText,slctr,linkArgs) {
     var prsnSetNm = typeof $("#prsnSetNm").val() === 'undefined' ? '' : $("#prsnSetNm").val();
     var prsnSetID = typeof $("#prsnSetID").val() === 'undefined' ? '-1' : $("#prsnSetID").val();
     var prsnSetDesc = typeof $("#prsnSetDesc").val() === 'undefined' ? '' : $("#prsnSetDesc").val();
@@ -1067,7 +1067,7 @@ function savePrsnSetForm(actionText, slctr, linkArgs) {
         return false;
     }
     var slctdPrsnSetRoles = "";
-    $('#prsSetAllwdRolesTable').find('tr').each(function (i, el) {
+    $('#prsSetAllwdRolesTable').find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -1076,9 +1076,9 @@ function savePrsnSetForm(actionText, slctr, linkArgs) {
                 if (typeof $('#prsSetAlwdRlsRow' + rndmNum + '_RoleID').val() === 'undefined') {
                     /*Do Nothing*/
                 } else {
-                    slctdPrsnSetRoles = slctdPrsnSetRoles + $('#prsSetAlwdRlsRow' + rndmNum + '_PayRoleID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#prsSetAlwdRlsRow' + rndmNum + '_RoleNm').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#prsSetAlwdRlsRow' + rndmNum + '_RoleID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                    slctdPrsnSetRoles = slctdPrsnSetRoles + $('#prsSetAlwdRlsRow' + rndmNum + '_PayRoleID').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#prsSetAlwdRlsRow' + rndmNum + '_RoleNm').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#prsSetAlwdRlsRow' + rndmNum + '_RoleID').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "|";
                 }
             }
         }
@@ -1089,11 +1089,11 @@ function savePrsnSetForm(actionText, slctr, linkArgs) {
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Person Set...Please Wait...</p>',
         callback: function () {
             $('#myFormsModalNrml').modal('hide');
-            getAllItemSets(actionText, slctr, linkArgs);
+            getAllItemSets(actionText,slctr,linkArgs);
         }
     });
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -1117,9 +1117,9 @@ function savePrsnSetForm(actionText, slctr, linkArgs) {
                 success: function (result) {
                     setTimeout(function () {
                         dialog.find('.bootbox-body').html(result);
-                    }, 500);
+                    },500);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     /*dialog.find('.bootbox-body').html(errorThrown);*/
                     console.warn(jqXHR.responseText);
                 }
@@ -1157,12 +1157,12 @@ function delRoleSet(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Role Set...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -1182,9 +1182,9 @@ function delRoleSet(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -1193,7 +1193,7 @@ function delRoleSet(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -1201,10 +1201,10 @@ function delRoleSet(rowIDAttrb) {
     });
 }
 
-function savePrsnSetPrsns(actionText, slctr, linkArgs) {
+function savePrsnSetPrsns(actionText,slctr,linkArgs) {
     var sbmtdPrsnSetHdrID = typeof $("#sbmtdPrsnSetHdrID").val() === 'undefined' ? '-1' : $("#sbmtdPrsnSetHdrID").val();
     var slctdPrsnSetPrsns = "";
-    $('#prsSetPrsnsTable').find('tr').each(function (i, el) {
+    $('#prsSetPrsnsTable').find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -1213,8 +1213,8 @@ function savePrsnSetPrsns(actionText, slctr, linkArgs) {
                 if (typeof $('#prsSetPrsnsRow' + rndmNum + '_PrsnLocID').val() === 'undefined') {
                     /*Do Nothing*/
                 } else {
-                    slctdPrsnSetPrsns = slctdPrsnSetPrsns + $('#prsSetPrsnsRow' + rndmNum + '_PrsnLocID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#prsSetPrsnsRow' + rndmNum + '_PrsnNm').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                    slctdPrsnSetPrsns = slctdPrsnSetPrsns + $('#prsSetPrsnsRow' + rndmNum + '_PrsnLocID').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#prsSetPrsnsRow' + rndmNum + '_PrsnNm').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "|";
                 }
             }
         }
@@ -1224,11 +1224,11 @@ function savePrsnSetPrsns(actionText, slctr, linkArgs) {
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Persons...Please Wait...</p>',
         callback: function () {
-            getAllPrsSetPrsns(actionText, slctr, linkArgs);
+            getAllPrsSetPrsns(actionText,slctr,linkArgs);
         }
     });
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -1246,9 +1246,9 @@ function savePrsnSetPrsns(actionText, slctr, linkArgs) {
                 success: function (result) {
                     setTimeout(function () {
                         dialog.find('.bootbox-body').html(result);
-                    }, 500);
+                    },500);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     /*dialog.find('.bootbox-body').html(errorThrown);*/
                     console.warn(jqXHR.responseText);
                 }
@@ -1290,7 +1290,7 @@ function delPrsnSetPrsn(rowIDAttrb) {
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -1311,9 +1311,9 @@ function delPrsnSetPrsn(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -1322,7 +1322,7 @@ function delPrsnSetPrsn(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -1330,7 +1330,7 @@ function delPrsnSetPrsn(rowIDAttrb) {
     });
 }
 
-function delPersonSet(rowIDAttrb, actionText, slctr, linkArgs) {
+function delPersonSet(rowIDAttrb,actionText,slctr,linkArgs) {
     var rndmNum = rowIDAttrb.split("_")[1];
     var pKeyID = -1;
     if (typeof $('#allPrsSetsRow' + rndmNum + '_PrsSetID').val() === 'undefined') {
@@ -1359,13 +1359,13 @@ function delPersonSet(rowIDAttrb, actionText, slctr, linkArgs) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Person Set...Please Wait...</p>',
                     callback: function (result) {
-                        getAllItemSets(actionText, slctr, linkArgs);
-                        $("body").css("padding-right", "0px");
+                        getAllItemSets(actionText,slctr,linkArgs);
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -1385,9 +1385,9 @@ function delPersonSet(rowIDAttrb, actionText, slctr, linkArgs) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -1396,7 +1396,7 @@ function delPersonSet(rowIDAttrb, actionText, slctr, linkArgs) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Person Set Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -1404,7 +1404,7 @@ function delPersonSet(rowIDAttrb, actionText, slctr, linkArgs) {
     });
 }
 
-function getAllItemSets(actionText, slctr, linkArgs) {
+function getAllItemSets(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#allItemSetsSrchFor").val() === 'undefined' ? '%' : $("#allItemSetsSrchFor").val();
     var srchIn = typeof $("#allItemSetsSrchIn").val() === 'undefined' ? 'Both' : $("#allItemSetsSrchIn").val();
     var pageNo = typeof $("#allItemSetsPageNo").val() === 'undefined' ? 1 : $("#allItemSetsPageNo").val();
@@ -1419,19 +1419,19 @@ function getAllItemSets(actionText, slctr, linkArgs) {
         pageNo = parseInt(pageNo) - 1;
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function enterKeyFuncAllItemSets(e, actionText, slctr, linkArgs) {
+function enterKeyFuncAllItemSets(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getAllItemSets(actionText, slctr, linkArgs);
+        getAllItemSets(actionText,slctr,linkArgs);
     }
 }
 
-function getOneItemSetItms(pKeyID, vwtype) {
+function getOneItemSetItms(pKeyID,vwtype) {
     var lnkArgs = 'grp=7&typ=1&pg=5&vtyp=' + vwtype + '&sbmtdItemSetHdrID=' + pKeyID;
-    doAjaxWthCallBck(lnkArgs, 'allItemSetsDetailInfo', 'PasteDirect', '', '', '', function () {
+    doAjaxWthCallBck(lnkArgs,'allItemSetsDetailInfo','PasteDirect','','','',function () {
         var table1 = $('#prsSetPrsnsTable').DataTable({
             "paging": false,
             "ordering": false,
@@ -1443,7 +1443,7 @@ function getOneItemSetItms(pKeyID, vwtype) {
     });
 }
 
-function getAllItemSetItms(actionText, slctr, linkArgs) {
+function getAllItemSetItms(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#prsSetPrsnsSrchFor").val() === 'undefined' ? '%' : $("#prsSetPrsnsSrchFor").val();
     var srchIn = typeof $("#prsSetPrsnsSrchIn").val() === 'undefined' ? 'Both' : $("#prsSetPrsnsSrchIn").val();
     var pageNo = typeof $("#prsSetPrsnsPageNo").val() === 'undefined' ? 1 : $("#prsSetPrsnsPageNo").val();
@@ -1458,19 +1458,19 @@ function getAllItemSetItms(actionText, slctr, linkArgs) {
         pageNo = parseInt(pageNo) - 1;
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function enterKeyFuncItemSetItms(e, actionText, slctr, linkArgs) {
+function enterKeyFuncItemSetItms(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getAllItemSetItms(actionText, slctr, linkArgs);
+        getAllItemSetItms(actionText,slctr,linkArgs);
     }
 }
 
-function getOneItemSetForm(pKeyID, vwtype) {
+function getOneItemSetForm(pKeyID,vwtype) {
     var lnkArgs = 'grp=7&typ=1&pg=5&vtyp=' + vwtype + '&sbmtdItemSetHdrID=' + pKeyID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalNrml', 'ShowDialog', 'Item Set Details (ID:' + pKeyID + ')', 'myFormsModalNrmlTitle', 'myFormsModalNrmlBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalNrml','ShowDialog','Item Set Details (ID:' + pKeyID + ')','myFormsModalNrmlTitle','myFormsModalNrmlBody',function () {
         var table1 = $('#itemSetAllwdRolesTable').DataTable({
             "paging": false,
             "ordering": false,
@@ -1486,7 +1486,7 @@ function getOneItemSetForm(pKeyID, vwtype) {
     });
 }
 
-function saveItemSetForm(actionText, slctr, linkArgs) {
+function saveItemSetForm(actionText,slctr,linkArgs) {
     var itemSetNm = typeof $("#itemSetNm").val() === 'undefined' ? '' : $("#itemSetNm").val();
     var itemSetID = typeof $("#itemSetID").val() === 'undefined' ? '-1' : $("#itemSetID").val();
     var itemSetDesc = typeof $("#itemSetDesc").val() === 'undefined' ? '' : $("#itemSetDesc").val();
@@ -1514,7 +1514,7 @@ function saveItemSetForm(actionText, slctr, linkArgs) {
         return false;
     }
     var slctdItemSetRoles = "";
-    $('#itemSetAllwdRolesTable').find('tr').each(function (i, el) {
+    $('#itemSetAllwdRolesTable').find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -1523,9 +1523,9 @@ function saveItemSetForm(actionText, slctr, linkArgs) {
                 if (typeof $('#itemSetAlwdRlsRow' + rndmNum + '_RoleID').val() === 'undefined') {
                     /*Do Nothing*/
                 } else {
-                    slctdItemSetRoles = slctdItemSetRoles + $('#itemSetAlwdRlsRow' + rndmNum + '_PayRoleID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#itemSetAlwdRlsRow' + rndmNum + '_RoleNm').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#itemSetAlwdRlsRow' + rndmNum + '_RoleID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                    slctdItemSetRoles = slctdItemSetRoles + $('#itemSetAlwdRlsRow' + rndmNum + '_PayRoleID').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#itemSetAlwdRlsRow' + rndmNum + '_RoleNm').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#itemSetAlwdRlsRow' + rndmNum + '_RoleID').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "|";
                 }
             }
         }
@@ -1536,11 +1536,11 @@ function saveItemSetForm(actionText, slctr, linkArgs) {
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Item Set...Please Wait...</p>',
         callback: function () {
             $('#myFormsModalNrml').modal('hide');
-            getAllItemSets(actionText, slctr, linkArgs);
+            getAllItemSets(actionText,slctr,linkArgs);
         }
     });
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -1564,9 +1564,9 @@ function saveItemSetForm(actionText, slctr, linkArgs) {
                 success: function (result) {
                     setTimeout(function () {
                         dialog.find('.bootbox-body').html(result);
-                    }, 500);
+                    },500);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     /*dialog.find('.bootbox-body').html(errorThrown);*/
                     console.warn(jqXHR.responseText);
                 }
@@ -1604,12 +1604,12 @@ function delItmSetRoleSet(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Role Set...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -1629,9 +1629,9 @@ function delItmSetRoleSet(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -1640,7 +1640,7 @@ function delItmSetRoleSet(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -1651,7 +1651,7 @@ function delItmSetRoleSet(rowIDAttrb) {
 function saveItemSetItms() {
     var sbmtdItemSetHdrID = typeof $("#sbmtdItemSetHdrID").val() === 'undefined' ? '-1' : $("#sbmtdItemSetHdrID").val();
     var slctdItemSetItms = "";
-    $('#itemSetItmsTable').find('tr').each(function (i, el) {
+    $('#itemSetItmsTable').find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -1660,8 +1660,8 @@ function saveItemSetItms() {
                 if (typeof $('#itemSetItmsRow' + rndmNum + '_ItemID').val() === 'undefined') {
                     /*Do Nothing*/
                 } else {
-                    slctdItemSetItms = slctdItemSetItms + $('#itemSetItmsRow' + rndmNum + '_ItemID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#itemSetItmsRow' + rndmNum + '_ItemName').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                    slctdItemSetItms = slctdItemSetItms + $('#itemSetItmsRow' + rndmNum + '_ItemID').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#itemSetItmsRow' + rndmNum + '_ItemName').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "|";
                 }
             }
         }
@@ -1671,11 +1671,11 @@ function saveItemSetItms() {
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Items...Please Wait...</p>',
         callback: function () {
-            getOneItemSetItms(sbmtdItemSetHdrID, 1);
+            getOneItemSetItms(sbmtdItemSetHdrID,1);
         }
     });
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -1693,9 +1693,9 @@ function saveItemSetItms() {
                 success: function (result) {
                     setTimeout(function () {
                         dialog.find('.bootbox-body').html(result);
-                    }, 500);
+                    },500);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     /*dialog.find('.bootbox-body').html(errorThrown);*/
                     console.warn(jqXHR.responseText);
                 }
@@ -1737,7 +1737,7 @@ function delItemSetItm(rowIDAttrb) {
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -1758,9 +1758,9 @@ function delItemSetItm(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -1769,7 +1769,7 @@ function delItemSetItm(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -1809,13 +1809,13 @@ function delItemSet(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Item Set...Please Wait...</p>',
                     callback: function (result) {
-                        getAllItemSets('', '#allmodules', 'grp=7&typ=1&pg=5&vtyp=0');
-                        $("body").css("padding-right", "0px");
+                        getAllItemSets('','#allmodules','grp=7&typ=1&pg=5&vtyp=0');
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -1836,9 +1836,9 @@ function delItemSet(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -1847,7 +1847,7 @@ function delItemSet(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Person Set Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -1855,7 +1855,7 @@ function delItemSet(rowIDAttrb) {
     });
 }
 
-function getPayMassPy(actionText, slctr, linkArgs) {
+function getPayMassPy(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#payMassPySrchFor").val() === 'undefined' ? '%' : $("#payMassPySrchFor").val();
     var srchIn = typeof $("#payMassPySrchIn").val() === 'undefined' ? 'Both' : $("#payMassPySrchIn").val();
     var pageNo = typeof $("#payMassPyPageNo").val() === 'undefined' ? 1 : $("#payMassPyPageNo").val();
@@ -1871,17 +1871,17 @@ function getPayMassPy(actionText, slctr, linkArgs) {
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn +
         "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function enterKeyFuncPayMassPy(e, actionText, slctr, linkArgs) {
+function enterKeyFuncPayMassPy(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getPayMassPy(actionText, slctr, linkArgs);
+        getPayMassPy(actionText,slctr,linkArgs);
     }
 }
 
-function getPayMassPyDt(actionText, slctr, linkArgs) {
+function getPayMassPyDt(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#payMassPyDtSrchFor").val() === 'undefined' ? '%' : $("#payMassPyDtSrchFor").val();
     var srchIn = typeof $("#payMassPyDtSrchIn").val() === 'undefined' ? 'Both' : $("#payMassPyDtSrchIn").val();
     var pageNo1 = typeof $("#payMassPyDtPageNo1").val() === 'undefined' ? 1 : $("#payMassPyDtPageNo1").val();
@@ -1937,19 +1937,19 @@ function getPayMassPyDt(actionText, slctr, linkArgs) {
     linkArgs = linkArgs + "&vtyp=" + vtyp + "&searchfor=" + srchFor + "&searchin=" + srchIn +
         "&pageNo1=" + pageNo1 + "&pageNo2=" + pageNo2 + "&pageNo3=" + pageNo3 +
         "&limitSze=" + limitSze + "&sortBy=" + sortBy + "&sbmtdMassPayRunID=" + payMassPyID;
-    openATab(slctr1, linkArgs);
+    openATab(slctr1,linkArgs);
 }
 
-function enterKeyFuncPayMassPyDt(e, actionText, slctr, linkArgs) {
+function enterKeyFuncPayMassPyDt(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getPayMassPyDt(actionText, slctr, linkArgs);
+        getPayMassPyDt(actionText,slctr,linkArgs);
     }
 }
 
-function getOnePayMassPyForm(tmpltID, vwtype) {
+function getOnePayMassPyForm(tmpltID,vwtype) {
     var lnkArgs = 'grp=7&typ=1&pg=7&vtyp=' + vwtype + '&sbmtdMassPayRunID=' + tmpltID;
-    doAjaxWthCallBck(lnkArgs, 'payMassPyDetailInfo', 'PasteDirect', '', '', '', function () {
+    doAjaxWthCallBck(lnkArgs,'payMassPyDetailInfo','PasteDirect','','','',function () {
         if (!$.fn.DataTable.isDataTable('#payMassPyRunDetsTable')) {
             var table2 = $('#payMassPyRunDetsTable').DataTable({
                 "paging": false,
@@ -2010,7 +2010,7 @@ function getOnePayMassPyForm(tmpltID, vwtype) {
     });
 }
 
-function getOnePayMassPyDiag(tmpltID, vwtype, isDiagForm, actionTxt) {
+function getOnePayMassPyDiag(tmpltID,vwtype,isDiagForm,actionTxt) {
     if (typeof actionTxt === 'undefined' || actionTxt === null) {
         actionTxt = 'ShowDialog';
     }
@@ -2020,7 +2020,7 @@ function getOnePayMassPyDiag(tmpltID, vwtype, isDiagForm, actionTxt) {
     var lnkArgs = 'grp=7&typ=1&pg=7&vtyp=' + vwtype + '&sbmtdMassPayRunID=' + tmpltID + '&isDiagForm=' + isDiagForm +
         "&qckPayPrsnSetID=" + qckPayPrsnSetID + "&qckPayItmSetID=" + qckPayItmSetID + "&qckPayPrsns_PrsnID=" + qckPayPrsns_PrsnID;
 
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalLg', actionTxt, 'New Bill/Payment', 'myFormsModalTitleLg', 'myFormsModalBodyLg', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalLg',actionTxt,'New Bill/Payment','myFormsModalTitleLg','myFormsModalBodyLg',function () {
         if (!$.fn.DataTable.isDataTable('#payMassPyRunDetsTable')) {
             var table2 = $('#payMassPyRunDetsTable').DataTable({
                 "paging": false,
@@ -2075,10 +2075,10 @@ function getOnePayMassPyDiag(tmpltID, vwtype, isDiagForm, actionTxt) {
             forceParse: true
         });
         $('#myFormsModalLg').off('hidden.bs.modal');
-        $('#myFormsModalLg').one('hidden.bs.modal', function (e) {
+        $('#myFormsModalLg').one('hidden.bs.modal',function (e) {
             $('#myFormsModalTitleLg').html('');
             $('#myFormsModalBodyLg').html('');
-            getQckPayPrsns('', '#allmodules', 'grp=7&typ=1&pg=4&vtyp=0');
+            getQckPayPrsns('','#allmodules','grp=7&typ=1&pg=4&vtyp=0');
             $(e.currentTarget).unbind();
         });
         $(".jbDetDbt").focus(function () {
@@ -2091,9 +2091,9 @@ function payMassPyGrpTypChange() {
     var lovChkngElementVal = typeof $("#payMassPyGrpType").val() === 'undefined' ? '' : $("#payMassPyGrpType").val();
     lovNm = "";
     if (lovChkngElementVal === "Everyone") {
-        $('#payMassPyGroupName').attr("disabled", "true");
+        $('#payMassPyGroupName').attr("disabled","true");
         $('#payMassPyGroupName').val("");
-        $('#payMassPyGroupNameLbl').attr("disabled", "true");
+        $('#payMassPyGroupNameLbl').attr("disabled","true");
     } else {
         $('#payMassPyGroupName').removeAttr("disabled");
         $('#payMassPyGroupName').val("");
@@ -2101,7 +2101,7 @@ function payMassPyGrpTypChange() {
     }
 }
 
-function savePayMassPyForm(funccrnm, actyp, rptID, alrtID, paramsStr, isDiagForm) {
+function savePayMassPyForm(funccrnm,actyp,rptID,alrtID,paramsStr,isDiagForm) {
     if (typeof funccrnm === 'undefined' || funccrnm === null) {
         funccrnm = 'GHS';
     }
@@ -2122,12 +2122,12 @@ function savePayMassPyForm(funccrnm, actyp, rptID, alrtID, paramsStr, isDiagForm
     }
     var payMassPyID = typeof $("#payMassPyID").val() === 'undefined' ? '-1' : $("#payMassPyID").val();
     if (actyp === 7) {
-        getSilentRptsRnSts(rptID, alrtID, paramsStr, function () {
+        getSilentRptsRnSts(rptID,alrtID,paramsStr,function () {
             if (Number(payMassPyID) > 0) {
                 if (isDiagForm === 'NO') {
-                    getOnePayMassPyForm(payMassPyID, 1);
+                    getOnePayMassPyForm(payMassPyID,1);
                 } else {
-                    getOnePayMassPyDiag(payMassPyID, 1, isDiagForm, 'ReloadDialog');
+                    getOnePayMassPyDiag(payMassPyID,1,isDiagForm,'ReloadDialog');
                 }
             }
         });
@@ -2165,18 +2165,18 @@ function savePayMassPyForm(funccrnm, actyp, rptID, alrtID, paramsStr, isDiagForm
             errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                 'font-weight:bold;color:red;">Pay Date and GL Date cannot be empty!</span></p>';
         }
-        if (payMassPyIsQckPay.trim() === 'NO' && Number(payMassPyPrsnStID.replace(/[^-?0-9\.]/g, '')) <= 0) {
+        if (payMassPyIsQckPay.trim() === 'NO' && Number(payMassPyPrsnStID.replace(/[^-?0-9\.]/g,'')) <= 0) {
             errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                 'font-weight:bold;color:red;">Person Set cannot be empty when Quick Pay is not Checked!</span></p>';
         }
-        if (payMassPyItmSetNm.trim() === '' || Number(payMassPyItmSetID.replace(/[^-?0-9\.]/g, '')) <= 0) {
+        if (payMassPyItmSetNm.trim() === '' || Number(payMassPyItmSetID.replace(/[^-?0-9\.]/g,'')) <= 0) {
             errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                 'font-weight:bold;color:red;">Item Set cannot be empty!</span></p>';
         }
 
         var isVld = true;
         var slctdAttchdVals = "";
-        $('#payMassPyAttchdValsTable').find('tr').each(function (i, el) {
+        $('#payMassPyAttchdValsTable').find('tr').each(function (i,el) {
             isVld = true;
             if (i > 0) {
                 if (typeof $(el).attr('id') === 'undefined') {
@@ -2189,20 +2189,20 @@ function savePayMassPyForm(funccrnm, actyp, rptID, alrtID, paramsStr, isDiagForm
                     var ln_ItemValID = $('#payMassPyAttchdValsRow' + rndmNum + '_ItemValID').val();
                     var ln_ValToUse = $('#payMassPyAttchdValsRow' + rndmNum + '_ValToUse').val();
                     var ln_CanEdt = $('#payMassPyAttchdValsRow' + rndmNum + '_CanEdt').val();
-                    if (Number(ln_PrsnID.replace(/[^-?0-9\.]/g, '')) > 0 && Number(ln_ItemID.replace(/[^-?0-9\.]/g, '')) > 0 && Number(ln_ItemValID.replace(/[^-?0-9\.]/g, '')) > 0) {
+                    if (Number(ln_PrsnID.replace(/[^-?0-9\.]/g,'')) > 0 && Number(ln_ItemID.replace(/[^-?0-9\.]/g,'')) > 0 && Number(ln_ItemValID.replace(/[^-?0-9\.]/g,'')) > 0) {
                         slctdAttchdVals = slctdAttchdVals +
                             ln_TrnsLnID + "~" +
-                            ln_PrsnID.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                            ln_ItemID.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                            ln_ItemValID.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                            ln_ValToUse.replace(/[^-?0-9\.]/g, '').replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                            ln_CanEdt.replace(/[^-?0-9\.]/g, '').replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                            ln_PrsnID.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                            ln_ItemID.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                            ln_ItemValID.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                            ln_ValToUse.replace(/[^-?0-9\.]/g,'').replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                            ln_CanEdt.replace(/[^-?0-9\.]/g,'').replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "|";
                     }
                 }
             }
         });
 
-        if (rhotrim(errMsg, '; ') !== '') {
+        if (rhotrim(errMsg,'; ') !== '') {
             bootbox.alert({
                 title: 'System Alert!',
                 /*size: 'small',*/
@@ -2214,46 +2214,46 @@ function savePayMassPyForm(funccrnm, actyp, rptID, alrtID, paramsStr, isDiagForm
             title: 'Save Bulk Pay Run',
             size: 'small',
             message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Bulk Pay Run...Please Wait...</p>',
-            callback: function () {}
+            callback: function () { }
         });
         var formData = new FormData();
-        formData.append('grp', 7);
-        formData.append('typ', 1);
-        formData.append('pg', 7);
-        formData.append('q', 'UPDATE');
-        formData.append('actyp', 1);
-        formData.append('payactyp', actyp);
-        formData.append('payMassPyID', payMassPyID);
-        formData.append('payMassPyName', payMassPyName);
-        formData.append('payMassPyDesc', payMassPyDesc);
-        formData.append('payMassPyPrsnStID', payMassPyPrsnStID);
-        formData.append('payMassPyPrsnStNm', payMassPyPrsnStNm);
-        formData.append('payMassPyItmSetID', payMassPyItmSetID);
-        formData.append('payMassPyItmSetNm', payMassPyItmSetNm);
+        formData.append('grp',7);
+        formData.append('typ',1);
+        formData.append('pg',7);
+        formData.append('q','UPDATE');
+        formData.append('actyp',1);
+        formData.append('payactyp',actyp);
+        formData.append('payMassPyID',payMassPyID);
+        formData.append('payMassPyName',payMassPyName);
+        formData.append('payMassPyDesc',payMassPyDesc);
+        formData.append('payMassPyPrsnStID',payMassPyPrsnStID);
+        formData.append('payMassPyPrsnStNm',payMassPyPrsnStNm);
+        formData.append('payMassPyItmSetID',payMassPyItmSetID);
+        formData.append('payMassPyItmSetNm',payMassPyItmSetNm);
 
-        formData.append('payMassPyDate', payMassPyDate);
-        formData.append('payMassPyGlDate', payMassPyGlDate);
-        formData.append('payMassPyIsQckPay', payMassPyIsQckPay);
-        formData.append('payMassPyAutoAsgng', payMassPyAutoAsgng);
-        formData.append('payMassPyAplyAdvnc', payMassPyAplyAdvnc);
-        formData.append('payMassPyKeepExcss', payMassPyKeepExcss);
-        formData.append('payMassPyGrpType', payMassPyGrpType);
-        formData.append('payMassPyGroupName', payMassPyGroupName);
-        formData.append('payMassPyGroupID', payMassPyGroupID);
+        formData.append('payMassPyDate',payMassPyDate);
+        formData.append('payMassPyGlDate',payMassPyGlDate);
+        formData.append('payMassPyIsQckPay',payMassPyIsQckPay);
+        formData.append('payMassPyAutoAsgng',payMassPyAutoAsgng);
+        formData.append('payMassPyAplyAdvnc',payMassPyAplyAdvnc);
+        formData.append('payMassPyKeepExcss',payMassPyKeepExcss);
+        formData.append('payMassPyGrpType',payMassPyGrpType);
+        formData.append('payMassPyGroupName',payMassPyGroupName);
+        formData.append('payMassPyGroupID',payMassPyGroupID);
 
-        formData.append('payMassPyWorkPlaceName', payMassPyWorkPlaceName);
-        formData.append('payMassPyWorkPlaceID', payMassPyWorkPlaceID);
-        formData.append('payMassPyWorkPlaceSiteName', payMassPyWorkPlaceSiteName);
-        formData.append('payMassPyWorkPlaceSiteID', payMassPyWorkPlaceSiteID);
+        formData.append('payMassPyWorkPlaceName',payMassPyWorkPlaceName);
+        formData.append('payMassPyWorkPlaceID',payMassPyWorkPlaceID);
+        formData.append('payMassPyWorkPlaceSiteName',payMassPyWorkPlaceSiteName);
+        formData.append('payMassPyWorkPlaceSiteID',payMassPyWorkPlaceSiteID);
 
-        formData.append('payMassPyAmntGvn', payMassPyAmntGvn);
-        formData.append('payMassPyChqNumber', payMassPyChqNumber);
-        formData.append('payMassPySignCode', payMassPySignCode);
+        formData.append('payMassPyAmntGvn',payMassPyAmntGvn);
+        formData.append('payMassPyChqNumber',payMassPyChqNumber);
+        formData.append('payMassPySignCode',payMassPySignCode);
 
-        formData.append('slctdAttchdVals', slctdAttchdVals);
+        formData.append('slctdAttchdVals',slctdAttchdVals);
 
         dialog.init(function () {
-            getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+            getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                 $body = $("body");
                 $body.removeClass("mdlloading");
                 $.ajax({
@@ -2272,30 +2272,30 @@ function savePayMassPyForm(funccrnm, actyp, rptID, alrtID, paramsStr, isDiagForm
                                 if (actyp === 5) {
                                     dialog.modal('hide');
                                     if (isDiagForm === 'NO') {
-                                        getPayMassPy('', '#allmodules', 'grp=7&typ=1&pg=7&vtyp=0');
+                                        getPayMassPy('','#allmodules','grp=7&typ=1&pg=7&vtyp=0');
                                     } else {
-                                        getOnePayMassPyDiag(payMassPyID, 1, isDiagForm, 'ReloadDialog');
+                                        getOnePayMassPyDiag(payMassPyID,1,isDiagForm,'ReloadDialog');
                                     }
-                                    getSilentRptsRnSts(rptID, alrtID, paramsStr, function () {
+                                    getSilentRptsRnSts(rptID,alrtID,paramsStr,function () {
                                         if (Number(payMassPyID) > 0) {
                                             if (isDiagForm === 'NO') {
-                                                getOnePayMassPyForm(payMassPyID, 1);
+                                                getOnePayMassPyForm(payMassPyID,1);
                                             } else {
-                                                getOnePayMassPyDiag(payMassPyID, 1, isDiagForm, 'ReloadDialog');
+                                                getOnePayMassPyDiag(payMassPyID,1,isDiagForm,'ReloadDialog');
                                             }
                                         }
                                     });
                                 } else {
                                     if (isDiagForm === 'NO') {
-                                        getPayMassPy('', '#allmodules', 'grp=7&typ=1&pg=7&vtyp=0');
+                                        getPayMassPy('','#allmodules','grp=7&typ=1&pg=7&vtyp=0');
                                     } else {
-                                        getOnePayMassPyDiag(payMassPyID, 1, isDiagForm, 'ReloadDialog');
+                                        getOnePayMassPyDiag(payMassPyID,1,isDiagForm,'ReloadDialog');
                                     }
                                 }
                             }
-                        }, 1000);
+                        },1000);
                     },
-                    error: function (jqXHR, textStatus, errorThrown) {
+                    error: function (jqXHR,textStatus,errorThrown) {
                         console.log(textStatus + " " + errorThrown);
                         console.warn(jqXHR.responseText);
                     }
@@ -2337,12 +2337,12 @@ function delPayMassPy(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Bulk Pay Run...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -2363,10 +2363,10 @@ function delPayMassPy(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                        getPayMassPy('', '#allmodules', 'grp=7&typ=1&pg=7&vtyp=0');
-                                    }, 500);
+                                        getPayMassPy('','#allmodules','grp=7&typ=1&pg=7&vtyp=0');
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -2375,7 +2375,7 @@ function delPayMassPy(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -2415,12 +2415,12 @@ function delPayMassPyAttchdVal(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Attached Value...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -2441,9 +2441,9 @@ function delPayMassPyAttchdVal(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -2452,7 +2452,7 @@ function delPayMassPyAttchdVal(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -2469,7 +2469,7 @@ function shwHideQuckPayDivs() {
     }
 }
 
-function getAllPayRnTrns(actionText, slctr, linkArgs) {
+function getAllPayRnTrns(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#allPayRnTrnsSrchFor").val() === 'undefined' ? '%' : $("#allPayRnTrnsSrchFor").val();
     var srchIn = typeof $("#allPayRnTrnsSrchIn").val() === 'undefined' ? 'Both' : $("#allPayRnTrnsSrchIn").val();
     var pageNo = typeof $("#allPayRnTrnsPageNo").val() === 'undefined' ? 1 : $("#allPayRnTrnsPageNo").val();
@@ -2491,17 +2491,17 @@ function getAllPayRnTrns(actionText, slctr, linkArgs) {
         "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy +
         "&qStrtDte=" + qStrtDte + "&qEndDte=" + qEndDte +
         "&qUnathrzdOnly=" + qUnathrzdOnly + "&qInvalidOnly=" + qInvalidOnly;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function enterKeyFuncAllPayRnTrns(e, actionText, slctr, linkArgs) {
+function enterKeyFuncAllPayRnTrns(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getAllPayRnTrns(actionText, slctr, linkArgs);
+        getAllPayRnTrns(actionText,slctr,linkArgs);
     }
 }
 
-function getAllPayGLIntrfcs(actionText, slctr, linkArgs) {
+function getAllPayGLIntrfcs(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#allPayGLIntrfcsSrchFor").val() === 'undefined' ? '%' : $("#allPayGLIntrfcsSrchFor").val();
     var srchIn = typeof $("#allPayGLIntrfcsSrchIn").val() === 'undefined' ? 'Both' : $("#allPayGLIntrfcsSrchIn").val();
     var pageNo = typeof $("#allPayGLIntrfcsPageNo").val() === 'undefined' ? 1 : $("#allPayGLIntrfcsPageNo").val();
@@ -2527,21 +2527,21 @@ function getAllPayGLIntrfcs(actionText, slctr, linkArgs) {
         "&qStrtDte=" + qStrtDte + "&qEndDte=" + qEndDte +
         "&qNotSentToGl=" + qNotSentToGl + "&qUnbalncdOnly=" + qUnbalncdOnly +
         "&qUsrGnrtd=" + qUsrGnrtd + "&qLowVal=" + qLowVal + "&qHighVal=" + qHighVal;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function enterKeyFuncAllPayGLIntrfcs(e, actionText, slctr, linkArgs) {
+function enterKeyFuncAllPayGLIntrfcs(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getAllPayGLIntrfcs(actionText, slctr, linkArgs);
+        getAllPayGLIntrfcs(actionText,slctr,linkArgs);
     }
 }
 
-function getOnePAYGLIntrfcForm(pKeyID, pRowIDAttrb) {
+function getOnePAYGLIntrfcForm(pKeyID,pRowIDAttrb) {
     var slctdIntrfcIDs = "";
     var slctdCnt = 0;
     var rowIDAttrb = "";
-    $('#allPayGLIntrfcsHdrsTable').find('tr').each(function (i, el) {
+    $('#allPayGLIntrfcsHdrsTable').find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -2553,7 +2553,7 @@ function getOnePAYGLIntrfcForm(pKeyID, pRowIDAttrb) {
                 } else {
                     var lnIntrfcID = typeof $('#' + rowPrfxNm + rndmNum + '_IntrfcID').val() === 'undefined' ? '-1' : $('#' + rowPrfxNm + rndmNum + '_IntrfcID').val();
                     var isTcked = (typeof $("input[name='" + rowPrfxNm + rndmNum + "_CheckBox']:checked").val() === 'undefined' ? 'NO' : 'YES');
-                    if (Number(lnIntrfcID.replace(/[^-?0-9\.]/g, '')) > 0 && isTcked === "YES") {
+                    if (Number(lnIntrfcID.replace(/[^-?0-9\.]/g,'')) > 0 && isTcked === "YES") {
                         slctdCnt = slctdCnt + 1;
                         rowIDAttrb = $(el).attr('id');
                     }
@@ -2571,9 +2571,9 @@ function getOnePAYGLIntrfcForm(pKeyID, pRowIDAttrb) {
         var dbtAmnt = $.trim($tds.eq(5).text());
         var crdtAmnt = $.trim($tds.eq(6).text());
         var trnsCur = $.trim($tds.eq(4).text());
-        var trnsAmnt = Math.abs(Number(dbtAmnt.replace(/[^-?0-9\.]/g, '')) - Number(crdtAmnt.replace(/[^-?0-9\.]/g, ''))).toFixed(2);
+        var trnsAmnt = Math.abs(Number(dbtAmnt.replace(/[^-?0-9\.]/g,'')) - Number(crdtAmnt.replace(/[^-?0-9\.]/g,''))).toFixed(2);
         var lnkArgs = 'grp=7&typ=1&pg=9&vtyp=1&sbmtdIntrfcID=' + pKeyID;
-        doAjaxWthCallBck(lnkArgs, 'myFormsModalp', 'ShowDialog', 'GL Interface Line (ID:' + pKeyID + ')', 'myFormsModalpTitle', 'myFormsModalpBody', function () {
+        doAjaxWthCallBck(lnkArgs,'myFormsModalp','ShowDialog','GL Interface Line (ID:' + pKeyID + ')','myFormsModalpTitle','myFormsModalpBody',function () {
             $('#addGLIntrfcsForm').submit(function (e) {
                 e.preventDefault();
                 return false;
@@ -2597,10 +2597,10 @@ function getOnePAYGLIntrfcForm(pKeyID, pRowIDAttrb) {
                 forceParse: true
             });
             $('#myFormsModalx').off('hidden.bs.modal');
-            $('#myFormsModalx').one('hidden.bs.modal', function (e) {
+            $('#myFormsModalx').one('hidden.bs.modal',function (e) {
                 $('#myFormsModalxTitle').html('');
                 $('#myFormsModalxBody').html('');
-                getAllPayGLIntrfcs('', '#allmodules', 'grp=7&typ=1&pg=9&vtyp=0');
+                getAllPayGLIntrfcs('','#allmodules','grp=7&typ=1&pg=9&vtyp=0');
                 $(e.currentTarget).unbind();
             });
         });
@@ -2620,29 +2620,29 @@ function afterPAYIntrfcItemSlctn() {
     $('#funcCrncyRate').val(1);
     $('#accntCrncyRate').val(1);
     var enteredCrncyNm = $('#enteredCrncyNm').val();
-    var enteredAmount = Number($('#enteredAmount').val().replace(/[^-?0-9\.]/g, ''));
+    var enteredAmount = Number($('#enteredAmount').val().replace(/[^-?0-9\.]/g,''));
     var intrfcAccntID = $('#intrfcAccntID').val();
     var glIntrfcTrnsDate = typeof $("#glIntrfcTrnsDate").val() === 'undefined' ? '' : $("#glIntrfcTrnsDate").val();
     var funcCrncyRate = typeof $("#funcCrncyRate").val() === 'undefined' ? '0' : $("#funcCrncyRate").val();
     var accntCrncyRate = typeof $("#accntCrncyRate").val() === 'undefined' ? '0' : $("#accntCrncyRate").val();
     if (Number(intrfcAccntID) > 0) {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloadingDiag");
             $body.removeClass("mdlloading");
             var obj;
             var formData = new FormData();
-            formData.append('grp', 7);
-            formData.append('typ', 1);
-            formData.append('pg', 9);
-            formData.append('q', 'VIEW');
-            formData.append('vtyp', 2);
-            formData.append('intrfcAccntID', intrfcAccntID);
-            formData.append('enteredCrncyNm', enteredCrncyNm);
-            formData.append('enteredAmount', enteredAmount);
-            formData.append('glIntrfcTrnsDate', glIntrfcTrnsDate);
-            formData.append('funcCrncyRate', funcCrncyRate);
-            formData.append('accntCrncyRate', accntCrncyRate);
+            formData.append('grp',7);
+            formData.append('typ',1);
+            formData.append('pg',9);
+            formData.append('q','VIEW');
+            formData.append('vtyp',2);
+            formData.append('intrfcAccntID',intrfcAccntID);
+            formData.append('enteredCrncyNm',enteredCrncyNm);
+            formData.append('enteredAmount',enteredAmount);
+            formData.append('glIntrfcTrnsDate',glIntrfcTrnsDate);
+            formData.append('funcCrncyRate',funcCrncyRate);
+            formData.append('accntCrncyRate',accntCrncyRate);
             $.ajax({
                 url: 'index.php',
                 method: 'POST',
@@ -2661,7 +2661,7 @@ function afterPAYIntrfcItemSlctn() {
                         $('#accntCrncyAmount').val(data.AccntCrncyAmount);
                     }
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     console.warn(jqXHR.responseText);
                 }
             });
@@ -2707,31 +2707,31 @@ function savePAYGLIntrfcForm() {
             errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                 'font-weight:bold;color:red;">Action cannot be empty!</span></p>';
         }
-        if (Number(intrfcAccntID.replace(/[^-?0-9\.]/g, '')) <= 0) {
+        if (Number(intrfcAccntID.replace(/[^-?0-9\.]/g,'')) <= 0) {
             errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                 'font-weight:bold;color:red;">GL Account cannot be empty!</span></p>';
         }
-        if (Number(enteredAmount.replace(/[^-?0-9\.]/g, '')) == 0) {
+        if (Number(enteredAmount.replace(/[^-?0-9\.]/g,'')) == 0) {
             errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                 'font-weight:bold;color:red;">Entered Amount cannot be Zero!</span></p>';
         }
-        if (Number(funcCrncyRate.replace(/[^-?0-9\.]/g, '')) == 0) {
+        if (Number(funcCrncyRate.replace(/[^-?0-9\.]/g,'')) == 0) {
             errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                 'font-weight:bold;color:red;">Functional Currency Rate cannot be empty!</span></p>';
         }
-        if (Number(accntCrncyRate.replace(/[^-?0-9\.]/g, '')) == 0) {
+        if (Number(accntCrncyRate.replace(/[^-?0-9\.]/g,'')) == 0) {
             errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                 'font-weight:bold;color:red;">Account Currency Rate cannot be empty!</span></p>';
         }
-        if (Number(funcCrncyAmount.replace(/[^-?0-9\.]/g, '')) == 0) {
+        if (Number(funcCrncyAmount.replace(/[^-?0-9\.]/g,'')) == 0) {
             errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                 'font-weight:bold;color:red;">Functional Currency Amount cannot be empty!</span></p>';
         }
-        if (Number(accntCrncyAmount.replace(/[^-?0-9\.]/g, '')) == 0) {
+        if (Number(accntCrncyAmount.replace(/[^-?0-9\.]/g,'')) == 0) {
             errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                 'font-weight:bold;color:red;">Account Currency Rate cannot be empty!</span></p>';
         }
-        if (rhotrim(errMsg, '; ') !== '') {
+        if (rhotrim(errMsg,'; ') !== '') {
             bootbox.alert({
                 title: 'System Alert!',
                 /*size: 'small',*/
@@ -2751,7 +2751,7 @@ function savePAYGLIntrfcForm() {
             }
         });
         dialog.init(function () {
-            getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+            getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                 $body = $("body");
                 $body.removeClass("mdlloading");
                 $.ajax({
@@ -2769,11 +2769,11 @@ function savePAYGLIntrfcForm() {
                         intrfcAccntID: intrfcAccntID,
                         incrsDcrs: incrsDcrs,
                         enteredCrncyNm: enteredCrncyNm,
-                        enteredAmount: enteredAmount.replace(/[^-?0-9\.]/g, ''),
-                        funcCrncyRate: funcCrncyRate.replace(/[^-?0-9\.]/g, ''),
-                        accntCrncyRate: accntCrncyRate.replace(/[^-?0-9\.]/g, ''),
-                        funcCrncyAmount: funcCrncyAmount.replace(/[^-?0-9\.]/g, ''),
-                        accntCrncyAmount: accntCrncyAmount.replace(/[^-?0-9\.]/g, '')
+                        enteredAmount: enteredAmount.replace(/[^-?0-9\.]/g,''),
+                        funcCrncyRate: funcCrncyRate.replace(/[^-?0-9\.]/g,''),
+                        accntCrncyRate: accntCrncyRate.replace(/[^-?0-9\.]/g,''),
+                        funcCrncyAmount: funcCrncyAmount.replace(/[^-?0-9\.]/g,''),
+                        accntCrncyAmount: accntCrncyAmount.replace(/[^-?0-9\.]/g,'')
                     },
                     success: function (result) {
                         dialog.find('.bootbox-body').html(result.message);
@@ -2781,20 +2781,20 @@ function savePAYGLIntrfcForm() {
                             shdClose = 1;
                         }
                     },
-                    error: function (jqXHR, textStatus, errorThrown) {
+                    error: function (jqXHR,textStatus,errorThrown) {
                         /*dialog.find('.bootbox-body').html(errorThrown);*/
                         console.warn(jqXHR.responseText);
                     }
                 });
             });
         });
-    }, 500);
+    },500);
 }
 
 function delSlctdPAYIntrfcLines() {
     var slctdIntrfcIDs = "";
     var slctdCnt = 0;
-    $('#allPayGLIntrfcsHdrsTable').find('tr').each(function (i, el) {
+    $('#allPayGLIntrfcsHdrsTable').find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -2806,7 +2806,7 @@ function delSlctdPAYIntrfcLines() {
                 } else {
                     var lnIntrfcID = typeof $('#' + rowPrfxNm + rndmNum + '_IntrfcID').val() === 'undefined' ? '-1' : $('#' + rowPrfxNm + rndmNum + '_IntrfcID').val();
                     var isTcked = (typeof $("input[name='" + rowPrfxNm + rndmNum + "_CheckBox']:checked").val() === 'undefined' ? 'NO' : 'YES');
-                    if (Number(lnIntrfcID.replace(/[^-?0-9\.]/g, '')) > 0 && isTcked === "YES") {
+                    if (Number(lnIntrfcID.replace(/[^-?0-9\.]/g,'')) > 0 && isTcked === "YES") {
                         slctdCnt = slctdCnt + 1;
                     }
                 }
@@ -2829,7 +2829,7 @@ function delSlctdPAYIntrfcLines() {
                 }
             },
             callback: function (result) {
-                $('#allPayGLIntrfcsHdrsTable').find('tr').each(function (i, el) {
+                $('#allPayGLIntrfcsHdrsTable').find('tr').each(function (i,el) {
                     if (i > 0) {
                         if (typeof $(el).attr('id') === 'undefined') {
                             /*Do Nothing*/
@@ -2844,9 +2844,9 @@ function delSlctdPAYIntrfcLines() {
                                 var $tds = $('#' + rowIDAttrb).find('td');
                                 var intrfcIDDesc = $.trim($tds.eq(4).text());
                                 var isTcked = (typeof $("input[name='" + rowPrfxNm + rndmNum + "_CheckBox']:checked").val() === 'undefined' ? 'NO' : 'YES');
-                                if (Number(lnIntrfcID.replace(/[^-?0-9\.]/g, '')) > 0 && isTcked === "YES") {
+                                if (Number(lnIntrfcID.replace(/[^-?0-9\.]/g,'')) > 0 && isTcked === "YES") {
                                     slctdIntrfcIDs = slctdIntrfcIDs + lnIntrfcID + "~" +
-                                        intrfcIDDesc.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                                        intrfcIDDesc.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "|";
                                 }
                                 $("#" + rowPrfxNm + rndmNum).remove();
                             }
@@ -2860,14 +2860,14 @@ function delSlctdPAYIntrfcLines() {
                         size: 'small',
                         message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Selected User Transactions...Please Wait...</p>',
                         callback: function () {
-                            $("body").css("padding-right", "0px");
+                            $("body").css("padding-right","0px");
                             if (result2.indexOf("Success") !== -1) {
-                                getAllPayGLIntrfcs('', '#allmodules', 'grp=7&typ=1&pg=9&vtyp=0');
+                                getAllPayGLIntrfcs('','#allmodules','grp=7&typ=1&pg=9&vtyp=0');
                             }
                         }
                     });
                     dialog1.init(function () {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -2885,9 +2885,9 @@ function delSlctdPAYIntrfcLines() {
                                     result2 = result1;
                                     setTimeout(function () {
                                         dialog1.find('.bootbox-body').html(result1);
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -2911,18 +2911,18 @@ function testPAYETax() {
 
     var allPayeRatesUnitPrc = typeof $("#allPayeRatesUnitPrc").val() === 'undefined' ? '0' : $("#allPayeRatesUnitPrc").val();
     allPayeRatesUnitPrc = fmtAsNumber('allPayeRatesUnitPrc');
-    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+    getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
         $body = $("body");
         $body.removeClass("mdlloadingDiag");
         $body.removeClass("mdlloading");
         var obj;
         var formData = new FormData();
-        formData.append('grp', 7);
-        formData.append('typ', 1);
-        formData.append('pg', 12);
-        formData.append('q', 'VIEW');
-        formData.append('vtyp', 1);
-        formData.append('allPayeRatesUnitPrc', allPayeRatesUnitPrc);
+        formData.append('grp',7);
+        formData.append('typ',1);
+        formData.append('pg',12);
+        formData.append('q','VIEW');
+        formData.append('vtyp',1);
+        formData.append('allPayeRatesUnitPrc',allPayeRatesUnitPrc);
         $.ajax({
             url: 'index.php',
             method: 'POST',
@@ -2934,18 +2934,18 @@ function testPAYETax() {
             success: function (data) {
                 $('#allPayeRatesSQLTestRslts').html(data.message);
             },
-            error: function (jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR,textStatus,errorThrown) {
                 console.warn(jqXHR.responseText);
             }
         });
     });
 }
 
-function insertNewTaxRateRows(tableElmntID, position, inptHtml) {
+function insertNewTaxRateRows(tableElmntID,position,inptHtml) {
     $("#allOtherInputData5").val(0);
     for (var i = 0; i < 1; i++) {
         var nwRndm = Math.floor((Math.random() * 9999999) + 1000000);
-        var nwInptHtml = urldecode(inptHtml.replace(/(_WWW123WWW_)+/g, nwRndm + "_").replace(/(_WWW123WWW)+/g, nwRndm));
+        var nwInptHtml = urldecode(inptHtml.replace(/(_WWW123WWW_)+/g,nwRndm + "_").replace(/(_WWW123WWW)+/g,nwRndm));
         if ($('#' + tableElmntID + ' > tbody > tr').length >= 1) {
             if ($('#' + tableElmntID + ' > tbody > tr > td').eq($('#' + tableElmntID + ' > tbody > tr').length - 1).text() == 'No data available in table') {
                 $('#' + tableElmntID + ' > tbody > tr > td').eq($('#' + tableElmntID + ' > tbody > tr').length - 1).remove();
@@ -2969,7 +2969,7 @@ function insertNewTaxRateRows(tableElmntID, position, inptHtml) {
         $(this).select();
     });
     var cntr = 0;
-    $('#' + tableElmntID).find('tr').each(function (i, el) {
+    $('#' + tableElmntID).find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -2986,7 +2986,7 @@ function insertNewTaxRateRows(tableElmntID, position, inptHtml) {
     });
 }
 
-function getPayGlblVals(actionText, slctr, linkArgs) {
+function getPayGlblVals(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#payGlblValsSrchFor").val() === 'undefined' ? '%' : $("#payGlblValsSrchFor").val();
     var srchIn = typeof $("#payGlblValsSrchIn").val() === 'undefined' ? 'Both' : $("#payGlblValsSrchIn").val();
     var pageNo = typeof $("#payGlblValsPageNo").val() === 'undefined' ? 1 : $("#payGlblValsPageNo").val();
@@ -3002,17 +3002,17 @@ function getPayGlblVals(actionText, slctr, linkArgs) {
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn +
         "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function enterKeyFuncPayGlblVals(e, actionText, slctr, linkArgs) {
+function enterKeyFuncPayGlblVals(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getPayGlblVals(actionText, slctr, linkArgs);
+        getPayGlblVals(actionText,slctr,linkArgs);
     }
 }
 
-function getPayGlblValsDt(actionText, slctr, linkArgs) {
+function getPayGlblValsDt(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#payGlblValsDtSrchFor").val() === 'undefined' ? '%' : $("#payGlblValsDtSrchFor").val();
     var srchIn = typeof $("#payGlblValsDtSrchIn").val() === 'undefined' ? 'Both' : $("#payGlblValsDtSrchIn").val();
     var pageNo = typeof $("#payGlblValsDtPageNo").val() === 'undefined' ? 1 : $("#payGlblValsDtPageNo").val();
@@ -3032,19 +3032,19 @@ function getPayGlblValsDt(actionText, slctr, linkArgs) {
     linkArgs = linkArgs + "&vtyp=" + vtyp + "&searchfor=" + srchFor + "&searchin=" + srchIn +
         "&pageNo=" + pageNo +
         "&limitSze=" + limitSze + "&sortBy=" + sortBy + "&sbmtdGBVID=" + payGlblValsID;
-    openATab(slctr1, linkArgs);
+    openATab(slctr1,linkArgs);
 }
 
-function enterKeyFuncPayGlblValsDt(e, actionText, slctr, linkArgs) {
+function enterKeyFuncPayGlblValsDt(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getPayGlblValsDt(actionText, slctr, linkArgs);
+        getPayGlblValsDt(actionText,slctr,linkArgs);
     }
 }
 
-function getOnePayGlblValsForm(tmpltID, vwtype) {
+function getOnePayGlblValsForm(tmpltID,vwtype) {
     var lnkArgs = 'grp=7&typ=1&pg=11&vtyp=' + vwtype + '&sbmtdGBVID=' + tmpltID;
-    doAjaxWthCallBck(lnkArgs, 'payGlblValsDetailInfo', 'PasteDirect', '', '', '', function () {
+    doAjaxWthCallBck(lnkArgs,'payGlblValsDetailInfo','PasteDirect','','','',function () {
         if (!$.fn.DataTable.isDataTable('#payGlblValsRunDetsTable')) {
             var table2 = $('#payGlblValsRunDetsTable').DataTable({
                 "paging": false,
@@ -3089,11 +3089,11 @@ function getOnePayGlblValsForm(tmpltID, vwtype) {
     });
 }
 
-function insertNewPayGlblValsRows(tableElmntID, position, inptHtml) {
+function insertNewPayGlblValsRows(tableElmntID,position,inptHtml) {
     var payGlblValsCritType = typeof $("#payGlblValsCritType option:selected").text() === 'undefined' ? '' : $("#payGlblValsCritType option:selected").text();
     for (var i = 0; i < 5; i++) {
         var nwRndm = Math.floor((Math.random() * 9999999) + 1000000);
-        var nwInptHtml = urldecode(inptHtml.replace(/(_WWW123WWW_)+/g, nwRndm + "_").replace(/(_WWW123WWW)+/g, nwRndm));
+        var nwInptHtml = urldecode(inptHtml.replace(/(_WWW123WWW_)+/g,nwRndm + "_").replace(/(_WWW123WWW)+/g,nwRndm));
         if ($('#' + tableElmntID + ' > tbody > tr').length >= 1) {
             if ($('#' + tableElmntID + ' > tbody > tr > td').eq($('#' + tableElmntID + ' > tbody > tr').length - 1).text() == 'No data available in table') {
                 $('#' + tableElmntID + ' > tbody > tr > td').eq($('#' + tableElmntID + ' > tbody > tr').length - 1).remove();
@@ -3138,7 +3138,7 @@ function insertNewPayGlblValsRows(tableElmntID, position, inptHtml) {
         forceParse: true
     });
     var cntr = 0;
-    $('#' + tableElmntID).find('tr').each(function (i, el) {
+    $('#' + tableElmntID).find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -3156,7 +3156,7 @@ function insertNewPayGlblValsRows(tableElmntID, position, inptHtml) {
 
 }
 
-function payGlblValsGrpChange(grpNameElmntID, grpIDElmntID) {
+function payGlblValsGrpChange(grpNameElmntID,grpIDElmntID) {
     $("#" + grpNameElmntID).val("");
     $("#" + grpIDElmntID).val("-1");
 }
@@ -3176,7 +3176,7 @@ function savePayGlblValsForm() {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Criteria Type cannot be empty!</span></p>';
     }
-    if (rhotrim(errMsg, '; ') !== '') {
+    if (rhotrim(errMsg,'; ') !== '') {
         bootbox.alert({
             title: 'System Alert!',
             /*size: 'small',*/
@@ -3188,7 +3188,7 @@ function savePayGlblValsForm() {
     var errMsg = "";
     var isVld = true;
     var slctdGlobalVals = "";
-    $('#payGlblValsRunDetsTable').find('tr').each(function (i, el) {
+    $('#payGlblValsRunDetsTable').find('tr').each(function (i,el) {
         isVld = true;
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
@@ -3203,7 +3203,7 @@ function savePayGlblValsForm() {
                 var ln_StrtDte = $('#payGlblValsRunDetsRow' + rndmNum + '_StrtDte').val();
                 var ln_EndDte = $('#payGlblValsRunDetsRow' + rndmNum + '_EndDte').val();
                 //Number(ln_Level.replace(/[^-?0-9\.]/g, ''))
-                if (ln_GBVAmnt.replace(/[^-?0-9\.]/g, '').trim() === "") {
+                if (ln_GBVAmnt.replace(/[^-?0-9\.]/g,'').trim() === "") {
                     isVld = false;
                     errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                         'font-weight:bold;color:red;">Amount for Row No. ' + i + ' cannot be empty!</span></p>';
@@ -3211,7 +3211,7 @@ function savePayGlblValsForm() {
                 } else {
                     $('#payGlblValsRunDetsRow' + rndmNum + '_GBVAmnt').removeClass('rho-error');
                 }
-                if (ln_CrtriaID.replace(/[^-?0-9\.]/g, '').trim() === "" || ln_CrtriaType.trim() === "") {
+                if (ln_CrtriaID.replace(/[^-?0-9\.]/g,'').trim() === "" || ln_CrtriaType.trim() === "") {
                     isVld = false;
                     errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                         'font-weight:bold;color:red;">Criteria Type and Name for Row No. ' + i + ' cannot be empty!</span></p>';
@@ -3223,13 +3223,13 @@ function savePayGlblValsForm() {
                 }
                 if (isVld === true) {
                     slctdGlobalVals = slctdGlobalVals +
-                        ln_TrnsLnID.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        ln_CrtriaType.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        ln_CrtriaID.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        ln_CrtriaNm.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        ln_GBVAmnt.replace(/[^-?0-9\.]/g, '').replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        ln_StrtDte.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        ln_EndDte.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                        ln_TrnsLnID.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        ln_CrtriaType.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        ln_CrtriaID.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        ln_CrtriaNm.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        ln_GBVAmnt.replace(/[^-?0-9\.]/g,'').replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        ln_StrtDte.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        ln_EndDte.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "|";
                 }
             }
         }
@@ -3238,10 +3238,10 @@ function savePayGlblValsForm() {
         title: 'Save Global Values',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Global Values...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -3263,10 +3263,10 @@ function savePayGlblValsForm() {
                 success: function (result) {
                     dialog.find('.bootbox-body').html(result.message);
                     if (result.message.indexOf("Success") !== -1) {
-                        getPayGlblValsDt('', '#allmodules', 'grp=7&typ=1&pg=11');
+                        getPayGlblValsDt('','#allmodules','grp=7&typ=1&pg=11');
                     }
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     /*dialog.find('.bootbox-body').html(errorThrown);*/
                     console.warn(jqXHR.responseText);
                 }
@@ -3310,12 +3310,12 @@ function delPayGlblVals(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting ' + msgPrt + '...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -3336,9 +3336,9 @@ function delPayGlblVals(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -3347,7 +3347,7 @@ function delPayGlblVals(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -3390,12 +3390,12 @@ function delPayGlblValsLn(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting ' + msgPrt + '...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -3416,9 +3416,9 @@ function delPayGlblValsLn(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -3427,7 +3427,7 @@ function delPayGlblValsLn(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -3436,7 +3436,7 @@ function delPayGlblValsLn(rowIDAttrb) {
 }
 
 
-function getPayPayItms(actionText, slctr, linkArgs) {
+function getPayPayItms(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#payPayItmsSrchFor").val() === 'undefined' ? '%' : $("#payPayItmsSrchFor").val();
     var srchIn = typeof $("#payPayItmsSrchIn").val() === 'undefined' ? 'Both' : $("#payPayItmsSrchIn").val();
     var pageNo = typeof $("#payPayItmsPageNo").val() === 'undefined' ? 1 : $("#payPayItmsPageNo").val();
@@ -3452,17 +3452,17 @@ function getPayPayItms(actionText, slctr, linkArgs) {
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn +
         "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function enterKeyFuncPayPayItms(e, actionText, slctr, linkArgs) {
+function enterKeyFuncPayPayItms(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getPayPayItms(actionText, slctr, linkArgs);
+        getPayPayItms(actionText,slctr,linkArgs);
     }
 }
 
-function getPayPayItmsDt(actionText, slctr, linkArgs) {
+function getPayPayItmsDt(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#payPayItmsDtSrchFor").val() === 'undefined' ? '%' : $("#payPayItmsDtSrchFor").val();
     var srchIn = typeof $("#payPayItmsDtSrchIn").val() === 'undefined' ? 'Both' : $("#payPayItmsDtSrchIn").val();
     var pageNo1 = typeof $("#payPayItmsDtPageNo1").val() === 'undefined' ? 1 : $("#payPayItmsDtPageNo1").val();
@@ -3518,19 +3518,19 @@ function getPayPayItmsDt(actionText, slctr, linkArgs) {
     linkArgs = linkArgs + "&vtyp=0&searchfor=" + srchFor + "&searchin=" + srchIn +
         "&pageNo1=" + pageNo1 + "&pageNo2=" + pageNo2 + "&pageNo3=" + pageNo3 +
         "&limitSze=" + limitSze + "&sortBy=" + sortBy + "&sbmtdPayItmID=" + payPayItmsID + "&subPgNo=" + subPgNo;
-    openATab(slctr1, linkArgs);
+    openATab(slctr1,linkArgs);
 }
 
-function enterKeyFuncPayPayItmsDt(e, actionText, slctr, linkArgs) {
+function enterKeyFuncPayPayItmsDt(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getPayPayItmsDt(actionText, slctr, linkArgs);
+        getPayPayItmsDt(actionText,slctr,linkArgs);
     }
 }
 
-function getOnePayPayItmsForm(tmpltID, vwtype) {
+function getOnePayPayItmsForm(tmpltID,vwtype) {
     var lnkArgs = 'grp=7&typ=1&pg=10&vtyp=' + vwtype + '&sbmtdPayItmID=' + tmpltID + "&subPgNo=1";
-    doAjaxWthCallBck(lnkArgs, 'payPayItmsDetailInfo', 'PasteDirect', '', '', '', function () {
+    doAjaxWthCallBck(lnkArgs,'payPayItmsDetailInfo','PasteDirect','','','',function () {
 
         if (!$.fn.DataTable.isDataTable('#payPayItmsBalsFeedsTable')) {
             var table2 = $('#payPayItmsBalsFeedsTable').DataTable({
@@ -3597,9 +3597,9 @@ function payPayItmsGrpTypChange() {
     var lovChkngElementVal = typeof $("#payPayItmsGrpType").val() === 'undefined' ? '' : $("#payPayItmsGrpType").val();
     lovNm = "";
     if (lovChkngElementVal === "Everyone") {
-        $('#payPayItmsGroupName').attr("disabled", "true");
+        $('#payPayItmsGroupName').attr("disabled","true");
         $('#payPayItmsGroupName').val("");
-        $('#payPayItmsGroupNameLbl').attr("disabled", "true");
+        $('#payPayItmsGroupNameLbl').attr("disabled","true");
     } else {
         $('#payPayItmsGroupName').removeAttr("disabled");
         $('#payPayItmsGroupName').val("");
@@ -3652,11 +3652,11 @@ function savePayPayItmsForm() {
             'font-weight:bold;color:red;">Effect on Person\'s Org. Debt cannot be empty!</span></p>';
     }
     if (payPayItmsCreatesActng === 'YES') {
-        if (payPayItmsIncrsDcrs1.trim() === "" || payPayItmsIncrsDcrs1.trim() === "None" || Number(payPayItmsCostAcntID.replace(/[^-?0-9\.]/g, '')) <= 0) {
+        if (payPayItmsIncrsDcrs1.trim() === "" || payPayItmsIncrsDcrs1.trim() === "None" || Number(payPayItmsCostAcntID.replace(/[^-?0-9\.]/g,'')) <= 0) {
             errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                 'font-weight:bold;color:red;">Costing Account information must be provided!</span></p>';
         }
-        if (payPayItmsIncrsDcrs2.trim() === "" || payPayItmsIncrsDcrs2.trim() === "None" || Number(payPayItmsBalsAcntID.replace(/[^-?0-9\.]/g, '')) <= 0) {
+        if (payPayItmsIncrsDcrs2.trim() === "" || payPayItmsIncrsDcrs2.trim() === "None" || Number(payPayItmsBalsAcntID.replace(/[^-?0-9\.]/g,'')) <= 0) {
             errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                 'font-weight:bold;color:red;">Balancing Account information must be provided!</span></p>';
             return;
@@ -3664,7 +3664,7 @@ function savePayPayItmsForm() {
     }
     var isVld = true;
     var slctdItemIDs = "";
-    $('#payPayItmsBalsFeedsTable').find('tr').each(function (i, el) {
+    $('#payPayItmsBalsFeedsTable').find('tr').each(function (i,el) {
         isVld = true;
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
@@ -3677,7 +3677,7 @@ function savePayPayItmsForm() {
                 var ln_Action = $('#payPayItmsBalsFeedsRow' + rndmNum + '_Action').val();
                 var ln_ScaleFctr = $('#payPayItmsBalsFeedsRow' + rndmNum + '_ScaleFctr').val();
 
-                if (Number(ln_ItemID.replace(/[^-?0-9\.]/g, '')) > 0) {
+                if (Number(ln_ItemID.replace(/[^-?0-9\.]/g,'')) > 0) {
                     if (ln_Action.trim() === "") {
                         isVld = false;
                         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
@@ -3686,7 +3686,7 @@ function savePayPayItmsForm() {
                     } else {
                         $('#payPayItmsBalsFeedsRow' + rndmNum + '_Action').removeClass('rho-error');
                     }
-                    if (ln_ScaleFctr.replace(/[^-?0-9\.]/g, '').trim() === "") {
+                    if (ln_ScaleFctr.replace(/[^-?0-9\.]/g,'').trim() === "") {
                         isVld = false;
                         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                             'font-weight:bold;color:red;">Action for Row No. ' + i + ' cannot be empty!</span></p>';
@@ -3696,10 +3696,10 @@ function savePayPayItmsForm() {
                     }
                     if (isVld === true) {
                         slctdItemIDs = slctdItemIDs +
-                            ln_TrnsLnID.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                            ln_ItemID.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                            ln_Action.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                            ln_ScaleFctr.replace(/[^-?0-9\.]/g, '').replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                            ln_TrnsLnID.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                            ln_ItemID.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                            ln_Action.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                            ln_ScaleFctr.replace(/[^-?0-9\.]/g,'').replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "|";
                     }
                 }
             }
@@ -3708,7 +3708,7 @@ function savePayPayItmsForm() {
 
     isVld = true;
     var slctdItemValueIDs = "";
-    $('#payPayItmsPsblValsTable').find('tr').each(function (i, el) {
+    $('#payPayItmsPsblValsTable').find('tr').each(function (i,el) {
         isVld = true;
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
@@ -3722,7 +3722,7 @@ function savePayPayItmsForm() {
 
                 if (ln_ValNm.trim() !== "") {
                     if (payPayItmsUsesSQL === 'NO') {
-                        if (ln_ValAmnt.replace(/[^-?0-9\.]/g, '') === "") {
+                        if (ln_ValAmnt.replace(/[^-?0-9\.]/g,'') === "") {
                             isVld = false;
                             errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                                 'font-weight:bold;color:red;">Value Amount for Row No. ' + i + ' cannot be empty!</span></p>';
@@ -3732,7 +3732,7 @@ function savePayPayItmsForm() {
                         }
                     }
                     if (payPayItmsUsesSQL === 'YES') {
-                        if (ln_ValSQL.replace(/[^-?0-9\.]/g, '') === "") {
+                        if (ln_ValSQL.replace(/[^-?0-9\.]/g,'') === "") {
                             isVld = false;
                             errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                                 'font-weight:bold;color:red;">Value SQL for Row No. ' + i + ' cannot be empty!</span></p>';
@@ -3743,10 +3743,10 @@ function savePayPayItmsForm() {
                     }
                     if (isVld === true) {
                         slctdItemValueIDs = slctdItemValueIDs +
-                            ln_ItemValID.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                            ln_ValNm.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                            ln_ValSQL.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                            ln_ValAmnt.replace(/[^-?0-9\.]/g, '').replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                            ln_ItemValID.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                            ln_ValNm.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                            ln_ValSQL.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                            ln_ValAmnt.replace(/[^-?0-9\.]/g,'').replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "|";
                     }
                 }
             }
@@ -3754,7 +3754,7 @@ function savePayPayItmsForm() {
     });
     isVld = true;
     var slctdExtraInfoLines = "";
-    $('#payPayItmsExtrInfTable').find('tr').each(function (i, el) {
+    $('#payPayItmsExtrInfTable').find('tr').each(function (i,el) {
         isVld = true;
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
@@ -3770,17 +3770,17 @@ function savePayPayItmsForm() {
 
                 if (isVld === true) {
                     slctdExtraInfoLines = slctdExtraInfoLines +
-                        ln_DfltRowID.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        ln_CombntnID.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        ln_TableID.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        ln_extrInfoCtgry.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        ln_extrInfoLbl.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        ln_Value.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                        ln_DfltRowID.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        ln_CombntnID.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        ln_TableID.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        ln_extrInfoCtgry.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        ln_extrInfoLbl.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        ln_Value.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "|";
                 }
             }
         }
     });
-    if (rhotrim(errMsg, '; ') !== '') {
+    if (rhotrim(errMsg,'; ') !== '') {
         bootbox.alert({
             title: 'System Alert!',
             /*size: 'small',*/
@@ -3792,46 +3792,46 @@ function savePayPayItmsForm() {
         title: 'Save Pay Item',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Pay Item...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
-    formData.append('grp', 7);
-    formData.append('typ', 1);
-    formData.append('pg', 10);
-    formData.append('q', 'UPDATE');
-    formData.append('actyp', 1);
-    formData.append('payPayItmsID', payPayItmsID);
-    formData.append('payPayItmsName', payPayItmsName);
-    formData.append('payPayItmsDesc', payPayItmsDesc);
-    formData.append('payPayItmsLocClsfctn', payPayItmsLocClsfctn);
-    formData.append('payPayItmsMajTyp', payPayItmsMajTyp);
-    formData.append('payPayItmsMinTyp', payPayItmsMinTyp);
-    formData.append('payPayItmsUOM', payPayItmsUOM);
+    formData.append('grp',7);
+    formData.append('typ',1);
+    formData.append('pg',10);
+    formData.append('q','UPDATE');
+    formData.append('actyp',1);
+    formData.append('payPayItmsID',payPayItmsID);
+    formData.append('payPayItmsName',payPayItmsName);
+    formData.append('payPayItmsDesc',payPayItmsDesc);
+    formData.append('payPayItmsLocClsfctn',payPayItmsLocClsfctn);
+    formData.append('payPayItmsMajTyp',payPayItmsMajTyp);
+    formData.append('payPayItmsMinTyp',payPayItmsMinTyp);
+    formData.append('payPayItmsUOM',payPayItmsUOM);
 
-    formData.append('payPayItmsPyaFeq', payPayItmsPyaFeq);
-    formData.append('payPayItmsBalsType', payPayItmsBalsType);
-    formData.append('payPayItmsEffctOrg', payPayItmsEffctOrg);
-    formData.append('payPayItmsRunPriority', payPayItmsRunPriority);
+    formData.append('payPayItmsPyaFeq',payPayItmsPyaFeq);
+    formData.append('payPayItmsBalsType',payPayItmsBalsType);
+    formData.append('payPayItmsEffctOrg',payPayItmsEffctOrg);
+    formData.append('payPayItmsRunPriority',payPayItmsRunPriority);
 
-    formData.append('payPayItmsIsEnbld', payPayItmsIsEnbld);
-    formData.append('payPayItmsAllowEdtng', payPayItmsAllowEdtng);
-    formData.append('payPayItmsCreatesActng', payPayItmsCreatesActng);
-    formData.append('payPayItmsUsesSQL', payPayItmsUsesSQL);
-    formData.append('payPayItmsIsRetro', payPayItmsIsRetro);
+    formData.append('payPayItmsIsEnbld',payPayItmsIsEnbld);
+    formData.append('payPayItmsAllowEdtng',payPayItmsAllowEdtng);
+    formData.append('payPayItmsCreatesActng',payPayItmsCreatesActng);
+    formData.append('payPayItmsUsesSQL',payPayItmsUsesSQL);
+    formData.append('payPayItmsIsRetro',payPayItmsIsRetro);
 
-    formData.append('payPayItmsRetroItmID', payPayItmsRetroItmID);
-    formData.append('payPayItmsInvItmID', payPayItmsInvItmID);
-    formData.append('payPayItmsIncrsDcrs1', payPayItmsIncrsDcrs1);
-    formData.append('payPayItmsCostAcntID', payPayItmsCostAcntID);
-    formData.append('payPayItmsIncrsDcrs2', payPayItmsIncrsDcrs2);
-    formData.append('payPayItmsBalsAcntID', payPayItmsBalsAcntID);
+    formData.append('payPayItmsRetroItmID',payPayItmsRetroItmID);
+    formData.append('payPayItmsInvItmID',payPayItmsInvItmID);
+    formData.append('payPayItmsIncrsDcrs1',payPayItmsIncrsDcrs1);
+    formData.append('payPayItmsCostAcntID',payPayItmsCostAcntID);
+    formData.append('payPayItmsIncrsDcrs2',payPayItmsIncrsDcrs2);
+    formData.append('payPayItmsBalsAcntID',payPayItmsBalsAcntID);
 
-    formData.append('slctdItemIDs', slctdItemIDs);
-    formData.append('slctdItemValueIDs', slctdItemValueIDs);
-    formData.append('slctdExtraInfoLines', slctdExtraInfoLines);
+    formData.append('slctdItemIDs',slctdItemIDs);
+    formData.append('slctdItemValueIDs',slctdItemValueIDs);
+    formData.append('slctdExtraInfoLines',slctdExtraInfoLines);
 
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -3847,11 +3847,11 @@ function savePayPayItmsForm() {
                         dialog.find('.bootbox-body').html(data.message);
                         if (data.message.indexOf("Success") !== -1) {
                             payPayItmsID = data.payPayItmsID;
-                            getOnePayPayItmsForm(payPayItmsID, 0);
+                            getOnePayPayItmsForm(payPayItmsID,0);
                         }
-                    }, 500);
+                    },500);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     console.log(textStatus + " " + errorThrown);
                     console.warn(jqXHR.responseText);
                 }
@@ -3892,12 +3892,12 @@ function delPayPayItms(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Pay Item...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -3918,9 +3918,9 @@ function delPayPayItms(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -3929,7 +3929,7 @@ function delPayPayItms(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -3969,12 +3969,12 @@ function delPayPayItmFeeds(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Item Feed...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -3995,9 +3995,9 @@ function delPayPayItmFeeds(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -4006,7 +4006,7 @@ function delPayPayItmFeeds(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -4046,12 +4046,12 @@ function delPayPayItmsAttchdVal(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Item Possible Value...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -4072,9 +4072,9 @@ function delPayPayItmsAttchdVal(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -4083,7 +4083,7 @@ function delPayPayItmsAttchdVal(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -4091,11 +4091,11 @@ function delPayPayItmsAttchdVal(rowIDAttrb) {
     });
 }
 
-function insertNewPayItmFeedsRows(tableElmntID, position, inptHtml) {
+function insertNewPayItmFeedsRows(tableElmntID,position,inptHtml) {
     $("#allOtherInputData5").val(0);
     for (var i = 0; i < 1; i++) {
         var nwRndm = Math.floor((Math.random() * 9999999) + 1000000);
-        var nwInptHtml = urldecode(inptHtml.replace(/(_WWW123WWW_)+/g, nwRndm + "_").replace(/(_WWW123WWW)+/g, nwRndm));
+        var nwInptHtml = urldecode(inptHtml.replace(/(_WWW123WWW_)+/g,nwRndm + "_").replace(/(_WWW123WWW)+/g,nwRndm));
         if ($('#' + tableElmntID + ' > tbody > tr').length >= 1) {
             if ($('#' + tableElmntID + ' > tbody > tr > td').eq($('#' + tableElmntID + ' > tbody > tr').length - 1).text() == 'No data available in table') {
                 $('#' + tableElmntID + ' > tbody > tr > td').eq($('#' + tableElmntID + ' > tbody > tr').length - 1).remove();
@@ -4119,7 +4119,7 @@ function insertNewPayItmFeedsRows(tableElmntID, position, inptHtml) {
         $(this).select();
     });
     var cntr = 0;
-    $('#' + tableElmntID).find('tr').each(function (i, el) {
+    $('#' + tableElmntID).find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -4136,11 +4136,11 @@ function insertNewPayItmFeedsRows(tableElmntID, position, inptHtml) {
     });
 }
 
-function insertNewPayItmsAttchdValRows(tableElmntID, position, inptHtml) {
+function insertNewPayItmsAttchdValRows(tableElmntID,position,inptHtml) {
     $("#allOtherInputData5").val(0);
     for (var i = 0; i < 1; i++) {
         var nwRndm = Math.floor((Math.random() * 9999999) + 1000000);
-        var nwInptHtml = urldecode(inptHtml.replace(/(_WWW123WWW_)+/g, nwRndm + "_").replace(/(_WWW123WWW)+/g, nwRndm));
+        var nwInptHtml = urldecode(inptHtml.replace(/(_WWW123WWW_)+/g,nwRndm + "_").replace(/(_WWW123WWW)+/g,nwRndm));
         if ($('#' + tableElmntID + ' > tbody > tr').length >= 1) {
             if ($('#' + tableElmntID + ' > tbody > tr > td').eq($('#' + tableElmntID + ' > tbody > tr').length - 1).text() == 'No data available in table') {
                 $('#' + tableElmntID + ' > tbody > tr > td').eq($('#' + tableElmntID + ' > tbody > tr').length - 1).remove();
@@ -4164,7 +4164,7 @@ function insertNewPayItmsAttchdValRows(tableElmntID, position, inptHtml) {
         $(this).select();
     });
     var cntr = 0;
-    $('#' + tableElmntID).find('tr').each(function (i, el) {
+    $('#' + tableElmntID).find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -4185,7 +4185,7 @@ function saveGRAPAYEForm() {
     var errMsg = "";
     var isVld = true;
     var slctdRateIDs = "";
-    $('#allPayeRatesTable').find('tr').each(function (i, el) {
+    $('#allPayeRatesTable').find('tr').each(function (i,el) {
         isVld = true;
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
@@ -4197,7 +4197,7 @@ function saveGRAPAYEForm() {
                 var ln_Taxable = $('#allPayeRatesRow' + rndmNum + '_Taxable').val();
                 var ln_Rate = $('#allPayeRatesRow' + rndmNum + '_Rate').val();
                 //Number(ln_Level.replace(/[^-?0-9\.]/g, ''))
-                if (ln_Level.replace(/[^-?0-9\.]/g, '').trim() === "") {
+                if (ln_Level.replace(/[^-?0-9\.]/g,'').trim() === "") {
                     isVld = false;
                     errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                         'font-weight:bold;color:red;">Level for Row No. ' + i + ' cannot be empty!</span></p>';
@@ -4205,7 +4205,7 @@ function saveGRAPAYEForm() {
                 } else {
                     $('#allPayeRatesRow' + rndmNum + '_Level').removeClass('rho-error');
                 }
-                if (ln_Taxable.replace(/[^-?0-9\.]/g, '').trim() === "") {
+                if (ln_Taxable.replace(/[^-?0-9\.]/g,'').trim() === "") {
                     isVld = false;
                     errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                         'font-weight:bold;color:red;">Taxable Amount for Row No. ' + i + ' cannot be empty!</span></p>';
@@ -4213,7 +4213,7 @@ function saveGRAPAYEForm() {
                 } else {
                     $('#allPayeRatesRow' + rndmNum + '_Taxable').removeClass('rho-error');
                 }
-                if (ln_Rate.replace(/[^-?0-9\.]/g, '').trim() === "") {
+                if (ln_Rate.replace(/[^-?0-9\.]/g,'').trim() === "") {
                     isVld = false;
                     errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                         'font-weight:bold;color:red;">Rate for Row No. ' + i + ' cannot be empty!</span></p>';
@@ -4223,20 +4223,20 @@ function saveGRAPAYEForm() {
                 }
                 if (isVld === true) {
                     slctdRateIDs = slctdRateIDs +
-                        ln_RatesID.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        ln_Level.replace(/[^-?0-9\.]/g, '').replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        ln_Taxable.replace(/[^-?0-9\.]/g, '').replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        ln_Rate.replace(/[^-?0-9\.]/g, '').replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                        ln_RatesID.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        ln_Level.replace(/[^-?0-9\.]/g,'').replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        ln_Taxable.replace(/[^-?0-9\.]/g,'').replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        ln_Rate.replace(/[^-?0-9\.]/g,'').replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "|";
                 }
             }
         }
     });
 
-    if (rhotrim(slctdRateIDs, ', ') === '') {
+    if (rhotrim(slctdRateIDs,', ') === '') {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Rates cannot be empty!</span></p>';
     }
-    if (rhotrim(errMsg, '; ') !== '') {
+    if (rhotrim(errMsg,'; ') !== '') {
         bootbox.alert({
             title: 'System Alert!',
             /*size: 'small',*/
@@ -4248,18 +4248,18 @@ function saveGRAPAYEForm() {
         title: 'Save Tax Rates',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Tax Rates...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
-    formData.append('grp', 7);
-    formData.append('typ', 1);
-    formData.append('pg', 12);
-    formData.append('q', 'UPDATE');
-    formData.append('actyp', 1);
-    formData.append('slctdRateIDs', slctdRateIDs);
+    formData.append('grp',7);
+    formData.append('typ',1);
+    formData.append('pg',12);
+    formData.append('q','UPDATE');
+    formData.append('actyp',1);
+    formData.append('slctdRateIDs',slctdRateIDs);
 
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -4274,11 +4274,11 @@ function saveGRAPAYEForm() {
                     setTimeout(function () {
                         dialog.find('.bootbox-body').html(data.message);
                         if (data.message.indexOf("Success") !== -1) {
-                            openATab('#allmodules', 'grp=7&typ=1&pg=12&vtyp=0');;
+                            openATab('#allmodules','grp=7&typ=1&pg=12&vtyp=0');;
                         }
-                    }, 500);
+                    },500);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     console.log(textStatus + " " + errorThrown);
                     console.warn(jqXHR.responseText);
                 }
@@ -4322,12 +4322,12 @@ function delPayTaxRateLn(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting ' + msgPrt + '...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -4348,9 +4348,9 @@ function delPayTaxRateLn(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -4359,7 +4359,7 @@ function delPayTaxRateLn(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -4367,7 +4367,7 @@ function delPayTaxRateLn(rowIDAttrb) {
     });
 }
 //TRANSACTION TYPES
-function getPayTransTyps(actionText, slctr, linkArgs) {
+function getPayTransTyps(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#payTransTypsSrchFor").val() === 'undefined' ? '%' : $("#payTransTypsSrchFor").val();
     var srchIn = typeof $("#payTransTypsSrchIn").val() === 'undefined' ? 'Both' : $("#payTransTypsSrchIn").val();
     var pageNo = typeof $("#payTransTypsPageNo").val() === 'undefined' ? 1 : $("#payTransTypsPageNo").val();
@@ -4385,22 +4385,22 @@ function getPayTransTyps(actionText, slctr, linkArgs) {
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn +
         "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy + "&qShwUsrOnly=" + qShwUsrOnly + "&qShwUnpstdOnly=" + qShwUnpstdOnly;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function enterKeyFuncPayTransTyps(e, actionText, slctr, linkArgs) {
+function enterKeyFuncPayTransTyps(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getPayTransTyps(actionText, slctr, linkArgs);
+        getPayTransTyps(actionText,slctr,linkArgs);
     }
 }
 
-function getOnePayTransTypsForm(pKeyID, vwtype, actionTxt) {
+function getOnePayTransTypsForm(pKeyID,vwtype,actionTxt) {
     if (typeof actionTxt === 'undefined' || actionTxt === null) {
         actionTxt = 'ShowDialog';
     }
     var lnkArgs = 'grp=7&typ=1&pg=15&vtyp=' + vwtype + '&sbmtdPayTransTypsID=' + pKeyID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalxLG', actionTxt, 'Transaction Types (ID:' + pKeyID + ')', 'myFormsModalxLGTitle', 'myFormsModalxLGBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalxLG',actionTxt,'Transaction Types (ID:' + pKeyID + ')','myFormsModalxLGTitle','myFormsModalxLGBody',function () {
         $('.form_date_tme').datetimepicker({
             format: "dd-M-yyyy hh:ii:ss",
             language: 'en',
@@ -4413,8 +4413,8 @@ function getOnePayTransTypsForm(pKeyID, vwtype, actionTxt) {
             minView: 0,
             maxView: 4,
             forceParse: true
-        }).on('hide', function (ev) {
-            $('#myFormsModalxLG').css("overflow", "auto");
+        }).on('hide',function (ev) {
+            $('#myFormsModalxLG').css("overflow","auto");
         });
         $('.form_date').datetimepicker({
             format: "dd-M-yyyy",
@@ -4428,8 +4428,8 @@ function getOnePayTransTypsForm(pKeyID, vwtype, actionTxt) {
             minView: 2,
             maxView: 4,
             forceParse: true
-        }).on('hide', function (ev) {
-            $('#myFormsModalxLG').css("overflow", "auto");
+        }).on('hide',function (ev) {
+            $('#myFormsModalxLG').css("overflow","auto");
         });
         if (!$.fn.DataTable.isDataTable('#payTrnTypClsfctnsTable')) {
             var table1 = $('#payTrnTypClsfctnsTable').DataTable({
@@ -4447,8 +4447,8 @@ function getOnePayTransTypsForm(pKeyID, vwtype, actionTxt) {
             return false;
         });
         $('#myFormsModalxLG').off('hidden.bs.modal');
-        $('#myFormsModalxLG').one('hidden.bs.modal', function (e) {
-            getPayTransTyps('', '#allmodules', 'grp=7&typ=1&pg=15&vtyp=0');
+        $('#myFormsModalxLG').one('hidden.bs.modal',function (e) {
+            getPayTransTyps('','#allmodules','grp=7&typ=1&pg=15&vtyp=0');
             $(e.currentTarget).unbind();
         });
         $('[data-toggle="tooltip"]').tooltip();
@@ -4506,7 +4506,7 @@ function shwHideTrnsTypsDivs() {
 }
 
 
-function savePayTransTypsForm(funcur, shdSbmt) {
+function savePayTransTypsForm(funcur,shdSbmt) {
     var sbmtdPayTransTypsID = typeof $("#sbmtdPayTransTypsID").val() === 'undefined' ? '-1' : $("#sbmtdPayTransTypsID").val();
     var payTransTypsName = typeof $("#payTransTypsName").val() === 'undefined' ? '' : $("#payTransTypsName").val();
     var payTransTypsDesc = typeof $("#payTransTypsDesc").val() === 'undefined' ? '' : $("#payTransTypsDesc").val();
@@ -4539,7 +4539,7 @@ function savePayTransTypsForm(funcur, shdSbmt) {
         lnkdPayTransTypsID = '-1';
         payTransTypsMnBalsItmID = '-1';
     }
-    if ((payTransTyp.trim() === 'SETTLEMENT') && (Number(lnkdPayTransTypsID.replace(/[^-?0-9\.]/g, '')) <= 0 || Number(payTransTypsMnBalsItmID.replace(/[^-?0-9\.]/g, '')) <= 0)) {
+    if ((payTransTyp.trim() === 'SETTLEMENT') && (Number(lnkdPayTransTypsID.replace(/[^-?0-9\.]/g,'')) <= 0 || Number(payTransTypsMnBalsItmID.replace(/[^-?0-9\.]/g,'')) <= 0)) {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Linked Loan Type and Main Balance Item cannot be empty for SETTLEMENT!</span></p>';
     }
@@ -4547,19 +4547,19 @@ function savePayTransTypsForm(funcur, shdSbmt) {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Transaction Type or Name cannot be empty!</span></p>';
     }
-    if ((payTransTyp.trim() === 'LOAN' || payTransTyp.trim() === 'PAYMENT') && Number(payTransTypsItmStID.replace(/[^-?0-9\.]/g, '')) <= 0) {
+    if ((payTransTyp.trim() === 'LOAN' || payTransTyp.trim() === 'PAYMENT') && Number(payTransTypsItmStID.replace(/[^-?0-9\.]/g,'')) <= 0) {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Item Set cannot be empty!</span></p>';
     }
-    if ((payTransTyp.trim() === 'LOAN' || payTransTyp.trim() === 'PAYMENT') && Number(payTransTypsMnItmID.replace(/[^-?0-9\.]/g, '')) <= 0) {
+    if ((payTransTyp.trim() === 'LOAN' || payTransTyp.trim() === 'PAYMENT') && Number(payTransTypsMnItmID.replace(/[^-?0-9\.]/g,'')) <= 0) {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Main Pay Item cannot be empty!</span></p>';
     }
-    if ((payTransTyp.trim() === 'INVESTMENT') && (Number(payTransCshAcntID.replace(/[^-?0-9\.]/g, '')) <= 0 ||
-            Number(payTransAssetAcntID.replace(/[^-?0-9\.]/g, '')) <= 0 ||
-            Number(payTransRcvblAcntID.replace(/[^-?0-9\.]/g, '')) <= 0 ||
-            Number(payTransLbltyAcntID.replace(/[^-?0-9\.]/g, '')) <= 0 ||
-            Number(payTransRvnuAcntID.replace(/[^-?0-9\.]/g, '')) <= 0)) {
+    if ((payTransTyp.trim() === 'INVESTMENT') && (Number(payTransCshAcntID.replace(/[^-?0-9\.]/g,'')) <= 0 ||
+        Number(payTransAssetAcntID.replace(/[^-?0-9\.]/g,'')) <= 0 ||
+        Number(payTransRcvblAcntID.replace(/[^-?0-9\.]/g,'')) <= 0 ||
+        Number(payTransLbltyAcntID.replace(/[^-?0-9\.]/g,'')) <= 0 ||
+        Number(payTransRvnuAcntID.replace(/[^-?0-9\.]/g,'')) <= 0)) {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">All Accounts fields are required!</span></p>';
     }
@@ -4570,7 +4570,7 @@ function savePayTransTypsForm(funcur, shdSbmt) {
     var slctdTypClsfctns = "";
     var isVld = true;
     var errMsg = "";
-    $('#payTrnTypClsfctnsTable').find('tr').each(function (i, el) {
+    $('#payTrnTypClsfctnsTable').find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -4584,16 +4584,16 @@ function savePayTransTypsForm(funcur, shdSbmt) {
                     $('#payTrnTypClsfctnsRow' + rndmNum + '_MajClsfctn').addClass('rho-error');
                 } else {
                     $('#payTrnTypClsfctnsRow' + rndmNum + '_MajClsfctn').removeClass('rho-error');
-                    slctdTypClsfctns = slctdTypClsfctns + $('#payTrnTypClsfctnsRow' + rndmNum + '_ClsfctnID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#payTrnTypClsfctnsRow' + rndmNum + '_OrdrNum').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#payTrnTypClsfctnsRow' + rndmNum + '_MajClsfctn').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        $('#payTrnTypClsfctnsRow' + rndmNum + '_MinClsfctn').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                        isEnabled.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                    slctdTypClsfctns = slctdTypClsfctns + $('#payTrnTypClsfctnsRow' + rndmNum + '_ClsfctnID').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#payTrnTypClsfctnsRow' + rndmNum + '_OrdrNum').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#payTrnTypClsfctnsRow' + rndmNum + '_MajClsfctn').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        $('#payTrnTypClsfctnsRow' + rndmNum + '_MinClsfctn').val().replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+                        isEnabled.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "|";
                 }
             }
         }
     });
-    if (rhotrim(errMsg, '; ') !== '') {
+    if (rhotrim(errMsg,'; ') !== '') {
         bootbox.alert({
             title: 'System Alert!',
             /*size: 'small',*/
@@ -4605,45 +4605,45 @@ function savePayTransTypsForm(funcur, shdSbmt) {
         title: 'Save Transaction Types',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Transaction Types...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
-    formData.append('grp', 7);
-    formData.append('typ', 1);
-    formData.append('pg', 15);
-    formData.append('q', 'UPDATE');
-    formData.append('actyp', 1);
-    formData.append('sbmtdPayTransTypsID', sbmtdPayTransTypsID);
-    formData.append('payTransTypsName', payTransTypsName);
-    formData.append('payTransTypsDesc', payTransTypsDesc);
-    formData.append('payTransTyp', payTransTyp);
-    formData.append('payTransTypsPrd', payTransTypsPrd);
-    formData.append('payTransPeriodTyp', payTransPeriodTyp);
-    formData.append('payTransTypsItmStID', payTransTypsItmStID);
-    formData.append('payTransTypsMnItmID', payTransTypsMnItmID);
-    formData.append('payTransCshAcntID', payTransCshAcntID);
-    formData.append('payTransAssetAcntID', payTransAssetAcntID);
-    formData.append('payTransRcvblAcntID', payTransRcvblAcntID);
-    formData.append('payTransLbltyAcntID', payTransLbltyAcntID);
-    formData.append('payTransRvnuAcntID', payTransRvnuAcntID);
-    formData.append('payTransTypsIsEnbld', payTransTypsIsEnbld);
+    formData.append('grp',7);
+    formData.append('typ',1);
+    formData.append('pg',15);
+    formData.append('q','UPDATE');
+    formData.append('actyp',1);
+    formData.append('sbmtdPayTransTypsID',sbmtdPayTransTypsID);
+    formData.append('payTransTypsName',payTransTypsName);
+    formData.append('payTransTypsDesc',payTransTypsDesc);
+    formData.append('payTransTyp',payTransTyp);
+    formData.append('payTransTypsPrd',payTransTypsPrd);
+    formData.append('payTransPeriodTyp',payTransPeriodTyp);
+    formData.append('payTransTypsItmStID',payTransTypsItmStID);
+    formData.append('payTransTypsMnItmID',payTransTypsMnItmID);
+    formData.append('payTransCshAcntID',payTransCshAcntID);
+    formData.append('payTransAssetAcntID',payTransAssetAcntID);
+    formData.append('payTransRcvblAcntID',payTransRcvblAcntID);
+    formData.append('payTransLbltyAcntID',payTransLbltyAcntID);
+    formData.append('payTransRvnuAcntID',payTransRvnuAcntID);
+    formData.append('payTransTypsIsEnbld',payTransTypsIsEnbld);
 
-    formData.append('payTransTypsIntrst', payTransTypsIntrst);
-    formData.append('payTransTypsIntrstTyp', payTransTypsIntrstTyp);
-    formData.append('payTransTypsRepay', payTransTypsRepay);
-    formData.append('payTransTypsRepayTyp', payTransTypsRepayTyp);
-    formData.append('payTransTypsPFrmlr', payTransTypsPFrmlr);
-    formData.append('payTransTypsNetAmntFmlr', payTransTypsNetAmntFmlr);
-    formData.append('payTransTypsMxAmntFrmlr', payTransTypsMxAmntFrmlr);
-    formData.append('payTransTypsEnfrcMx', payTransTypsEnfrcMx);
-    formData.append('slctdTypClsfctns', slctdTypClsfctns);
-    formData.append('lnkdPayTransTypsID', lnkdPayTransTypsID);
-    formData.append('payTransTypsMnBalsItmID', payTransTypsMnBalsItmID);
-    formData.append('payTransTypsMinAmntFrmlr', payTransTypsMinAmntFrmlr);
+    formData.append('payTransTypsIntrst',payTransTypsIntrst);
+    formData.append('payTransTypsIntrstTyp',payTransTypsIntrstTyp);
+    formData.append('payTransTypsRepay',payTransTypsRepay);
+    formData.append('payTransTypsRepayTyp',payTransTypsRepayTyp);
+    formData.append('payTransTypsPFrmlr',payTransTypsPFrmlr);
+    formData.append('payTransTypsNetAmntFmlr',payTransTypsNetAmntFmlr);
+    formData.append('payTransTypsMxAmntFrmlr',payTransTypsMxAmntFrmlr);
+    formData.append('payTransTypsEnfrcMx',payTransTypsEnfrcMx);
+    formData.append('slctdTypClsfctns',slctdTypClsfctns);
+    formData.append('lnkdPayTransTypsID',lnkdPayTransTypsID);
+    formData.append('payTransTypsMnBalsItmID',payTransTypsMnBalsItmID);
+    formData.append('payTransTypsMinAmntFrmlr',payTransTypsMinAmntFrmlr);
 
-    formData.append('shdSbmt', shdSbmt);
+    formData.append('shdSbmt',shdSbmt);
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -4659,11 +4659,11 @@ function savePayTransTypsForm(funcur, shdSbmt) {
                         dialog.find('.bootbox-body').html(data.message);
                         if (data.message.indexOf("Success") !== -1) {
                             sbmtdPayTransTypsID = data.sbmtdPayTransTypsID;
-                            getOnePayTransTypsForm(sbmtdPayTransTypsID, 1, 'ReloadDialog');
+                            getOnePayTransTypsForm(sbmtdPayTransTypsID,1,'ReloadDialog');
                         }
-                    }, 500);
+                    },500);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     console.log(textStatus + " " + errorThrown);
                     console.warn(jqXHR.responseText);
                 }
@@ -4707,12 +4707,12 @@ function delPayTrnTypClsfctn(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting ' + msgPrt + '...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -4733,9 +4733,9 @@ function delPayTrnTypClsfctn(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -4744,7 +4744,7 @@ function delPayTrnTypClsfctn(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -4787,12 +4787,12 @@ function delPayTransTyps(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting ' + msgPrt + '...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -4813,9 +4813,9 @@ function delPayTransTyps(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -4824,7 +4824,7 @@ function delPayTransTyps(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -4832,7 +4832,7 @@ function delPayTransTyps(rowIDAttrb) {
     });
 }
 //Investment Transactions - Fund Management
-function getPayInvstTrans(actionText, slctr, linkArgs) {
+function getPayInvstTrans(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#payInvstTransSrchFor").val() === 'undefined' ? '%' : $("#payInvstTransSrchFor").val();
     var srchIn = typeof $("#payInvstTransSrchIn").val() === 'undefined' ? 'Both' : $("#payInvstTransSrchIn").val();
     var pageNo = typeof $("#payInvstTransPageNo").val() === 'undefined' ? 1 : $("#payInvstTransPageNo").val();
@@ -4850,22 +4850,22 @@ function getPayInvstTrans(actionText, slctr, linkArgs) {
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn +
         "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy + "&qShwUsrOnly=" + qShwUsrOnly + "&qShwUnpstdOnly=" + qShwUnpstdOnly;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function enterKeyFuncPayInvstTrans(e, actionText, slctr, linkArgs) {
+function enterKeyFuncPayInvstTrans(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getPayInvstTrans(actionText, slctr, linkArgs);
+        getPayInvstTrans(actionText,slctr,linkArgs);
     }
 }
 
-function getOnePayInvstTransForm(pKeyID, vwtype, actionTxt) {
+function getOnePayInvstTransForm(pKeyID,vwtype,actionTxt) {
     if (typeof actionTxt === 'undefined' || actionTxt === null) {
         actionTxt = 'ShowDialog';
     }
     var lnkArgs = 'grp=7&typ=1&pg=14&vtyp=' + vwtype + '&sbmtdPayInvstTransID=' + pKeyID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalNrml', actionTxt, 'Fund Management Voucher Details (ID:' + pKeyID + ')', 'myFormsModalNrmlTitle', 'myFormsModalNrmlBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalNrml',actionTxt,'Fund Management Voucher Details (ID:' + pKeyID + ')','myFormsModalNrmlTitle','myFormsModalNrmlBody',function () {
         $('.form_date_tme').datetimepicker({
             format: "dd-M-yyyy hh:ii:ss",
             language: 'en',
@@ -4878,8 +4878,8 @@ function getOnePayInvstTransForm(pKeyID, vwtype, actionTxt) {
             minView: 0,
             maxView: 4,
             forceParse: true
-        }).on('hide', function (ev) {
-            $('#myFormsModalNrml').css("overflow", "auto");
+        }).on('hide',function (ev) {
+            $('#myFormsModalNrml').css("overflow","auto");
         });
         $('.form_date').datetimepicker({
             format: "dd-M-yyyy",
@@ -4893,8 +4893,8 @@ function getOnePayInvstTransForm(pKeyID, vwtype, actionTxt) {
             minView: 2,
             maxView: 4,
             forceParse: true
-        }).on('hide', function (ev) {
-            $('#myFormsModalLg').css("overflow", "auto");
+        }).on('hide',function (ev) {
+            $('#myFormsModalLg').css("overflow","auto");
         });
         $('#allOtherInputData99').val('0');
         $('#onePayInvstTransEDTForm').submit(function (e) {
@@ -4902,8 +4902,8 @@ function getOnePayInvstTransForm(pKeyID, vwtype, actionTxt) {
             return false;
         });
         $('#myFormsModalNrml').off('hidden.bs.modal');
-        $('#myFormsModalNrml').one('hidden.bs.modal', function (e) {
-            getPayInvstTrans('', '#allmodules', 'grp=7&typ=1&pg=14&vtyp=0');
+        $('#myFormsModalNrml').one('hidden.bs.modal',function (e) {
+            getPayInvstTrans('','#allmodules','grp=7&typ=1&pg=14&vtyp=0');
             $(e.currentTarget).unbind();
         });
         $('[data-toggle="tooltip"]').tooltip();
@@ -4929,12 +4929,12 @@ function getOnePayInvstTransForm(pKeyID, vwtype, actionTxt) {
     });
 }
 
-function getOnePInvstRedeemForm(pKeyID, vwtype, actionTxt) {
+function getOnePInvstRedeemForm(pKeyID,vwtype,actionTxt) {
     if (typeof actionTxt === 'undefined' || actionTxt === null) {
         actionTxt = 'ShowDialog';
     }
     var lnkArgs = 'grp=7&typ=1&pg=14&vtyp=' + vwtype + '&sbmtdPayInvstTransID=' + pKeyID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModaly', actionTxt, 'Investment Redemption Details (ID:' + pKeyID + ')', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModaly',actionTxt,'Investment Redemption Details (ID:' + pKeyID + ')','myFormsModalyTitle','myFormsModalyBody',function () {
         $('.form_date_tme').datetimepicker({
             format: "dd-M-yyyy hh:ii:ss",
             language: 'en',
@@ -4947,8 +4947,8 @@ function getOnePInvstRedeemForm(pKeyID, vwtype, actionTxt) {
             minView: 0,
             maxView: 4,
             forceParse: true
-        }).on('hide', function (ev) {
-            $('#myFormsModaly').css("overflow", "auto");
+        }).on('hide',function (ev) {
+            $('#myFormsModaly').css("overflow","auto");
         });
         $('.form_date').datetimepicker({
             format: "dd-M-yyyy",
@@ -4962,8 +4962,8 @@ function getOnePInvstRedeemForm(pKeyID, vwtype, actionTxt) {
             minView: 2,
             maxView: 4,
             forceParse: true
-        }).on('hide', function (ev) {
-            $('#myFormsModaly').css("overflow", "auto");
+        }).on('hide',function (ev) {
+            $('#myFormsModaly').css("overflow","auto");
         });
         $('#allOtherInputData99').val('0');
         $('#onePayInvstTransEDTForm').submit(function (e) {
@@ -4971,8 +4971,8 @@ function getOnePInvstRedeemForm(pKeyID, vwtype, actionTxt) {
             return false;
         });
         $('#myFormsModaly').off('hidden.bs.modal');
-        $('#myFormsModaly').one('hidden.bs.modal', function (e) {
-            getOnePayInvstTransForm(pKeyID, 1, 'ReloadDialog');
+        $('#myFormsModaly').one('hidden.bs.modal',function (e) {
+            getOnePayInvstTransForm(pKeyID,1,'ReloadDialog');
             $(e.currentTarget).unbind();
         });
         $('[data-toggle="tooltip"]').tooltip();
@@ -4998,9 +4998,9 @@ function getOnePInvstRedeemForm(pKeyID, vwtype, actionTxt) {
     });
 }
 //INVESTMENT CALCULATOR
-function getOnePayInvstCalcForm(pKeyID, vwtype) {
+function getOnePayInvstCalcForm(pKeyID,vwtype) {
     var lnkArgs = 'grp=7&typ=1&pg=14&vtyp=' + vwtype + '&sbmtdPayInvstTransID=' + pKeyID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModaly', 'ShowDialog', 'Investment Calculator', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModaly','ShowDialog','Investment Calculator','myFormsModalyTitle','myFormsModalyBody',function () {
         $('[data-toggle="tooltip"]').tooltip();
 
 
@@ -5009,23 +5009,23 @@ function getOnePayInvstCalcForm(pKeyID, vwtype) {
             $.fn.detect = function (method) {
                 var $field = $(this),
                     field = this;
-                $(field).on("keypress", function (e) {
+                $(field).on("keypress",function (e) {
                     startTypingTimer($(e.target));
                 });
                 $(field).keyup(function (e) {
                     if (e.keyCode == 8)
                         startTypingTimer($(e.target));
                 });
-                $(field).on('input paste', function (e) {
+                $(field).on('input paste',function (e) {
                     startTypingTimer($(e.target));
                 });
             }
-            $("#billrate").on("change", function (e) {
+            $("#billrate").on("change",function (e) {
                 var rate = Number($('#billrate').val()) * 100;
                 $('#erate').val(rate);
                 calculate_bill();
             });
-            $("#rate").on("change", function (e) {
+            $("#rate").on("change",function (e) {
                 $("#erate").val('');
                 calculate();
             });
@@ -5035,20 +5035,20 @@ function getOnePayInvstCalcForm(pKeyID, vwtype) {
                     clearTimeout(typingTimeout);
                 typingTimeout = setTimeout(function () {
                     eval(field_input.attr("onfinishinput"));
-                }, 200);
+                },200);
             }
 
-            function replaceAll(find, replace, str) {
-                return str.replace(new RegExp(find, 'g'), replace);
+            function replaceAll(find,replace,str) {
+                return str.replace(new RegExp(find,'g'),replace);
             }
 
             function numberWithCommas(x) {
-                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
             }
 
             function calculate_bill() {
                 var principal = $("input#principal").val();
-                principal = replaceAll(',', '', principal);
+                principal = replaceAll(',','',principal);
                 principal = parseFloat(principal);
                 if (!principal)
                     return false;
@@ -5060,19 +5060,19 @@ function getOnePayInvstCalcForm(pKeyID, vwtype) {
                     rate = parseFloat(rate) / 100.0;
                 }
 
-                $('.total-91').text('GHS ' + fv_tbill(rate, 1, principal, 1));
-                $('.total-180').text('GHS ' + fv_tbill(rate, 2, principal, 1));
-                $('.total-360').text('GHS ' + fv_tbill(rate, 4, principal, 1));
-                $('.total-720').text('GHS ' + fv_tbill(rate, 8, principal, 1));
-                $('.total-1080').text('GHS ' + fv_tbill(rate, 12, principal, 1));
-                $('.total-1800').text('GHS ' + fv_tbill(rate, 20, principal, 1));
-                $('.total-7200').text('GHS ' + fv_tbill(rate, 80, principal, 1));
+                $('.total-91').text('GHS ' + fv_tbill(rate,1,principal,1));
+                $('.total-180').text('GHS ' + fv_tbill(rate,2,principal,1));
+                $('.total-360').text('GHS ' + fv_tbill(rate,4,principal,1));
+                $('.total-720').text('GHS ' + fv_tbill(rate,8,principal,1));
+                $('.total-1080').text('GHS ' + fv_tbill(rate,12,principal,1));
+                $('.total-1800').text('GHS ' + fv_tbill(rate,20,principal,1));
+                $('.total-7200').text('GHS ' + fv_tbill(rate,80,principal,1));
             }
 
             function calculate() {
 
                 var principal = $("input#principal").val();
-                principal = replaceAll(',', '', principal);
+                principal = replaceAll(',','',principal);
                 principal = parseFloat(principal);
                 if (!principal)
                     return false;
@@ -5083,25 +5083,25 @@ function getOnePayInvstCalcForm(pKeyID, vwtype) {
                 } else {
                     rate = parseFloat(rate) / 100.0;
                 }
-                $('.total-91').text('GHS ' + fv_a(rate, 1, 0, principal, 1));
-                $('.total-180').text('GHS ' + fv_a(rate, 2, 0, principal, 1));
-                $('.total-360').text('GHS ' + fv_a(rate, 4, 0, principal, 1));
-                $('.total-720').text('GHS ' + fv_a(rate, 8, 0, principal, 1));
-                $('.total-1080').text('GHS ' + fv_a(rate, 12, 0, principal, 1));
-                $('.total-1800').text('GHS ' + fv_a(rate, 20, 0, principal, 1));
-                $('.total-7200').text('GHS ' + fv_a(rate, 80, principal, 1));
+                $('.total-91').text('GHS ' + fv_a(rate,1,0,principal,1));
+                $('.total-180').text('GHS ' + fv_a(rate,2,0,principal,1));
+                $('.total-360').text('GHS ' + fv_a(rate,4,0,principal,1));
+                $('.total-720').text('GHS ' + fv_a(rate,8,0,principal,1));
+                $('.total-1080').text('GHS ' + fv_a(rate,12,0,principal,1));
+                $('.total-1800').text('GHS ' + fv_a(rate,20,0,principal,1));
+                $('.total-7200').text('GHS ' + fv_a(rate,80,principal,1));
             }
 
-            function fv_a(rate, nper, pmt, pv, type) {
-                var fv = pv * Math.pow(1 + (rate / 4), nper)
+            function fv_a(rate,nper,pmt,pv,type) {
+                var fv = pv * Math.pow(1 + (rate / 4),nper)
                 return numberWithCommas(fv.toFixed(2));
             }
 
-            function fv_tbill(rate, nper, pv, type) {
+            function fv_tbill(rate,nper,pv,type) {
                 var pmt = 0;
-                var rate = Math.pow(1 + rate, (1 / 4)) - 1;
+                var rate = Math.pow(1 + rate,(1 / 4)) - 1;
                 var pv = '-' + pv;
-                var pow = Math.pow(1 + rate, nper),
+                var pow = Math.pow(1 + rate,nper),
                     fv;
                 if (rate) {
                     fv = (pmt * (1 + rate * type) * (1 - pow) / rate) - pv * pow;
@@ -5111,7 +5111,7 @@ function getOnePayInvstCalcForm(pKeyID, vwtype) {
                 return numberWithCommas(fv.toFixed(2));
             }
 
-            function fv(pv, r, n, nper) {
+            function fv(pv,r,n,nper) {
                 r = r / 100;
                 return ((((r / nper) * pv) / n) + parseFloat(pv)).toFixed(3);
             }
@@ -5126,9 +5126,9 @@ function getOnePayInvstCalcForm(pKeyID, vwtype) {
     });
 }
 
-function getOnePayInvstTransDocsForm(pKeyID, vwtype) {
+function getOnePayInvstTransDocsForm(pKeyID,vwtype) {
     var lnkArgs = 'grp=7&typ=1&pg=14&vtyp=' + vwtype + '&sbmtdPayInvstTransID=' + pKeyID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModaly', 'ShowDialog', 'Fund Management Attached Documents', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModaly','ShowDialog','Fund Management Attached Documents','myFormsModalyTitle','myFormsModalyBody',function () {
         var table1 = $('#attchdInvstTransDocsTable').DataTable({
             "paging": false,
             "ordering": false,
@@ -5145,7 +5145,7 @@ function getOnePayInvstTransDocsForm(pKeyID, vwtype) {
     });
 }
 
-function uploadFileToInvstTransDocs(inptElmntID, attchIDElmntID, docNmElmntID, sbmtdHdrID, rowIDAttrb) {
+function uploadFileToInvstTransDocs(inptElmntID,attchIDElmntID,docNmElmntID,sbmtdHdrID,rowIDAttrb) {
     var docCtrgrName = $('#' + docNmElmntID).val();
     var errMsg = "";
     if (docCtrgrName.trim() === '') {
@@ -5156,7 +5156,7 @@ function uploadFileToInvstTransDocs(inptElmntID, attchIDElmntID, docNmElmntID, s
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Attachments must be done on a saved Document/Transaction!</span></p>';
     }
-    if (rhotrim(errMsg, '; ') !== '') {
+    if (rhotrim(errMsg,'; ') !== '') {
         bootbox.alert({
             title: 'System Alert!',
             size: 'small',
@@ -5169,14 +5169,14 @@ function uploadFileToInvstTransDocs(inptElmntID, attchIDElmntID, docNmElmntID, s
     $("#" + inptElmntID).change(function () {
         var fileName = $(this).val();
         var input = document.getElementById(inptElmntID);
-        sendFileToInvstTransDocs(input.files[0], docNmElmntID, attchIDElmntID, sbmtdHdrID, function (data) {
+        sendFileToInvstTransDocs(input.files[0],docNmElmntID,attchIDElmntID,sbmtdHdrID,function (data) {
             $("#" + attchIDElmntID).val(data.attchID);
             var dialog = bootbox.alert({
                 title: 'Server Response!',
                 size: 'small',
                 message: '<div id="myInformation">' + data.message + '</div>',
                 callback: function () {
-                    if (data.message.indexOf("Success") !== -1) {}
+                    if (data.message.indexOf("Success") !== -1) { }
                 }
             });
         });
@@ -5184,24 +5184,24 @@ function uploadFileToInvstTransDocs(inptElmntID, attchIDElmntID, docNmElmntID, s
     performFileClick(inptElmntID);
 }
 
-function sendFileToInvstTransDocs(file, docNmElmntID, attchIDElmntID, sbmtdHdrID, callBackFunc) {
+function sendFileToInvstTransDocs(file,docNmElmntID,attchIDElmntID,sbmtdHdrID,callBackFunc) {
     var data1 = new FormData();
-    data1.append('daInvstTransAttchmnt', file);
-    data1.append('grp', 7);
-    data1.append('typ', 1);
-    data1.append('pg', 14);
-    data1.append('q', 'UPDATE');
-    data1.append('actyp', 2);
-    data1.append('docCtrgrName', $('#' + docNmElmntID).val());
-    data1.append('attchmentID', $('#' + attchIDElmntID).val());
-    data1.append('sbmtdPayInvstTransID', sbmtdHdrID);
+    data1.append('daInvstTransAttchmnt',file);
+    data1.append('grp',7);
+    data1.append('typ',1);
+    data1.append('pg',14);
+    data1.append('q','UPDATE');
+    data1.append('actyp',2);
+    data1.append('docCtrgrName',$('#' + docNmElmntID).val());
+    data1.append('attchmentID',$('#' + attchIDElmntID).val());
+    data1.append('sbmtdPayInvstTransID',sbmtdHdrID);
     var dialog1 = bootbox.alert({
         title: 'Uploading File...',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Uploading File...Please Wait...</p>'
     });
     dialog1.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -5216,7 +5216,7 @@ function sendFileToInvstTransDocs(file, docNmElmntID, attchIDElmntID, sbmtdHdrID
                     dialog1.modal('hide');
                     callBackFunc(data);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     console.log(textStatus + " " + errorThrown);
                     console.warn(jqXHR.responseText);
                 }
@@ -5225,7 +5225,7 @@ function sendFileToInvstTransDocs(file, docNmElmntID, attchIDElmntID, sbmtdHdrID
     });
 }
 
-function getAttchdInvstTransDocs(actionText, slctr, linkArgs, actionDialog) {
+function getAttchdInvstTransDocs(actionText,slctr,linkArgs,actionDialog) {
     if (typeof actionDialog === 'undefined' || actionDialog === null) {
         actionDialog = 'ShowDialog';
     }
@@ -5243,7 +5243,7 @@ function getAttchdInvstTransDocs(actionText, slctr, linkArgs, actionDialog) {
         pageNo = parseInt(pageNo) - 1;
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    doAjaxWthCallBck(linkArgs, 'myFormsModaly', actionDialog, 'Fund Management Attached Documents', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+    doAjaxWthCallBck(linkArgs,'myFormsModaly',actionDialog,'Fund Management Attached Documents','myFormsModalyTitle','myFormsModalyBody',function () {
         if (!$.fn.DataTable.isDataTable('#attchdInvstTransDocsTable')) {
             var table1 = $('#attchdInvstTransDocsTable').DataTable({
                 "paging": false,
@@ -5262,13 +5262,13 @@ function getAttchdInvstTransDocs(actionText, slctr, linkArgs, actionDialog) {
     });
 }
 
-function enterKeyFuncAttchdInvstTransDocs(e, actionText, slctr, linkArgs, actionDialog) {
+function enterKeyFuncAttchdInvstTransDocs(e,actionText,slctr,linkArgs,actionDialog) {
     if (typeof actionDialog === 'undefined' || actionDialog === null) {
         actionDialog = 'ShowDialog';
     }
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getAttchdInvstTransDocs(actionText, slctr, linkArgs, actionDialog);
+        getAttchdInvstTransDocs(actionText,slctr,linkArgs,actionDialog);
     }
 }
 
@@ -5303,12 +5303,12 @@ function delAttchdInvstTransDoc(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Document...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -5330,9 +5330,9 @@ function delAttchdInvstTransDoc(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -5341,7 +5341,7 @@ function delAttchdInvstTransDoc(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -5384,12 +5384,12 @@ function delPayInvstTrans(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting ' + msgPrt + '...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -5410,9 +5410,9 @@ function delPayInvstTrans(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -5421,7 +5421,7 @@ function delPayInvstTrans(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -5429,7 +5429,7 @@ function delPayInvstTrans(rowIDAttrb) {
     });
 }
 
-function savePayInvstTransForm(funcur, shdSbmt) {
+function savePayInvstTransForm(funcur,shdSbmt) {
     var sbmtdPayInvstTransID = typeof $("#sbmtdPayInvstTransID").val() === 'undefined' ? -1 : $("#sbmtdPayInvstTransID").val();
     var payInvstTrnsType = typeof $("#payInvstTrnsType").val() === 'undefined' ? '' : $("#payInvstTrnsType").val();
     var payInvstItemType = typeof $("#payInvstItemType").val() === 'undefined' ? '' : $("#payInvstItemType").text();
@@ -5470,7 +5470,7 @@ function savePayInvstTransForm(funcur, shdSbmt) {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Purchase and Maturity Amounts cannot be both zero or less at the same time!</span></p>';
     }
-    if (rhotrim(errMsg, '; ') !== '') {
+    if (rhotrim(errMsg,'; ') !== '') {
         bootbox.alert({
             title: 'System Alert!',
             /*size: 'small',*/
@@ -5482,32 +5482,32 @@ function savePayInvstTransForm(funcur, shdSbmt) {
         title: 'Save Fund Management',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Fund Management...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
-    formData.append('grp', 7);
-    formData.append('typ', 1);
-    formData.append('pg', 14);
-    formData.append('q', 'UPDATE');
-    formData.append('actyp', 1);
-    formData.append('sbmtdPayInvstTransID', sbmtdPayInvstTransID);
-    formData.append('payInvstTrnsType', payInvstTrnsType);
-    formData.append('payInvstItemType', payInvstItemType);
-    formData.append('payInvstItemTypID', payInvstItemTypID);
-    formData.append('payInvstTransDesc', payInvstTransDesc);
-    formData.append('payInvstRollOvrType', payInvstRollOvrType);
-    formData.append('payInvstPrchsDte', payInvstPrchsDte);
-    formData.append('payInvstMatureDte', payInvstMatureDte);
-    formData.append('payInvstRefNum', payInvstRefNum);
-    formData.append('payInvstTransInvcCur', payInvstTransInvcCur);
-    formData.append('payInvstPrchsAmnt', payInvstPrchsAmnt);
-    formData.append('payInvstMatureAmnt', payInvstMatureAmnt);
-    formData.append('payInvstIntrstRate', payInvstIntrstRate);
-    formData.append('payInvstExchngRate', payInvstExchngRate);
-    formData.append('payInvstClientID', payInvstClientID);
-    formData.append('shdSbmt', shdSbmt);
+    formData.append('grp',7);
+    formData.append('typ',1);
+    formData.append('pg',14);
+    formData.append('q','UPDATE');
+    formData.append('actyp',1);
+    formData.append('sbmtdPayInvstTransID',sbmtdPayInvstTransID);
+    formData.append('payInvstTrnsType',payInvstTrnsType);
+    formData.append('payInvstItemType',payInvstItemType);
+    formData.append('payInvstItemTypID',payInvstItemTypID);
+    formData.append('payInvstTransDesc',payInvstTransDesc);
+    formData.append('payInvstRollOvrType',payInvstRollOvrType);
+    formData.append('payInvstPrchsDte',payInvstPrchsDte);
+    formData.append('payInvstMatureDte',payInvstMatureDte);
+    formData.append('payInvstRefNum',payInvstRefNum);
+    formData.append('payInvstTransInvcCur',payInvstTransInvcCur);
+    formData.append('payInvstPrchsAmnt',payInvstPrchsAmnt);
+    formData.append('payInvstMatureAmnt',payInvstMatureAmnt);
+    formData.append('payInvstIntrstRate',payInvstIntrstRate);
+    formData.append('payInvstExchngRate',payInvstExchngRate);
+    formData.append('payInvstClientID',payInvstClientID);
+    formData.append('shdSbmt',shdSbmt);
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -5523,11 +5523,11 @@ function savePayInvstTransForm(funcur, shdSbmt) {
                         dialog.find('.bootbox-body').html(data.message);
                         if (data.message.indexOf("Success") !== -1) {
                             sbmtdPayInvstTransID = data.sbmtdPayInvstTransID;
-                            getOnePayInvstTransForm(sbmtdPayInvstTransID, 1, 'ReloadDialog');
+                            getOnePayInvstTransForm(sbmtdPayInvstTransID,1,'ReloadDialog');
                         }
-                    }, 500);
+                    },500);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     console.log(textStatus + " " + errorThrown);
                     console.warn(jqXHR.responseText);
                 }
@@ -5536,7 +5536,7 @@ function savePayInvstTransForm(funcur, shdSbmt) {
     });
 }
 
-function savePInvstRedeemForm(funcur, shdSbmt) {
+function savePInvstRedeemForm(funcur,shdSbmt) {
     var sbmtdPayInvstTransID = typeof $("#sbmtdPayInvstTransID2").val() === 'undefined' ? -1 : $("#sbmtdPayInvstTransID2").val();
     var payInvstRollOvrType = typeof $("#payInvstRollOvrType2").val() === 'undefined' ? '' : $("#payInvstRollOvrType2").val();
     var payInvstMatureDte = typeof $("#payInvstMatureDte2").val() === 'undefined' ? '' : $("#payInvstMatureDte2").val();
@@ -5553,7 +5553,7 @@ function savePInvstRedeemForm(funcur, shdSbmt) {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Maturity Amount cannot be zero or less!</span></p>';
     }
-    if (rhotrim(errMsg, '; ') !== '') {
+    if (rhotrim(errMsg,'; ') !== '') {
         bootbox.alert({
             title: 'System Alert!',
             /*size: 'small',*/
@@ -5565,23 +5565,23 @@ function savePInvstRedeemForm(funcur, shdSbmt) {
         title: 'Save Investment Redemption',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Investment Redemption...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
-    formData.append('grp', 7);
-    formData.append('typ', 1);
-    formData.append('pg', 14);
-    formData.append('q', 'UPDATE');
-    formData.append('actyp', 5);
-    formData.append('sbmtdPayInvstTransID', sbmtdPayInvstTransID);
-    formData.append('payInvstTransDesc', payInvstTransDesc);
-    formData.append('payInvstRollOvrType', payInvstRollOvrType);
-    formData.append('payInvstMatureDte', payInvstMatureDte);
-    formData.append('payInvstMatureAmnt', payInvstMatureAmnt);
-    formData.append('payOLDMatureAmnt', payOLDMatureAmnt);
-    formData.append('shdSbmt', shdSbmt);
+    formData.append('grp',7);
+    formData.append('typ',1);
+    formData.append('pg',14);
+    formData.append('q','UPDATE');
+    formData.append('actyp',5);
+    formData.append('sbmtdPayInvstTransID',sbmtdPayInvstTransID);
+    formData.append('payInvstTransDesc',payInvstTransDesc);
+    formData.append('payInvstRollOvrType',payInvstRollOvrType);
+    formData.append('payInvstMatureDte',payInvstMatureDte);
+    formData.append('payInvstMatureAmnt',payInvstMatureAmnt);
+    formData.append('payOLDMatureAmnt',payOLDMatureAmnt);
+    formData.append('shdSbmt',shdSbmt);
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -5597,11 +5597,11 @@ function savePInvstRedeemForm(funcur, shdSbmt) {
                         dialog.find('.bootbox-body').html(data.message);
                         if (data.message.indexOf("Success") !== -1) {
                             sbmtdPayInvstTransID = data.sbmtdPayInvstTransID;
-                            getOnePayInvstTransForm(sbmtdPayInvstTransID, 1, 'ReloadDialog');
+                            getOnePayInvstTransForm(sbmtdPayInvstTransID,1,'ReloadDialog');
                         }
-                    }, 500);
+                    },500);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     console.log(textStatus + " " + errorThrown);
                     console.warn(jqXHR.responseText);
                 }
@@ -5610,7 +5610,7 @@ function savePInvstRedeemForm(funcur, shdSbmt) {
     });
 }
 
-function savePayInvstTransRvrslForm(funcCur, shdSbmt) {
+function savePayInvstTransRvrslForm(funcCur,shdSbmt) {
     if (shdSbmt === 1) {
         disableBtnFunc("fnlzeRvrslPayInvstTransBtn");
     }
@@ -5630,12 +5630,12 @@ function savePayInvstTransRvrslForm(funcCur, shdSbmt) {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Reversal Reason is required!</span></p>';
         $("#payInvstTransDesc").addClass('rho-error');
-        $("#payInvstTransDesc").attr("readonly", false);
-        $("#fnlzeRvrslPayInvstTransBtn").attr("disabled", false);
+        $("#payInvstTransDesc").attr("readonly",false);
+        $("#fnlzeRvrslPayInvstTransBtn").attr("disabled",false);
     } else {
         $("#payInvstTransDesc").removeClass('rho-error');
     }
-    if (rhotrim(errMsg, '; ') !== '') {
+    if (rhotrim(errMsg,'; ') !== '') {
         $body.removeClass("mdlloadingDiag");
         bootbox.alert({
             title: 'System Alert!',
@@ -5675,12 +5675,12 @@ function savePayInvstTransRvrslForm(funcCur, shdSbmt) {
                     callback: function () {
                         sbmtdPayInvstTransID = typeof $("#sbmtdPayInvstTransID").val() === 'undefined' ? -1 : $("#sbmtdPayInvstTransID").val();
                         if (sbmtdPayInvstTransID > 0) {
-                            getOnePayInvstTransForm(sbmtdPayInvstTransID, 1, 'ReloadDialog');
+                            getOnePayInvstTransForm(sbmtdPayInvstTransID,1,'ReloadDialog');
                         }
                     }
                 });
                 dialog.init(function () {
-                    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                    getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                         $body = $("body");
                         $body.removeClass("mdlloading");
                         $.ajax({
@@ -5700,7 +5700,7 @@ function savePayInvstTransRvrslForm(funcCur, shdSbmt) {
                                 var msg = "";
                                 var data = result;
                                 var p_sbmtdJrnlBatchID = -1;
-                                if (/^[\],:{}\s]*$/.test(data.replace(/\\["\\\/bfnrtu]/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+                                if (/^[\],:{}\s]*$/.test(data.replace(/\\["\\\/bfnrtu]/g,'@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,']').replace(/(?:^|:|,)(?:\s*\[)+/g,''))) {
                                     obj = $.parseJSON(data);
                                     sbmtdPayInvstTransID = obj.sbmtdPayInvstTransID;
                                     msg = obj.sbmtMsg;
@@ -5715,9 +5715,9 @@ function savePayInvstTransRvrslForm(funcCur, shdSbmt) {
                                 }
                                 setTimeout(function () {
                                     dialog.find('.bootbox-body').html(msg);
-                                }, 500);
+                                },500);
                             },
-                            error: function (jqXHR, textStatus, errorThrown) {
+                            error: function (jqXHR,textStatus,errorThrown) {
                                 /*dialog.find('.bootbox-body').html(errorThrown);*/
                                 console.warn(jqXHR.responseText);
                             }
@@ -5729,7 +5729,7 @@ function savePayInvstTransRvrslForm(funcCur, shdSbmt) {
     });
 }
 //Loan Requests
-function getPayTrnsRqsts(actionText, slctr, linkArgs) {
+function getPayTrnsRqsts(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#payTrnsRqstsSrchFor").val() === 'undefined' ? '%' : $("#payTrnsRqstsSrchFor").val();
     var srchIn = typeof $("#payTrnsRqstsSrchIn").val() === 'undefined' ? 'Both' : $("#payTrnsRqstsSrchIn").val();
     var pageNo = typeof $("#payTrnsRqstsPageNo").val() === 'undefined' ? 1 : $("#payTrnsRqstsPageNo").val();
@@ -5747,17 +5747,17 @@ function getPayTrnsRqsts(actionText, slctr, linkArgs) {
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn +
         "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy + "&qShwUsrOnly=" + qShwUsrOnly + "&qShwUnpstdOnly=" + qShwUnpstdOnly;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function enterKeyFuncPayTrnsRqsts(e, actionText, slctr, linkArgs) {
+function enterKeyFuncPayTrnsRqsts(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getPayTrnsRqsts(actionText, slctr, linkArgs);
+        getPayTrnsRqsts(actionText,slctr,linkArgs);
     }
 }
 
-function getOnePayTrnsRqstsForm(pKeyID, vwtype, actionTxt, payTrnsRqstsType) {
+function getOnePayTrnsRqstsForm(pKeyID,vwtype,actionTxt,payTrnsRqstsType) {
     if (typeof actionTxt === 'undefined' || actionTxt === null) {
         actionTxt = 'ShowDialog';
     }
@@ -5765,7 +5765,7 @@ function getOnePayTrnsRqstsForm(pKeyID, vwtype, actionTxt, payTrnsRqstsType) {
         payTrnsRqstsType = 'LOAN';
     }
     var lnkArgs = 'grp=7&typ=1&pg=13&vtyp=' + vwtype + '&sbmtdPayTrnsRqstsID=' + pKeyID + '&payTrnsRqstsType=' + payTrnsRqstsType;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalxLG', actionTxt, 'Transaction Request Details (ID:' + pKeyID + ')', 'myFormsModalxLGTitle', 'myFormsModalxLGBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalxLG',actionTxt,'Transaction Request Details (ID:' + pKeyID + ')','myFormsModalxLGTitle','myFormsModalxLGBody',function () {
         $('.form_date_tme').datetimepicker({
             format: "dd-M-yyyy hh:ii:ss",
             language: 'en',
@@ -5778,8 +5778,8 @@ function getOnePayTrnsRqstsForm(pKeyID, vwtype, actionTxt, payTrnsRqstsType) {
             minView: 0,
             maxView: 4,
             forceParse: true
-        }).on('hide', function (ev) {
-            $('#myFormsModalxLG').css("overflow", "auto");
+        }).on('hide',function (ev) {
+            $('#myFormsModalxLG').css("overflow","auto");
         });
         $('.form_date').datetimepicker({
             format: "dd-M-yyyy",
@@ -5793,8 +5793,8 @@ function getOnePayTrnsRqstsForm(pKeyID, vwtype, actionTxt, payTrnsRqstsType) {
             minView: 2,
             maxView: 4,
             forceParse: true
-        }).on('hide', function (ev) {
-            $('#myFormsModalxLG').css("overflow", "auto");
+        }).on('hide',function (ev) {
+            $('#myFormsModalxLG').css("overflow","auto");
         });
         $('#allOtherInputData99').val('0');
         $('#onePayTrnsRqstsEDTForm').submit(function (e) {
@@ -5802,8 +5802,8 @@ function getOnePayTrnsRqstsForm(pKeyID, vwtype, actionTxt, payTrnsRqstsType) {
             return false;
         });
         $('#myFormsModalxLG').off('hidden.bs.modal');
-        $('#myFormsModalxLG').one('hidden.bs.modal', function (e) {
-            getPayTrnsRqsts('', '#allmodules', 'grp=7&typ=1&pg=13&vtyp=0');
+        $('#myFormsModalxLG').one('hidden.bs.modal',function (e) {
+            getPayTrnsRqsts('','#allmodules','grp=7&typ=1&pg=13&vtyp=0');
             $(e.currentTarget).unbind();
         });
         $('[data-toggle="tooltip"]').tooltip();
@@ -5835,20 +5835,20 @@ function shwHidePayTrnsFlds() {
     var payTrnsRqstsItmTypID = typeof $("#payTrnsRqstsItmTypID").val() === 'undefined' ? '-1' : $("#payTrnsRqstsItmTypID").val();
     var payTrnsRqstsItmTyp = typeof $("#payTrnsRqstsItmTypID").val() === 'undefined' ? '' : $("#payTrnsRqstsItmTypID").text();
     var payTrnsRqstsClsfctn = typeof $("#payTrnsRqstsClsfctn").val() === 'undefined' ? '' : $("#payTrnsRqstsClsfctn").val();
-    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+    getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
         $body = $("body");
         $body.removeClass("mdlloadingDiag");
         $body.removeClass("mdlloading");
         var obj;
         var formData = new FormData();
-        formData.append('grp', 7);
-        formData.append('typ', 1);
-        formData.append('pg', 15);
-        formData.append('q', 'VIEW');
-        formData.append('vtyp', 4);
-        formData.append('payTrnsRqstsItmTypID', payTrnsRqstsItmTypID);
-        formData.append('payTrnsRqstsType', payTrnsRqstsType);
-        formData.append('payTrnsRqstsClsfctn', payTrnsRqstsClsfctn);
+        formData.append('grp',7);
+        formData.append('typ',1);
+        formData.append('pg',15);
+        formData.append('q','VIEW');
+        formData.append('vtyp',4);
+        formData.append('payTrnsRqstsItmTypID',payTrnsRqstsItmTypID);
+        formData.append('payTrnsRqstsType',payTrnsRqstsType);
+        formData.append('payTrnsRqstsClsfctn',payTrnsRqstsClsfctn);
         $.ajax({
             url: 'index.php',
             method: 'POST',
@@ -5868,7 +5868,7 @@ function shwHidePayTrnsFlds() {
                             defaultSlctd = true;
                             isSlctd = true;
                         }
-                        var o = new Option(options[i], options[i], defaultSlctd, isSlctd);
+                        var o = new Option(options[i],options[i],defaultSlctd,isSlctd);
                         /// jquerify the DOM object 'o' so we can use the html method
                         $(o).html(options[i]);
                         $("#payTrnsRqstsClsfctn").append(o);
@@ -5878,7 +5878,7 @@ function shwHidePayTrnsFlds() {
                     }
                 }
             },
-            error: function (jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR,textStatus,errorThrown) {
                 console.warn(jqXHR.responseText);
             }
         });
@@ -5893,21 +5893,21 @@ function shwHidePayPrevLoans() {
     var payTrnsRqstsItmTyp = typeof $("#payTrnsRqstsItmTypID").val() === 'undefined' ? '' : $("#payTrnsRqstsItmTypID").text();
     var lnkdPayTrnsRqstsID = typeof $("#lnkdPayTrnsRqstsID").val() === 'undefined' ? '-1' : $("#lnkdPayTrnsRqstsID").val();
     var payTrnsRqstsPrsnID = typeof $("#payTrnsRqstsPrsnID").val() === 'undefined' ? '-1' : $("#payTrnsRqstsPrsnID").val();
-    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+    getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
         $body = $("body");
         $body.removeClass("mdlloadingDiag");
         $body.removeClass("mdlloading");
         var obj;
         var formData = new FormData();
-        formData.append('grp', 7);
-        formData.append('typ', 1);
-        formData.append('pg', 15);
-        formData.append('q', 'VIEW');
-        formData.append('vtyp', 5);
-        formData.append('payTrnsRqstsItmTypID', payTrnsRqstsItmTypID);
-        formData.append('payTrnsRqstsType', payTrnsRqstsType);
-        formData.append('lnkdPayTrnsRqstsID', lnkdPayTrnsRqstsID);
-        formData.append('payTrnsRqstsPrsnID', payTrnsRqstsPrsnID);
+        formData.append('grp',7);
+        formData.append('typ',1);
+        formData.append('pg',15);
+        formData.append('q','VIEW');
+        formData.append('vtyp',5);
+        formData.append('payTrnsRqstsItmTypID',payTrnsRqstsItmTypID);
+        formData.append('payTrnsRqstsType',payTrnsRqstsType);
+        formData.append('lnkdPayTrnsRqstsID',lnkdPayTrnsRqstsID);
+        formData.append('payTrnsRqstsPrsnID',payTrnsRqstsPrsnID);
         $.ajax({
             url: 'index.php',
             method: 'POST',
@@ -5928,32 +5928,32 @@ function shwHidePayPrevLoans() {
                             defaultSlctd = true;
                             isSlctd = true;
                         }
-                        var o = new Option(nwOptions[0], nwOptions[0], defaultSlctd, isSlctd);
+                        var o = new Option(nwOptions[0],nwOptions[0],defaultSlctd,isSlctd);
                         /// jquerify the DOM object 'o' so we can use the html method
                         $(o).html(nwOptions[1]);
                         $("#lnkdPayTrnsRqstsID").append(o);
                     }
                     var payTrnsRqstsAmnt = typeof $("#payTrnsRqstsAmnt").val() === 'undefined' ? '0' : $("#payTrnsRqstsAmnt").val();
-                    if (Number(payTrnsRqstsAmnt.replace(/[^-?0-9\.]/g, '')) <= 0 ||
-                        myPayTrnsRqstsStatusBtn.indexOf('Not Submitted') !== -1 ||
-                        myPayTrnsRqstsStatusBtn.indexOf('Withdrawn') !== -1 ||
-                        myPayTrnsRqstsStatusBtn.indexOf('Rejected') !== -1) {
+                    if (Number(payTrnsRqstsAmnt.replace(/[^-?0-9\.]/g,'')) <= 0 &&
+                        (myPayTrnsRqstsStatusBtn.indexOf('Not Submitted') !== -1 ||
+                            myPayTrnsRqstsStatusBtn.indexOf('Withdrawn') !== -1 ||
+                            myPayTrnsRqstsStatusBtn.indexOf('Rejected') !== -1)) {
                         var outDefaultAmnt = data.DefaultAmnt;
                         $("#payTrnsRqstsAmnt").val(outDefaultAmnt);
                         payTrnsRqstsAmnt = fmtAsNumber('payTrnsRqstsAmnt');
                     }
                 }
             },
-            error: function (jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR,textStatus,errorThrown) {
                 console.warn(jqXHR.responseText);
             }
         });
     });
 }
 
-function getOnePayTrnsRqstsDocsForm(pKeyID, vwtype) {
+function getOnePayTrnsRqstsDocsForm(pKeyID,vwtype) {
     var lnkArgs = 'grp=7&typ=1&pg=13&vtyp=' + vwtype + '&sbmtdPayTrnsRqstsID=' + pKeyID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModaly', 'ShowDialog', 'Request Attached Documents', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModaly','ShowDialog','Request Attached Documents','myFormsModalyTitle','myFormsModalyBody',function () {
         var table1 = $('#attchdTrnsRqstsDocsTable').DataTable({
             "paging": false,
             "ordering": false,
@@ -5970,7 +5970,7 @@ function getOnePayTrnsRqstsDocsForm(pKeyID, vwtype) {
     });
 }
 
-function uploadFileToTrnsRqstsDocs(inptElmntID, attchIDElmntID, docNmElmntID, sbmtdHdrID, rowIDAttrb) {
+function uploadFileToTrnsRqstsDocs(inptElmntID,attchIDElmntID,docNmElmntID,sbmtdHdrID,rowIDAttrb) {
     var docCtrgrName = $('#' + docNmElmntID).val();
     var errMsg = "";
     if (docCtrgrName.trim() === '') {
@@ -5981,7 +5981,7 @@ function uploadFileToTrnsRqstsDocs(inptElmntID, attchIDElmntID, docNmElmntID, sb
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Attachments must be done on a saved Document/Transaction!</span></p>';
     }
-    if (rhotrim(errMsg, '; ') !== '') {
+    if (rhotrim(errMsg,'; ') !== '') {
         bootbox.alert({
             title: 'System Alert!',
             size: 'small',
@@ -5994,14 +5994,14 @@ function uploadFileToTrnsRqstsDocs(inptElmntID, attchIDElmntID, docNmElmntID, sb
     $("#" + inptElmntID).change(function () {
         var fileName = $(this).val();
         var input = document.getElementById(inptElmntID);
-        sendFileToTrnsRqstsDocs(input.files[0], docNmElmntID, attchIDElmntID, sbmtdHdrID, function (data) {
+        sendFileToTrnsRqstsDocs(input.files[0],docNmElmntID,attchIDElmntID,sbmtdHdrID,function (data) {
             $("#" + attchIDElmntID).val(data.attchID);
             var dialog = bootbox.alert({
                 title: 'Server Response!',
                 size: 'small',
                 message: '<div id="myInformation">' + data.message + '</div>',
                 callback: function () {
-                    if (data.message.indexOf("Success") !== -1) {}
+                    if (data.message.indexOf("Success") !== -1) { }
                 }
             });
         });
@@ -6009,24 +6009,24 @@ function uploadFileToTrnsRqstsDocs(inptElmntID, attchIDElmntID, docNmElmntID, sb
     performFileClick(inptElmntID);
 }
 
-function sendFileToTrnsRqstsDocs(file, docNmElmntID, attchIDElmntID, sbmtdHdrID, callBackFunc) {
+function sendFileToTrnsRqstsDocs(file,docNmElmntID,attchIDElmntID,sbmtdHdrID,callBackFunc) {
     var data1 = new FormData();
-    data1.append('daInvstTransAttchmnt', file);
-    data1.append('grp', 7);
-    data1.append('typ', 1);
-    data1.append('pg', 13);
-    data1.append('q', 'UPDATE');
-    data1.append('actyp', 2);
-    data1.append('docCtrgrName', $('#' + docNmElmntID).val());
-    data1.append('attchmentID', $('#' + attchIDElmntID).val());
-    data1.append('sbmtdPayTrnsRqstsID', sbmtdHdrID);
+    data1.append('daInvstTransAttchmnt',file);
+    data1.append('grp',7);
+    data1.append('typ',1);
+    data1.append('pg',13);
+    data1.append('q','UPDATE');
+    data1.append('actyp',2);
+    data1.append('docCtrgrName',$('#' + docNmElmntID).val());
+    data1.append('attchmentID',$('#' + attchIDElmntID).val());
+    data1.append('sbmtdPayTrnsRqstsID',sbmtdHdrID);
     var dialog1 = bootbox.alert({
         title: 'Uploading File...',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Uploading File...Please Wait...</p>'
     });
     dialog1.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -6041,7 +6041,7 @@ function sendFileToTrnsRqstsDocs(file, docNmElmntID, attchIDElmntID, sbmtdHdrID,
                     dialog1.modal('hide');
                     callBackFunc(data);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     console.log(textStatus + " " + errorThrown);
                     console.warn(jqXHR.responseText);
                 }
@@ -6050,7 +6050,7 @@ function sendFileToTrnsRqstsDocs(file, docNmElmntID, attchIDElmntID, sbmtdHdrID,
     });
 }
 
-function getAttchdTrnsRqstsDocs(actionText, slctr, linkArgs, actionDialog) {
+function getAttchdTrnsRqstsDocs(actionText,slctr,linkArgs,actionDialog) {
     if (typeof actionDialog === 'undefined' || actionDialog === null) {
         actionDialog = 'ShowDialog';
     }
@@ -6068,7 +6068,7 @@ function getAttchdTrnsRqstsDocs(actionText, slctr, linkArgs, actionDialog) {
         pageNo = parseInt(pageNo) - 1;
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    doAjaxWthCallBck(linkArgs, 'myFormsModaly', actionDialog, 'Transaction Request Attached Documents', 'myFormsModalyTitle', 'myFormsModalyBody', function () {
+    doAjaxWthCallBck(linkArgs,'myFormsModaly',actionDialog,'Transaction Request Attached Documents','myFormsModalyTitle','myFormsModalyBody',function () {
         if (!$.fn.DataTable.isDataTable('#attchdTrnsRqstsDocsTable')) {
             var table1 = $('#attchdTrnsRqstsDocsTable').DataTable({
                 "paging": false,
@@ -6087,13 +6087,13 @@ function getAttchdTrnsRqstsDocs(actionText, slctr, linkArgs, actionDialog) {
     });
 }
 
-function enterKeyFuncAttchdTrnsRqstsDocs(e, actionText, slctr, linkArgs, actionDialog) {
+function enterKeyFuncAttchdTrnsRqstsDocs(e,actionText,slctr,linkArgs,actionDialog) {
     if (typeof actionDialog === 'undefined' || actionDialog === null) {
         actionDialog = 'ShowDialog';
     }
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getAttchdTrnsRqstsDocs(actionText, slctr, linkArgs, actionDialog);
+        getAttchdTrnsRqstsDocs(actionText,slctr,linkArgs,actionDialog);
     }
 }
 
@@ -6128,12 +6128,12 @@ function delAttchdTrnsRqstsDoc(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Document...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -6155,9 +6155,9 @@ function delAttchdTrnsRqstsDoc(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -6166,7 +6166,7 @@ function delAttchdTrnsRqstsDoc(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -6209,12 +6209,12 @@ function delPayTrnsRqsts(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting ' + msgPrt + '...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -6235,9 +6235,9 @@ function delPayTrnsRqsts(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -6246,7 +6246,7 @@ function delPayTrnsRqsts(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -6254,7 +6254,7 @@ function delPayTrnsRqsts(rowIDAttrb) {
     });
 }
 
-function savePayTrnsRqstsForm(funcur, shdSbmt) {
+function savePayTrnsRqstsForm(funcur,shdSbmt) {
     var sbmtdPayTrnsRqstsID = typeof $("#sbmtdPayTrnsRqstsID").val() === 'undefined' ? '-1' : $("#sbmtdPayTrnsRqstsID").val();
     var lnkdPayTrnsRqstsID = typeof $("#lnkdPayTrnsRqstsID").val() === 'undefined' ? '-1' : $("#lnkdPayTrnsRqstsID").val();
     var payTrnsRqstsType = typeof $("#payTrnsRqstsType").val() === 'undefined' ? '' : $("#payTrnsRqstsType").val();
@@ -6287,7 +6287,7 @@ function savePayTrnsRqstsForm(funcur, shdSbmt) {
             'font-weight:bold;color:red;">Amount cannot be zero or less!</span></p>';
     }
     var isVld = true;
-    if (rhotrim(errMsg, '; ') !== '') {
+    if (rhotrim(errMsg,'; ') !== '') {
         bootbox.alert({
             title: 'System Alert!',
             /*size: 'small',*/
@@ -6299,29 +6299,29 @@ function savePayTrnsRqstsForm(funcur, shdSbmt) {
         title: 'Save Transaction Request',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Transaction Request...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
-    formData.append('grp', 7);
-    formData.append('typ', 1);
-    formData.append('pg', 13);
-    formData.append('q', 'UPDATE');
-    formData.append('actyp', 1);
-    formData.append('sbmtdPayTrnsRqstsID', sbmtdPayTrnsRqstsID);
-    formData.append('lnkdPayTrnsRqstsID', lnkdPayTrnsRqstsID);
-    formData.append('payTrnsRqstsType', payTrnsRqstsType);
-    formData.append('payTrnsRqstsPrsnID', payTrnsRqstsPrsnID);
-    formData.append('payTrnsRqstsPrsnNm', payTrnsRqstsPrsnNm);
-    formData.append('payTrnsRqstsItmTypID', payTrnsRqstsItmTypID);
-    formData.append('payTrnsRqstsItmTypNm', payTrnsRqstsItmTypNm);
-    formData.append('payTrnsRqstsClsfctn', payTrnsRqstsClsfctn);
-    formData.append('payTrnsRqstsDesc', payTrnsRqstsDesc);
-    formData.append('payTrnsRqstsDate', payTrnsRqstsDate);
-    formData.append('payTrnsRqstsAmnt', payTrnsRqstsAmnt);
-    formData.append('payTrnsRqstsHsAgreed', payTrnsRqstsHsAgreed);
-    formData.append('shdSbmt', shdSbmt);
+    formData.append('grp',7);
+    formData.append('typ',1);
+    formData.append('pg',13);
+    formData.append('q','UPDATE');
+    formData.append('actyp',1);
+    formData.append('sbmtdPayTrnsRqstsID',sbmtdPayTrnsRqstsID);
+    formData.append('lnkdPayTrnsRqstsID',lnkdPayTrnsRqstsID);
+    formData.append('payTrnsRqstsType',payTrnsRqstsType);
+    formData.append('payTrnsRqstsPrsnID',payTrnsRqstsPrsnID);
+    formData.append('payTrnsRqstsPrsnNm',payTrnsRqstsPrsnNm);
+    formData.append('payTrnsRqstsItmTypID',payTrnsRqstsItmTypID);
+    formData.append('payTrnsRqstsItmTypNm',payTrnsRqstsItmTypNm);
+    formData.append('payTrnsRqstsClsfctn',payTrnsRqstsClsfctn);
+    formData.append('payTrnsRqstsDesc',payTrnsRqstsDesc);
+    formData.append('payTrnsRqstsDate',payTrnsRqstsDate);
+    formData.append('payTrnsRqstsAmnt',payTrnsRqstsAmnt);
+    formData.append('payTrnsRqstsHsAgreed',payTrnsRqstsHsAgreed);
+    formData.append('shdSbmt',shdSbmt);
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -6337,11 +6337,11 @@ function savePayTrnsRqstsForm(funcur, shdSbmt) {
                         dialog.find('.bootbox-body').html(data.message);
                         if (data.message.indexOf("Success") !== -1) {
                             sbmtdPayTrnsRqstsID = data.sbmtdPayTrnsRqstsID;
-                            getOnePayTrnsRqstsForm(sbmtdPayTrnsRqstsID, 1, 'ReloadDialog');
+                            getOnePayTrnsRqstsForm(sbmtdPayTrnsRqstsID,1,'ReloadDialog');
                         }
-                    }, 500);
+                    },500);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     console.log(textStatus + " " + errorThrown);
                     console.warn(jqXHR.responseText);
                 }
@@ -6374,14 +6374,14 @@ function actOnLoanRqst(acttype) {
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Acting on Request...Please Wait...</p>',
                     callback: function () {
                         if (pKeyID > 0) {
-                            openATab('#allmodules', 'grp=7&typ=1&pg=13&vtyp=0');
-                            getOnePayTrnsRqstsForm(pKeyID, 1, 'ReloadDialog');
+                            openATab('#allmodules','grp=7&typ=1&pg=13&vtyp=0');
+                            getOnePayTrnsRqstsForm(pKeyID,1,'ReloadDialog');
                         }
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -6399,9 +6399,9 @@ function actOnLoanRqst(acttype) {
                                 success: function (result1) {
                                     setTimeout(function () {
                                         dialog1.find('.bootbox-body').html(result1);
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -6409,7 +6409,7 @@ function actOnLoanRqst(acttype) {
                     } else {
                         setTimeout(function () {
                             dialog1.find('.bootbox-body').html('<span style="color:red;">Nothing to Act On!</span>');
-                        }, 500);
+                        },500);
                     }
                 });
             }
