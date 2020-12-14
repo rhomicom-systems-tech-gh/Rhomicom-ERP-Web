@@ -1,12 +1,12 @@
-Number.prototype.padLeft = function (base, chr) {
+Number.prototype.padLeft = function (base,chr) {
     var len = (String(base || 10).length - String(this).length) + 1;
     return len > 0 ? new Array(len).join(chr || '0') + this : this;
 };
-$(document).on("hidden.bs.modal", ".bootbox.modal", function (e) {
-    $("body").css("padding", "0px 0px 0px 0px");
+$(document).on("hidden.bs.modal",".bootbox.modal",function (e) {
+    $("body").css("padding","0px 0px 0px 0px");
 });
-$(document).on("change", ".form_date input", function (e) {
-    $("body").css("overflow", "auto");
+$(document).on("change",".form_date input",function (e) {
+    $("body").css("overflow","auto");
 });
 
 function isMyScriptLoaded(url) {
@@ -50,7 +50,7 @@ function isEmailValid(email) {
 
 function getTtlRows(tblID) {
     var cntr = 0;
-    $('#' + tblID).find('tr').each(function (i, el) {
+    $('#' + tblID).find('tr').each(function (i,el) {
         if (i > 0) {
             cntr++;
         }
@@ -60,7 +60,7 @@ function getTtlRows(tblID) {
 
 function clearTblRows(tblID) {
     var cntr = 0;
-    $('#' + tblID).find('tr').each(function (i, el) {
+    $('#' + tblID).find('tr').each(function (i,el) {
         if (i > 0) {
             /*var rowIDAttrb = $(el).attr('id');
              $("#" + rowIDAttrb).remove();*/
@@ -69,9 +69,9 @@ function clearTblRows(tblID) {
     });
 }
 
-function getRowIndx(rowIDAttrb, tblID) {
+function getRowIndx(rowIDAttrb,tblID) {
     var indx = 0;
-    $('#' + tblID).find('tr').each(function (i, el) {
+    $('#' + tblID).find('tr').each(function (i,el) {
         if (i > 0 && $(el).attr('id') === rowIDAttrb) {
             indx = i;
         }
@@ -79,10 +79,10 @@ function getRowIndx(rowIDAttrb, tblID) {
     return indx;
 }
 
-function getFreeRowNum(freePKeyRowSffx, tblID) {
+function getFreeRowNum(freePKeyRowSffx,tblID) {
     var indx = 0;
     var rwNumber = "";
-    $('#' + tblID).find('tr').each(function (i, el) {
+    $('#' + tblID).find('tr').each(function (i,el) {
         if (i > 0) {
             if (typeof $(el).attr('id') === 'undefined') {
                 /*Do Nothing*/
@@ -90,7 +90,7 @@ function getFreeRowNum(freePKeyRowSffx, tblID) {
                 var prfx = $(el).attr('id').split("_")[0];
                 var rndmNum = $(el).attr('id').split("_")[1];
                 var ln_TrnsLnID = typeof $('#' + prfx + rndmNum + freePKeyRowSffx).val() === 'undefined' ? '-1' : $('#' + prfx + rndmNum + freePKeyRowSffx).val();
-                if (Number(ln_TrnsLnID.replace(/[^-?0-9\.]/g, '')) <= 0) {
+                if (Number(ln_TrnsLnID.replace(/[^-?0-9\.]/g,'')) <= 0) {
                     indx = i;
                     rwNumber = rndmNum;
                 }
@@ -107,12 +107,12 @@ function addCommas(nStr) {
     x2 = x.length > 1 ? '.' + x[1] : '';
     var rgx = /(-?\d+)(\d{3})/;
     while (rgx.test(x1)) {
-        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        x1 = x1.replace(rgx,'$1' + ',' + '$2');
     }
     return x1 + x2;
 }
 
-function loadScript(url, callback) {
+function loadScript(url,callback) {
     var script = document.createElement("script");
     script.type = "text/javascript";
     if (script.readyState) {
@@ -133,7 +133,7 @@ function loadScript(url, callback) {
     document.getElementsByTagName("head")[0].appendChild(script);
 }
 
-function loadCss(url, callback) {
+function loadCss(url,callback) {
     var script = document.createElement("link");
     script.type = "text/css";
     script.rel = "stylesheet";
@@ -154,10 +154,10 @@ function loadCss(url, callback) {
     document.getElementsByTagName("head")[0].appendChild(script);
 }
 
-function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
-    criteriaID2, criteriaID3, chkOrRadio, mustSelSth,
-    selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn,
-    addtnlWhere, callBackFunc, psblValIDElmntID) {
+function getLovsPage(elementID,titleElementID,modalBodyID,lovNm,criteriaID,
+    criteriaID2,criteriaID3,chkOrRadio,mustSelSth,
+    selVals,valueElmntID,descElemntID,actionText,colNoForChkBxCmprsn,
+    addtnlWhere,callBackFunc,psblValIDElmntID) {
     if (typeof callBackFunc === 'undefined' || callBackFunc === null) {
         callBackFunc = function () {
             var tstabcd = 1;
@@ -169,7 +169,7 @@ function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
     if (typeof descElemntID === 'undefined' || descElemntID === null || descElemntID == '') {
         descElemntID = "RhoUndefined";
     }
-    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+    getMsgAsync('grp=1&typ=11&q=Check Session',function () {
         $body = $("body");
         $body.addClass("mdlloadingDiag");
         if (criteriaID == '') {
@@ -226,7 +226,7 @@ function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
                 //$('#myLovModal').draggable();
                 $('#' + elementID).off('hidden.bs.modal');
                 $('#' + elementID).off('show.bs.modal');
-                $('#' + elementID).one('show.bs.modal', function (e) {
+                $('#' + elementID).one('show.bs.modal',function (e) {
                     $(this).find('.modal-body').css({
                         'max-height': '100%'
                     });
@@ -238,12 +238,12 @@ function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
                     keyboard: false
                 });
                 $('#' + elementID).off('shown.bs.modal');
-                $('#' + elementID).on('shown.bs.modal', function () {
+                $('#' + elementID).on('shown.bs.modal',function () {
                     /*$('#' + elementID).draggable();*/
                     $('#lovSrchFor').focus();
                 });
                 $body.removeClass("mdlloading");
-                $body.css("overflow-y", "auto");
+                $body.css("overflow-y","auto");
                 $(document).ready(function () {
                     $("#lovForm").submit(function (e) {
                         e.preventDefault();
@@ -260,29 +260,29 @@ function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
                             "scrollX": false
                         });
                         $('#lovTblRO').wrap('<div class="table-responsive">');
-                        $('#lovTblRO tbody').on('dblclick', 'tr', function () {
+                        $('#lovTblRO tbody').on('dblclick','tr',function () {
                             table.$('tr.selected').removeClass('selected');
                             $(this).addClass('selected');
                             $checkedBoxes = $(this).find('input[type=checkbox]');
-                            $checkedBoxes.each(function (i, checkbox) {
+                            $checkedBoxes.each(function (i,checkbox) {
                                 checkbox.checked = true;
                             });
                             $radioBoxes = $(this).find('input[type=radio]');
-                            $radioBoxes.each(function (i, radio) {
+                            $radioBoxes.each(function (i,radio) {
                                 radio.checked = true;
                             });
-                            applySlctdLov(elementID, 'lovForm', valueElmntID, descElemntID, callBackFunc, psblValIDElmntID);
+                            applySlctdLov(elementID,'lovForm',valueElmntID,descElemntID,callBackFunc,psblValIDElmntID);
                         });
 
-                        $('#lovTblRO tbody').on('click', 'tr', function () {
+                        $('#lovTblRO tbody').on('click','tr',function () {
                             if ($(this).hasClass('selected')) {
                                 $(this).removeClass('selected');
                                 $checkedBoxes = $(this).find('input[type=checkbox]');
-                                $checkedBoxes.each(function (i, checkbox) {
+                                $checkedBoxes.each(function (i,checkbox) {
                                     checkbox.checked = false;
                                 });
                                 $radioBoxes = $(this).find('input[type=radio]');
-                                $radioBoxes.each(function (i, radio) {
+                                $radioBoxes.each(function (i,radio) {
                                     radio.checked = false;
                                 });
                             } else {
@@ -290,17 +290,17 @@ function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
                                 $(this).addClass('selected');
 
                                 $checkedBoxes = $(this).find('input[type=checkbox]');
-                                $checkedBoxes.each(function (i, checkbox) {
+                                $checkedBoxes.each(function (i,checkbox) {
                                     checkbox.checked = true;
                                 });
                                 $radioBoxes = $(this).find('input[type=radio]');
-                                $radioBoxes.each(function (i, radio) {
+                                $radioBoxes.each(function (i,radio) {
                                     radio.checked = true;
                                 });
                             }
                         });
                         $('#lovTblRO tbody')
-                            .on('mouseenter', 'tr', function () {
+                            .on('mouseenter','tr',function () {
                                 if ($(this).hasClass('highlight')) {
                                     $(this).removeClass('highlight');
                                 } else {
@@ -312,8 +312,8 @@ function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
                 });
             }
         };
-        xmlhttp.open("POST", "index.php", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.open("POST","index.php",true);
+        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
         //alert(criteriaIDVal);
         xmlhttp.send("grp=2&typ=1&lovNm=" + lovNm +
             "&criteriaID=" + criteriaID + "&criteriaID2=" + criteriaID2 +
@@ -329,9 +329,9 @@ function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
     });
 }
 
-function enterKeyFuncLov(e, elementID, titleElementID, modalBodyID, lovNm, criteriaID,
-    criteriaID2, criteriaID3, chkOrRadio, mustSelSth,
-    selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere, callBackFunc, psblValIDElmntID) {
+function enterKeyFuncLov(e,elementID,titleElementID,modalBodyID,lovNm,criteriaID,
+    criteriaID2,criteriaID3,chkOrRadio,mustSelSth,
+    selVals,valueElmntID,descElemntID,actionText,colNoForChkBxCmprsn,addtnlWhere,callBackFunc,psblValIDElmntID) {
     if (typeof callBackFunc === 'undefined' || callBackFunc === null) {
         callBackFunc = function () {
             var tstabcd = 1;
@@ -339,13 +339,13 @@ function enterKeyFuncLov(e, elementID, titleElementID, modalBodyID, lovNm, crite
     }
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
-            criteriaID2, criteriaID3, chkOrRadio, mustSelSth,
-            selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere, callBackFunc, psblValIDElmntID);
+        getLovsPage(elementID,titleElementID,modalBodyID,lovNm,criteriaID,
+            criteriaID2,criteriaID3,chkOrRadio,mustSelSth,
+            selVals,valueElmntID,descElemntID,actionText,colNoForChkBxCmprsn,addtnlWhere,callBackFunc,psblValIDElmntID);
     }
 }
 
-function applySlctdLov(modalElementID, formElmntID, valueElmntID, descElemntID, callBackFunc, psblValIDElmntID) {
+function applySlctdLov(modalElementID,formElmntID,valueElmntID,descElemntID,callBackFunc,psblValIDElmntID) {
     if (typeof callBackFunc === 'undefined' || callBackFunc === null) {
         callBackFunc = function () {
             var tstabcd = 1;
@@ -368,10 +368,10 @@ function applySlctdLov(modalElementID, formElmntID, valueElmntID, descElemntID, 
         }
     }
     if (cbResults.length > 1) {
-        fnl_res = cbResults.slice(0, -1);
+        fnl_res = cbResults.slice(0,-1);
     }
     if (radioResults.length > 1) {
-        fnl_res = radioResults.slice(0, -1);
+        fnl_res = radioResults.slice(0,-1);
     }
     var bigArry = [];
     var tempArry = [];
@@ -396,9 +396,9 @@ function applySlctdLov(modalElementID, formElmntID, valueElmntID, descElemntID, 
         }
     }
     if (cbResults.length > 1) {
-        descValue = descValue.slice(0, -1);
-        valValue = valValue.slice(0, -1);
-        psblValIDValue = psblValIDValue.slice(0, -1);
+        descValue = descValue.slice(0,-1);
+        valValue = valValue.slice(0,-1);
+        psblValIDValue = psblValIDValue.slice(0,-1);
     }
     /*alert(descValue);
      alert(valValue);
@@ -419,7 +419,7 @@ function applySlctdLov(modalElementID, formElmntID, valueElmntID, descElemntID, 
     callBackFunc();
 }
 
-function applySlctdLov_mcf(modalElementID, formElmntID, valueElmntID, descElemntID, callBackFunc) {
+function applySlctdLov_mcf(modalElementID,formElmntID,valueElmntID,descElemntID,callBackFunc) {
     if (typeof callBackFunc === 'undefined' || callBackFunc === null) {
         callBackFunc = function () {
             var tstabcd = 1;
@@ -442,10 +442,10 @@ function applySlctdLov_mcf(modalElementID, formElmntID, valueElmntID, descElemnt
         }
     }
     if (cbResults.length > 1) {
-        fnl_res = cbResults.slice(0, -1);
+        fnl_res = cbResults.slice(0,-1);
     }
     if (radioResults.length > 1) {
-        fnl_res = radioResults.slice(0, -1);
+        fnl_res = radioResults.slice(0,-1);
     }
     var bigArry = [];
     var tempArry = [];
@@ -467,8 +467,8 @@ function applySlctdLov_mcf(modalElementID, formElmntID, valueElmntID, descElemnt
         }
     }
     if (cbResults.length > 1) {
-        descValue = descValue.slice(0, -1);
-        valValue = valValue.slice(0, -1);
+        descValue = descValue.slice(0,-1);
+        valValue = valValue.slice(0,-1);
     }
     if (typeof ($('#' + descElemntID).val()) !== 'undefined') {
         document.getElementById(descElemntID).value = descValue;
@@ -481,15 +481,15 @@ function applySlctdLov_mcf(modalElementID, formElmntID, valueElmntID, descElemnt
     callBackFunc();
 }
 
-function getLovsPage_mcf(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
-    criteriaID2, criteriaID3, chkOrRadio, mustSelSth,
-    selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere, callBackFunc) {
+function getLovsPage_mcf(elementID,titleElementID,modalBodyID,lovNm,criteriaID,
+    criteriaID2,criteriaID3,chkOrRadio,mustSelSth,
+    selVals,valueElmntID,descElemntID,actionText,colNoForChkBxCmprsn,addtnlWhere,callBackFunc) {
     if (typeof callBackFunc === 'undefined' || callBackFunc === null) {
         callBackFunc = function () {
             var tstabcd = 1;
         };
     }
-    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+    getMsgAsync('grp=1&typ=11&q=Check Session',function () {
         $body = $("body");
         $body.addClass("mdlloadingDiag");
         if (criteriaID == '') {
@@ -548,7 +548,7 @@ function getLovsPage_mcf(elementID, titleElementID, modalBodyID, lovNm, criteria
                  });
                  });*/
                 $body.removeClass("mdlloadingDiag");
-                $('#' + elementID).modal('show', {
+                $('#' + elementID).modal('show',{
                     backdrop: 'static'
                 });;
                 $body.removeClass("mdlloading");
@@ -568,31 +568,31 @@ function getLovsPage_mcf(elementID, titleElementID, modalBodyID, lovNm, criteria
                             "scrollX": false
                         });
                         $('#lovTblRO').wrap('<div class="table-responsive">');
-                        $('#lovTblRO tbody').on('dblclick', 'tr', function () {
+                        $('#lovTblRO tbody').on('dblclick','tr',function () {
 
                             table.$('tr.selected').removeClass('selected');
                             $(this).addClass('selected');
 
                             $checkedBoxes = $(this).find('input[type=checkbox]');
-                            $checkedBoxes.each(function (i, checkbox) {
+                            $checkedBoxes.each(function (i,checkbox) {
                                 checkbox.checked = true;
                             });
                             $radioBoxes = $(this).find('input[type=radio]');
-                            $radioBoxes.each(function (i, radio) {
+                            $radioBoxes.each(function (i,radio) {
                                 radio.checked = true;
                             });
-                            applySlctdLov_mcf(elementID, 'lovForm', valueElmntID, descElemntID, callBackFunc);
+                            applySlctdLov_mcf(elementID,'lovForm',valueElmntID,descElemntID,callBackFunc);
                         });
 
-                        $('#lovTblRO tbody').on('click', 'tr', function () {
+                        $('#lovTblRO tbody').on('click','tr',function () {
                             if ($(this).hasClass('selected')) {
                                 $(this).removeClass('selected');
                                 $checkedBoxes = $(this).find('input[type=checkbox]');
-                                $checkedBoxes.each(function (i, checkbox) {
+                                $checkedBoxes.each(function (i,checkbox) {
                                     checkbox.checked = false;
                                 });
                                 $radioBoxes = $(this).find('input[type=radio]');
-                                $radioBoxes.each(function (i, radio) {
+                                $radioBoxes.each(function (i,radio) {
                                     radio.checked = false;
                                 });
                             } else {
@@ -600,17 +600,17 @@ function getLovsPage_mcf(elementID, titleElementID, modalBodyID, lovNm, criteria
                                 $(this).addClass('selected');
 
                                 $checkedBoxes = $(this).find('input[type=checkbox]');
-                                $checkedBoxes.each(function (i, checkbox) {
+                                $checkedBoxes.each(function (i,checkbox) {
                                     checkbox.checked = true;
                                 });
                                 $radioBoxes = $(this).find('input[type=radio]');
-                                $radioBoxes.each(function (i, radio) {
+                                $radioBoxes.each(function (i,radio) {
                                     radio.checked = true;
                                 });
                             }
                         });
                         $('#lovTblRO tbody')
-                            .on('mouseenter', 'tr', function () {
+                            .on('mouseenter','tr',function () {
                                 if ($(this).hasClass('highlight')) {
                                     $(this).removeClass('highlight');
                                 } else {
@@ -622,8 +622,8 @@ function getLovsPage_mcf(elementID, titleElementID, modalBodyID, lovNm, criteria
                 });
             }
         };
-        xmlhttp.open("POST", "index.php", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.open("POST","index.php",true);
+        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
         //alert(criteriaIDVal);
         xmlhttp.send("grp=2&typ=2&lovNm=" + lovNm +
             "&criteriaID=" + criteriaID + "&criteriaID2=" + criteriaID2 +
@@ -640,9 +640,9 @@ function getLovsPage_mcf(elementID, titleElementID, modalBodyID, lovNm, criteria
 
 }
 
-function doAjax(linkArgs, elementID, actionAfter, titleMsg, titleElementID, modalBodyID) {
+function doAjax(linkArgs,elementID,actionAfter,titleMsg,titleElementID,modalBodyID) {
     $('#allOtherInputData99').val(0);
-    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+    getMsgAsync('grp=1&typ=11&q=Check Session',function () {
         $body = $("body");
 
         $body.addClass("mdlloading");
@@ -657,19 +657,19 @@ function doAjax(linkArgs, elementID, actionAfter, titleMsg, titleElementID, moda
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                 if (actionAfter == 'Redirect') {
                     $body.removeClass("mdlloading");
-                    window.open(xmlhttp.responseText, '_blank');
+                    window.open(xmlhttp.responseText,'_blank');
                 } else if (actionAfter == 'ShowDialog') {
                     $body.removeClass("mdlloading");
                     $('#' + titleElementID).html(titleMsg);
                     $('#' + modalBodyID).html(xmlhttp.responseText);
                     $('#' + elementID).off('show.bs.modal');
                     $('#' + elementID).off('hidden.bs.modal');
-                    $('#' + elementID).one('hidden.bs.modal', function (e) {
+                    $('#' + elementID).one('hidden.bs.modal',function (e) {
                         $('#' + titleElementID).html('');
                         $('#' + modalBodyID).html('');
                         $(e.currentTarget).unbind();
                     });
-                    $('#' + elementID).one('show.bs.modal', function (e) {
+                    $('#' + elementID).one('show.bs.modal',function (e) {
                         /*console.debug('modal shown!');*/
                         $(this).find('.modal-body').css({
                             'max-height': '100%'
@@ -699,16 +699,16 @@ function doAjax(linkArgs, elementID, actionAfter, titleMsg, titleElementID, moda
                 }
             }
         };
-        xmlhttp.open("POST", "index.php", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.open("POST","index.php",true);
+        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
         xmlhttp.send(linkArgs.trim());
     });
 }
 
 
-function doAjaxWthCallBck(linkArgs, elementID, actionAfter, titleMsg, titleElementID, modalBodyID, rqstdCallBack) {
+function doAjaxWthCallBck(linkArgs,elementID,actionAfter,titleMsg,titleElementID,modalBodyID,rqstdCallBack) {
     $('#allOtherInputData99').val(0);
-    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+    getMsgAsync('grp=1&typ=11&q=Check Session',function () {
         $body = $("body");
         $body.addClass("mdlloading");
         var xmlhttp;
@@ -721,7 +721,7 @@ function doAjaxWthCallBck(linkArgs, elementID, actionAfter, titleMsg, titleEleme
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                 if (actionAfter == 'Redirect') {
                     $body.removeClass("mdlloading");
-                    window.open(xmlhttp.responseText, '_blank');
+                    window.open(xmlhttp.responseText,'_blank');
                     rqstdCallBack();
                 } else if (actionAfter == 'ShowDialog') {
                     $body.removeClass("mdlloading");
@@ -729,12 +729,12 @@ function doAjaxWthCallBck(linkArgs, elementID, actionAfter, titleMsg, titleEleme
                     $('#' + modalBodyID).html(xmlhttp.responseText);
                     $('#' + elementID).off('show.bs.modal');
                     $('#' + elementID).off('hidden.bs.modal');
-                    $('#' + elementID).one('hidden.bs.modal', function (e) {
+                    $('#' + elementID).one('hidden.bs.modal',function (e) {
                         $('#' + titleElementID).html('');
                         $('#' + modalBodyID).html('');
                         $(e.currentTarget).unbind();
                     });
-                    $('#' + elementID).one('show.bs.modal', function (e) {
+                    $('#' + elementID).one('show.bs.modal',function (e) {
                         /*console.debug('modal shown!');*/
                         $(this).find('.modal-body').css({
                             'max-height': '100%'
@@ -746,7 +746,7 @@ function doAjaxWthCallBck(linkArgs, elementID, actionAfter, titleMsg, titleEleme
                         keyboard: false
                     });
                     $('#' + elementID).off('shown.bs.modal');
-                    $('#' + elementID).on('shown.bs.modal', function () {
+                    $('#' + elementID).on('shown.bs.modal',function () {
                         /*$('#' + elementID).draggable();*/
                         rqstdCallBack();
                     });
@@ -770,18 +770,18 @@ function doAjaxWthCallBck(linkArgs, elementID, actionAfter, titleMsg, titleEleme
                 }
             }
         };
-        xmlhttp.open("POST", "index.php", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.open("POST","index.php",true);
+        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
         xmlhttp.send(linkArgs.trim());
     });
 }
 
-function openATab(slctr, linkArgs) {
+function openATab(slctr,linkArgs) {
     $('#allOtherInputData99').val(0);
     $body = $("body");
     $body.addClass("mdlloading");
     var targ = slctr;
-    $("body").css("padding", "0px 0px 0px 0px");
+    $("body").css("padding","0px 0px 0px 0px");
     if (linkArgs.indexOf("grp=210&typ") !== -1 ||
         linkArgs.indexOf("grp=40&typ=1") !== -1 ||
         linkArgs.indexOf("grp=60&typ=1") !== -1) {
@@ -801,7 +801,7 @@ function openATab(slctr, linkArgs) {
                     $body.removeClass("mdlloading");
                     $("#usrnm").focus();
                 } else if (linkArgs.indexOf("grp=40&typ=1") !== -1) {
-                    prepareNotices(linkArgs, $body, targ, xmlhttp.responseText);
+                    prepareNotices(linkArgs,$body,targ,xmlhttp.responseText);
                 } else {
                     $(targ).html(xmlhttp.responseText);
                     $body.removeClass("mdlloading");
@@ -809,11 +809,11 @@ function openATab(slctr, linkArgs) {
             }
             $body.removeClass("mdlloading");
         };
-        xmlhttp.open("POST", "index.php", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.open("POST","index.php",true);
+        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
         xmlhttp.send(linkArgs.trim());
     } else {
-        getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsync('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             var $this = $(slctr + 'tab');
             var targ = slctr;
@@ -826,26 +826,26 @@ function openATab(slctr, linkArgs) {
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                     if (linkArgs.indexOf("grp=50&typ=1") !== -1) {
-                        loadScript("js_self/self_prsn.js?v=" + jsFilesVrsn, function () {
+                        loadScript("js_self/self_prsn.js?v=" + jsFilesVrsn,function () {
                             $this.tab('show');
-                            prepareProfile(linkArgs, $body, targ, xmlhttp.responseText);
+                            prepareProfile(linkArgs,$body,targ,xmlhttp.responseText);
                         });
                     } else if (linkArgs.indexOf("grp=45&typ=1") !== -1) {
-                        prepareInbox(linkArgs, $body, targ, xmlhttp.responseText);
+                        prepareInbox(linkArgs,$body,targ,xmlhttp.responseText);
                     } else if (linkArgs.indexOf("grp=9&typ=1") !== -1) {
-                        loadScript("js_self/self_rpt.js?v=" + jsFilesVrsn, function () {
+                        loadScript("js_self/self_rpt.js?v=" + jsFilesVrsn,function () {
                             $this.tab('show');
-                            prepareRpts(linkArgs, $body, targ, xmlhttp.responseText);
+                            prepareRpts(linkArgs,$body,targ,xmlhttp.responseText);
                         });
                     } else if (linkArgs.indexOf("grp=80&typ=1") !== -1) {
-                        loadScript("js_self/self_pay.js?v=" + jsFilesVrsn, function () {
+                        loadScript("js_self/self_pay.js?v=" + jsFilesVrsn,function () {
                             $this.tab('show');
-                            prepareSelfPay(linkArgs, $body, targ, xmlhttp.responseText);
+                            prepareSelfPay(linkArgs,$body,targ,xmlhttp.responseText);
                         });
                     } else if (linkArgs.indexOf("grp=110&typ=1") !== -1) {
-                        loadScript("js_self/self_aca.js?v=" + jsFilesVrsn, function () {
+                        loadScript("js_self/self_aca.js?v=" + jsFilesVrsn,function () {
                             $this.tab('show');
-                            prepareSelfAca(linkArgs, $body, targ, xmlhttp.responseText);
+                            prepareSelfAca(linkArgs,$body,targ,xmlhttp.responseText);
                         });
                     } else {
                         $(targ).html(xmlhttp.responseText);
@@ -854,21 +854,21 @@ function openATab(slctr, linkArgs) {
                     $body.removeClass("mdlloading");
                 }
             };
-            xmlhttp.open("POST", "index.php", true);
-            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlhttp.open("POST","index.php",true);
+            xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
             xmlhttp.send(linkArgs.trim());
         });
     }
 }
 
-function openATab1(slctr, linkArgs) {
+function openATab1(slctr,linkArgs) {
     $('#allOtherInputData99').val(0);
     $body = $("body");
     $body.addClass("mdlloading");
     var $this = $(slctr + 'tab');
     var targ = slctr;
-    $("body").css("padding", "0px 0px 0px 0px");
-    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+    $("body").css("padding","0px 0px 0px 0px");
+    getMsgAsync('grp=1&typ=11&q=Check Session',function () {
         $body = $("body");
         var $this = $(slctr + 'tab');
         var targ = slctr;
@@ -882,30 +882,30 @@ function openATab1(slctr, linkArgs) {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                 if (linkArgs.indexOf("grp=45&typ=1") !== -1) {
                     $this.tab('show');
-                    prepareInbox(linkArgs, $body, targ, xmlhttp.responseText);
+                    prepareInbox(linkArgs,$body,targ,xmlhttp.responseText);
                 } else if (linkArgs.indexOf("grp=8&typ=1") !== -1) {
-                    loadScript("app/prs/prsn.js?v=" + jsFilesVrsn, function () {
+                    loadScript("app/prs/prsn.js?v=" + jsFilesVrsn,function () {
                         $this.tab('show');
-                        prepareProfile(linkArgs, $body, targ, xmlhttp.responseText);
+                        prepareProfile(linkArgs,$body,targ,xmlhttp.responseText);
                     });
                 } else if (linkArgs.indexOf("grp=40&typ=3") !== -1) {
                     $this.tab('show');
-                    prepareNotices(linkArgs, $body, targ, xmlhttp.responseText);
+                    prepareNotices(linkArgs,$body,targ,xmlhttp.responseText);
                 } else if (linkArgs.indexOf("grp=3&typ=1") !== -1) {
                     if (linkArgs.indexOf("pg=1&vtyp=4") !== -1) {
                         $this.tab('show');
-                        prepareUsrPrfl(linkArgs, $body, targ, xmlhttp.responseText);
+                        prepareUsrPrfl(linkArgs,$body,targ,xmlhttp.responseText);
                     } else {
-                        loadScript("app/sec/sys_admin.js?v=" + jsFilesVrsn, function () {
+                        loadScript("app/sec/sys_admin.js?v=" + jsFilesVrsn,function () {
                             $this.tab('show');
-                            prepareSysAdmin(linkArgs, $body, targ, xmlhttp.responseText);
+                            prepareSysAdmin(linkArgs,$body,targ,xmlhttp.responseText);
                         });
                     }
                 } else if (linkArgs.indexOf("grp=17&typ=1") !== -1) {
-                    loadScript("app/mcf/mcf2.js?v=" + jsFilesVrsn, function () {});
-                    loadScript("app/mcf/mcf.js?v=" + jsFilesVrsn, function () {
+                    loadScript("app/mcf/mcf2.js?v=" + jsFilesVrsn,function () { });
+                    loadScript("app/mcf/mcf.js?v=" + jsFilesVrsn,function () {
                         $this.tab('show');
-                        prepareMcf(linkArgs, $body, targ, xmlhttp.responseText);
+                        prepareMcf(linkArgs,$body,targ,xmlhttp.responseText);
                     });
                 } else {
                     $(targ).html(xmlhttp.responseText);
@@ -915,14 +915,14 @@ function openATab1(slctr, linkArgs) {
                 $body.removeClass("mdlloading");
             }
         };
-        xmlhttp.open("POST", "index.php", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.open("POST","index.php",true);
+        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
         xmlhttp.send(linkArgs.trim());
     });
 
 }
 
-function prepareUsrPrfl(lnkArgs, htBody, targ, rspns) {
+function prepareUsrPrfl(lnkArgs,htBody,targ,rspns) {
     $(targ).html(rspns);
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
@@ -946,7 +946,7 @@ function prepareUsrPrfl(lnkArgs, htBody, targ, rspns) {
     });
 }
 
-function getUsrPrfl(actionText, slctr, linkArgs) {
+function getUsrPrfl(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#usrPrflSrchFor").val() === 'undefined' ? '%' : $("#usrPrflSrchFor").val();
     var srchIn = 'Role Name';
     var pageNo = typeof $("#usrPrflPageNo").val() === 'undefined' ? 1 : $("#usrPrflPageNo").val();
@@ -961,17 +961,17 @@ function getUsrPrfl(actionText, slctr, linkArgs) {
         pageNo = parseInt(pageNo) - 1;
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    openATab1(slctr, linkArgs);
+    openATab1(slctr,linkArgs);
 }
 
-function enterKeyFuncUsrPrfl(e, actionText, slctr, linkArgs) {
+function enterKeyFuncUsrPrfl(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getUsrPrfl(actionText, slctr, linkArgs);
+        getUsrPrfl(actionText,slctr,linkArgs);
     }
 }
 
-function prepareNotices(lnkArgs, htBody, targ, rspns) {
+function prepareNotices(lnkArgs,htBody,targ,rspns) {
     $(targ).html(rspns);
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
@@ -995,13 +995,13 @@ function prepareNotices(lnkArgs, htBody, targ, rspns) {
                 var ui = $.summernote.ui;
                 var button = ui.button({
                     contents: '<i class="fa fa-file"/> Upload',
-                    tooltip: 'Upload File',
+                    tooltip: 'Upload File Inline Within Message Body',
                     click: function () {
                         $(function () {
                             $("#allOtherFileInput1").change(function () {
                                 var fileName = $(this).val();
                                 var input = document.getElementById('allOtherFileInput1');
-                                sendNoticesFile(input.files[0], "", "", "OTHERS", function () {
+                                sendNoticesFile(input.files[0],"","","OTHERS",function () {
                                     var inptUrl = $("#allOtherInputData1").val();
                                     var inptText = $("#allOtherInputData2").val();
                                     var inptNwWndw = $("#allOtherInputData2").val();
@@ -1011,7 +1011,7 @@ function prepareNotices(lnkArgs, htBody, targ, rspns) {
                                     if (inptNwWndw === "") {
                                         inptNwWndw = true;
                                     }
-                                    $('#fdbckMsgBody').summernote('createLink', {
+                                    $('#fdbckMsgBody').summernote('createLink',{
                                         text: inptText,
                                         url: inptUrl,
                                         newWindow: inptNwWndw
@@ -1030,29 +1030,29 @@ function prepareNotices(lnkArgs, htBody, targ, rspns) {
                 disableDragAndDrop: false,
                 dialogsInBody: true,
                 toolbar: [
-                    ['style', ['style']],
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough', 'superscript', 'subscript']],
-                    ['fontsize', ['fontsize']],
-                    ['fontname', ['fontname']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph', 'height']],
-                    ['height', ['height']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video', 'hr']],
-                    ['view', ['fullscreen']],
-                    ['help', ['help']],
-                    ['misc', ['print']],
-                    ['mybutton', ['upload']]
+                    ['style',['style']],
+                    ['style',['bold','italic','underline','clear']],
+                    ['font',['strikethrough','superscript','subscript']],
+                    ['fontsize',['fontsize']],
+                    ['fontname',['fontname']],
+                    ['color',['color']],
+                    ['para',['ul','ol','paragraph','height']],
+                    ['height',['height']],
+                    ['table',['table']],
+                    ['insert',['link','picture','video','hr']],
+                    ['view',['fullscreen']],
+                    ['help',['help']],
+                    ['misc',['print']],
+                    ['mybutton',['upload']]
                 ],
                 buttons: {
                     upload: fileLink
                 },
                 callbacks: {
-                    onImageUpload: function (file, editor, welEditable) {
-                        sendNoticesFile(file[0], editor, welEditable, "IMAGES", function () {
+                    onImageUpload: function (file,editor,welEditable) {
+                        sendNoticesFile(file[0],editor,welEditable,"IMAGES",function () {
                             var inptUrl = $("#allOtherInputData1").val();
-                            $('#fdbckMsgBody').summernote("insertImage", inptUrl, 'filename');
+                            $('#fdbckMsgBody').summernote("insertImage",inptUrl,'filename');
                         });
                     }
                 }
@@ -1079,13 +1079,13 @@ function prepareNotices(lnkArgs, htBody, targ, rspns) {
                 var ui = $.summernote.ui;
                 var button = ui.button({
                     contents: '<i class="fa fa-file"/> Upload',
-                    tooltip: 'Upload File',
+                    tooltip: 'Upload File Inline Within Message Body',
                     click: function () {
                         $(function () {
                             $("#allOtherFileInput1").change(function () {
                                 var fileName = $(this).val();
                                 var input = document.getElementById('allOtherFileInput1');
-                                sendNoticesFile(input.files[0], "", "", "OTHERS", function () {
+                                sendNoticesFile(input.files[0],"","","OTHERS",function () {
                                     var inptUrl = $("#allOtherInputData1").val();
                                     var inptText = $("#allOtherInputData2").val();
                                     var inptNwWndw = $("#allOtherInputData2").val();
@@ -1095,7 +1095,7 @@ function prepareNotices(lnkArgs, htBody, targ, rspns) {
                                     if (inptNwWndw === "") {
                                         inptNwWndw = true;
                                     }
-                                    $('#articleNwCmmntsMsg').summernote('createLink', {
+                                    $('#articleNwCmmntsMsg').summernote('createLink',{
                                         text: inptText,
                                         url: inptUrl,
                                         newWindow: inptNwWndw
@@ -1114,24 +1114,24 @@ function prepareNotices(lnkArgs, htBody, targ, rspns) {
                 disableDragAndDrop: false,
                 dialogsInBody: true,
                 toolbar: [
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough', 'superscript', 'subscript']],
-                    ['fontsize', ['fontsize']],
-                    ['fontname', ['fontname']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph', 'height']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video', 'hr']],
-                    ['mybutton', ['upload']]
+                    ['style',['bold','italic','underline','clear']],
+                    ['font',['strikethrough','superscript','subscript']],
+                    ['fontsize',['fontsize']],
+                    ['fontname',['fontname']],
+                    ['color',['color']],
+                    ['para',['ul','ol','paragraph','height']],
+                    ['table',['table']],
+                    ['insert',['link','picture','video','hr']],
+                    ['mybutton',['upload']]
                 ],
                 buttons: {
                     upload: fileLink
                 },
                 callbacks: {
-                    onImageUpload: function (file, editor, welEditable) {
-                        sendNoticesFile(file[0], editor, welEditable, "IMAGES", function () {
+                    onImageUpload: function (file,editor,welEditable) {
+                        sendNoticesFile(file[0],editor,welEditable,"IMAGES",function () {
                             var inptUrl = $("#allOtherInputData1").val();
-                            $('#articleNwCmmntsMsg').summernote("insertImage", inptUrl, 'filename');
+                            $('#articleNwCmmntsMsg').summernote("insertImage",inptUrl,'filename');
                         });
                     }
                 }
@@ -1142,13 +1142,13 @@ function prepareNotices(lnkArgs, htBody, targ, rspns) {
                 var ui = $.summernote.ui;
                 var button = ui.button({
                     contents: '<i class="fa fa-file"/> Upload',
-                    tooltip: 'Upload File',
+                    tooltip: 'Upload File Inline Within Message Body',
                     click: function () {
                         $(function () {
                             $("#allOtherFileInput1").change(function () {
                                 var fileName = $(this).val();
                                 var input = document.getElementById('allOtherFileInput1');
-                                sendNoticesFile(input.files[0], "", "", "OTHERS", function () {
+                                sendNoticesFile(input.files[0],"","","OTHERS",function () {
                                     var inptUrl = $("#allOtherInputData1").val();
                                     var inptText = $("#allOtherInputData2").val();
                                     var inptNwWndw = $("#allOtherInputData2").val();
@@ -1158,7 +1158,7 @@ function prepareNotices(lnkArgs, htBody, targ, rspns) {
                                     if (inptNwWndw === "") {
                                         inptNwWndw = true;
                                     }
-                                    $('#articleNwCmmntsMsg').summernote('createLink', {
+                                    $('#articleNwCmmntsMsg').summernote('createLink',{
                                         text: inptText,
                                         url: inptUrl,
                                         newWindow: inptNwWndw
@@ -1177,24 +1177,24 @@ function prepareNotices(lnkArgs, htBody, targ, rspns) {
                 disableDragAndDrop: false,
                 dialogsInBody: true,
                 toolbar: [
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough', 'superscript', 'subscript']],
-                    ['fontsize', ['fontsize']],
-                    ['fontname', ['fontname']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph', 'height']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video', 'hr']],
-                    ['mybutton', ['upload']]
+                    ['style',['bold','italic','underline','clear']],
+                    ['font',['strikethrough','superscript','subscript']],
+                    ['fontsize',['fontsize']],
+                    ['fontname',['fontname']],
+                    ['color',['color']],
+                    ['para',['ul','ol','paragraph','height']],
+                    ['table',['table']],
+                    ['insert',['link','picture','video','hr']],
+                    ['mybutton',['upload']]
                 ],
                 buttons: {
                     upload: fileLink
                 },
                 callbacks: {
-                    onImageUpload: function (file, editor, welEditable) {
-                        sendNoticesFile(file[0], editor, welEditable, "IMAGES", function () {
+                    onImageUpload: function (file,editor,welEditable) {
+                        sendNoticesFile(file[0],editor,welEditable,"IMAGES",function () {
                             var inptUrl = $("#allOtherInputData1").val();
-                            $('#articleNwCmmntsMsg').summernote("insertImage", inptUrl, 'filename');
+                            $('#articleNwCmmntsMsg').summernote("insertImage",inptUrl,'filename');
                         });
                     }
                 }
@@ -1207,11 +1207,11 @@ function prepareNotices(lnkArgs, htBody, targ, rspns) {
     });
 }
 
-function prepareDashboard(lnkArgs, htBody, targ, rspns) {
+function prepareDashboard(lnkArgs,htBody,targ,rspns) {
     $(targ).html(rspns);
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
-        if (lnkArgs.indexOf("&vtyp=0") !== -1) {}
+        if (lnkArgs.indexOf("&vtyp=0") !== -1) { }
         $('.form_date').datetimepicker({
             format: "dd-M-yyyy",
             language: 'en',
@@ -1229,7 +1229,7 @@ function prepareDashboard(lnkArgs, htBody, targ, rspns) {
     });
 }
 
-function getAllNotices(actionText, slctr, linkArgs) {
+function getAllNotices(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#allnoticesSrchFor").val() === 'undefined' ? '%' : $("#allnoticesSrchFor").val();
     /*var srchIn = typeof $("#allnoticesSrchIn").val() === 'undefined' ? 'Both' : $("#allnoticesSrchIn").val();*/
     var pageNo = typeof $("#allnoticesPageNo").val() === 'undefined' ? 1 : $("#allnoticesPageNo").val();
@@ -1244,17 +1244,17 @@ function getAllNotices(actionText, slctr, linkArgs) {
         pageNo = parseInt(pageNo) - 1;
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=All&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function enterKeyFuncNotices(e, actionText, slctr, linkArgs) {
+function enterKeyFuncNotices(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getAllNotices(actionText, slctr, linkArgs);
+        getAllNotices(actionText,slctr,linkArgs);
     }
 }
 
-function getAllComments(actionText, slctr, linkArgs, ttlCmnts, srcBtn) {
+function getAllComments(actionText,slctr,linkArgs,ttlCmnts,srcBtn) {
     var srchFor = '%';
     var srchIn = 'All';
     var pageNo = typeof $("#allcommentsPageNo1").val() === 'undefined' ? 1 : $("#allcommentsPageNo1").val();
@@ -1287,10 +1287,10 @@ function getAllComments(actionText, slctr, linkArgs, ttlCmnts, srcBtn) {
         }
     }
     linkArgs = linkArgs + "&sbmtdNoticeID=" + sbmtdNoticeID + "&searchfor=" + srchFor + "&searchin=All&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function getMoreComments(actionText, slctr, linkArgs) {
+function getMoreComments(actionText,slctr,linkArgs) {
     var srchFor = '%';
     var srchIn = 'All';
     var pageNo = typeof $("#onenoticesPageNo1").val() === 'undefined' ? 1 : $("#onenoticesPageNo1").val();
@@ -1300,10 +1300,10 @@ function getMoreComments(actionText, slctr, linkArgs) {
     var sortBy = "";
     pageNo = parseInt(pageNo) + 1;
     linkArgs = linkArgs + "&prntCmmntID=" + prntCmmntID + "&sbmtdNoticeID=" + sbmtdNoticeID + "&searchfor1=" + srchFor + "&searchin1=All&pageNo1=" + pageNo + "&limitSze1=" + limitSze + "&sortBy1=" + sortBy;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function getMoreComments1(actionText, slctr, linkArgs) {
+function getMoreComments1(actionText,slctr,linkArgs) {
     var srchFor = '%';
     var srchIn = 'All';
     var pageNo = typeof $("#onenoticesPageNo1").val() === 'undefined' ? 1 : $("#onenoticesPageNo1").val();
@@ -1312,7 +1312,7 @@ function getMoreComments1(actionText, slctr, linkArgs) {
     var sortBy = "";
     pageNo = parseInt(pageNo) + 1;
     linkArgs = linkArgs + "&sbmtdNoticeID=" + sbmtdNoticeID + "&searchfor1=" + srchFor + "&searchin1=All&pageNo1=" + pageNo + "&limitSze1=" + limitSze + "&sortBy1=" + sortBy;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
 function newComments(crntPrnCmntID) {
@@ -1320,7 +1320,7 @@ function newComments(crntPrnCmntID) {
     $('#cmmntsNewMsgs').removeClass('hideNotice');
 }
 
-function getOneNotice(actionText, slctr, linkArgs, srcBtn, srcBtnNo) {
+function getOneNotice(actionText,slctr,linkArgs,srcBtn,srcBtnNo) {
     var srchFor = '%';
     var srchIn = 'All';
     var pageNo = 1;
@@ -1348,12 +1348,12 @@ function getOneNotice(actionText, slctr, linkArgs, srcBtn, srcBtnNo) {
         pageNo = parseInt(pageNo) - 1;
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function getOneNoticeForm(elementID, modalBodyID, titleElementID, formElementID,
-    formTitle, articleID, vtyp, pgNo) {
-    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+function getOneNoticeForm(elementID,modalBodyID,titleElementID,formElementID,
+    formTitle,articleID,vtyp,pgNo) {
+    getMsgAsync('grp=1&typ=11&q=Check Session',function () {
         $body = $("body");
 
         $body.addClass("mdlloadingDiag");
@@ -1391,22 +1391,22 @@ function getOneNoticeForm(elementID, modalBodyID, titleElementID, formElementID,
                     disableDragAndDrop: false,
                     dialogsInBody: true,
                     toolbar: [
-                        ['style', ['style']],
-                        ['style', ['bold', 'italic', 'underline', 'clear']],
-                        ['font', ['strikethrough', 'superscript', 'subscript']],
-                        ['fontsize', ['fontsize']],
-                        ['fontname', ['fontname']],
-                        ['color', ['color']],
-                        ['para', ['ul', 'ol', 'paragraph', 'height']],
-                        ['table', ['table']],
-                        ['insert', ['link', 'picture', 'hr']],
-                        ['view', ['fullscreen', 'codeview']]
+                        ['style',['style']],
+                        ['style',['bold','italic','underline','clear']],
+                        ['font',['strikethrough','superscript','subscript']],
+                        ['fontsize',['fontsize']],
+                        ['fontname',['fontname']],
+                        ['color',['color']],
+                        ['para',['ul','ol','paragraph','height']],
+                        ['table',['table']],
+                        ['insert',['link','picture','hr']],
+                        ['view',['fullscreen','codeview']]
                     ],
                     callbacks: {
-                        onImageUpload: function (file, editor, welEditable) {
-                            sendNoticesFile(file[0], editor, welEditable, "IMAGES", function () {
+                        onImageUpload: function (file,editor,welEditable) {
+                            sendNoticesFile(file[0],editor,welEditable,"IMAGES",function () {
                                 var inptUrl = $("#allOtherInputData1").val();
-                                $('#articleIntroMsg').summernote("insertImage", inptUrl, 'filename');
+                                $('#articleIntroMsg').summernote("insertImage",inptUrl,'filename');
                             });
                         }
                     }
@@ -1415,13 +1415,13 @@ function getOneNoticeForm(elementID, modalBodyID, titleElementID, formElementID,
                     var ui = $.summernote.ui;
                     var button = ui.button({
                         contents: '<i class="fa fa-file"/> Upload',
-                        tooltip: 'Upload File',
+                        tooltip: 'Upload File Inline Within Message Body',
                         click: function () {
                             $(function () {
                                 $("#allOtherFileInput1").change(function () {
                                     var fileName = $(this).val();
                                     var input = document.getElementById('allOtherFileInput1');
-                                    sendNoticesFile(input.files[0], "", "", "OTHERS", function () {
+                                    sendNoticesFile(input.files[0],"","","OTHERS",function () {
                                         var inptUrl = $("#allOtherInputData1").val();
                                         var inptText = $("#allOtherInputData2").val();
                                         var inptNwWndw = $("#allOtherInputData2").val();
@@ -1431,7 +1431,7 @@ function getOneNoticeForm(elementID, modalBodyID, titleElementID, formElementID,
                                         if (inptNwWndw === "") {
                                             inptNwWndw = true;
                                         }
-                                        $('#articleBodyText').summernote('createLink', {
+                                        $('#articleBodyText').summernote('createLink',{
                                             text: inptText,
                                             url: inptUrl,
                                             newWindow: inptNwWndw
@@ -1450,29 +1450,29 @@ function getOneNoticeForm(elementID, modalBodyID, titleElementID, formElementID,
                     disableDragAndDrop: false,
                     dialogsInBody: true,
                     toolbar: [
-                        ['style', ['style']],
-                        ['style', ['bold', 'italic', 'underline', 'clear']],
-                        ['font', ['strikethrough', 'superscript', 'subscript']],
-                        ['fontsize', ['fontsize']],
-                        ['fontname', ['fontname']],
-                        ['color', ['color']],
-                        ['para', ['ul', 'ol', 'paragraph', 'height']],
-                        ['height', ['height']],
-                        ['table', ['table']],
-                        ['insert', ['link', 'picture', 'video', 'hr']],
-                        ['view', ['fullscreen', 'codeview']],
-                        ['help', ['help']],
-                        ['misc', ['print']],
-                        ['mybutton', ['upload']]
+                        ['style',['style']],
+                        ['style',['bold','italic','underline','clear']],
+                        ['font',['strikethrough','superscript','subscript']],
+                        ['fontsize',['fontsize']],
+                        ['fontname',['fontname']],
+                        ['color',['color']],
+                        ['para',['ul','ol','paragraph','height']],
+                        ['height',['height']],
+                        ['table',['table']],
+                        ['insert',['link','picture','video','hr']],
+                        ['view',['fullscreen','codeview']],
+                        ['help',['help']],
+                        ['misc',['print']],
+                        ['mybutton',['upload']]
                     ],
                     buttons: {
                         upload: fileLink
                     },
                     callbacks: {
-                        onImageUpload: function (file, editor, welEditable) {
-                            sendNoticesFile(file[0], editor, welEditable, "IMAGES", function () {
+                        onImageUpload: function (file,editor,welEditable) {
+                            sendNoticesFile(file[0],editor,welEditable,"IMAGES",function () {
                                 var inptUrl = $("#allOtherInputData1").val();
-                                $('#articleBodyText').summernote("insertImage", inptUrl, 'filename');
+                                $('#articleBodyText').summernote("insertImage",inptUrl,'filename');
                             });
                         }
                     }
@@ -1482,8 +1482,8 @@ function getOneNoticeForm(elementID, modalBodyID, titleElementID, formElementID,
                 } else {
                     var markupStr1 = typeof $("#articleIntroMsgDecoded").val() === 'undefined' ? '' : $("#articleIntroMsgDecoded").val();
                     var markupStr2 = typeof $("#articleBodyTextDecoded").val() === 'undefined' ? '' : $("#articleBodyTextDecoded").val();
-                    $('#articleIntroMsg').summernote('code', urldecode(markupStr1));
-                    $('#articleBodyText').summernote('code', urldecode(markupStr2));
+                    $('#articleIntroMsg').summernote('code',urldecode(markupStr1));
+                    $('#articleBodyText').summernote('code',urldecode(markupStr2));
                 }
                 $('.note-editable').trigger('focus');
                 $body.removeClass("mdlloadingDiag");
@@ -1501,8 +1501,8 @@ function getOneNoticeForm(elementID, modalBodyID, titleElementID, formElementID,
                 });
             }
         };
-        xmlhttp.open("POST", "index.php", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.open("POST","index.php",true);
+        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
         xmlhttp.send("grp=40&typ=3&pg=" + pgNo + "&vtyp=" + vtyp + "&sbmtdNoticeID=" + articleID);
     });
 }
@@ -1511,17 +1511,17 @@ function performFileClick(elemId) {
     var elem = document.getElementById(elemId);
     if (elem && document.createEvent) {
         var evt = document.createEvent("MouseEvents");
-        evt.initEvent("click", true, false);
+        evt.initEvent("click",true,false);
         elem.dispatchEvent(evt);
     }
 }
 
-function sendNoticesFile(file, editor, welEditable, fileTypes, callBackFunc) {
+function sendNoticesFile(file,editor,welEditable,fileTypes,callBackFunc) {
     var data1 = new FormData();
-    data1.append("file", file);
+    data1.append("file",file);
     if (fileTypes !== "IMAGES") {
         $.ajax({
-            url: "dwnlds/uploader1.php",
+            url: "../dwnlds/uploader1.php",
             data: data1,
             cache: false,
             contentType: false,
@@ -1531,13 +1531,13 @@ function sendNoticesFile(file, editor, welEditable, fileTypes, callBackFunc) {
                 $("#allOtherInputData1").val(data);
                 callBackFunc();
             },
-            error: function (jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR,textStatus,errorThrown) {
                 console.log(textStatus + " " + errorThrown);
             }
         });
     } else {
         $.ajax({
-            url: "dwnlds/uploader.php",
+            url: "../dwnlds/uploader.php",
             data: data1,
             cache: false,
             contentType: false,
@@ -1547,7 +1547,7 @@ function sendNoticesFile(file, editor, welEditable, fileTypes, callBackFunc) {
                 $("#allOtherInputData1").val(data);
                 callBackFunc();
             },
-            error: function (jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR,textStatus,errorThrown) {
                 console.log(textStatus + " " + errorThrown);
             }
         });
@@ -1558,9 +1558,9 @@ function grpTypNoticesChange() {
     var lovChkngElementVal = typeof $("#grpType").val() === 'undefined' ? '' : $("#grpType").val();
     lovNm = "";
     if (lovChkngElementVal === "Everyone" || lovChkngElementVal === "Public") {
-        $('#groupName').attr("disabled", "true");
+        $('#groupName').attr("disabled","true");
         $('#groupName').val("");
-        $('#groupNameLbl').attr("disabled", "true");
+        $('#groupNameLbl').attr("disabled","true");
     } else {
         $('#groupName').removeAttr("disabled");
         $('#groupName').val("");
@@ -1568,9 +1568,9 @@ function grpTypNoticesChange() {
     }
 }
 
-function getNoticeLovs(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
-    criteriaID2, criteriaID3, chkOrRadio, mustSelSth,
-    selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere, callBackFunc) {
+function getNoticeLovs(elementID,titleElementID,modalBodyID,lovNm,criteriaID,
+    criteriaID2,criteriaID3,chkOrRadio,mustSelSth,
+    selVals,valueElmntID,descElemntID,actionText,colNoForChkBxCmprsn,addtnlWhere,callBackFunc) {
     /*alert(lovChkngElementVal);*/
     var lovChkngElementVal = typeof $("#grpType").val() === 'undefined' ? "" : $("#grpType").val();
     if (lovChkngElementVal.trim() === "") {
@@ -1594,15 +1594,15 @@ function getNoticeLovs(elementID, titleElementID, modalBodyID, lovNm, criteriaID
     } else {
         return false;
     }
-    getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
-        criteriaID2, criteriaID3, chkOrRadio, mustSelSth,
-        selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere, callBackFunc)
+    getLovsPage(elementID,titleElementID,modalBodyID,lovNm,criteriaID,
+        criteriaID2,criteriaID3,chkOrRadio,mustSelSth,
+        selVals,valueElmntID,descElemntID,actionText,colNoForChkBxCmprsn,addtnlWhere,callBackFunc)
 }
 
-function getNoticeLovsTblr(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
-    criteriaID2, criteriaID3, chkOrRadio, mustSelSth,
-    selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere,
-    grpTypeElmntID, callBackFunc) {
+function getNoticeLovsTblr(elementID,titleElementID,modalBodyID,lovNm,criteriaID,
+    criteriaID2,criteriaID3,chkOrRadio,mustSelSth,
+    selVals,valueElmntID,descElemntID,actionText,colNoForChkBxCmprsn,addtnlWhere,
+    grpTypeElmntID,callBackFunc) {
     var lovChkngElementVal = typeof $("#" + grpTypeElmntID).val() === 'undefined' ? 10 : $("#" + grpTypeElmntID).val();
     lovNm = "";
     if (lovChkngElementVal === "Divisions/Groups") {
@@ -1622,12 +1622,12 @@ function getNoticeLovsTblr(elementID, titleElementID, modalBodyID, lovNm, criter
     } else {
         return false;
     }
-    getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
-        criteriaID2, criteriaID3, chkOrRadio, mustSelSth,
-        selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere, callBackFunc)
+    getLovsPage(elementID,titleElementID,modalBodyID,lovNm,criteriaID,
+        criteriaID2,criteriaID3,chkOrRadio,mustSelSth,
+        selVals,valueElmntID,descElemntID,actionText,colNoForChkBxCmprsn,addtnlWhere,callBackFunc)
 }
 
-function saveOneNoticeForm(actionText, slctr, linkArgs) {
+function saveOneNoticeForm(actionText,slctr,linkArgs) {
     var articleCategory = typeof $("#articleCategory").val() === 'undefined' ? '' : $("#articleCategory").val();
     var articleLoclClsfctn = typeof $("#articleLoclClsfctn").val() === 'undefined' ? '' : $("#articleLoclClsfctn").val();
     var grpType = typeof $("#grpType").val() === 'undefined' ? '' : $("#grpType").val();
@@ -1679,11 +1679,11 @@ function saveOneNoticeForm(actionText, slctr, linkArgs) {
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Forum/Notice...Please Wait...</p>',
         callback: function () {
-            getAllNotices(actionText, slctr, linkArgs);
+            getAllNotices(actionText,slctr,linkArgs);
         }
     });
     dialog.init(function () {
-        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
             $body = $("body");
             $body.removeClass("mdlloading");
             $.ajax({
@@ -1708,9 +1708,9 @@ function saveOneNoticeForm(actionText, slctr, linkArgs) {
                 success: function (result) {
                     setTimeout(function () {
                         dialog.find('.bootbox-body').html(result);
-                    }, 500);
+                    },500);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR,textStatus,errorThrown) {
                     /*dialog.find('.bootbox-body').html(errorThrown);*/
                     console.warn(jqXHR.responseText);
                 }
@@ -1719,11 +1719,11 @@ function saveOneNoticeForm(actionText, slctr, linkArgs) {
     });
 }
 
-function closeNoticeForm(actionText, slctr, linkArgs) {
+function closeNoticeForm(actionText,slctr,linkArgs) {
     $('#myFormsModalLg').modal('hide');
     /*$('#myFormsModalLg').html("");
      $('#modal').modal('toggle');*/
-    getAllNotices(actionText, slctr, linkArgs);
+    getAllNotices(actionText,slctr,linkArgs);
 }
 
 function delOneNotice(rowIDAttrb) {
@@ -1755,12 +1755,12 @@ function delOneNotice(rowIDAttrb) {
                     size: 'small',
                     message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Notice...Please Wait...</p>',
                     callback: function () {
-                        $("body").css("padding-right", "0px");
+                        $("body").css("padding-right","0px");
                     }
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -1780,9 +1780,9 @@ function delOneNotice(rowIDAttrb) {
                                         if (result1.indexOf("Success") !== -1) {
                                             $("#" + rowIDAttrb).remove();
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                 }
                             });
@@ -1791,7 +1791,7 @@ function delOneNotice(rowIDAttrb) {
                         setTimeout(function () {
                             $("#" + rowIDAttrb).remove();
                             dialog1.find('.bootbox-body').html('Row Removed Successfully!');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -1799,7 +1799,7 @@ function delOneNotice(rowIDAttrb) {
     });
 }
 
-function pblshUnplsh(rowIDAttrb, action, actionText, slctr, linkArgs) {
+function pblshUnplsh(rowIDAttrb,action,actionText,slctr,linkArgs) {
     var rndmNum = rowIDAttrb.split("_")[1];
     var pKeyID = -1;
     if (typeof $('#allnoticesRow' + rndmNum + '_ArticleID').val() === 'undefined') {
@@ -1831,7 +1831,7 @@ function pblshUnplsh(rowIDAttrb, action, actionText, slctr, linkArgs) {
                 });
                 dialog1.init(function () {
                     if (pKeyID > 0) {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
                             $.ajax({
@@ -1850,12 +1850,12 @@ function pblshUnplsh(rowIDAttrb, action, actionText, slctr, linkArgs) {
                                     setTimeout(function () {
                                         dialog1.find('.bootbox-body').html(result1);
                                         if (result1.indexOf("Success") !== -1) {
-                                            getAllNotices(actionText, slctr, linkArgs);
+                                            getAllNotices(actionText,slctr,linkArgs);
                                             dialog1.modal('hide');
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     dialog1.find('.bootbox-body').html(errorThrown1);
                                     dialog1.modal('hide');
                                 }
@@ -1863,9 +1863,9 @@ function pblshUnplsh(rowIDAttrb, action, actionText, slctr, linkArgs) {
                         });
                     } else {
                         setTimeout(function () {
-                            getAllNotices(actionText, slctr, linkArgs);
+                            getAllNotices(actionText,slctr,linkArgs);
                             dialog1.modal('hide');
-                        }, 500);
+                        },500);
                     }
                 });
             }
@@ -1873,11 +1873,11 @@ function pblshUnplsh(rowIDAttrb, action, actionText, slctr, linkArgs) {
     });
 }
 
-function sendComment(actionText, slctr, linkArgs) {
+function sendComment(actionText,slctr,linkArgs) {
     var articleNwCmmntsMsg = typeof $("#articleNwCmmntsMsg").val() === 'undefined' ? '' : ($('#articleNwCmmntsMsg').summernote('code'));
     var allcommentsArticleID = typeof $("#allcommentsArticleID").val() === 'undefined' ? -1 : $("#allcommentsArticleID").val();
     var prntCmntID = typeof $("#crntPrnCmntID").val() === 'undefined' ? -1 : $("#crntPrnCmntID").val();
-    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+    getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
         $body = $("body");
         $body.removeClass("mdlloading");
         $.ajax({
@@ -1894,21 +1894,21 @@ function sendComment(actionText, slctr, linkArgs) {
                 articleComment: articleNwCmmntsMsg
             },
             success: function (result1) {
-                getAllComments(actionText, slctr, linkArgs, 3);
+                getAllComments(actionText,slctr,linkArgs,3);
                 $('#articleNwCmmntsMsg').summernote('reset');
             },
-            error: function (jqXHR1, textStatus1, errorThrown1) {
+            error: function (jqXHR1,textStatus1,errorThrown1) {
                 console.log(errorThrown1);
             }
         });
     });
 }
 
-function sendComment2(actionText, slctr, linkArgs) {
+function sendComment2(actionText,slctr,linkArgs) {
     var articleNwCmmntsMsg = typeof $("#articleNwCmmntsMsg2").val() === 'undefined' ? '' : $('#articleNwCmmntsMsg2').val();
     var allcommentsArticleID = typeof $("#allcommentsArticleID").val() === 'undefined' ? -1 : $("#allcommentsArticleID").val();
     var prntCmntID = typeof $("#crntPrnCmntID").val() === 'undefined' ? -1 : $("#crntPrnCmntID").val();
-    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+    getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
         $body = $("body");
         $body.removeClass("mdlloading");
         $.ajax({
@@ -1925,30 +1925,30 @@ function sendComment2(actionText, slctr, linkArgs) {
                 articleComment: articleNwCmmntsMsg
             },
             success: function (result1) {
-                getAllComments(actionText, slctr, linkArgs, 3);
+                getAllComments(actionText,slctr,linkArgs,3);
                 $('#articleNwCmmntsMsg').summernote('reset');
                 $('#articleNwCmmntsMsg2').val("");
             },
-            error: function (jqXHR1, textStatus1, errorThrown1) {
+            error: function (jqXHR1,textStatus1,errorThrown1) {
                 console.log(errorThrown1);
             }
         });
     });
 }
 
-function enterKeyFuncSndCmnt(e, actionText, slctr, linkArgs) {
+function enterKeyFuncSndCmnt(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        sendComment2(actionText, slctr, linkArgs);
+        sendComment2(actionText,slctr,linkArgs);
     }
 }
 
-function showNoticeDetails(sbmtdNoticeID, ctgry) {
-    openATab('#' + noticesElmntNm, 'grp=40&typ=1&pg=0&vtyp=4&sbmtdNoticeID=' + sbmtdNoticeID + '&sbmtdNoticeCtgry=' + ctgry);
+function showNoticeDetails(sbmtdNoticeID,ctgry) {
+    openATab('#' + noticesElmntNm,'grp=40&typ=1&pg=0&vtyp=4&sbmtdNoticeID=' + sbmtdNoticeID + '&sbmtdNoticeCtgry=' + ctgry);
 }
 
-function showArticleDetails(sbmtdNoticeID, ctgry) {
-    openATab('#' + noticesElmntNm, 'grp=40&typ=1&pg=0&vtyp=4&sbmtdNoticeID=' + sbmtdNoticeID + '&sbmtdNoticeCtgry=' + ctgry);
+function showArticleDetails(sbmtdNoticeID,ctgry) {
+    openATab('#' + noticesElmntNm,'grp=40&typ=1&pg=0&vtyp=4&sbmtdNoticeID=' + sbmtdNoticeID + '&sbmtdNoticeCtgry=' + ctgry);
 }
 
 function autoQueueFdbck() {
@@ -2001,7 +2001,7 @@ function autoQueueFdbck() {
                     }
                 });
                 dialog.init(function () {
-                    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                    getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                         $body = $("body");
                         $body.removeClass("mdlloading");
 
@@ -2024,7 +2024,7 @@ function autoQueueFdbck() {
                                 elem.style.width = data.percent + '%';
                                 $("#myInformation").html(data.message);
                             },
-                            error: function (jqXHR, textStatus, errorThrown) {
+                            error: function (jqXHR,textStatus,errorThrown) {
                                 console.log(textStatus + " " + errorThrown);
                                 console.warn(jqXHR.responseText);
                             }
@@ -2056,7 +2056,7 @@ function clearFdbckForm() {
                 $("#fdbckMailCc").val('');
                 $("#fdbckMailAttchmnts").val('');
                 $("#fdbckSubject").val('');
-                $('#fdbckMsgBody').summernote('code', '<p></p>');
+                $('#fdbckMsgBody').summernote('code','<p></p>');
             }
         }
     });
@@ -2067,7 +2067,7 @@ function attchFileToFdbck() {
     $("#allOtherFileInput2").change(function () {
         var fileName = $(this).val();
         var input = document.getElementById('allOtherFileInput2');
-        sendFdbckFile(input.files[0], function () {
+        sendFdbckFile(input.files[0],function () {
             var inptUrl = $("#allOtherInputData2").val();
             crntAttchMnts = crntAttchMnts + ";" + inptUrl;
             $("#fdbckMailAttchmnts").val(crntAttchMnts);
@@ -2076,9 +2076,9 @@ function attchFileToFdbck() {
     performFileClick('allOtherFileInput2');
 }
 
-function sendFdbckFile(file, callBackFunc) {
+function sendFdbckFile(file,callBackFunc) {
     var data1 = new FormData();
-    data1.append("file", file);
+    data1.append("file",file);
     $.ajax({
         url: "../dwnlds/uploader1.php",
         data: data1,
@@ -2090,15 +2090,15 @@ function sendFdbckFile(file, callBackFunc) {
             $("#allOtherInputData2").val(data);
             callBackFunc();
         },
-        error: function (jqXHR, textStatus, errorThrown) {
+        error: function (jqXHR,textStatus,errorThrown) {
             console.log(textStatus + " " + errorThrown);
         }
     });
 }
 
-function checkWkfRqstStatus(pKeyID, pKeyTitle) {
+function checkWkfRqstStatus(pKeyID,pKeyTitle) {
     var lnkArgs = 'grp=45&typ=1&pg=0&vtyp=8&RoutingID=' + pKeyID;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalx', 'ShowDialog', pKeyTitle, 'myFormsModalxTitle', 'myFormsModalxBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalx','ShowDialog',pKeyTitle,'myFormsModalxTitle','myFormsModalxBody',function () {
         if (!$.fn.DataTable.isDataTable('#gnrlInbxActionsTable')) {
             var table1 = $('#gnrlInbxActionsTable').DataTable({
                 "paging": false,
@@ -2113,7 +2113,7 @@ function checkWkfRqstStatus(pKeyID, pKeyTitle) {
     });
 }
 
-function insertNewRowBe4(tableElmntID, position, inptHtml, callBackFunc) {
+function insertNewRowBe4(tableElmntID,position,inptHtml,callBackFunc) {
     var pos = typeof $('#allOtherInputData99').val() === 'undefined' ? '0' : $('#allOtherInputData99').val();
     if (pos > 0) {
         position = pos;
@@ -2128,7 +2128,7 @@ function insertNewRowBe4(tableElmntID, position, inptHtml, callBackFunc) {
         };
     }
     var nwRndm = Math.floor((Math.random() * 9999999) + 1000000);
-    var nwInptHtml = urldecode(inptHtml.replace(/(_WWW123WWW_)+/g, nwRndm + "_").replace(/(_WWW123WWW)+/g, nwRndm));
+    var nwInptHtml = urldecode(inptHtml.replace(/(_WWW123WWW_)+/g,nwRndm + "_").replace(/(_WWW123WWW)+/g,nwRndm));
     if ($('#' + tableElmntID + ' > tbody > tr').length <= 0) {
         $('#' + tableElmntID).append(nwInptHtml);
     } else {
@@ -2166,7 +2166,7 @@ function insertNewRowBe4(tableElmntID, position, inptHtml, callBackFunc) {
     });
 }
 
-function insertNewRowAfta(tableElmntID, position, inptHtml, callBackFunc) {
+function insertNewRowAfta(tableElmntID,position,inptHtml,callBackFunc) {
     var pos = typeof $('#allOtherInputData99').val() === 'undefined' ? '0' : $('#allOtherInputData99').val();
     if (pos > 0) {
         position = pos;
@@ -2181,7 +2181,7 @@ function insertNewRowAfta(tableElmntID, position, inptHtml, callBackFunc) {
         };
     }
     var nwRndm = Math.floor((Math.random() * 9999999) + 1000000);
-    var nwInptHtml = urldecode(inptHtml.replace(/(_WWW123WWW_)+/g, nwRndm + "_").replace(/(_WWW123WWW)+/g, nwRndm));
+    var nwInptHtml = urldecode(inptHtml.replace(/(_WWW123WWW_)+/g,nwRndm + "_").replace(/(_WWW123WWW)+/g,nwRndm));
     $('#' + tableElmntID).append(nwInptHtml);
     $(function () {
         $('.form_date_tme').datetimepicker({
@@ -2216,11 +2216,11 @@ function insertNewRowAfta(tableElmntID, position, inptHtml, callBackFunc) {
 }
 
 function urldecode(str) {
-    return unescape(decodeURIComponent(str.replace(/\+/g, ' ')));
+    return unescape(decodeURIComponent(str.replace(/\+/g,' ')));
 }
 
 function urlencode(str) {
-    return escape(encodeURIComponent(str.replace(/\+/g, ' ')));
+    return escape(encodeURIComponent(str.replace(/\+/g,' ')));
 }
 
 function logOutFunc() {
@@ -2233,14 +2233,14 @@ function logOutFunc() {
         closable: true,
         closeByBackdrop: false,
         closeByKeyboard: false,
-        onshow: function (dialog) {},
+        onshow: function (dialog) { },
         buttons: [{
             label: 'Cancel',
             icon: 'glyphicon glyphicon-ban-circle',
             action: function (dialogItself) {
                 dialogItself.close();
             }
-        }, {
+        },{
             label: 'Logout',
             icon: 'glyphicon glyphicon-menu-left',
             cssClass: 'btn-primary',
@@ -2266,7 +2266,7 @@ function logOutFunc() {
     });
 }
 
-function showBootDiagMsg(btitle, bmsg, bsize) {
+function showBootDiagMsg(btitle,bmsg,bsize) {
     if (typeof bsize === 'undefined' || bsize === null) {
         bsize = BootstrapDialog.SIZE_SMALL;
     }
@@ -2293,7 +2293,7 @@ var curDialogItself = null;
 var lgnBtnSsn = null;
 var curCallBack = null;
 
-function getMsgAsync(linkArgs, callback) {
+function getMsgAsync(linkArgs,callback) {
     $body = $("body");
     $body.addClass("mdlloading");
     var xmlhttp;
@@ -2377,7 +2377,7 @@ function getMsgAsync(linkArgs, callback) {
                                 }
                             });
                         }
-                    }, {
+                    },{
                         id: 'lgnBtnSsn',
                         label: 'Login',
                         icon: 'glyphicon glyphicon-menu-right',
@@ -2389,7 +2389,7 @@ function getMsgAsync(linkArgs, callback) {
                             $button.disable();
                             $button.spin();
                             dialogItself.setClosable(false);
-                            homePageLgn(dialogItself, callback);
+                            homePageLgn(dialogItself,callback);
                         }
                     }]
                 });
@@ -2400,12 +2400,12 @@ function getMsgAsync(linkArgs, callback) {
 
         }
     };
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.open("POST","index.php",true);
+    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     xmlhttp.send(linkArgs.trim());
 }
 
-function getMsgAsyncSilent(linkArgs, callback) {
+function getMsgAsyncSilent(linkArgs,callback) {
     $body = $("body");
     var xmlhttp;
     if (window.XMLHttpRequest) {
@@ -2487,7 +2487,7 @@ function getMsgAsyncSilent(linkArgs, callback) {
                                 }
                             });
                         }
-                    }, {
+                    },{
                         id: 'lgnBtnSsn',
                         label: 'Login',
                         icon: 'glyphicon glyphicon-menu-right',
@@ -2499,7 +2499,7 @@ function getMsgAsyncSilent(linkArgs, callback) {
                             $button.disable();
                             $button.spin();
                             dialogItself.setClosable(false);
-                            homePageLgn(dialogItself, callback);
+                            homePageLgn(dialogItself,callback);
                         }
                     }]
                 });
@@ -2510,8 +2510,8 @@ function getMsgAsyncSilent(linkArgs, callback) {
 
         }
     };
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.open("POST","index.php",true);
+    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     xmlhttp.send(linkArgs.trim());
 }
 
@@ -2521,12 +2521,12 @@ function enterKeyFuncLgn(e) {
         lgnBtnSsn.disable();
         lgnBtnSsn.spin();
         curDialogItself.setClosable(false);
-        homePageLgn(curDialogItself, curCallBack);
+        homePageLgn(curDialogItself,curCallBack);
     }
     //return false;
 }
 
-function homePageLgn(dialogItself, callback) {
+function homePageLgn(dialogItself,callback) {
     var xmlhttp;
     var usrNm = "";
     var old_pswd = "";
@@ -2536,11 +2536,11 @@ function homePageLgn(dialogItself, callback) {
     old_pswd = document.getElementById("pwd").value;
     machdet = document.getElementById("machdet").value;
     if (usrNm === "" || usrNm === null) {
-        showBootDiagMsg('System Alert!', 'User Name cannot be empty!');
+        showBootDiagMsg('System Alert!','User Name cannot be empty!');
         return false;
     }
     if (old_pswd === "" || old_pswd === null) {
-        showBootDiagMsg('System Alert!', 'Password cannot be empty!');
+        showBootDiagMsg('System Alert!','Password cannot be empty!');
         return false;
     }
     lnkArgs = "grp=200&typ=1&usrnm=" + usrNm + "&pwd=" + old_pswd + "&machdet=" + machdet + "&screenwdth=" + screen.width;
@@ -2582,8 +2582,8 @@ function homePageLgn(dialogItself, callback) {
         }
     };
 
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.open("POST","index.php",true);
+    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     xmlhttp.send(lnkArgs); //+ "&machdetls=" + machDet
 }
 
@@ -2591,8 +2591,8 @@ function showRoles() {
     window.location = 'index.php';
 }
 
-function dwnldAjxCall(linkArgs, elemtnID) {
-    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+function dwnldAjxCall(linkArgs,elemtnID) {
+    getMsgAsync('grp=1&typ=11&q=Check Session',function () {
         var xmlhttp;
         if (window.XMLHttpRequest) {
             xmlhttp = new XMLHttpRequest();
@@ -2604,13 +2604,13 @@ function dwnldAjxCall(linkArgs, elemtnID) {
                 $body = $("body");
                 $body.removeClass("mdlloading");
                 document.getElementById(elemtnID).innerHTML = "&nbsp;";
-                window.open(xmlhttp.responseText, '_blank');
+                window.open(xmlhttp.responseText,'_blank');
             } else {
                 document.getElementById(elemtnID).innerHTML = "<p><img style=\"width:80px;height:25px;display:inline;float:left;margin-right:5px;clear: left;\" src='../cmn_images/animated_loading.gif'/>Loading...Please Wait...</p>";
             }
         };
-        xmlhttp.open("POST", "index.php", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.open("POST","index.php",true);
+        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
         xmlhttp.send(linkArgs.trim());
     });
 }
@@ -2623,14 +2623,14 @@ function myIP() {
         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
     }
 
-    xmlhttp.open("GET", "http://api.hostip.info/get_html.php", false);
+    xmlhttp.open("GET","http://api.hostip.info/get_html.php",false);
     var res = "";
-    var hostipInfo, ipAddress;
+    var hostipInfo,ipAddress;
     var t = setTimeout(function () {
         xmlhttp.abort();
         xmlhttp = null;
         res = "Unknown";
-    }, 3000);
+    },3000);
     xmlhttp.send();
     if (res === "Unknown") {
         return res;
@@ -2649,19 +2649,19 @@ function myIP() {
 function myCountry() {
     var res = "";
     var xmlhttp;
-    var hostipInfo, ipAddress;
+    var hostipInfo,ipAddress;
     if (window.XMLHttpRequest) {
         xmlhttp = new XMLHttpRequest();
     } else {
         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
     }
 
-    xmlhttp.open("GET", "http://api.hostip.info/get_html.php", false);
+    xmlhttp.open("GET","http://api.hostip.info/get_html.php",false);
     var t = setTimeout(function () {
         xmlhttp.abort();
         xmlhttp = null;
         res = "Unknown";
-    }, 3000);
+    },3000);
     xmlhttp.send();
     if (res === "Unknown") {
         return res;
@@ -2697,32 +2697,32 @@ function unCheckAllBtns(elmntID) {
     }
 }
 
-function toggleCheckBx(elmntID, callback) {
+function toggleCheckBx(elmntID,callback) {
     if ($('#' + elmntID + ':checked').length > 0) {
-        $('#' + elmntID).prop('checked', false);
+        $('#' + elmntID).prop('checked',false);
     } else {
-        $('#' + elmntID).prop('checked', true);
+        $('#' + elmntID).prop('checked',true);
     }
     callback();
 }
 
-function changeImgSrc(input, imgId, imgSrcLocID) {
+function changeImgSrc(input,imgId,imgSrcLocID) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
 
         reader.onload = function (e) {
             //$('#img1Test')
-            $(imgId).attr('src', e.target.result);
-            $(imgSrcLocID).attr('value', $(input).val());
+            $(imgId).attr('src',e.target.result);
+            $(imgSrcLocID).attr('value',$(input).val());
         };
 
         reader.readAsDataURL(input.files[0]);
     }
 }
 
-function setFileLoc(input, nwSrcLocElmnt) {
+function setFileLoc(input,nwSrcLocElmnt) {
     if (input.files && input.files[0]) {
-        $(nwSrcLocElmnt).attr('value', $(input).val());
+        $(nwSrcLocElmnt).attr('value',$(input).val());
     }
 }
 
@@ -2730,20 +2730,20 @@ function scrollTo(hash) {
     location.hash = "#" + hash;
 }
 
-function rhotrim(s, mask) {
+function rhotrim(s,mask) {
     while (~mask.indexOf(s[0])) {
         s = s.slice(1);
     }
     while (~mask.indexOf(s[s.length - 1])) {
-        s = s.slice(0, -1);
+        s = s.slice(0,-1);
     }
     return s;
 }
 
 function rhoFrmtDate() {
-    var m_names = new Array("Jan", "Feb", "Mar",
-        "Apr", "May", "Jun", "Jul", "Aug", "Sep",
-        "Oct", "Nov", "Dec");
+    var m_names = new Array("Jan","Feb","Mar",
+        "Apr","May","Jun","Jul","Aug","Sep",
+        "Oct","Nov","Dec");
 
     var d = new Date();
     var curr_date = d.getDate().padLeft();
@@ -2753,8 +2753,8 @@ function rhoFrmtDate() {
         "-" + curr_year;
 
     var dformat = first_part + ' ' + [d.getHours().padLeft(),
-        d.getMinutes().padLeft(),
-        d.getSeconds().padLeft()
+    d.getMinutes().padLeft(),
+    d.getSeconds().padLeft()
     ].join(':');
     return dformat;
 }
@@ -2783,7 +2783,7 @@ function isReaderAPIAvlbl() {
             title: 'System Alert',
             size: 'small',
             message: '<p style="color:red;font-weight:bold;">' + errMsg + '</p>',
-            callback: function () {}
+            callback: function () { }
         });
         return false;
     }
@@ -2803,14 +2803,14 @@ function isFloat(n) {
 
 function fmtAsNumber(elementID) {
     var num = $("#" + elementID).val();
-    $("#" + elementID).val(addCommas(Number(num.replace(/[^-?0-9\.]/g, '')).toFixed(2)));
-    return Number(num.replace(/[^-?0-9\.]/g, ''));
+    $("#" + elementID).val(addCommas(Number(num.replace(/[^-?0-9\.]/g,'')).toFixed(2)));
+    return Number(num.replace(/[^-?0-9\.]/g,''));
 }
 
 function fmtAsNumber2(elementID) {
     var num = $("#" + elementID).val();
-    $("#" + elementID).val(addCommas(Number(num.replace(/[^-?0-9\.]/g, '')).toFixed(4)));
-    return Number(num.replace(/[^-?0-9\.]/g, ''));
+    $("#" + elementID).val(addCommas(Number(num.replace(/[^-?0-9\.]/g,'')).toFixed(4)));
+    return Number(num.replace(/[^-?0-9\.]/g,''));
 }
 
 function ClearAllIntervals() {
@@ -2818,14 +2818,14 @@ function ClearAllIntervals() {
         window.clearInterval(i);
 }
 
-function gnrlFldKeyPress(event, elementIDAttrb, sbmtdTblRowID, classNm) {
+function gnrlFldKeyPress(event,elementIDAttrb,sbmtdTblRowID,classNm) {
     if (event.which === 13) {
         var nextItem;
         var nextItemVal = 0;
         var curItemVal = 0;
         var indx = 0;
         var ttlElmnts = 0;
-        $('#' + sbmtdTblRowID + ' .' + classNm).each(function (i, el) {
+        $('#' + sbmtdTblRowID + ' .' + classNm).each(function (i,el) {
             ttlElmnts++;
             if ($(el).attr('id') === elementIDAttrb) {
                 indx = i;
@@ -2862,7 +2862,7 @@ function changeElmntTitleFunc(htmElementID) {
     });
 }
 
-function changeBtnTitleFunc(htmElementID, btnElementID) {
+function changeBtnTitleFunc(htmElementID,btnElementID) {
     //$('body').tooltip('dispose');
     $('[data-toggle="tooltip"]').tooltip('destroy');
     var titleTxt = $("#" + htmElementID).val();
@@ -2890,13 +2890,13 @@ function startDashBoardRpts() {
             console.log("Report Run Finished");
         }
     };
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.open("POST","index.php",true);
+    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     xmlhttp.send(linkArgs.trim());
     console.log("Report Run Started");
 }
 
-function prepareInbox(lnkArgs, htBody, targ, rspns) {
+function prepareInbox(lnkArgs,htBody,targ,rspns) {
     $(targ).html(rspns);
     $(document).ready(function () {
         if (lnkArgs.indexOf("&vtyp=0") !== -1) {
@@ -2941,7 +2941,7 @@ function prepareInbox(lnkArgs, htBody, targ, rspns) {
              forceParse: true
              });*/
             $('#myInbxTable tbody')
-                .on('mouseenter', 'tr', function () {
+                .on('mouseenter','tr',function () {
                     if ($(this).hasClass('highlight')) {
                         $(this).removeClass('highlight');
                     } else {
@@ -2955,7 +2955,7 @@ function prepareInbox(lnkArgs, htBody, targ, rspns) {
 }
 
 
-function getMyInbx(actionText, slctr, linkArgs) {
+function getMyInbx(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#myInbxSrchFor").val() === 'undefined' ? '%' : $("#myInbxSrchFor").val();
     var srchIn = typeof $("#myInbxSrchIn").val() === 'undefined' ? 'Both' : $("#myInbxSrchIn").val();
     var pageNo = typeof $("#myInbxPageNo").val() === 'undefined' ? 1 : $("#myInbxPageNo").val();
@@ -2978,19 +2978,19 @@ function getMyInbx(actionText, slctr, linkArgs) {
         "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy +
         "&qStrtDte=" + qStrtDte + "&qEndDte=" + qEndDte + "&qActvOnly=" + qActvOnly + "&qNonLgn=" + qNonLgn + "&qNonAknwldg=" + qNonAknwldg;
     //alert(linkArgs);
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function enterKeyFuncMyInbx(e, actionText, slctr, linkArgs) {
+function enterKeyFuncMyInbx(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getMyInbx(actionText, slctr, linkArgs);
+        getMyInbx(actionText,slctr,linkArgs);
     }
 }
 
-function getOneMyInbxForm(elementID, modalBodyID, titleElementID, formElementID,
-    formTitle, routingID, vtyp, pgNo) {
-    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+function getOneMyInbxForm(elementID,modalBodyID,titleElementID,formElementID,
+    formTitle,routingID,vtyp,pgNo) {
+    getMsgAsync('grp=1&typ=11&q=Check Session',function () {
         $body = $("body");
         $body.addClass("mdlloadingDiag");
         var xmlhttp;
@@ -3001,18 +3001,22 @@ function getOneMyInbxForm(elementID, modalBodyID, titleElementID, formElementID,
             /*code for IE6, IE5*/
             xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
-
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                 $('#' + titleElementID).html(formTitle);
                 $('#' + modalBodyID).html(xmlhttp.responseText);
 
+                $('#myFormsModal').css("z-index","9998!important");
                 $('#' + elementID).off('hidden.bs.modal');
                 $('#' + elementID).off('show.bs.modal');
-                $('#' + elementID).one('show.bs.modal', function (e) {
+                $('#' + elementID).one('show.bs.modal',function (e) {
                     $(this).find('.modal-body').css({
                         'max-height': '100%'
                     });
+                    $(e.currentTarget).unbind();
+                });
+                $('#' + elementID).one("hidden.bs.modal",function (e) {
+                    $('#myFormsModal').css("z-index","9997!important");
                     $(e.currentTarget).unbind();
                 });
                 if (!$.fn.DataTable.isDataTable('#myInbxDetTable')) {
@@ -3048,13 +3052,13 @@ function getOneMyInbxForm(elementID, modalBodyID, titleElementID, formElementID,
                 });
             }
         };
-        xmlhttp.open("POST", "index.php", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.open("POST","index.php",true);
+        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
         xmlhttp.send("grp=45&typ=1&pg=" + pgNo + "&vtyp=" + vtyp + "&RoutingID=" + routingID);
     });
 }
 
-function getAllInbx(actionText, slctr, linkArgs) {
+function getAllInbx(actionText,slctr,linkArgs) {
     var srchFor = typeof $("#allInbxSrchFor").val() === 'undefined' ? '%' : $("#allInbxSrchFor").val();
     var srchIn = typeof $("#allInbxSrchIn").val() === 'undefined' ? 'Both' : $("#allInbxSrchIn").val();
     var pageNo = typeof $("#allInbxPageNo").val() === 'undefined' ? 1 : $("#allInbxPageNo").val();
@@ -3077,19 +3081,19 @@ function getAllInbx(actionText, slctr, linkArgs) {
         "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy +
         "&qStrtDte=" + qStrtDte + "&qEndDte=" + qEndDte + "&qActvOnly=" + qActvOnly + "&qNonLgn=" + qNonLgn + "&qNonAknwldg=" + qNonAknwldg;
 
-    openATab(slctr, linkArgs);
+    openATab(slctr,linkArgs);
 }
 
-function enterKeyFuncAllInbx(e, actionText, slctr, linkArgs) {
+function enterKeyFuncAllInbx(e,actionText,slctr,linkArgs) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
-        getAllInbx(actionText, slctr, linkArgs);
+        getAllInbx(actionText,slctr,linkArgs);
     }
 }
 
-function getOneAllInbxForm(elementID, modalBodyID, titleElementID, formElementID,
-    formTitle, routingID, vtyp, pgNo) {
-    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+function getOneAllInbxForm(elementID,modalBodyID,titleElementID,formElementID,
+    formTitle,routingID,vtyp,pgNo) {
+    getMsgAsync('grp=1&typ=11&q=Check Session',function () {
         $body = $("body");
         $body.addClass("mdlloadingDiag");
         var xmlhttp;
@@ -3105,15 +3109,19 @@ function getOneAllInbxForm(elementID, modalBodyID, titleElementID, formElementID
                 $('#' + titleElementID).html(formTitle);
                 $('#' + modalBodyID).html(xmlhttp.responseText);
 
+                $('#myFormsModal').css("z-index","9998!important");
                 $('#' + elementID).off('hidden.bs.modal');
                 $('#' + elementID).off('show.bs.modal');
-                $('#' + elementID).one('show.bs.modal', function (e) {
+                $('#' + elementID).one('show.bs.modal',function (e) {
                     $(this).find('.modal-body').css({
                         'max-height': '100%'
                     });
                     $(e.currentTarget).unbind();
                 });
-
+                $('#' + elementID).one("hidden.bs.modal",function (e) {
+                    $('#myFormsModal').css("z-index","9997!important");
+                    $(e.currentTarget).unbind();
+                });
                 $(document).ready(function () {
                     $('#allInbxDetTable').wrap('<div class="table-responsive">');
                     var table1 = $('#allInbxActionsTable').DataTable({
@@ -3138,52 +3146,52 @@ function getOneAllInbxForm(elementID, modalBodyID, titleElementID, formElementID
                 });
             }
         };
-        xmlhttp.open("POST", "index.php", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.open("POST","index.php",true);
+        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
         xmlhttp.send("grp=45&typ=1&pg=" + pgNo + "&vtyp=" + vtyp + "&RoutingID=" + routingID);
     });
 }
 
-function actionProcess(cmpID, RoutingID, actionNm, isResDiag,
-    toPrsnLocID, toPrsNm, msgSubjct, msgDate, wkfAppNm) {
+function actionProcess(cmpID,RoutingID,actionNm,isResDiag,
+    toPrsnLocID,toPrsNm,msgSubjct,msgDate,wkfAppNm) {
     if (actionNm === "Reject") {
-        onReject(RoutingID, msgSubjct, msgDate);
+        onReject(RoutingID,msgSubjct,msgDate);
     } else if (actionNm === "Request for Information") {
-        onInfoRequest(RoutingID, 1, msgSubjct, msgDate, toPrsnLocID, toPrsNm);
+        onInfoRequest(RoutingID,1,msgSubjct,msgDate,toPrsnLocID,toPrsNm);
     } else if (actionNm === "Respond") {
-        onResponse(RoutingID, 1, msgSubjct, msgDate, toPrsnLocID, toPrsNm);
+        onResponse(RoutingID,1,msgSubjct,msgDate,toPrsnLocID,toPrsNm);
     } else if (actionNm === "View Attachments") {
-        onAttachment(RoutingID, msgSubjct);
+        onAttachment(RoutingID,msgSubjct);
     } else {
-        onAct(RoutingID, actionNm, isResDiag,
-            '', toPrsnLocID, wkfAppNm);
+        onAct(RoutingID,actionNm,isResDiag,
+            '',toPrsnLocID,wkfAppNm);
     }
 }
 
-function onReject(RoutingID, msgSubjct, msgDate) {
+function onReject(RoutingID,msgSubjct,msgDate) {
     var lnkArgs = 'grp=45&typ=1&pg=0&vtyp=3&RoutingID=' + RoutingID + '&msgSubjct=' + msgSubjct + '&msgDate=' + msgDate;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalx', 'ShowDialog', '  REJECTION OF SELECTED WORKFLOW DOCUMENT', 'myFormsModalxTitle', 'myFormsModalxBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalx','ShowDialog','  REJECTION OF SELECTED WORKFLOW DOCUMENT','myFormsModalxTitle','myFormsModalxBody',function () {
         $('#wkfActionMsg').focus();
     });
 }
 
-function onInfoRequest(RoutingID, id, msgSubjct, msgDate, toPrsnLocID, toPrsNm) {
+function onInfoRequest(RoutingID,id,msgSubjct,msgDate,toPrsnLocID,toPrsNm) {
     var lnkArgs = 'grp=45&typ=1&pg=0&vtyp=4&RoutingID=' + RoutingID + '&msgSubjct=' + msgSubjct + '&msgDate=' + msgDate;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalx', 'ShowDialog', '  REQUEST INFORMATION ON SELECTED WORKFLOW DOCUMENT', 'myFormsModalxTitle', 'myFormsModalxBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalx','ShowDialog','  REQUEST INFORMATION ON SELECTED WORKFLOW DOCUMENT','myFormsModalxTitle','myFormsModalxBody',function () {
         $('#wkfActionMsg').focus();
     });
 }
 
-function onResponse(RoutingID, id, msgSubjct, msgDate, toPrsnLocID, toPrsNm) {
+function onResponse(RoutingID,id,msgSubjct,msgDate,toPrsnLocID,toPrsNm) {
     var lnkArgs = 'grp=45&typ=1&pg=0&vtyp=5&RoutingID=' + RoutingID + '&msgSubjct=' + msgSubjct + '&msgDate=' + msgDate + '&toPrsnLocID=' + toPrsnLocID + '&toPrsNm=' + toPrsNm;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalx', 'ShowDialog', '  RESPONSE TO INFORMATION REQUEST ON SELECTED WORKFLOW DOCUMENTS', 'myFormsModalxTitle', 'myFormsModalxBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalx','ShowDialog','  RESPONSE TO INFORMATION REQUEST ON SELECTED WORKFLOW DOCUMENTS','myFormsModalxTitle','myFormsModalxBody',function () {
         $('#wkfActionMsg').focus();
     });
 }
 
-function onAttachment(RoutingID, msgSubjct) {
+function onAttachment(RoutingID,msgSubjct) {
     var lnkArgs = 'grp=45&typ=1&pg=0&vtyp=6&RoutingID=' + RoutingID + '&msgSubjct=' + msgSubjct;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalx', 'ShowDialog', ' Attachments for Notification Number: ' + RoutingID, 'myFormsModalxTitle', 'myFormsModalxBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalx','ShowDialog',' Attachments for Notification Number: ' + RoutingID,'myFormsModalxTitle','myFormsModalxBody',function () {
         $('#wkfActionMsg').focus();
     });
 }
@@ -3202,15 +3210,15 @@ function onReassign(elmntID) {
         }
     }
     if (inRoutingIDs.length > 1) {
-        inRoutingIDs = inRoutingIDs.slice(0, -1);
+        inRoutingIDs = inRoutingIDs.slice(0,-1);
     }
     var lnkArgs = 'grp=45&typ=1&pg=0&vtyp=7&routingIDs=' + inRoutingIDs + '&inCount=' + inCount;
-    doAjaxWthCallBck(lnkArgs, 'myFormsModalx', 'ShowDialog', '  RE-ASSIGN SELECTED WORKFLOW DOCUMENTS', 'myFormsModalxTitle', 'myFormsModalxBody', function () {
+    doAjaxWthCallBck(lnkArgs,'myFormsModalx','ShowDialog','  RE-ASSIGN SELECTED WORKFLOW DOCUMENTS','myFormsModalxTitle','myFormsModalxBody',function () {
         $('#wkfActionMsg').focus();
     });
 }
 
-function onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID, wkfAppNm, wkfSlctdRoutingIDs) {
+function onAct(RoutingID,actionNm,isResDiag,actionReason,toPrsnLocID,wkfAppNm,wkfSlctdRoutingIDs) {
 
     var isSelf4Open = false;
     var finalURL = "../index.php";
@@ -3228,19 +3236,19 @@ function onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID, wkfApp
             }
         });
         dialog.init(function () {
-            getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+            getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                 $body = $("body");
                 $body.removeClass("mdlloading");
 
                 var formData = new FormData();
-                formData.append('grp', 1);
-                formData.append('typ', 11);
-                formData.append('q', 'action_url');
-                formData.append('actyp', 1);
-                formData.append('RoutingID', RoutingID);
-                formData.append('actyp', actionNm);
-                formData.append('actReason', actionReason);
-                formData.append('toPrsLocID', toPrsnLocID);
+                formData.append('grp',1);
+                formData.append('typ',11);
+                formData.append('q','action_url');
+                formData.append('actyp',1);
+                formData.append('RoutingID',RoutingID);
+                formData.append('actyp',actionNm);
+                formData.append('actReason',actionReason);
+                formData.append('toPrsLocID',toPrsnLocID);
                 $.ajax({
                     method: "POST",
                     url: "index.php",
@@ -3259,7 +3267,7 @@ function onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID, wkfApp
                         if (urlParams.indexOf('|ERROR|') > -1) {
                             setTimeout(function () {
                                 dialog.find('.bootbox-body').html(result);
-                            }, 500);
+                            },500);
                         } else {
                             $.ajax({
                                 method: "POST",
@@ -3270,23 +3278,23 @@ function onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID, wkfApp
                                         if (isResDiag >= 1) {
                                             dialog.find('.bootbox-body').html(result1);
                                             if (!(typeof $("#allInbxSrchFor").val() === 'undefined')) {
-                                                getAllInbx('', '#allmodules', 'grp=45&typ=1&pg=0&vtyp=2&qMaster=1');
+                                                getAllInbx('','#allmodules','grp=45&typ=1&pg=0&vtyp=2&qMaster=1');
                                             }
                                             if (!(typeof $("#myInbxSrchFor").val() === 'undefined')) {
-                                                getMyInbx('', '#allmodules', 'grp=45&typ=1&pg=0&vtyp=0');
+                                                getMyInbx('','#allmodules','grp=45&typ=1&pg=0&vtyp=0');
                                             }
                                         } else {
                                             //Show Larger DIalog
                                             dialog.modal('hide');
                                             if (isSelf4Open === false) {
-                                                loadScript("../app/cmncde/cmncde.js?v=" + jsFilesVrsn, function () {
+                                                loadScript("../app/cmncde/cmncde.js?v=" + jsFilesVrsn,function () {
                                                     $('#myFormsModalLxTitle').html('Action Result!');
                                                     result1 = result1 + '<style>label {display: inline-block !important;margin-bottom: 0px !important;}</style>';
-                                                    $('#myFormsModalLxBody').html(result1.replace(/<span class="glyphicon glyphicon-th-list"><\/span>/g, "<span class=\"input-group-text rhoclickable\"><i class=\"fas fa-th-list\"></i></span>").replace(/ 15px/g, " 7.5px").replace(/"cmn_images/g, "\"../cmn_images").replace(/col-md-/g, "col-sm-").replace(/<caption>/g, "<div class=\"caption basic_person_lg\">").replace(/caption/g, "div"));
+                                                    $('#myFormsModalLxBody').html(result1.replace(/<span class="glyphicon glyphicon-th-list"><\/span>/g,"<span class=\"input-group-text rhoclickable\"><i class=\"fas fa-th-list\"></i></span>").replace(/ 15px/g," 7.5px").replace(/"cmn_images/g,"\"../cmn_images").replace(/col-md-/g,"col-sm-").replace(/<caption>/g,"<div class=\"caption basic_person_lg\">").replace(/caption/g,"div"));
                                                     //replace(/col-sm-12/g, "col-sm-12 row")..replace(/<\/label>/g, "</div>")..replace(/class="btn btn-primary btn-file input-group-addon/g, "class=\"input-group-prepend handCursor").replace(/class="btn btn-info btn-file input-group-addon/g, "class=\"input-group-prepend handCursor")
                                                     $('#myFormsModalLx').off('hidden.bs.modal');
                                                     $('#myFormsModalLx').off('show.bs.modal');
-                                                    $('#myFormsModalLx').one('show.bs.modal', function (e) {
+                                                    $('#myFormsModalLx').one('show.bs.modal',function (e) {
                                                         $(this).find('.modal-body').css({
                                                             'max-height': '100%'
                                                         });
@@ -3296,7 +3304,7 @@ function onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID, wkfApp
                                                         backdrop: 'static',
                                                         keyboard: false
                                                     });
-                                                    $('.table').each(function (i, el) {
+                                                    $('.table').each(function (i,el) {
                                                         var tblID = $(el).attr('id');
                                                         if (!$.fn.DataTable.isDataTable('#' + tblID)) {
                                                             $('#' + tblID).DataTable({
@@ -3317,7 +3325,7 @@ function onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID, wkfApp
 
                                                 $('#myFormsModalLx').off('hidden.bs.modal');
                                                 $('#myFormsModalLx').off('show.bs.modal');
-                                                $('#myFormsModalLx').one('show.bs.modal', function (e) {
+                                                $('#myFormsModalLx').one('show.bs.modal',function (e) {
                                                     $(this).find('.modal-body').css({
                                                         'max-height': '100%'
                                                     });
@@ -3330,15 +3338,15 @@ function onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID, wkfApp
                                                 afterShowActions(wkfAppNm);
                                             }
                                         }
-                                    }, 500);
+                                    },500);
                                 },
-                                error: function (jqXHR1, textStatus1, errorThrown1) {
+                                error: function (jqXHR1,textStatus1,errorThrown1) {
                                     console.warn(jqXHR.responseText);
                                 }
                             });
                         }
                     },
-                    error: function (jqXHR, textStatus, errorThrown) {
+                    error: function (jqXHR,textStatus,errorThrown) {
                         /*dialog.find('.bootbox-body').html(errorThrown);*/
                         console.warn(jqXHR.responseText);
                     }
@@ -3356,21 +3364,21 @@ function onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID, wkfApp
             }
         });
         dialog.init(function () {
-            getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+            getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                 $body = $("body");
                 $body.removeClass("mdlloading");
 
                 var formData = new FormData();
-                formData.append('grp', 45);
-                formData.append('typ', 1);
-                formData.append('q', 'UPDATE');
-                formData.append('vtyp', 0);
-                formData.append('actyp', 1);
-                formData.append('RoutingID', RoutingID);
-                formData.append('actionNm', actionNm);
-                formData.append('actReason', actionReason);
-                formData.append('toPrsLocID', toPrsnLocID);
-                formData.append('wkfSlctdRoutingIDs', wkfSlctdRoutingIDs);
+                formData.append('grp',45);
+                formData.append('typ',1);
+                formData.append('q','UPDATE');
+                formData.append('vtyp',0);
+                formData.append('actyp',1);
+                formData.append('RoutingID',RoutingID);
+                formData.append('actionNm',actionNm);
+                formData.append('actReason',actionReason);
+                formData.append('toPrsLocID',toPrsnLocID);
+                formData.append('wkfSlctdRoutingIDs',wkfSlctdRoutingIDs);
                 $.ajax({
                     method: "POST",
                     url: "index.php",
@@ -3383,14 +3391,14 @@ function onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID, wkfApp
                         setTimeout(function () {
                             dialog.find('.bootbox-body').html(result);
                             if (!(typeof $("#allInbxSrchFor").val() === 'undefined')) {
-                                getAllInbx('', '#allmodules', 'grp=45&typ=1&pg=0&vtyp=2&qMaster=1');
+                                getAllInbx('','#allmodules','grp=45&typ=1&pg=0&vtyp=2&qMaster=1');
                             }
                             if (!(typeof $("#myInbxSrchFor").val() === 'undefined')) {
-                                getMyInbx('', '#allmodules', 'grp=45&typ=1&pg=0&vtyp=0');
+                                getMyInbx('','#allmodules','grp=45&typ=1&pg=0&vtyp=0');
                             }
-                        }, 500);
+                        },500);
                     },
-                    error: function (jqXHR, textStatus, errorThrown) {
+                    error: function (jqXHR,textStatus,errorThrown) {
                         /*dialog.find('.bootbox-body').html(errorThrown);*/
                         console.warn(jqXHR.responseText);
                     }
@@ -3424,19 +3432,19 @@ function onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID, wkfApp
                         }
                     });
                     dialog.init(function () {
-                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
 
                             var formData = new FormData();
-                            formData.append('grp', 1);
-                            formData.append('typ', 11);
-                            formData.append('q', 'action_url');
-                            formData.append('actyp', 1);
-                            formData.append('RoutingID', RoutingID);
-                            formData.append('actyp', actionNm);
-                            formData.append('actReason', actionReason);
-                            formData.append('toPrsLocID', toPrsnLocID);
+                            formData.append('grp',1);
+                            formData.append('typ',11);
+                            formData.append('q','action_url');
+                            formData.append('actyp',1);
+                            formData.append('RoutingID',RoutingID);
+                            formData.append('actyp',actionNm);
+                            formData.append('actReason',actionReason);
+                            formData.append('toPrsLocID',toPrsnLocID);
                             $.ajax({
                                 method: "POST",
                                 url: "index.php",
@@ -3454,7 +3462,7 @@ function onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID, wkfApp
                                     if (urlParams.indexOf('|ERROR|') > -1) {
                                         setTimeout(function () {
                                             dialog.find('.bootbox-body').html(result);
-                                        }, 500);
+                                        },500);
                                     } else {
                                         $.ajax({
                                             method: "POST",
@@ -3465,10 +3473,10 @@ function onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID, wkfApp
                                                     if (isResDiag >= 1) {
                                                         dialog.find('.bootbox-body').html(result1);
                                                         if (!(typeof $("#allInbxSrchFor").val() === 'undefined')) {
-                                                            getAllInbx('', '#allmodules', 'grp=45&typ=1&pg=0&vtyp=2&qMaster=1');
+                                                            getAllInbx('','#allmodules','grp=45&typ=1&pg=0&vtyp=2&qMaster=1');
                                                         }
                                                         if (!(typeof $("#myInbxSrchFor").val() === 'undefined')) {
-                                                            getMyInbx('', '#allmodules', 'grp=45&typ=1&pg=0&vtyp=0');
+                                                            getMyInbx('','#allmodules','grp=45&typ=1&pg=0&vtyp=0');
                                                         }
                                                     } else {
                                                         //Show Larger DIalog
@@ -3482,7 +3490,7 @@ function onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID, wkfApp
                                                             closable: true,
                                                             closeByBackdrop: false,
                                                             closeByKeyboard: false,
-                                                            onshow: function (dialog) {},
+                                                            onshow: function (dialog) { },
                                                             buttons: [{
                                                                 label: 'Close',
                                                                 icon: 'glyphicon glyphicon-ban-circle',
@@ -3492,15 +3500,15 @@ function onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID, wkfApp
                                                             }]
                                                         });
                                                     }
-                                                }, 500);
+                                                },500);
                                             },
-                                            error: function (jqXHR1, textStatus1, errorThrown1) {
+                                            error: function (jqXHR1,textStatus1,errorThrown1) {
                                                 console.warn(jqXHR.responseText);
                                             }
                                         });
                                     }
                                 },
-                                error: function (jqXHR, textStatus, errorThrown) {
+                                error: function (jqXHR,textStatus,errorThrown) {
                                     /*dialog.find('.bootbox-body').html(errorThrown);*/
                                     console.warn(jqXHR.responseText);
                                 }
@@ -3513,7 +3521,7 @@ function onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID, wkfApp
     }
 }
 
-function directApprove(rowIDAttrb, actionsToPrfrm) {
+function directApprove(rowIDAttrb,actionsToPrfrm) {
     var prfxNm = rowIDAttrb.split("_")[0];
     var rndmNum = rowIDAttrb.split("_")[1];
     var RoutingID = $('#' + prfxNm + '' + rndmNum + '_RoutingID').val();
@@ -3536,10 +3544,10 @@ function directApprove(rowIDAttrb, actionsToPrfrm) {
             title: 'No Notification Selected',
             size: 'small',
             message: '<p style="text-align:center;"><i class="fa fa-exclamation-triangle" style="color:red;"></i> Please select a Notification First!</p>',
-            callback: function () {}
+            callback: function () { }
         });
     } else {
-        onAct(RoutingID, actType, 1, '', '', '');
+        onAct(RoutingID,actType,1,'','','');
     }
 }
 
@@ -3556,7 +3564,7 @@ function directReject(rowIDAttrb) {
             title: 'Informational Notification Selected',
             size: 'small',
             message: '<p style="text-align:center;"><i class="fa fa-exclamation-triangle" style="color:red;"></i> Cannot Reject an Informational Notification!</p>',
-            callback: function () {}
+            callback: function () { }
         });
         return;
     } else if (RoutingID > 0) {
@@ -3567,10 +3575,10 @@ function directReject(rowIDAttrb) {
             title: 'No Document Based Notification Selected',
             size: 'small',
             message: '<p style="text-align:center;"><i class="fa fa-spin fa-circle"></i> Please select a Document Based Notification First!</p>',
-            callback: function () {}
+            callback: function () { }
         });
     } else {
-        onReject(RoutingID, sbjct, dateSnt);
+        onReject(RoutingID,sbjct,dateSnt);
     }
 }
 
@@ -3589,7 +3597,7 @@ function directInfoRqst(rowIDAttrb) {
             title: 'Informational Notification Selected',
             size: 'small',
             message: '<p style="text-align:center;"><i class="fa fa-exclamation-triangle" style="color:red;"></i> Cannot Request for Information on an Informational Notification!</p>',
-            callback: function () {}
+            callback: function () { }
         });
         return;
     } else if (RoutingID > 0) {
@@ -3601,10 +3609,10 @@ function directInfoRqst(rowIDAttrb) {
             title: 'No Document Based Notification Selected',
             size: 'small',
             message: '<p style="text-align:center;"><i class="fa fa-exclamation-triangle" style="color:red;"></i> Please select a Document Based Notification First!</p>',
-            callback: function () {}
+            callback: function () { }
         });
     } else {
-        onInfoRequest(RoutingID, 1, sbjct, dateSnt, toPrsLocID, toPrsNm);
+        onInfoRequest(RoutingID,1,sbjct,dateSnt,toPrsLocID,toPrsNm);
     }
 }
 
@@ -3618,14 +3626,14 @@ function directAttachment(rowIDAttrb) {
             title: 'No Notification Selected',
             size: 'small',
             message: '<p style="text-align:center;"><i class="fa fa-exclamation-triangle" style="color:red;"></i> Please select a Notification First!</p>',
-            callback: function () {}
+            callback: function () { }
         });
     } else {
-        onAttachment(RoutingID, sbjct);
+        onAttachment(RoutingID,sbjct);
     }
 }
 
-function be4OnAct(RoutingID, actionNm, isResDiag) {
+function be4OnAct(RoutingID,actionNm,isResDiag) {
     var actionReason = typeof $("#wkfActionMsg").val() === 'undefined' ? "" : $("#wkfActionMsg").val();
     var toPrsnLocID = typeof $("#wkfToPrsnLocID").val() === 'undefined' ? "" : $("#wkfToPrsnLocID").val();
     var wkfSlctdRoutingIDs = typeof $("#wkfSlctdRoutingIDs").val() === 'undefined' ? "" : $("#wkfSlctdRoutingIDs").val();
@@ -3643,7 +3651,7 @@ function be4OnAct(RoutingID, actionNm, isResDiag) {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
             'font-weight:bold;color:red;">Action Message/Reason cannot be empty!</span></p>';
     }
-    if (rhotrim(errMsg, '; ') !== '') {
+    if (rhotrim(errMsg,'; ') !== '') {
         bootbox.alert({
             title: 'System Alert!',
             size: 'small',
@@ -3651,7 +3659,435 @@ function be4OnAct(RoutingID, actionNm, isResDiag) {
         });
         return false;
     }
-    onAct(RoutingID, actionNm, isResDiag, actionReason, toPrsnLocID, '', wkfSlctdRoutingIDs);
+    onAct(RoutingID,actionNm,isResDiag,actionReason,toPrsnLocID,'',wkfSlctdRoutingIDs);
+}
+
+function autoQueueMsgs() {
+    var rho_msg_source = typeof $("#rho_msg_source").val() === 'undefined' ? '' : $("#rho_msg_source").val();
+    var msgType = typeof $("#msgType").val() === 'undefined' ? '' : $("#msgType").val();
+    var sndMsgOneByOne = typeof $("input[name='sndMsgOneByOne']:checked").val() === 'undefined' ? 'NO' : 'YES';
+    var grpType = typeof $("#grpType").val() === 'undefined' ? '' : $("#grpType").val();
+    var groupID = typeof $("#groupID").val() === 'undefined' ? '-1' : $("#groupID").val();
+    var grpName = typeof $("#groupName").val() === 'undefined' ? '' : $("#groupName").val();
+    var workPlaceID = typeof $("#workPlaceID").val() === 'undefined' ? -1 : $("#workPlaceID").val();
+    var workPlaceSiteID = typeof $("#workPlaceSiteID").val() === 'undefined' ? -1 : $("#workPlaceSiteID").val();
+    if (rho_msg_source == "SELF-SERVICE-MSG" && Number(groupID.replace(/[^-?0-9\.]/g,"")) > 0) {
+        $("#mailTo").val(groupID + ";");
+    }
+
+    var mailTo = typeof $("#mailTo").val() === 'undefined' ? '' : $("#mailTo").val();
+    var mailCc = typeof $("#mailCc").val() === 'undefined' ? '' : $("#mailCc").val();
+    var mailBcc = typeof $("#mailBcc").val() === 'undefined' ? '' : $("#mailBcc").val();
+    var mailAttchmnts = typeof $("#mailAttchmnts").val() === 'undefined' ? '' : $("#mailAttchmnts").val();
+    var mailSubject = typeof $("#mailSubject").val() === 'undefined' ? '' : $("#mailSubject").val();
+    var bulkMessageBody = typeof $("#bulkMessageBody").val() === 'undefined' ? '' : ($('#bulkMessageBody').summernote('code'));
+    if (msgType === "SMS") {
+        bulkMessageBody = bulkMessageBody.replace(/<\/p>/gi," ")
+            .replace(/<br\/?>/gi," ")
+            .replace(/<\/?[^>]+(>|$)/g,"");
+        /*
+          bulkMessageBody = bulkMessageBody.replace(/<\/p>/gi, "\n")
+         .replace(/<br\/?>/gi, "\n")
+         .replace(/<\/?[^>]+(>|$)/g, "");
+         */
+    }
+    if (mailSubject.trim() === '') {
+        bootbox.alert({
+            title: 'System Alert!',
+            size: 'small',
+            message: '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                'font-weight:bold;">Subject cannot be empty!</span></p>'
+        });
+        return false;
+    }
+    if (bulkMessageBody.trim() === '') {
+        bootbox.alert({
+            title: 'System Alert!',
+            size: 'small',
+            message: '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                'font-weight:bold;">Message Body cannot be empty!</span></p>'
+        });
+        return false;
+    }
+    if (rhotrim(mailTo,'; ') === '') {
+        bootbox.alert({
+            title: 'System Alert!',
+            size: 'small',
+            message: '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                'font-weight:bold;">Mail To cannot be empty!</span></p>'
+        });
+        return false;
+    }
+    var dialog1 = bootbox.confirm({
+        title: 'Queue Messages?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:green;font-weight:bold;font-style:italic;">SEND THIS MESSAGE</span> to the Indicated Receipients?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true) {
+                var dialog = bootbox.alert({
+                    title: 'Queue Messages',
+                    size: 'small',
+                    message: '<div id="myProgress"><div id="myBar"></div></div><div id="myInformation"><i class="fa fa-spin fa-spinner"></i> Queuing Messages...Please Wait...</div>',
+                    callback: function () {
+                        clearInterval(prgstimerid1);
+                    }
+                });
+                dialog.init(function () {
+                    getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
+                        $body = $("body");
+                        $body.removeClass("mdlloading");
+                        $.ajax({
+                            method: "POST",
+                            url: "index.php",
+                            data: {
+                                grp: 45,
+                                typ: 2,
+                                q: 'UPDATE',
+                                actyp: 3,
+                                msgType: msgType,
+                                sndMsgOneByOne: sndMsgOneByOne,
+                                grpType: grpType,
+                                grpName: grpName,
+                                groupID: groupID,
+                                workPlaceID: workPlaceID,
+                                workPlaceSiteID: workPlaceSiteID,
+                                mailTo: mailTo,
+                                mailCc: mailCc,
+                                mailBcc: mailBcc,
+                                mailAttchmnts: mailAttchmnts,
+                                mailSubject: mailSubject,
+                                bulkMessageBody: bulkMessageBody
+                            }
+                        });
+                        prgstimerid1 = window.setInterval(rfrshQueueMsgsPrgrs,1000);
+                    });
+                });
+            }
+        }
+    });
+}
+
+function rfrshQueueMsgsPrgrs() {
+    $.ajax({
+        method: "POST",
+        url: "index.php",
+        data: {
+            grp: 45,
+            typ: 2,
+            q: 'UPDATE',
+            actyp: 4
+        },
+        success: function (data) {
+            var elem = document.getElementById('myBar');
+            elem.style.width = data.percent + '%';
+            $("#myInformation").html(data.message);
+            if (data.percent == 100) {
+                window.clearInterval(prgstimerid1);
+            }
+        }
+    });
+}
+
+/**Self-Service Msg */
+function sendGeneralMessage2(msgType,mailToElmtID,mailCcElmtID,mailSubjectElmtID,bulkMessageBodyElmtID,mailAttchmntsElmtID,elementID,actionAfter,titleMsg,titleElementID,modalBodyID) {
+    if (typeof mailAttchmntsElmtID === 'undefined' || mailAttchmntsElmtID === null) {
+        mailAttchmntsElmtID = 'XXX_RHO_UNDEFINED';
+    }
+    var mailTo = typeof $("#" + mailToElmtID).val() === 'undefined' ? '' : $("#" + mailToElmtID).val();
+    var mailCc = typeof $("#" + mailCcElmtID).val() === 'undefined' ? '' : $("#" + mailCcElmtID).val();
+    var mailSubject = typeof $("#" + mailSubjectElmtID).val() === 'undefined' ? '' : $("#" + mailSubjectElmtID).val();
+    var bulkMessageBody = typeof $("#" + bulkMessageBodyElmtID).val() === 'undefined' ? '' : $("#" + bulkMessageBodyElmtID).val();
+    var mailAttchmnts = typeof $("#" + mailAttchmntsElmtID).val() === 'undefined' ? '' : $("#" + mailAttchmntsElmtID).val();
+    var linkArgs = 'grp=45&typ=2&vtyp=0&q=SELF-SERVICE-MSG&msgType=' + msgType + '&mailTo=' + mailTo + '&mailCc=' + mailCc + '&mailSubject=' + mailSubject + '&bulkMessageBody=' + bulkMessageBody + "&mailAttchmnts=" + mailAttchmnts;
+    if (typeof msgType === 'undefined' || msgType === null) {
+        msgType = 'Email';
+    }
+    if (typeof elementID === 'undefined' || elementID === null) {
+        elementID = 'sndBlkMsgForm';
+    }
+    if (typeof actionAfter === 'undefined' || actionAfter === null) {
+        actionAfter = 'ShowDialog';
+    }
+    if (typeof titleMsg === 'undefined' || titleMsg === null) {
+        titleMsg = 'Send Bulk Email/SMS';
+    }
+    if (typeof titleElementID === 'undefined' || titleElementID === null) {
+        titleElementID = 'sndBlkMsgFormTitle';
+    }
+    if (typeof modalBodyID === 'undefined' || modalBodyID === null) {
+        modalBodyID = 'sndBlkMsgFormBody';
+    }
+    doAjaxWthCallBck(linkArgs,elementID,actionAfter,titleMsg,titleElementID,modalBodyID,function () {
+        var fileLink = function (context) {
+            var ui = $.summernote.ui;
+            var button = ui.button({
+                contents: '<i class="fa fa-file"/> Upload',
+                tooltip: 'Upload File Inline Within Message Body',
+                click: function () {
+                    $(function () {
+                        $("#allOtherFileInput1").change(function () {
+                            var fileName = $(this).val();
+                            var input = document.getElementById('allOtherFileInput1');
+                            sendNoticesFile(input.files[0],"","","OTHERS",function () {
+                                var inptUrl = $("#allOtherInputData1").val();
+                                var inptText = $("#allOtherInputData2").val();
+                                var inptNwWndw = $("#allOtherInputData2").val();
+                                if (inptText === "") {
+                                    inptText = "Read More...";
+                                }
+                                if (inptNwWndw === "") {
+                                    inptNwWndw = true;
+                                }
+                                $('#bulkMessageBody').summernote('createLink',{
+                                    text: inptText,
+                                    url: inptUrl,
+                                    newWindow: inptNwWndw
+                                });
+                            });
+                        });
+                    });
+                    performFileClick('allOtherFileInput1');
+                }
+            });
+            return button.render();
+        };
+        $('#bulkMessageBody').summernote({
+            minHeight: 375,
+            focus: true,
+            disableDragAndDrop: false,
+            dialogsInBody: true,
+            toolbar: [
+                ['style',['style']],
+                ['style',['bold','italic','underline','clear']],
+                ['font',['strikethrough','superscript','subscript']],
+                ['fontsize',['fontsize']],
+                ['fontname',['fontname']],
+                ['color',['color']],
+                ['para',['ul','ol','paragraph','height']],
+                ['height',['height']],
+                ['table',['table']],
+                ['insert',['link','picture','video','hr']],
+                ['view',['fullscreen','codeview']],
+                ['help',['help']],
+                ['misc',['print']],
+                ['mybutton',['upload']]
+            ],
+            buttons: {
+                upload: fileLink
+            },
+            callbacks: {
+                onImageUpload: function (file,editor,welEditable) {
+                    sendNoticesFile(file[0],editor,welEditable,"IMAGES",function () {
+                        var inptUrl = $("#allOtherInputData1").val();
+                        $('#bulkMessageBody').summernote("insertImage",inptUrl,'filename');
+                    });
+                }
+            }
+        });
+        $('.note-editor').css("min-width","100%");
+        $('.note-editable').trigger('focus');
+        $('#bulkMessageBody').summernote('code',urldecode(bulkMessageBody));
+        $('#mailTo').val(urldecode(mailTo));
+        $('#mailCc').val(urldecode(mailCc));
+        $('#mailSubject').val(urldecode(mailSubject));
+        $('#mailAttchmnts').val(mailAttchmnts);
+        $('#' + elementID).off('hidden.bs.modal');
+        $('#' + elementID).one("hidden.bs.modal",function (e) {
+            $(e.currentTarget).unbind();
+        });
+    });
+}
+
+function sendGeneralMessage3(rowIDAttrb,msgType,mailToElmtID,mailCcElmtID,mailSubjectElmtID,bulkMessageBodyElmtID,mailAttchmntsElmtID,elementID,actionAfter,titleMsg,titleElementID,modalBodyID) {
+    if (typeof mailAttchmntsElmtID === 'undefined' || mailAttchmntsElmtID === null) {
+        mailAttchmntsElmtID = 'XXX_RHO_UNDEFINED';
+    }
+    if (typeof mailSubjectElmtID === 'undefined' || mailSubjectElmtID === null) {
+        mailSubjectElmtID = 'prevMailSubject';
+    }
+    if (typeof bulkMessageBodyElmtID === 'undefined' || bulkMessageBodyElmtID === null) {
+        bulkMessageBodyElmtID = 'prevBulkMessageBody';
+    }
+    var prfxNm = rowIDAttrb.split("_")[0];
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var RoutingID = $('#' + prfxNm + '' + rndmNum + '_RoutingID').val();
+
+    var rowCnt = 0;
+    var mailTo = typeof $("#" + mailToElmtID).val() === 'undefined' ? '' : $("#" + mailToElmtID).val();
+    var mailCc = typeof $("#" + mailCcElmtID).val() === 'undefined' ? '' : $("#" + mailCcElmtID).val();
+    var mailSubject = typeof $("#" + mailSubjectElmtID).val() === 'undefined' ? '' : $("#" + mailSubjectElmtID).val();
+    var bulkMessageBody = typeof $("#" + bulkMessageBodyElmtID).val() === 'undefined' ? '' : $("#" + bulkMessageBodyElmtID).val();
+    var mailAttchmnts = typeof $("#" + mailAttchmntsElmtID).val() === 'undefined' ? '' : $("#" + mailAttchmntsElmtID).val();
+    var linkArgs = 'grp=45&typ=2&vtyp=0&q=SELF-SERVICE-MSG&msgType=' + msgType + '&mailTo=' + mailTo + '&mailCc=' + mailCc + '&mailSubject=' + mailSubject + '&bulkMessageBody=' + bulkMessageBody + "&mailAttchmnts=" + mailAttchmnts + "&RoutingID=" + RoutingID;
+    if (typeof msgType === 'undefined' || msgType === null) {
+        msgType = 'Email';
+    }
+    if (typeof elementID === 'undefined' || elementID === null) {
+        elementID = 'sndBlkMsgForm';
+    }
+    if (typeof actionAfter === 'undefined' || actionAfter === null) {
+        actionAfter = 'ShowDialog';
+    }
+    if (typeof titleMsg === 'undefined' || titleMsg === null) {
+        titleMsg = 'Send Bulk Email/SMS';
+    }
+    if (typeof titleElementID === 'undefined' || titleElementID === null) {
+        titleElementID = 'sndBlkMsgFormTitle';
+    }
+    if (typeof modalBodyID === 'undefined' || modalBodyID === null) {
+        modalBodyID = 'sndBlkMsgFormBody';
+    }
+    doAjaxWthCallBck(linkArgs,elementID,actionAfter,titleMsg,titleElementID,modalBodyID,function () {
+        var fileLink = function (context) {
+            var ui = $.summernote.ui;
+            var button = ui.button({
+                contents: '<i class="fa fa-file"/> Upload',
+                tooltip: 'Upload File Inline Within Message Body',
+                click: function () {
+                    $(function () {
+                        $("#allOtherFileInput1").change(function () {
+                            var fileName = $(this).val();
+                            var input = document.getElementById('allOtherFileInput1');
+                            sendNoticesFile(input.files[0],"","","OTHERS",function () {
+                                var inptUrl = $("#allOtherInputData1").val();
+                                var inptText = $("#allOtherInputData2").val();
+                                var inptNwWndw = $("#allOtherInputData2").val();
+                                if (inptText === "") {
+                                    inptText = "Read More...";
+                                }
+                                if (inptNwWndw === "") {
+                                    inptNwWndw = true;
+                                }
+                                $('#bulkMessageBody').summernote('createLink',{
+                                    text: inptText,
+                                    url: inptUrl,
+                                    newWindow: inptNwWndw
+                                });
+                            });
+                        });
+                    });
+                    performFileClick('allOtherFileInput1');
+                }
+            });
+            return button.render();
+        };
+        $('#bulkMessageBody').summernote({
+            minHeight: 375,
+            focus: true,
+            disableDragAndDrop: false,
+            dialogsInBody: true,
+            toolbar: [
+                ['style',['style']],
+                ['style',['bold','italic','underline','clear']],
+                ['font',['strikethrough','superscript','subscript']],
+                ['fontsize',['fontsize']],
+                ['fontname',['fontname']],
+                ['color',['color']],
+                ['para',['ul','ol','paragraph','height']],
+                ['height',['height']],
+                ['table',['table']],
+                ['insert',['link','picture','video','hr']],
+                ['view',['fullscreen','codeview']],
+                ['help',['help']],
+                ['misc',['print']],
+                ['mybutton',['upload']]
+            ],
+            buttons: {
+                upload: fileLink
+            },
+            callbacks: {
+                onImageUpload: function (file,editor,welEditable) {
+                    sendNoticesFile(file[0],editor,welEditable,"IMAGES",function () {
+                        var inptUrl = $("#allOtherInputData1").val();
+                        $('#bulkMessageBody').summernote("insertImage",inptUrl,'filename');
+                    });
+                }
+            }
+        });
+        var mailSubject = typeof $("#" + mailSubjectElmtID).val() === 'undefined' ? '' : $("#" + mailSubjectElmtID).val();
+        var bulkMessageBody = typeof $("#" + bulkMessageBodyElmtID).val() === 'undefined' ? '' : $("#" + bulkMessageBodyElmtID).val();
+        $('.note-editable').trigger('focus');
+        $('#bulkMessageBody').summernote('code',urldecode(bulkMessageBody));
+        $('#mailTo').val(urldecode(mailTo));
+        $('#mailCc').val(urldecode(mailCc));
+        $('#mailSubject').val(urldecode(mailSubject));
+        $('#mailAttchmnts').val(mailAttchmnts);
+        $('#' + elementID).off('hidden.bs.modal');
+        $('#' + elementID).one("hidden.bs.modal",function (e) {
+            $(e.currentTarget).unbind();
+        });
+    });
+}
+function clearMsgForm() {
+    var dialog = bootbox.confirm({
+        title: 'Clear Form?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">CLEAR</span> this Form?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true) {
+                $("#mailTo").val('');
+                $("#mailCc").val('');
+                $("#mailBcc").val('');
+                $("#mailAttchmnts").val('');
+                $("#mailSubject").val('');
+                $('#bulkMessageBody').summernote('code','<p></p>');
+            }
+        }
+    });
+}
+
+function attchFileToMsg() {
+    var crntAttchMnts = $("#mailAttchmnts").val();
+    $("#allOtherFileInput3").change(function () {
+        var fileName = $(this).val();
+        var input = document.getElementById('allOtherFileInput3');
+        sendMsgsFile(input.files[0],function () {
+            var inptUrl = $("#allOtherInputData3").val();
+            crntAttchMnts = crntAttchMnts + ";" + inptUrl;
+            $("#mailAttchmnts").val(crntAttchMnts);
+        });
+    });
+    performFileClick('allOtherFileInput3');
+}
+
+function sendMsgsFile(file,callBackFunc) {
+    var data1 = new FormData();
+    data1.append("file",file);
+    $.ajax({
+        url: "../dwnlds/uploader1.php",
+        data: data1,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function (data) {
+            $("#allOtherInputData3").val(data);
+            callBackFunc();
+        },
+        error: function (jqXHR,textStatus,errorThrown) {
+            console.log(textStatus + " " + errorThrown);
+        }
+    });
 }
 
 function afterShowActions(wkfAppNm) {
@@ -3695,7 +4131,7 @@ function funcHtmlToExcel(tableid) {
     var hour = dt.getHours();
     var mins = dt.getMinutes();
     var secns = dt.getSeconds();
-    var postfix = day + "." + month + "." + year + "_" + hour + "." + mins + "." + secns + "_" + getRandomInt2(100, 999);
+    var postfix = day + "." + month + "." + year + "_" + hour + "." + mins + "." + secns + "_" + getRandomInt2(100,999);
     var myURL = window.URL || window.webkitURL;
     //alert(navigator.userAgent + ':HH:' + navigator.vendor);
     if (isChrome || isFirefox || isEdge || isBlink) {
@@ -3724,15 +4160,15 @@ function funcHtmlToExcel(tableid) {
         }
 
         tab_text = tab_text + "</table>";
-        tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, ""); //remove if u want links in your table
-        tab_text = tab_text.replace(/<a[^>]*>|<\/a>/g, "").replace(/Â»/g, ""); //remove if u want links in your table
-        tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
-        tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+        tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g,""); //remove if u want links in your table
+        tab_text = tab_text.replace(/<a[^>]*>|<\/a>/g,"").replace(/Â»/g,""); //remove if u want links in your table
+        tab_text = tab_text.replace(/<img[^>]*>/gi,""); // remove if u want images in your table
+        tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi,""); // reomves input params
 
         var binaryData = [];
         /*table_div.outerHTML*/
         binaryData.push(tab_text);
-        var url = myURL.createObjectURL(new Blob(binaryData, {
+        var url = myURL.createObjectURL(new Blob(binaryData,{
             type: "data:application/vnd.ms-excel"
         }));
         var table_html = url;
@@ -3743,12 +4179,12 @@ function funcHtmlToExcel(tableid) {
         a.click();
     } else {
         //alert('Here2');
-        fnExcelReport(tableid, 'exported_table_' + postfix);
+        fnExcelReport(tableid,'exported_table_' + postfix);
     }
     return false;
 }
 
-function fnExcelReport(tableid, fileNm) {
+function fnExcelReport(tableid,fileNm) {
     var x = document.getElementById('allOtherIframe1');
     var frame = (x.contentWindow || x.contentDocument);
     var cptnTxt = $("caption").text();
@@ -3766,10 +4202,10 @@ function fnExcelReport(tableid, fileNm) {
     }
 
     tab_text = tab_text + "</table>";
-    tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, ""); //remove if u want links in your table
-    tab_text = tab_text.replace(/<a[^>]*>|<\/a>/g, "").replace(/Â»/g, ""); //remove if u want links in your table
-    tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
-    tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+    tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g,""); //remove if u want links in your table
+    tab_text = tab_text.replace(/<a[^>]*>|<\/a>/g,"").replace(/Â»/g,""); //remove if u want links in your table
+    tab_text = tab_text.replace(/<img[^>]*>/gi,""); // remove if u want images in your table
+    tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi,""); // reomves input params
 
     var ua = window.navigator.userAgent;
     var msie = ua.indexOf("MSIE ");
@@ -3786,11 +4222,11 @@ function fnExcelReport(tableid, fileNm) {
     /**/
     if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./) || navigator.userAgent.indexOf(' Trident/') >= 0 || navigator.userAgent.indexOf(' Edge/') >= 0) // If Internet Explorer
     {
-        frame.document.open("txt/html", "replace");
+        frame.document.open("txt/html","replace");
         frame.document.write(tab_text);
         frame.document.close();
         frame.focus();
-        sa = frame.document.execCommand("SaveAs", true, fileNm + ".xls");
+        sa = frame.document.execCommand("SaveAs",true,fileNm + ".xls");
         /*// IE10+ : (has Blob, but not a[download] or URL)
          if (navigator.msSaveBlob) {
          return navigator.msSaveBlob(blob, fileName);
@@ -3819,17 +4255,17 @@ function generateHtmlExcel(tableid) {
     }
 
     tab_text = tab_text + "</table>";
-    tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, ""); //remove if u want links in your table
-    tab_text = tab_text.replace(/<a[^>]*>|<\/a>/g, "").replace(/Â»/g, ""); //remove if u want links in your table
-    tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
-    tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+    tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g,""); //remove if u want links in your table
+    tab_text = tab_text.replace(/<a[^>]*>|<\/a>/g,"").replace(/Â»/g,""); //remove if u want links in your table
+    tab_text = tab_text.replace(/<img[^>]*>/gi,""); // remove if u want images in your table
+    tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi,""); // reomves input params
     /*table.outerHTML*/
     var myURL = window.URL || window.webkitURL;
     var table = document.getElementById(tableid);
     var html = tab_text;
     var binaryData = [];
     binaryData.push(html);
-    var url = myURL.createObjectURL(new Blob(binaryData, {
+    var url = myURL.createObjectURL(new Blob(binaryData,{
         type: "data:application/vnd.ms-excel"
     }));
     return window.open(url);
@@ -3839,7 +4275,7 @@ function getRandomInt1(max) {
     return Math.floor(Math.random() * Math.floor(max));
 }
 
-function getRandomInt2(min, max) {
+function getRandomInt2(min,max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
@@ -3850,7 +4286,7 @@ function rhovoid() {
 }
 
 function escapeRegExp(str) {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+    return str.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"); // $& means the whole matched string
 }
 
 function tickUntickChckBx(chckBxElmnt) {
@@ -3892,7 +4328,7 @@ function popUpDisplay(srcInputTextAreaID) {
                 dialogItself.setClosable(true);
                 dialogItself.close();
             }
-        }, {
+        },{
             id: 'popOKBtnSsn',
             label: 'OKAY',
             icon: 'glyphicon glyphicon-menu-right',
@@ -3936,33 +4372,33 @@ function popUpDisplayHtml(srcInputTextAreaID) {
                 disableDragAndDrop: false,
                 dialogsInBody: true,
                 toolbar: [
-                    ['style', ['style']],
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough', 'superscript', 'subscript']],
-                    ['fontsize', ['fontsize']],
-                    ['fontname', ['fontname']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph', 'height']],
-                    ['height', ['height']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video', 'hr']],
-                    ['view', ['fullscreen', 'codeview']],
-                    ['help', ['help']],
-                    ['misc', ['print']],
-                    ['mybutton', ['upload']]
+                    ['style',['style']],
+                    ['style',['bold','italic','underline','clear']],
+                    ['font',['strikethrough','superscript','subscript']],
+                    ['fontsize',['fontsize']],
+                    ['fontname',['fontname']],
+                    ['color',['color']],
+                    ['para',['ul','ol','paragraph','height']],
+                    ['height',['height']],
+                    ['table',['table']],
+                    ['insert',['link','picture','video','hr']],
+                    ['view',['fullscreen','codeview']],
+                    ['help',['help']],
+                    ['misc',['print']],
+                    ['mybutton',['upload']]
                 ],
                 callbacks: {
-                    onImageUpload: function (file, editor, welEditable) {
-                        sendNoticesFile(file[0], editor, welEditable, "IMAGES", function () {
+                    onImageUpload: function (file,editor,welEditable) {
+                        sendNoticesFile(file[0],editor,welEditable,"IMAGES",function () {
                             var inptUrl = $("#allOtherInputData1").val();
-                            $('#popUpDsplyTxtAreaHtm2').summernote("insertImage", inptUrl, 'filename');
+                            $('#popUpDsplyTxtAreaHtm2').summernote("insertImage",inptUrl,'filename');
                         });
                     }
                 }
             });
             $('.note-editable').trigger('focus');
             var markupStr1 = typeof $("#" + srcInputTextAreaID).val() === 'undefined' ? '' : $("#" + srcInputTextAreaID).val();
-            $('#popUpDsplyTxtAreaHtm2').summernote('code', urldecode(markupStr1));
+            $('#popUpDsplyTxtAreaHtm2').summernote('code',urldecode(markupStr1));
         },
         buttons: [{
             label: 'CLOSE',
@@ -3973,7 +4409,7 @@ function popUpDisplayHtml(srcInputTextAreaID) {
                 dialogItself.setClosable(true);
                 dialogItself.close();
             }
-        }, {
+        },{
             id: 'popOKBtnSsn',
             label: 'OKAY',
             icon: 'glyphicon glyphicon-menu-right',
@@ -3990,9 +4426,9 @@ function popUpDisplayHtml(srcInputTextAreaID) {
     });
 }
 
-String.prototype.replaceAll = function (search, replacement) {
+String.prototype.replaceAll = function (search,replacement) {
     var target = this;
-    return target.replace(new RegExp(escapeRegExp(search), 'g'), replacement);
+    return target.replace(new RegExp(escapeRegExp(search),'g'),replacement);
 };
 
 // Numeric only control handler
@@ -4017,26 +4453,44 @@ jQuery.fn.ForceNumericOnly =
         });
     };
 
-    
-        /*
-    PDFObject v2.1.1
-    https://github.com/pipwerks/PDFObject
-    Copyright (c) 2008-2018 Philip Hutchison
-    MIT-style license: http://pipwerks.mit-license.org/
-    UMD module pattern from https://github.com/umdjs/umd/blob/master/templates/returnExports.js
+
+/*
+PDFObject v2.1.1
+https://github.com/pipwerks/PDFObject
+Copyright (c) 2008-2018 Philip Hutchison
+MIT-style license: http://pipwerks.mit-license.org/
+UMD module pattern from https://github.com/umdjs/umd/blob/master/templates/returnExports.js
 */
 
-(function(root,factory){if(typeof define==='function'&&define.amd){define([],factory);}else if(typeof module==='object'&&module.exports){module.exports=factory();}else{root.PDFObject=factory();}}(this,function(){"use strict";if(typeof window==="undefined"||typeof navigator==="undefined"){return false;}
-var pdfobjectversion="2.1.1",ua=window.navigator.userAgent,supportsPDFs,isIE,supportsPdfMimeType=(typeof navigator.mimeTypes['application/pdf']!=="undefined"),supportsPdfActiveX,isModernBrowser=(function(){return(typeof window.Promise!=="undefined");})(),isFirefox=(function(){return(ua.indexOf("irefox")!==-1);})(),isFirefoxWithPDFJS=(function(){if(!isFirefox){return false;}
-return(parseInt(ua.split("rv:")[1].split(".")[0],10)>18);})(),isIOS=(function(){return(/iphone|ipad|ipod/i.test(ua.toLowerCase()));})(),createAXO,buildFragmentString,log,embedError,embed,getTargetElement,generatePDFJSiframe,generateEmbedElement;createAXO=function(type){var ax;try{ax=new ActiveXObject(type);}catch(e){ax=null;}
-return ax;};isIE=function(){return!!(window.ActiveXObject||"ActiveXObject"in window);};supportsPdfActiveX=function(){return!!(createAXO("AcroPDF.PDF")||createAXO("PDF.PdfCtrl"));};supportsPDFs=(!isIOS&&(isFirefoxWithPDFJS||supportsPdfMimeType||(isIE()&&supportsPdfActiveX())));buildFragmentString=function(pdfParams){var string="",prop;if(pdfParams){for(prop in pdfParams){if(pdfParams.hasOwnProperty(prop)){string+=encodeURIComponent(prop)+"="+encodeURIComponent(pdfParams[prop])+"&";}}
-if(string){string="#"+string;string=string.slice(0,string.length-1);}}
-return string;};log=function(msg){if(typeof console!=="undefined"&&console.log){console.log("[PDFObject] "+msg);}};embedError=function(msg){log(msg);return false;};getTargetElement=function(targetSelector){var targetNode=document.body;if(typeof targetSelector==="string"){targetNode=document.querySelector(targetSelector);}else if(typeof jQuery!=="undefined"&&targetSelector instanceof jQuery&&targetSelector.length){targetNode=targetSelector.get(0);}else if(typeof targetSelector.nodeType!=="undefined"&&targetSelector.nodeType===1){targetNode=targetSelector;}
-return targetNode;};generatePDFJSiframe=function(targetNode,url,pdfOpenFragment,PDFJS_URL,id){var fullURL=PDFJS_URL+"?file="+encodeURIComponent(url)+pdfOpenFragment;var scrollfix=(isIOS)?"-webkit-overflow-scrolling: touch; overflow-y: scroll; ":"overflow: hidden; ";var iframe="<div style='"+scrollfix+"position: absolute; top: 0; right: 0; bottom: 0; left: 0;'><iframe  "+id+" src='"+fullURL+"' style='border: none; width: 100%; height: 100%;' frameborder='0'></iframe></div>";targetNode.className+=" pdfobject-container";targetNode.style.position="relative";targetNode.style.overflow="auto";targetNode.innerHTML=iframe;return targetNode.getElementsByTagName("iframe")[0];};generateEmbedElement=function(targetNode,targetSelector,url,pdfOpenFragment,width,height,id){var style="";if(targetSelector&&targetSelector!==document.body){style="width: "+width+"; height: "+height+";";}else{style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;";}
-targetNode.className+=" pdfobject-container";targetNode.innerHTML="<embed "+id+" class='pdfobject' src='"+url+pdfOpenFragment+"' type='application/pdf' style='overflow: auto; "+style+"'/>";return targetNode.getElementsByTagName("embed")[0];};embed=function(url,targetSelector,options){if(typeof url!=="string"){return embedError("URL is not valid");}
-targetSelector=(typeof targetSelector!=="undefined")?targetSelector:false;options=(typeof options!=="undefined")?options:{};var id=(options.id&&typeof options.id==="string")?"id='"+options.id+"'":"",page=(options.page)?options.page:false,pdfOpenParams=(options.pdfOpenParams)?options.pdfOpenParams:{},fallbackLink=(typeof options.fallbackLink!=="undefined")?options.fallbackLink:true,width=(options.width)?options.width:"100%",height=(options.height)?options.height:"100%",assumptionMode=(typeof options.assumptionMode==="boolean")?options.assumptionMode:true,forcePDFJS=(typeof options.forcePDFJS==="boolean")?options.forcePDFJS:false,PDFJS_URL=(options.PDFJS_URL)?options.PDFJS_URL:false,targetNode=getTargetElement(targetSelector),fallbackHTML="",pdfOpenFragment="",fallbackHTML_default="<p>This browser does not support inline PDFs. Please download the PDF to view it: <a href='[url]'>Download PDF</a></p>";if(!targetNode){return embedError("Target element cannot be determined");}
-if(page){pdfOpenParams.page=page;}
-pdfOpenFragment=buildFragmentString(pdfOpenParams);if(forcePDFJS&&PDFJS_URL){return generatePDFJSiframe(targetNode,url,pdfOpenFragment,PDFJS_URL,id);}else if(supportsPDFs||(assumptionMode&&isModernBrowser&&!isIOS)){return generateEmbedElement(targetNode,targetSelector,url,pdfOpenFragment,width,height,id);}else if(PDFJS_URL){return generatePDFJSiframe(targetNode,url,pdfOpenFragment,PDFJS_URL,id);}else{if(fallbackLink){fallbackHTML=(typeof fallbackLink==="string")?fallbackLink:fallbackHTML_default;targetNode.innerHTML=fallbackHTML.replace(/\[url\]/g,url);}
-return embedError("This browser does not support embedded PDFs");}};return{embed:function(a,b,c){return embed(a,b,c);},pdfobjectversion:(function(){return pdfobjectversion;})(),supportsPDFs:(function(){return supportsPDFs;})()};}));
+(function (root,factory) { if (typeof define === 'function' && define.amd) { define([],factory); } else if (typeof module === 'object' && module.exports) { module.exports = factory(); } else { root.PDFObject = factory(); } }(this,function () {
+    "use strict"; if (typeof window === "undefined" || typeof navigator === "undefined") { return false; }
+    var pdfobjectversion = "2.1.1",ua = window.navigator.userAgent,supportsPDFs,isIE,supportsPdfMimeType = (typeof navigator.mimeTypes['application/pdf'] !== "undefined"),supportsPdfActiveX,isModernBrowser = (function () { return (typeof window.Promise !== "undefined"); })(),isFirefox = (function () { return (ua.indexOf("irefox") !== -1); })(),isFirefoxWithPDFJS = (function () {
+        if (!isFirefox) { return false; }
+        return (parseInt(ua.split("rv:")[1].split(".")[0],10) > 18);
+    })(),isIOS = (function () { return (/iphone|ipad|ipod/i.test(ua.toLowerCase())); })(),createAXO,buildFragmentString,log,embedError,embed,getTargetElement,generatePDFJSiframe,generateEmbedElement; createAXO = function (type) {
+        var ax; try { ax = new ActiveXObject(type); } catch (e) { ax = null; }
+        return ax;
+    }; isIE = function () { return !!(window.ActiveXObject || "ActiveXObject" in window); }; supportsPdfActiveX = function () { return !!(createAXO("AcroPDF.PDF") || createAXO("PDF.PdfCtrl")); }; supportsPDFs = (!isIOS && (isFirefoxWithPDFJS || supportsPdfMimeType || (isIE() && supportsPdfActiveX()))); buildFragmentString = function (pdfParams) {
+        var string = "",prop; if (pdfParams) {
+            for (prop in pdfParams) { if (pdfParams.hasOwnProperty(prop)) { string += encodeURIComponent(prop) + "=" + encodeURIComponent(pdfParams[prop]) + "&"; } }
+            if (string) { string = "#" + string; string = string.slice(0,string.length - 1); }
+        }
+        return string;
+    }; log = function (msg) { if (typeof console !== "undefined" && console.log) { console.log("[PDFObject] " + msg); } }; embedError = function (msg) { log(msg); return false; }; getTargetElement = function (targetSelector) {
+        var targetNode = document.body; if (typeof targetSelector === "string") { targetNode = document.querySelector(targetSelector); } else if (typeof jQuery !== "undefined" && targetSelector instanceof jQuery && targetSelector.length) { targetNode = targetSelector.get(0); } else if (typeof targetSelector.nodeType !== "undefined" && targetSelector.nodeType === 1) { targetNode = targetSelector; }
+        return targetNode;
+    }; generatePDFJSiframe = function (targetNode,url,pdfOpenFragment,PDFJS_URL,id) { var fullURL = PDFJS_URL + "?file=" + encodeURIComponent(url) + pdfOpenFragment; var scrollfix = (isIOS) ? "-webkit-overflow-scrolling: touch; overflow-y: scroll; " : "overflow: hidden; "; var iframe = "<div style='" + scrollfix + "position: absolute; top: 0; right: 0; bottom: 0; left: 0;'><iframe  " + id + " src='" + fullURL + "' style='border: none; width: 100%; height: 100%;' frameborder='0'></iframe></div>"; targetNode.className += " pdfobject-container"; targetNode.style.position = "relative"; targetNode.style.overflow = "auto"; targetNode.innerHTML = iframe; return targetNode.getElementsByTagName("iframe")[0]; }; generateEmbedElement = function (targetNode,targetSelector,url,pdfOpenFragment,width,height,id) {
+        var style = ""; if (targetSelector && targetSelector !== document.body) { style = "width: " + width + "; height: " + height + ";"; } else { style = "position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;"; }
+        targetNode.className += " pdfobject-container"; targetNode.innerHTML = "<embed " + id + " class='pdfobject' src='" + url + pdfOpenFragment + "' type='application/pdf' style='overflow: auto; " + style + "'/>"; return targetNode.getElementsByTagName("embed")[0];
+    }; embed = function (url,targetSelector,options) {
+        if (typeof url !== "string") { return embedError("URL is not valid"); }
+        targetSelector = (typeof targetSelector !== "undefined") ? targetSelector : false; options = (typeof options !== "undefined") ? options : {}; var id = (options.id && typeof options.id === "string") ? "id='" + options.id + "'" : "",page = (options.page) ? options.page : false,pdfOpenParams = (options.pdfOpenParams) ? options.pdfOpenParams : {},fallbackLink = (typeof options.fallbackLink !== "undefined") ? options.fallbackLink : true,width = (options.width) ? options.width : "100%",height = (options.height) ? options.height : "100%",assumptionMode = (typeof options.assumptionMode === "boolean") ? options.assumptionMode : true,forcePDFJS = (typeof options.forcePDFJS === "boolean") ? options.forcePDFJS : false,PDFJS_URL = (options.PDFJS_URL) ? options.PDFJS_URL : false,targetNode = getTargetElement(targetSelector),fallbackHTML = "",pdfOpenFragment = "",fallbackHTML_default = "<p>This browser does not support inline PDFs. Please download the PDF to view it: <a href='[url]'>Download PDF</a></p>"; if (!targetNode) { return embedError("Target element cannot be determined"); }
+        if (page) { pdfOpenParams.page = page; }
+        pdfOpenFragment = buildFragmentString(pdfOpenParams); if (forcePDFJS && PDFJS_URL) { return generatePDFJSiframe(targetNode,url,pdfOpenFragment,PDFJS_URL,id); } else if (supportsPDFs || (assumptionMode && isModernBrowser && !isIOS)) { return generateEmbedElement(targetNode,targetSelector,url,pdfOpenFragment,width,height,id); } else if (PDFJS_URL) { return generatePDFJSiframe(targetNode,url,pdfOpenFragment,PDFJS_URL,id); } else {
+            if (fallbackLink) { fallbackHTML = (typeof fallbackLink === "string") ? fallbackLink : fallbackHTML_default; targetNode.innerHTML = fallbackHTML.replace(/\[url\]/g,url); }
+            return embedError("This browser does not support embedded PDFs");
+        }
+    }; return { embed: function (a,b,c) { return embed(a,b,c); },pdfobjectversion: (function () { return pdfobjectversion; })(),supportsPDFs: (function () { return supportsPDFs; })() };
+}));
 
 

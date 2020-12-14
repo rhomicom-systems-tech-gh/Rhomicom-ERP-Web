@@ -13,7 +13,7 @@ ini_set("html_errors", TRUE);
 require '../app_code/cmncde/connect_pg.php';
 if (isset($_SESSION['LAST_ACTIVITY'])) {
     if ((time() - $_SESSION['LAST_ACTIVITY'] > 1800) && $_SESSION['LGN_NUM'] > 0) {
-// last request was more than 50 minates ago
+        // last request was more than 50 minates ago
         destroySession();
         if (count($_POST) <= 0) {
             header("Location: index.php");
@@ -39,7 +39,8 @@ if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
         echo '[Error Occurred:Unpermitted File Type!]';
         exit();
     }
-    $filename = str_replace(" ", "_", basename($_FILES["file"]["name"]));
+
+    $filename = str_replace("." . $extension, "", str_replace(" ", "_", basename($_FILES["file"]["name"])) . "_" . encrypt1(getRandomTxt(10), $smplTokenWord1)) . "." . $extension;
     $destination_path = getcwd() . DIRECTORY_SEPARATOR . "pem" . DIRECTORY_SEPARATOR;
     $target_path = $destination_path . $filename;
     /*
@@ -56,4 +57,3 @@ if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
 }
 echo '[Error:Unknown]';
 exit();
-?>

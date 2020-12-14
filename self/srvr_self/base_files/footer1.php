@@ -24,19 +24,19 @@
 <div id="allOtherContent"></div>
 <iframe id="allOtherIframe1" style="display:none;" src=""></iframe>
 <a id="allOtherATag1" style="display:none" href="" download="exported_table.xls"></a>
-<input type="hidden" id="allOtherInputData1" value=""/>
-<input type="hidden" id="allOtherInputData2" value=""/>
-<input type="hidden" id="allOtherInputData3" value=""/>
-<input type="hidden" id="allOtherInputData4" value=""/>
-<input type="hidden" id="allOtherInputData5" value=""/>
-<input type="hidden" id="allOtherInputData99" value="0"/>
-<input type="hidden" id="allOtherInputData101" value="0"/>
+<input type="hidden" id="allOtherInputData1" value="" />
+<input type="hidden" id="allOtherInputData2" value="" />
+<input type="hidden" id="allOtherInputData3" value="" />
+<input type="hidden" id="allOtherInputData4" value="" />
+<input type="hidden" id="allOtherInputData5" value="" />
+<input type="hidden" id="allOtherInputData99" value="0" />
+<input type="hidden" id="allOtherInputData101" value="0" />
 <input id="allOtherFileInput1" type="file" style="visibility:hidden" />
 <input id="allOtherFileInput2" type="file" style="visibility:hidden" />
 <input id="allOtherFileInput3" type="file" style="visibility:hidden" />
 <input id="allOtherFileInput4" type="file" style="visibility:hidden" />
-<input id="allOtherFileInput5" type="file" style="visibility:hidden" />                
-<input type="hidden" id="allOtherInputOrgID" value="<?php echo $orgID; ?>">                
+<input id="allOtherFileInput5" type="file" style="visibility:hidden" />
+<input type="hidden" id="allOtherInputOrgID" value="<?php echo $orgID; ?>">
 <input type="hidden" id="allOtherInputUsrID" value="<?php echo $usrID; ?>">
 <input id="allOtherFileInput6" type="file" style="visibility:hidden" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
 <div class="modalLdng"></div>
@@ -70,7 +70,7 @@
             </div>
         </div>
     </div>
-</div>                
+</div>
 <div class="modal fade" id="myFormsModalx" aria-hidden="true" style="display: none;z-index: 9997 !important;">
     <div class="modal-dialog modal-lg" id="myFormsModalxDiag" style="min-width:300px;max-width:90%;width:40%;">
         <div class="modal-content">
@@ -109,7 +109,7 @@
             </div>
         </div>
     </div>
-</div>  
+</div>
 <div class="modal fade" id="myFormsModalLgZI" aria-hidden="true" style="display: none;z-index: 9999 !important;">
     <div class="modal-dialog" role="document" style="min-width:300px;max-width:93%;width:93%;margin:5px calc(1.4% + 1px) !important;">
         <div class="modal-content">
@@ -122,7 +122,21 @@
             </div>
         </div>
     </div>
-</div>                
+</div>
+<div class="modal fade" id="sndBlkMsgForm" aria-hidden="true" style="display: none;z-index: 9997 !important;">
+    <div class="modal-dialog" role="document" style="min-width:80%;width:80% !important;margin:5px calc(2.4% + 1px) !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="sndBlkMsgFormTitle">Send Bulk Email/SMS</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body" id="sndBlkMsgFormBody" style="border-bottom: none !important;">
+            </div>
+            <div class="modal-footer" style="border-top: none !important;">
+            </div>
+        </div>
+    </div>
+</div>
 <!--<div class="modal fade" id="myFormsModaly" aria-hidden="true" style="display: none;z-index: 9997 !important;">
     <div class="modal-dialog" role="document" id="myFormsModalyDiag" style="min-width:300px;max-width:90%;width:50%;">
         <div class="modal-content">
@@ -135,7 +149,7 @@
             </div>
         </div>
     </div>
-</div>-->                
+</div>-->
 <div class="modal fade" id="myFormsModalxLG" aria-hidden="true" style="display: none;z-index: 9996 !important;">
     <div class="modal-dialog" role="document" id="myFormsModalxLGDiag" style="min-width:340px;max-width:90%;width:50%;">
         <div class="modal-content">
@@ -160,4 +174,5 @@
 <script src="js_self/self_global.js?v=<?php echo $jsCssFileVrsn; ?>"></script>
 <script src="js_self/self_rpt.js?v=<?php echo $jsCssFileVrsn; ?>"></script>
 </body>
+
 </html>

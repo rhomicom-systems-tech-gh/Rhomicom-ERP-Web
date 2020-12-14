@@ -412,6 +412,8 @@ if ($isMntnceMode) {
         } else if ($group == 45) {
             if ($type == 1) {
                 require 'srvr_self/myinbox.php';
+            }else if ($type == 2) {
+                require 'srvr_self/bulk_msg_system.php';
             }
         } else if ($group == 50) {
             if ($type == 1) {

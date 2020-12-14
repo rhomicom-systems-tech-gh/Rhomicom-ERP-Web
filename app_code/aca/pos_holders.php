@@ -199,14 +199,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </td>
                                                 <td class=\"lovtd\">
                                                     <div class=\"input-group date form_date\" data-date=\"\" data-date-format=\"dd-M-yyyy\" data-link-field=\"dtp_input2\" data-link-format=\"yyyy-mm-dd\" style=\"width:100%;\">
-                                                        <input class=\"form-control\" size=\"16\" type=\"text\" id=\"acaPosHldrsHdrsRow_WWW123WWW_StrtDte\" name=\"acaPosHldrsHdrsRow_WWW123WWW_StrtDte\" value=\"\" readonly=\"\">
+                                                        <input class=\"form-control\" size=\"16\" type=\"text\" id=\"acaPosHldrsHdrsRow_WWW123WWW_StrtDte\" name=\"acaPosHldrsHdrsRow_WWW123WWW_StrtDte\" value=\"\">
                                                          <!--<span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-remove\"></span></span>-->
                                                         <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-calendar\"></span></span>
                                                     </div>                                                         
                                                 </td>
                                                 <td class=\"lovtd\">
                                                     <div class=\"input-group date form_date\" data-date=\"\" data-date-format=\"dd-M-yyyy\" data-link-field=\"dtp_input2\" data-link-format=\"yyyy-mm-dd\" style=\"width:100%;\">
-                                                        <input class=\"form-control\" size=\"16\" type=\"text\" id=\"acaPosHldrsHdrsRow_WWW123WWW_EndDte\" name=\"acaPosHldrsHdrsRow_WWW123WWW_EndDte\" value=\"\" readonly=\"\">
+                                                        <input class=\"form-control\" size=\"16\" type=\"text\" id=\"acaPosHldrsHdrsRow_WWW123WWW_EndDte\" name=\"acaPosHldrsHdrsRow_WWW123WWW_EndDte\" value=\"\">
                                                         <!--<span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-remove\"></span></span>-->
                                                         <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-calendar\"></span></span>
                                                     </div>                                                       
@@ -433,7 +433,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <td class="lovtd">
                                                     <?php if ($canEdt === true) { ?>
                                                         <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd" style="width:100%;">
-                                                            <input class="form-control" size="16" type="text" id="acaPosHldrsHdrsRow<?php echo $cntr; ?>_StrtDte" name="acaPosHldrsHdrsRow<?php echo $cntr; ?>_StrtDte" value="<?php echo $trsctnLnStrtDte; ?>" readonly="">
+                                                            <input class="form-control" size="16" type="text" id="acaPosHldrsHdrsRow<?php echo $cntr; ?>_StrtDte" name="acaPosHldrsHdrsRow<?php echo $cntr; ?>_StrtDte" value="<?php echo $trsctnLnStrtDte; ?>">
                                                              <!--<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>-->
                                                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                                         </div>  
@@ -444,7 +444,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <td class="lovtd">
                                                     <?php if ($canEdt === true) { ?>
                                                         <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd" style="width:100%;">
-                                                            <input class="form-control" size="16" type="text" id="acaPosHldrsHdrsRow<?php echo $cntr; ?>_EndDte" name="acaPosHldrsHdrsRow<?php echo $cntr; ?>_EndDte" value="<?php echo $trsctnLnEndDte; ?>" readonly="">
+                                                            <input class="form-control" size="16" type="text" id="acaPosHldrsHdrsRow<?php echo $cntr; ?>_EndDte" name="acaPosHldrsHdrsRow<?php echo $cntr; ?>_EndDte" value="<?php echo $trsctnLnEndDte; ?>">
                                                             <!--<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>-->
                                                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                                         </div> 
