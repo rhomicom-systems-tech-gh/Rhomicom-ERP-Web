@@ -873,7 +873,7 @@ var exprtBtn;
 var exprtBtn2;
 
 function exprtPersons() {
-    var exprtMsg = '<form role="form">' +
+    var exprtMsg = '<form role="form" id="recsToExprtForm">' +
         '<p style="color:#000;">' +
         'How many Persons will you like to Export?' +
         '<br/>1=No Persons(Empty Template)' +
@@ -903,6 +903,17 @@ function exprtPersons() {
         onshow: function (dialogItself) {},
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_rpt');
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
+            $('#recsToExprt').val(2);
             $('#recsToExprt').focus();
         },
         buttons: [{

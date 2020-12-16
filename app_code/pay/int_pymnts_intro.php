@@ -275,7 +275,7 @@ function get_CumltiveBals($prsnID)
       . "or b.item_code_name ilike '%2015%' "
       . "or b.item_code_name ilike '%2014%' THEN 1 "
       . " */
-      //echo $sqlStr;
+    //echo $sqlStr;
     $result = executeSQLNoParams($sqlStr);
     return $result;
 }
@@ -1797,6 +1797,19 @@ function doesItmFeedExists($itmid, $blsItmID)
     }
 }
 
+function getItmFeedID($itmid, $blsItmID)
+{
+    $selSQL = "SELECT a.feed_id " .
+        "FROM org.org_pay_itm_feeds a WHERE ((a.fed_by_itm_id = " . $itmid .
+        ") and (a.balance_item_id = " . $blsItmID .
+        ")) ORDER BY a.feed_id ";
+    $result = executeSQLNoParams($selSQL);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return -1;
+}
+
 function deletePayItem($hdrID, $itmNm)
 {
     $selSQL1 = "Select count(1) from pay.pay_itm_trnsctns where item_id = " . $hdrID;
@@ -1861,6 +1874,36 @@ function deleteItemVal($psblValid, $itmNm)
         $dsply = "No Record Deleted";
         return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
     }
+}
+
+function get_All_PayItemsNVals($org_ID, $lmit)
+{
+    $extrWhr = "";
+    if ($lmit >= 0) {
+        $extrWhr = " LIMIT " . $lmit . " OFFSET 0";
+    } else if ($lmit < 0) {
+        $extrWhr = "";
+    }
+
+    $strSql = "SELECT a.item_code_name, a.item_desc, a.item_maj_type, a.item_min_type, " .
+        "a.item_value_uom, a.pay_frequency, a.pay_run_priority, 
+        CASE WHEN a.uses_sql_formulas='1' THEN 'YES' ELSE 'NO' END, 
+        a.local_classfctn, a.balance_type, a.incrs_dcrs_cost_acnt, " .
+        "(select b.accnt_num from accb.accb_chart_of_accnts b where b.accnt_id = a.cost_accnt_id) cost_accnt_num, a.incrs_dcrs_bals_acnt , " .
+        "(select b.accnt_num from accb.accb_chart_of_accnts b where b.accnt_id = a.bals_accnt_id) bals_accnt_num, " .
+        "(select d.item_code_name from org.org_pay_items d where d.item_id = c.balance_item_id and c.fed_by_itm_id = a.item_id) feeds_into, " .
+        "c.adds_subtracts, c.scale_factor, CASE WHEN a.is_retro_element='1' THEN 'YES' ELSE 'NO' END, " .
+        "org.get_payitm_nm(a.retro_item_id), inv.get_invitm_code(a.inv_item_id), CASE WHEN a.allow_value_editing='1' THEN 'YES' ELSE 'NO' END, " .
+        "CASE WHEN a.creates_accounting='1' THEN 'YES' ELSE 'NO' END, a.effct_on_org_debt, 
+        CASE WHEN a.is_enabled='1' THEN 'YES' ELSE 'NO' END,
+        b.pssbl_value_code_name, b.pssbl_amount, b.pssbl_value_sql  " .
+        "FROM org.org_pay_items a 
+        LEFT OUTER JOIN org.org_pay_items_values b ON a.item_id = b.item_id
+        LEFT OUTER JOIN org.org_pay_itm_feeds c ON a.item_id = c.fed_by_itm_id WHERE a.org_id = " . $org_ID . " " .
+        "order by a.item_maj_type, a.is_retro_element DESC, a.pay_run_priority " . $extrWhr;
+
+    $result = executeSQLNoParams($strSql);
+    return $result;
 }
 
 function createItmSt($orgid, $itmsetname, $itmstdesc, $isenbled, $isdflt, $usesSQL, $sqlTxt)

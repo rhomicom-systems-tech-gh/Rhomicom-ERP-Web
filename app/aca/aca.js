@@ -5192,8 +5192,18 @@ function exprtGrdScale() {
         onshow: function (dialogItself) {},
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_rpt');
-            $('#recsToExprt').focus();
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
             $('#recsToExprt').val(2);
+            $('#recsToExprt').focus();
         },
         buttons: [{
             label: 'Cancel',
@@ -6048,8 +6058,18 @@ function exprtSbjctTask() {
         onshow: function (dialogItself) {},
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_rpt');
-            $('#recsToExprt').focus();
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
             $('#recsToExprt').val(2);
+            $('#recsToExprt').focus();
         },
         buttons: [{
             label: 'Cancel',
@@ -6147,7 +6167,7 @@ function rfrshSbjctTaskPrcs() {
 //EXPORT/IMPORT PROGRAMMES/OBJECTIVES
 function exprtCourseObjctv() {
     var msgPart = "Programmes/Objectives";
-    var exprtMsg = '<form role="form">' +
+    var exprtMsg = '<form role="form" id="recsToExprtForm">' +
         '<p style="color:#000;">' +
         'How many ' + msgPart + ' will you like to Export?' +
         '<br/>1=No ' + msgPart + '(Empty Template)' +
@@ -6177,8 +6197,18 @@ function exprtCourseObjctv() {
         onshow: function (dialogItself) {},
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_rpt');
-            $('#recsToExprt').focus();
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
             $('#recsToExprt').val(2);
+            $('#recsToExprt').focus();
         },
         buttons: [{
             label: 'Cancel',
@@ -6277,7 +6307,7 @@ function rfrshCourseObjctvPrcs() {
 //EXPORT/IMPORT ASSESSMENT TYPES
 function exprtAssessTypes() {
     var msgPart = "Assessment Types";
-    var exprtMsg = '<form role="form">' +
+    var exprtMsg = '<form role="form" id="recsToExprtForm">' +
         '<p style="color:#000;">' +
         'How many ' + msgPart + ' will you like to Export?' +
         '<br/>1=No ' + msgPart + '(Empty Template)' +
@@ -6307,8 +6337,18 @@ function exprtAssessTypes() {
         onshow: function (dialogItself) {},
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_rpt');
-            $('#recsToExprt').focus();
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
             $('#recsToExprt').val(2);
+            $('#recsToExprt').focus();
         },
         buttons: [{
             label: 'Cancel',
@@ -6406,7 +6446,7 @@ function rfrshAssessTypesPrcs() {
 //EXPORT/IMPORT ASSESSMENT GROUPS
 function exprtAssessGrps() {
     var msgPart = "Assessment Groups";
-    var exprtMsg = '<form role="form">' +
+    var exprtMsg = '<form role="form" id="recsToExprtForm">' +
         '<p style="color:#000;">' +
         'How many ' + msgPart + ' will you like to Export?' +
         '<br/>1=No ' + msgPart + '(Empty Template)' +
@@ -6436,8 +6476,18 @@ function exprtAssessGrps() {
         onshow: function (dialogItself) {},
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_rpt');
-            $('#recsToExprt').focus();
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
             $('#recsToExprt').val(2);
+            $('#recsToExprt').focus();
         },
         buttons: [{
             label: 'Cancel',
@@ -6536,7 +6586,7 @@ function rfrshAssessGrpsPrcs() {
 //EXPORT/IMPORT ASSESSMENT GROUPS
 function exprtRgstrtns() {
     var msgPart = "Task Assignments/Registrations";
-    var exprtMsg = '<form role="form">' +
+    var exprtMsg = '<form role="form" id="recsToExprtForm">' +
         '<p style="color:#000;">' +
         'How many ' + msgPart + ' will you like to Export?' +
         '<br/>1=No ' + msgPart + '(Empty Template)' +
@@ -6566,8 +6616,18 @@ function exprtRgstrtns() {
         onshow: function (dialogItself) {},
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_rpt');
-            $('#recsToExprt').focus();
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
             $('#recsToExprt').val(2);
+            $('#recsToExprt').focus();
         },
         buttons: [{
             label: 'Cancel',
@@ -6665,7 +6725,7 @@ function rfrshRgstrtnsPrcs() {
 //EXPORT/IMPORT ASSESSMENT Sheets
 function exprtAsessShts() {
     var msgPart = "Assessment Sheets";
-    var exprtMsg = '<form role="form">' +
+    var exprtMsg = '<form role="form" id="recsToExprtForm">' +
         '<p style="color:#000;">' +
         'How many ' + msgPart + ' will you like to Export?' +
         '<br/>1=No ' + msgPart + '(Empty Template)' +
@@ -6695,8 +6755,18 @@ function exprtAsessShts() {
         onshow: function (dialogItself) {},
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_rpt');
-            $('#recsToExprt').focus();
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
             $('#recsToExprt').val(2);
+            $('#recsToExprt').focus();
         },
         buttons: [{
             label: 'Cancel',
@@ -6801,7 +6871,7 @@ function rfrshAsessShtsPrcs() {
 //EXPORT/IMPORT SCORE CARDS
 function exprtScoreCards() {
     var msgPart = "Report/Score Cards";
-    var exprtMsg = '<form role="form">' +
+    var exprtMsg = '<form role="form" id="recsToExprtForm">' +
         '<p style="color:#000;">' +
         'How many ' + msgPart + ' will you like to Export?' +
         '<br/>1=No ' + msgPart + '(Empty Template)' +
@@ -6831,8 +6901,18 @@ function exprtScoreCards() {
         onshow: function (dialogItself) {},
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_rpt');
-            $('#recsToExprt').focus();
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
             $('#recsToExprt').val(2);
+            $('#recsToExprt').focus();
         },
         buttons: [{
             label: 'Cancel',

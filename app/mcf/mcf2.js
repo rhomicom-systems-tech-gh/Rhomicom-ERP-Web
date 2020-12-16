@@ -1103,7 +1103,7 @@ function exprtMiscTrns()
     var qStrtDte = typeof $('#' + fieldsPrfx + "StrtDate").val() === 'undefined' ? '' : $('#' + fieldsPrfx + "StrtDate").val();
     var qEndDte = typeof $('#' + fieldsPrfx + "EndDate").val() === 'undefined' ? '' : $('#' + fieldsPrfx + "EndDate").val();
     var msgTitle = "Transactions";
-    var exprtMsg = '<form role="form">' +
+    var exprtMsg = '<form role="form" id="recsToExprtForm">' +
             '<p style="color:#000;">' +
             'How many ' + msgTitle + ' will you like to Export?' +
             '<br/>1=No ' + msgTitle + '(Empty Template)' +
@@ -1133,6 +1133,17 @@ function exprtMiscTrns()
         },
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_recs');
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
+            $('#recsToExprt').val(2);
             $('#recsToExprt').focus();
         },
         buttons: [{
@@ -8438,7 +8449,7 @@ function exprtBulkMiscTrns()
 {
     var vmsTrnsHdrID = typeof $("#vmsTrnsHdrID").val() === 'undefined' ? -1 : $("#vmsTrnsHdrID").val();
     var msgTitle = "Bulk Misc. Transactions";
-    var exprtMsg = '<form role="form">' +
+    var exprtMsg = '<form role="form" id="recsToExprtForm">' +
             '<p style="color:#000;">' +
             'How many ' + msgTitle + ' will you like to Export?' +
             '<br/>1=No ' + msgTitle + '(Empty Template)' +
@@ -8468,6 +8479,17 @@ function exprtBulkMiscTrns()
         },
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_recs');
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
+            $('#recsToExprt').val(2);
             $('#recsToExprt').focus();
         },
         buttons: [{

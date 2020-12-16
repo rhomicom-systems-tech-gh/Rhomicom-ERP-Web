@@ -11848,7 +11848,7 @@ var exprtBtn;
 var exprtBtn2;
 
 function exprtInvntryItems() {
-    var exprtMsg = '<form role="form">' +
+    var exprtMsg = '<form role="form" id="recsToExprtForm">' +
         '<p style="color:#000;">' +
         'How many Accounts will you like to Export?' +
         '<br/>1=No Accounts(Empty Template)' +
@@ -11878,6 +11878,17 @@ function exprtInvntryItems() {
         onshow: function (dialogItself) {},
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_rpt');
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
+            $('#recsToExprt').val(2);
             $('#recsToExprt').focus();
         },
         buttons: [{
