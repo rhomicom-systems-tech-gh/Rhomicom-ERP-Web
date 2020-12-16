@@ -6425,3 +6425,682 @@ function afterBulkRnItmSet() {
         $('#payMassPyDesc').val('Payment of ' + payMassPyItmSetNm);
     }
 }
+
+/*Import Export Payroll Items*/
+function exprtPayItems() {
+    var exprtMsg =
+        '<form role="form" id="recsToExprtForm">' +
+        '<p style="color:#000;">' +
+        "How many Pay Items will you like to Export?" +
+        "<br/>1=No Pay Items(Empty Template)" +
+        "<br/>2=All Pay Items" +
+        "<br/>3-Infinity=Specify the exact number of Pay Items to Export<br/>" +
+        "</p>" +
+        '<div class="form-group" style="margin-bottom:10px !important;">' +
+        '<div class="input-group">' +
+        '<span class="input-group-addon" id="basic-addon1">' +
+        '<i class="fa fa-sort-numeric-asc fa-fw fa-border"></i></span>' +
+        '<input type="number" class="form-control" placeholder="" aria-describedby="basic-addon1" id="recsToExprt" name="recsToExprt" onkeyup="" tabindex="0" autofocus>' +
+        "</div>" +
+        "</div>" +
+        '<p style="font-size:12px;" id="msgAreaExprt">&nbsp;' +
+        "</p>" +
+        "</form>";
+
+    BootstrapDialog.show({
+        size: BootstrapDialog.SIZE_SMALL,
+        type: BootstrapDialog.TYPE_DEFAULT,
+        title: "Export Pay Items!",
+        message: exprtMsg,
+        animate: true,
+        closable: true,
+        closeByBackdrop: false,
+        closeByKeyboard: false,
+        onshow: function (dialogItself) { },
+        onshown: function (dialogItself) {
+            exprtBtn = dialogItself.getButton("btn_exprt_rpt");
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
+            $('#recsToExprt').val(2);
+            $("#recsToExprt").focus();
+        },
+        buttons: [
+            {
+                label: "Cancel",
+                icon: "glyphicon glyphicon-menu-left",
+                cssClass: "btn-default",
+                action: function (dialogItself) {
+                    window.clearInterval(prgstimerid2);
+                    dialogItself.close();
+                    window.clearInterval(prgstimerid2);
+                    ClearAllIntervals();
+                },
+            },
+            {
+                id: "btn_exprt_rpt",
+                label: "Export",
+                icon: "glyphicon glyphicon-menu-right",
+                cssClass: "btn-primary",
+                action: function (dialogItself) {
+                    /*Validate Input and Do Ajax if OK*/
+                    var inptNum = $("#recsToExprt").val();
+                    if (!isNumber(inptNum)) {
+                        var dialog = bootbox.alert({
+                            title: "Exporting Pay Items",
+                            size: "small",
+                            message: "Please provide a valid Number!",
+                            callback: function () { },
+                        });
+                        return false;
+                    } else {
+                        var $button = this;
+                        $button.disable();
+                        $button.spin();
+                        dialogItself.setClosable(false);
+                        document.getElementById("msgAreaExprt").innerHTML =
+                            '<img style="width:165px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;" src=\'cmn_images/ajax-loader2.gif\'/><br/><span style="color:blue;font-size:11px;text-align: left;margin-top:0px;">Working on Export...Please Wait...</span>';
+                        getMsgAsyncSilent("grp=1&typ=11&q=Check Session",function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 7,
+                                    typ: 1,
+                                    pg: 10,
+                                    q: "UPDATE",
+                                    actyp: 903,
+                                    inptNum: inptNum,
+                                },
+                            });
+                            prgstimerid2 = window.setInterval(rfrshPayItemsPrcs,1000);
+                        });
+                    }
+                },
+            },
+        ],
+    });
+}
+
+function rfrshPayItemsPrcs() {
+    $.ajax({
+        method: "POST",
+        url: "index.php",
+        data: {
+            grp: 7,
+            typ: 1,
+            pg: 10,
+            q: "UPDATE",
+            actyp: 904,
+        },
+        success: function (data) {
+            if (data.percent >= 100) {
+                if (data.message.indexOf("Error") !== -1) {
+                    $("#msgAreaExprt").html(data.message);
+                } else {
+                    $("#msgAreaExprt").html(
+                        data.message +
+                        '<br/><a href="' +
+                        data.dwnld_url +
+                        '">Click to Download File!</a>'
+                    );
+                }
+                exprtBtn.enable();
+                exprtBtn.stopSpin();
+                window.clearInterval(prgstimerid2);
+                window.clearInterval(prgstimerid2);
+                ClearAllIntervals();
+            } else {
+                $("#msgAreaExprt").html(
+                    '<img style="width:165px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;" src="cmn_images/ajax-loader2.gif"/>' +
+                    data.message
+                );
+                document.getElementById("msgAreaExprt").innerHTML =
+                    '<img style="width:165px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;" src="cmn_images/ajax-loader2.gif"/>' +
+                    data.message;
+            }
+        },
+        error: function (jqXHR,textStatus,errorThrown) {
+            console.log(textStatus + " " + errorThrown);
+            console.warn(jqXHR.responseText);
+        },
+    });
+}
+
+function importPayItems() {
+    var dataToSend = "";
+    var isFileValid = true;
+    var dialog1 = bootbox.confirm({
+        title: "Import Pay Items?",
+        size: "small",
+        message:
+            '<p style="text-align:center;">Are you sure you want to <span style="color:green;font-weight:bold;font-style:italic;">IMPORT PAY ITEMS</span> to overwrite existing ones?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: "btn-success",
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: "btn-danger",
+            },
+        },
+        callback: function (result) {
+            if (result === true) {
+                if (isReaderAPIAvlbl()) {
+                    $("#allOtherFileInput6").val("");
+                    $("#allOtherFileInput6").off("change");
+                    $("#allOtherFileInput6").change(function () {
+                        var fileName = $(this).val();
+                        var input = document.getElementById("allOtherFileInput6");
+                        var file = input.files[0];
+                        /* read the file metadata*/
+                        var output = "";
+                        output +=
+                            '<span style="font-weight:bold;">' +
+                            escape(file.name) +
+                            "</span><br />\n";
+                        output += " - FileType: " + (file.type || "n/a") + "<br />\n";
+                        output += " - FileSize: " + file.size + " bytes<br />\n";
+                        output +=
+                            " - LastModified: " +
+                            (file.lastModifiedDate
+                                ? file.lastModifiedDate.toLocaleDateString()
+                                : "n/a") +
+                            "<br />\n";
+
+                        var reader = new FileReader();
+                        BootstrapDialog.show({
+                            size: BootstrapDialog.SIZE_LARGE,
+                            type: BootstrapDialog.TYPE_DEFAULT,
+                            title: "Validating Selected File",
+                            message:
+                                '<div id="myProgress"><div id="myBar"></div></div><div id="myInformation"><i class="fa fa-spin fa-spinner"></i> Validating Selected File...Please Wait...</div><br/><div id="fileInformation">' +
+                                output +
+                                "</div>",
+                            animate: true,
+                            closable: true,
+                            closeByBackdrop: false,
+                            closeByKeyboard: false,
+                            onshow: function (dialogItself) {
+                                setTimeout(function () {
+                                    var $footerButton = dialogItself.getButton("btn-srvr-prcs");
+                                    $footerButton.disable();
+                                    /* read the file content*/
+                                    reader.onerror = function (evt) {
+                                        switch (evt.target.error.code) {
+                                            case evt.target.error.NOT_FOUND_ERR:
+                                                alert("File Not Found!");
+                                                break;
+                                            case evt.target.error.NOT_READABLE_ERR:
+                                                alert("File is not readable");
+                                                break;
+                                            case evt.target.error.ABORT_ERR:
+                                                break;
+                                            default:
+                                                alert("An error occurred reading this file.");
+                                        }
+                                    };
+                                    reader.onprogress = function (evt) {
+                                        /* evt is an ProgressEvent.*/
+                                        if (evt.lengthComputable) {
+                                            var percentLoaded = Math.round(
+                                                (evt.loaded / evt.total) * 100
+                                            );
+                                            /* Increase the progress bar length.*/
+                                            var elem = document.getElementById("myBar");
+                                            elem.style.width = percentLoaded + "%";
+                                            if (percentLoaded < 100) {
+                                                $("#myInformation").html(
+                                                    '<span style="color:green;"><i class="fa fa-spin fa-spinner"></i>' +
+                                                    percentLoaded +
+                                                    "% Validating Selected File...Please Wait...</span>"
+                                                );
+                                            } else {
+                                                $("#myInformation").html(
+                                                    '<span style="color:green;"><i class="fa fa-check"></i>' +
+                                                    percentLoaded +
+                                                    "% Validating Selected File Completed!</span>"
+                                                );
+
+                                                var $footerButton = dialogItself.getButton(
+                                                    "btn-srvr-prcs"
+                                                );
+                                                if (isFileValid == true) {
+                                                    $footerButton.enable();
+                                                } else {
+                                                    $footerButton.disable();
+                                                }
+                                            }
+                                        }
+                                    };
+                                    reader.onabort = function (e) {
+                                        alert("File read cancelled");
+                                    };
+                                    reader.onloadstart = function (e) {
+                                        var elem = document.getElementById("myBar");
+                                        elem.style.width = "1%";
+                                        $("#myInformation").html(
+                                            '<span style="color:green;"><i class="fa fa-spin fa-spinner"></i>1% Started Importing Pay Items...Please Wait...</span>'
+                                        );
+                                    };
+                                    reader.onload = function (event) {
+                                        try {
+                                            var csv = event.target.result;
+                                            var data = $.csv.toArrays(csv);
+                                            var rwCntr = 0;
+                                            var colCntr = 0;
+                                            var vldRwCntr = 0;
+                                            var payItmName = "";
+                                            var payItmDesc = "";
+                                            var payItmMajTyp = "";
+                                            var payItmMinTyp = "";
+                                            var payItmUOM = "";
+                                            var payItmFreq = "";
+                                            var payItmPrioty = "";
+                                            var payItmUseSQL = "";
+                                            var payItmClsfctn = "";
+                                            var payItmBalsTyp = "";
+                                            var payItmIncrsDcrs1 = "";
+                                            var payItmAccnt1 = "";
+                                            var payItmIncrsDcrs2 = "";
+                                            var payItmAccnt2 = "";
+                                            var payItmFeedsInto = "";
+                                            var payItmAddSbtrct = "";
+                                            var payItmScale = "";
+                                            var payItmIsRetro = "";
+                                            var payItmRetroName = "";
+                                            var payItmInvName = "";
+                                            var payItmAllwEdt = "";
+                                            var payItmCreateActng = "";
+                                            var payItmEffectDebt = "";
+                                            var payItmIsEnbld = "";
+                                            var payItmValueName = "";
+                                            var payItmValueAmt = "";
+                                            var payItmValueSQL = "";
+
+                                            for (var row in data) {
+                                                for (var item in data[row]) {
+                                                    colCntr++;
+                                                    switch (colCntr) {
+                                                        case 1:
+                                                            payItmName = data[row][item];
+                                                            break;
+                                                        case 2:
+                                                            payItmDesc = data[row][item];
+                                                            break;
+                                                        case 3:
+                                                            payItmMajTyp = data[row][item];
+                                                            break;
+                                                        case 4:
+                                                            payItmMinTyp = data[row][item];
+                                                            break;
+                                                        case 5:
+                                                            payItmUOM = data[row][item];
+                                                            break;
+                                                        case 6:
+                                                            payItmFreq = data[row][item];
+                                                            break;
+                                                        case 7:
+                                                            payItmPrioty = data[row][item];
+                                                            break;
+                                                        case 8:
+                                                            payItmUseSQL = data[row][item];
+                                                            break;
+                                                        case 9:
+                                                            payItmClsfctn = data[row][item];
+                                                            break;
+                                                        case 10:
+                                                            payItmBalsTyp = data[row][item];
+                                                            break;
+                                                        case 11:
+                                                            payItmIncrsDcrs1 = data[row][item];
+                                                            break;
+                                                        case 12:
+                                                            payItmAccnt1 = data[row][item];
+                                                            break;
+                                                        case 13:
+                                                            payItmIncrsDcrs2 = data[row][item];
+                                                            break;
+                                                        case 14:
+                                                            payItmAccnt2 = data[row][item];
+                                                            break;
+                                                        case 15:
+                                                            payItmFeedsInto = data[row][item];
+                                                            break;
+                                                        case 16:
+                                                            payItmAddSbtrct = data[row][item];
+                                                            break;
+                                                        case 17:
+                                                            payItmScale = data[row][item];
+                                                            break;
+                                                        case 18:
+                                                            payItmIsRetro = data[row][item];
+                                                            break;
+                                                        case 19:
+                                                            payItmRetroName = data[row][item];
+                                                            break;
+                                                        case 20:
+                                                            payItmInvName = data[row][item];
+                                                            break;
+                                                        case 21:
+                                                            payItmAllwEdt = data[row][item];
+                                                            break;
+                                                        case 22:
+                                                            payItmCreateActng = data[row][item];
+                                                            break;
+                                                        case 23:
+                                                            payItmEffectDebt = data[row][item];
+                                                            break;
+                                                        case 24:
+                                                            payItmIsEnbld = data[row][item];
+                                                            break;
+                                                        case 25:
+                                                            payItmValueName = data[row][item];
+                                                            break;
+                                                        case 26:
+                                                            payItmValueAmt = data[row][item];
+                                                            break;
+                                                        case 27:
+                                                            payItmValueSQL = data[row][item];
+                                                            break;
+                                                        default:
+                                                            var dialog = bootbox.alert({
+                                                                title: "Error-Validating Selected File",
+                                                                size: "small",
+                                                                message:
+                                                                    '<span style="color:red;font-weight:bold:">An error occurred reading this file.Invalid Column in File!</span>',
+                                                                callback: function () {
+                                                                    isFileValid = false;
+                                                                    reader.abort();
+                                                                },
+                                                            });
+                                                    }
+                                                }
+                                                if (rwCntr === 0) {
+                                                    if (
+                                                        payItmName.toUpperCase() ===
+                                                        "Item Code/Name**".toUpperCase() &&
+                                                        payItmDesc.toUpperCase() ===
+                                                        "Item Description".toUpperCase() &&
+                                                        payItmCreateActng.toUpperCase() ===
+                                                        "Creates Accounting?(YES/NO)".toUpperCase() &&
+                                                        payItmValueSQL.toUpperCase() ===
+                                                        "SQL Formula".toUpperCase()
+                                                    ) {
+                                                        /*alert(number.toUpperCase() + "|" + processName.toUpperCase() + "|" + isEnbld.toUpperCase());*/
+                                                    } else {
+                                                        var dialog = bootbox.alert({
+                                                            title: "Error-Import Pay Items",
+                                                            size: "small",
+                                                            message:
+                                                                '<span style="color:red;font-weight:bold:">Invalid File Selected!</span>',
+                                                            callback: function () {
+                                                                isFileValid = false;
+                                                                reader.abort();
+                                                            },
+                                                        });
+                                                    }
+                                                }
+                                                if (
+                                                    payItmName.trim() !== "" &&
+                                                    payItmMajTyp.trim() !== "" &&
+                                                    payItmMinTyp.trim() !== "" &&
+                                                    payItmUOM.trim() !== ""
+                                                ) {
+                                                    dataToSend =
+                                                        dataToSend +
+                                                        payItmName
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmDesc
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmMajTyp
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmMinTyp
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmUOM
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmFreq
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmPrioty
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmUseSQL
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmClsfctn
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmBalsTyp
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmIncrsDcrs1
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmAccnt1
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmIncrsDcrs2
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmAccnt2
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmFeedsInto
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmAddSbtrct
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmScale
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmIsRetro
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmRetroName
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmInvName
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmAllwEdt
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmCreateActng
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmEffectDebt
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmIsEnbld
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmValueName
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmValueAmt
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        payItmValueSQL
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "|";
+                                                    vldRwCntr++;
+                                                }
+                                                colCntr = 0;
+                                                rwCntr++;
+                                            }
+                                            output +=
+                                                '<br/><span style="color:blue;font-weight:bold;">No. of Valid Rows:' +
+                                                vldRwCntr;
+                                            output += "<br/>Total No. of Rows:" + rwCntr + "</span>";
+                                            $("#fileInformation").html(output);
+                                        } catch (err) {
+                                            var dialog = bootbox.alert({
+                                                title: "Error-Import Pay Items",
+                                                size: "small",
+                                                message: "Error:" + err.message,
+                                                callback: function () {
+                                                    isFileValid = false;
+                                                    reader.abort();
+                                                },
+                                            });
+                                        }
+                                    };
+                                    reader.readAsText(file);
+                                },500);
+                            },
+                            buttons: [
+                                {
+                                    label: "Cancel",
+                                    icon: "glyphicon glyphicon-menu-left",
+                                    cssClass: "btn-default",
+                                    action: function (dialogItself) {
+                                        isFileValid = false;
+                                        reader.abort();
+                                        dialogItself.close();
+                                    },
+                                },
+                                {
+                                    id: "btn-srvr-prcs",
+                                    label: "Start Server Processing",
+                                    icon: "glyphicon glyphicon-menu-right",
+                                    cssClass: "btn-primary",
+                                    action: function (dialogItself) {
+                                        if (isFileValid == true) {
+                                            dialogItself.close();
+                                            savePayItemsExcl(dataToSend);
+                                        } else {
+                                            var dialog = bootbox.alert({
+                                                title: "Error-Import Pay Items",
+                                                size: "small",
+                                                message:
+                                                    '<span style="color:red;font-weight:bold:">Invalid File Selected!</span>',
+                                                callback: function () { },
+                                            });
+                                        }
+                                    },
+                                },
+                            ],
+                        });
+                    });
+                    performFileClick("allOtherFileInput6");
+                }
+            }
+        },
+    });
+}
+
+function savePayItemsExcl(dataToSend) {
+    if (dataToSend.trim() === "") {
+        bootbox.alert({
+            title: "System Alert!",
+            size: "small",
+            message:
+                '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                'font-weight:bold;">No Data to Send!</span></p>',
+        });
+        return false;
+    }
+    var dialog = bootbox.alert({
+        title: "Importing Pay Items",
+        size: "small",
+        message:
+            '<div id="myProgress1"><div id="myBar1"></div></div><div id="myInformation1"><i class="fa fa-spin fa-spinner"></i> Importing Pay Items...Please Wait...</div>',
+        callback: function () {
+            clearInterval(prgstimerid2);
+            window.clearInterval(prgstimerid2);
+            getPayPayItms('','#allmodules','grp=7&typ=1&pg=10&vtyp=0');
+            ClearAllIntervals();
+        },
+    });
+    dialog.init(function () {
+        getMsgAsyncSilent("grp=1&typ=11&q=Check Session",function () {
+            $body = $("body");
+            $body.removeClass("mdlloading");
+            $.ajax({
+                method: "POST",
+                url: "index.php",
+                data: {
+                    grp: 7,
+                    typ: 1,
+                    pg: 10,
+                    q: "UPDATE",
+                    actyp: 901,
+                    dataToSend: dataToSend,
+                },
+            });
+            prgstimerid2 = window.setInterval(rfrshSavePayItems,1000);
+        });
+    });
+}
+
+function rfrshSavePayItems() {
+    $.ajax({
+        method: "POST",
+        url: "index.php",
+        data: {
+            grp: 7,
+            typ: 1,
+            pg: 10,
+            q: "UPDATE",
+            actyp: 902,
+        },
+        success: function (data) {
+            var elem = document.getElementById("myBar1");
+            elem.style.width = data.percent + "%";
+            $("#myInformation1").html(data.message);
+            if (data.percent >= 100) {
+                window.clearInterval(prgstimerid2);
+                window.clearInterval(prgstimerid2);
+                ClearAllIntervals();
+            }
+        },
+        error: function (jqXHR,textStatus,errorThrown) {
+            console.log(textStatus + " " + errorThrown);
+            console.warn(jqXHR.responseText);
+        },
+    });
+}

@@ -16562,7 +16562,7 @@ var exprtBtn2;
 
 function exprtAccntChart() {
     var exprtMsg =
-        '<form role="form">' +
+        '<form role="form" id="recsToExprtForm">' +
         '<p style="color:#000;">' +
         "How many Accounts will you like to Export?" +
         "<br/>1=No Accounts(Empty Template)" +
@@ -16592,6 +16592,17 @@ function exprtAccntChart() {
         onshow: function (dialogItself) { },
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton("btn_exprt_rpt");
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
+            $('#recsToExprt').val(2);
             $("#recsToExprt").focus();
         },
         buttons: [
@@ -17225,7 +17236,7 @@ function exprtAccntDetTrns() {
             : $("#sbmtdJrnlBatchID").val();
     var partMsg = "Debit/Credit Transactions";
     var exprtMsg =
-        '<form role="form">' +
+        '<form role="form" id="recsToExprtForm">' +
         '<p style="color:#000;">' +
         "How many " +
         partMsg +
@@ -17263,6 +17274,17 @@ function exprtAccntDetTrns() {
         onshow: function (dialogItself) { },
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton("btn_exprt_rpt");
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
+            $('#recsToExprt').val(2);
             $("#recsToExprt").focus();
         },
         buttons: [
@@ -17788,7 +17810,7 @@ function exprtAccntEditTrns() {
             : $("#sbmtdJrnlBatchID").val();
     var partMsg = "Increase/Decrease Transactions";
     var exprtMsg =
-        '<form role="form">' +
+        '<form role="form" id="recsToExprtForm">' +
         '<p style="color:#000;">' +
         "How many " +
         partMsg +
@@ -17826,6 +17848,17 @@ function exprtAccntEditTrns() {
         onshow: function (dialogItself) { },
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton("btn_exprt_rpt");
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
+            $('#recsToExprt').val(2);
             $("#recsToExprt").focus();
         },
         buttons: [
@@ -18371,7 +18404,7 @@ function exprtAccntSmmryTrns() {
             : $("#sbmtdJrnlBatchID").val();
     var partMsg = "Simplified Transactions";
     var exprtMsg =
-        '<form role="form">' +
+        '<form role="form" id="recsToExprtForm">' +
         '<p style="color:#000;">' +
         "How many " +
         partMsg +
@@ -18409,6 +18442,17 @@ function exprtAccntSmmryTrns() {
         onshow: function (dialogItself) { },
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton("btn_exprt_rpt");
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
+            $('#recsToExprt').val(2);
             $("#recsToExprt").focus();
         },
         buttons: [
@@ -18990,7 +19034,7 @@ function exprtAccntBdgts() {
             ? "-1"
             : $("#accbSbmtdBudgetID").val();
     var exprtMsg =
-        '<form role="form">' +
+        '<form role="form" id="recsToExprtForm">' +
         '<p style="color:#000;">' +
         "How many Budget Lines will you like to Export?" +
         "<br/>1=No Budget Lines(Empty Template)" +
@@ -19020,6 +19064,17 @@ function exprtAccntBdgts() {
         onshow: function (dialogItself) { },
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton("btn_exprt_rpt");
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
+            $('#recsToExprt').val(2);
             $("#recsToExprt").focus();
         },
         buttons: [
@@ -19576,7 +19631,7 @@ function rfrshSaveAccntBdgts() {
 /*Import Export Assets Register*/
 function exprtAssetRgstr() {
     var exprtMsg =
-        '<form role="form">' +
+        '<form role="form" id="recsToExprtForm">' +
         '<p style="color:#000;">' +
         "How many Assets will you like to Export?" +
         "<br/>1=No Assets(Empty Template)" +
@@ -19606,6 +19661,17 @@ function exprtAssetRgstr() {
         onshow: function (dialogItself) { },
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton("btn_exprt_rpt");
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
+            $('#recsToExprt').val(2);
             $("#recsToExprt").focus();
         },
         buttons: [

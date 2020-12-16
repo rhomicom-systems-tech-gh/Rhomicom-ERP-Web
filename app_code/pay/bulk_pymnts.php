@@ -440,11 +440,22 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         $vPsblVal1 = getPssblValDesc($vPsblValID1);
                                         $rptID6 = -1;
                                         $paramStr6 = "";
+                                        $rptID69 = -1;
+                                        $paramStr69 = ""; //
                                         $rptID8 = -1;
                                         $paramStr8 = "";
                                         $rptID9 = -1;
                                         $paramStr9 = "";
                                         if ($vPsblVal1 == "TAKBG_SWLFR_APP_1") {
+                                            $reportName69 = "General Welfare Credit Letter";
+                                            $reportTitle69 = "General Welfare Credit Letter";
+                                            $rptID69 = getRptID($reportName69);
+                                            $prmID6029 = getParamIDUseSQLRep("{:documentTitle}", $rptID69);
+                                            $prmID6039 = getParamIDUseSQLRep("{:orgID}", $rptID69);
+                                            $prmID6049 = getParamIDUseSQLRep("{:pay_run_id}", $rptID69);
+                                            $paramRepsNVals69 = $prmID6029 . "~" . $reportTitle69 . "|" . $prmID6039 . "~" . $orgID . "|" . $prmID6049 . "~" . $pkID . "|-130~" . $reportTitle69 . "|-190~PDF";
+                                            $paramStr69 = urlencode($paramRepsNVals69);
+
                                             $reportName6 = "Welfare Loan Credit Letter";
                                             $reportTitle6 = "Welfare Loan Letter";
                                             $rptID6 = getRptID($reportName6);
@@ -899,6 +910,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                             <a href="javascript:getSilentRptsRnSts(<?php echo $rptID6; ?>, -1, '<?php echo $paramStr6; ?>');">
                                                                                                 <img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                                                 Welfare Loan Credit Letter
+                                                                                            </a>
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <a href="javascript:getSilentRptsRnSts(<?php echo $rptID69; ?>, -1, '<?php echo $paramStr69; ?>');">
+                                                                                                <img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                                                General Welfare Credit Letter
                                                                                             </a>
                                                                                         </li>
                                                                                         <li>
@@ -1412,11 +1429,22 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $vPsblVal1 = getPssblValDesc($vPsblValID1);
                 $rptID6 = -1;
                 $paramStr6 = "";
+                $rptID69 = -1;
+                $paramStr69 = ""; //
                 $rptID8 = -1;
                 $paramStr8 = "";
                 $rptID9 = -1;
                 $paramStr9 = "";
                 if ($vPsblVal1 == "TAKBG_SWLFR_APP_1") {
+                    $reportName69 = "General Welfare Credit Letter";
+                    $reportTitle69 = "General Welfare Credit Letter";
+                    $rptID69 = getRptID($reportName69);
+                    $prmID6029 = getParamIDUseSQLRep("{:documentTitle}", $rptID69);
+                    $prmID6039 = getParamIDUseSQLRep("{:orgID}", $rptID69);
+                    $prmID6049 = getParamIDUseSQLRep("{:pay_run_id}", $rptID69);
+                    $paramRepsNVals69 = $prmID6029 . "~" . $reportTitle69 . "|" . $prmID6039 . "~" . $orgID . "|" . $prmID6049 . "~" . $pkID . "|-130~" . $reportTitle69 . "|-190~PDF";
+                    $paramStr69 = urlencode($paramRepsNVals69);
+
                     $reportName6 = "Welfare Loan Credit Letter";
                     $reportTitle6 = "Welfare Loan Letter";
                     $rptID6 = getRptID($reportName6);
@@ -1937,6 +1965,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <a href="javascript:getSilentRptsRnSts(<?php echo $rptID6; ?>, -1, '<?php echo $paramStr6; ?>');">
                                                                     <img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                     Welfare Loan Credit Letter
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="javascript:getSilentRptsRnSts(<?php echo $rptID69; ?>, -1, '<?php echo $paramStr69; ?>');">
+                                                                    <img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                    General Welfare Credit Letter
                                                                 </a>
                                                             </li>
                                                             <li>

@@ -1763,7 +1763,7 @@ function delRpts(rowIDAttrb)
 
 function exprtRpts()
 {
-    var exprtMsg = '<form role="form">' +
+    var exprtMsg = '<form role="form" id="recsToExprtForm">' +
             '<p style="color:#000;">' +
             'How many Reports/Processes will you like to Export?' +
             '<br/>1=No Reports/Processes(Empty Template)' +
@@ -1794,6 +1794,17 @@ function exprtRpts()
         },
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_rpt');
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
+            $('#recsToExprt').val(2);
             $('#recsToExprt').focus();
         },
         buttons: [{
@@ -3231,7 +3242,7 @@ function rfrshSaveRptParams() {
 
 function exprtRptParams()
 {
-    var exprtMsg = '<form role="form">' +
+    var exprtMsg = '<form role="form" id="recsToExprtForm">' +
             '<p style="color:#000;">' +
             'How many Parameters will you like to Export?' +
             '<br/>1=No Parameters(Empty Template)' +
@@ -3262,7 +3273,18 @@ function exprtRptParams()
         },
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_param');
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $('#recsToExprt').val(2);
             $('#recsToExprt').focus();
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
         },
         buttons: [{
                 label: 'Cancel',

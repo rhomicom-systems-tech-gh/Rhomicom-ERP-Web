@@ -307,6 +307,387 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 }
             } else if ($actyp == 2) {
                 //Run Mass Pay Run
+            } else if ($actyp == 901) {
+                //Import Pay Items
+                $dataToSend = trim(cleanInputData($_POST['dataToSend']), "|~");
+                session_write_close();
+                $affctd = 0;
+                $afftctd = 0;
+                $afftctd1 = 0;
+                $afftctd2 = 0;
+                if ($dataToSend != "") {
+                    $variousRows = explode("|", $dataToSend);
+                    $total = count($variousRows);
+                    for ($z = 0; $z < $total; $z++) {
+                        $crntRow = explode("~", $variousRows[$z]);
+                        if (count($crntRow) == 27) {
+                            $payPayItmsID = -1;
+                            $payPayItmsName = trim(cleanInputData1($crntRow[0]));
+                            $payPayItmsDesc = trim(cleanInputData1($crntRow[1]));
+                            $payPayItmsMajTyp = trim(cleanInputData1($crntRow[2]));
+                            $payPayItmsMinTyp = trim(cleanInputData1($crntRow[3]));
+                            $payPayItmsUOM = trim(cleanInputData1($crntRow[4]));
+                            $payPayItmsPyaFeq = trim(cleanInputData1($crntRow[5]));
+                            $payPayItmsRunPriority = trim(cleanInputData1($crntRow[6]));
+                            $payPayItmsUsesSQL = trim(cleanInputData1($crntRow[7]));
+                            $payPayItmsLocClsfctn = trim(cleanInputData1($crntRow[8]));
+                            $payPayItmsBalsType = trim(cleanInputData1($crntRow[9]));
+                            $payPayItmsIncrsDcrs1 = trim(cleanInputData1($crntRow[10]));
+                            $payPayItmsCostAcntNm = ltrim(trim(cleanInputData1($crntRow[11])), '\'');
+                            $payPayItmsIncrsDcrs2 = trim(cleanInputData1($crntRow[12]));
+                            $payPayItmsBalsAcntNm = ltrim(trim(cleanInputData1($crntRow[13])), '\'');
+                            $payPayItmsFeedInto = trim(cleanInputData1($crntRow[14]));
+                            $payPayItmsAddSbtrct = trim(cleanInputData1($crntRow[15]));
+                            $payPayItmsAddSbtScale = trim(cleanInputData1($crntRow[16]));
+                            $payPayItmsIsRetro = trim(cleanInputData1($crntRow[17]));
+                            $payPayItmsRetroItmNm = trim(cleanInputData1($crntRow[18]));
+                            $payPayItmsInvItmNm = trim(cleanInputData1($crntRow[19]));
+                            $payPayItmsAllowEdtng = trim(cleanInputData1($crntRow[20]));
+                            $payPayItmsCreatesActng = trim(cleanInputData1($crntRow[21]));
+                            $payPayItmsEffctOrg = trim(cleanInputData1($crntRow[22]));
+                            $payPayItmsIsEnbld = trim(cleanInputData1($crntRow[23]));
+                            $payPayItmsValueNm = trim(cleanInputData1($crntRow[24]));
+                            $payPayItmsValueAmt = trim(cleanInputData1($crntRow[25]));
+                            $payPayItmsValueSQL = trim(cleanInputData1($crntRow[26]));
+
+                            $payPayItmsRetroItmID = -1;
+                            $payPayItmsInvItmID = -1;
+                            $payPayItmsFeedIntoID = -1;
+                            $payPayItmsCostAcntID = -1;
+                            $payPayItmsBalsAcntID = -1;
+
+                            if ($z == 0) {
+                                if (
+                                    strtoupper($payPayItmsName) == strtoupper("Item Code/Name**")
+                                    && strtoupper($payPayItmsDesc) == strtoupper("Item Description")
+                                    && strtoupper($payPayItmsCreatesActng) == strtoupper("Creates Accounting?(YES/NO)")
+                                    && strtoupper($payPayItmsValueSQL) == strtoupper("SQL Formula")
+                                ) {
+                                    continue;
+                                } else {
+                                    $arr_content['percent'] = 100;
+                                    $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span> Selected File is Invalid!";
+                                    //.strtoupper($number) ."|". strtoupper($processName) ."|". strtoupper($isEnbld1 == "IS ENABLED?");
+                                    $arr_content['msgcount'] = $total;
+                                    file_put_contents(
+                                        $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_PayItemsHdrimport_progress.rho",
+                                        json_encode($arr_content)
+                                    );
+                                    break;
+                                }
+                            } else {
+                                $payPayItmsUsesSQL = ($payPayItmsUsesSQL == "YES") ? TRUE : FALSE;
+                                $payPayItmsIsRetro = ($payPayItmsIsRetro == "YES") ? TRUE : FALSE;
+                                $payPayItmsAllowEdtng = ($payPayItmsAllowEdtng == "YES") ? TRUE : FALSE;
+                                $payPayItmsCreatesActng = ($payPayItmsCreatesActng == "YES") ? TRUE : FALSE;
+                                $payPayItmsIsEnbld = ($payPayItmsIsEnbld == "YES") ? TRUE : FALSE;
+                                $payPayItmsValueAmt = (float)$payPayItmsValueAmt;
+                                $payPayItmsRunPriority = (float)$payPayItmsRunPriority;
+                                $payPayItmsAddSbtScale = (float) $payPayItmsAddSbtScale;
+
+                                $payPayItmsRetroItmID = getItmID($payPayItmsRetroItmNm, $orgID);
+                                $payPayItmsInvItmID = getInvItmID($payPayItmsInvItmNm, $orgID);
+                                $payPayItmsFeedIntoID = getItmID($payPayItmsFeedInto, $orgID);
+                                $payPayItmsCostAcntID = getAccntID($payPayItmsCostAcntNm, $orgID);
+                                $payPayItmsBalsAcntID = getAccntID($payPayItmsBalsAcntNm, $orgID);
+                                //$msg = $payPayItmsName . ":" . $payPayItmsDesc . ":" . $payPayItmsCreatesActng . ":" . $payPayItmsValueSQL;
+                                //logSessionErrs("WWW z=" . $z . " Before Excel Import" . count($crntRow) . $msg . $gnrlTrnsDteDMYHMS);
+                            }
+                            $exitErrMsg = "";
+                            if ($payPayItmsName == "") {
+                                $exitErrMsg .= "Row " . ($z + 1) . ":-Please enter Pay Item Name!<br/>";
+                            }
+                            if ($payPayItmsMajTyp == "" || $payPayItmsMinTyp == "") {
+                                $exitErrMsg .= "Row " . ($z + 1) . ":-Please enter Item Major and Minor Type!<br/>";
+                            }
+                            if ($payPayItmsUOM == "") {
+                                $exitErrMsg .= "Row " . ($z + 1) . ":-Please enter UOM!<br/>";
+                            }
+                            if ($payPayItmsEffctOrg == "") {
+                                $payPayItmsEffctOrg ="None";
+                                //$exitErrMsg .= "Row " . ($z + 1) . ":-Please enter Effect on Person's Debt!<br/>";
+                            }
+                            if ($payPayItmsCreatesActng == true) {
+                                if ($payPayItmsIncrsDcrs1 == "None" || $payPayItmsCostAcntID <= 0) {
+                                    $exitErrMsg .= "Row " . ($z + 1) . ":-Costing Account CANNOT be EMPTY!";
+                                }
+                                if ($payPayItmsIncrsDcrs2 == "None" || $payPayItmsBalsAcntID <= 0) {
+                                    $exitErrMsg .= "Row " . ($z + 1) . ":-Balancing Account CANNOT be EMPTY!";
+                                }
+                            }
+                            if (trim($exitErrMsg) !== "") {
+                                $arr_content['percent'] = 100;
+                                $arr_content['payPayItmsID'] = $payPayItmsID;
+                                $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>" . $exitErrMsg . "</span>";
+                                file_put_contents(
+                                    $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_PayItemsHdrimport_progress.rho",
+                                    json_encode($arr_content)
+                                );
+                                break;
+                            }
+                            $payPayItmsID = getItmID($payPayItmsName, $orgID);
+                            if ($payPayItmsID <= 0) {
+                                $affctd +=createItm(
+                                    $orgID,
+                                    $payPayItmsName,
+                                    $payPayItmsDesc,
+                                    $payPayItmsMajTyp,
+                                    $payPayItmsMinTyp,
+                                    $payPayItmsUOM,
+                                    $payPayItmsUsesSQL,
+                                    $payPayItmsIsEnbld,
+                                    $payPayItmsCostAcntID,
+                                    $payPayItmsBalsAcntID,
+                                    $payPayItmsPyaFeq,
+                                    $payPayItmsLocClsfctn,
+                                    $payPayItmsRunPriority,
+                                    $payPayItmsIncrsDcrs1,
+                                    $payPayItmsIncrsDcrs2,
+                                    $payPayItmsBalsType,
+                                    100,
+                                    $payPayItmsIsRetro,
+                                    $payPayItmsRetroItmID,
+                                    $payPayItmsInvItmID,
+                                    $payPayItmsAllowEdtng,
+                                    $payPayItmsCreatesActng,
+                                    $payPayItmsEffctOrg
+                                );
+                                $payPayItmsID = getItmID($payPayItmsName, $orgID);
+                            } else {
+                                $affctd +=updateItm(
+                                    $orgID,
+                                    $payPayItmsID,
+                                    $payPayItmsName,
+                                    $payPayItmsDesc,
+                                    $payPayItmsMajTyp,
+                                    $payPayItmsMinTyp,
+                                    $payPayItmsUOM,
+                                    $payPayItmsUsesSQL,
+                                    $payPayItmsIsEnbld,
+                                    $payPayItmsCostAcntID,
+                                    $payPayItmsBalsAcntID,
+                                    $payPayItmsPyaFeq,
+                                    $payPayItmsLocClsfctn,
+                                    $payPayItmsRunPriority,
+                                    $payPayItmsIncrsDcrs1,
+                                    $payPayItmsIncrsDcrs2,
+                                    $payPayItmsBalsType,
+                                    100,
+                                    $payPayItmsIsRetro,
+                                    $payPayItmsRetroItmID,
+                                    $payPayItmsInvItmID,
+                                    $payPayItmsAllowEdtng,
+                                    $payPayItmsCreatesActng,
+                                    $payPayItmsEffctOrg
+                                );
+                            }
+                            //Import Item Feeds
+                            $exitErrMsg = "";
+                            if ($payPayItmsFeedIntoID > 0 && $payPayItmsID > 0) {
+                                $ln_ItmID = $payPayItmsFeedIntoID;
+                                $feedItmMayTyp = getGnrlRecNm("org.org_pay_items", "item_id", "item_maj_type", $payPayItmsFeedIntoID);
+                                $ln_Action = $payPayItmsAddSbtrct;
+                                $ln_ScaleFctr = $payPayItmsAddSbtScale;
+                                $errMsg = "";
+                                if ($ln_Action === "" || $ln_ItmID <= 0) {
+                                    $errMsg .= "Row " . ($z + 1) . ":- Item Feed and Action cannot be empty!<br/>";
+                                }
+                                if (($payPayItmsMajTyp == "Balance Item" && $feedItmMayTyp == "Balance Item")
+                                    || ($payPayItmsMajTyp != "Balance Item" && $feedItmMayTyp != "Balance Item")
+                                ) {
+                                    $errMsg .= "Row " . ($z + 1) . ":- Balance Item must be fed by non-balance item!<br/>";
+                                }
+                                if ($errMsg === "") {
+                                    if ($ln_Action != "" && $ln_ItmID > 0 && $ln_ScaleFctr != 0) {
+                                        $itmid = $payPayItmsID;
+                                        $balsItmID = $ln_ItmID;
+                                        if ($payPayItmsMajTyp == "Balance Item" && $feedItmMayTyp != "Balance Item") {
+                                            $itmid = $ln_ItmID;
+                                            $balsItmID = $payPayItmsID;
+                                        }
+                                        $ln_TrnsLnID = getItmFeedID($itmid, $balsItmID);
+                                        if ($ln_TrnsLnID <= 0) {
+                                            $afftctd1 += createItmFeed($itmid, $balsItmID, $ln_Action, $ln_ScaleFctr);
+                                        } else {
+                                            $afftctd1 += updateItmFeed($ln_TrnsLnID, $itmid, $balsItmID, $ln_Action, $ln_ScaleFctr);
+                                        }
+                                    }
+                                } else {
+                                    $exitErrMsg .= $errMsg;
+                                }
+                            }
+                            //Import Item Values
+                            if (trim($payPayItmsValueNm, "|~") != "" && $payPayItmsID > 0) {
+                                $ln_ItemValID = getItmValID($payPayItmsValueNm, $payPayItmsID);
+                                $ln_ValNm = $payPayItmsValueNm;
+                                $ln_ValSQL = $payPayItmsValueSQL;
+                                $ln_ValAmnt = $payPayItmsValueAmt;
+                                $errMsg = "";
+                                if ($payPayItmsUsesSQL == true && $ln_ValSQL == "") {
+                                    $ln_ValSQL = "Select 0";
+                                }
+                                if ($payPayItmsUsesSQL == true && strlen($ln_ValSQL) <= 6) {
+                                    $ln_ValSQL = "Select 0";
+                                }
+                                if ($payPayItmsUsesSQL == true && $ln_ValSQL != "") {
+                                    if (!isItmValSQLValid($ln_ValSQL, $prsnid, $orgID, $gnrlTrnsDteDMYHMS, -1, -1, $errMsg)) {
+                                        $errMsg .= "Row " . ($z + 1) . ":SQL is NOT valid!";
+                                    }
+                                }
+                                $exitErrMsg .= $errMsg;
+                                if ($errMsg === "") {
+                                    if ($ln_ItemValID <= 0) {
+                                        $afftctd2 += createItmVal($payPayItmsID, $ln_ValAmnt, $ln_ValSQL, $ln_ValNm);
+                                    } else {
+                                        $afftctd2 += updateItmVal($ln_ItemValID, $payPayItmsID, $ln_ValAmnt, $ln_ValSQL, $ln_ValNm);
+                                    }
+                                }
+                            }
+                            if (trim($exitErrMsg) !== "") {
+                                $arr_content['percent'] = 100;
+                                $arr_content['payPayItmsID'] = $payPayItmsID;
+                                $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>" . $exitErrMsg . "</span>";
+                                file_put_contents(
+                                    $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_PayItemsHdrimport_progress.rho",
+                                    json_encode($arr_content)
+                                );
+                                break;
+                            }
+                        }
+                        $percent = round((($z + 1) / $total) * 100, 2);
+                        $arr_content['percent'] = $percent;
+                        if ($percent >= 100) {
+                            $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span> 100% Completed!..." . $affctd . " out of " . $total . " Pay Item(s) processed.";
+                            $arr_content['msgcount'] = $total;
+                        } else {
+                            $arr_content['message'] = "<i class=\"fa fa-spin fa-spinner\"></i> Importing Pay Items...Please Wait..." . ($z + 1) . " out of " . $total . " Pay Item(s) processed.";
+                        }
+                        file_put_contents(
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_PayItemsHdrimport_progress.rho",
+                            json_encode($arr_content)
+                        );
+                    }
+                } else {
+                    $percent = 100;
+                    $arr_content['percent'] = $percent;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> 100% Completed...An Error Occured!<br/>$errMsg</span>";
+                    $arr_content['msgcount'] = "";
+                    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_PayItemsHdrimport_progress.rho", json_encode($arr_content));
+                }
+            } else if ($actyp == 902) {
+                //Checked Importing Process Status                
+                header('Content-Type: application/json');
+                $file = $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_PayItemsHdrimport_progress.rho";
+                if (file_exists($file)) {
+                    $text = file_get_contents($file);
+                    echo $text;
+
+                    $obj = json_decode($text);
+                    if ($obj->percent >= 100) {
+                        //$rs = file_exists($file) ? unlink($file) : TRUE;
+                    }
+                } else {
+                    echo json_encode(array("percent" => null, "message" => null));
+                }
+            } else if ($actyp == 903) {
+                //Export Asset Register
+                $inptNum = isset($_POST['inptNum']) ? (int) cleanInputData($_POST['inptNum']) : 0;
+                session_write_close();
+                $affctd = 0;
+                $errMsg = "Invalid Option!";
+                if ($inptNum >= 0) {
+                    $hdngs = array(
+                        "Item Code/Name**", "Item Description", "Item Major Type**", "Item Minor Type**",
+                        "Item UOM**", "Pay Frequency", "Pay Priority", "Uses SQL Formulas for Values?", "Local Classification",
+                        "Balance Type", "Increase/Decrease Cost Account", "Cost Account Number",
+                        "Increase/Decrease Balance Account", "Balance Account Number", "Balance Item it Feeds Into",
+                        "Adds/Subtracts", "Scale Factor", "Is Retro?(YES/NO)", "Retro Element Name", "Inventory Item Code",
+                        "Allow Value Editing?(YES/NO)", "Creates Accounting?(YES/NO)", "Effect on Person's Debt", "Is Enabled?(YES/NO)",
+                        "Possible Value Code/Name**", "Value Amount", "SQL Formula"
+                    );
+                    $limit_size = 0;
+                    if ($inptNum > 2) {
+                        $limit_size = $inptNum;
+                    } else if ($inptNum == 2) {
+                        $limit_size = 1000000;
+                    }
+                    $rndm = getRandomNum(10001, 9999999);
+                    $dteNm = date('dMY_His');
+                    $nwFileNm = $fldrPrfx . "dwnlds/tmp/PayItemsHdrExprt_" . $dteNm . "_" . $rndm . ".csv";
+                    $dwnldUrl = $app_url . "dwnlds/tmp/PayItemsHdrExprt_" . $dteNm . "_" . $rndm . ".csv";
+                    $opndfile = fopen($nwFileNm, "w");
+                    fputcsv($opndfile, $hdngs);
+                    if ($limit_size <= 0) {
+                        $arr_content['percent'] = 100;
+                        $arr_content['dwnld_url'] = $dwnldUrl;
+                        $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!... Accounts Chart Template Exported.</span>";
+                        $arr_content['msgcount'] = 0;
+                        file_put_contents(
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_PayItemsHdrexprt_progress.rho",
+                            json_encode($arr_content)
+                        );
+
+                        fclose($opndfile);
+                        exit();
+                    }
+                    $z = 0;
+                    $crntRw = "";
+                    $result = get_All_PayItemsNVals($orgID, $limit_size);
+                    $total = loc_db_num_rows($result);
+                    $fieldCntr = loc_db_num_fields($result);
+                    while ($row = loc_db_fetch_array($result)) {
+                        $crntRw = array(
+                            $row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6],
+                            $row[7], $row[8], $row[9], $row[10], "'" . $row[11],
+                            $row[12], "'" . $row[13], $row[14], $row[15], $row[16], $row[17], $row[18],
+                            "'" . $row[19], $row[20], $row[21], $row[22], $row[23], $row[24], $row[25], $row[26]
+                        );
+                        fputcsv($opndfile, $crntRw);
+                        //file_put_contents($nwFileNm, $crntRw, FILE_APPEND | LOCK_EX);
+                        $percent = round((($z + 1) / $total) * 100, 2);
+                        $arr_content['percent'] = $percent;
+                        $arr_content['dwnld_url'] = $dwnldUrl;
+                        if ($percent >= 100) {
+                            $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!..." . ($z +
+                                1) . " out of " . $total . " Account(s) exported.</span>";
+                            $arr_content['msgcount'] = $total;
+                        } else {
+                            $arr_content['message'] = "<span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"><br/>Exporting Accounts...Please Wait..." . ($z +
+                                1) . " out of " . $total . " Account(s) exported.</span>";
+                        }
+                        file_put_contents(
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_PayItemsHdrexprt_progress.rho",
+                            json_encode($arr_content)
+                        );
+                        $z++;
+                    }
+                    fclose($opndfile);
+                } else {
+                    $percent = 100;
+                    $arr_content['percent'] = $percent;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> 100% Completed...An Error Occured!<br/>$errMsg</span>";
+                    $arr_content['msgcount'] = "";
+                    $arr_content['dwnld_url'] = "";
+                    file_put_contents(
+                        $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_PayItemsHdrexprt_progress.rho",
+                        json_encode($arr_content)
+                    );
+                }
+            } else if ($actyp == 904) {
+                //Checked Exporting Process Status                
+                header('Content-Type: application/json');
+                $file = $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_PayItemsHdrexprt_progress.rho";
+                if (file_exists($file)) {
+                    $text = file_get_contents($file);
+                    echo $text;
+
+                    $obj = json_decode($text);
+                    if ($obj->percent >= 100) {
+                        //$rs = file_exists($file) ? unlink($file) : TRUE;
+                    }
+                } else {
+                    echo json_encode(array("percent" => 0, "message" => '<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Not Started</span>'));
+                }
             }
         } else {
             if ($vwtyp == 0) {
@@ -330,20 +711,26 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $result = get_Basic_Itm($srchFor, $srchIn, $curIdx, $lmtSze, $orgID);
                     $cntr = 0;
                     $colClassType1 = "col-lg-2";
-                    $colClassType2 = "col-lg-3";
-                    $colClassType3 = "col-lg-4";
+                    $colClassType2 = "col-lg-5";
+                    $colClassType3 = "col-lg-2";
 ?>
                     <form id='payPayItmsForm' action='' method='post' accept-charset='UTF-8'>
                         <div class="row rhoRowMargin">
                             <?php if ($canAdd === true) { ?>
                                 <div class="<?php echo $colClassType2; ?>" style="padding:0px 0px 0px 0px !important;">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOnePayPayItmsForm(-1, 0);" style="width:100% !important;" data-toggle="tooltip" data-placement="bottom" title=" New Bulk/Mass Pay Run">
                                             <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                             New Pay Item
                                         </button>
-                                    </div>
-                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="exprtPayItems();" data-toggle="tooltip" title="Export Pay Items">
+                                            <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                            Export
+                                        </button>
+                                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="importPayItems();" data-toggle="tooltip" title="Import Pay Items">
+                                            <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                            Import
+                                        </button>
                                         <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="savePayPayItmsForm();" style="width:100% !important;">
                                             <img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                             Save
@@ -358,9 +745,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             ?>
                             <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                                 <div class="input-group">
-                                    <input class="form-control" id="payPayItmsSrchFor" type="text" placeholder="Search For" value="<?php
-                                                                                                                                    echo trim(str_replace("%", " ", $srchFor));
-                                                                                                                                    ?>" onkeyup="enterKeyFuncPayPayItms(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                    <input class="form-control" id="payPayItmsSrchFor" type="text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncPayPayItms(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
                                     <input id="payPayItmsPageNo" type="hidden" value="<?php echo $pageNo; ?>">
                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getPayPayItms('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
                                         <span class="glyphicon glyphicon-remove"></span>
@@ -368,10 +753,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getPayPayItms('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
                                         <span class="glyphicon glyphicon-search"></span>
                                     </label>
-                                </div>
-                            </div>
-                            <div class="<?php echo $colClassType3; ?>">
-                                <div class="input-group">
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
                                     <select data-placeholder="Select..." class="form-control chosen-select" id="payPayItmsSrchIn">
                                         <?php
@@ -432,7 +813,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <thead>
                                             <tr>
                                                 <th>No.</th>
-                                                <th>Pay Run Name</th>
+                                                <th>Pay Item Name</th>
                                                 <th>...</th>
                                                 <?php if ($canVwRcHstry) { ?>
                                                     <th>...</th>
