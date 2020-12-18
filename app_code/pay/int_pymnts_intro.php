@@ -2775,16 +2775,13 @@ function deletePersonSet($hdrid, $setNm)
         return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
     } else {
         $dsply = "No Record Deleted!";
-        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">
-
-    $dsply</p>";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
     }
 }
 
 function deletePersonSetRole($hdrid, $roleNm)
 {
     $affctd = deleteGnrlRecs($hdrid, "pay.pay_sets_allwd_roles", "pay_roles_id", "Linked Role Set Name = " . $roleNm);
-
     if ($affctd > 0) {
         $dsply = "Successfully Deleted the ff Records-";
         $dsply .= "<br/>$affctd Linked Role Set(s)!";
@@ -2901,6 +2898,20 @@ function getNewMsPyID()
     }
     return 0;
 }
+
+function getMsPayAtchdValID($payMassPyID, $psrnID, $itmid, $pssblvalid)
+{
+    $strSql = "select value_set_det_id from pay.pay_value_sets_det
+    where person_id=" . $psrnID . " and item_id=" . $itmid .
+        " and itm_pssbl_val_id=" . $pssblvalid .
+        " and mass_pay_id=" . $payMassPyID;
+    $result = executeSQLNoParams($strSql);
+    while ($row = loc_db_fetch_array($result)) {
+        return ((float) $row[0]) + 1;
+    }
+    return 0;
+}
+
 
 function createMsPayAtchdVal($mspyid, $psrnID, $itmid, $amnt, $pssblvalid, $dteErnd)
 {
