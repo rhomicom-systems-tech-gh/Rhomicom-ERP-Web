@@ -16500,6 +16500,9 @@ function moveSelectedTrans() {
             typeof $("#" + rowPrfxNm1 + rndmNum1 + "_IsParent").val() === "undefined"
                 ? "0"
                 : $("#" + rowPrfxNm1 + rndmNum1 + "_IsParent").val();
+        if (ln_TrnsDte.trim().length <= 11) {
+            ln_TrnsDte = ln_TrnsDte.trim() + " 12:00:00";
+        }
         ln_DbtAmt = Number(ln_DbtAmt.replace(/[^-?0-9\.]/g,""));
         ln_CrdtAmnt = Number(ln_CrdtAmnt.replace(/[^-?0-9\.]/g,""));
         var newNetAmnt = 0;
@@ -16519,7 +16522,7 @@ function moveSelectedTrans() {
             $("#" + rowPrfxNm + nwRndm + "_TrnsCurNm1").text(jrnlBatchAmountCrncy);
             $("#" + rowPrfxNm + nwRndm + "_CreditAmnt").val(ln_DbtAmt);
             $("#" + rowPrfxNm + nwRndm + "_DebitAmnt").val(ln_CrdtAmnt);
-            $("#" + rowPrfxNm + nwRndm + "_TransDte").val(ln_TrnsDte + " 12:00:00");
+            $("#" + rowPrfxNm + nwRndm + "_TransDte").val(ln_TrnsDte);
             /*Recreate accounts trans in new account*/
             nwRndm = insertOnlyJrnlBatcRows("oneJrnlBatchDetLinesTable",1,inptHtml);
             $("#" + rowPrfxNm + nwRndm + "_AccountID").val(rcnclAccntID);
@@ -16531,7 +16534,7 @@ function moveSelectedTrans() {
             $("#" + rowPrfxNm + nwRndm + "_TrnsCurNm1").text(jrnlBatchAmountCrncy);
             $("#" + rowPrfxNm + nwRndm + "_CreditAmnt").val(ln_CrdtAmnt);
             $("#" + rowPrfxNm + nwRndm + "_DebitAmnt").val(ln_DbtAmt);
-            $("#" + rowPrfxNm + nwRndm + "_TransDte").val(ln_TrnsDte + " 12:00:00");
+            $("#" + rowPrfxNm + nwRndm + "_TransDte").val(ln_TrnsDte);
         }
     }
 

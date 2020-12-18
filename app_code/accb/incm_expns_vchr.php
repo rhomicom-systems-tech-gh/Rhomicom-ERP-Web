@@ -568,7 +568,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
                         $gnrtdTrnsNo = $row[1];
                         $smplVchrSpplr = $row[6];
-                        $smplVchrSpplrID = (float) $row[1];
+                        $smplVchrSpplrID = (float) $row[5];
                         $smplVchrSpplrSite = $row[17];
                         $smplVchrSpplrSiteID = (float)$row[16];
                         $smplVchrMainTmpltID = (float)$row[19];

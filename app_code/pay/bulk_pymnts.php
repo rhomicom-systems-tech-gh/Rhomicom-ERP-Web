@@ -227,6 +227,198 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 }
             } else if ($actyp == 2) {
                 //Run Mass Pay Run
+            } else if ($actyp == 901) {
+                //Import Attached Values
+                $payMassPyID = isset($_POST['payMassPyID']) ? (int) cleanInputData($_POST['payMassPyID']) : -1;
+                $dataToSend = trim(cleanInputData($_POST['dataToSend']), "|~");
+                session_write_close();
+                $affctd = 0;
+                $errMsg = "";
+                if ($dataToSend != "") {
+                    $variousRows = explode("|", $dataToSend);
+                    $total = count($variousRows);
+                    for ($z = 0; $z < $total; $z++) {
+                        $crntRow = explode("~", $variousRows[$z]);
+                        if (count($crntRow) == 5) {
+                            $ln_PrsnLocID = ltrim(trim(cleanInputData1($crntRow[0])), '\'');
+                            $ln_PrsnNm = trim(cleanInputData1($crntRow[1]));
+                            $ln_ItemNm = trim(cleanInputData1($crntRow[2]));
+                            $ln_ItemValNm = trim(cleanInputData1($crntRow[3]));
+                            $ln_Value = trim(cleanInputData1($crntRow[4]));
+                            if ($z == 0) {
+                                if (
+                                    strtoupper($ln_PrsnLocID) == strtoupper("Person's ID No.**")
+                                    && strtoupper($ln_ItemValNm) == strtoupper("Item Value Name**")
+                                    && strtoupper($ln_Value) == strtoupper("Value/Amount to Use**")
+                                ) {
+                                    continue;
+                                } else {
+                                    $arr_content['percent'] = 100;
+                                    $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span> Selected File is Invalid!";
+                                    //.strtoupper($number) ."|". strtoupper($processName) ."|". strtoupper($isEnbld1 == "IS ENABLED?");
+                                    $arr_content['msgcount'] = $total;
+                                    file_put_contents(
+                                        $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_PyAttchdValuesimport_progress.rho",
+                                        json_encode($arr_content)
+                                    );
+                                    break;
+                                }
+                            }
+                            $ln_PrsnID = getPersonID($ln_PrsnLocID, $orgID);
+                            $ln_ItemID = getItmID($ln_ItemNm, $orgID);
+                            $ln_ItemValID = getItmValID($ln_ItemValNm, $ln_ItemID);
+                            $ln_ValToUse = (float) $ln_Value;
+                            $ln_CanEdt = getGnrlRecNm("org.org_pay_items", "item_id", "allow_value_editing", $ln_ItemID);
+                            $ln_DateEarnd = "";
+                            $exitErrMsg = "";
+                            $errMsg = "";
+                            if ($ln_PrsnID <= 0 || $ln_ItemID <= 0 || $ln_ItemValID <= 0) {
+                                $errMsg = "Row " . ($z + 1) . ":- Person and Pay Item/Value must be valid and existing!<br/>";
+                            }
+                            $ln_TrnsLnID = getMsPayAtchdValID($payMassPyID, $ln_PrsnID, $ln_ItemID, $ln_ItemValID);
+                            if ($errMsg === "") {
+                                if ($ln_TrnsLnID <= 0 && $ln_CanEdt == "1") {
+                                    $affctd += createMsPayAtchdVal(
+                                        $payMassPyID,
+                                        $ln_PrsnID,
+                                        $ln_ItemID,
+                                        $ln_ValToUse,
+                                        $ln_ItemValID,
+                                        $ln_DateEarnd
+                                    );
+                                } else if ($ln_TrnsLnID > 0 && $ln_CanEdt == "1") {
+                                    $affctd += updtMsPayAtchdVal($ln_TrnsLnID, $ln_ValToUse);
+                                }
+                            } else {
+                                $exitErrMsg .= $errMsg;
+                            }
+                        }
+                        $percent = round((($z + 1) / $total) * 100, 2);
+                        $arr_content['percent'] = $percent;
+                        if ($percent >= 100) {
+                            $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span> 100% Completed!..." . $affctd . " out of " . $total . " Attached Value(s) processed." . $exitErrMsg;
+                            $arr_content['msgcount'] = $total;
+                        } else {
+                            $arr_content['message'] = "<i class=\"fa fa-spin fa-spinner\"></i> Importing Assets...Please Wait..." . ($z + 1) . " out of " . $total . " Attached Value(s) processed.";
+                        }
+                        file_put_contents(
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_PyAttchdValuesimport_progress.rho",
+                            json_encode($arr_content)
+                        );
+                    }
+                } else {
+                    $percent = 100;
+                    $arr_content['percent'] = $percent;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> 100% Completed...An Error Occured!<br/>$errMsg</span>";
+                    $arr_content['msgcount'] = "";
+                    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_PyAttchdValuesimport_progress.rho", json_encode($arr_content));
+                }
+            } else if ($actyp == 902) {
+                //Checked Importing Process Status                
+                header('Content-Type: application/json');
+                $file = $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_PyAttchdValuesimport_progress.rho";
+                if (file_exists($file)) {
+                    $text = file_get_contents($file);
+                    echo $text;
+
+                    $obj = json_decode($text);
+                    if ($obj->percent >= 100) {
+                        //$rs = file_exists($file) ? unlink($file) : TRUE;
+                    }
+                } else {
+                    echo json_encode(array("percent" => null, "message" => null));
+                }
+            } else if ($actyp == 903) {
+                //Export Attached Values
+                $payMassPyID = isset($_POST['payMassPyID']) ? (int) cleanInputData($_POST['payMassPyID']) : -1;
+                $inptNum = isset($_POST['inptNum']) ? (int) cleanInputData($_POST['inptNum']) : 0;
+                session_write_close();
+                $affctd = 0;
+                $errMsg = "Invalid Option!";
+                if ($inptNum >= 0) {
+                    $hdngs = array(
+                        "Person's ID No.**", "Full Name", "Item Name**", "Item Value Name**", "Value/Amount to Use**"
+                    );
+                    $limit_size = 0;
+                    if ($inptNum > 2) {
+                        $limit_size = $inptNum;
+                    } else if ($inptNum == 2) {
+                        $limit_size = 1000000;
+                    }
+                    $rndm = getRandomNum(10001, 9999999);
+                    $dteNm = date('dMY_His');
+                    $nwFileNm = $fldrPrfx . "dwnlds/tmp/PyAttchdValuesExprt_" . $dteNm . "_" . $rndm . ".csv";
+                    $dwnldUrl = $app_url . "dwnlds/tmp/PyAttchdValuesExprt_" . $dteNm . "_" . $rndm . ".csv";
+                    $opndfile = fopen($nwFileNm, "w");
+                    fputcsv($opndfile, $hdngs);
+                    if ($limit_size <= 0) {
+                        $arr_content['percent'] = 100;
+                        $arr_content['dwnld_url'] = $dwnldUrl;
+                        $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!... Accounts Chart Template Exported.</span>";
+                        $arr_content['msgcount'] = 0;
+                        file_put_contents(
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_PyAttchdValuesexprt_progress.rho",
+                            json_encode($arr_content)
+                        );
+
+                        fclose($opndfile);
+                        exit();
+                    }
+                    $z = 0;
+                    $crntRw = "";
+                    $result = get_One_MsPayAtchdVals("%", "Person Name/ID", 0, $limit_size, $payMassPyID);
+                    $total = loc_db_num_rows($result);
+                    $fieldCntr = loc_db_num_fields($result);
+                    while ($row = loc_db_fetch_array($result)) {
+                        $crntRw = array(
+                            "'" . $row[3], $row[4], $row[6], $row[8], $row[9]
+                        );
+                        fputcsv($opndfile, $crntRw);
+                        //file_put_contents($nwFileNm, $crntRw, FILE_APPEND | LOCK_EX);
+                        $percent = round((($z + 1) / $total) * 100, 2);
+                        $arr_content['percent'] = $percent;
+                        $arr_content['dwnld_url'] = $dwnldUrl;
+                        if ($percent >= 100) {
+                            $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!..." . ($z +
+                                1) . " out of " . $total . " Attached Value(s) exported.</span>";
+                            $arr_content['msgcount'] = $total;
+                        } else {
+                            $arr_content['message'] = "<span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"><br/>Exporting Accounts...Please Wait..." . ($z +
+                                1) . " out of " . $total . " Attached Value(s) exported.</span>";
+                        }
+                        file_put_contents(
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_PyAttchdValuesexprt_progress.rho",
+                            json_encode($arr_content)
+                        );
+                        $z++;
+                    }
+                    fclose($opndfile);
+                } else {
+                    $percent = 100;
+                    $arr_content['percent'] = $percent;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> 100% Completed...An Error Occured!<br/>$errMsg</span>";
+                    $arr_content['msgcount'] = "";
+                    $arr_content['dwnld_url'] = "";
+                    file_put_contents(
+                        $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_PyAttchdValuesexprt_progress.rho",
+                        json_encode($arr_content)
+                    );
+                }
+            } else if ($actyp == 904) {
+                //Checked Exporting Process Status                
+                header('Content-Type: application/json');
+                $file = $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_PyAttchdValuesexprt_progress.rho";
+                if (file_exists($file)) {
+                    $text = file_get_contents($file);
+                    echo $text;
+
+                    $obj = json_decode($text);
+                    if ($obj->percent >= 100) {
+                        //$rs = file_exists($file) ? unlink($file) : TRUE;
+                    }
+                } else {
+                    echo json_encode(array("percent" => 0, "message" => '<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Not Started</span>'));
+                }
             }
         } else {
             if ($vwtyp == 0) {
@@ -899,6 +1091,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     <span class="caret"></span>
                                                                                 </button>
                                                                                 <ul class="dropdown-menu" role="menu" style="margin-left: 15px !important;">
+                                                                                    <li>
+                                                                                        <a href="javascript:exprtPyRnAttchdVals();">
+                                                                                            <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                                            Export Attached Values
+                                                                                        </a>
+                                                                                    </li>
+                                                                                    <?php if ($payMassPyStatus == "0" && $canEdt === true) { ?>
+                                                                                        <li>
+                                                                                            <a href="javascript:importPyRnAttchdVals();">
+                                                                                                <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                                                Import Attached Values
+                                                                                            </a>
+                                                                                        </li>
+                                                                                    <?php } ?>
                                                                                     <li>
                                                                                         <a href="javascript:getSilentRptsRnSts(<?php echo $rptID7; ?>, -1, '<?php echo $paramStr7; ?>');">
                                                                                             <img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
@@ -1954,6 +2160,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <span class="caret"></span>
                                                     </button>
                                                     <ul class="dropdown-menu" role="menu" style="margin-left: 15px !important;">
+                                                        <li>
+                                                            <a href="javascript:exprtPyRnAttchdVals();">
+                                                                <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                Export Attached Values
+                                                            </a>
+                                                        </li>
+                                                        <?php if ($payMassPyStatus == "0" && $canEdt === true) { ?>
+                                                            <li>
+                                                                <a href="javascript:importPyRnAttchdVals();">
+                                                                    <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                    Import Attached Values
+                                                                </a>
+                                                            </li>
+                                                        <?php } ?>
                                                         <li>
                                                             <a href="javascript:getSilentRptsRnSts(<?php echo $rptID7; ?>, -1, '<?php echo $paramStr7; ?>');">
                                                                 <img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
