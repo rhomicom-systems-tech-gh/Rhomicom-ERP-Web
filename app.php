@@ -2119,18 +2119,24 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 <?php
     }
 }
+session_write_close();
+/** Check and Execute DB Corrections */
 $strSQL = "select distinct trim(to_char(cust_sup_id,'999999999999999999999999999999')) a, cust_sup_name b, '' c, org_id d, ''||lnkd_prsn_id e, cust_or_sup f from scm.scm_cstmr_suplr where (is_enabled='1') order by 2";
 $lovID1 = getLovID("All Customers and Suppliers");
+$rptPrmCnt = (float) getGnrlRecNm2("gst.gen_stp_lov_names", "lov_name", "count(1)", "All Customers and Suppliers");
 if ($lovID1 > 0) {
     execUpdtInsSQL("UPDATE gst.gen_stp_lov_names
 	SET value_list_name='All Business/Trade Partners', value_list_desc='All Business/Trade Partners', " .
         "sqlquery_if_dyn='" . loc_db_escape_string($strSQL) . "' 
-	WHERE value_list_id=" . $lovID1);
+    WHERE value_list_id=" . $lovID1);
 } else {
     $lovID = getLovID("All Business/Trade Partners");
     $oldSQL = getGnrlRecNm("gst.gen_stp_lov_names", "value_list_id", "sqlquery_if_dyn", $lovID);
     if ($lovID > 0 && strpos($oldSQL, "cust_or_sup f") === FALSE) {
         updateLovNm($lovID, true, $strSQL, "SYS", true);
     }
+}
+if ($rptPrmCnt > 0) {
+    execUpdtInsSQL("UPDATE SET lov_name= 'All Business/Trade Partners' WHERE lov_name='All Customers and Suppliers'");
 }
 ?>

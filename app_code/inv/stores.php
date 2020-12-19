@@ -52,7 +52,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $lnkdSiteID = isset($_POST['lnkdSiteID']) ? (float) cleanInputData($_POST['lnkdSiteID']) : -1;
                 $lnkdGLAccountID = isset($_POST['lnkdGLAccountID']) ? (float) cleanInputData($_POST['lnkdGLAccountID']) : -1;
                 $storewhsMngrsPrsnID = isset($_POST['storewhsMngrsPrsnID']) ? (float) cleanInputData($_POST['storewhsMngrsPrsnID'])
-                            : -1;
+                    : -1;
                 $grpType = isset($_POST['grpType']) ? cleanInputData($_POST['grpType']) : '';
                 $allwdGroupNm = isset($_POST['allwdGroupNm']) ? cleanInputData($_POST['allwdGroupNm']) : '';
                 $allwdGroupID = isset($_POST['allwdGroupID']) ? cleanInputData($_POST['allwdGroupID']) : '';
@@ -76,12 +76,35 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $errMsg = "";
                 if ($storeNm != "" && $storeDesc != "" && ($oldStoreID <= 0 || $oldStoreID == $sbmtdStoreWhsID)) {
                     if ($sbmtdStoreWhsID <= 0) {
-                        createStore($storeNm, $storeDesc, $storeAddress, $isSalesAllwdVal, $storewhsMngrsPrsnID, $orgID,
-                                $isStoreWhsEnbldVal, $lnkdGLAccountID, $lnkdSiteID, $grpType, $allwdGrpVal);
+                        createStore(
+                            $storeNm,
+                            $storeDesc,
+                            $storeAddress,
+                            $isSalesAllwdVal,
+                            $storewhsMngrsPrsnID,
+                            $orgID,
+                            $isStoreWhsEnbldVal,
+                            $lnkdGLAccountID,
+                            $lnkdSiteID,
+                            $grpType,
+                            $allwdGrpVal
+                        );
                         $sbmtdStoreWhsID = getStoreID($storeNm);
                     } else {
-                        updateStore($sbmtdStoreWhsID, $storeNm, $storeDesc, $storeAddress, $isSalesAllwdVal, $storewhsMngrsPrsnID,
-                                $orgID, $isStoreWhsEnbldVal, $lnkdGLAccountID, $lnkdSiteID, $grpType, $allwdGrpVal);
+                        updateStore(
+                            $sbmtdStoreWhsID,
+                            $storeNm,
+                            $storeDesc,
+                            $storeAddress,
+                            $isSalesAllwdVal,
+                            $storewhsMngrsPrsnID,
+                            $orgID,
+                            $isStoreWhsEnbldVal,
+                            $lnkdGLAccountID,
+                            $lnkdSiteID,
+                            $grpType,
+                            $allwdGrpVal
+                        );
                     }
                     //Save Store Users
                     $afftctd = 0;
@@ -101,8 +124,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     //Insert
                                     $afftctd += createStoreUser($storewhsUsrID, $sbmtdStoreWhsID, $usrStartDte, $usrEndDte);
                                 } else if ($storewhsUsrLineID > 0) {
-                                    $afftctd += updateStoreUser($storewhsUsrLineID, $storewhsUsrID, $sbmtdStoreWhsID,
-                                            $usrStartDte, $usrEndDte);
+                                    $afftctd += updateStoreUser(
+                                        $storewhsUsrLineID,
+                                        $storewhsUsrID,
+                                        $sbmtdStoreWhsID,
+                                        $usrStartDte,
+                                        $usrEndDte
+                                    );
                                 }
                             }
                         }
@@ -159,14 +187,42 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $errMsg = "";
                 if ($cageShelfNm != "" && $cageDesc != "" && ($oldCageLineID <= 0 || $oldCageLineID == $cageLineID)) {
                     if ($cageLineID <= 0) {
-                        createCageTill($orgID, $cageShelfID, $cageStoreID, $cageShelfNm, $cageDesc, $cageOwnersCstmrID, $grpType,
-                                $allwdGrpVal, $lnkdGLAccountID, $cageMngrsPrsnID, $dfltItemState, $mngrsWithdrawlLmt,
-                                $mngrsDepositLmt, $dfltItemType, $isCageEnbldVal);
+                        createCageTill(
+                            $orgID,
+                            $cageShelfID,
+                            $cageStoreID,
+                            $cageShelfNm,
+                            $cageDesc,
+                            $cageOwnersCstmrID,
+                            $grpType,
+                            $allwdGrpVal,
+                            $lnkdGLAccountID,
+                            $cageMngrsPrsnID,
+                            $dfltItemState,
+                            $mngrsWithdrawlLmt,
+                            $mngrsDepositLmt,
+                            $dfltItemType,
+                            $isCageEnbldVal
+                        );
                         $cageLineID = getCageTillID($cageShelfNm, $cageStoreID);
                     } else {
-                        updateCageTill($cageLineID, $cageShelfID, $cageStoreID, $cageShelfNm, $cageDesc, $cageOwnersCstmrID,
-                                $grpType, $allwdGrpVal, $lnkdGLAccountID, $cageMngrsPrsnID, $dfltItemState, $mngrsWithdrawlLmt,
-                                $mngrsDepositLmt, $dfltItemType, $isCageEnbldVal);
+                        updateCageTill(
+                            $cageLineID,
+                            $cageShelfID,
+                            $cageStoreID,
+                            $cageShelfNm,
+                            $cageDesc,
+                            $cageOwnersCstmrID,
+                            $grpType,
+                            $allwdGrpVal,
+                            $lnkdGLAccountID,
+                            $cageMngrsPrsnID,
+                            $dfltItemState,
+                            $mngrsWithdrawlLmt,
+                            $mngrsDepositLmt,
+                            $dfltItemType,
+                            $isCageEnbldVal
+                        );
                     }
                     $arr_content['percent'] = 100;
                     $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>Vault Cage Successfully Saved!<br/>" . $errMsg;
@@ -201,19 +257,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $colClassType1 = "col-lg-2";
                 $colClassType2 = "col-lg-4";
                 $prm = get_CurPlcy_Mx_Fld_lgns();
-                ?>
+?>
                 <form id='allStoresWhsForm' action='' method='post' accept-charset='UTF-8'>
                     <div class="row rhoRowMargin">
                         <?php
                         if ($canAdd === true) {
-                            ?> 
-                            <div class="<?php echo $colClassType1; ?>" style="padding:0px 1px 0px 15px !important;">                    
+                        ?>
+                            <div class="<?php echo $colClassType1; ?>" style="padding:0px 1px 0px 15px !important;">
                                 <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneStoresWhsForm(-1);">
                                     <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                     New Store
                                 </button>
                             </div>
-                            <?php
+                        <?php
                         } else {
                             $colClassType1 = "col-lg-2";
                             $colClassType2 = "col-lg-5";
@@ -221,16 +277,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         ?>
                         <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                             <div class="input-group">
-                                <input class="form-control" id="allStoresWhsSrchFor" type = "text" placeholder="Search For" value="<?php
-                                echo trim(str_replace("%", " ", $srchFor));
-                                ?>" onkeyup="enterKeyFuncAllStoresWhs(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
-                                <input id="allStoresWhsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                                <input class="form-control" id="allStoresWhsSrchFor" type="text" placeholder="Search For" value="<?php
+                                                                                                                                    echo trim(str_replace("%", " ", $srchFor));
+                                                                                                                                    ?>" onkeyup="enterKeyFuncAllStoresWhs(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                <input id="allStoresWhsPageNo" type="hidden" value="<?php echo $pageNo; ?>">
                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getAllStoresWhs('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
                                     <span class="glyphicon glyphicon-remove"></span>
                                 </label>
                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getAllStoresWhs('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
                                     <span class="glyphicon glyphicon-search"></span>
-                                </label> 
+                                </label>
                             </div>
                         </div>
                         <div class="<?php echo $colClassType2; ?>">
@@ -245,12 +301,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         if ($srchIn == $srchInsArrys[$z]) {
                                             $valslctdArry[$z] = "selected";
                                         }
-                                        ?>
+                                    ?>
                                         <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                     <?php } ?>
                                 </select>
                                 <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
-                                <select data-placeholder="Select..." class="form-control chosen-select" id="allStoresWhsDsplySze" style="min-width:70px !important;">                            
+                                <select data-placeholder="Select..." class="form-control chosen-select" id="allStoresWhsDsplySze" style="min-width:70px !important;">
                                     <?php
                                     $valslctdArry = array("", "", "", "", "", "", "", "");
                                     $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
@@ -260,9 +316,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         } else {
                                             $valslctdArry[$y] = "";
                                         }
-                                        ?>
-                                        <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
-                                        <?php
+                                    ?>
+                                        <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>
+                                    <?php
                                     }
                                     ?>
                                 </select>
@@ -285,8 +341,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             </nav>
                         </div>
                     </div>
-                    <div class="row"> 
-                        <div  class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
                             <table class="table table-striped table-bordered table-responsive" id="allStoresWhsTable" cellspacing="0" width="100%" style="width:100%;">
                                 <thead>
                                     <tr>
@@ -312,9 +368,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <?php
                                     while ($row = loc_db_fetch_array($result)) {
                                         $cntr += 1;
-                                        ?>
-                                        <tr id="allStoresWhsRow_<?php echo $cntr; ?>">                                    
-                                            <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td> 
+                                    ?>
+                                        <tr id="allStoresWhsRow_<?php echo $cntr; ?>">
+                                            <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
                                             <td class="lovtd">
                                                 <?php
                                                 echo str_replace(" (" . $row[1] . ")", "", $row[1] . " (" . $row[2] . ")");
@@ -325,12 +381,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <td class="lovtd"><?php echo $row[5]; ?></td>
                                             <td class="lovtd" style="text-align:right;font-weight: bold;"><?php echo $row[8]; ?></td>
                                             <td class="lovtd" style="text-align:right;font-weight: bold;color:blue;"><?php
-                                                echo number_format((float) $row[11], 2);
-                                                ?>
+                                                                                                                        echo number_format((float) $row[11], 2);
+                                                                                                                        ?>
                                             </td>
                                             <td class="lovtd" style="text-align:right;font-weight: bold;color:blue;"><?php
-                                                echo number_format((float) $row[10], 2);
-                                                ?>
+                                                                                                                        echo number_format((float) $row[10], 2);
+                                                                                                                        ?>
                                             </td>
                                             <td class="lovtd"><?php echo $row[7]; ?></td>
                                             <td class="lovtd"><?php echo $row[13]; ?></td>
@@ -365,23 +421,24 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <?php if ($canVwRcHstry === true) { ?>
                                                 <td class="lovtd">
                                                     <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php
-                                                    echo urlencode(encrypt1(($row[0] . "|inv.inv_itm_subinventories|subinv_id"),
-                                                                    $smplTokenWord1));
-                                                    ?>');" style="padding:2px !important;">
+                                                                                                                                                                                                            echo urlencode(encrypt1(($row[0] . "|inv.inv_itm_subinventories|subinv_id"),
+                                                                                                                                                                                                                $smplTokenWord1
+                                                                                                                                                                                                            ));
+                                                                                                                                                                                                            ?>');" style="padding:2px !important;">
                                                         <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                     </button>
                                                 </td>
                                             <?php } ?>
                                         </tr>
-                                        <?php
+                                    <?php
                                     }
                                     ?>
                                 </tbody>
                             </table>
-                        </div>                     
+                        </div>
                     </div>
                 </form>
-                <?php
+            <?php
             } else if ($vwtyp == 1) {
                 //New Store Form
                 $canAddCage = test_prmssns($dfltPrvldgs[20], $mdlNm);
@@ -427,10 +484,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     }
                 } else if ($sbmtdSiteID > 0) {
                     $lnkdSiteID = $sbmtdSiteID;
-                    $lnkdSiteNm = getGnrlRecNm("org.org_sites_locations", "location_id",
-                            "REPLACE(location_code_name || '.' || site_desc, '.' || location_code_name,'')", $sbmtdSiteID);
+                    $lnkdSiteNm = getGnrlRecNm(
+                        "org.org_sites_locations",
+                        "location_id",
+                        "REPLACE(location_code_name || '.' || site_desc, '.' || location_code_name,'')",
+                        $sbmtdSiteID
+                    );
                 }
-                ?>
+            ?>
                 <form class="form-horizontal" id='storeStpForm' action='' method='post' accept-charset='UTF-8'>
                     <div class="row">
                         <div class="row" style="padding: 0px 15px 0px 15px !important;">
@@ -441,7 +502,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label for="storeNm" class="control-label">Store Name:</label>
                                         </div>
                                         <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                            <?php if ($canEdt === true) { ?> 
+                                            <?php if ($canEdt === true) { ?>
                                                 <input type="text" name="storeNm" id="storeNm" class="form-control rqrdFld" value="<?php echo $storeNm; ?>" style="width:100% !important;">
                                                 <input type="hidden" name="sbmtdStoreWhsID" id="sbmtdStoreWhsID" class="form-control" value="<?php echo $sbmtdStoreWhsID; ?>">
                                             <?php } else { ?>
@@ -455,7 +516,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
                                             <label for="storeDesc" class="control-label">Description:</label>
                                         </div>
-                                        <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">     
+                                        <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                             <?php if ($canEdt === true) { ?>
                                                 <textarea rows="3" name="storeDesc" id="storeDesc" class="form-control rqrdFld"><?php echo $storeDesc; ?></textarea>
                                             <?php } else { ?>
@@ -469,7 +530,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
                                             <label for="storeAddress" class="control-label">Address:</label>
                                         </div>
-                                        <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">     
+                                        <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                             <?php if ($canEdt === true) { ?>
                                                 <textarea rows="3" name="storeAddress" id="storeAddress" class="form-control"><?php echo $storeAddress; ?></textarea>
                                             <?php } else { ?>
@@ -484,13 +545,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label for="lnkdSiteNm" class="control-label">Site Name:</label>
                                         </div>
                                         <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                            <?php if ($canEdt === true) { ?>                                   
+                                            <?php if ($canEdt === true) { ?>
                                                 <div class="input-group" style="width:100% !important;">
                                                     <input type="text" name="lnkdSiteNm" id="lnkdSiteNm" class="form-control rqrdFld" value="<?php echo $lnkdSiteNm; ?>" readonly="true" style="width:100% !important;">
                                                     <input type="hidden" name="lnkdSiteID" id="lnkdSiteID" class="form-control" value="<?php echo $lnkdSiteID; ?>">
                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Sites/Locations', '', '', '', 'radio', true, '', 'lnkdSiteID', 'lnkdSiteNm', 'clear', 0, '', function () {
                                                                 var aa112 = 1;
-                                                            });"> 
+                                                            });">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
                                                 </div>
@@ -500,7 +561,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </div>
                                     </div>
                                 </div>
-                            </div>  
+                            </div>
                             <div class="col-md-6" style="padding: 1px !important;">
                                 <div class="form-group">
                                     <div class="col-sm-12">
@@ -508,13 +569,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label for="lnkdGLAccountNm" class="control-label">Linked GL Account:</label>
                                         </div>
                                         <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                            <?php if ($canEdt === true) { ?>                                   
+                                            <?php if ($canEdt === true) { ?>
                                                 <div class="input-group">
                                                     <input type="text" name="lnkdGLAccountNm" id="lnkdGLAccountNm" class="form-control" value="<?php echo $lnkdGLAccountNm; ?>" readonly="true">
                                                     <input type="hidden" name="lnkdGLAccountID" id="lnkdGLAccountID" class="form-control" value="<?php echo $lnkdGLAccountID; ?>">
                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Asset Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'lnkdGLAccountID', 'lnkdGLAccountNm', 'clear', 0, '', function () {
                                                                 var aa112 = 1;
-                                                            });"> 
+                                                            });">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
                                                 </div>
@@ -524,7 +585,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group" >
+                                <div class="form-group">
                                     <div class="col-md-12">
                                         <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
                                             &nbsp;
@@ -545,7 +606,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <input type="checkbox" name="isStoreWhsEnbld" id="isStoreWhsEnbld" <?php echo $isChkd . " " . $isRdOnly; ?>>Enabled?</label>
                                             </div>
                                         </div>
-                                        <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">                                           
+                                        <div class="col-md-4" style="padding: 0px 0px 0px 0px !important;">
                                             <div class="checkbox" style="padding: 0px 0px 5px 0px !important;">
                                                 <label for="isSalesAllwd" class="control-label">
                                                     <?php
@@ -570,17 +631,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </div>
                                         <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
                                             <?php if ($canEdt === true) { ?>
-                                                <select class="form-control" id="grpType" onchange="grpTypMcfChangeV();">                                                        
+                                                <select class="form-control" id="grpType" onchange="grpTypMcfChangeV();">
                                                     <?php
                                                     $valslctdArry = array("", "", "", "", "", "", "", "");
-                                                    $valuesArrys = array("Everyone", "Divisions/Groups",
-                                                        "Grade", "Job", "Position", "Site/Location", "Person Type", "Single Person");
+                                                    $valuesArrys = array(
+                                                        "Everyone", "Divisions/Groups",
+                                                        "Grade", "Job", "Position", "Site/Location", "Person Type", "Single Person"
+                                                    );
 
                                                     for ($z = 0; $z < count($valuesArrys); $z++) {
                                                         if ($grpType == $valuesArrys[$z]) {
                                                             $valslctdArry[$z] = "selected";
                                                         }
-                                                        ?>
+                                                    ?>
                                                         <option value="<?php echo $valuesArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $valuesArrys[$z]; ?></option>
                                                     <?php } ?>
                                                 </select>
@@ -616,16 +679,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label for="storewhsMngrsName" class="control-label">Store Manager's Name:</label>
                                         </div>
                                         <div class="col-md-8" style="padding: 0px 0px 0px 0px !important;">
-                                            <?php if ($canEdt === true) { ?>                                   
+                                            <?php if ($canEdt === true) { ?>
                                                 <div class="input-group">
                                                     <input type="text" name="storewhsMngrsName" id="storewhsMngrsName" class="form-control" value="<?php echo $storewhsMngrsName; ?>" readonly="true">
                                                     <input type="hidden" name="storewhsMngrsPrsnID" id="storewhsMngrsPrsnID" class="form-control" value="<?php echo $storewhsMngrsPrsnID; ?>">
                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Person IDs', 'allOtherInputOrgID', '', '', 'radio', true, '', 'storewhsMngrsPrsnID', 'storewhsMngrsName', 'clear', 0, '', function () {
                                                                 var aa112 = 1;
-                                                            });"> 
+                                                            });">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
-                                                </div> 
+                                                </div>
                                             <?php } else { ?>
                                                 <span><?php echo $storewhsMngrsName; ?></span>
                                             <?php } ?>
@@ -633,8 +696,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </div>
                                 </div>
                             </div>
-                        </div>  
-                        <div class="row" style="padding:1px 15px 1px 15px !important;"><hr style="margin:3px 0px 3px 0px;"></div>
+                        </div>
+                        <div class="row" style="padding:1px 15px 1px 15px !important;">
+                            <hr style="margin:3px 0px 3px 0px;">
+                        </div>
                         <?php if ($sbmtdStoreWhsID > 0) { ?>
                             <div class="row">
                                 <div class="col-md-12">
@@ -642,24 +707,24 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <li class="active"><a data-toggle="tabajxstores" data-rhodata="" href="#storeCages" id="storeCagestab" style="padding: 3px 10px !important;">Shelves/Cages</a></li>
                                         <li><a data-toggle="tabajxstores" data-rhodata="" href="#storeUsers" id="storeUserstab" style="padding: 3px 10px !important;">Manage Users</a></li>
                                     </ul>
-                                    <div class="custDiv" style="padding:0px !important;min-height: 40px !important;" id="oneStoreDetTblSctn"> 
+                                    <div class="custDiv" style="padding:0px !important;min-height: 40px !important;" id="oneStoreDetTblSctn">
                                         <div class="tab-content" style="padding:5px !important;padding-top:7px !important;">
                                             <div id="storeCages" class="tab-pane fadein active" style="border:none !important;padding:0px !important;">
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <?php
                                                         if ($canAddCage === true) {
-                                                            ?>
-                                                            <button id="addNwStoreBtn" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneINVCgFormV(-1, 'Stores', <?php echo $sbmtdStoreWhsID; ?>, <?php echo $lnkdSiteID; ?>);" data-toggle="tooltip" data-placement="bottom" title = "New Store Cage/Shelf">
+                                                        ?>
+                                                            <button id="addNwStoreBtn" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneINVCgFormV(-1, 'Stores', <?php echo $sbmtdStoreWhsID; ?>, <?php echo $lnkdSiteID; ?>);" data-toggle="tooltip" data-placement="bottom" title="New Store Cage/Shelf">
                                                                 <img src="cmn_images/add1-64.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                 Add Store Cage/Shelf
                                                             </button>
                                                         <?php } ?>
-                                                        <button id="refreshStoreWhsBtn" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneStoresWhsForm(<?php echo $sbmtdStoreWhsID; ?>, 'ReloadDialog', 'FROMBRNCH', <?php echo $lnkdSiteID; ?>);" data-toggle="tooltip" data-placement="bottom" title = "Reload Store Cage/Shelf">
+                                                        <button id="refreshStoreWhsBtn" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneStoresWhsForm(<?php echo $sbmtdStoreWhsID; ?>, 'ReloadDialog', 'FROMBRNCH', <?php echo $lnkdSiteID; ?>);" data-toggle="tooltip" data-placement="bottom" title="Reload Store Cage/Shelf">
                                                             <img src="cmn_images/refresh.bmp" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             Refresh
                                                         </button>
-                                                    </div>                                            
+                                                    </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-12">
@@ -673,12 +738,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <th style="max-width:30px;width:30px;">&nbsp;</th>
                                                                     <?php
                                                                     if ($canDelCage === true) {
-                                                                        ?>
+                                                                    ?>
                                                                         <th style="max-width:30px;width:30px;">&nbsp;</th>
                                                                     <?php } ?>
                                                                     <?php
                                                                     if ($canVwRcHstry === true) {
-                                                                        ?>
+                                                                    ?>
                                                                         <th style="max-width:30px;width:30px;">...</th>
                                                                     <?php } ?>
                                                                 </tr>
@@ -694,10 +759,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     $cgDesc = $rwCage[16];
                                                                     $cageEnbld = $rwCage[7];
                                                                     $clientMgnrNm = -1;
-                                                                    ?>
-                                                                    <tr id="oneStoreCagesRow_<?php echo $cntrCg; ?>">                                    
+                                                                ?>
+                                                                    <tr id="oneStoreCagesRow_<?php echo $cntrCg; ?>">
                                                                         <td class="lovtd">
-                                                                            <input type="hidden" id="oneStoreCagesRow<?php echo $cntrCg; ?>_LineID" value="<?php echo $cgLineID; ?>"/>
+                                                                            <input type="hidden" id="oneStoreCagesRow<?php echo $cntrCg; ?>_LineID" value="<?php echo $cgLineID; ?>" />
                                                                             <span><?php echo ($rwCage[0]); ?></span>
                                                                         </td>
                                                                         <td class="lovtd"><span><?php echo $cgName; ?></span></td>
@@ -725,7 +790,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         </td>
                                                                         <?php
                                                                         if ($canDelCage === true) {
-                                                                            ?>
+                                                                        ?>
                                                                             <td class="lovtd">
                                                                                 <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delINVCgV('oneStoreCagesRow_<?php echo $cntrCg; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Cage">
                                                                                     <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
@@ -734,30 +799,31 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         <?php } ?>
                                                                         <?php
                                                                         if ($canVwRcHstry === true) {
-                                                                            ?>
+                                                                        ?>
                                                                             <td class="lovtd">
                                                                                 <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php
-                                                                                echo urlencode(encrypt1(($rwCage[2] . "|inv.inv_shelf|line_id"),
-                                                                                                $smplTokenWord1));
-                                                                                ?>');" style="padding:2px !important;">
+                                                                                                                                                                                                                                        echo urlencode(encrypt1(($rwCage[2] . "|inv.inv_shelf|line_id"),
+                                                                                                                                                                                                                                            $smplTokenWord1
+                                                                                                                                                                                                                                        ));
+                                                                                                                                                                                                                                        ?>');" style="padding:2px !important;">
                                                                                     <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                                 </button>
                                                                             </td>
                                                                         <?php } ?>
                                                                     </tr>
-                                                                    <?php
+                                                                <?php
                                                                 }
                                                                 ?>
                                                             </tbody>
-                                                        </table> 
+                                                        </table>
                                                     </div>
                                                 </div>
-                                            </div>                                    
+                                            </div>
                                             <div id="storeUsers" class="tab-pane fade hideNotice" style="border:none !important;padding:0px !important;">
                                                 <?php
                                                 $nwRowHtml = urlencode("<tr id=\"oneStoreUsersRow__WWW123WWW\">"
-                                                        . "<td class=\"lovtd\"><span>New</span></td>"
-                                                        . "<td class=\"lovtd\">
+                                                    . "<td class=\"lovtd\"><span>New</span></td>"
+                                                    . "<td class=\"lovtd\">
                                                                             <div class=\"form-group form-group-sm col-md-12\">
                                                                                 <div class=\"input-group\"  style=\"width:100%;\">
                                                                                     <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"oneStoreUsersRow_WWW123WWW_UsrNm\" value=\"\">
@@ -796,16 +862,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <?php if ($canEdt === true) { ?>
-                                                            <button id="addNwStoreBtn" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowAfta('oneStoreUsersTable', 0, '<?php echo $nwRowHtml; ?>');" data-toggle="tooltip" data-placement="bottom" title = "New Store User">
+                                                            <button id="addNwStoreBtn" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowAfta('oneStoreUsersTable', 0, '<?php echo $nwRowHtml; ?>');" data-toggle="tooltip" data-placement="bottom" title="New Store User">
                                                                 <img src="cmn_images/add1-64.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                 Add Store User
                                                             </button>
                                                         <?php } ?>
-                                                        <button id="refreshStoreWhsBtn" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneStoresWhsForm(<?php echo $sbmtdStoreWhsID; ?>, 'ReloadDialog', 'FROMBRNCH', <?php echo $lnkdSiteID; ?>);" data-toggle="tooltip" data-placement="bottom" title = "Reload Store Cage/Shelf">
+                                                        <button id="refreshStoreWhsBtn" type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneStoresWhsForm(<?php echo $sbmtdStoreWhsID; ?>, 'ReloadDialog', 'FROMBRNCH', <?php echo $lnkdSiteID; ?>);" data-toggle="tooltip" data-placement="bottom" title="Reload Store Cage/Shelf">
                                                             <img src="cmn_images/refresh.bmp" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             Refresh
                                                         </button>
-                                                    </div>                                            
+                                                    </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-12">
@@ -813,13 +879,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <thead>
                                                                 <tr>
                                                                     <th style="max-width:50px;width:50px;">No.</th>
-                                                                    <th >User Name</th>
-                                                                    <th >Start Date</th>
-                                                                    <th >End Date</th>
+                                                                    <th>User Name</th>
+                                                                    <th>Start Date</th>
+                                                                    <th>End Date</th>
                                                                     <th style="max-width:30px;width:30px;">&nbsp;</th>
                                                                     <?php
                                                                     if ($canVwRcHstry === true) {
-                                                                        ?>
+                                                                    ?>
                                                                         <th>...</th>
                                                                     <?php } ?>
                                                                 </tr>
@@ -833,13 +899,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     $usName = $rwCage[2];
                                                                     $usStartDte = $rwCage[3];
                                                                     $usEndDte = $rwCage[4];
-                                                                    ?>
-                                                                    <tr id="oneStoreUsersRow_<?php echo $cntrUsr; ?>">                                    
+                                                                ?>
+                                                                    <tr id="oneStoreUsersRow_<?php echo $cntrUsr; ?>">
                                                                         <td class="lovtd"><span><?php echo ($rwCage[0]); ?></span></td>
                                                                         <td class="lovtd">
                                                                             <?php if ($canEdt === true) { ?>
                                                                                 <div class="form-group form-group-sm col-md-12">
-                                                                                    <div class="input-group"  style="width:100%;">
+                                                                                    <div class="input-group" style="width:100%;">
                                                                                         <input type="text" class="form-control" aria-label="..." id="oneStoreUsersRow<?php echo $cntrUsr; ?>_UsrNm" value="<?php echo $usName; ?>">
                                                                                         <input type="hidden" class="form-control" aria-label="..." id="oneStoreUsersRow<?php echo $cntrUsr; ?>_UsrID" value="<?php echo $rwCage[1]; ?>">
                                                                                         <input type="hidden" class="form-control" aria-label="..." id="oneStoreUsersRow<?php echo $cntrUsr; ?>_LineID" value="<?php echo $rwCage[5]; ?>">
@@ -850,61 +916,66 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 </div>
                                                                             <?php } else { ?>
                                                                                 <span><?php echo $usName; ?></span>
-                                                                            <?php } ?> 
+                                                                            <?php } ?>
                                                                         </td>
-                                                                        <td class="lovtd">                                                                            
-                                                                            <?php if ($canEdt
-                                                                                    === true) {
-                                                                                ?>
+                                                                        <td class="lovtd">
+                                                                            <?php if (
+                                                                                $canEdt
+                                                                                === true
+                                                                            ) {
+                                                                            ?>
                                                                                 <div class="form-group form-group-sm col-md-12">
                                                                                     <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%;">
                                                                                         <input class="form-control" size="16" type="text" id="oneStoreUsersRow<?php echo $cntrUsr; ?>_StrtDte" value="<?php echo $usStartDte; ?>" readonly="true">
                                                                                         <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                                                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                                                                    </div>                                                                
+                                                                                    </div>
                                                                                 </div>
                                                                             <?php } else { ?>
                                                                                 <span><?php echo $usStartDte; ?></span>
-                        <?php } ?> 
+                                                                            <?php } ?>
                                                                         </td>
                                                                         <td class="lovtd">
-                                                                            <?php if ($canEdt
-                                                                                    === true) {
-                                                                                ?>
+                                                                            <?php if (
+                                                                                $canEdt
+                                                                                === true
+                                                                            ) {
+                                                                            ?>
                                                                                 <div class="form-group form-group-sm col-md-12">
                                                                                     <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%;">
                                                                                         <input class="form-control" size="16" type="text" id="oneStoreUsersRow<?php echo $cntrUsr; ?>_EndDte" value="<?php echo $usEndDte; ?>" readonly="true">
                                                                                         <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                                                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                                                                    </div>                                                                
+                                                                                    </div>
                                                                                 </div>
                                                                             <?php } else { ?>
                                                                                 <span><?php echo $usEndDte; ?></span>
-                                                                        <?php } ?>  
+                                                                            <?php } ?>
                                                                         </td>
-                        <?php if ($canEdt === true) { ?>
+                                                                        <?php if ($canEdt === true) { ?>
                                                                             <td class="lovtd">
                                                                                 <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delINVStoreWhsUsrs('oneStoreUsersRow_<?php echo $cntrUsr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete User">
                                                                                     <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                                                 </button>
                                                                             </td>
-                        <?php } ?>
-                                                                            <?php if ($canVwRcHstry === true) { ?>
+                                                                        <?php } ?>
+                                                                        <?php if ($canVwRcHstry === true) { ?>
                                                                             <td class="lovtd">
                                                                                 <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php
-                                                                                        echo urlencode(encrypt1(($rwCage[5] . "|inv.inv_user_subinventories|line_id"),
-                                                                                                        $smplTokenWord1));
-                                                                                        ?>');" style="padding:2px !important;">
+                                                                                                                                                                                                                                        echo urlencode(encrypt1(($rwCage[5] . "|inv.inv_user_subinventories|line_id"),
+                                                                                                                                                                                                                                            $smplTokenWord1
+                                                                                                                                                                                                                                        ));
+                                                                                                                                                                                                                                        ?>');" style="padding:2px !important;">
                                                                                     <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                                 </button>
                                                                             </td>
-                                                                    <?php } ?>
+                                                                        <?php } ?>
                                                                     </tr>
-                                                                    <?php
+                                                                <?php
                                                                 }
                                                                 ?>
                                                             </tbody>
-                                                        </table> 
+                                                        </table>
                                                     </div>
                                                 </div>
                                             </div>
@@ -912,16 +983,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </div>
                                 </div>
                             </div>
-                            <?php } ?>
+                        <?php } ?>
                         <div class="row" style="float:right;padding-right: 30px;margin-top: 5px;">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <?php if ($canEdt === true) { ?>
                                 <button type="button" class="btn btn-primary" onclick="saveStoresWhsForm(<?php echo $sbmtdSiteID; ?>);">Save Changes</button>
-                <?php } ?>
+                            <?php } ?>
                         </div>
                     </div>
-                </form>                    
-                <?php
+                </form>
+            <?php
             } else if ($vwtyp == 2) {
                 //New Cage Form
                 $canEdtCage = test_prmssns($dfltPrvldgs[20], $mdlNm);
@@ -974,7 +1045,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 } else if ($cageStoreID > 0) {
                     $cageStoreNm = getGnrlRecNm("inv.inv_itm_subinventories", "subinv_id", "subinv_name", $cageStoreID);
                 }
-                ?>
+            ?>
                 <form class="form-horizontal" id='mcfTillStpForm' action='' method='post' accept-charset='UTF-8'>
                     <div class="row">
                         <div class="row">
@@ -985,20 +1056,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label for="cageShelfNm" class="control-label">Store Cage Name:</label>
                                         </div>
                                         <div class="col-md-8">
-                <?php if ($canEdtCage === true) { ?>                                   
+                                            <?php if ($canEdtCage === true) { ?>
                                                 <div class="input-group" style="width:100% !important;">
                                                     <input type="text" name="cageShelfNm" id="cageShelfNm" class="form-control rqrdFld" value="<?php echo $cageShelfNm; ?>" style="width:100% !important;">
                                                     <input type="hidden" name="cageLineID" id="cageLineID" class="form-control" value="<?php echo $cageLineID; ?>">
                                                     <input type="hidden" name="cageShelfID" id="cageLineID" class="form-control" value="<?php echo $cageShelfID; ?>">
                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Shelves', '', '', '', 'radio', true, '', 'cageShelfNm', 'cageDesc', 'clear', 0, '', function () {
                                                                 var aa112 = 1;
-                                                            });"> 
+                                                            });">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
                                                 </div>
                                             <?php } else { ?>
                                                 <span><?php echo $cageShelfNm; ?></span>
-                <?php } ?>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
@@ -1007,12 +1078,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <div class="col-md-4">
                                             <label for="cageDesc" class="control-label">Description:</label>
                                         </div>
-                                        <div class="col-md-8">     
+                                        <div class="col-md-8">
                                             <?php if ($canEdtCage === true) { ?>
                                                 <textarea rows="2" name="cageDesc" id="cageDesc" class="form-control rqrdFld"><?php echo $cageDesc; ?></textarea>
                                             <?php } else { ?>
                                                 <span><?php echo $cageDesc; ?></span>
-                <?php } ?>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
@@ -1022,19 +1093,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label for="cageStoreNm" class="control-label">Linked Store Name:</label>
                                         </div>
                                         <div class="col-md-8">
-                <?php if ($canEdtCage === true) { ?>                                   
+                                            <?php if ($canEdtCage === true) { ?>
                                                 <div class="input-group" style="width:100% !important;">
                                                     <input type="text" name="cageStoreNm" id="cageStoreNm" class="form-control rqrdFld" value="<?php echo $cageStoreNm; ?>" readonly="true" style="width:100% !important;">
                                                     <input type="hidden" name="cageStoreID" id="cageStoreID" class="form-control" value="<?php echo $cageStoreID; ?>">
                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'VMS Vaults', '', '', '', 'radio', true, '', 'cageStoreID', 'cageStoreNm', 'clear', 0, '', function () {
                                                                 var aa112 = 1;
-                                                            });"> 
+                                                            });">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
                                                 </div>
                                             <?php } else { ?>
                                                 <span><?php echo $cageStoreNm; ?></span>
-                <?php } ?>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
@@ -1044,19 +1115,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label for="cageOwnersCstmrNm" class="control-label">Client Owner:</label>
                                         </div>
                                         <div class="col-md-8">
-                <?php if ($canEdtCage === true) { ?>                                   
+                                            <?php if ($canEdtCage === true) { ?>
                                                 <div class="input-group">
                                                     <input type="text" name="cageOwnersCstmrNm" id="cageOwnersCstmrNm" class="form-control" value="<?php echo $cageOwnersCstmrNm; ?>" readonly="true">
                                                     <input type="hidden" name="cageOwnersCstmrID" id="cageOwnersCstmrID" class="form-control" value="<?php echo $cageOwnersCstmrID; ?>">
                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', '', 'radio', true, '', 'cageOwnersCstmrID', 'cageOwnersCstmrNm', 'clear', 0, '', function () {
                                                                 var aa112 = 1;
-                                                            });"> 
+                                                            });">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
                                                 </div>
                                             <?php } else { ?>
                                                 <span><?php echo $cageOwnersCstmrNm; ?></span>
-                <?php } ?>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
@@ -1066,19 +1137,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label for="lnkdGLAccountNm" class="control-label">Linked GL Account:</label>
                                         </div>
                                         <div class="col-md-8">
-                <?php if ($canEdtCage === true) { ?>                                   
+                                            <?php if ($canEdtCage === true) { ?>
                                                 <div class="input-group">
                                                     <input type="text" name="lnkdCgGLAccountNm" id="lnkdCgGLAccountNm" class="form-control rqrdFld" value="<?php echo $lnkdGLAccountNm; ?>" readonly="true">
                                                     <input type="hidden" name="lnkdCgGLAccountID" id="lnkdCgGLAccountID" class="form-control" value="<?php echo $lnkdGLAccountID; ?>">
                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Asset Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'lnkdCgGLAccountID', 'lnkdCgGLAccountNm', 'clear', 0, '', function () {
                                                                 var aa112 = 1;
-                                                            });"> 
+                                                            });">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
                                                 </div>
                                             <?php } else { ?>
                                                 <span><?php echo $lnkdGLAccountNm; ?></span>
-                <?php } ?>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
@@ -1114,24 +1185,26 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label for="grpType" class="control-label">Allowed Group Type:</label>
                                         </div>
                                         <div class="col-md-8">
-                                                <?php if ($canEdtCage === true) { ?>
-                                                <select class="form-control" id="grpType" onchange="grpTypMcfChangeV();">                                                        
+                                            <?php if ($canEdtCage === true) { ?>
+                                                <select class="form-control" id="grpType" onchange="grpTypMcfChangeV();">
                                                     <?php
                                                     $valslctdArry = array("", "", "", "", "", "", "", "");
-                                                    $valuesArrys = array("Everyone", "Divisions/Groups",
-                                                        "Grade", "Job", "Position", "Site/Location", "Person Type", "Single Person");
+                                                    $valuesArrys = array(
+                                                        "Everyone", "Divisions/Groups",
+                                                        "Grade", "Job", "Position", "Site/Location", "Person Type", "Single Person"
+                                                    );
 
                                                     for ($z = 0; $z < count($valuesArrys); $z++) {
                                                         if ($grpType == $valuesArrys[$z]) {
                                                             $valslctdArry[$z] = "selected";
                                                         }
-                                                        ?>
+                                                    ?>
                                                         <option value="<?php echo $valuesArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $valuesArrys[$z]; ?></option>
-                                                <?php } ?>
+                                                    <?php } ?>
                                                 </select>
                                             <?php } else { ?>
                                                 <span><?php echo $grpType; ?></span>
-                <?php } ?>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
@@ -1141,7 +1214,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label for="allwdGroupNm" class="control-label">Allowed Group Name:</label>
                                         </div>
                                         <div class="col-md-8">
-                <?php if ($canEdtCage === true) { ?>
+                                            <?php if ($canEdtCage === true) { ?>
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" aria-label="..." id="allwdGroupName" value="<?php echo $allwdGroupName; ?>" readonly="">
                                                     <input type="hidden" id="allwdGroupID" value="<?php echo $allwdGroupID; ?>">
@@ -1151,7 +1224,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </div>
                                             <?php } else { ?>
                                                 <span><?php echo $allwdGroupName; ?></span>
-                <?php } ?>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
@@ -1161,19 +1234,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label for="cageMngrsName" class="control-label">Cage/Till Manager's Name:</label>
                                         </div>
                                         <div class="col-md-8">
-                <?php if ($canEdtCage === true) { ?>                                   
+                                            <?php if ($canEdtCage === true) { ?>
                                                 <div class="input-group">
                                                     <input type="text" name="cageMngrsName" id="cageMngrsName" class="form-control" value="<?php echo $cageMngrsName; ?>" readonly="true">
                                                     <input type="hidden" name="cageMngrsPrsnID" id="cageMngrsPrsnID" class="form-control" value="<?php echo $cageMngrsPrsnID; ?>">
                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Person IDs', 'allOtherInputOrgID', '', '', 'radio', true, '', 'cageMngrsPrsnID', 'cageMngrsName', 'clear', 0, '', function () {
                                                                 var aa112 = 1;
-                                                            });"> 
+                                                            });">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
-                                                </div> 
+                                                </div>
                                             <?php } else { ?>
                                                 <span><?php echo $cageMngrsName; ?></span>
-                <?php } ?>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
@@ -1183,13 +1256,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label for="mngrsWithdrawlLmt" class="control-label">Manager's Withdrawal Limit:</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <?php if ($canEdtCage === true) { ?>                                   
+                                            <?php if ($canEdtCage === true) { ?>
                                                 <input type="text" name="mngrsWithdrawlLmt" id="mngrsWithdrawlLmt" class="form-control" value="<?php
-                                                       echo number_format($mngrsWithdrawlLmt, 2);
-                                                       ?>">                                                        
+                                                                                                                                                echo number_format($mngrsWithdrawlLmt, 2);
+                                                                                                                                                ?>">
                                             <?php } else { ?>
                                                 <span><?php echo number_format($mngrsWithdrawlLmt, 2); ?></span>
-                <?php } ?>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
@@ -1199,13 +1272,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label for="mngrsDepositLmt" class="control-label">Manager's Deposit Limit:</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <?php if ($canEdtCage === true) { ?>                                 
+                                            <?php if ($canEdtCage === true) { ?>
                                                 <input type="text" name="mngrsDepositLmt" id="mngrsDepositLmt" class="form-control" value="<?php
-                                                       echo number_format($mngrsDepositLmt, 2);
-                                                       ?>">                                                        
+                                                                                                                                            echo number_format($mngrsDepositLmt, 2);
+                                                                                                                                            ?>">
                                             <?php } else { ?>
                                                 <span><?php echo number_format($mngrsDepositLmt, 2); ?></span>
-                <?php } ?>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
@@ -1215,25 +1288,27 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label for="dfltItemType" class="control-label">Default Item Type:</label>
                                         </div>
                                         <div class="col-md-8">
-                                                <?php if ($canEdtCage === true) { ?>
+                                            <?php if ($canEdtCage === true) { ?>
                                                 <select class="form-control rqrdFld" id="dfltItemType">
                                                     <option value="">&nbsp;</option>
                                                     <?php
                                                     $valslctdArry = array("", "", "", "", "", "", "");
-                                                    $valuesArrys = array("Merchandise Inventory", "Non-Merchandise Inventory",
-                                                        "Fixed Assets", "Expense Item", "Services", "VaultItem-Cash", "VaultItem-NonCash");
+                                                    $valuesArrys = array(
+                                                        "Merchandise Inventory", "Non-Merchandise Inventory",
+                                                        "Fixed Assets", "Expense Item", "Services", "VaultItem-Cash", "VaultItem-NonCash"
+                                                    );
 
                                                     for ($z = 0; $z < count($valuesArrys); $z++) {
                                                         if ($dfltItemType == $valuesArrys[$z]) {
                                                             $valslctdArry[$z] = "selected";
                                                         }
-                                                        ?>
+                                                    ?>
                                                         <option value="<?php echo $valuesArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $valuesArrys[$z]; ?></option>
-                                                <?php } ?>
+                                                    <?php } ?>
                                                 </select>
                                             <?php } else { ?>
                                                 <span><?php echo $dfltItemType; ?></span>
-                <?php } ?>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
@@ -1243,32 +1318,32 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label for="dfltItemState" class="control-label">Default Item State:</label>
                                         </div>
                                         <div class="col-md-8">
-                <?php if ($canEdtCage === true) { ?>                                   
+                                            <?php if ($canEdtCage === true) { ?>
                                                 <div class="input-group">
                                                     <input type="text" name="dfltItemState" id="dfltItemState" class="form-control rqrdFld" value="<?php echo $dfltItemState; ?>" readonly="true">
                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Vault Item States', '', '', '', 'radio', true, '', 'dfltItemState', '', 'clear', 0, '', function () {
                                                                 var aa112 = 1;
-                                                            });"> 
+                                                            });">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
-                                                </div> 
+                                                </div>
                                             <?php } else { ?>
                                                 <span><?php echo $dfltItemState; ?></span>
-                <?php } ?>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
-                            </div>                               
+                            </div>
                         </div>
                         <div class="row" style="float:right;padding-right: 30px;margin-top: 5px;">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <?php if ($canEdtCage === true) { ?>
                                 <button type="button" class="btn btn-primary" onclick="saveINVCgFormV();">Save Changes</button>
-                <?php } ?>
+                            <?php } ?>
                         </div>
                     </div>
-                </form>                    
-                <?php
+                </form>
+<?php
             }
         }
     }
