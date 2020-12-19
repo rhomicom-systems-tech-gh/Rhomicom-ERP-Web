@@ -133,7 +133,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"hotlComplntsHdrsRow_WWW123WWW_PrsnID\" value=\"-1\" style=\"width:100% !important;\"> 
                                                     <div class=\"input-group\" style=\"width:100% !important;\">
                                                             <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"hotlComplntsHdrsRow_WWW123WWW_CstmrNm\" name=\"hotlComplntsHdrsRow_WWW123WWW_CstmrNm\" value=\"\" readonly=\"true\" style=\"width:100% !important;\">
-                                                            <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'allOtherInputOrgID', '', '', 'radio', true, '', 'hotlComplntsHdrsRow_WWW123WWW_CstmrID', 'hotlComplntsHdrsRow_WWW123WWW_CstmrNm', 'clear', 1, '', function () {});\">
+                                                            <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', '', 'radio', true, '', 'hotlComplntsHdrsRow_WWW123WWW_CstmrID', 'hotlComplntsHdrsRow_WWW123WWW_CstmrNm', 'clear', 1, '', function () {});\">
                                                                 <span class=\"glyphicon glyphicon-th-list\"></span>
                                                             </label>
                                                     </div>                                              
@@ -328,7 +328,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         ?>
                                                         <div class="input-group" style="width:100% !important;">
                                                             <input type="text" class="form-control" aria-label="..." id="hotlComplntsHdrsRow<?php echo $cntr; ?>_CstmrNm" name="hotlComplntsHdrsRow<?php echo $cntr; ?>_CstmrNm" value="<?php echo $trsctnLnCstmrName; ?>" readonly="true" style="width:100% !important;">
-                                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'allOtherInputOrgID', '', '', 'radio', true, '', 'hotlComplntsHdrsRow<?php echo $cntr; ?>_CstmrID', 'hotlComplntsHdrsRow<?php echo $cntr; ?>_CstmrNm', 'clear', 1, '', function () {});">
+                                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', '', 'radio', true, '', 'hotlComplntsHdrsRow<?php echo $cntr; ?>_CstmrID', 'hotlComplntsHdrsRow<?php echo $cntr; ?>_CstmrNm', 'clear', 1, '', function () {});">
                                                                 <span class="glyphicon glyphicon-th-list"></span>
                                                             </label>
                                                         </div>      

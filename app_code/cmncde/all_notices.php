@@ -740,7 +740,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 <?php
                                                                                 $lovName = "";
                                                                                 ?>
-                                                                                <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'groupID', 'groupName', 'clear', 1, '');">
+                                                                                <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlOrgID', '', '', 'radio', true, '', 'groupID', 'groupName', 'clear', 1, '');">
                                                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                                                 </label>
                                                                             </div>
@@ -906,7 +906,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                         $dsbld = "";
                                                                                     }
                                                                                     ?>
-                                                                                    <label <?php echo $dsbld; ?> id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'groupID', 'groupName', 'clear', 1, '');">
+                                                                                    <label <?php echo $dsbld; ?> id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlOrgID', '', '', 'radio', true, '', 'groupID', 'groupName', 'clear', 1, '');">
                                                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                                                     </label>
                                                                                 </div>

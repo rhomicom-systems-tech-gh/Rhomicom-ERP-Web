@@ -94,7 +94,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     }
 
                     $curIdx = $pageNo - 1;
-                    $result = get_Basic_UOMStp($srchFor, $srchIn, $curIdx, $lmtSze);
+                    $result = get_Basic_UOMStp($srchFor, $srchIn, $curIdx, $lmtSze, $orgID);
                     $cntr = 0;
                     $colClassType1 = "col-lg-2";
                     $colClassType2 = "col-lg-3";

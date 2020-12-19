@@ -166,7 +166,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         $scmSalesInvcCstmrSiteID = get_DfltCstmrSpplrSiteID($scmSalesInvcCstmrID);
                         $scmSalesInvcCstmrSite = getCstmrSiteNm($scmSalesInvcCstmrSiteID, $scmSalesInvcCstmrID);
                     }
-                    $scmSalesInvcCstmrClsfctn = "Customer";
+                    $scmSalesInvcCstmrClsfctn = "%Customer%";
                     $rqStatus = "Not Validated";
                     $rqStatusNext = "Approve";
                     $rqstatusColor = "red";
@@ -974,7 +974,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     $scmSalesInvcCstmrSiteID = get_DfltCstmrSpplrSiteID($scmSalesInvcCstmrID);
                                     $scmSalesInvcCstmrSite = getCstmrSiteNm($scmSalesInvcCstmrSiteID, $scmSalesInvcCstmrID);
                                 }
-                                $scmSalesInvcCstmrClsfctn = "Customer";
+                                $scmSalesInvcCstmrClsfctn = "%Customer%";
                                 $rqStatus = "Not Validated";
                                 $rqStatusNext = "Approve";
                                 $rqstatusColor = "red";
@@ -1292,7 +1292,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="getCstmrSpplrForm(-1, 'Create/Edit Customer', 'ShowDialog', function () {}, 'scmSalesInvcCstmrID');" data-toggle="tooltip" title="Create/Edit Supplier">
                                                                 <span class="glyphicon glyphicon-plus"></span>
                                                             </label>
-                                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'allOtherInputOrgID', '', 'scmSalesInvcCstmrClsfctn', 'radio', true, '', 'scmSalesInvcCstmrID', 'scmSalesInvcCstmr', 'clear', 1, '', function () {
+                                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', 'scmSalesInvcCstmrClsfctn', 'radio', true, '', 'scmSalesInvcCstmrID', 'scmSalesInvcCstmr', 'clear', 1, '', function () {
                                                                         getInvRcvblsAcntInfo();
                                                                     });" data-toggle="tooltip" title="Existing Client/Vendor">
                                                                 <span class="glyphicon glyphicon-th-list"></span>
@@ -2797,7 +2797,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $scmSalesInvcCstmrSiteID = get_DfltCstmrSpplrSiteID($scmSalesInvcCstmrID);
                     $scmSalesInvcCstmrSite = getCstmrSiteNm($scmSalesInvcCstmrSiteID, $scmSalesInvcCstmrID);
                 }
-                $scmSalesInvcCstmrClsfctn = "Customer";
+                $scmSalesInvcCstmrClsfctn = "%Customer%";
                 $rqStatus = "Not Validated";
                 $rqStatusNext = "Approve";
                 $rqstatusColor = "red";
@@ -3257,7 +3257,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="getCstmrSpplrForm(-1, 'Create/Edit Supplier', 'ShowDialog', function () {}, 'scmSalesInvcCstmrID');" data-toggle="tooltip" title="Create/Edit Supplier">
                                                 <span class="glyphicon glyphicon-plus"></span>
                                             </label>
-                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'allOtherInputOrgID', '', 'scmSalesInvcCstmrClsfctn', 'radio', true, '', 'scmSalesInvcCstmrID', 'scmSalesInvcCstmr', 'clear', 1, '', function () {
+                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', 'scmSalesInvcCstmrClsfctn', 'radio', true, '', 'scmSalesInvcCstmrID', 'scmSalesInvcCstmr', 'clear', 1, '', function () {
                                                         getInvRcvblsAcntInfo();
                                                     });" data-toggle="tooltip" title="Existing Client/Vendor">
                                                 <span class="glyphicon glyphicon-th-list"></span>

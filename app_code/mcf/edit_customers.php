@@ -449,7 +449,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         <input <?php echo $mkReadOnly; ?> type="text" class="form-control rqrdFld" aria-label="..." id="lnkdFirmName" value="<?php echo $row[21]; ?>"/>
                                                                         <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
                                                                         <input type="hidden" id="lnkdFirmID" value="<?php echo $row[29]; ?>">
-                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '<?php echo $row[21]; ?>', 'lnkdFirmID', 'lnkdFirmName', 'clear', 1, '');">
+                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlOrgID', '', '', 'radio', true, '<?php echo $row[21]; ?>', 'lnkdFirmID', 'lnkdFirmName', 'clear', 1, '');">
                                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                                         </label>
                                                                     </div>
@@ -951,7 +951,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <input type="text" class="form-control rqrdFld" id="lnkdFirmName" value="">
                                                             <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
                                                             <input type="hidden" id="lnkdFirmID" value="">
-                                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'lnkdFirmID', 'lnkdFirmName', 'clear', 1, '');">
+                                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlOrgID', '', '', 'radio', true, '', 'lnkdFirmID', 'lnkdFirmName', 'clear', 1, '');">
                                                                 <span class="glyphicon glyphicon-th-list"></span>
                                                             </label>
                                                         </div>
@@ -3625,7 +3625,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         <input type="text" class="form-control" aria-label="..." id="lnkdFirmName" value="<?php echo $row[21]; ?>">
                                                                         <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
                                                                         <input type="hidden" id="lnkdFirmID" value="<?php echo $row[31]; ?>">
-                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '<?php echo $row[21]; ?>', 'lnkdFirmID', 'lnkdFirmName', 'clear', 1, '');">
+                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlOrgID', '', '', 'radio', true, '<?php echo $row[21]; ?>', 'lnkdFirmID', 'lnkdFirmName', 'clear', 1, '');">
                                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                                         </label>
                                                                     </div>
@@ -4188,7 +4188,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <input type="text" class="form-control" aria-label="..." id="lnkdFirmName" value="">
                                                         <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
                                                         <input type="hidden" id="lnkdFirmID" value="">
-                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'lnkdFirmID', 'lnkdFirmName', 'clear', 1, '');">
+                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlOrgID', '', '', 'radio', true, '', 'lnkdFirmID', 'lnkdFirmName', 'clear', 1, '');">
                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                         </label>
                                                     </div>
@@ -4296,7 +4296,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <input type="text" class="form-control" aria-label="..." id="bnkBranch" value="<?php echo $prsnBranch; ?>" readonly>
                                                         <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
                                                         <input type="hidden" id="bnkBranchID" value="<?php echo $prsnBranchID; ?>">
-                                                        <label style="display:none !important;" class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'lnkdFirmID', 'lnkdFirmName', 'clear', 1, '');">
+                                                        <label style="display:none !important;" class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlOrgID', '', '', 'radio', true, '', 'lnkdFirmID', 'lnkdFirmName', 'clear', 1, '');">
                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                         </label>
                                                     </div>

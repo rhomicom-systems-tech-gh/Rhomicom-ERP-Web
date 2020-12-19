@@ -6928,7 +6928,7 @@ function getVMSTrnsRdOnlyDsply($sbmtdVmsTrnsHdrID, $trnsType)
                             <?php } else { ?>
                                 <div class="input-group">
                                     <input type="text" class="form-control" aria-label="..." id="vmsTrnsType" name="vmsTrnsType" value="<?php echo $trnsType; ?>" <?php echo $mkReadOnly; ?>>
-                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlVmsOrgID', '', '', 'radio', true, '', '', 'vmsTrnsType', 'clear', 1, '');">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlVmsOrgID', '', '', 'radio', true, '', '', 'vmsTrnsType', 'clear', 1, '');">
                                         <span class="glyphicon glyphicon-th-list"></span>
                                     </label>
                                 </div>

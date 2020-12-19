@@ -539,7 +539,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $scmCnsgnRtrnSpplrID = -1;
                 $scmCnsgnRtrnSpplrSite = "";
                 $scmCnsgnRtrnSpplrSiteID = -1;
-                $scmCnsgnRtrnSpplrClsfctn = "Supplier";
+                $scmCnsgnRtrnSpplrClsfctn = "%Supplier%";
                 $rqStatus = "Incomplete";
                 $rqStatusNext = "Return";
                 $rqstatusColor = "red";
@@ -719,7 +719,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="getCstmrSpplrForm(-1, 'Create/Edit Supplier', 'ShowDialog', function () {}, 'scmCnsgnRtrnSpplrID');" data-toggle="tooltip" title="Create/Edit Supplier">
                                                 <span class="glyphicon glyphicon-plus"></span>
                                             </label>
-                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'allOtherInputOrgID', '', 'scmCnsgnRtrnSpplrClsfctn', 'radio', true, '', 'scmCnsgnRtrnSpplrID', 'scmCnsgnRtrnSpplr', 'clear', 1, '', function () {
+                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', 'scmCnsgnRtrnSpplrClsfctn', 'radio', true, '', 'scmCnsgnRtrnSpplrID', 'scmCnsgnRtrnSpplr', 'clear', 1, '', function () {
                                                                         getInvPyblsAcntInfo();
                                                                     });" data-toggle="tooltip" title="Existing Client/Vendor">
                                                 <span class="glyphicon glyphicon-th-list"></span>

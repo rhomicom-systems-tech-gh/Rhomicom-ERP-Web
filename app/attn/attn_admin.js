@@ -2030,7 +2030,7 @@ function getAttnRgstrLovPage(elementID, titleElementID, modalBodyID, lovNm, crit
         valueElmntID = '' + rowPrfxNm + rndmNum + '_DetPrsnID';
     } else if (attnRgstrDetType === "Customer")
     {
-        lovNm = "All Customers and Suppliers";
+        lovNm = "All Business/Trade Partners";
         valueElmntID = '' + rowPrfxNm + rndmNum + '_DetCstmrID';
     } else
     {

@@ -724,7 +724,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $accbPttyCashSpplrID = -1;
                 $accbPttyCashSpplrSite = "";
                 $accbPttyCashSpplrSiteID = -1;
-                $accbPttyCashSpplrClsfctn = "Supplier";
+                $accbPttyCashSpplrClsfctn = "%Supplier%";
                 $rqStatus = "Not Validated"; //approval_status
                 $rqStatusNext = "Approve"; //next_aproval_action
                 $rqstatusColor = "red";
@@ -948,7 +948,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="getCstmrSpplrForm(-1, 'Create/Edit Payee', 'ShowDialog', function () {}, 'accbPttyCashSpplrID');" data-toggle="tooltip" title="Create/Edit Payee">
                                                 <span class="glyphicon glyphicon-plus"></span>
                                             </label>
-                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'allOtherInputOrgID', '', 'accbPttyCashSpplrClsfctn', 'radio', true, '', 'accbPttyCashSpplrID', 'accbPttyCashSpplr', 'clear', 1, '');" data-toggle="tooltip" title="Existing Client/Vendor">
+                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', 'accbPttyCashSpplrClsfctn', 'radio', true, '', 'accbPttyCashSpplrID', 'accbPttyCashSpplr', 'clear', 1, '');" data-toggle="tooltip" title="Existing Client/Vendor">
                                                 <span class="glyphicon glyphicon-th-list"></span>
                                             </label>
                                         </div>

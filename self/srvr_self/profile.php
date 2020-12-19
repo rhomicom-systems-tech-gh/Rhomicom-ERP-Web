@@ -218,7 +218,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             $skillsPkeyID = isset($_POST['skillsPkeyID']) ? cleanInputData($_POST['skillsPkeyID']) : -1;
             $srcForm = -1; //isset($_POST['srcForm']) ? cleanInputData($_POST['srcForm']) : -1;
             if ($srcForm <= 0) {
-                echo deleteSkillSelf($skillsPkeyID);
+                echo deleteSkillsSelf($skillsPkeyID);
                 $rqstRslt = prsn_ChngRqst_Exist($prsnid);
                 $rslt = get_RqstStatus($prsnid);
                 if ($rqstRslt < 0) {
@@ -226,7 +226,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 }
             } else {
                 if ($canEdtPrsn || ($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
-                    echo deleteSkill($skillsPkeyID);
+                    echo deleteSkills($skillsPkeyID);
                 } else {
                     restricted();
                 }
@@ -2932,7 +2932,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             <div class="input-group">
                                                                                 <input type="text" class="form-control" aria-label="..." id="usrPrflLnkdCstmr" value="<?php echo $row[16]; ?>" readonly="true">
                                                                                 <input type="hidden" class="form-control" aria-label="..." id="usrPrflLnkdCstmrID" value="<?php echo $row[15]; ?>">
-                                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', '', '', '', 'radio', true, '<?php echo $row[15]; ?>', 'usrPrflLnkdCstmrID', 'usrPrflLnkdCstmr', 'clear', 1, '');">
+                                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', '', 'radio', true, '<?php echo $row[15]; ?>', 'usrPrflLnkdCstmrID', 'usrPrflLnkdCstmr', 'clear', 1, '');">
                                                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                                                 </label>
                                                                             </div>
@@ -3503,7 +3503,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <input type="text" class="form-control" aria-label="..." id="daCompany" name="daCompany" value="<?php echo $row[21]; ?>">
                                                             <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
                                                             <input type="hidden" id="daCompanyID" value="<?php echo $row[28]; ?>">
-                                                            <div class="input-group-append handCursor"  onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '<?php echo $row[21]; ?>', 'daCompanyID', 'daCompany', 'clear', 1, '');">
+                                                            <div class="input-group-append handCursor"  onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlOrgID', '', '', 'radio', true, '<?php echo $row[21]; ?>', 'daCompanyID', 'daCompany', 'clear', 1, '');">
                                                                 <span class="input-group-text rhoclickable"><i class="fas fa-th-list"></i></span>
                                                             </div>
                                                         </div>

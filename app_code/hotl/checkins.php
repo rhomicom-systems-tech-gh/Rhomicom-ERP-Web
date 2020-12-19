@@ -1103,7 +1103,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $scmSalesInvcCstmrID = -1;
                 $scmSalesInvcCstmrSite = "";
                 $scmSalesInvcCstmrSiteID = -1;
-                $scmSalesInvcCstmrClsfctn = "Customer";
+                $scmSalesInvcCstmrClsfctn = "%Customer%";
                 $rqStatus = "Not Validated";
                 $rqStatusNext = "Approve";
                 $rqstatusColor = "red";
@@ -1538,7 +1538,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="getCstmrSpplrForm(-1, 'Create/Edit Supplier', 'ShowDialog', function () {}, 'hotlChckinDocSpnsrID');" data-toggle="tooltip" title="Create/Edit Customer">
                                                 <span class="glyphicon glyphicon-plus"></span>
                                             </label>
-                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'allOtherInputOrgID', '', 'scmSalesInvcCstmrClsfctn', 'radio', true, '', 'hotlChckinDocSpnsrID', 'hotlChckinDocSpnsr', 'clear', 1, '', function () {
+                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', 'scmSalesInvcCstmrClsfctn', 'radio', true, '', 'hotlChckinDocSpnsrID', 'hotlChckinDocSpnsr', 'clear', 1, '', function () {
                                                                         getHotlRcvblsAcntInfo();
                                                                     });" data-toggle="tooltip" title="Existing Client/Vendor">
                                                 <span class="glyphicon glyphicon-th-list"></span>
@@ -1563,7 +1563,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <div  class="col-md-8"> 
                                         <div class="input-group" style="width:100% !important;">
                                             <input type="text" class="form-control" aria-label="..." id="hotlChckinDocSpnsee" name="hotlChckinDocSpnsee" value="<?php echo $hotlChckinDocSpnsee; ?>" readonly="true" style="width:100% !important;">
-                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'allOtherInputOrgID', '', 'scmSalesInvcCstmrClsfctn', 'radio', true, '', 'hotlChckinDocSpnseeID', 'hotlChckinDocSpnsee', 'clear', 1, '', function () {
+                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', 'scmSalesInvcCstmrClsfctn', 'radio', true, '', 'hotlChckinDocSpnseeID', 'hotlChckinDocSpnsee', 'clear', 1, '', function () {
                                                                         getHotlOccpntRcvblsAcntInfo();
                                                                     });">
                                                 <span class="glyphicon glyphicon-th-list"></span>
@@ -1874,7 +1874,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <input type="text" class="form-control" aria-label="..." id="scmSalesInvcBrnchNm" name="scmSalesInvcBrnchNm" value="<?php echo $scmSalesInvcBrnchNm; ?>" readonly="true">
                                                                     <input class="form-control" type="hidden" id="scmSalesInvcBrnchID" value="<?php echo $scmSalesInvcBrnchID; ?>">
                                                                     <input class="form-control" type="hidden" id="scmSalesLnkdPrsnID" value="-1">
-                                                                    <input type="hidden" id="scmSalesInvcCstmrClsfctn" value="Customer">
+                                                                    <input type="hidden" id="scmSalesInvcCstmrClsfctn" value="%Customer%">
                                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Sites/Locations', 'allOtherInputOrgID', '', '', 'radio', true, '', 'scmSalesInvcBrnchID', 'scmSalesInvcBrnchNm', 'clear', 0, '');" data-toggle="tooltip" title="">
                                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                                     </label>

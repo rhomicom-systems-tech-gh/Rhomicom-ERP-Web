@@ -961,7 +961,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <div class="input-group">
                                                                         <input type="text" class="form-control" aria-label="..." id="payMassPyGroupName" value="<?php echo $payMassPyGroupName; ?>" readonly="">
                                                                         <input type="hidden" id="payMassPyGroupID" value="<?php echo $payMassPyGroupID; ?>">
-                                                                        <label id="payMassPyGroupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'allOtherInputOrgID', '', '', 'radio', true, '', 'payMassPyGroupID', 'payMassPyGroupName', 'clear', 1, '');">
+                                                                        <label id="payMassPyGroupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', '', 'radio', true, '', 'payMassPyGroupID', 'payMassPyGroupName', 'clear', 1, '');">
                                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                                         </label>
                                                                     </div>
@@ -974,7 +974,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <div class="input-group">
                                                                         <input type="text" class="form-control" aria-label="..." id="payMassPyWorkPlaceName" value="<?php echo $payMassPyWorkPlaceName; ?>" readonly="true">
                                                                         <input type="hidden" id="payMassPyWorkPlaceID" value="<?php echo $payMassPyWorkPlaceID; ?>">
-                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'allOtherInputOrgID', '', '', 'radio', true, '', 'payMassPyWorkPlaceID', 'payMassPyWorkPlaceName', 'clear', 1, '');">
+                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', '', 'radio', true, '', 'payMassPyWorkPlaceID', 'payMassPyWorkPlaceName', 'clear', 1, '');">
                                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                                         </label>
                                                                     </div>
@@ -2032,7 +2032,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <div class="input-group">
                                             <input type="text" class="form-control" aria-label="..." id="payMassPyGroupName" value="<?php echo $payMassPyGroupName; ?>" readonly="">
                                             <input type="hidden" id="payMassPyGroupID" value="<?php echo $payMassPyGroupID; ?>">
-                                            <label id="payMassPyGroupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'allOtherInputOrgID', '', '', 'radio', true, '', 'payMassPyGroupID', 'payMassPyGroupName', 'clear', 1, '');">
+                                            <label id="payMassPyGroupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', '', 'radio', true, '', 'payMassPyGroupID', 'payMassPyGroupName', 'clear', 1, '');">
                                                 <span class="glyphicon glyphicon-th-list"></span>
                                             </label>
                                         </div>
@@ -2044,7 +2044,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <div class="input-group">
                                             <input type="text" class="form-control" aria-label="..." id="payMassPyWorkPlaceName" value="<?php echo $payMassPyWorkPlaceName; ?>" readonly="true">
                                             <input type="hidden" id="payMassPyWorkPlaceID" value="<?php echo $payMassPyWorkPlaceID; ?>">
-                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'allOtherInputOrgID', '', '', 'radio', true, '', 'payMassPyWorkPlaceID', 'payMassPyWorkPlaceName', 'clear', 1, '');">
+                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', '', 'radio', true, '', 'payMassPyWorkPlaceID', 'payMassPyWorkPlaceName', 'clear', 1, '');">
                                                 <span class="glyphicon glyphicon-th-list"></span>
                                             </label>
                                         </div>

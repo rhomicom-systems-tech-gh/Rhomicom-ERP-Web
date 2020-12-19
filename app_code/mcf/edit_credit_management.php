@@ -9990,7 +9990,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <input type="hidden" id="prptyValuerSupID" value="<?php echo $prptyValuerSupID; ?>">
                             <input type="hidden" id="lnkdPrsnID" value="-1">
                             <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
-                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', 'lnkdPrsnID', '', 'radio', true, '', 'prptyValuerSupID', 'prptyValuerSup', 'clear', 1, '');">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlOrgID', 'lnkdPrsnID', '', 'radio', true, '', 'prptyValuerSupID', 'prptyValuerSup', 'clear', 1, '');">
                                 <span class="glyphicon glyphicon-th-list"></span>
                             </label>
                         </div>

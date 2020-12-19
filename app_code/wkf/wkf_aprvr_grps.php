@@ -283,7 +283,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         <input type="text" class="form-control" aria-label="..." id="wkfGrpLinkedFirm" value="<?php echo $row1[4]; ?>">
                                                                         <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
                                                                         <input type="hidden" id="wkfGrpLinkedFirmID" value="<?php echo $row1[3]; ?>">
-                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '<?php echo $row1[3]; ?>', 'wkfGrpLinkedFirmID', 'wkfGrpLinkedFirm', 'clear', 1, '');">
+                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlOrgID', '', '', 'radio', true, '<?php echo $row1[3]; ?>', 'wkfGrpLinkedFirmID', 'wkfGrpLinkedFirm', 'clear', 1, '');">
                                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                                         </label>
                                                                     </div>
@@ -497,7 +497,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <input type="text" class="form-control" aria-label="..." id="wkfGrpLinkedFirm" value="<?php echo $row1[4]; ?>" readonly="true">
                                                     <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
                                                     <input type="hidden" id="wkfGrpLinkedFirmID" value="<?php echo $row1[3]; ?>">
-                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '<?php echo $row1[3]; ?>', 'wkfGrpLinkedFirmID', 'wkfGrpLinkedFirm', 'clear', 1, '');">
+                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlOrgID', '', '', 'radio', true, '<?php echo $row1[3]; ?>', 'wkfGrpLinkedFirmID', 'wkfGrpLinkedFirm', 'clear', 1, '');">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
                                                 </div>
@@ -698,7 +698,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <input type="text" class="form-control" aria-label="..." id="wkfGrpLinkedFirm" value="">
                                         <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
                                         <input type="hidden" id="wkfGrpLinkedFirmID" value="-1">
-                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'wkfGrpLinkedFirmID', 'wkfGrpLinkedFirm', 'clear', 1, '');">
+                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlOrgID', '', '', 'radio', true, '', 'wkfGrpLinkedFirmID', 'wkfGrpLinkedFirm', 'clear', 1, '');">
                                             <span class="glyphicon glyphicon-th-list"></span>
                                         </label>
                                     </div>

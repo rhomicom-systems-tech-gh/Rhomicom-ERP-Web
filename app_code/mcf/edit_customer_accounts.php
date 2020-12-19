@@ -596,7 +596,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         <input type="text" class="form-control" aria-label="..." id="groupName" value="<?php echo getAllwdGrpVal($row[25], $row[26]); ?>" readonly="">
                                                                         <!--<input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">120220-->
                                                                         <input type="hidden" id="groupID" value="<?php echo $row[26]; ?>">
-                                                                        <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'groupID', 'groupName', 'clear', 1, '');">
+                                                                        <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlOrgID', '', '', 'radio', true, '', 'groupID', 'groupName', 'clear', 1, '');">
                                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                                         </label>
                                                                     </div>
@@ -1240,7 +1240,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <input type="text" class="form-control" aria-label="..." id="groupName" value="" readonly="">
                                                                     <!--<input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">20022020-->
                                                                     <input type="hidden" id="groupID" value="-1">
-                                                                    <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'groupID', 'groupName', 'clear', 1, '');">
+                                                                    <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlOrgID', '', '', 'radio', true, '', 'groupID', 'groupName', 'clear', 1, '');">
                                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                                     </label>
                                                                 </div>

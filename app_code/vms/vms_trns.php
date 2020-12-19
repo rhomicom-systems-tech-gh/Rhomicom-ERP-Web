@@ -5404,7 +5404,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <?php } else { ?>
                                             <div class="input-group">
                                                 <input type="text" class="form-control rqrdFld" aria-label="..." id="vmsTrnsType" name="vmsTrnsType" value="<?php echo $trnsType; ?>" <?php echo $mkReadOnly; ?>>
-                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlVmsOrgID', '', '', 'radio', true, '', '', 'vmsTrnsType', 'clear', 1, '');">
+                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlVmsOrgID', '', '', 'radio', true, '', '', 'vmsTrnsType', 'clear', 1, '');">
                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                 </label>
                                             </div>
@@ -5463,7 +5463,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getCstmrSpplrForm(-1, 'Create/Edit <?php echo $fldLbl; ?>');" data-toggle="tooltip" title="Create New <?php echo $fldLbl; ?>">
                                                     <span class="glyphicon glyphicon-plus"></span>
                                                 </label>
-                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlVmsOrgID', '', 'vmsCstmrClsfctn', 'radio', true, '', 'vmsCstmrID', 'vmsCstmrNm', 'clear', 1, '');" data-toggle="tooltip" title="Existing Client/Vendor">
+                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlVmsOrgID', '', 'vmsCstmrClsfctn', 'radio', true, '', 'vmsCstmrID', 'vmsCstmrNm', 'clear', 1, '');" data-toggle="tooltip" title="Existing Client/Vendor">
                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                 </label>
                                             </div>
@@ -9273,7 +9273,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <?php } else { ?>
                                             <div class="input-group">
                                                 <input type="text" class="form-control rqrdFld" aria-label="..." id="vmsTrnsType" name="vmsTrnsType" value="<?php echo $trnsType; ?>" <?php echo $mkReadOnly; ?>>
-                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlVmsOrgID', '', '', 'radio', true, '', '', 'vmsTrnsType', 'clear', 1, '');">
+                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlVmsOrgID', '', '', 'radio', true, '', '', 'vmsTrnsType', 'clear', 1, '');">
                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                 </label>
                                             </div>
@@ -9303,7 +9303,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="getCstmrSpplrForm(-1, 'Create/Edit <?php echo $fldLbl; ?>');" data-toggle="tooltip" title="Create New <?php echo $fldLbl; ?>">
                                                 <span class="glyphicon glyphicon-plus"></span>
                                             </label>
-                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlVmsOrgID', '', 'vmsCstmrClsfctn', 'radio', true, '', 'vmsCstmrID', 'vmsCstmrNm', 'clear', 1, '');" data-toggle="tooltip" title="Existing Client/Vendor">
+                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlVmsOrgID', '', 'vmsCstmrClsfctn', 'radio', true, '', 'vmsCstmrID', 'vmsCstmrNm', 'clear', 1, '');" data-toggle="tooltip" title="Existing Client/Vendor">
                                                 <span class="glyphicon glyphicon-th-list"></span>
                                             </label>
                                         </div>

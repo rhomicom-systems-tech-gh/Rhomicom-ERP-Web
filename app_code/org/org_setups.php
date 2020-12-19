@@ -2159,7 +2159,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class=\"input-group\">
                                                                 <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"sitesLocsRow_WWW123WWW_GrpName\" value=\"\" readonly=\"true\">
                                                                 <input type=\"hidden\" id=\"sitesLocsRow_WWW123WWW_GrpID\" value=\"-1\">
-                                                                <label disabled=\"true\" id=\"sitesLocsRow_WWW123WWW_GrpNmLbl\" class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getNoticeLovsTblr('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'orgDetOrgID', '', '', 'radio', true, '', 'sitesLocsRow_WWW123WWW_GrpID', 'sitesLocsRow_WWW123WWW_GrpName', 'clear', 1, '', 'sitesLocsRow_WWW123WWW_GrpType');\">
+                                                                <label disabled=\"true\" id=\"sitesLocsRow_WWW123WWW_GrpNmLbl\" class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getNoticeLovsTblr('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'orgDetOrgID', '', '', 'radio', true, '', 'sitesLocsRow_WWW123WWW_GrpID', 'sitesLocsRow_WWW123WWW_GrpName', 'clear', 1, '', 'sitesLocsRow_WWW123WWW_GrpType');\">
                                                                     <span class=\"glyphicon glyphicon-th-list\"></span>
                                                                 </label>
                                                             </div>
@@ -2377,7 +2377,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="input-group">
                                                                 <input type="text" class="form-control" aria-label="..." id="sitesLocsRow<?php echo $cntr; ?>_GrpName" value="<?php echo $row1[10]; ?>" readonly="true">
                                                                 <input type="hidden" id="sitesLocsRow<?php echo $cntr; ?>_GrpID" value="<?php echo $row1[5]; ?>">
-                                                                <label disabled="true" id="sitesLocsRow<?php echo $cntr; ?>_GrpNmLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovsTblr('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'orgDetOrgID', '', '', 'radio', true, '', 'sitesLocsRow<?php echo $cntr; ?>_GrpID', 'sitesLocsRow<?php echo $cntr; ?>_GrpName', 'clear', 1, '', 'sitesLocsRow<?php echo $cntr; ?>_GrpType');">
+                                                                <label disabled="true" id="sitesLocsRow<?php echo $cntr; ?>_GrpNmLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovsTblr('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'orgDetOrgID', '', '', 'radio', true, '', 'sitesLocsRow<?php echo $cntr; ?>_GrpID', 'sitesLocsRow<?php echo $cntr; ?>_GrpName', 'clear', 1, '', 'sitesLocsRow<?php echo $cntr; ?>_GrpType');">
                                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                                 </label>
                                                             </div>
@@ -3771,7 +3771,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             <div class="input-group">
                                                                                 <input type="text" class="form-control" aria-label="..." id="sgValAllwdGrpValue" value="<?php echo $sgValAllwdGrpValue; ?>" readonly="true">
                                                                                 <input type="hidden" id="sgValAllwdGrpID" value="<?php echo $sgValAllwdGrpID; ?>">
-                                                                                <label disabled="true" id="sgValAllwdGrpNmLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovsTblr('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'orgDetOrgID', '', '', 'radio', true, '', 'sgValAllwdGrpID', 'sgValAllwdGrpValue', 'clear', 1, '', 'sgValAllwdGrpType');">
+                                                                                <label disabled="true" id="sgValAllwdGrpNmLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovsTblr('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'orgDetOrgID', '', '', 'radio', true, '', 'sgValAllwdGrpID', 'sgValAllwdGrpValue', 'clear', 1, '', 'sgValAllwdGrpType');">
                                                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                                                 </label>
                                                                             </div>
@@ -4424,7 +4424,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="input-group">
                                                             <input type="text" class="form-control" aria-label="..." id="sgValAllwdGrpValue" value="<?php echo $sgValAllwdGrpValue; ?>" readonly="true">
                                                             <input type="hidden" id="sgValAllwdGrpID" value="<?php echo $sgValAllwdGrpID; ?>">
-                                                            <label disabled="true" id="sgValAllwdGrpNmLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovsTblr('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'orgDetOrgID', '', '', 'radio', true, '', 'sgValAllwdGrpID', 'sgValAllwdGrpValue', 'clear', 1, '', 'sgValAllwdGrpType');">
+                                                            <label disabled="true" id="sgValAllwdGrpNmLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovsTblr('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'orgDetOrgID', '', '', 'radio', true, '', 'sgValAllwdGrpID', 'sgValAllwdGrpValue', 'clear', 1, '', 'sgValAllwdGrpType');">
                                                                 <span class="glyphicon glyphicon-th-list"></span>
                                                             </label>
                                                         </div>
@@ -5020,7 +5020,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" aria-label="..." id="sgValAllwdGrpValue" value="<?php echo $sgValAllwdGrpValue; ?>" readonly="true">
                                                     <input type="hidden" id="sgValAllwdGrpID" value="<?php echo $sgValAllwdGrpID; ?>">
-                                                    <label disabled="true" id="sgValAllwdGrpNmLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovsTblr('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'orgDetOrgID', '', '', 'radio', true, '', 'sgValAllwdGrpID', 'sgValAllwdGrpValue', 'clear', 1, '', 'sgValAllwdGrpType');">
+                                                    <label disabled="true" id="sgValAllwdGrpNmLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovsTblr('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'orgDetOrgID', '', '', 'radio', true, '', 'sgValAllwdGrpID', 'sgValAllwdGrpValue', 'clear', 1, '', 'sgValAllwdGrpType');">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
                                                 </div>
