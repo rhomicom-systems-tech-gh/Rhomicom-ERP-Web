@@ -81,7 +81,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <?php echo $forecolors;
                 ?><?php echo $bckcolors_home;
                     ?>border: 1px solid <?php echo $bckcolorOnly;
-                            ?>
+                                        ?>
             }
 
             .rho-card-body2 {
@@ -1038,7 +1038,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                     </div>
                 </div>
-		<!--CLINIC/HOSPITAL-->
+                <!--CLINIC/HOSPITAL-->
                 <div class="modal fade" id="myFormsModalLgHZ" tabindex="-1" role="dialog" aria-labelledby="myFormsModalLgHZTitle" style="z-index: 9995 !important;">
                     <div class="modal-dialog" role="document" style="min-width:300px;max-width:90%;width:90%;">
                         <div class="modal-content">
@@ -1090,7 +1090,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             </div>
                         </div>
                     </div>
-                </div>           
+                </div>
                 <div class="modal fade" id="myFormsModalyH" tabindex="-1" role="dialog" aria-labelledby="myFormsModalyHTitle" style="z-index: 9995 !important;">
                     <div class="modal-dialog" role="document" id="myFormsModalyHDiag" style="min-width:300px;max-width:90%;width:70%;">
                         <div class="modal-content">
@@ -1116,7 +1116,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             </div>
                         </div>
                     </div>
-                </div>                
+                </div>
                 <div class="modal fade" id="myFormsModalxH" tabindex="-1" role="dialog" aria-labelledby="myFormsModalxHTitle" style="z-index: 9995 !important;">
                     <div class="modal-dialog" role="document" id="myFormsModalxHDiag" style="min-width:340px;max-width:90%;width:40%;">
                         <div class="modal-content">
@@ -1142,9 +1142,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             </div>
                         </div>
                     </div>
-                </div> 
+                </div>
                 <div class="modal fade" id="myFormsModalH" tabindex="-1" role="dialog" aria-labelledby="myFormsModalHTitle" style="z-index: 9995 !important;">
-                    <div class="modal-dialog" role="document" style="max-width:400px;" id="myFormsModalHDiag" >
+                    <div class="modal-dialog" role="document" style="max-width:400px;" id="myFormsModalHDiag">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -1156,7 +1156,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     </div>
                 </div>
                 <div id="custoverlay" style="z-index: 9998 !important;">
-                   <div id="custoverlaytext" style="display:none !important;">Loading Historic Data....Please Wait....</div>
+                    <div id="custoverlaytext" style="display:none !important;">Loading Historic Data....Please Wait....</div>
                 </div>
                 <!--CLINIC/HOSPITAL-->
                 <div id="allOtherContent"></div>
@@ -2070,7 +2070,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <script type="text/javascript" src="cmn_scrpts/bootstrap337/bootbox.min.js" rel="preload" as="script"></script>
                 <script type="text/javascript" src="cmn_scrpts/summernote081/summernote-ext-print.js" rel="preload" as="script"></script>
                 <link rel="stylesheet" type="text/css" href="cmn_scrpts/bootstrap-multiselect/css/bootstrap-multiselect.css" />
-                <script type="text/javascript" src="cmn_scrpts/bootstrap-multiselect/js/bootstrap-multiselect.js" rel="preload" as="script"></script>                
+                <script type="text/javascript" src="cmn_scrpts/bootstrap-multiselect/js/bootstrap-multiselect.js" rel="preload" as="script"></script>
                 <script type="text/javascript" src="cmn_scrpts/MDB Free/js/mdb.min.js" rel="preload" as="script"></script>
                 <script src="cmn_scrpts/amcharts_4.1.4/amcharts4/core.js" rel="preload" as="script"></script>
                 <script src="cmn_scrpts/amcharts_4.1.4/amcharts4/themes/animated.js" rel="preload" as="script"></script>
@@ -2117,6 +2117,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
         </html>
 <?php
+    }
+}
+$strSQL = "select distinct trim(to_char(cust_sup_id,'999999999999999999999999999999')) a, cust_sup_name b, '' c, org_id d, ''||lnkd_prsn_id e, cust_or_sup f from scm.scm_cstmr_suplr where (is_enabled='1') order by 2";
+$lovID1 = getLovID("All Customers and Suppliers");
+if ($lovID1 > 0) {
+    execUpdtInsSQL("UPDATE gst.gen_stp_lov_names
+	SET value_list_name='All Business/Trade Partners', value_list_desc='All Business/Trade Partners', " .
+        "sqlquery_if_dyn='" . loc_db_escape_string($strSQL) . "' 
+	WHERE value_list_id=" . $lovID1);
+} else {
+    $lovID = getLovID("All Business/Trade Partners");
+    $oldSQL = getGnrlRecNm("gst.gen_stp_lov_names", "value_list_id", "sqlquery_if_dyn", $lovID);
+    if ($lovID > 0 && strpos($oldSQL, "cust_or_sup f") === FALSE) {
+        updateLovNm($lovID, true, $strSQL, "SYS", true);
     }
 }
 ?>

@@ -1931,7 +1931,7 @@ function createWelcomeMsg($username)
     routWkfMsg($msg_id, -1, $prsnid, $userID, 'Initiated', 'Acknowledge');
 }
 
-function createSysInboxMsg($prsnid, $msghdr, $msgbody, $attchmnts = "", $attchmnts_desc = "", $fromPrsnID=-1)
+function createSysInboxMsg($prsnid, $msghdr, $msgbody, $attchmnts = "", $attchmnts_desc = "", $fromPrsnID = -1)
 {
     global $app_url;
     global $fldrPrfx;
@@ -3340,13 +3340,18 @@ function getLovValues(
         } else if ($criteriaID >= 0 && $criteriaID2 != "" && $criteriaID3 != "") {
             $strSql = "select " . $selLst . " from (" . str_replace("{:prsn_id}", getUserPrsnID1($usrID), getSQLForDynamicVlLst($lovID)) .
                 ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and tbl1.e = '" .
-                loc_db_escape_string($criteriaID2) . "' and tbl1.f = '" . loc_db_escape_string($criteriaID3) .
+                loc_db_escape_string($criteriaID2) . "' and tbl1.f like '" . loc_db_escape_string($criteriaID3) .
                 "' " . $extrWhere . $addtnlWhere . ") " . $ordrBy . " LIMIT " . $limit_size .
                 " OFFSET " . abs($offset * $limit_size);
         } else if ($criteriaID < 0 && $criteriaID2 != "" && $criteriaID3 == "") {
             $strSql = "select " . $selLst . " from (" . str_replace("{:prsn_id}", getUserPrsnID1($usrID), getSQLForDynamicVlLst($lovID)) .
                 ") tbl1 WHERE (tbl1.e = '" .
                 loc_db_escape_string($criteriaID2) . "' " . $extrWhere . $addtnlWhere . ") " . $ordrBy . " LIMIT " . $limit_size .
+                " OFFSET " . abs($offset * $limit_size);
+        } else if ($criteriaID >= 0 && $criteriaID2 == "" && $criteriaID3 != "") {
+            $strSql = "select " . $selLst . " from (" . str_replace("{:prsn_id}", getUserPrsnID1($usrID), getSQLForDynamicVlLst($lovID)) .
+                ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and tbl1.f like '" . loc_db_escape_string($criteriaID3) .
+                "' " . $extrWhere . $addtnlWhere . ") " . $ordrBy . " LIMIT " . $limit_size .
                 " OFFSET " . abs($offset * $limit_size);
         } else {
             $strSql = "select " . $selLst . " from (" . str_replace("{:prsn_id}", getUserPrsnID1($usrID), getSQLForDynamicVlLst($lovID)) .
@@ -3427,12 +3432,16 @@ function getTtlLovValues(
         } else if ($criteriaID >= 0 && $criteriaID2 != "" && $criteriaID3 != "") {
             $strSql = "select count(1) from (" . str_replace("{:prsn_id}", getUserPrsnID1($usrID), getSQLForDynamicVlLst($lovID)) .
                 ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and tbl1.e = '" .
-                loc_db_escape_string($criteriaID2) . "' and tbl1.f = '" . loc_db_escape_string($criteriaID3) .
+                loc_db_escape_string($criteriaID2) . "' and tbl1.f like '" . loc_db_escape_string($criteriaID3) .
                 "' " . $extrWhere . $addtnlWhere . ") ";
         } else if ($criteriaID < 0 && $criteriaID2 != "" && $criteriaID3 == "") {
             $strSql = "select count(1) from (" . str_replace("{:prsn_id}", getUserPrsnID1($usrID), getSQLForDynamicVlLst($lovID)) .
                 ") tbl1 WHERE (tbl1.e = '" .
                 loc_db_escape_string($criteriaID2) . "' " . $extrWhere . $addtnlWhere . ") ";
+        } else if ($criteriaID >= 0 && $criteriaID2 == "" && $criteriaID3 != "") {
+            $strSql = "select count(1) from (" . str_replace("{:prsn_id}", getUserPrsnID1($usrID), getSQLForDynamicVlLst($lovID)) .
+                ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and tbl1.f like '" . loc_db_escape_string($criteriaID3) .
+                "' " . $extrWhere . $addtnlWhere . ") ";
         } else {
             $strSql = "select count(1) from (" . str_replace("{:prsn_id}", getUserPrsnID1($usrID), getSQLForDynamicVlLst($lovID)) .
                 ") tbl1 WHERE (1=1 " . $extrWhere . $addtnlWhere . ") ";

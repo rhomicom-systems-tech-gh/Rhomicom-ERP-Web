@@ -1103,7 +1103,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" aria-label="..." id="allwdGroupName" value="<?php echo $allwdGroupName; ?>" readonly="">
                                                     <input type="hidden" id="allwdGroupID" value="<?php echo $allwdGroupID; ?>">
-                                                    <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'allOtherInputOrgID', '', '', 'radio', true, '', 'allwdGroupID', 'allwdGroupName', 'clear', 1, '');">
+                                                    <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', '', 'radio', true, '', 'allwdGroupID', 'allwdGroupName', 'clear', 1, '');">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
                                                 </div>
@@ -1583,7 +1583,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" aria-label="..." id="allwdGroupName" value="<?php echo $allwdGroupName; ?>" readonly="">
                                                     <input type="hidden" id="allwdGroupID" value="<?php echo $allwdGroupID; ?>">
-                                                    <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'allOtherInputOrgID', '', '', 'radio', true, '', 'allwdGroupID', 'allwdGroupName', 'clear', 1, '');">
+                                                    <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', '', 'radio', true, '', 'allwdGroupID', 'allwdGroupName', 'clear', 1, '');">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
                                                 </div>
@@ -2240,7 +2240,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="input-group">
                                                     <input type="text" name="cageOwnersCstmrNm" id="cageOwnersCstmrNm" class="form-control" value="<?php echo $cageOwnersCstmrNm; ?>" readonly="true">
                                                     <input type="hidden" name="cageOwnersCstmrID" id="cageOwnersCstmrID" class="form-control" value="<?php echo $cageOwnersCstmrID; ?>">
-                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', '', '', '', 'radio', true, '', 'cageOwnersCstmrID', 'cageOwnersCstmrNm', 'clear', 0, '', function () {
+                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', '', 'radio', true, '', 'cageOwnersCstmrID', 'cageOwnersCstmrNm', 'clear', 0, '', function () {
                                                                 var aa112 = 1;
                                                             });"> 
                                                         <span class="glyphicon glyphicon-th-list"></span>
@@ -2337,7 +2337,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" aria-label="..." id="allwdGroupName" value="<?php echo $allwdGroupName; ?>" readonly="">
                                                     <input type="hidden" id="allwdGroupID" value="<?php echo $allwdGroupID; ?>">
-                                                    <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'allOtherInputOrgID', '', '', 'radio', true, '', 'allwdGroupID', 'allwdGroupName', 'clear', 1, '');">
+                                                    <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', '', 'radio', true, '', 'allwdGroupID', 'allwdGroupName', 'clear', 1, '');">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
                                                 </div>
@@ -3001,7 +3001,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <div class="input-group">
                                                                         <input type="text" class="form-control" aria-label="..." id="invItemCtgry" value="<?php echo $invItemCtgry; ?>" readonly="">
                                                                         <input type="hidden" id="invItemCtgryID" value="<?php echo $invItemCtgryID; ?>">
-                                                                        <label id="invItemCtgryLbl" class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Categories', '', '', '', 'radio', true, '', 'invItemCtgryID', 'invItemCtgry', 'clear', 1, '');">
+                                                                        <label id="invItemCtgryLbl" class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Categories', 'allOtherInputOrgID', '', '', 'radio', true, '', 'invItemCtgryID', 'invItemCtgry', 'clear', 1, '');">
                                                                             <span class="glyphicon glyphicon-th-list"></span>
                                                                         </label>
                                                                     </div>
@@ -3646,7 +3646,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"oneItmUOMsRow_WWW123WWW_UOMNm\" value=\"\">
                                                                     <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"oneItmUOMsRow_WWW123WWW_UOMID\" value=\"\">
                                                                     <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"oneItmUOMsRow_WWW123WWW_LineID\" value=\"\">
-                                                                    <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Unit Of Measures', '', '', '', 'radio', true, '', 'oneItmUOMsRow_WWW123WWW_UOMID', 'oneItmUOMsRow_WWW123WWW_UOMNm', 'clear', 1, '');\">
+                                                                    <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Unit Of Measures', 'allOtherInputOrgID', '', '', 'radio', true, '', 'oneItmUOMsRow_WWW123WWW_UOMID', 'oneItmUOMsRow_WWW123WWW_UOMNm', 'clear', 1, '');\">
                                                                         <span class=\"glyphicon glyphicon-th-list\"></span>
                                                                     </label>
                                                                 </div>
@@ -3732,7 +3732,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     <input type="text" class="form-control" aria-label="..." id="oneItmUOMsRow<?php echo $cntrUsr; ?>_UOMNm" value="<?php echo $itmUOM1; ?>">
                                                                                     <input type="hidden" class="form-control" aria-label="..." id="oneItmUOMsRow<?php echo $cntrUsr; ?>_UOMID" value="<?php echo $itmUOMID; ?>">
                                                                                     <input type="hidden" class="form-control" aria-label="..." id="oneItmUOMsRow<?php echo $cntrUsr; ?>_LineID" value="<?php echo $itmUOMLineID; ?>">
-                                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Unit Of Measures', '', '', '', 'radio', true, '<?php echo $itmUOMID; ?>', 'oneItmUOMsRow<?php echo $cntrUsr; ?>_UOMID', 'oneItmUOMsRow<?php echo $cntrUsr; ?>_UOMNm', 'clear', 1, '');">
+                                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Unit Of Measures', 'allOtherInputOrgID', '', '', 'radio', true, '<?php echo $itmUOMID; ?>', 'oneItmUOMsRow<?php echo $cntrUsr; ?>_UOMID', 'oneItmUOMsRow<?php echo $cntrUsr; ?>_UOMNm', 'clear', 1, '');">
                                                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                                                     </label>
                                                                                 </div>

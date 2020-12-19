@@ -2290,7 +2290,7 @@ function get_One_PrdtCtgry_Det($catID)
     return $result;
 }
 
-function get_Basic_PrdtCtgry($searchWord, $searchIn, $offset, $limit_size)
+function get_Basic_PrdtCtgry($searchWord, $searchIn, $offset, $limit_size, $orgID)
 {
     $whrcls = "";
     if ($searchIn == "Category Name") {
@@ -2302,13 +2302,13 @@ function get_Basic_PrdtCtgry($searchWord, $searchIn, $offset, $limit_size)
     }
     $strSql = "select a.cat_id, a.cat_name, a.cat_desc, a.start_date, a.end_date, a.enabled_flag "
         . "from inv.inv_product_categories a " .
-        "WHERE ((1=1)" . $whrcls . ") ORDER BY a.cat_id DESC LIMIT " . $limit_size .
+        "WHERE ((a.org_id=" . $orgID . ")" . $whrcls . ") ORDER BY a.cat_id DESC LIMIT " . $limit_size .
         " OFFSET " . (abs($offset * $limit_size));
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_Total_PrdtCtgry($searchWord, $searchIn)
+function get_Total_PrdtCtgry($searchWord, $searchIn, $orgID)
 {
     $whrcls = "";
     if ($searchIn == "Category Name") {
@@ -2320,7 +2320,7 @@ function get_Total_PrdtCtgry($searchWord, $searchIn)
     }
     $strSql = "SELECT count(1)  " .
         "FROM inv.inv_product_categories a " .
-        "WHERE ((1=1)" . $whrcls . ")";
+        "WHERE ((a.org_id=" . $orgID . ")" . $whrcls . ")";
 
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
@@ -2394,7 +2394,7 @@ function get_One_UOMStp_Det($uomID)
     return $result;
 }
 
-function get_Basic_UOMStp($searchWord, $searchIn, $offset, $limit_size)
+function get_Basic_UOMStp($searchWord, $searchIn, $offset, $limit_size, $orgID)
 {
     $whrcls = "";
     if ($searchIn == "UOM Name") {
@@ -2405,13 +2405,13 @@ function get_Basic_UOMStp($searchWord, $searchIn, $offset, $limit_size)
             "')";
     }
     $strSql = "select a.uom_id, a.uom_name, a.uom_desc, a.enabled_flag from inv.unit_of_measure a "
-        . "WHERE ((1=1)" . $whrcls . ") ORDER BY a.uom_id DESC LIMIT " . $limit_size .
+        . "WHERE ((a.org_id=" . $orgID . ")" . $whrcls . ") ORDER BY a.uom_id DESC LIMIT " . $limit_size .
         " OFFSET " . (abs($offset * $limit_size));
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_Total_UOMStp($searchWord, $searchIn)
+function get_Total_UOMStp($searchWord, $searchIn, $orgID)
 {
     $whrcls = "";
     if ($searchIn == "UOM Name") {
@@ -2423,7 +2423,7 @@ function get_Total_UOMStp($searchWord, $searchIn)
     }
     $strSql = "SELECT count(1)  " .
         "FROM inv.unit_of_measure a " .
-        "WHERE ((1=1)" . $whrcls . ")";
+        "WHERE ((a.org_id=" . $orgID . ")" . $whrcls . ")";
 
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
@@ -2496,6 +2496,7 @@ function deleteUOMStp($uomid, $uomNm)
 
 function get_ItmTmplts($searchFor, $searchIn, $offset, $limit_size)
 {
+    global $orgID;
     $whereClause = "";
     $strSql = "";
     if ($searchIn == "Name") {
@@ -2510,7 +2511,7 @@ function get_ItmTmplts($searchFor, $searchIn, $offset, $limit_size)
         "dscnt_code_id, extr_chrg_id, inv_asset_acct_id, cogs_acct_id, sales_rev_accnt_id, sales_ret_accnt_id, " .
         " purch_ret_accnt_id, expense_accnt_id, is_tmplt_enabled_flag, planning_enabled, min_level, max_level, " .
         " selling_price, item_type, value_price_crncy_id, gst.get_pssbl_val(value_price_crncy_id), auto_dflt_in_vms_trns  from inv.inv_itm_type_templates a " .
-        "WHERE ((1=1)$whereClause) ORDER BY a.item_type_id DESC LIMIT " . $limit_size .
+        "WHERE ((a.org_id=" . $orgID . ")$whereClause) ORDER BY a.item_type_id DESC LIMIT " . $limit_size .
         " OFFSET " . abs($offset * $limit_size);
     $result = executeSQLNoParams($strSql);
     return $result;
@@ -2518,7 +2519,7 @@ function get_ItmTmplts($searchFor, $searchIn, $offset, $limit_size)
 
 function get_ItmTmpltsTtl($searchFor, $searchIn)
 {
-
+    global $orgID;
     $whereClause = "";
     $strSql = "";
     if ($searchIn == "Name") {
@@ -2528,7 +2529,7 @@ function get_ItmTmpltsTtl($searchFor, $searchIn)
         $whereClause = " and (a.item_type_desc ilike '" . loc_db_escape_string($searchFor) . "')";
     }
     $strSql = "select count(1) from inv.inv_itm_type_templates a " .
-        "WHERE ((1=1)$whereClause)";
+        "WHERE ((a.org_id=" . $orgID . ")$whereClause)";
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -5381,19 +5382,19 @@ function get_CnsgnRcpt_Attachments($searchWord, $offset, $limit_size, $batchID, 
     $strSql = "SELECT a.attchmnt_id, a.doc_hdr_id, a.attchmnt_desc, a.file_name " .
         "FROM inv.inv_doc_attchmnts a " .
         "WHERE(a.attchmnt_desc ilike '" . loc_db_escape_string($searchWord) .
-        "' and a.doc_hdr_id = " . $batchID . " AND doc_hdr_type = '". loc_db_escape_string($docHdrTyp) .
+        "' and a.doc_hdr_id = " . $batchID . " AND doc_hdr_type = '" . loc_db_escape_string($docHdrTyp) .
         "') ORDER BY a.attchmnt_id LIMIT " . $limit_size .
         " OFFSET " . (abs($offset * $limit_size));
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_Total_CnsgnRcpt_Attachments($searchWord, $batchID,$docHdrTyp)
+function get_Total_CnsgnRcpt_Attachments($searchWord, $batchID, $docHdrTyp)
 {
     $strSql = "SELECT count(1) " .
         "FROM inv.inv_doc_attchmnts a " .
         "WHERE(a.attchmnt_desc ilike '" . loc_db_escape_string($searchWord) .
-        "' and a.doc_hdr_id = " . $batchID . " AND doc_hdr_type = '". loc_db_escape_string($docHdrTyp) .
+        "' and a.doc_hdr_id = " . $batchID . " AND doc_hdr_type = '" . loc_db_escape_string($docHdrTyp) .
         "')";
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
@@ -5402,11 +5403,11 @@ function get_Total_CnsgnRcpt_Attachments($searchWord, $batchID,$docHdrTyp)
     return 0;
 }
 
-function getCnsgnRcptAttchmtDocs($batchid,$docHdrTyp)
+function getCnsgnRcptAttchmtDocs($batchid, $docHdrTyp)
 {
     $sqlStr = "SELECT attchmnt_id, file_name, attchmnt_desc
         FROM inv.inv_doc_attchmnts 
-        WHERE 1=1 AND doc_hdr_type = '". loc_db_escape_string($docHdrTyp) .
+        WHERE 1=1 AND doc_hdr_type = '" . loc_db_escape_string($docHdrTyp) .
         "' AND file_name != '' AND doc_hdr_id = " . $batchid;
     $result = executeSQLNoParams($sqlStr);
     return $result;

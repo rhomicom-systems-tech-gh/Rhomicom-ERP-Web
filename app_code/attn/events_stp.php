@@ -740,7 +740,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <?php if ($canEdt === true) { ?>
                                             <div class="input-group">
                                                 <input type="text" class="form-control" aria-label="..." id="attnEvntStpGrpName" value="<?php echo $attnEvntStpGrpName; ?>" readonly="">
-                                                <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'allOtherInputOrgID', '', '', 'radio', true, '', 'attnEvntStpGrpID', 'attnEvntStpGrpName', 'clear', 1, '');">
+                                                <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', '', 'radio', true, '', 'attnEvntStpGrpID', 'attnEvntStpGrpName', 'clear', 1, '');">
                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                 </label>
                                             </div>
@@ -780,7 +780,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <label class="btn btn-primary btn-file input-group-addon" onclick="getCstmrSpplrForm(-1, 'Create/Edit Supplier', 'ShowDialog', function () {}, 'attnEvntStpFirmID');" data-toggle="tooltip" title="Create/Edit Customer/Supplier">
                                                 <span class="glyphicon glyphicon-plus"></span>
                                             </label>
-                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'allOtherInputOrgID', '', 'attnEvntStpCstmrClsfctn', 'radio', true, '', 'attnEvntStpFirmID', 'attnEvntStpFirmNm', 'clear', 1, '', function () {
+                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', 'attnEvntStpCstmrClsfctn', 'radio', true, '', 'attnEvntStpFirmID', 'attnEvntStpFirmNm', 'clear', 1, '', function () {
                                                                         getAttnSpplrInfo();
                                                                     });" data-toggle="tooltip" title="Existing Client/Vendor">
                                                 <span class="glyphicon glyphicon-th-list"></span>

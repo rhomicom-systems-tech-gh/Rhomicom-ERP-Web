@@ -482,7 +482,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <div class="input-group">
                                                 <input type="text" class="form-control" aria-label="..." id="usrPrflLnkdCstmr" value="<?php echo $row[16]; ?>" readonly="true">
                                                 <input type="hidden" class="form-control" aria-label="..." id="usrPrflLnkdCstmrID" value="<?php echo $row[15]; ?>">
-                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', '', '', '', 'radio', true, '<?php echo $row[15]; ?>', 'usrPrflLnkdCstmrID', 'usrPrflLnkdCstmr', 'clear', 1, '');">
+                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', '', 'radio', true, '<?php echo $row[15]; ?>', 'usrPrflLnkdCstmrID', 'usrPrflLnkdCstmr', 'clear', 1, '');">
                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                 </label>
                                             </div>
@@ -785,7 +785,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <div class="input-group">
                                     <input type="text" class="form-control" aria-label="..." id="usrPrflLnkdCstmr" value="" readonly="true">
                                     <input type="hidden" class="form-control" aria-label="..." id="usrPrflLnkdCstmrID" value="">
-                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', '', '', '', 'radio', true, '', 'usrPrflLnkdCstmrID', 'usrPrflLnkdCstmr', 'clear', 1, '');">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', '', 'radio', true, '', 'usrPrflLnkdCstmrID', 'usrPrflLnkdCstmr', 'clear', 1, '');">
                                         <span class="glyphicon glyphicon-th-list"></span>
                                     </label>
                                 </div>

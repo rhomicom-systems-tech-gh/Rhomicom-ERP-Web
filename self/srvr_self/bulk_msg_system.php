@@ -386,7 +386,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <div class="input-group">
                                                                     <input type="text" class="form-control" aria-label="..." id="workPlaceName" value="" readonly="">
                                                                     <input type="hidden" id="workPlaceID" value="-1">
-                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'workPlaceID', 'workPlaceName', 'clear', 1, '');">
+                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlOrgID', '', '', 'radio', true, '', 'workPlaceID', 'workPlaceName', 'clear', 1, '');">
                                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                                     </label>
                                                                 </div>
@@ -465,7 +465,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <input type="text" class="form-control" aria-label="..." id="groupName" value="<?php echo $inGroupName; ?>" readonly="">
                                                     <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
                                                     <input type="hidden" id="groupID" value="<?php echo $inGroupID; ?>">
-                                                    <div id="groupNameLbl" class="input-group-append handCursor" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'groupID', 'groupName', 'clear', 1, '');">
+                                                    <div id="groupNameLbl" class="input-group-append handCursor" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlOrgID', '', '', 'radio', true, '', 'groupID', 'groupName', 'clear', 1, '');">
                                                         <span class="input-group-text rhoclickable"><i class="fas fa-list-ul"></i></span>
                                                     </div>
                                                 </div>
@@ -589,7 +589,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <input type="text" class="form-control" aria-label="..." id="groupName" value="" readonly="">
                                                                     <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
                                                                     <input type="hidden" id="groupID" value="-1">
-                                                                    <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'groupID', 'groupName', 'clear', 1, '');">
+                                                                    <label disabled="true" id="groupNameLbl" class="btn btn-primary btn-file input-group-addon" onclick="getNoticeLovs('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlOrgID', '', '', 'radio', true, '', 'groupID', 'groupName', 'clear', 1, '');">
                                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                                     </label>
                                                                 </div>
@@ -605,7 +605,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <div class="input-group">
                                                                     <input type="text" class="form-control" aria-label="..." id="workPlaceName" value="" readonly="">
                                                                     <input type="hidden" id="workPlaceID" value="-1">
-                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'workPlaceID', 'workPlaceName', 'clear', 1, '');">
+                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'gnrlOrgID', '', '', 'radio', true, '', 'workPlaceID', 'workPlaceName', 'clear', 1, '');">
                                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                                     </label>
                                                                 </div>

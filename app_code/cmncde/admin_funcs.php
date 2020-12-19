@@ -1372,7 +1372,7 @@ function createInvntryRqrdLOVs()
         "Suppliers", "Customer/Supplier Sites", "Users' Sales Stores", "Approved Pro-Forma Invoices",
         "Approved Sales Orders", "Approved Internal Item Requests",
         "Customers", "Approved Sales Invoices/Item Issues", "Customer Names for Reports",
-        /* 19 */ "Supplier Names for Reports", "Allow Dues on Invoices", "All Customers and Suppliers",
+        /* 19 */ "Supplier Names for Reports", "Allow Dues on Invoices", "All Business/Trade Partners",
         /* 22 */ "Production Process Runs", "Production Process Run Stages", "Production Process Classifications",
         /* 25 */ "Default POS Paper Size", "Default Document Notes", "Document Custom Print Process Names",
         /* 28 */ "All Sales Documents", "Production Cost Explanations",
@@ -1387,7 +1387,7 @@ function createInvntryRqrdLOVs()
         "Suppliers", "Customer/Supplier Sites", "Users' Sales Stores", "Approved Pro-Forma Invoices",
         "Approved Sales Orders", "Approved Internal Item Requests",
         "Customers", "Approved Sales Invoices/Item Issues", "Customer Names for Reports",
-        /* 19 */ "Supplier Names for Reports", "Allow Dues on Invoices", "All Customers and Suppliers",
+        /* 19 */ "Supplier Names for Reports", "Allow Dues on Invoices", "All Business/Trade Partners",
         "Production Process Runs",
         "Production Process Run Stages", "Production Process Classifications",
         "Default POS Paper Size", "Default Document Notes",
@@ -1437,7 +1437,7 @@ function createInvntryRqrdLOVs()
         "select distinct cust_sup_name a, cust_sup_name b, '' c, org_id d from scm.scm_cstmr_suplr where (cust_or_sup ilike '%Customer%' and is_enabled='1') order by 2",
         "select distinct cust_sup_name a, cust_sup_name b, '' c, org_id d from scm.scm_cstmr_suplr where (cust_or_sup ilike '%Supplier%' and is_enabled='1') order by 2",
         "",
-        "select distinct trim(to_char(cust_sup_id,'999999999999999999999999999999')) a, cust_sup_name b, '' c, org_id d, lnkd_prsn_id e from scm.scm_cstmr_suplr where (is_enabled='1') order by 2",
+        "select distinct trim(to_char(cust_sup_id,'999999999999999999999999999999')) a, cust_sup_name b, '' c, org_id d, lnkd_prsn_id e, cust_or_sup f from scm.scm_cstmr_suplr where (is_enabled='1') order by 2",
         "select distinct '' || y.process_run_id a, y.batch_code_num b, '' c, z.org_id d, y.process_def_id e from scm.scm_process_run y, scm.scm_process_definition z where (z.process_def_id = y.process_def_id) order by 2",
         "select distinct z.stage_code_name a, z.stage_code_desc b, '' c, -1 d, y.process_run_id e from scm.scm_process_run_stages y, scm.scm_process_def_stages z where (z.stage_id = y.def_stage_id and y.process_run_id>0) order by 2",
         "", "", "", "",
@@ -2820,7 +2820,7 @@ function createAcctngRqrdLOVs1()
         /* 28 */ "Asset Categories", "Asset Building Names", "Asset Room Names",
         "Asset Numbers",
         /* 32 */ "PM Measurement Types", "PM Measurement Units", "PM Actions Taken",
-        "All Customers and Suppliers", "Petty Cash Accounts"
+        "All Business/Trade Partners", "Petty Cash Accounts"
     );
     $sysLovsDesc = array(
         "Cash Accounts", "Inventory/Asset Accounts", "Contra Expense Accounts",
@@ -2832,7 +2832,7 @@ function createAcctngRqrdLOVs1()
         "Persons not Linked as Customers/Suppliers", "All Accounts",
         "All Asset Accounts", "All Liability Accounts", "All Equity Accounts", "All Revenue Accounts", "All Expense Accounts", "All Memo Accounts", "Asset Classifications", "Asset Categories", "Asset Building Names", "Asset Room Names", "Asset Numbers",
         /* 32 */ "PM Measurement Types", "PM Measurement Units", "PM Actions Taken",
-        "All Customers and Suppliers", "Petty Cash Accounts"
+        "All Business/Trade Partners", "Petty Cash Accounts"
     );
     $sysLovsDynQrys = array(
         "", "",
@@ -2885,9 +2885,7 @@ function createAcctngRqrdLOVs1()
         "", "", "", "",
         "select distinct '' || asset_id a, trim(asset_code_name || ' ' || REPLACE(asset_desc, asset_code_name, '')) b, '' c, org_id d from accb.accb_fa_assets_rgstr order by 2",
         "", "", "",
-        "select distinct trim(to_char(cust_sup_id,'999999999999999999999999999999')) a, cust_sup_name b, '' c,
-org_id d, lnkd_prsn_id e, cust_or_sup f from scm.scm_cstmr_suplr
-where (is_enabled='1') order by 2",
+        "select distinct trim(to_char(cust_sup_id,'999999999999999999999999999999')) a, cust_sup_name b, '' c, org_id d, lnkd_prsn_id e, cust_or_sup f from scm.scm_cstmr_suplr where (is_enabled='1') order by 2",
         "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_num || '.' || accnt_name b, '' c,
 org_id d, accnt_num e from accb.accb_chart_of_accnts
 where (accnt_type = 'A' and accnt_id IN (SELECT z.account_id

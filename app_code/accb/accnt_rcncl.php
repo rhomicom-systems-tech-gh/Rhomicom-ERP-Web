@@ -150,11 +150,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $orgID . ", -1);";
                         $result = executeSQLNoParams($strSql);
                     }
+                    /**
+                     * 1. Click Btn to generate import template
+                     * 2. Click Btn to import template and send user to imported statement page
+                     * 3. Click Btn to auto-match imported statement and system generated statement
+                     * using ticked criteria and send user to reconciliation statement page
+                     * 4. Also main system statement page shd color green reconcilde/matched lines
+                     */
                     ?>
                     <div class="col-md-12" style="padding:0px 15px 0px 15px;">
                         <fieldset class="basic_person_fs1" style="padding: 0px 5px 5px 5px !important;">
                             <ul class="nav nav-tabs" style="margin-top:1px !important;">
                                 <li class="active"><a data-toggle="tabajxaccrcncl" data-rhodata="" href="#accbRcnclGlStatemtLines" id="accbRcnclGlStatemtLinestab">Main Report</a></li>
+                                <li class=""><a data-toggle="tabajxaccrcncl" data-rhodata="" href="#accbRcnclImprtdTrnsLines" id="accbRcnclImprtdTrnsLinestab">Imported Account Statement</a></li>
+                                <li class=""><a data-toggle="tabajxaccrcncl" data-rhodata="" href="#accbRcnclUnMtchdTrnsLines" id="accbRcnclUnMtchdTrnsLinestab">Unreconciled Transactions</a></li>
                                 <li class=""><a data-toggle="tabajxaccrcncl" data-rhodata="" href="#accbRcnclJrnlTrnsLines" id="accbRcnclJrnlTrnsLinestab">Corrective Journal Entries</a></li>
                             </ul>
                             <div class="custDiv" style="padding:0px !important;min-height: 40px !important;" id="oneAccbFSRptTblSctn"> 
@@ -397,6 +406,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </form>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div id="accbRcnclImprtdTrnsLines" class="tab-pane fadein" style="border:none !important;padding:0px !important;">
+                                    </div>
+                                    <div id="accbRcnclUnMtchdTrnsLines" class="tab-pane fadein" style="border:none !important;padding:0px !important;">
                                     </div>
                                     <div id="accbRcnclJrnlTrnsLines" class="tab-pane fadein" style="border:none !important;padding:0px !important;">
                                         <div class="row"> 

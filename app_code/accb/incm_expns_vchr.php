@@ -541,9 +541,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $smplVchrSpplrSiteID = -1;
                 $smplVchrMainTmpltID = -1;
                 $smplVchrMltplLines = "0";
-                $smplVchrSpplrClsfctn = "Supplier";
+                $smplVchrSpplrClsfctn = "%Supplier%";
                 if ($inTmpltTyp == "INCM") {
-                    $smplVchrSpplrClsfctn = "Customer";
+                    $smplVchrSpplrClsfctn = "%Customer%";
                 }
                 $smplVchrTransDte = $gnrlTrnsDteDMY;
                 $smplVchrDesc = "";
@@ -741,7 +741,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getCstmrSpplrForm(-1, 'Create/Edit Payee', 'ShowDialog', function () {}, 'smplVchrSpplrID');" data-toggle="tooltip" title="Create/Edit Payee">
                                             <span class="glyphicon glyphicon-plus"></span>
                                         </label>
-                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'allOtherInputOrgID', '', 'smplVchrSpplrClsfctn', 'radio', true, '', 'smplVchrSpplrID', 'smplVchrSpplr', 'clear', 1, '',function(){afterVchrPayeeSlct();});" data-toggle="tooltip" title="Existing Client/Vendor">
+                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', 'smplVchrSpplrClsfctn', 'radio', true, '', 'smplVchrSpplrID', 'smplVchrSpplr', 'clear', 1, '',function(){afterVchrPayeeSlct();});" data-toggle="tooltip" title="Existing Client/Vendor">
                                             <span class="glyphicon glyphicon-th-list"></span>
                                         </label>
                                     </div>

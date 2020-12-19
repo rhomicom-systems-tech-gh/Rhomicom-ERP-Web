@@ -1204,7 +1204,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <div class="input-group">
                                             <input type="text" class="form-control" aria-label="..." id="accbPymntsSpplr" name="accbPymntsSpplr" value="<?php echo $accbPymntsSpplr; ?>" readonly="true">
                                             <input type="hidden" id="accbPymntsSpplrID" value="<?php echo $accbPymntsSpplrID; ?>">
-                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbPymntsSpplrID', 'accbPymntsSpplr', 'clear', 1, '');" data-toggle="tooltip" title="Existing Client/Vendor">
+                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Business/Trade Partners', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbPymntsSpplrID', 'accbPymntsSpplr', 'clear', 1, '');" data-toggle="tooltip" title="Existing Client/Vendor">
                                                 <span class="glyphicon glyphicon-th-list"></span>
                                             </label>
                                         </div>
