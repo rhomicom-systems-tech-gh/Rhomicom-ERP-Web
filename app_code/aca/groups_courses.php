@@ -189,6 +189,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         );
                         $z++;
                     }
+                    if ($z == 0) {
+                        $arr_content['percent'] = 100;
+                        $arr_content['dwnld_url'] = $dwnldUrl;
+                        $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!... Template Exported.</span>";
+                        $arr_content['msgcount'] = 0;
+                        file_put_contents(
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_" . $exprtFileNmPrt . "_exprt_progress.rho",
+                            json_encode($arr_content)
+                        );
+                    }
                     fclose($opndfile);
                 } else {
                     $percent = 100;

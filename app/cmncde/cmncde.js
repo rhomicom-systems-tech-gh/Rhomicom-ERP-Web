@@ -2179,7 +2179,7 @@ function printPayPOSRcpt(pKeyID) {
         }
     });
 }
-
+         getOneJrnlBatchForm(-1, 11, 'ReloadDialog', -1, '', '#accbRcnclJrnlTrnsLines');
 function getOneJrnlBatchForm(pKeyID,vwtype,actionTxt,extraPKeyID,extraPKeyType,destElmntID) {
     if (typeof actionTxt === 'undefined' || actionTxt === null) {
         actionTxt = 'ShowDialog';
@@ -2721,7 +2721,6 @@ function getOneAccbPyblsInvcForm(pKeyID,vwtype,actionTxt,accbPyblsInvcVchType,ex
     });
 }
 
-
 function calcAllAccbPyblsInvcSmryTtl() {
     var ttlAmount = 0;
     var ttlRwAmount = 0;
@@ -2752,7 +2751,6 @@ function calcAllAccbPyblsInvcSmryTtl() {
     $('#accbPyblsInvcOustndngAmnt').val(addCommas((ttlAmount - Number(accbPyblsInvcPaidAmnt)).toFixed(2)));
 }
 
-
 function resetAccbFSRptRpts(slctr,linkArgs) {
     shdHideFSRpt = 0;
     openATab(slctr,linkArgs);
@@ -2771,6 +2769,10 @@ function getAccbFSRptRpts(startRunng,slctr,linkArgs,startAcntID) {
     var accbFSRptShwSmmry = $('#accbFSRptShwSmmry:checked').length > 0 ? "YES" : "NO";
     var accbFSRptShwNetPos = $('#accbFSRptShwNetPos:checked').length > 0 ? "YES" : "NO";
     var accbFSRptUseCreationDte = $('#accbFSRptUseCreationDte:checked').length > 0 ? "YES" : "NO";
+    var accbFSRptShwUnBalsd = $('#accbFSRptShwUnBalsd:checked').length > 0 ? "YES" : "NO";
+    var accbFSRptShwUnmtchd = $('#accbFSRptShwUnmtchd:checked').length > 0 ? "YES" : "NO";
+    var accbFSRptShwVoided = $('#accbFSRptShwVoided:checked').length > 0 ? "YES" : "NO";
+    var accbFSRptShwUnrcncld = $('#accbFSRptShwUnrcncld:checked').length > 0 ? "YES" : "NO";
     var accbFSRptSgmnt1ValID = typeof $("#accbFSRptSgmnt1ValID").val() === 'undefined' ? -1 : $("#accbFSRptSgmnt1ValID").val();
     var accbFSRptSgmnt2ValID = typeof $("#accbFSRptSgmnt2ValID").val() === 'undefined' ? -1 : $("#accbFSRptSgmnt2ValID").val();
     var accbFSRptSgmnt3ValID = typeof $("#accbFSRptSgmnt3ValID").val() === 'undefined' ? -1 : $("#accbFSRptSgmnt3ValID").val();
@@ -2786,7 +2788,6 @@ function getAccbFSRptRpts(startRunng,slctr,linkArgs,startAcntID) {
     var accbFSRptCreatedBy = typeof $("#accbFSRptCreatedBy").val() === 'undefined' ? '' : $("#accbFSRptCreatedBy").val();
     var accbFSRptDocType = typeof $("#accbFSRptDocType").val() === 'undefined' ? '' : $("#accbFSRptDocType").val();
     var accbFSRptSortBy = typeof $("#accbFSRptSortBy").val() === 'undefined' ? '' : $("#accbFSRptSortBy").val();
-
 
     var accbFSRptItemCodeID = typeof $("#accbFSRptItemCodeID").val() === 'undefined' ? -1 : $("#accbFSRptItemCodeID").val();
     var accbFSRptItemCode = typeof $("#accbFSRptItemCode").val() === 'undefined' ? '' : $("#accbFSRptItemCode").val();
@@ -2844,7 +2845,11 @@ function getAccbFSRptRpts(startRunng,slctr,linkArgs,startAcntID) {
         "&accbFSRptSortBy=" + accbFSRptSortBy +
         "&accbFSRptCreatedByID=" + accbFSRptCreatedByID +
         "&accbFSRptCreatedBy=" + accbFSRptCreatedBy +
-        "&accbFSRptUseCreationDte=" + accbFSRptUseCreationDte;
+        "&accbFSRptUseCreationDte=" + accbFSRptUseCreationDte +
+        "&accbFSRptShwUnBalsd=" + accbFSRptShwUnBalsd +
+        "&accbFSRptShwUnmtchd=" + accbFSRptShwUnmtchd +
+        "&accbFSRptShwVoided=" + accbFSRptShwVoided +
+        "&accbFSRptShwUnrcncld=" + accbFSRptShwUnrcncld;
     openATab(slctr,linkArgs);
     if (startAcntID >= 1) {
         shdHideFSRpt = 1;
@@ -2867,6 +2872,19 @@ function shwHideFSRptDivs(whtToDo) {
     }
 }
 
+function shwHideImprtdFSRptDivs(whtToDo) {
+    if (whtToDo === 'hide') {
+        $('#leftDivImprtdFSRpt').addClass('hideNotice');
+        $('#rightDivImprtdFSRptBtn').removeClass('hideNotice');
+        $('#rightDivImprtdFSRpt').removeClass('col-md-9');
+        $('#rightDivImprtdFSRpt').addClass('col-md-12');
+    } else {
+        $('#leftDivImprtdFSRpt').removeClass('hideNotice');
+        $('#rightDivImprtdFSRpt').removeClass('col-md-12');
+        $('#rightDivImprtdFSRpt').addClass('col-md-9');
+        $('#rightDivImprtdFSRptBtn').addClass('hideNotice');
+    }
+}
 
 var prgstimerid;
 var prgstimerid1;

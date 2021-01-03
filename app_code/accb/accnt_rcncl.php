@@ -9,13 +9,300 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($lgn_num > 0 && $canview === true) {
         if ($qstr == "DELETE") {
             if ($actyp == 1) {
-                
             } else if ($actyp == 5) {
-                
             }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {
-                
+                header("content-type:application/json");
+                //Mark Unmark Selected Trans as Selected
+                $rcnclAccntID = isset($_POST['rcnclAccntID']) ? (int) cleanInputData($_POST['rcnclAccntID']) : -1;
+                $slctdLineTrans = isset($_POST['slctdLineTrans']) ? cleanInputData($_POST['slctdLineTrans']) : '';
+
+                $afftctd = 0;
+                $afftctd1 = 0;
+                $afftctd2 = 0;
+                if (trim($slctdLineTrans, "|~") != "") {
+                    $variousRows = explode("|", trim($slctdLineTrans, "|"));
+                    for ($y = 0; $y < count($variousRows); $y++) {
+                        $crntRow = explode("~", $variousRows[$y]);
+                        if (count($crntRow) == 3) {
+                            $ln_TransLineID = (float) (cleanInputData1($crntRow[0]));
+                            $ln_IsRcncld = (cleanInputData1($crntRow[1]));
+                            $ln_AccntID = cleanInputData1($crntRow[2]);
+                            if ($ln_TransLineID > 0) {
+                                $afftctd1 += changeReconciledStatus($ln_TransLineID, $ln_IsRcncld);
+                            }
+                        }
+                    }
+                }
+                $arr_content['percent'] = 100;
+                $arr_content['rcnclAccntID'] = $rcnclAccntID;
+                $arr_content['message'] = $afftctd1 . " Transaction Status(es) Successfully Modified";
+                echo json_encode($arr_content);
+                exit();
+            } else if ($actyp == 901) {
+                //Import Assets Register                
+                $rcnclAccntID = isset($_POST['rcnclAccntID']) ? (int) cleanInputData($_POST['rcnclAccntID']) : -1;
+                $accbStrtFSRptDte = isset($_POST['accbStrtFSRptDte']) ? cleanInputData($_POST['accbStrtFSRptDte']) : '';
+                $accbEndFSRptDte = isset($_POST['accbEndFSRptDte']) ? cleanInputData($_POST['accbEndFSRptDte']) : '';
+                $dataToSend = trim(cleanInputData($_POST['dataToSend']), "|~");
+                session_write_close();
+                $rcnclImprtHdrID = get_MxImprtdBnkStmntID($rcnclAccntID, $accbStrtFSRptDte, $accbEndFSRptDte);
+                $affctd = 0;
+                if ($rcnclImprtHdrID > 0) {
+                    $percent = 100;
+                    $arr_content['percent'] = $percent;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> 0% Completed...Imported Transactions already exist for the Period Selected!<br/>Please delete that imported set first!</span>";
+                    $arr_content['msgcount'] = "";
+                    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccbBnkStmtimport_progress.rho", json_encode($arr_content));
+                    exit();
+                }else{                                    
+                    $rcnclImprtHdrID = get_MaxBnkStmntHdrID() + 1;
+                }
+                if ($dataToSend != "") {
+                    $variousRows = explode("|", $dataToSend);
+                    $total = count($variousRows);
+                    for ($z = 0; $z < $total; $z++) {
+                        $crntRow = explode("~", $variousRows[$z]);
+                        if (count($crntRow) == 7) {
+                            $rcnclImprtHdrID = -1;
+                            $imprtTrnsDate = ltrim(trim(cleanInputData1($crntRow[0])), '\'');
+                            $imprtValueDate = ltrim(trim(cleanInputData1($crntRow[1])), '\'');
+                            $imprtReference = ltrim(trim(cleanInputData1($crntRow[2])), '\'');
+                            $imprtDebits = trim(cleanInputData1($crntRow[3]));
+                            $imprtCredits = trim(cleanInputData1($crntRow[4]));
+                            $imprtRunBals = trim(cleanInputData1($crntRow[5]));
+                            $imprtRemarks = trim(cleanInputData1($crntRow[6]));
+
+                            $accbImprtDebits = 0;
+                            $accbImprtCredits = 0;
+                            $accbImprtRunBals = 0;
+                            $accbOpngDebits = 0;
+                            $accbOpngCredits = 0;
+                            $accbClsngDebits = 0;
+                            $accbClsngCredits = 0;
+
+                            if ($z == 0) {
+                                if (
+                                    strtoupper($imprtTrnsDate) == strtoupper("Transaction Date (DD-MMM-YYYY)")
+                                    && strtoupper($imprtReference) == strtoupper("Reference")
+                                    && strtoupper($imprtCredits) == strtoupper("Credits")
+                                ) {
+                                    continue;
+                                } else {
+                                    $arr_content['percent'] = 100;
+                                    $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span> Selected File is Invalid!";
+                                    $arr_content['msgcount'] = $total;
+                                    file_put_contents(
+                                        $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccbBnkStmtimport_progress.rho",
+                                        json_encode($arr_content)
+                                    );
+                                    break;
+                                }
+                            } else {
+                                $accbImprtDebits = (float) $imprtDebits;
+                                $accbImprtCredits = (float) $imprtCredits;
+                                $accbImprtRunBals = (float) $imprtRunBals;
+                                $accbOpngDebits = 0;
+                                $accbOpngCredits = 0;
+                                $accbClsngDebits = 0;
+                                $accbClsngCredits = 0;
+                                if ($z == 1) {
+                                    $accbOpngDebits = $accbImprtRunBals + $accbImprtDebits;
+                                    $accbOpngCredits = $accbImprtRunBals - $accbImprtCredits;
+                                    $accbClsngDebits = $accbOpngDebits;
+                                    $accbClsngCredits = $accbOpngCredits;
+                                }
+                                $accbClsngDebits = $accbClsngDebits + $accbImprtDebits;
+                                $accbClsngCredits = $accbClsngCredits + $accbImprtCredits;
+                            }
+                            $exitErrMsg = "";
+                            if ($imprtTrnsDate == "" || $imprtRemarks == "") {
+                                $exitErrMsg .= "Row " . ($z + 1) . ": Please enter Transaction Date and Remark!<br/>";
+                            }
+                            if ($accbImprtDebits == 0 && $accbImprtCredits == 0) {
+                                $exitErrMsg .= "Row " . ($z + 1) . ": Please enter Debit or Credit Amount!<br/>";
+                            }
+                            if (trim($exitErrMsg) !== "") {
+                                $arr_content['percent'] = 100;
+                                $arr_content['accbAstHdrID'] = $accbAstHdrID;
+                                $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>" . $exitErrMsg . "</span>";
+                                file_put_contents(
+                                    $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccbBnkStmtimport_progress.rho",
+                                    json_encode($arr_content)
+                                );
+                                break;
+                            }
+                            $affctd +=  createBnkStmntTrans(
+                                $rcnclAccntID,
+                                $accbStrtFSRptDte,
+                                $accbEndFSRptDte,
+                                $rcnclImprtHdrID,
+                                $imprtTrnsDate,
+                                $imprtValueDate,
+                                $imprtReference,
+                                $imprtDebits,
+                                $imprtCredits,
+                                $imprtRunBals,
+                                $imprtRemarks,
+                                $imprtRecCntr,
+                                $opngDebits,
+                                $opngCredits,
+                                $clsngDebits,
+                                $clsngCredits
+                            );
+                        }
+                        if ($z == $total - 1) {
+                            execUpdtInsSQL("UPDATE accb.accb_trans_to_reconcile SET clsng_dbt_amount=" . $accbClsngDebits .
+                                ",clsng_crdt_amount=" . $accbClsngCredits .
+                                ",clsng_net_amount=" . ($accbClsngCredits - $accbClsngDebits) .
+                                " WHERE import_hdr_runid = " . $rcnclImprtHdrID);
+                        }
+                        $percent = round((($z + 1) / $total) * 100, 2);
+                        $arr_content['percent'] = $percent;
+                        if ($percent >= 100) {
+                            $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span> 100% Completed!..." . $affctd . " out of " . $total . " Asset(s) processed.";
+                            $arr_content['msgcount'] = $total;
+                        } else {
+                            $arr_content['message'] = "<i class=\"fa fa-spin fa-spinner\"></i> Importing Assets...Please Wait..." . ($z + 1) . " out of " . $total . " Asset(s) processed.";
+                        }
+                        file_put_contents(
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccbBnkStmtimport_progress.rho",
+                            json_encode($arr_content)
+                        );
+                    }
+                } else {
+                    $percent = 100;
+                    $arr_content['percent'] = $percent;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> 100% Completed...An Error Occured!<br/>$errMsg</span>";
+                    $arr_content['msgcount'] = "";
+                    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccbBnkStmtimport_progress.rho", json_encode($arr_content));
+                }
+            } else if ($actyp == 902) {
+                //Checked Importing Process Status                
+                header('Content-Type: application/json');
+                $file = $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccbBnkStmtimport_progress.rho";
+                if (file_exists($file)) {
+                    $text = file_get_contents($file);
+                    echo $text;
+
+                    $obj = json_decode($text);
+                    if ($obj->percent >= 100) {
+                        //$rs = file_exists($file) ? unlink($file) : TRUE;
+                    }
+                } else {
+                    echo json_encode(array("percent" => null, "message" => null));
+                }
+            } else if ($actyp == 903) {
+                //Export Bank Statement
+                $inptNum = isset($_POST['inptNum']) ? (int) cleanInputData($_POST['inptNum']) : 0;
+                $rcnclAccntID = isset($_POST['rcnclAccntID']) ? (int) cleanInputData($_POST['rcnclAccntID']) : -1;
+                $accbStrtFSRptDte = isset($_POST['accbStrtFSRptDte']) ? cleanInputData($_POST['accbStrtFSRptDte']) : '';
+                $accbEndFSRptDte = isset($_POST['accbEndFSRptDte']) ? cleanInputData($_POST['accbEndFSRptDte']) : '';
+                session_write_close();
+                if ($accbStrtFSRptDte != "") {
+                    $accbStrtFSRptDte = cnvrtDMYToYMD($accbStrtFSRptDte);
+                }
+                if ($accbEndFSRptDte != "") {
+                    $accbEndFSRptDte = cnvrtDMYToYMD($accbEndFSRptDte);
+                }
+                $affctd = 0;
+                $errMsg = "Invalid Option!";
+                if ($inptNum >= 0) {
+                    $hdngs = array(
+                        "Transaction Date (DD-MMM-YYYY)", "Value Date (DD-MMM-YYYY)", "Reference", "Debits",
+                        "Credits", "Running Balance", "Remarks"
+                    );
+                    $limit_size = 0;
+                    if ($inptNum > 2) {
+                        $limit_size = $inptNum;
+                    } else if ($inptNum == 2) {
+                        $limit_size = 1000000;
+                    }
+                    $rndm = getRandomNum(10001, 9999999);
+                    $dteNm = date('dMY_His');
+                    $nwFileNm = $fldrPrfx . "dwnlds/tmp/AccbBnkStmtExprt_" . $dteNm . "_" . $rndm . ".csv";
+                    $dwnldUrl = $app_url . "dwnlds/tmp/AccbBnkStmtExprt_" . $dteNm . "_" . $rndm . ".csv";
+                    $opndfile = fopen($nwFileNm, "w");
+                    fputcsv($opndfile, $hdngs);
+                    if ($limit_size <= 0) {
+                        $arr_content['percent'] = 100;
+                        $arr_content['dwnld_url'] = $dwnldUrl;
+                        $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!...Template Exported.</span>";
+                        $arr_content['msgcount'] = 0;
+                        file_put_contents(
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccbBnkStmtExprt_progress.rho",
+                            json_encode($arr_content)
+                        );
+
+                        fclose($opndfile);
+                        exit();
+                    }
+                    $z = 0;
+                    $crntRw = "";
+                    $result = get_ImprtdBnkStmntRpt($rcnclAccntID, $accbStrtFSRptDte, $accbEndFSRptDte);
+                    $total = loc_db_num_rows($result);
+                    $fieldCntr = loc_db_num_fields($result);
+                    while ($row = loc_db_fetch_array($result)) {
+                        $crntRw = array(
+                            "'" . $row[14], "'" . $row[23], "'" . $row[4], $row[5], $row[6], $row[17], $row[3]
+                        );
+                        fputcsv($opndfile, $crntRw);
+                        //file_put_contents($nwFileNm, $crntRw, FILE_APPEND | LOCK_EX);
+                        $percent = round((($z + 1) / $total) * 100, 2);
+                        $arr_content['percent'] = $percent;
+                        $arr_content['dwnld_url'] = $dwnldUrl;
+                        if ($percent >= 100) {
+                            $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!..." . ($z +
+                                1) . " out of " . $total . " Transaction(s) exported.</span>";
+                            $arr_content['msgcount'] = $total;
+                        } else {
+                            $arr_content['message'] = "<span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"><br/>Exporting Transactions...Please Wait..." . ($z +
+                                1) . " out of " . $total . " Transaction(s) exported.</span>";
+                        }
+                        file_put_contents(
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccbBnkStmtExprt_progress.rho",
+                            json_encode($arr_content)
+                        );
+                        $z++;
+                    }
+                    if ($z <= 0) {
+                        $arr_content['percent'] = 100;
+                        $arr_content['dwnld_url'] = $dwnldUrl;
+                        $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!... Template Exported.</span>";
+                        $arr_content['msgcount'] = 0;
+                        file_put_contents(
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccbBnkStmtExprt_progress.rho",
+                            json_encode($arr_content)
+                        );
+                    }
+                    fclose($opndfile);
+                } else {
+                    $percent = 100;
+                    $arr_content['percent'] = $percent;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> 100% Completed...An Error Occured!<br/>$errMsg</span>";
+                    $arr_content['msgcount'] = "";
+                    $arr_content['dwnld_url'] = "";
+                    file_put_contents(
+                        $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccbBnkStmtExprt_progress.rho",
+                        json_encode($arr_content)
+                    );
+                }
+            } else if ($actyp == 904) {
+                //Checked Exporting Process Status                
+                header('Content-Type: application/json');
+                $file = $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccbBnkStmtExprt_progress.rho";
+                if (file_exists($file)) {
+                    $text = file_get_contents($file);
+                    echo $text;
+
+                    $obj = json_decode($text);
+                    if ($obj->percent >= 100) {
+                        //$rs = file_exists($file) ? unlink($file) : TRUE;
+                    }
+                } else {
+                    echo json_encode(array("percent" => 0, "message" => '<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Not Started</span>'));
+                }
             }
         } else {
             if ($vwtyp == 0) {
@@ -41,8 +328,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $accbFSRptDte = isset($_POST['accbFSRptDte']) ? cleanInputData($_POST['accbFSRptDte']) : substr($ymdtme2, 0, 11);
                 $accbFSRptDte1 = $accbFSRptDte;
                 $nwRowHtml2 = "<tr id=\"oneJrnlBatchDetRow__WWW123WWW\" onclick=\"$('#allOtherInputData99').val($('#oneJrnlBatchDetLinesTable tr').index(this));\">"
-                        . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
-                        . "<td class=\"lovtd\">
+                    . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
+                    . "<td class=\"lovtd\">
                                                                         <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"oneJrnlBatchDetRow_WWW123WWW_AccountID\" value=\"-1\" style=\"width:100% !important;\">  
                                                                         <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"oneJrnlBatchDetRow_WWW123WWW_TrnsLnID\" value=\"-1\" style=\"width:100% !important;\">    
                                                                         <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"oneJrnlBatchDetRow_WWW123WWW_TrnsSmryLnID\" value=\"-1\" style=\"width:100% !important;\">  
@@ -103,16 +390,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 }
                 $nwRowHtml2 .= "</tr>";
                 $nwRowHtml2 = urlencode($nwRowHtml2);
-                ?>
+?>
                 <div class="row">
                     <?php
                     $startRunng = isset($_POST['startRunng']) ? (int) cleanInputData($_POST['startRunng']) : 0;
-                    $qShwSmmry = isset($_POST['accbFSRptShwSmmry']) ? (cleanInputData($_POST['accbFSRptShwSmmry']) === "YES" ? TRUE : FALSE)
-                                : FALSE;
+                    $qShwSmmry = isset($_POST['accbFSRptShwSmmry']) ? (cleanInputData($_POST['accbFSRptShwSmmry']) === "YES" ? TRUE : FALSE) : TRUE;
+                    $qShwHideUnBalsd = isset($_POST['accbFSRptShwUnBalsd']) ? (cleanInputData($_POST['accbFSRptShwUnBalsd']) === "YES" ? TRUE : FALSE) : FALSE;
+                    $qShwHideUnmtchd = isset($_POST['accbFSRptShwUnmtchd']) ? (cleanInputData($_POST['accbFSRptShwUnmtchd']) === "YES" ? TRUE : FALSE) : FALSE;
+                    $qShwHideVoided = isset($_POST['accbFSRptShwVoided']) ? (cleanInputData($_POST['accbFSRptShwVoided']) === "YES" ? TRUE : FALSE) : TRUE;
+                    $qShwHideUnrcncld = isset($_POST['accbFSRptShwUnrcncld']) ? (cleanInputData($_POST['accbFSRptShwUnrcncld']) === "YES" ? TRUE : FALSE) : FALSE;
 
+                    $dfltCheckAccountID = get_DfltCheckAcnt($orgID);
                     $accbFSRptMaxAcntLvl = isset($_POST['accbFSRptMaxAcntLvl']) ? (int) cleanInputData($_POST['accbFSRptMaxAcntLvl']) : 1;
                     $accbFSRptSbmtdAccountID = isset($_POST['accbFSRptSbmtdAccountID']) ? (int) cleanInputData($_POST['accbFSRptSbmtdAccountID'])
-                                : -1;
+                        : $dfltCheckAccountID;
                     $accbFSRptAcntNum = isset($_POST['accbFSRptAcntNum']) ? cleanInputData($_POST['accbFSRptAcntNum']) : "";
                     if ($accbFSRptSbmtdAccountID > 0) {
                         $accbFSRptAcntNum = getAccntNum($accbFSRptSbmtdAccountID) . "." . getAccntName($accbFSRptSbmtdAccountID);
@@ -134,6 +425,23 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         $shwSmmryChkd = "checked=\"true\"";
                     }
                     $shwIntrfcsParam = ($qShwSmmry) ? "Yes" : "No";
+                    $shwHideUnrcncldChkd = "";
+                    if ($qShwHideUnrcncld == true) {
+                        $shwHideUnrcncldChkd = "checked=\"true\"";
+                    }
+                    $shwHideVoidedChkd = "";
+                    if ($qShwHideVoided == true) {
+                        $shwHideVoidedChkd = "checked=\"true\"";
+                    }
+                    $shwHideUnmtchdChkd = "";
+                    if ($qShwHideUnmtchd == true) {
+                        $shwHideUnmtchdChkd = "checked=\"true\"";
+                    }
+                    $shwHideUnBalsdChkd = "";
+                    if ($qShwHideUnBalsd == true) {
+                        $shwHideUnBalsdChkd = "checked=\"true\"";
+                    }
+
 
                     $fsrptRunID = -1;
                     if ($startRunng == 1 && $accbFSRptSbmtdAccountID > 0) {
@@ -145,13 +453,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $accbFSRptDte = cnvrtDMYToYMD($accbFSRptDte);
                         }
                         $strSql = "select accb.populate_gl_statement2( " . $fsrptRunID . ", "
-                                . $accbFSRptSbmtdAccountID . ",'" . $shwIntrfcsParam . "', '" . $accbStrtFSRptDte .
-                                "', '" . $accbFSRptDte . "', "
-                                . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $orgID . ", -1);";
+                            . $accbFSRptSbmtdAccountID . ",'" . $shwIntrfcsParam . "', '" . $accbStrtFSRptDte .
+                            "', '" . $accbFSRptDte . "', "
+                            . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $orgID . ", -1);";
                         $result = executeSQLNoParams($strSql);
                     }
                     /**
-                     * 1. Click Btn to generate import template
+                     * 1. Click Btn to export import template
+                     * Narration, ref number, Debit amount, credit amount, date, Bals afta Trans
                      * 2. Click Btn to import template and send user to imported statement page
                      * 3. Click Btn to auto-match imported statement and system generated statement
                      * using ticked criteria and send user to reconciliation statement page
@@ -163,13 +472,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <ul class="nav nav-tabs" style="margin-top:1px !important;">
                                 <li class="active"><a data-toggle="tabajxaccrcncl" data-rhodata="" href="#accbRcnclGlStatemtLines" id="accbRcnclGlStatemtLinestab">Main Report</a></li>
                                 <li class=""><a data-toggle="tabajxaccrcncl" data-rhodata="" href="#accbRcnclImprtdTrnsLines" id="accbRcnclImprtdTrnsLinestab">Imported Account Statement</a></li>
-                                <li class=""><a data-toggle="tabajxaccrcncl" data-rhodata="" href="#accbRcnclUnMtchdTrnsLines" id="accbRcnclUnMtchdTrnsLinestab">Unreconciled Transactions</a></li>
+                                <li class=""><a data-toggle="tabajxaccrcncl" data-rhodata="" href="#accbRcnclUnMtchdTrnsLines" id="accbRcnclUnMtchdTrnsLinestab">Statement of Reconciliation</a></li>
                                 <li class=""><a data-toggle="tabajxaccrcncl" data-rhodata="" href="#accbRcnclJrnlTrnsLines" id="accbRcnclJrnlTrnsLinestab">Corrective Journal Entries</a></li>
                             </ul>
-                            <div class="custDiv" style="padding:0px !important;min-height: 40px !important;" id="oneAccbFSRptTblSctn"> 
+                            <div class="custDiv" style="padding:0px !important;min-height: 40px !important;" id="oneAccbFSRptTblSctn">
                                 <div class="tab-content" style="padding:5px !important;padding-top:7px !important;">
                                     <div id="accbRcnclGlStatemtLines" class="tab-pane fadein active" style="border:none !important;padding:0px !important;">
-                                        <div class="row"> 
+                                        <div class="row">
                                             <div class="col-md-3" style="padding:0px 1px 0px 15px;" id="leftDivFSRpt">
                                                 <form class="form-horizontal" id="accbFSRptForm">
                                                     <fieldset class="basic_person_fs1" style="padding: 0px 5px 5px 5px !important;">
@@ -184,9 +493,41 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <input type="checkbox" class="form-check-input" onclick="" id="accbFSRptShwSmmry" name="accbFSRptShwSmmry" <?php echo $shwSmmryChkd; ?>>
                                                                     Show Interface Trns.
                                                                 </label>
-                                                            </div>                            
+                                                            </div>
                                                         </div>
-                                                        <div  class="col-md-12">
+                                                        <div class="col-md-12" style="padding:5px 1px 0px 1px !important;">
+                                                            <div class="form-check" style="font-size: 12px !important;">
+                                                                <label class="form-check-label">
+                                                                    <input type="checkbox" class="form-check-input" onclick="" id="accbFSRptShwUnrcncld" name="accbFSRptShwUnrcncld" <?php echo $shwHideUnrcncldChkd; ?>>
+                                                                    Show Only Unreconciled
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12" style="padding:5px 1px 0px 1px !important;">
+                                                            <div class="form-check" style="font-size: 12px !important;">
+                                                                <label class="form-check-label">
+                                                                    <input type="checkbox" class="form-check-input" onclick="" id="accbFSRptShwVoided" name="accbFSRptShwVoided" <?php echo $shwHideVoidedChkd; ?>>
+                                                                    Hide Voided Transactions
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12" style="padding:5px 1px 0px 1px !important;display:none;">
+                                                            <div class="form-check" style="font-size: 12px !important;">
+                                                                <label class="form-check-label">
+                                                                    <input type="checkbox" class="form-check-input" onclick="" id="accbFSRptShwUnmtchd" name="accbFSRptShwUnmtchd" <?php echo $shwHideUnmtchdChkd; ?>>
+                                                                    Un-Matched Amounts
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12" style="padding:5px 1px 0px 1px !important;">
+                                                            <div class="form-check" style="font-size: 12px !important;">
+                                                                <label class="form-check-label">
+                                                                    <input type="checkbox" class="form-check-input" onclick="" id="accbFSRptShwUnBalsd" name="accbFSRptShwUnBalsd" <?php echo $shwHideUnBalsdChkd; ?>>
+                                                                    Possible Unbalanced Entries
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
                                                             <div class="form-group">
                                                                 <div class="col-md-6" style="padding:5px 1px 0px 1px !important;">
                                                                     <label style="margin-bottom:0px !important;">From Date:</label>
@@ -198,7 +539,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div  class="col-md-12">
+                                                        <div class="col-md-12">
                                                             <div class="form-group">
                                                                 <div class="col-md-6" style="padding:5px 1px 0px 1px !important;">
                                                                     <label style="margin-bottom:0px !important;">To Date:</label>
@@ -213,7 +554,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="col-md-12">
                                                             <div class="form-group" style="padding:5px 1px 0px 1px !important;">
                                                                 <label for="accbFSRptAcntNum" class="control-label col-md-12" style="padding:5px 1px 0px 1px !important;display:none;">GL Account:</label>
-                                                                <div  class="col-md-12" style="padding:5px 1px 0px 1px !important;">
+                                                                <div class="col-md-12" style="padding:5px 1px 0px 1px !important;">
                                                                     <div class="input-group">
                                                                         <input type="text" class="form-control" aria-label="..." id="accbFSRptAcntNum" name="accbFSRptAcntNum" value="<?php echo $accbFSRptAcntNum; ?>" style="width:100%;" readonly="true">
                                                                         <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt1ValID" name="accbFSRptSgmnt1ValID" value="<?php echo $accbFSRptSgmnt1ValID; ?>">
@@ -239,29 +580,51 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSbmtdAccountID" name="accbFSRptSbmtdAccountID" value="<?php echo $accbFSRptSbmtdAccountID; ?>">
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-8" style="padding:5px 1px 0px 1px !important;">           
-                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;" onclick="getAccbFSRptRpts(1, '#allmodules', 'grp=6&typ=1&pg=19&vtyp=0');">
-                                                                <img src="cmn_images/98.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
-                                                                Generate Report
-                                                            </button>
-                                                        </div> 
-                                                        <div class="col-md-2" style="padding:5px 1px 0px 1px !important;" title="Reset Report">           
-                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;" onclick="resetAccbFSRptRpts('#allmodules', 'grp=6&typ=1&pg=19&vtyp=0');">
-                                                                <img src="cmn_images/undo_256.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                        <div class="col-md-8" style="padding:5px 1px 0px 1px !important;">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;text-align: left;" onclick="getAccbFSRptRpts(1, '#allmodules', 'grp=6&typ=1&pg=19&vtyp=0');">
+                                                                <img src="cmn_images/98.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                Generate Report&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                             </button>
                                                         </div>
-                                                        <div class="col-md-2" style="padding:5px 1px 0px 1px !important;" title="Excel Export">           
-                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;" onclick="funcHtmlToExcel('accbFSRptTable');">
-                                                                <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                        <div class="col-md-2" style="padding:5px 1px 0px 1px !important;" title="Reset Report">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;" onclick="resetAccbFSRptRpts('#allmodules', 'grp=6&typ=1&pg=19&vtyp=0');">
+                                                                <img src="cmn_images/undo_256.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             </button>
-                                                        </div> 
-                                                        <div class="col-md-12" style="padding:5px 1px 0px 1px !important;">           
-                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;" 
-                                                                    onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Transaction Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'rcnclAccntID', 'rcnclAccntNm', 'clear', 1, '', function () {
+                                                        </div>
+                                                        <div class="col-md-2" style="padding:5px 1px 0px 1px !important;" title="Excel Export">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;" onclick="funcHtmlToExcel('accbFSRptTable');">
+                                                                <img src="cmn_images/image007.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-10" style="padding:5px 1px 0px 1px !important;">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;text-align: left;" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Transaction Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'rcnclAccntID', 'rcnclAccntNm', 'clear', 1, '', function () {
                                                                                 moveSelectedTrans();
                                                                             });">
-                                                                <img src="cmn_images/98.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
-                                                                Move Selected Transactions
+                                                                <img src="cmn_images/98.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                Move Selected Trns. from A/c&nbsp;
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-2" style="padding:5px 1px 0px 1px !important;" title="Get Bank Statement Import Excel Template">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;" onclick="exportToRcncl();">
+                                                                <img src="cmn_images/image007.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-12" style="padding:5px 1px 0px 1px !important;">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;text-align: left;" onclick="markSelectedTransRcncld();">
+                                                                <img src="cmn_images/98.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                Mark/Unmark selected as Reconciled&nbsp;
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-6" style="padding:5px 1px 0px 1px !important;">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;text-align: left;" onclick="importToRcncl();">
+                                                                <img src="cmn_images/98.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                Import Bank&nbsp;&nbsp;&nbsp;&nbsp;<br />Statement
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-6" style="padding:5px 1px 0px 1px !important;">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;text-align: left;" onclick="autoRcnclWthImprtd();">
+                                                                <img src="cmn_images/98.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                Reconcile with &nbsp;&nbsp;<br />Imported Statement
                                                             </button>
                                                         </div>
                                                     </fieldset>
@@ -279,14 +642,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <tr>
                                                                 <th style="max-width:20px;width:20px;">&nbsp;</th>
                                                                 <th style="max-width:20px;width:20px;">No.</th>
-                                                                <th style="max-width:450px !important;">Transaction Description (Ref. Doc. No.)</th>
+                                                                <th style="min-width:250px !important;">Transaction Description</th>
+                                                                <th style="max-width:70px;width:70px;">Ref. Doc. No.</th>
                                                                 <th style="text-align: right;">Debit Amount</th>
                                                                 <th style="text-align: right;">Credit Amount</th>
                                                                 <th style="text-align: right;">Running Balance</th>
                                                                 <th style="max-width:70px;width:70px;">Transaction Date</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>   
+                                                        <tbody>
                                                             <?php
                                                             $cntr = 0;
                                                             $maxNoRows = 0;
@@ -306,20 +670,30 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 $trsctnCrdtAmnt = 0;
                                                                 $trsctnNetAmnt = 0;
                                                                 $trsctnLineDate = "";
+                                                                $trsctnIsRcncld = "0";
+                                                                $trsctnBatchStatus = "VALID";
+                                                                $trsctnSrcBatchID = -1;
+                                                                $trsctnRefNumber = "";
                                                                 $isParent = "0";
                                                                 $hsSbldgr = "0";
                                                                 $numStyle1 = "text-align:right;";
                                                                 $nameStyle1 = "";
+                                                                $rowStyle = "background-color: #ffcccb";
                                                                 if ($rowRw = loc_db_fetch_array($resultRw)) {
                                                                     $rowNumber = (float) $rowRw[0];
-                                                                    $trsctnAcntID = -1; 
+                                                                    $trsctnAcntID = -1;
                                                                     $trsctnAcntNm = "";
                                                                     $trsctnAcntDesc = "";
                                                                     if ($rowNumber > 1) {
-                                                                        $trsctnAcntID = (int) $rowRw[19]; 
+                                                                        $trsctnAcntID = (int) $rowRw[19];
                                                                         $trsctnAcntNm = trim($rowRw[1]) . "." . trim($rowRw[2]);
                                                                         $trsctnAcntDesc = $rowRw[3];
+                                                                        $trsctnRefNumber = $rowRw[4];
+                                                                        $trsctnIsRcncld = $rowRw[20];
+                                                                        $trsctnBatchStatus = $rowRw[21];
+                                                                        $trsctnSrcBatchID = (float) $rowRw[22];
                                                                     } else {
+                                                                        $rowStyle = "";
                                                                         $numStyle1 = "text-align:right;font-weight:bold;";
                                                                         $nameStyle1 = "font-weight:bold;";
                                                                     }
@@ -331,25 +705,38 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     $ttlTrsctnDbtAmnt = (float) $rowRw[11];
                                                                     $ttlTrsctnCrdtAmnt = (float) $rowRw[12];
                                                                     $ttlTrsctnNetAmnt = (float) $rowRw[13];
+                                                                    if ($trsctnIsRcncld == "1") {
+                                                                        $rowStyle = "background-color: #BFFF00";
+                                                                    }
                                                                 }
                                                                 $cntr += 1;
-                                                                ?>
-                                                                <tr id="oneAccbFSRptRow_<?php echo $cntr; ?>" class="hand_cursor">   
+                                                                if ($qShwHideUnrcncld == true && $trsctnIsRcncld == "1") {
+                                                                    continue;
+                                                                }
+                                                                if ($qShwHideVoided == true && ($trsctnBatchStatus == "VOID" || $trsctnSrcBatchID > 0)) {
+                                                                    continue;
+                                                                }
+                                                            ?>
+                                                                <tr id="oneAccbFSRptRow_<?php echo $cntr; ?>" class="hand_cursor" style="<?php echo $rowStyle; ?>">
                                                                     <td class="lovtd">
                                                                         <input type="checkbox" name="oneAccbFSRptRow<?php echo $cntr; ?>_CheckBox" value="oneAccbFSRptRow_<?php echo $cntr; ?>">
-                                                                    </td>                      
-                                                                    <td class="lovtd"><span><?php echo ($rowNumber); ?></span></td>    
+                                                                    </td>
+                                                                    <td class="lovtd"><span><?php echo ($rowNumber); ?></span></td>
                                                                     <td class="lovtd" style="<?php echo $nameStyle1; ?>">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_TransLineID" value="<?php echo $trsctnLineID; ?>" style="width:100% !important;"> 
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_AccountID" value="<?php echo $trsctnAcntID; ?>" style="width:100% !important;">  
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_IsParent" value="<?php echo $isParent; ?>" style="width:100% !important;">  
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_AccntNum" value="<?php echo trim($rowRw[1]); ?>" style="width:100% !important;">   
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_AccntNm" value="<?php echo trim($trsctnAcntNm); ?>" style="width:100% !important;">  
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_LineDesc" value="<?php echo trim($trsctnAcntDesc); ?>" style="width:100% !important;">  
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_DbtAmnt" value="<?php echo $trsctnDbtAmnt; ?>" style="width:100% !important;">  
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_CrdtAmnt" value="<?php echo $trsctnCrdtAmnt; ?>" style="width:100% !important;">  
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_TrnsDte" value="<?php echo trim($trsctnLineDate); ?>" style="width:100% !important;">  
-                                                                        <span><?php echo $trsctnAcntDesc; ?></span>             
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_TransLineID" value="<?php echo $trsctnLineID; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_AccountID" value="<?php echo $trsctnAcntID; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_IsParent" value="<?php echo $isParent; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_AccntNum" value="<?php echo trim($rowRw[1]); ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_AccntNm" value="<?php echo trim($trsctnAcntNm); ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_LineDesc" value="<?php echo trim($trsctnAcntDesc); ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_DbtAmnt" value="<?php echo $trsctnDbtAmnt; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_CrdtAmnt" value="<?php echo $trsctnCrdtAmnt; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_TrnsDte" value="<?php echo trim($trsctnLineDate); ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_IsRcncld" value="<?php echo trim($trsctnIsRcncld); ?>" style="width:100% !important;">
+                                                                        <span><?php echo $trsctnAcntDesc; ?></span>
+                                                                    </td>
+                                                                    <td class="lovtd" style="">
+                                                                        <span><?php echo $trsctnRefNumber; ?></span>
                                                                     </td>
                                                                     <td class="lovtd" style="<?php echo $numStyle1; ?>">
                                                                         <span><?php echo number_format($trsctnDbtAmnt, 2); ?></span>
@@ -361,45 +748,62 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         <span><?php echo number_format($trsctnNetAmnt, 2); ?></span>
                                                                     </td>
                                                                     <td class="lovtd">
-                                                                        <span><?php echo $trsctnLineDate; ?></span>                   
+                                                                        <span><?php echo $trsctnLineDate; ?></span>
                                                                     </td>
                                                                 </tr>
-                                                                <?php
+                                                            <?php
                                                             }
                                                             ?>
                                                         </tbody>
-                                                        <tfoot>                                                            
+                                                        <tfoot>
                                                             <tr>
                                                                 <th style="">&nbsp;</th>
                                                                 <th style="">&nbsp;</th>
                                                                 <th>TOTALS:</th>
+                                                                <th style="">&nbsp;</th>
                                                                 <th style="text-align: right;">
                                                                     <?php
-                                                                    echo "<span style=\"color:blue;font-weight:bold;font-size:14px;\" id=\"myCptrdJbDbtsTtlBtn\">" . number_format($ttlTrsctnDbtAmnt,
-                                                                            2, '.', ',') . "</span>";
+                                                                    echo "<span style=\"color:blue;font-weight:bold;font-size:14px;\" id=\"myCptrdJbDbtsTtlBtn\">" . number_format(
+                                                                        $ttlTrsctnDbtAmnt,
+                                                                        2,
+                                                                        '.',
+                                                                        ','
+                                                                    ) . "</span>";
                                                                     ?>
                                                                     <input type="hidden" id="myCptrdJbDbtsTtlVal" value="<?php echo $ttlTrsctnDbtAmnt; ?>">
                                                                 </th>
                                                                 <th style="text-align: right;">
                                                                     <?php
-                                                                    echo "<span style=\"color:blue;font-weight:bold;font-size:14px;\" id=\"myCptrdJbCrdtsTtlBtn\">" . number_format($ttlTrsctnCrdtAmnt,
-                                                                            2, '.', ',') . "</span>";
+                                                                    echo "<span style=\"color:blue;font-weight:bold;font-size:14px;\" id=\"myCptrdJbCrdtsTtlBtn\">" . number_format(
+                                                                        $ttlTrsctnCrdtAmnt,
+                                                                        2,
+                                                                        '.',
+                                                                        ','
+                                                                    ) . "</span>";
                                                                     ?>
                                                                     <input type="hidden" id="myCptrdJbCrdtsTtlVal" value="<?php echo $ttlTrsctnCrdtAmnt; ?>">
                                                                 </th>
                                                                 <th style="text-align: right;">
                                                                     <?php
                                                                     if ($ttlTrsctnNetAmnt <= 0) {
-                                                                        echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdJbNetTtlBtn\">" . number_format($ttlTrsctnNetAmnt,
-                                                                                2, '.', ',') . "</span>";
+                                                                        echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdJbNetTtlBtn\">" . number_format(
+                                                                            $ttlTrsctnNetAmnt,
+                                                                            2,
+                                                                            '.',
+                                                                            ','
+                                                                        ) . "</span>";
                                                                     } else {
-                                                                        echo "<span style=\"color:green;font-weight:bold;font-size:14px;\" id=\"myCptrdJbNetTtlBtn\">" . number_format($ttlTrsctnNetAmnt,
-                                                                                2, '.', ',') . "</span>";
+                                                                        echo "<span style=\"color:green;font-weight:bold;font-size:14px;\" id=\"myCptrdJbNetTtlBtn\">" . number_format(
+                                                                            $ttlTrsctnNetAmnt,
+                                                                            2,
+                                                                            '.',
+                                                                            ','
+                                                                        ) . "</span>";
                                                                     }
                                                                     ?>
                                                                     <input type="hidden" id="myCptrdJbNetTtlVal" value="<?php echo $ttlTrsctnNetAmnt; ?>">
                                                                 </th>
-                                                                <th style="">&nbsp;</th>     
+                                                                <th style="">&nbsp;</th>
                                                             </tr>
                                                         </tfoot>
                                                     </table>
@@ -408,17 +812,293 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </div>
                                     </div>
                                     <div id="accbRcnclImprtdTrnsLines" class="tab-pane fadein" style="border:none !important;padding:0px !important;">
+                                    <div class="row">
+                                            <div class="col-md-3" style="padding:0px 1px 0px 15px;" id="leftDivImprtdFSRpt">
+                                                <form class="form-horizontal" id="accbImprtdFSRptForm">
+                                                    <fieldset class="basic_person_fs1" style="padding: 0px 5px 5px 5px !important;">
+                                                        <legend class="basic_person_lg">
+                                                            Parameters<a class="rhopagination" href="javascript:shwHideImprtdFSRptDivs('hide');" aria-label="hide" style="float:right;padding: 0px 15px 0px 15px !important;">
+                                                                <span aria-hidden="true">&laquo;</span>
+                                                            </a>
+                                                        </legend>
+                                                        <div class="col-md-12" style="padding:5px 1px 0px 1px !important;">
+                                                            <div class="form-check" style="font-size: 12px !important;">
+                                                                <label class="form-check-label">
+                                                                    <input type="checkbox" class="form-check-input" onclick="" id="accbImprtdFSRptShwUnrcncld" name="accbImprtdFSRptShwUnrcncld" <?php echo $shwHideUnrcncldChkd; ?>>
+                                                                    Show Only Unreconciled
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group" style="padding:5px 1px 0px 1px !important;">
+                                                                <label for="accbFSRptAcntNum" class="control-label col-md-12" style="padding:5px 1px 0px 1px !important;display:none;">GL Account:</label>
+                                                                <div class="col-md-12" style="padding:5px 1px 0px 1px !important;">
+                                                                    <div class="input-group">
+                                                                        <input type="text" class="form-control" aria-label="..." id="accbFSRptAcntNum" name="accbFSRptAcntNum" value="<?php echo $accbFSRptAcntNum; ?>" style="width:100%;" readonly="true">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt1ValID" name="accbFSRptSgmnt1ValID" value="<?php echo $accbFSRptSgmnt1ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt2ValID" name="accbFSRptSgmnt2ValID" value="<?php echo $accbFSRptSgmnt2ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt3ValID" name="accbFSRptSgmnt3ValID" value="<?php echo $accbFSRptSgmnt3ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt4ValID" name="accbFSRptSgmnt4ValID" value="<?php echo $accbFSRptSgmnt4ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt5ValID" name="accbFSRptSgmnt5ValID" value="<?php echo $accbFSRptSgmnt5ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt6ValID" name="accbFSRptSgmnt6ValID" value="<?php echo $accbFSRptSgmnt6ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt7ValID" name="accbFSRptSgmnt7ValID" value="<?php echo $accbFSRptSgmnt7ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt8ValID" name="accbFSRptSgmnt8ValID" value="<?php echo $accbFSRptSgmnt8ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt9ValID" name="accbFSRptSgmnt9ValID" value="<?php echo $accbFSRptSgmnt9ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt10ValID" name="accbFSRptSgmnt10ValID" value="<?php echo $accbFSRptSgmnt10ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt" name="accbFSRptSgmnt" value="">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptAcntNum1" name="accbFSRptAcntNum1" value="">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="rcnclAccntID" name="rcnclAccntID" value="-1">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="rcnclAccntNm" name="accbFSRptAcntNum1" value="">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="nwRowHtml2" name="nwRowHtml2" value="<?php echo $nwRowHtml2; ?>">
+                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
+                                                                            <span class="glyphicon glyphicon-th-list"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSbmtdAccountID" name="accbFSRptSbmtdAccountID" value="<?php echo $accbFSRptSbmtdAccountID; ?>">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-8" style="padding:5px 1px 0px 1px !important;">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;text-align: left;" onclick="getAccbFSRptRpts(1, '#allmodules', 'grp=6&typ=1&pg=19&vtyp=0');">
+                                                                <img src="cmn_images/98.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                Generate Report&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-2" style="padding:5px 1px 0px 1px !important;" title="Reset Report">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;" onclick="resetAccbFSRptRpts('#allmodules', 'grp=6&typ=1&pg=19&vtyp=0');">
+                                                                <img src="cmn_images/undo_256.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-2" style="padding:5px 1px 0px 1px !important;" title="Excel Export">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;" onclick="funcHtmlToExcel('accbFSRptTable');">
+                                                                <img src="cmn_images/image007.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-10" style="padding:5px 1px 0px 1px !important;">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;text-align: left;" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Transaction Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'rcnclAccntID', 'rcnclAccntNm', 'clear', 1, '', function () {
+                                                                                moveSelectedTrans();
+                                                                            });">
+                                                                <img src="cmn_images/98.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                Move Selected Trns. from A/c&nbsp;
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-2" style="padding:5px 1px 0px 1px !important;" title="Get Bank Statement Import Excel Template">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;" onclick="exportToRcncl();">
+                                                                <img src="cmn_images/image007.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-12" style="padding:5px 1px 0px 1px !important;">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;text-align: left;" onclick="markSelectedTransRcncld();">
+                                                                <img src="cmn_images/98.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                Mark/Unmark selected as Reconciled&nbsp;
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-6" style="padding:5px 1px 0px 1px !important;">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;text-align: left;" onclick="importToRcncl();">
+                                                                <img src="cmn_images/98.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                Import Bank&nbsp;&nbsp;&nbsp;&nbsp;<br />Statement
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-6" style="padding:5px 1px 0px 1px !important;">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;text-align: left;" onclick="autoRcnclWthImprtd();">
+                                                                <img src="cmn_images/98.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                Reconcile with &nbsp;&nbsp;<br />Imported Statement
+                                                            </button>
+                                                        </div>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
+                                            <div class="col-md-9" style="padding:0px 15px 0px 15px;" id="rightDivFSRpt">
+                                                <form class="form-horizontal" id="accbFSRptDetForm">
+                                                    <table class="table table-striped table-bordered table-responsive" id="accbFSRptTable" cellspacing="0" width="100%" style="width:100%;min-width: 300px !important;">
+                                                        <caption class="basic_person_lg" style="padding:5px 15px 5px 15px;font-weight:bold;font-size: 18px;">
+                                                            <a id="rightDivFSRptBtn" class="rhopagination hideNotice" href="javascript:shwHideFSRptDivs('show');" aria-label="Show" style="float:left;padding: 0px 15px 0px 15px !important;">
+                                                                <span aria-hidden="true">&raquo;</span>
+                                                            </a><?php echo $accbFSRptAcntNum; ?> IMPORTED STATEMENT FROM <?php echo strtoupper($accbStrtFSRptDte1); ?> TO <?php echo strtoupper($accbFSRptDte1); ?>
+                                                        </caption>
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="max-width:20px;width:20px;">&nbsp;</th>
+                                                                <th style="max-width:20px;width:20px;">No.</th>
+                                                                <th style="min-width:250px !important;">Transaction Description</th>
+                                                                <th style="max-width:70px;width:70px;">Ref. Doc. No.</th>
+                                                                <th style="text-align: right;">Debit Amount</th>
+                                                                <th style="text-align: right;">Credit Amount</th>
+                                                                <th style="text-align: right;">Running Balance</th>
+                                                                <th style="max-width:70px;width:70px;">Transaction Date</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php
+                                                            $cntr = 0;
+                                                            $maxNoRows = 0;
+                                                            $resultRw = null;
+                                                            if ($fsrptRunID > 0) {
+                                                                $resultRw = get_GLStmntRpt($fsrptRunID, $accbStrtFSRptDte, $accbFSRptDte);
+                                                                $maxNoRows = loc_db_num_rows($resultRw);
+                                                            }
+                                                            $ttlTrsctnDbtAmnt = 0;
+                                                            $ttlTrsctnCrdtAmnt = 0;
+                                                            $ttlTrsctnNetAmnt = 0;
+                                                            while ($cntr < $maxNoRows) {
+                                                                $rowNumber = 0;
+                                                                $trsctnAcntID = -1;
+                                                                $trsctnAcntNm = "";
+                                                                $trsctnDbtAmnt = 0;
+                                                                $trsctnCrdtAmnt = 0;
+                                                                $trsctnNetAmnt = 0;
+                                                                $trsctnLineDate = "";
+                                                                $trsctnIsRcncld = "0";
+                                                                $trsctnBatchStatus = "VALID";
+                                                                $trsctnSrcBatchID = -1;
+                                                                $trsctnRefNumber = "";
+                                                                $isParent = "0";
+                                                                $hsSbldgr = "0";
+                                                                $numStyle1 = "text-align:right;";
+                                                                $nameStyle1 = "";
+                                                                $rowStyle = "background-color: #ffcccb";
+                                                                if ($rowRw = loc_db_fetch_array($resultRw)) {
+                                                                    $rowNumber = (float) $rowRw[0];
+                                                                    $trsctnAcntID = -1;
+                                                                    $trsctnAcntNm = "";
+                                                                    $trsctnAcntDesc = "";
+                                                                    if ($rowNumber > 1) {
+                                                                        $trsctnAcntID = (int) $rowRw[19];
+                                                                        $trsctnAcntNm = trim($rowRw[1]) . "." . trim($rowRw[2]);
+                                                                        $trsctnAcntDesc = $rowRw[3];
+                                                                        $trsctnRefNumber = $rowRw[4];
+                                                                        $trsctnIsRcncld = $rowRw[20];
+                                                                        $trsctnBatchStatus = $rowRw[21];
+                                                                        $trsctnSrcBatchID = (float) $rowRw[22];
+                                                                    } else {
+                                                                        $rowStyle = "";
+                                                                        $numStyle1 = "text-align:right;font-weight:bold;";
+                                                                        $nameStyle1 = "font-weight:bold;";
+                                                                    }
+                                                                    $trsctnDbtAmnt = (float) $rowRw[5];
+                                                                    $trsctnCrdtAmnt = (float) $rowRw[6];
+                                                                    $trsctnNetAmnt = (float) $rowRw[17];
+                                                                    $trsctnLineDate = $rowRw[14];
+                                                                    $trsctnLineID = (float) $rowRw[18];
+                                                                    $ttlTrsctnDbtAmnt = (float) $rowRw[11];
+                                                                    $ttlTrsctnCrdtAmnt = (float) $rowRw[12];
+                                                                    $ttlTrsctnNetAmnt = (float) $rowRw[13];
+                                                                    if ($trsctnIsRcncld == "1") {
+                                                                        $rowStyle = "background-color: #BFFF00";
+                                                                    }
+                                                                }
+                                                                $cntr += 1;
+                                                                if ($qShwHideUnrcncld == true && $trsctnIsRcncld == "1") {
+                                                                    continue;
+                                                                }
+                                                                if ($qShwHideVoided == true && ($trsctnBatchStatus == "VOID" || $trsctnSrcBatchID > 0)) {
+                                                                    continue;
+                                                                }
+                                                            ?>
+                                                                <tr id="oneAccbFSRptRow_<?php echo $cntr; ?>" class="hand_cursor" style="<?php echo $rowStyle; ?>">
+                                                                    <td class="lovtd">
+                                                                        <input type="checkbox" name="oneAccbFSRptRow<?php echo $cntr; ?>_CheckBox" value="oneAccbFSRptRow_<?php echo $cntr; ?>">
+                                                                    </td>
+                                                                    <td class="lovtd"><span><?php echo ($rowNumber); ?></span></td>
+                                                                    <td class="lovtd" style="<?php echo $nameStyle1; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_TransLineID" value="<?php echo $trsctnLineID; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_AccountID" value="<?php echo $trsctnAcntID; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_IsParent" value="<?php echo $isParent; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_AccntNum" value="<?php echo trim($rowRw[1]); ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_AccntNm" value="<?php echo trim($trsctnAcntNm); ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_LineDesc" value="<?php echo trim($trsctnAcntDesc); ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_DbtAmnt" value="<?php echo $trsctnDbtAmnt; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_CrdtAmnt" value="<?php echo $trsctnCrdtAmnt; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_TrnsDte" value="<?php echo trim($trsctnLineDate); ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_IsRcncld" value="<?php echo trim($trsctnIsRcncld); ?>" style="width:100% !important;">
+                                                                        <span><?php echo $trsctnAcntDesc; ?></span>
+                                                                    </td>
+                                                                    <td class="lovtd" style="">
+                                                                        <span><?php echo $trsctnRefNumber; ?></span>
+                                                                    </td>
+                                                                    <td class="lovtd" style="<?php echo $numStyle1; ?>">
+                                                                        <span><?php echo number_format($trsctnDbtAmnt, 2); ?></span>
+                                                                    </td>
+                                                                    <td class="lovtd" style="<?php echo $numStyle1; ?>">
+                                                                        <span><?php echo number_format($trsctnCrdtAmnt, 2); ?></span>
+                                                                    </td>
+                                                                    <td class="lovtd" style="<?php echo $numStyle1; ?>">
+                                                                        <span><?php echo number_format($trsctnNetAmnt, 2); ?></span>
+                                                                    </td>
+                                                                    <td class="lovtd">
+                                                                        <span><?php echo $trsctnLineDate; ?></span>
+                                                                    </td>
+                                                                </tr>
+                                                            <?php
+                                                            }
+                                                            ?>
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th style="">&nbsp;</th>
+                                                                <th style="">&nbsp;</th>
+                                                                <th>TOTALS:</th>
+                                                                <th style="">&nbsp;</th>
+                                                                <th style="text-align: right;">
+                                                                    <?php
+                                                                    echo "<span style=\"color:blue;font-weight:bold;font-size:14px;\" id=\"myCptrdJbDbtsTtlBtn\">" . number_format(
+                                                                        $ttlTrsctnDbtAmnt,
+                                                                        2,
+                                                                        '.',
+                                                                        ','
+                                                                    ) . "</span>";
+                                                                    ?>
+                                                                    <input type="hidden" id="myCptrdJbDbtsTtlVal" value="<?php echo $ttlTrsctnDbtAmnt; ?>">
+                                                                </th>
+                                                                <th style="text-align: right;">
+                                                                    <?php
+                                                                    echo "<span style=\"color:blue;font-weight:bold;font-size:14px;\" id=\"myCptrdJbCrdtsTtlBtn\">" . number_format(
+                                                                        $ttlTrsctnCrdtAmnt,
+                                                                        2,
+                                                                        '.',
+                                                                        ','
+                                                                    ) . "</span>";
+                                                                    ?>
+                                                                    <input type="hidden" id="myCptrdJbCrdtsTtlVal" value="<?php echo $ttlTrsctnCrdtAmnt; ?>">
+                                                                </th>
+                                                                <th style="text-align: right;">
+                                                                    <?php
+                                                                    if ($ttlTrsctnNetAmnt <= 0) {
+                                                                        echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdJbNetTtlBtn\">" . number_format(
+                                                                            $ttlTrsctnNetAmnt,
+                                                                            2,
+                                                                            '.',
+                                                                            ','
+                                                                        ) . "</span>";
+                                                                    } else {
+                                                                        echo "<span style=\"color:green;font-weight:bold;font-size:14px;\" id=\"myCptrdJbNetTtlBtn\">" . number_format(
+                                                                            $ttlTrsctnNetAmnt,
+                                                                            2,
+                                                                            '.',
+                                                                            ','
+                                                                        ) . "</span>";
+                                                                    }
+                                                                    ?>
+                                                                    <input type="hidden" id="myCptrdJbNetTtlVal" value="<?php echo $ttlTrsctnNetAmnt; ?>">
+                                                                </th>
+                                                                <th style="">&nbsp;</th>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div id="accbRcnclUnMtchdTrnsLines" class="tab-pane fadein" style="border:none !important;padding:0px !important;">
                                     </div>
                                     <div id="accbRcnclJrnlTrnsLines" class="tab-pane fadein" style="border:none !important;padding:0px !important;">
-                                        <div class="row"> 
-                                            <div class="col-md-12"> 
+                                        <div class="row">
+                                            <div class="col-md-12">
                                                 <?php
                                                 $lmtSze = isset($_POST['accbJrnlBatchDsplySze']) ? cleanInputData($_POST['accbJrnlBatchDsplySze'])
-                                                            : 50;
+                                                    : 50;
                                                 $sbmtdJrnlBatchID = isset($_POST['sbmtdJrnlBatchID']) ? (float) cleanInputData($_POST['sbmtdJrnlBatchID'])
-                                                            : -1;
+                                                    : -1;
                                                 if (!$canAdd || ($sbmtdJrnlBatchID > 0 && !$canEdt)) {
                                                     restricted();
                                                     exit();
@@ -516,9 +1196,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     }
                                                     $userAccntName = getGnrlRecNm("sec.sec_users", "user_id", "user_name", $usrID);
                                                     $gnrtdTrnsNo1 = substr($userAccntName, 0, 4) . "-" . $usrTrnsCode . "-" . $dte . "-";
-                                                    $gnrtdTrnsNo = $gnrtdTrnsNo1 . str_pad((getRecCount_LstNum("accb.accb_trnsctn_batches",
-                                                                            "batch_name", "batch_id", $gnrtdTrnsNo1 . "%") + 1), 3, '0',
-                                                                    STR_PAD_LEFT);
+                                                    $gnrtdTrnsNo = $gnrtdTrnsNo1 . str_pad((getRecCount_LstNum(
+                                                            "accb.accb_trnsctn_batches",
+                                                            "batch_name",
+                                                            "batch_id",
+                                                            $gnrtdTrnsNo1 . "%"
+                                                        ) + 1),
+                                                        3,
+                                                        '0',
+                                                        STR_PAD_LEFT
+                                                    );
                                                     /* createBatch($orgID, $gnrtdTrnsNo, $jrnlBatchDesc, "Manual", "VALID",
                                                       $voidedJrnlBatchID, "0", $jrnlBatchDfltBalsAcntID, $jrnlBatchRvrslRsn,
                                                       $jrnlBatchDfltCurID, $jrnlBatchDfltTrnsDte);
@@ -563,7 +1250,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         <input type="hidden" class="form-control" aria-label="..." id="sbmtdTempltUsrID" name="sbmtdTempltUsrID" value="<?php echo $usrID; ?>" readonly="true">
                                                                         <input type="hidden" class="form-control" aria-label="..." id="sbmtdTempltTrnsCount" name="sbmtdTempltTrnsCount" value="2" readonly="true">
                                                                         <input type="text" class="form-control" aria-label="..." id="sbmtdJrnlBatchID" name="sbmtdJrnlBatchID" value="<?php echo $sbmtdJrnlBatchID; ?>" readonly="true">
-                                                                        <input class="form-control" type="hidden" id="voidedJrnlBatchID" value="<?php echo $voidedJrnlBatchID; ?>"/>
+                                                                        <input class="form-control" type="hidden" id="voidedJrnlBatchID" value="<?php echo $voidedJrnlBatchID; ?>" />
                                                                     </div>
                                                                     <div class="col-md-7" style="padding:0px 15px 0px 1px;">
                                                                         <input type="text" class="form-control" aria-label="..." id="jrnlBatchNum" name="jrnlBatchNum" value="<?php echo $gnrtdTrnsNo; ?>" readonly="true">
@@ -596,21 +1283,21 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <div class="col-md-4" style="padding:0px 1px 0px 15px;">
                                                                         <input type="text" class="form-control" aria-label="..." id="rqstVldty" name="rqstVldty" value="<?php echo $rqstVldty; ?>" readonly="true" style="font-weight:bold;color:<?php echo $rqstVldtyColor; ?>">
                                                                     </div>
-                                                                    <div class="col-md-6" style="padding:0px 15px 0px 1px;">                             
+                                                                    <div class="col-md-6" style="padding:0px 15px 0px 1px;">
                                                                         <button type="button" class="btn btn-default" style="margin-bottom: 5px;height:30px;width:100% !important;" id="myJrnlBatchStatusBtn"><span style="font-weight:bold;height:30px;">Status: </span><span style="color:<?php echo $rqstatusColor; ?>;font-weight: bold;height:30px;"><?php echo $rqStatus; ?></span></button>
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="autoPostStatus" name="autoPostStatus" value="<?php echo $autoPostStatus; ?>" readonly="true" style="font-weight:bold;color:<?php echo $autoPostStatusColor; ?>">                                    
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="autoPostStatus" name="autoPostStatus" value="<?php echo $autoPostStatus; ?>" readonly="true" style="font-weight:bold;color:<?php echo $autoPostStatusColor; ?>">
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-4">                                                               
+                                                            <div class="col-md-4">
                                                                 <div class="form-group">
-                                                                    <div class="col-md-3">
+                                                                    <div class="col-md-2">
                                                                         <label style="margin-bottom:0px !important;">Remarks:</label>
                                                                     </div>
-                                                                    <div class="col-md-9">
-                                                                        <div class="input-group"  style="width:100%;">
-                                                                            <input class="form-control" type="hidden" id="jrnlBatchDesc1" value="<?php echo $jrnlBatchDesc; ?>">
+                                                                    <div class="col-md-10">
+                                                                        <div class="input-group" style="width:100%;">
                                                                             <textarea class="form-control rqrdFld" rows="5" cols="20" id="jrnlBatchDesc" name="jrnlBatchDesc" <?php echo $mkRmrkReadOnly; ?> style="text-align:left !important;"><?php echo $jrnlBatchDesc; ?></textarea>
+                                                                            <input class="form-control" type="hidden" id="jrnlBatchDesc1" value="<?php echo $jrnlBatchDesc; ?>">
                                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('jrnlBatchDesc');" style="max-width:30px;width:30px;">
                                                                                 <span class="glyphicon glyphicon-th-list"></span>
                                                                             </label>
@@ -622,120 +1309,124 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <div class="form-group">
                                                                     <div class="col-md-12">
                                                                         <div class="input-group" style="width:100% !important;">
-                                                                            <label class="btn btn-primary btn-file input-group-addon"  style="<?php echo $breadCrmbBckclr; ?>;min-width:27% !important;width:27% !important;">
+                                                                            <label class="btn btn-primary btn-file input-group-addon" style="<?php echo $breadCrmbBckclr; ?>;min-width:27% !important;width:27% !important;">
                                                                                 <span style="font-weight:bold;<?php echo $forecolors; ?>">Total Debits:&nbsp;&nbsp;</span>
                                                                             </label>
-                                                                            <input class="form-control" id="jrnlBatchDbtAmnt" type = "text" placeholder="0.00" value="<?php
-                                                                            echo number_format($jrnlBatchDbtAmnt, 2);
-                                                                            ?>" readonly="true" style="font-size:16px;font-weight:bold;<?php echo $style1; ?>;width:100%;">
+                                                                            <input class="form-control" id="jrnlBatchDbtAmnt" type="text" placeholder="0.00" value="<?php
+                                                                                                                                                                    echo number_format($jrnlBatchDbtAmnt, 2);
+                                                                                                                                                                    ?>" readonly="true" style="font-size:16px;font-weight:bold;<?php echo $style1; ?>;width:100%;">
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="col-md-12">
                                                                         <div class="input-group" style="width:100% !important;">
-                                                                            <label class="btn btn-primary btn-file input-group-addon"  style="<?php echo $breadCrmbBckclr; ?>;min-width:27% !important;width:27% !important;">
+                                                                            <label class="btn btn-primary btn-file input-group-addon" style="<?php echo $breadCrmbBckclr; ?>;min-width:27% !important;width:27% !important;">
                                                                                 <span style="font-weight:bold;<?php echo $forecolors; ?>">Total Credits:&nbsp;</span>
                                                                             </label>
-                                                                            <input class="form-control" id="jrnlBatchCrdtAmnt" type = "text" placeholder="0.00" value="<?php
-                                                                            echo number_format($jrnlBatchCrdtAmnt, 2);
-                                                                            ?>" readonly="true" style="font-size:16px;font-weight:bold;<?php echo $style1; ?>;width:100%;">
+                                                                            <input class="form-control" id="jrnlBatchCrdtAmnt" type="text" placeholder="0.00" value="<?php
+                                                                                                                                                                        echo number_format($jrnlBatchCrdtAmnt, 2);
+                                                                                                                                                                        ?>" readonly="true" style="font-size:16px;font-weight:bold;<?php echo $style1; ?>;width:100%;">
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="col-md-12">
                                                                         <div class="input-group" style="width:100% !important;">
-                                                                            <label class="btn btn-primary btn-file input-group-addon"  style="<?php echo $breadCrmbBckclr; ?>;min-width:27% !important;width:27% !important;">
+                                                                            <label class="btn btn-primary btn-file input-group-addon" style="<?php echo $breadCrmbBckclr; ?>;min-width:27% !important;width:27% !important;">
                                                                                 <span style="font-weight:bold;<?php echo $forecolors; ?>">Difference:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                                                             </label>
-                                                                            <input class="form-control" id="jrnlBatchNetAmnt" type = "text" placeholder="0.00" value="<?php
-                                                                            echo number_format($jrnlBatchNetAmnt, 2);
-                                                                            ?>" readonly="true" style="font-size:16px;font-weight:bold;<?php echo $style1; ?>;width:100%;">
+                                                                            <input class="form-control" id="jrnlBatchNetAmnt" type="text" placeholder="0.00" value="<?php
+                                                                                                                                                                    echo number_format($jrnlBatchNetAmnt, 2);
+                                                                                                                                                                    ?>" readonly="true" style="font-size:16px;font-weight:bold;<?php echo $style1; ?>;width:100%;">
                                                                         </div>
                                                                     </div>
-                                                                </div>   
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </fieldset>
                                                     <fieldset class="">
                                                         <div class="row">
                                                             <div class="col-md-12">
-                                                                <div class="custDiv" style="padding:0px !important;min-height: 30px !important;"> 
+                                                                <div class="custDiv" style="padding:0px !important;min-height: 30px !important;">
                                                                     <div class="tab-content" style="padding:3px 5px 2px 5px!important;">
                                                                         <div class="row">
                                                                             <div class="col-md-12">
                                                                                 <div class="col-md-12" style="padding:0px 0px 0px 0px !important;">
                                                                                     <div class="col-md-6" style="padding:0px 0px 0px 0px !important;float:left;">
                                                                                         <?php if ($canEdt) { ?>
-                                                                                            <button id="addNwJrnlBatchDetBtn" type="button" class="btn btn-default" style="margin-bottom: 5px;height:30px;" onclick="insertNewJrnlBatcRows('oneJrnlBatchDetLinesTable', 0, '<?php echo $nwRowHtml2; ?>');" data-toggle="tooltip" data-placement="bottom" title = "New Detailed Transaction Line">
+                                                                                            <button id="addNwJrnlBatchDetBtn" type="button" class="btn btn-default" style="margin-bottom: 5px;height:30px;" onclick="insertNewJrnlBatcRows('oneJrnlBatchDetLinesTable', 0, '<?php echo $nwRowHtml2; ?>');" data-toggle="tooltip" data-placement="bottom" title="New Detailed Transaction Line">
                                                                                                 <img src="cmn_images/add1-64.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
-                                                                                            </button>                               
+                                                                                            </button>
                                                                                         <?php } ?>
-                                                                                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;height:30px;" onclick="getOneJrnlBatchDocsForm(<?php echo $sbmtdJrnlBatchID; ?>, 20);" data-toggle="tooltip" data-placement="bottom" title = "Attached Documents">
+                                                                                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;height:30px;" onclick="getOneJrnlBatchDocsForm(<?php echo $sbmtdJrnlBatchID; ?>, 20);" data-toggle="tooltip" data-placement="bottom" title="Attached Documents">
                                                                                             <img src="cmn_images/adjunto.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
-                                                                                        </button> 
-                                                                                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;height:30px;" onclick="getOneJrnlBatchForm(<?php echo $sbmtdJrnlBatchID; ?>, 11, 'ReloadDialog', -1, '', '#accbRcnclJrnlTrnsLines');"><img src="cmn_images/refresh.bmp" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;"></button>
-                                                                                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;height:30px;"  onclick="getSilentRptsRnSts(<?php echo $rptID; ?>, -1, '<?php echo $paramStr; ?>');" style="width:100% !important;">
-                                                                                            <img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                                        </button>
+                                                                                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;height:30px;" onclick="getOneJrnlBatchForm(<?php echo $sbmtdJrnlBatchID; ?>, 11, 'ReloadDialog', -1, '', '#accbRcnclJrnlTrnsLines');"><img src="cmn_images/refresh.bmp" style="left: 0.01%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;"></button>
+                                                                                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;height:30px;" onclick="getSilentRptsRnSts(<?php echo $rptID; ?>, -1, '<?php echo $paramStr; ?>');" style="width:100% !important;">
+                                                                                            <img src="cmn_images/pdf.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                                             Print
                                                                                         </button>
-                                                                                        <select data-placeholder="Select..." class="form-control chosen-select" id="accbJrnlBatchDsplySze" style="margin-bottom: -3px;height:30px;max-width:70px !important;display:inline-block;" onchange="getOneJrnlBatchForm(<?php echo $sbmtdJrnlBatchID; ?>, 1, 'ReloadDialog', -1, '', '#accbRcnclJrnlTrnsLines');" data-toggle="tooltip" title="No. of Records to Display">                            
+                                                                                        <select data-placeholder="Select..." class="form-control chosen-select" id="accbJrnlBatchDsplySze" style="margin-bottom: -3px;height:30px;max-width:70px !important;display:inline-block;" onchange="getOneJrnlBatchForm(<?php echo $sbmtdJrnlBatchID; ?>, 1, 'ReloadDialog', -1, '', '#accbRcnclJrnlTrnsLines');" data-toggle="tooltip" title="No. of Records to Display">
                                                                                             <?php
-                                                                                            $valslctdArry = array("", "", "", "", "", "",
-                                                                                                "", "");
-                                                                                            $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100,
-                                                                                                500, 1000, 50000, 1000000000);
+                                                                                            $valslctdArry = array(
+                                                                                                "", "", "", "", "", "",
+                                                                                                "", ""
+                                                                                            );
+                                                                                            $dsplySzeArry = array(
+                                                                                                1, 5, 10, 15, 30, 50, 100,
+                                                                                                500, 1000, 50000, 1000000000
+                                                                                            );
                                                                                             for ($y = 0; $y < count($dsplySzeArry); $y++) {
                                                                                                 if ($lmtSze == $dsplySzeArry[$y]) {
                                                                                                     $valslctdArry[$y] = "selected";
                                                                                                 } else {
                                                                                                     $valslctdArry[$y] = "";
                                                                                                 }
-                                                                                                ?>
-                                                                                                <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
-                                                                                                <?php
+                                                                                            ?>
+                                                                                                <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>
+                                                                                            <?php
                                                                                             }
                                                                                             ?>
                                                                                         </select>
-                                                                                    </div> 
+                                                                                    </div>
                                                                                     <div class="col-md-6" style="padding:0px 0px 0px 0px !important;">
-                                                                                        <div class="" style="padding:0px 0px 0px 0px;float:right !important;"> 
+                                                                                        <div class="" style="padding:0px 0px 0px 0px;float:right !important;">
                                                                                             <?php
                                                                                             if ($rqStatus == "Not Posted") {
-                                                                                                ?>
+                                                                                            ?>
                                                                                                 <?php
                                                                                                 if ($voidedJrnlBatchID <= 0) {
-                                                                                                    ?> 
+                                                                                                ?>
                                                                                                     <?php if ($canEdt) { ?>
-                                                                                                        <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveJrnlBatchForm('<?php echo $fnccurnm; ?>', 0, -1, -1, '', -1, '', 'TBALS');"><img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Save&nbsp;</button>    
+                                                                                                        <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveJrnlBatchForm('<?php echo $fnccurnm; ?>', 0, -1, -1, '', -1, '', 'TBALS');"><img src="cmn_images/FloppyDisk.png" style="left: 0.01%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Save&nbsp;</button>
                                                                                                     <?php } ?>
-                                                                                                    <?php
+                                                                                                <?php
                                                                                                 }
                                                                                                 if ($canPost && $sbmtdJrnlBatchID > 0) {
-                                                                                                    ?>  
-                                                                                                    <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveJrnlBatchForm('<?php echo $fnccurnm; ?>', 5,<?php echo $rptID1; ?>, -1, '<?php echo $paramStr1; ?>', -1, '', 'TBALS');"><img src="cmn_images/98.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Post Batch&nbsp;</button>
-                                                                                                    <?php
+                                                                                                ?>
+                                                                                                    <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveJrnlBatchForm('<?php echo $fnccurnm; ?>', 5,<?php echo $rptID1; ?>, -1, '<?php echo $paramStr1; ?>', -1, '', 'TBALS');"><img src="cmn_images/98.png" style="left: 0.01%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Post Batch&nbsp;</button>
+                                                                                                <?php
                                                                                                 } else if ($sbmtdJrnlBatchID > 0) {
-                                                                                                    ?>  
-                                                                                                    <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="bootbox.alert({title: 'System Alert!', size: 'small', message: 'Permission Denied!'});"><img src="cmn_images/98.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Post Batch&nbsp;</button>
-                                                                                                    <?php
+                                                                                                ?>
+                                                                                                    <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="bootbox.alert({title: 'System Alert!', size: 'small', message: 'Permission Denied!'});"><img src="cmn_images/98.png" style="left: 0.01%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Post Batch&nbsp;</button>
+                                                                                                <?php
                                                                                                 }
                                                                                             } else if ($rqStatus == "Posted") {
                                                                                                 ?>
-                                                                                                <button id="fnlzeRvrslJrnlBatchBtn" type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveJrnlRvrsBatchForm('<?php echo $fnccurnm; ?>', 1, -1, '');"><img src="cmn_images/90.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Void Transaction&nbsp;</button>                                                                   
-                                                                                                <?php
+                                                                                                <button id="fnlzeRvrslJrnlBatchBtn" type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="saveJrnlRvrsBatchForm('<?php echo $fnccurnm; ?>', 1, -1, '');"><img src="cmn_images/90.png" style="left: 0.01%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Void Transaction&nbsp;</button>
+                                                                                            <?php
                                                                                             }
                                                                                             ?>
                                                                                         </div>
-                                                                                    </div>                    
-                                                                                </div> 
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="custDiv" style="padding:0px !important;min-height: 40px !important;" id="oneJrnlBatchLnsTblSctn"> 
-                                                                    <div class="tab-content" style="padding:5px !important;padding-top:7px !important;">    
+                                                                <div class="custDiv" style="padding:0px !important;min-height: 40px !important;" id="oneJrnlBatchLnsTblSctn">
+                                                                    <div class="tab-content" style="padding:5px !important;padding-top:7px !important;">
                                                                         <div id="jrnlBatchDetLines" class="tab-pane fadein active" style="border:none !important;padding:0px !important;">
                                                                             <div class="row">
                                                                                 <div class="col-md-12">
@@ -754,16 +1445,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                                 <th style="max-width:20px;width:20px;">...</th>
                                                                                                 <?php
                                                                                                 if ($canVwRcHstry === true) {
-                                                                                                    ?>
+                                                                                                ?>
                                                                                                     <th style="max-width:20px;width:20px;">...</th>
                                                                                                 <?php } ?>
                                                                                             </tr>
                                                                                         </thead>
-                                                                                        <tbody>   
+                                                                                        <tbody>
                                                                                             <?php
                                                                                             $cntr = 0;
-                                                                                            $resultRw = get_One_Batch_Trns($sbmtdJrnlBatchID,
-                                                                                                    $lmtSze);
+                                                                                            $resultRw = get_One_Batch_Trns(
+                                                                                                $sbmtdJrnlBatchID,
+                                                                                                $lmtSze
+                                                                                            );
                                                                                             $maxNoRows = loc_db_num_rows($resultRw);
                                                                                             $ttlTrsctnDbtAmnt = 0;
                                                                                             $ttlTrsctnCrdtAmnt = 0;
@@ -826,17 +1519,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                                     $isPosted = ($row[11] == "1") ? "true" : "false";
                                                                                                 }
                                                                                                 $cntr += 1;
-                                                                                                ?>
-                                                                                                <tr id="oneJrnlBatchDetRow_<?php echo $cntr; ?>">                                    
-                                                                                                    <td class="lovtd"><span><?php echo ($cntr); ?></span></td>    
+                                                                                            ?>
+                                                                                                <tr id="oneJrnlBatchDetRow_<?php echo $cntr; ?>">
+                                                                                                    <td class="lovtd"><span><?php echo ($cntr); ?></span></td>
                                                                                                     <td class="lovtd">
-                                                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneJrnlBatchDetRow<?php echo $cntr; ?>_AccountID" value="<?php echo $trsctnAcntID; ?>" style="width:100% !important;">  
-                                                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneJrnlBatchDetRow<?php echo $cntr; ?>_TrnsLnID" value="<?php echo $trsctnLineID; ?>" style="width:100% !important;">    
-                                                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneJrnlBatchDetRow<?php echo $cntr; ?>_TrnsSmryLnID" value="<?php echo $trsctnSmryLineID; ?>" style="width:100% !important;"> 
-                                                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneJrnlBatchDetRow<?php echo $cntr; ?>_SlctdAmtBrkdwns" value="" style="width:100% !important;"> 
+                                                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneJrnlBatchDetRow<?php echo $cntr; ?>_AccountID" value="<?php echo $trsctnAcntID; ?>" style="width:100% !important;">
+                                                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneJrnlBatchDetRow<?php echo $cntr; ?>_TrnsLnID" value="<?php echo $trsctnLineID; ?>" style="width:100% !important;">
+                                                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneJrnlBatchDetRow<?php echo $cntr; ?>_TrnsSmryLnID" value="<?php echo $trsctnSmryLineID; ?>" style="width:100% !important;">
+                                                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneJrnlBatchDetRow<?php echo $cntr; ?>_SlctdAmtBrkdwns" value="" style="width:100% !important;">
                                                                                                         <?php
                                                                                                         if ($canEdt === true) {
-                                                                                                            ?>
+                                                                                                        ?>
                                                                                                             <div class="input-group" style="width:100% !important;">
                                                                                                                 <input type="text" class="form-control" aria-label="..." id="oneJrnlBatchDetRow<?php echo $cntr; ?>_AccountNm" name="oneJrnlBatchDetRow<?php echo $cntr; ?>_AccountNm" value="<?php echo $trsctnAcntNm; ?>" readonly="true" style="width:100% !important;">
                                                                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Transaction Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'oneJrnlBatchDetRow<?php echo $cntr; ?>_AccountID', 'oneJrnlBatchDetRow<?php echo $cntr; ?>_AccountNm', 'clear', 1, '', function () {
@@ -844,20 +1537,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                                                         });">
                                                                                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                                                                                 </label>
-                                                                                                            </div>      
+                                                                                                            </div>
                                                                                                         <?php } else { ?>
                                                                                                             <span><?php echo $trsctnAcntNm; ?></span>
-                                                                                                        <?php } ?>                                             
-                                                                                                    </td>                                          
-                                                                                                    <td class="lovtd"  style="">
+                                                                                                        <?php } ?>
+                                                                                                    </td>
+                                                                                                    <td class="lovtd" style="">
                                                                                                         <?php
                                                                                                         if ($canEdt === true) {
-                                                                                                            ?>
-                                                                                                            <input type="text" class="form-control rqrdFld jbDetDesc" aria-label="..." id="oneJrnlBatchDetRow<?php echo $cntr; ?>_LineDesc" name="oneJrnlBatchDetRow<?php echo $cntr; ?>_LineDesc" value="<?php echo $trsctnLineDesc; ?>" style="width:100% !important;" <?php echo $mkReadOnly; ?> onkeypress="gnrlFldKeyPress(event, 'oneJrnlBatchDetRow<?php echo $cntr; ?>_LineDesc', 'oneJrnlBatchDetLinesTable', 'jbDetDesc');">                                                    
+                                                                                                        ?>
+                                                                                                            <input type="text" class="form-control rqrdFld jbDetDesc" aria-label="..." id="oneJrnlBatchDetRow<?php echo $cntr; ?>_LineDesc" name="oneJrnlBatchDetRow<?php echo $cntr; ?>_LineDesc" value="<?php echo $trsctnLineDesc; ?>" style="width:100% !important;" <?php echo $mkReadOnly; ?> onkeypress="gnrlFldKeyPress(event, 'oneJrnlBatchDetRow<?php echo $cntr; ?>_LineDesc', 'oneJrnlBatchDetLinesTable', 'jbDetDesc');">
                                                                                                         <?php } else { ?>
                                                                                                             <span><?php echo $trsctnLineDesc; ?></span>
-                                                                                                        <?php } ?>    
-                                                                                                    </td>                                                  
+                                                                                                        <?php } ?>
+                                                                                                    </td>
                                                                                                     <td class="lovtd">
                                                                                                         <div class="" style="width:100% !important;">
                                                                                                             <input type="hidden" class="form-control" aria-label="..." id="oneJrnlBatchDetRow<?php echo $cntr; ?>_TrnsCurNm" name="oneJrnlBatchDetRow<?php echo $cntr; ?>_TrnsCurNm" value="<?php echo $funcCurNm; ?>" readonly="true" style="width:100% !important;">
@@ -866,54 +1559,54 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                                                     });">
                                                                                                                 <span class="" id="oneJrnlBatchDetRow<?php echo $cntr; ?>_TrnsCurNm1"><?php echo $funcCurNm; ?></span>
                                                                                                             </label>
-                                                                                                        </div>                                              
+                                                                                                        </div>
                                                                                                     </td>
                                                                                                     <td class="lovtd">
                                                                                                         <input type="text" class="form-control rqrdFld jbDetDbt" aria-label="..." id="oneJrnlBatchDetRow<?php echo $cntr; ?>_DebitAmnt" name="oneJrnlBatchDetRow<?php echo $cntr; ?>_DebitAmnt" value="<?php
-                                                                                                        echo number_format($trsctnDbtAmnt, 2);
-                                                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneJrnlBatchDetRow<?php echo $cntr; ?>_DebitAmnt', 'oneJrnlBatchDetLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllJrnlBatchDetTtl();">                                                    
+                                                                                                                                                                                                                                                                                                        echo number_format($trsctnDbtAmnt, 2);
+                                                                                                                                                                                                                                                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneJrnlBatchDetRow<?php echo $cntr; ?>_DebitAmnt', 'oneJrnlBatchDetLinesTable', 'jbDetDbt');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllJrnlBatchDetTtl();">
                                                                                                     </td>
                                                                                                     <td class="lovtd">
                                                                                                         <input type="text" class="form-control rqrdFld jbDetCrdt" aria-label="..." id="oneJrnlBatchDetRow<?php echo $cntr; ?>_CreditAmnt" name="oneJrnlBatchDetRow<?php echo $cntr; ?>_CreditAmnt" value="<?php
-                                                                                                        echo number_format($trsctnCrdtAmnt,
-                                                                                                                2);
-                                                                                                        ?>" onkeypress="gnrlFldKeyPress(event, 'oneJrnlBatchDetRow<?php echo $cntr; ?>_CreditAmnt', 'oneJrnlBatchDetLinesTable', 'jbDetCrdt');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllJrnlBatchDetTtl();">                                                    
+                                                                                                                                                                                                                                                                                                            echo number_format(
+                                                                                                                                                                                                                                                                                                                $trsctnCrdtAmnt,
+                                                                                                                                                                                                                                                                                                                2
+                                                                                                                                                                                                                                                                                                            );
+                                                                                                                                                                                                                                                                                                            ?>" onkeypress="gnrlFldKeyPress(event, 'oneJrnlBatchDetRow<?php echo $cntr; ?>_CreditAmnt', 'oneJrnlBatchDetLinesTable', 'jbDetCrdt');" style="width:100% !important;text-align: right;" <?php echo $mkReadOnly; ?> onchange="calcAllJrnlBatchDetTtl();">
                                                                                                     </td>
                                                                                                     <td class="lovtd">
                                                                                                         <?php
                                                                                                         if ($rowRw[22] != ",") {
-                                                                                                            ?>
-                                                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Interface Table Breakdown" 
-                                                                                                                    onclick="getAccbTransSrchDet(<?php echo $trsctnLineID; ?>, 'Transaction ID', <?php echo $isPosted; ?>, true, '', '', 'Breakdown of Source Transactions', 'ShowDialog', function () {});" style="padding:2px !important;" style="padding:2px !important;"> 
-                                                                                                                <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                                                                        ?>
+                                                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Interface Table Breakdown" onclick="getAccbTransSrchDet(<?php echo $trsctnLineID; ?>, 'Transaction ID', <?php echo $isPosted; ?>, true, '', '', 'Breakdown of Source Transactions', 'ShowDialog', function () {});" style="padding:2px !important;" style="padding:2px !important;">
+                                                                                                                <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                                                             </button>
                                                                                                         <?php } else { ?>
-                                                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Denominational Breakdown" 
-                                                                                                                    onclick="getAccbCashBreakdown(<?php echo $trsctnLineID; ?>, 'ShowDialog', 'Transaction Amount Breakdown', '<?php echo $trnsBrkDwnVType; ?>', '<?php echo $defaultBrkdwnLOV; ?>', '', '');" style="padding:2px !important;" style="padding:2px !important;"> 
-                                                                                                                <img src="cmn_images/cash_breakdown.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">                                                            
+                                                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Denominational Breakdown" onclick="getAccbCashBreakdown(<?php echo $trsctnLineID; ?>, 'ShowDialog', 'Transaction Amount Breakdown', '<?php echo $trnsBrkDwnVType; ?>', '<?php echo $defaultBrkdwnLOV; ?>', '', '');" style="padding:2px !important;" style="padding:2px !important;">
+                                                                                                                <img src="cmn_images/cash_breakdown.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                                                             </button>
                                                                                                         <?php } ?>
                                                                                                     </td>
                                                                                                     <td class="lovtd">
                                                                                                         <?php
                                                                                                         if ($canEdt === true) {
-                                                                                                            ?>
+                                                                                                        ?>
                                                                                                             <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100% !important;">
                                                                                                                 <input class="form-control" size="16" type="text" id="oneJrnlBatchDetRow<?php echo $cntr; ?>_TransDte" value="<?php echo $trsctnLineDate; ?>">
                                                                                                                 <!--<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>-->
                                                                                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                                                                                            </div> 
+                                                                                                            </div>
                                                                                                         <?php } else { ?>
                                                                                                             <span><?php echo $trsctnLineDate; ?></span>
-                                                                                                        <?php } ?>                                                         
-                                                                                                    </td>                                         
+                                                                                                        <?php } ?>
+                                                                                                    </td>
                                                                                                     <td class="lovtd" style="">
-                                                                                                        <input type="text" class="form-control jbDetRfDc" aria-label="..." id="oneJrnlBatchDetRow<?php echo $cntr; ?>_RefDoc" name="oneJrnlBatchDetRow<?php echo $cntr; ?>_RefDoc" value="<?php echo $trsctnLineRefDoc; ?>" style="width:100% !important;" <?php echo $mkReadOnly; ?> onkeypress="gnrlFldKeyPress(event, 'oneJrnlBatchDetRow<?php echo $cntr; ?>_RefDoc', 'oneJrnlBatchDetLinesTable', 'jbDetRfDc');">                                                    
+                                                                                                        <input type="text" class="form-control jbDetRfDc" aria-label="..." id="oneJrnlBatchDetRow<?php echo $cntr; ?>_RefDoc" name="oneJrnlBatchDetRow<?php echo $cntr; ?>_RefDoc" value="<?php echo $trsctnLineRefDoc; ?>" style="width:100% !important;" <?php echo $mkReadOnly; ?> onkeypress="gnrlFldKeyPress(event, 'oneJrnlBatchDetRow<?php echo $cntr; ?>_RefDoc', 'oneJrnlBatchDetLinesTable', 'jbDetRfDc');">
                                                                                                     </td>
                                                                                                     <td class="lovtd">
                                                                                                         <?php
                                                                                                         if ($canDel === true && $canEdt === true) {
-                                                                                                            ?>
+                                                                                                        ?>
                                                                                                             <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delAccbJrnlBatchDetLn('oneJrnlBatchDetRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Journal Line">
                                                                                                                 <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                                                                             </button>
@@ -921,23 +1614,24 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                                     </td>
                                                                                                     <?php
                                                                                                     if ($canVwRcHstry === true) {
-                                                                                                        ?>
+                                                                                                    ?>
                                                                                                         <td class="lovtd">
                                                                                                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Record History" onclick="getRecHstry('<?php
-                                                                                                            echo urlencode(encrypt1(($trsctnLineID . "|accb.accb_trnsctn_details|transctn_id"),
-                                                                                                                            $smplTokenWord1));
-                                                                                                            ?>');" style="padding:2px !important;">
+                                                                                                                                                                                                                                                                    echo urlencode(encrypt1(($trsctnLineID . "|accb.accb_trnsctn_details|transctn_id"),
+                                                                                                                                                                                                                                                                        $smplTokenWord1
+                                                                                                                                                                                                                                                                    ));
+                                                                                                                                                                                                                                                                    ?>');" style="padding:2px !important;">
                                                                                                                 <img src="cmn_images/Information.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                                                             </button>
                                                                                                         </td>
                                                                                                     <?php } ?>
                                                                                                 </tr>
-                                                                                                <?php
+                                                                                            <?php
                                                                                             }
                                                                                             $mkReadOnly = $ornlMkReadOnly;
                                                                                             ?>
                                                                                         </tbody>
-                                                                                        <tfoot>                                                            
+                                                                                        <tfoot>
                                                                                             <tr>
                                                                                                 <th>&nbsp;</th>
                                                                                                 <th>&nbsp;</th>
@@ -945,33 +1639,41 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                                 <th style=""><?php echo $crncyIDNm; ?></th>
                                                                                                 <th style="text-align: right;">
                                                                                                     <?php
-                                                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdJbDbtsTtlBtn\">" . number_format($ttlTrsctnDbtAmnt,
-                                                                                                            2, '.', ',') . "</span>";
+                                                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdJbDbtsTtlBtn\">" . number_format(
+                                                                                                        $ttlTrsctnDbtAmnt,
+                                                                                                        2,
+                                                                                                        '.',
+                                                                                                        ','
+                                                                                                    ) . "</span>";
                                                                                                     ?>
-                                                                                                    <input type="hidden" id="myCptrdJbDbtsTtlVal" value="<?php echo $ttlTrsctnDbtAmnt; ?>">
+                                                                                                    <input type="hidden" id="myCptrdJbDbtsTtlVal2" value="<?php echo $ttlTrsctnDbtAmnt; ?>">
                                                                                                 </th>
                                                                                                 <th style="text-align: right;">
                                                                                                     <?php
-                                                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdJbCrdtsTtlBtn\">" . number_format($ttlTrsctnCrdtAmnt,
-                                                                                                            2, '.', ',') . "</span>";
+                                                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdJbCrdtsTtlBtn\">" . number_format(
+                                                                                                        $ttlTrsctnCrdtAmnt,
+                                                                                                        2,
+                                                                                                        '.',
+                                                                                                        ','
+                                                                                                    ) . "</span>";
                                                                                                     ?>
-                                                                                                    <input type="hidden" id="myCptrdJbCrdtsTtlVal" value="<?php echo $ttlTrsctnCrdtAmnt; ?>">
+                                                                                                    <input type="hidden" id="myCptrdJbCrdtsTtlVal2" value="<?php echo $ttlTrsctnCrdtAmnt; ?>">
                                                                                                 </th>
-                                                                                                <th style="">&nbsp;</th>                                           
+                                                                                                <th style="">&nbsp;</th>
                                                                                                 <th style="">&nbsp;</th>
                                                                                                 <th style="">&nbsp;</th>
                                                                                                 <th style="max-width:20px;width:20px;">&nbsp;</th>
                                                                                                 <?php
                                                                                                 if ($canVwRcHstry === true) {
-                                                                                                    ?>
+                                                                                                ?>
                                                                                                     <th style="max-width:20px;width:20px;">&nbsp;</th>
-                                                                                                    <?php } ?>
+                                                                                                <?php } ?>
                                                                                             </tr>
                                                                                         </tfoot>
                                                                                     </table>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>   
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -986,7 +1688,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </fieldset>
                     </div>
                 </div>
-                <?php
+<?php
             }
         }
     }

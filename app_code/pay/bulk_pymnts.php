@@ -240,11 +240,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     for ($z = 0; $z < $total; $z++) {
                         $crntRow = explode("~", $variousRows[$z]);
                         if (count($crntRow) == 5) {
-                            $ln_PrsnLocID = ltrim(trim(cleanInputData1($crntRow[0])), '\'');
+                            $ln_PrsnLocID = ltrim(trim(cleanInputData1($crntRow[0])), '\' ');
                             $ln_PrsnNm = trim(cleanInputData1($crntRow[1]));
                             $ln_ItemNm = trim(cleanInputData1($crntRow[2]));
                             $ln_ItemValNm = trim(cleanInputData1($crntRow[3]));
                             $ln_Value = trim(cleanInputData1($crntRow[4]));
+                            //logSessionErrs($ln_PrsnLocID . ":" . $ln_PrsnNm . ":" . $ln_ItemNm . ":" . $ln_ItemValNm . ":" . $ln_Value);
                             if ($z == 0) {
                                 if (
                                     strtoupper($ln_PrsnLocID) == strtoupper("Person's ID No.**")
@@ -265,6 +266,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 }
                             }
                             $ln_PrsnID = getPersonID($ln_PrsnLocID, $orgID);
+                            //logSessionErrs($ln_PrsnLocID . ":".$ln_PrsnID."-" . $ln_PrsnNm . ":" . $ln_ItemNm . ":" . $ln_ItemValNm . ":" . $ln_Value);
                             $ln_ItemID = getItmID($ln_ItemNm, $orgID);
                             $ln_ItemValID = getItmValID($ln_ItemValNm, $ln_ItemID);
                             $ln_ValToUse = (float) $ln_Value;
@@ -391,6 +393,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             json_encode($arr_content)
                         );
                         $z++;
+                    }
+                    if ($z == 0) {
+                        $arr_content['percent'] = 100;
+                        $arr_content['dwnld_url'] = $dwnldUrl;
+                        $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!... Template Exported.</span>";
+                        $arr_content['msgcount'] = 0;
+                        file_put_contents(
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_PyAttchdValuesexprt_progress.rho",
+                            json_encode($arr_content)
+                        );
                     }
                     fclose($opndfile);
                 } else {

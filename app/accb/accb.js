@@ -16559,6 +16559,145 @@ function moveSelectedTrans() {
     calcAllJrnlBatchEditTtl();
 }
 
+function markSelectedTransRcncld() {
+    var inptHtml = typeof $("#nwRowHtml2").val() === "undefined" ? "" : $("#nwRowHtml2").val();
+    var rcnclAccntID = typeof $("#rcnclAccntID").val() === "undefined" ? "-1" : $("#rcnclAccntID").val();
+    var rcnclAccntNm = typeof $("#rcnclAccntNm").val() === "undefined" ? "" : $("#rcnclAccntNm").val();
+    var jrnlBatchAmountCrncy = typeof $("#jrnlBatchAmountCrncy").text() === "undefined" ? "" : $("#jrnlBatchAmountCrncy").text();
+    var jrnlBatchDesc = typeof $("#jrnlBatchDesc").val() === "undefined" ? "" : $("#jrnlBatchDesc").val();
+    if (jrnlBatchDesc.trim() === "") {
+        jrnlBatchDesc = "Reconciliation Movement of Account Transactions";
+        $("#jrnlBatchDesc").val(jrnlBatchDesc);
+    }
+    var form = document.getElementById("accbFSRptDetForm");
+    var cbResults = "";
+    var fnl_res = "";
+    var entrdFgrs = "";
+    for (var i = 0; i < form.elements.length; i++) {
+        if (form.elements[i].type === "checkbox") {
+            if (form.elements[i].checked === true) {
+                cbResults += form.elements[i].value + "|";
+            }
+        }
+    }
+    if (cbResults.length > 1) {
+        fnl_res = cbResults.slice(0,-1);
+    }
+    var bigArry = [];
+    var bigArry2 = [];
+    bigArry = fnl_res.split("|");
+    var i = 0;
+    var ln_TransLineID = "";
+    var ln_AccntNm = "";
+    var ln_LineDesc = "";
+    var ln_AccntID = -1;
+    var ln_Rmrks = "";
+    var ln_CrncyID = -1;
+    var ln_CrncyNm = "";
+    var ln_DbtAmt = 0;
+    var ln_CrdtAmnt = 0;
+    var ln_TrnsDte = "";
+    var ln_IsParent = "";
+    var ln_IsRcncld = "0";
+    var rowPrfxNm = "oneJrnlBatchDetRow";
+    var slctdLineTrans = "";
+    for (i = 0; i < bigArry.length; i++) {
+        var rndmNum1 = bigArry[i].split("_")[1];
+        var rowPrfxNm1 = bigArry[i].split("_")[0];
+        ln_AccntID = typeof $("#" + rowPrfxNm1 + rndmNum1 + "_AccountID").val() === "undefined" ? "-1" : $("#" + rowPrfxNm1 + rndmNum1 + "_AccountID").val();
+        ln_TransLineID = typeof $("#" + rowPrfxNm1 + rndmNum1 + "_TransLineID").val() === "undefined" ? "-1" : $("#" + rowPrfxNm1 + rndmNum1 + "_TransLineID").val();
+        ln_AccntNm = typeof $("#" + rowPrfxNm1 + rndmNum1 + "_AccntNm").val() === "undefined" ? "" : $("#" + rowPrfxNm1 + rndmNum1 + "_AccntNm").val();
+        ln_LineDesc = typeof $("#" + rowPrfxNm1 + rndmNum1 + "_LineDesc").val() === "undefined" ? "" : $("#" + rowPrfxNm1 + rndmNum1 + "_LineDesc").val();
+        ln_DbtAmt = typeof $("#" + rowPrfxNm1 + rndmNum1 + "_DbtAmnt").val() === "undefined" ? "0.00" : $("#" + rowPrfxNm1 + rndmNum1 + "_DbtAmnt").val();
+        ln_CrdtAmnt = typeof $("#" + rowPrfxNm1 + rndmNum1 + "_CrdtAmnt").val() === "undefined" ? "0.00" : $("#" + rowPrfxNm1 + rndmNum1 + "_CrdtAmnt").val();
+        ln_TrnsDte = typeof $("#" + rowPrfxNm1 + rndmNum1 + "_TrnsDte").val() === "undefined" ? "" : $("#" + rowPrfxNm1 + rndmNum1 + "_TrnsDte").val();
+        ln_IsParent = typeof $("#" + rowPrfxNm1 + rndmNum1 + "_IsParent").val() === "undefined" ? "0" : $("#" + rowPrfxNm1 + rndmNum1 + "_IsParent").val();
+        ln_IsRcncld = typeof $("#" + rowPrfxNm1 + rndmNum1 + "_IsRcncld").val() === "undefined" ? "0" : $("#" + rowPrfxNm1 + rndmNum1 + "_IsRcncld").val();
+        if (ln_TrnsDte.trim().length <= 11) {
+            ln_TrnsDte = ln_TrnsDte.trim() + " 12:00:00";
+        }
+        ln_DbtAmt = Number(ln_DbtAmt.replace(/[^-?0-9\.]/g,""));
+        ln_CrdtAmnt = Number(ln_CrdtAmnt.replace(/[^-?0-9\.]/g,""));
+        var newNetAmnt = 0;
+        if (ln_IsRcncld.trim() == "1") {
+            ln_IsRcncld = "0";
+            $("#" + rowPrfxNm1 + rndmNum1 + "_IsRcncld").val(ln_IsRcncld);
+            $("#" + bigArry[i]).css("background-color","#ffcccb");
+        } else {
+            ln_IsRcncld = "1";
+            $("#" + rowPrfxNm1 + rndmNum1 + "_IsRcncld").val(ln_IsRcncld);
+            $("#" + bigArry[i]).css("background-color","#BFFF00");
+        }
+
+        slctdLineTrans = slctdLineTrans +
+            ln_TransLineID.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+            ln_IsRcncld.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+            ln_AccntID.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "|";
+    }
+
+    var dialog = bootbox.alert({
+        title: 'Change Transaction Reconciled Status',
+        size: 'small',
+        message: '<p><i class="fa fa-spin fa-spinner"></i> Changing Transaction Reconciled Status...Please Wait...</p>',
+        callback: function () { }
+    });
+
+    var formData = new FormData();
+    formData.append('grp',6);
+    formData.append('typ',1);
+    formData.append('pg',19);
+    formData.append('q','UPDATE');
+    formData.append('actyp',1);
+    formData.append('rcnclAccntID',rcnclAccntID);
+    formData.append('slctdLineTrans',slctdLineTrans);
+
+    dialog.init(function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
+            $body = $("body");
+            $body.removeClass("mdlloading");
+            $.ajax({
+                url: 'index.php',
+                method: 'POST',
+                data: formData,
+                async: true,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    setTimeout(function () {
+                        dialog.find('.bootbox-body').html(data.message);
+                        if (data.message.indexOf("Success") !== -1) {
+                            rcnclAccntID = data.rcnclAccntID;
+                            dialog.modal('hide');
+                        }
+                    },500);
+                },
+                error: function (jqXHR,textStatus,errorThrown) {
+                    console.log(textStatus + " " + errorThrown);
+                    console.warn(jqXHR.responseText);
+                }
+            });
+        });
+    });
+    var cntr = 0;
+    $("#oneJrnlBatchDetLinesTable")
+        .find("tr")
+        .each(function (i,el) {
+            if (i > 0) {
+                if (typeof $(el).attr("id") === "undefined") {
+                    /*Do Nothing*/
+                } else {
+                    cntr++;
+                    var prfxName1 = $(el).attr("id").split("_")[0];
+                    var rndmNum1 = $(el).attr("id").split("_")[1];
+                    var $tds = $("#" + prfxName1 + "_" + rndmNum1).find("td");
+                    $tds.eq(0).html(cntr);
+                }
+            }
+        });
+    $("#accbRcnclGlStatemtLinestab").tab("show");
+}
+
 var prgstimerid2;
 var exprtBtn;
 var exprtBtn2;
@@ -20338,6 +20477,535 @@ function rfrshSaveAssetRgstr() {
             grp: 6,
             typ: 1,
             pg: 9,
+            q: "UPDATE",
+            actyp: 902,
+        },
+        success: function (data) {
+            var elem = document.getElementById("myBar1");
+            elem.style.width = data.percent + "%";
+            $("#myInformation1").html(data.message);
+            if (data.percent >= 100) {
+                window.clearInterval(prgstimerid2);
+                window.clearInterval(prgstimerid2);
+                ClearAllIntervals();
+            }
+        },
+        error: function (jqXHR,textStatus,errorThrown) {
+            console.log(textStatus + " " + errorThrown);
+            console.warn(jqXHR.responseText);
+        },
+    });
+}
+
+
+/*Import Export Bank Statement*/
+function exportToRcncl() {
+    var exprtMsg =
+        '<form role="form" id="recsToExprtForm">' +
+        '<p style="color:#000;">' +
+        "How many Transactions will you like to Export?" +
+        "<br/>1=No Transactions(Empty Template)" +
+        "<br/>2=All Transactions" +
+        "</p>" +
+        '<div class="form-group" style="margin-bottom:10px !important;">' +
+        '<div class="input-group">' +
+        '<span class="input-group-addon" id="basic-addon1">' +
+        '<i class="fa fa-sort-numeric-asc fa-fw fa-border"></i></span>' +
+        '<input type="number" class="form-control" placeholder="" aria-describedby="basic-addon1" id="recsToExprt" name="recsToExprt" onkeyup="" tabindex="0" autofocus>' +
+        "</div>" +
+        "</div>" +
+        '<p style="font-size:12px;" id="msgAreaExprt">&nbsp;' +
+        "</p>" +
+        "</form>";
+    var rcnclAccntID = typeof $("#rcnclAccntID").val() === 'undefined' ? -1 : $("#rcnclAccntID").val();
+    var accbStrtFSRptDte = typeof $("#accbStrtFSRptDte").val() === 'undefined' ? '' : $("#accbStrtFSRptDte").val();
+    var accbEndFSRptDte = typeof $("#accbFSRptDte").val() === 'undefined' ? '' : $("#accbFSRptDte").val();
+
+    BootstrapDialog.show({
+        size: BootstrapDialog.SIZE_SMALL,
+        type: BootstrapDialog.TYPE_DEFAULT,
+        title: "Export Transactions!",
+        message: exprtMsg,
+        animate: true,
+        closable: true,
+        closeByBackdrop: false,
+        closeByKeyboard: false,
+        onshow: function (dialogItself) { },
+        onshown: function (dialogItself) {
+            exprtBtn = dialogItself.getButton("btn_exprt_rpt");
+            $("#recsToExprtForm").submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $("#recsToExprt").keyup(function (e) {
+                var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                if (charCode == 13) {
+                    $("#btn_exprt_rpt").click();
+                }
+            });
+            $('#recsToExprt').val(2);
+            $("#recsToExprt").focus();
+        },
+        buttons: [
+            {
+                label: "Cancel",
+                icon: "glyphicon glyphicon-menu-left",
+                cssClass: "btn-default",
+                action: function (dialogItself) {
+                    window.clearInterval(prgstimerid2);
+                    dialogItself.close();
+                    window.clearInterval(prgstimerid2);
+                    ClearAllIntervals();
+                },
+            },
+            {
+                id: "btn_exprt_rpt",
+                label: "Export",
+                icon: "glyphicon glyphicon-menu-right",
+                cssClass: "btn-primary",
+                action: function (dialogItself) {
+                    /*Validate Input and Do Ajax if OK*/
+                    var inptNum = $("#recsToExprt").val();
+                    if (!isNumber(inptNum)) {
+                        var dialog = bootbox.alert({
+                            title: "Exporting Transactions",
+                            size: "small",
+                            message: "Please provide a valid Number!",
+                            callback: function () { },
+                        });
+                        return false;
+                    } else {
+                        var $button = this;
+                        $button.disable();
+                        $button.spin();
+                        dialogItself.setClosable(false);
+                        document.getElementById("msgAreaExprt").innerHTML =
+                            '<img style="width:165px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;" src=\'cmn_images/ajax-loader2.gif\'/><br/><span style="color:blue;font-size:11px;text-align: left;margin-top:0px;">Working on Export...Please Wait...</span>';
+                        getMsgAsyncSilent("grp=1&typ=11&q=Check Session",function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 6,
+                                    typ: 1,
+                                    pg: 19,
+                                    q: "UPDATE",
+                                    actyp: 903,
+                                    inptNum: inptNum,
+                                    rcnclAccntID: rcnclAccntID,
+                                    accbStrtFSRptDte: accbStrtFSRptDte,
+                                    accbEndFSRptDte: accbEndFSRptDte
+                                },
+                            });
+                            prgstimerid2 = window.setInterval(rfrshExprtToRcnclPrcs,1000);
+                        });
+                    }
+                },
+            },
+        ],
+    });
+}
+
+function rfrshExprtToRcnclPrcs() {
+    $.ajax({
+        method: "POST",
+        url: "index.php",
+        data: {
+            grp: 6,
+            typ: 1,
+            pg: 19,
+            q: "UPDATE",
+            actyp: 904,
+        },
+        success: function (data) {
+            if (data.percent >= 100) {
+                if (data.message.indexOf("Error") !== -1) {
+                    $("#msgAreaExprt").html(data.message);
+                } else {
+                    $("#msgAreaExprt").html(
+                        data.message +
+                        '<br/><a href="' +
+                        data.dwnld_url +
+                        '">Click to Download File!</a>'
+                    );
+                }
+                exprtBtn.enable();
+                exprtBtn.stopSpin();
+                window.clearInterval(prgstimerid2);
+                window.clearInterval(prgstimerid2);
+                ClearAllIntervals();
+            } else {
+                $("#msgAreaExprt").html(
+                    '<img style="width:165px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;" src="cmn_images/ajax-loader2.gif"/>' +
+                    data.message
+                );
+                document.getElementById("msgAreaExprt").innerHTML =
+                    '<img style="width:165px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;" src="cmn_images/ajax-loader2.gif"/>' +
+                    data.message;
+            }
+        },
+        error: function (jqXHR,textStatus,errorThrown) {
+            console.log(textStatus + " " + errorThrown);
+            console.warn(jqXHR.responseText);
+        },
+    });
+}
+
+function importToRcncl() {
+    var dataToSend = "";
+    var isFileValid = true;
+    var dialog1 = bootbox.confirm({
+        title: "Import Transactions?",
+        size: "small",
+        message:
+            '<p style="text-align:center;">Are you sure you want to <span style="color:green;font-weight:bold;font-style:italic;">IMPORT TRANSACTIONS</span> to overwrite existing ones?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: "btn-success",
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: "btn-danger",
+            },
+        },
+        callback: function (result) {
+            if (result === true) {
+                if (isReaderAPIAvlbl()) {
+                    $("#allOtherFileInput6").val("");
+                    $("#allOtherFileInput6").off("change");
+                    $("#allOtherFileInput6").change(function () {
+                        var fileName = $(this).val();
+                        var input = document.getElementById("allOtherFileInput6");
+                        var file = input.files[0];
+                        /* read the file metadata*/
+                        var output = "";
+                        output +=
+                            '<span style="font-weight:bold;">' +
+                            escape(file.name) +
+                            "</span><br />\n";
+                        output += " - FileType: " + (file.type || "n/a") + "<br />\n";
+                        output += " - FileSize: " + file.size + " bytes<br />\n";
+                        output +=
+                            " - LastModified: " +
+                            (file.lastModifiedDate
+                                ? file.lastModifiedDate.toLocaleDateString()
+                                : "n/a") +
+                            "<br />\n";
+
+                        var reader = new FileReader();
+                        BootstrapDialog.show({
+                            size: BootstrapDialog.SIZE_LARGE,
+                            type: BootstrapDialog.TYPE_DEFAULT,
+                            title: "Validating Selected File",
+                            message:
+                                '<div id="myProgress"><div id="myBar"></div></div><div id="myInformation"><i class="fa fa-spin fa-spinner"></i> Validating Selected File...Please Wait...</div><br/><div id="fileInformation">' +
+                                output +
+                                "</div>",
+                            animate: true,
+                            closable: true,
+                            closeByBackdrop: false,
+                            closeByKeyboard: false,
+                            onshow: function (dialogItself) {
+                                setTimeout(function () {
+                                    var $footerButton = dialogItself.getButton("btn-srvr-prcs");
+                                    $footerButton.disable();
+                                    /* read the file content*/
+                                    reader.onerror = function (evt) {
+                                        switch (evt.target.error.code) {
+                                            case evt.target.error.NOT_FOUND_ERR:
+                                                alert("File Not Found!");
+                                                break;
+                                            case evt.target.error.NOT_READABLE_ERR:
+                                                alert("File is not readable");
+                                                break;
+                                            case evt.target.error.ABORT_ERR:
+                                                break;
+                                            default:
+                                                alert("An error occurred reading this file.");
+                                        }
+                                    };
+                                    reader.onprogress = function (evt) {
+                                        /* evt is an ProgressEvent.*/
+                                        if (evt.lengthComputable) {
+                                            var percentLoaded = Math.round(
+                                                (evt.loaded / evt.total) * 100
+                                            );
+                                            /* Increase the progress bar length.*/
+                                            var elem = document.getElementById("myBar");
+                                            elem.style.width = percentLoaded + "%";
+                                            if (percentLoaded < 100) {
+                                                $("#myInformation").html(
+                                                    '<span style="color:green;"><i class="fa fa-spin fa-spinner"></i>' +
+                                                    percentLoaded +
+                                                    "% Validating Selected File...Please Wait...</span>"
+                                                );
+                                            } else {
+                                                $("#myInformation").html(
+                                                    '<span style="color:green;"><i class="fa fa-check"></i>' +
+                                                    percentLoaded +
+                                                    "% Validating Selected File Completed!</span>"
+                                                );
+
+                                                var $footerButton = dialogItself.getButton(
+                                                    "btn-srvr-prcs"
+                                                );
+                                                if (isFileValid == true) {
+                                                    $footerButton.enable();
+                                                } else {
+                                                    $footerButton.disable();
+                                                }
+                                            }
+                                        }
+                                    };
+                                    reader.onabort = function (e) {
+                                        alert("File read cancelled");
+                                    };
+                                    reader.onloadstart = function (e) {
+                                        var elem = document.getElementById("myBar");
+                                        elem.style.width = "1%";
+                                        $("#myInformation").html(
+                                            '<span style="color:green;"><i class="fa fa-spin fa-spinner"></i>1% Started Importing Transactions...Please Wait...</span>'
+                                        );
+                                    };
+                                    reader.onload = function (event) {
+                                        try {
+                                            var csv = event.target.result;
+                                            var data = $.csv.toArrays(csv);
+                                            var rwCntr = 0;
+                                            var colCntr = 0;
+                                            var vldRwCntr = 0;
+                                            var imprtTrnsDate = "";
+                                            var imprtValueDate = "";
+                                            var imprtReference = "";
+                                            var imprtDebits = "";
+                                            var imprtCredits = "";
+                                            var imprtRunBals = "";
+                                            var imprtRemarks = "";
+                                            for (var row in data) {
+                                                for (var item in data[row]) {
+                                                    colCntr++;
+                                                    switch (colCntr) {
+                                                        case 1:
+                                                            imprtTrnsDate = data[row][item];
+                                                            break;
+                                                        case 2:
+                                                            imprtValueDate = data[row][item];
+                                                            break;
+                                                        case 3:
+                                                            imprtReference = data[row][item];
+                                                            break;
+                                                        case 4:
+                                                            imprtDebits = data[row][item];
+                                                            break;
+                                                        case 5:
+                                                            imprtCredits = data[row][item];
+                                                            break;
+                                                        case 6:
+                                                            imprtRunBals = data[row][item];
+                                                            break;
+                                                        case 7:
+                                                            imprtRemarks = data[row][item];
+                                                            break;
+                                                        default:
+                                                            var dialog = bootbox.alert({
+                                                                title: "Error-Validating Selected File",
+                                                                size: "small",
+                                                                message:
+                                                                    '<span style="color:red;font-weight:bold:">An error occurred reading this file.Invalid Column in File!</span>',
+                                                                callback: function () {
+                                                                    isFileValid = false;
+                                                                    reader.abort();
+                                                                },
+                                                            });
+                                                    }
+                                                }
+                                                if (rwCntr === 0) {
+                                                    if (
+                                                        imprtTrnsDate.toUpperCase() ===
+                                                        "Transaction Date (DD-MMM-YYYY)".toUpperCase() &&
+                                                        imprtValueDate.toUpperCase() ===
+                                                        "Value Date (DD-MMM-YYYY)".toUpperCase() &&
+                                                        imprtReference.toUpperCase() ===
+                                                        "Reference".toUpperCase() &&
+                                                        imprtRemarks.toUpperCase() ===
+                                                        "Remarks".toUpperCase()
+                                                    ) {
+                                                        /*alert(number.toUpperCase() + "|" + processName.toUpperCase() + "|" + isEnbld.toUpperCase());*/
+                                                    } else {
+                                                        var dialog = bootbox.alert({
+                                                            title: "Error-Import Transactions",
+                                                            size: "small",
+                                                            message:
+                                                                '<span style="color:red;font-weight:bold:">Invalid File Selected!</span>',
+                                                            callback: function () {
+                                                                isFileValid = false;
+                                                                reader.abort();
+                                                            },
+                                                        });
+                                                    }
+                                                }
+                                                if (
+                                                    imprtTrnsDate.trim() !== "" &&
+                                                    imprtRemarks.trim() !== "" &&
+                                                    imprtRunBals.trim() !== ""
+                                                ) {
+                                                    dataToSend =
+                                                        dataToSend +
+                                                        imprtTrnsDate
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        imprtValueDate
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        imprtReference
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        imprtDebits
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        imprtCredits
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        imprtRunBals
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "~" +
+                                                        imprtRemarks
+                                                            .replace(/(~)/g,"{-;-;}")
+                                                            .replace(/(\|)/g,"{:;:;}") +
+                                                        "|";
+                                                    vldRwCntr++;
+                                                }
+                                                colCntr = 0;
+                                                rwCntr++;
+                                            }
+                                            output +=
+                                                '<br/><span style="color:blue;font-weight:bold;">No. of Valid Rows:' +
+                                                vldRwCntr;
+                                            output += "<br/>Total No. of Rows:" + rwCntr + "</span>";
+                                            $("#fileInformation").html(output);
+                                        } catch (err) {
+                                            var dialog = bootbox.alert({
+                                                title: "Error-Import Transactions",
+                                                size: "small",
+                                                message: "Error:" + err.message,
+                                                callback: function () {
+                                                    isFileValid = false;
+                                                    reader.abort();
+                                                },
+                                            });
+                                        }
+                                    };
+                                    reader.readAsText(file);
+                                },500);
+                            },
+                            buttons: [
+                                {
+                                    label: "Cancel",
+                                    icon: "glyphicon glyphicon-menu-left",
+                                    cssClass: "btn-default",
+                                    action: function (dialogItself) {
+                                        isFileValid = false;
+                                        reader.abort();
+                                        dialogItself.close();
+                                    },
+                                },
+                                {
+                                    id: "btn-srvr-prcs",
+                                    label: "Start Server Processing",
+                                    icon: "glyphicon glyphicon-menu-right",
+                                    cssClass: "btn-primary",
+                                    action: function (dialogItself) {
+                                        if (isFileValid == true) {
+                                            dialogItself.close();
+                                            saveImprtToRcnclExcl(dataToSend);
+                                        } else {
+                                            var dialog = bootbox.alert({
+                                                title: "Error-Import Transactions",
+                                                size: "small",
+                                                message:
+                                                    '<span style="color:red;font-weight:bold:">Invalid File Selected!</span>',
+                                                callback: function () { },
+                                            });
+                                        }
+                                    },
+                                },
+                            ],
+                        });
+                    });
+                    performFileClick("allOtherFileInput6");
+                }
+            }
+        },
+    });
+}
+
+function saveImprtToRcnclExcl(dataToSend) {
+    if (dataToSend.trim() === "") {
+        bootbox.alert({
+            title: "System Alert!",
+            size: "small",
+            message:
+                '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                'font-weight:bold;">No Data to Send!</span></p>',
+        });
+        return false;
+    }
+    var dialog = bootbox.alert({
+        title: "Importing Transactions",
+        size: "small",
+        message:
+            '<div id="myProgress1"><div id="myBar1"></div></div><div id="myInformation1"><i class="fa fa-spin fa-spinner"></i> Importing Transactions...Please Wait...</div>',
+        callback: function () {
+            clearInterval(prgstimerid2);
+            window.clearInterval(prgstimerid2);
+            $("#accbRcnclImprtdTrnsLinestab").tab("show");
+            ClearAllIntervals();
+        },
+    });
+    var rcnclAccntID = typeof $("#rcnclAccntID").val() === 'undefined' ? -1 : $("#rcnclAccntID").val();
+    var accbStrtFSRptDte = typeof $("#accbStrtFSRptDte").val() === 'undefined' ? '' : $("#accbStrtFSRptDte").val();
+    var accbEndFSRptDte = typeof $("#accbFSRptDte").val() === 'undefined' ? '' : $("#accbFSRptDte").val();
+    dialog.init(function () {
+        getMsgAsyncSilent("grp=1&typ=11&q=Check Session",function () {
+            $body = $("body");
+            $body.removeClass("mdlloading");
+            $.ajax({
+                method: "POST",
+                url: "index.php",
+                data: {
+                    grp: 6,
+                    typ: 1,
+                    pg: 19,
+                    q: "UPDATE",
+                    actyp: 901,
+                    rcnclAccntID: rcnclAccntID,
+                    accbStrtFSRptDte: accbStrtFSRptDte,
+                    accbEndFSRptDte: accbEndFSRptDte,
+                    dataToSend: dataToSend
+                },
+            });
+            prgstimerid2 = window.setInterval(rfrshSaveImprtToRcncl,1000);
+        });
+    });
+}
+
+function rfrshSaveImprtToRcncl() {
+    $.ajax({
+        method: "POST",
+        url: "index.php",
+        data: {
+            grp: 6,
+            typ: 1,
+            pg: 19,
             q: "UPDATE",
             actyp: 902,
         },
