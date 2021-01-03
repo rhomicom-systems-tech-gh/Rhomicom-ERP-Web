@@ -2907,7 +2907,7 @@ function getMsPayAtchdValID($payMassPyID, $psrnID, $itmid, $pssblvalid)
         " and mass_pay_id=" . $payMassPyID;
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
-        return ((float) $row[0]) + 1;
+        return ((float) $row[0]);
     }
     return 0;
 }

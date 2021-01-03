@@ -231,6 +231,8 @@ $pssblVals = array(
     "79", "Prempeh College", "School",
     "79", "Rhomicom Systems Tech. Ltd.", "Company",
     "80", "Petty Cash", "Petty Cash",
+    "80", "Cash Balance", "Cash Balance",
+    "80", "Bank Balance", "Bank Balance",
     "80", "Cash and Cash Equivalents", "Cash and Cash Equivalents",
     "80", "Operating Activities.Sale of Goods", "Operating Activities.Sale of Goods",
     "80", "Operating Activities.Sale of Services", "Operating Activities.Sale of Services",

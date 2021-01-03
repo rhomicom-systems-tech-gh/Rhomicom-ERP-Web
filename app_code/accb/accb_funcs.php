@@ -3217,11 +3217,12 @@ WHERE tbl1.accb_rpt_runid=" . $trnsID . " ORDER BY tbl1.gnrl_data1::INTEGER";
 
 function get_GLStmntRpt($trnsID, $asAtDate1, $asAtDate2)
 {
+    /**(CASE WHEN tbl1.gnrl_data5 !='' THEN 'Ref. No.:'||tbl1.gnrl_data5 ELSE '' END) */
     $strSql = "SELECT
 tbl1.gnrl_data1::INTEGER rownumbr,
 tbl1.gnrl_data2 account_number,
 tbl1.gnrl_data3 accnt_name,
-tbl1.gnrl_data4 || (CASE WHEN tbl1.gnrl_data5 !='' THEN 'Ref. No.:'||tbl1.gnrl_data5 ELSE '' END) transaction_desc,
+tbl1.gnrl_data4 transaction_desc,
 tbl1.gnrl_data5 ref_doc_number,
 tbl1.gnrl_data6::NUMERIC dbt_amount,
 tbl1.gnrl_data7::NUMERIC crdt_amount,
@@ -3239,7 +3240,10 @@ to_char(to_timestamp('" . $asAtDate2 . "','YYYY-MM-DD'),'DD-Mon-YYYY') P_TO_DATE
 WHERE b.gnrl_data1::INTEGER <= tbl1.gnrl_data1::INTEGER
 AND b.accb_rpt_runid=tbl1.accb_rpt_runid) rnng_bals,
 tbl1.gnrl_data11::NUMERIC trnsctn_line,
-tbl1.gnrl_data10::INTEGER accnt_id
+tbl1.gnrl_data10::INTEGER accnt_id,
+tbl1.gnrl_data19 is_reconciled,
+tbl1.gnrl_data20 batch_vldty_status,
+tbl1.gnrl_data21::INTEGER src_batch_id
 FROM rpt.rpt_accb_data_storage tbl1 
 WHERE tbl1.accb_rpt_runid=" . $trnsID . " ORDER BY tbl1.gnrl_data1::INTEGER";
     $result = executeSQLNoParams($strSql);
@@ -3284,6 +3288,175 @@ WHERE tbl1.accb_rpt_runid=" . $trnsID . " ORDER BY tbl1.gnrl_data1::INTEGER";
     //echo $strSql;
     $result = executeSQLNoParams($strSql);
     return $result;
+}
+
+function get_ImprtdBnkStmntRpt($accntID, $asAtDate1, $asAtDate2)
+{
+    /**row_number() over(ORDER BY a.cust_sup_site_id) as row */
+    $strSql = "SELECT
+                imprtd_rec_pos_cntr rownumbr,
+                accb.get_accnt_num(a.account_id) account_number,
+                accb.get_accnt_name(a.account_id) accnt_name,
+                a.reconcile_desc transaction_desc,
+                a.ref_doc_number ref_doc_number,
+                a.debit_amount dbt_amount,
+                a.credit_amount crdt_amount,
+                a.net_amount net_amount,
+                a.opng_dbt_amount,
+                a.opng_crdt_amount,
+                a.opng_net_amount,
+                a.clsng_dbt_amount,
+                a.clsng_crdt_amount,
+                a.clsng_net_amount,
+                to_char(to_timestamp(a.bnk_trans_date,'YYYY-MM-DD'),'DD-Mon-YYYY') trnsctn_date,
+                to_char(to_timestamp('" . $asAtDate1 . "','YYYY-MM-DD'),'DD-Mon-YYYY') P_FROM_DATE,
+                to_char(to_timestamp('" . $asAtDate2 . "','YYYY-MM-DD'),'DD-Mon-YYYY') P_TO_DATE, 
+                (SELECT SUM(b.net_amount) FROM accb.accb_trans_to_reconcile b
+                WHERE b.imprtd_rec_pos_cntr <= a.imprtd_rec_pos_cntr
+                AND b.import_hdr_runid=a.import_hdr_runid) rnng_bals,
+                a.reconcile_line_id trnsctn_line,
+                a.account_id accnt_id,
+                a.is_reconciled is_reconciled,
+                'VALID' batch_vldty_status,
+                -1 src_batch_id,
+                to_char(to_timestamp(a.value_date,'YYYY-MM-DD'),'DD-Mon-YYYY') value_date
+                FROM accb.accb_trans_to_reconcile a 
+                WHERE a.import_hdr_runid = (Select MAX(c.import_hdr_runid) 
+                                    FROM accb.accb_trans_to_reconcile c 
+                                    WHERE c.account_id=" . $accntID .
+        " and c.reconcile_strt_date>='" . $asAtDate1 .
+        "' and c.reconcile_end_date<='" . $asAtDate2 . "') 
+                ORDER BY a.imprtd_rec_pos_cntr";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_MxImprtdBnkStmntID($accntID, $asAtDate1, $asAtDate2)
+{
+    global $orgID;
+    if ($asAtDate1 != "") {
+        $asAtDate1 = cnvrtDMYToYMD($asAtDate1);
+    }
+    if ($asAtDate2 != "") {
+        $asAtDate2 = cnvrtDMYToYMD($asAtDate2);
+    }
+    $strSql = "Select MAX(c.import_hdr_runid) 
+                FROM accb.accb_trans_to_reconcile c 
+                WHERE c.account_id=" . $accntID ." and c.org_id=".$orgID.
+        " and (('" . $asAtDate1 .
+        "' >=c.reconcile_strt_date and '" . $asAtDate1 .
+        "' <= c.reconcile_end_date) or ('" . $asAtDate2 .
+        "' >= c.reconcile_strt_date and '" . $asAtDate2 . "' <= c.reconcile_end_date))";
+    $result = executeSQLNoParams($strSql);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return -1;
+}
+
+function get_ImprtdBnkTransID($rcnclHdrID, $imprtTrnsDate, $imprtReference, $imprtRemarks)
+{
+    if ($imprtTrnsDate != "") {
+        $imprtTrnsDate = cnvrtDMYToYMD($imprtTrnsDate);
+    }
+    $strSql = "Select MAX(c.reconcile_line_id) 
+                FROM accb.accb_trans_to_reconcile c 
+                WHERE c.import_hdr_runid=" . $rcnclHdrID .
+        " and c.bnk_trans_date>='" . loc_db_escape_string($imprtTrnsDate) .
+        "' and c.ref_doc_number = '" . loc_db_escape_string($imprtReference) . "'
+                and c.reconcile_desc = '" . loc_db_escape_string($imprtRemarks) . "'";
+    $result = executeSQLNoParams($strSql);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return -1;
+}
+
+function get_MaxBnkStmntHdrID()
+{
+    global $orgID;
+    $strSql = "Select MAX(c.import_hdr_runid) 
+                FROM accb.accb_trans_to_reconcile c WHERE org_id=" . $orgID;
+    $result = executeSQLNoParams($strSql);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return -1;
+}
+
+function createBnkStmntTrans(
+    $accntid,
+    $strtDte,
+    $enddte,
+    $rcnclHdrID,
+    $imprtTrnsDate,
+    $imprtValueDate,
+    $imprtReference,
+    $imprtDebits,
+    $imprtCredits,
+    $imprtRunBals,
+    $imprtRemarks,
+    $imprtRecCntr,
+    $opngDebits,
+    $opngCredits,
+    $clsngDebits,
+    $clsngCredits
+) {
+    global $usrID;
+    global $orgID;
+    if ($strtDte != "") {
+        $strtDte = cnvrtDMYToYMD($strtDte);
+    }
+    if ($enddte == "") {
+        $enddte = "31-Dec-4000 23:59:59";
+    }
+    if ($enddte != "") {
+        $enddte = cnvrtDMYToYMD($enddte);
+    }
+    if ($imprtTrnsDate != "") {
+        $imprtTrnsDate = cnvrtDMYToYMD($imprtTrnsDate);
+    }
+    if ($imprtValueDate != "") {
+        $imprtValueDate = cnvrtDMYToYMD($imprtValueDate);
+    }
+
+    $insSQL = "INSERT INTO accb.accb_trans_to_reconcile(
+        bnk_trans_date, value_date, reconcile_desc, ref_doc_number, account_id, 
+        imprtd_rec_pos_cntr, import_hdr_runid, reconcile_strt_date, reconcile_end_date, debit_amount, 
+        credit_amount, net_amount, bals_afta_trans, opng_dbt_amount, opng_crdt_amount, opng_net_amount, 
+        clsng_dbt_amount, clsng_crdt_amount, clsng_net_amount, 
+        is_reconciled, lnkd_sys_trans_id, org_id, created_by, creation_date, last_update_by, last_update_date) " .
+        "VALUES ('" . loc_db_escape_string($imprtTrnsDate) .
+        "', '" . loc_db_escape_string($imprtValueDate) .
+        "', '" . loc_db_escape_string($imprtRemarks) .
+        "', '" . loc_db_escape_string($imprtReference) .
+        "', " . $accntid .
+        ", " . $imprtRecCntr .
+        ", " . $rcnclHdrID .
+        ", '" . loc_db_escape_string($strtDte) .
+        "', '" . loc_db_escape_string($enddte) .
+        "', " . $imprtDebits .
+        ", " . $imprtCredits .
+        ", " . ($imprtCredits - $imprtDebits) .
+        ", " . $imprtRunBals .
+        ", " . $opngDebits .
+        ", " . $opngCredits .
+        ", " . ($opngCredits - $opngDebits) .
+        ", " . $clsngDebits .
+        ", " . $clsngCredits .
+        ", " . ($clsngCredits - $clsngDebits) .
+        ", '0', -1, " . $orgID . ", " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
+        ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'))";
+    return execUpdtInsSQL($insSQL);
+}
+
+function delBnkStmntTrans(
+    $rcnclHdrID
+) {
+    global $orgID;
+    $insSQL = "DELETE FROM accb.accb_trans_to_reconcile WHERE reconcile_line_id = " . $rcnclHdrID . " and org_id=" . $orgID;
+    return execUpdtInsSQL($insSQL);
 }
 
 function get_Trns_AmntBrkdwn($trnsID, $lovID, $mode)
@@ -5496,25 +5669,27 @@ function get_One_AssetHdrNTrns($org_ID, $lmit)
        FROM accb.accb_fa_assets_rgstr a
        LEFT OUTER JOIN accb.accb_fa_asset_trns b ON (a.asset_id = b.asset_id) 
        WHERE a.org_id = $org_ID ORDER BY a.asset_code_name, b.trns_type" . $extrWhr;
-    
+
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function getAccbDivGrpID($divName, $inOrgID) {
+function getAccbDivGrpID($divName, $inOrgID)
+{
     $strSQL = "SELECT div_id FROM org.org_divs_groups WHERE lower(div_code_name) = lower('"
-            . loc_db_escape_string($divName) . "') and org_id = " . $inOrgID;
+        . loc_db_escape_string($divName) . "') and org_id = " . $inOrgID;
     $result = executeSQLNoParams($strSQL);
     while ($row = loc_db_fetch_array($result)) {
         return (int) $row[0];
     }
     return -1;
-//$conn
+    //$conn
 }
 
-function getAccbSiteID($sitename, $orgid) {
+function getAccbSiteID($sitename, $orgid)
+{
     $sqlStr = "select location_id from org.org_sites_locations where lower(location_code_name) = '" .
-            loc_db_escape_string($sitename) . "' and org_id = " . $orgid;
+        loc_db_escape_string($sitename) . "' and org_id = " . $orgid;
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return (int) $row[0];
@@ -5533,7 +5708,8 @@ function getAccbINVItmID($itemNm, $orgid)
     return -1;
 }
 
-function getAccbAccntId($accnt_num, $orgid) {
+function getAccbAccntId($accnt_num, $orgid)
+{
     $sqlStr = "select accnt_id from accb.accb_chart_of_accnts where lower(trim(accnt_num)) = '" .
         loc_db_escape_string(strtolower($accnt_num)) . "' and org_id = " . $orgid;
     $result = executeSQLNoParams($sqlStr);
@@ -5696,7 +5872,7 @@ function createAssetHdr(
     if ($enddte == "") {
         $enddte = "31-Dec-4000 23:59:59";
     }
-    if ($strtDte != "") {
+    if ($enddte != "") {
         $enddte = cnvrtDMYTmToYMDTm($enddte);
     }
 
@@ -5767,7 +5943,7 @@ function updtAssetHdr(
     if ($enddte == "") {
         $enddte = "31-Dec-4000 23:59:59";
     }
-    if ($strtDte != "") {
+    if ($enddte != "") {
         $enddte = cnvrtDMYTmToYMDTm($enddte);
     }
     $insSQL = "UPDATE accb.accb_fa_assets_rgstr 

@@ -507,7 +507,7 @@ body {
     border-top-left-radius: 5px !important;
     border-top-right-radius: 5px !important;
 }
-tr.highlight {
+tr.highlight:hover {
     background-color: #E0FFFF !important;
 }
 tr.selected{background-color: #00FFFF !important;}

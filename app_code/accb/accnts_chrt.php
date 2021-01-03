@@ -476,6 +476,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 json_encode($arr_content));
                         $z++;
                     }
+                    if ($z == 0) {
+                        $arr_content['percent'] = 100;
+                        $arr_content['dwnld_url'] = $dwnldUrl;
+                        $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!... Template Exported.</span>";
+                        $arr_content['msgcount'] = 0;
+                        file_put_contents(
+                            $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_AccntChartexprt_progress.rho",
+                            json_encode($arr_content)
+                        );
+                    }
                     fclose($opndfile);
                 } else {
                     $percent = 100;
@@ -1237,7 +1247,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td class=\"lovtd\">
                                                             <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-left:0px !important;\">
                                                                 <div class=\"input-group\"  style=\"width:100%;\">
-                                                                    <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"acbRptClsfctnsRow_WWW123WWW_MajClsfctn\" value=\"\" readonly=\"true\">
+                                                                    <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"acbRptClsfctnsRow_WWW123WWW_MajClsfctn\" value=\"\">
                                                                     <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Account Classifications', '', '', '', 'radio', true, '', '', 'acbRptClsfctnsRow_WWW123WWW_MajClsfctn', 'clear', 0, '');\">
                                                                         <span class=\"glyphicon glyphicon-th-list\"></span>
                                                                     </label>
@@ -1247,7 +1257,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td class=\"lovtd\">
                                                             <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-left:0px !important;\">
                                                                 <div class=\"input-group\"  style=\"width:100%;\">
-                                                                    <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"acbRptClsfctnsRow_WWW123WWW_MinClsfctn\" value=\"\" readonly=\"true\">
+                                                                    <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"acbRptClsfctnsRow_WWW123WWW_MinClsfctn\" value=\"\">
                                                                     <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Account Classifications', '', '', '', 'radio', true, '', '', 'acbRptClsfctnsRow_WWW123WWW_MinClsfctn', 'clear', 0, '');\">
                                                                         <span class=\"glyphicon glyphicon-th-list\"></span>
                                                                     </label>
@@ -1302,7 +1312,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <?php if ($canEdt === true) { ?>
                                                             <div class="form-group form-group-sm" style="width:100% !important;margin-left:0px !important;">
                                                                 <div class="input-group"  style="width:100%;">
-                                                                    <input type="text" class="form-control" aria-label="..." id="acbRptClsfctnsRow<?php echo $cntr; ?>_MajClsfctn" value="<?php echo $row1[1]; ?>" readonly="true">
+                                                                    <input type="text" class="form-control" aria-label="..." id="acbRptClsfctnsRow<?php echo $cntr; ?>_MajClsfctn" value="<?php echo $row1[1]; ?>">
                                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Account Classifications', '', '', '', 'radio', true, '<?php echo $row1[1]; ?>', '', 'acbRptClsfctnsRow<?php echo $cntr; ?>_MajClsfctn', 'clear', 0, '');">
                                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                                     </label>
@@ -1316,7 +1326,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <?php if ($canEdt === true) { ?>
                                                             <div class="form-group form-group-sm" style="width:100% !important;margin-left:0px !important;">
                                                                 <div class="input-group"  style="width:100%;">
-                                                                    <input type="text" class="form-control" aria-label="..." id="acbRptClsfctnsRow<?php echo $cntr; ?>_MinClsfctn" value="<?php echo $row1[2]; ?>" readonly="true">
+                                                                    <input type="text" class="form-control" aria-label="..." id="acbRptClsfctnsRow<?php echo $cntr; ?>_MinClsfctn" value="<?php echo $row1[2]; ?>">
                                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Account Classifications', '', '', '', 'radio', true, '<?php echo $row1[2]; ?>', '', 'acbRptClsfctnsRow<?php echo $cntr; ?>_MinClsfctn', 'clear', 0, '');">
                                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                                     </label>

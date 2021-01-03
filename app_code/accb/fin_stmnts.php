@@ -666,13 +666,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             </div>
                                                             <div class="col-md-4">                                                               
                                                                 <div class="form-group">
-                                                                    <div class="col-md-3">
+                                                                    <div class="col-md-2">
                                                                         <label style="margin-bottom:0px !important;">Remarks:</label>
                                                                     </div>
-                                                                    <div class="col-md-9">
+                                                                    <div class="col-md-10">
                                                                         <div class="input-group"  style="width:100%;">
-                                                                            <input class="form-control" type="hidden" id="jrnlBatchDesc1" value="<?php echo $jrnlBatchDesc; ?>">
                                                                             <textarea class="form-control rqrdFld" rows="5" cols="20" id="jrnlBatchDesc" name="jrnlBatchDesc" <?php echo $mkRmrkReadOnly; ?> style="text-align:left !important;"><?php echo $jrnlBatchDesc; ?></textarea>
+                                                                            <input class="form-control" type="hidden" id="jrnlBatchDesc1" value="<?php echo $jrnlBatchDesc; ?>">
                                                                             <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('jrnlBatchDesc');" style="max-width:30px;width:30px;">
                                                                                 <span class="glyphicon glyphicon-th-list"></span>
                                                                             </label>
@@ -1315,13 +1315,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </div>
                                     <div class="col-md-4">                                                               
                                         <div class="form-group">
-                                            <div class="col-md-3">
+                                            <div class="col-md-2">
                                                 <label style="margin-bottom:0px !important;">Remarks:</label>
                                             </div>
-                                            <div class="col-md-9">
+                                            <div class="col-md-10">
                                                 <div class="input-group"  style="width:100%;">
-                                                    <input class="form-control" type="hidden" id="jrnlBatchDesc1" value="<?php echo $jrnlBatchDesc; ?>">
                                                     <textarea class="form-control rqrdFld" rows="5" cols="20" id="jrnlBatchDesc" name="jrnlBatchDesc" <?php echo $mkRmrkReadOnly; ?> style="text-align:left !important;"><?php echo $jrnlBatchDesc; ?></textarea>
+                                                    <input class="form-control" type="hidden" id="jrnlBatchDesc1" value="<?php echo $jrnlBatchDesc; ?>">
                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="popUpDisplay('jrnlBatchDesc');" style="max-width:30px;width:30px;">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
