@@ -1,14 +1,15 @@
 <?php
 
-function creatAdminAccnt() {
+function creatAdminAccnt()
+{
     global $smplTokenWord;
     $dateStr = getDB_Date_time();
     $sqlStr = "INSERT INTO sec.sec_users(usr_password, person_id, is_suspended, is_pswd_temp, 
 	failed_login_atmpts, user_name, last_login_atmpt_time, last_pswd_chng_time, 
 valid_start_date, valid_end_date, created_by, creation_date, last_update_by, last_update_date)  
 VALUES (md5('" . loc_db_escape_string(encrypt("admin", $smplTokenWord)) . "'), -1, FALSE, FALSE, 0, 'admin', '" .
-            $dateStr . "', '" . $dateStr . "', '" . $dateStr . "', '4000-12-31 00:00:00', -1, '" .
-            $dateStr . "',-1, '" . $dateStr . "');";
+        $dateStr . "', '" . $dateStr . "', '" . $dateStr . "', '4000-12-31 00:00:00', -1, '" .
+        $dateStr . "',-1, '" . $dateStr . "');";
     executeSQLNoParams($sqlStr);
 
     $uID = getUserID("admin");
@@ -25,7 +26,7 @@ VALUES (md5('" . loc_db_escape_string(encrypt("admin", $smplTokenWord)) . "'), -
     //Update userID
     $updtUsr = "UPDATE sec.sec_users SET 
             person_id = " . $pID . ", created_by = " . $uID . ", last_update_by = " . $uID .
-            " WHERE (user_id = " . $uID . ")";
+        " WHERE (user_id = " . $uID . ")";
     executeSQLNoParams($updtUsr);
     $pID1 = getPersonID("RHO0002017");
 
@@ -40,31 +41,34 @@ VALUES (md5('" . loc_db_escape_string(encrypt("admin", $smplTokenWord)) . "'), -
     executeSQLNoParams($updtSQL);
 }
 
-function createAdminRole() {
+function createAdminRole()
+{
     $uID = getUserID("admin");
     $dateStr = getDB_Date_time();
     $sqlStr = "INSERT INTO sec.sec_roles(role_name, valid_start_date, valid_end_date, created_by,  
 creation_date, last_update_by, last_update_date) VALUES ('System Administrator', '" .
-            $dateStr . "', '4000-12-31 00:00:00', " . $uID . ", '" . $dateStr . "', " . $uID . ", '" . $dateStr . "')";
+        $dateStr . "', '4000-12-31 00:00:00', " . $uID . ", '" . $dateStr . "', " . $uID . ", '" . $dateStr . "')";
     executeSQLNoParams($sqlStr);
 }
 
-function asgnAdmnRoleToAdmn() {
-//Assigns the System Administrator responsibility to the Admin Account
+function asgnAdmnRoleToAdmn()
+{
+    //Assigns the System Administrator responsibility to the Admin Account
     $uID = getUserID("admin");
     $dateStr = getDB_Date_time();
     $sqlStr = "INSERT INTO sec.sec_users_n_roles (user_id, role_id, valid_start_date, valid_end_date, created_by, 
 creation_date, last_update_by, last_update_date) VALUES (" . getUserID("admin") . ", " .
-            getRoleID("System Administrator") . ", '" . $dateStr .
-            "', '4000-12-31 00:00:00', " . $uID . ", '" . $dateStr . "', " . $uID . ", '" . $dateStr . "')";
+        getRoleID("System Administrator") . ", '" . $dateStr .
+        "', '4000-12-31 00:00:00', " . $uID . ", '" . $dateStr . "', " . $uID . ", '" . $dateStr . "')";
     executeSQLNoParams($sqlStr);
 }
 
-function doesUserHaveThisRole($username, $rolename) {
+function doesUserHaveThisRole($username, $rolename)
+{
     $sqlStr = "SELECT user_id FROM sec.sec_users_n_roles WHERE ((user_id = " .
-            getUserID($username) . ") AND (role_id = " . getRoleID($rolename) .
-            ") AND (now() between to_timestamp(valid_start_date,'YYYY-MM-DD HH24:MI:SS') AND " .
-            "to_timestamp(valid_end_date,'YYYY-MM-DD HH24:MI:SS')))";
+        getUserID($username) . ") AND (role_id = " . getRoleID($rolename) .
+        ") AND (now() between to_timestamp(valid_start_date,'YYYY-MM-DD HH24:MI:SS') AND " .
+        "to_timestamp(valid_end_date,'YYYY-MM-DD HH24:MI:SS')))";
     $result = executeSQLNoParams($sqlStr);
     if (loc_db_num_rows($result) > 0) {
         return true;
@@ -73,17 +77,20 @@ function doesUserHaveThisRole($username, $rolename) {
     }
 }
 
-function checkB4LgnRequireMents() {
+function checkB4LgnRequireMents()
+{
     //global $smplTokenWord;
     $lvid = getLovID("Security Keys");
     $apKey = getEnbldPssblValDesc(
-            "AppKey", $lvid);
+        "AppKey",
+        $lvid
+    );
     if ($apKey != "" && $lvid > 0) {
         //$smplTokenWord = $apKey;
     } else if ($lvid <= 0) {
         $apKey = "ROMeRRTRREMhbnsdGeneral KeyZzfor Rhomi|com Systems "
-                . "Tech. !Ltd Enterpise/Organization @763542ERPorbjkSOFTWARE"
-                . "asdbhi68103weuikTESTfjnsdfRSTLU../";
+            . "Tech. !Ltd Enterpise/Organization @763542ERPorbjkSOFTWARE"
+            . "asdbhi68103weuikTESTfjnsdfRSTLU../";
         //$smplTokenWord = $apKey;
         createLovNm("Security Keys", "Security Keys", false, "", "SYS", true);
         $lvid = getLovID("Security Keys");
@@ -103,7 +110,8 @@ function checkB4LgnRequireMents() {
     }
 }
 
-function chcAftrScsflLgnRqnt($usrNm, $pswd, &$msg) {
+function chcAftrScsflLgnRqnt($usrNm, $pswd, &$msg)
+{
     if (isAccntSuspended($usrNm) === true) {
         $msg = "This account has been suspended!<br/>Contact your System Administrator!";
         return "logout";
@@ -125,8 +133,8 @@ function chcAftrScsflLgnRqnt($usrNm, $pswd, &$msg) {
     }
     if (doesPswdCmplxtyMeetPlcy($pswd, $usrNm, $msg) === false) {
         $msg .= "Your password's complexity does not meet\nthe " .
-                "current password policy requirements!\nPlease change " .
-                "your password!";
+            "current password policy requirements!\nPlease change " .
+            "your password!";
         $_SESSION['MUST_CHNG_PWD'] = "1";
         return "change password";
     }
@@ -159,7 +167,8 @@ function chcAftrScsflLgnRqnt($usrNm, $pswd, &$msg) {
     return "select role";
 }
 
-function get_Users_Roles($usrID, $searchFor, $searchIn, $offset, $limit_size) {
+function get_Users_Roles($usrID, $searchFor, $searchIn, $offset, $limit_size)
+{
     //global ;//
     $wherecls = "";
     if ($searchIn === "Role Name") {
@@ -170,17 +179,18 @@ FROM sec.sec_users_n_roles a LEFT OUTER JOIN sec.sec_roles b ON (a.role_id = b.r
 WHERE ((now() between to_timestamp(a.valid_start_date,'YYYY-MM-DD HH24:MI:SS') AND 
 to_timestamp(a.valid_end_date,'YYYY-MM-DD HH24:MI:SS')) 
 AND (now() between to_timestamp(b.valid_start_date,'YYYY-MM-DD HH24:MI:SS') AND " .
-            "to_timestamp(b.valid_end_date,'YYYY-MM-DD HH24:MI:SS')) AND (a.user_id = " . $usrID .
-            ")$wherecls) ORDER BY b.role_name LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
-//echo $sqlStr;
+        "to_timestamp(b.valid_end_date,'YYYY-MM-DD HH24:MI:SS')) AND (a.user_id = " . $usrID .
+        ")$wherecls) ORDER BY b.role_name LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    //echo $sqlStr;
     $result = executeSQLNoParams($sqlStr);
     return $result;
 }
 
-function isUserAccntLckd($username) {
+function isUserAccntLckd($username)
+{
     $prm = get_CurPlcy_Mx_Fld_lgns();
     $sqlStr = "SELECT user_name FROM sec.sec_users WHERE lower(user_name) = lower('"
-            . loc_db_escape_string($username) . "') and failed_login_atmpts >=$prm";
+        . loc_db_escape_string($username) . "') and failed_login_atmpts >=$prm";
     $result = executeSQLNoParams($sqlStr);
     if (loc_db_num_rows($result) > 0) {
 
@@ -190,11 +200,12 @@ function isUserAccntLckd($username) {
     }
 }
 
-function shdUnlckAccnt($username) {
+function shdUnlckAccnt($username)
+{
     $sqlStr = "SELECT user_name " .
-            " FROM sec.sec_users WHERE lower(user_name) = lower('" . loc_db_escape_string($username) . "')
+        " FROM sec.sec_users WHERE lower(user_name) = lower('" . loc_db_escape_string($username) . "')
                                      and age(now(), to_timestamp(last_login_atmpt_time, 'YYYY-MM-DD HH24:MI:SS')) " .
-            ">= interval '" . get_CurPlcy_Auto_Unlck_tme() . " minute'";
+        ">= interval '" . get_CurPlcy_Auto_Unlck_tme() . " minute'";
     $result = executeSQLNoParams($sqlStr);
     if (loc_db_num_rows($result) > 0) {
         return true;
@@ -203,7 +214,8 @@ function shdUnlckAccnt($username) {
     }
 }
 
-function isAccntSuspended($username) {
+function isAccntSuspended($username)
+{
     $sqlStr = "SELECT user_name FROM sec.sec_users 
                             WHERE lower(user_name) = lower('" . loc_db_escape_string($username) . "') and is_suspended='t'";
     $result = executeSQLNoParams($sqlStr);
@@ -214,7 +226,8 @@ function isAccntSuspended($username) {
     }
 }
 
-function isPswdTmp($username) {
+function isPswdTmp($username)
+{
     $sqlStr = "SELECT user_name FROM sec.sec_users 
                             WHERE lower(user_name) = lower('" . loc_db_escape_string($username) . "') and is_pswd_temp='t'";
     $result = executeSQLNoParams($sqlStr);
@@ -225,11 +238,12 @@ function isPswdTmp($username) {
     }
 }
 
-function isPswdExpired($username) {
+function isPswdExpired($username)
+{
     $sqlStr = "SELECT user_name" .
-            " FROM sec.sec_users WHERE lower(user_name) = lower('" . loc_db_escape_string($username) . "')
+        " FROM sec.sec_users WHERE lower(user_name) = lower('" . loc_db_escape_string($username) . "')
                                     and age(now(), to_timestamp(last_pswd_chng_time, 'YYYY-MM-DD HH24:MI:SS')) " .
-            ">= interval '" . get_CurPlcy_Pwd_Exp_Days() . " days'";
+        ">= interval '" . get_CurPlcy_Pwd_Exp_Days() . " days'";
     $result = executeSQLNoParams($sqlStr);
     if (loc_db_num_rows($result) > 0) {
         return true;
@@ -238,14 +252,16 @@ function isPswdExpired($username) {
     }
 }
 
-function unlockUsrAccnt($username) {
+function unlockUsrAccnt($username)
+{
     //Set failed_login_atmpts in sec.sec_users to 0
     $sqlStr = "UPDATE sec.sec_users SET failed_login_atmpts = 0 
                             WHERE (lower(user_name) = lower('" . loc_db_escape_string($username) . "'))";
     $result = executeSQLNoParams($sqlStr);
 }
 
-function unlockUsrAccntConditnl($username) {
+function unlockUsrAccntConditnl($username)
+{
     //Set failed_login_atmpts in sec.sec_users to 0
     $sqlStr = "UPDATE sec.sec_users SET failed_login_atmpts = 0 
                             WHERE ((lower(user_name) = lower('" . loc_db_escape_string($username) . "')) 
@@ -253,23 +269,26 @@ function unlockUsrAccntConditnl($username) {
     $result = executeSQLNoParams($sqlStr);
 }
 
-function updtFailedLgnCnt($username) {
+function updtFailedLgnCnt($username)
+{
     $sqlStr = "UPDATE sec.sec_users SET failed_login_atmpts = failed_login_atmpts + 1  
               WHERE (lower(user_name) = lower('" . loc_db_escape_string($username) . "'))";
     $result = executeSQLNoParams($sqlStr);
 }
 
-function updtLastLgnAttmpTme($username, $lgn_time) {
+function updtLastLgnAttmpTme($username, $lgn_time)
+{
     $sqlStr = "UPDATE sec.sec_users SET last_login_atmpt_time = '" . $lgn_time .
-            "' WHERE (lower(user_name) = lower('" . loc_db_escape_string($username) . "'))";
+        "' WHERE (lower(user_name) = lower('" . loc_db_escape_string($username) . "'))";
     $result = executeSQLNoParams($sqlStr);
 }
 
-function get_login_number($username, $login_time, $mach_details) {
+function get_login_number($username, $login_time, $mach_details)
+{
     //Gets the last login attempt time
     $sqlStr = "SELECT login_number FROM sec.sec_track_user_logins WHERE ((user_id = " .
-            getUserID($username) . ") AND (login_time = '" . $login_time . "') AND (host_mach_details = '" .
-            loc_db_escape_string($mach_details) . "'))";
+        getUserID($username) . ") AND (login_time = '" . $login_time . "') AND (host_mach_details = '" .
+        loc_db_escape_string($mach_details) . "'))";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -277,11 +296,12 @@ function get_login_number($username, $login_time, $mach_details) {
     return -1;
 }
 
-function chckNUpdateStaleLgns($userid) {
+function chckNUpdateStaleLgns($userid)
+{
     $sqlStr = "UPDATE sec.sec_track_user_logins SET  logout_time=last_active_time 
             WHERE user_id = " . $userid . " and  age(now(), to_timestamp((CASE WHEN last_active_time ='' THEN " .
-            "to_char(now(),'YYYY-MM-DD HH24:MI:SS') ELSE last_active_time END), 'YYYY-MM-DD HH24:MI:SS')) " .
-            ">= interval '" . get_CurPlcy_SessnTime() . " second' and  logout_time='' and last_active_time!='' and was_lgn_atmpt_succsful='t'";
+        "to_char(now(),'YYYY-MM-DD HH24:MI:SS') ELSE last_active_time END), 'YYYY-MM-DD HH24:MI:SS')) " .
+        ">= interval '" . get_CurPlcy_SessnTime() . " second' and  logout_time='' and last_active_time!='' and was_lgn_atmpt_succsful='t'";
     execUpdtInsSQL($sqlStr);
     $sqlStr = "UPDATE sec.sec_track_user_logins SET  logout_time=to_char(now(), 'YYYY-MM-DD HH24:MI:SS'),
 last_active_time=to_char(now(), 'YYYY-MM-DD HH24:MI:SS')
@@ -289,13 +309,15 @@ last_active_time=to_char(now(), 'YYYY-MM-DD HH24:MI:SS')
     execUpdtInsSQL($sqlStr);
 }
 
-function adminForceLogoutLgns($userid) {
+function adminForceLogoutLgns($userid)
+{
     $sqlStr = "UPDATE sec.sec_track_user_logins SET  logout_time=to_char(now(), 'YYYY-MM-DD HH24:MI:SS')
             WHERE user_id = " . $userid . " and logout_time='' and was_lgn_atmpt_succsful='t'";
     execUpdtInsSQL($sqlStr);
 }
 
-function recordSuccflLogin($username, $machdet) {
+function recordSuccflLogin($username, $machdet)
+{
     global $app_version;
     global $ftp_base_db_fldr;
     global $logNxtLine;
@@ -312,9 +334,9 @@ function recordSuccflLogin($username, $machdet) {
     } else {
         $sqlStr = "INSERT INTO sec.sec_track_user_logins(user_id, 
                             login_time, logout_time, host_mach_details, was_lgn_atmpt_succsful, app_vrsn, web_session_id, last_active_time, lgn_remarks) " .
-                "VALUES (" . $userid . ", '" . $dateStr . "', '', '" .
-                loc_db_escape_string($mach_details) . "', TRUE, '" . $app_version .
-                "', '" . loc_db_escape_string($ssnID) . "', '" . loc_db_escape_string($dateStr) . "', '')";
+            "VALUES (" . $userid . ", '" . $dateStr . "', '', '" .
+            loc_db_escape_string($mach_details) . "', TRUE, '" . $app_version .
+            "', '" . loc_db_escape_string($ssnID) . "', '" . loc_db_escape_string($dateStr) . "', '')";
         executeSQLNoParams($sqlStr);
         updtLastLgnAttmpTme($username, $dateStr);
         $prsnid = getUserPrsnID($username);
@@ -334,13 +356,14 @@ function recordSuccflLogin($username, $machdet) {
     }
 }
 
-function doesActiveLgnExist($userid) {
+function doesActiveLgnExist($userid)
+{
     $isMltplAllwdID = getEnbldPssblValID("Allow Multiple Same User Logons", getLovID("All Other General Setups"));
     $isMltplAllwd = getPssblValDesc($isMltplAllwdID);
     if (strtoupper($isMltplAllwd) != "YES" && $isMltplAllwdID > 0) {
         $sqlStr = "SELECT login_number FROM sec.sec_track_user_logins WHERE ((user_id = " .
-                $userid . " and was_lgn_atmpt_succsful='t') AND (now() between to_timestamp(login_time,'YYYY-MM-DD HH24:MI:SS') "
-                . "and to_timestamp((CASE WHEN logout_time='' THEN '4000-12-31 23:59:59' ELSE logout_time END), 'YYYY-MM-DD HH24:MI:SS')))";
+            $userid . " and was_lgn_atmpt_succsful='t') AND (now() between to_timestamp(login_time,'YYYY-MM-DD HH24:MI:SS') "
+            . "and to_timestamp((CASE WHEN logout_time='' THEN '4000-12-31 23:59:59' ELSE logout_time END), 'YYYY-MM-DD HH24:MI:SS')))";
         //echo $sqlStr;
         $result = executeSQLNoParams($sqlStr);
         while ($row = loc_db_fetch_array($result)) {
@@ -352,7 +375,8 @@ function doesActiveLgnExist($userid) {
     }
 }
 
-function recopyPrflPic($username, $lgn_num) {
+function recopyPrflPic($username, $lgn_num)
+{
     global $ftp_base_db_fldr;
     global $logNxtLine;
     global $smplTokenWord1;
@@ -392,7 +416,8 @@ function recopyPrflPic($username, $lgn_num) {
     file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", $txt . $logNxtLine, FILE_APPEND | LOCK_EX);
 }
 
-function recopyOrgLogo($orgid, $lgn_num) {
+function recopyOrgLogo($orgid, $lgn_num)
+{
     global $ftp_base_db_fldr;
     global $logNxtLine;
     global $smplTokenWord1;
@@ -401,39 +426,50 @@ function recopyOrgLogo($orgid, $lgn_num) {
     global $fldrPrfx;
     global $tmpDest;
     global $app_image1;
-    $strlFileNm = getOrgLogo($orgid);
-    $extnsn = "png";
-    if (trim($strlFileNm) != "") {
-        $temp = explode(".", $strlFileNm);
-        $extnsn = end($temp);
-    }else{
-        $strlFileNm = $orgid . ".png";
+    set_error_handler("rhoErrorHandler3");
+    try {
+        $strlFileNm = getOrgLogo($orgid);
+        $extnsn = "png";
+        if (trim($strlFileNm) != "") {
+            $temp = explode(".", $strlFileNm);
+            $extnsn = end($temp);
+        } else {
+            $strlFileNm = $orgid . ".png";
+        }
+        $nwFileName = encrypt1($strlFileNm . session_id(), $smplTokenWord1) . '.' . $extnsn;
+        $fullTmpDest = $fldrPrfx . $tmpDest . $nwFileName;
+        $fullRptDest = $fldrPrfx . "dwnlds/amcharts_2100/images" .  $orgid . ".png";
+        $ftp_src = $ftp_base_db_fldr . "/Org/" . $strlFileNm;
+        $txt = "";
+        $orgLogoFileName =  $app_image1;
+        if (file_exists($ftp_src) && !file_exists($fullTmpDest)) {
+            copy("$ftp_src", "$fullTmpDest");
+            $orgLogoFileName = $tmpDest . $nwFileName;
+        }
+        if (file_exists($ftp_src) && !file_exists($fullRptDest)) {
+            copy("$ftp_src", "$fullRptDest");
+        }
+        $_SESSION['ORG_LOGO_FILE_NAME'] = $orgLogoFileName;
+        $txt .= "orgLogoFileName:" . $orgLogoFileName . "|strlFileNm11:" . trim($strlFileNm) . "|extnsn:" . $extnsn;
+        file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", $txt . $logNxtLine, FILE_APPEND | LOCK_EX);
+    } catch (Exception $ex) {
+        $errMsg = "An error occurred. <br/>" . $ex->getMessage() . " Invalid Person Set SQL Query!";
+        return FALSE;
     }
-    $nwFileName = encrypt1($strlFileNm . session_id(), $smplTokenWord1) . '.' . $extnsn;
-    $fullTmpDest = $fldrPrfx . $tmpDest . $nwFileName;
-    $ftp_src = $ftp_base_db_fldr . "/Org/" . $strlFileNm;
-    $txt = "";     
-    $orgLogoFileName=  $app_image1;
-    if (file_exists($ftp_src) && !file_exists($fullTmpDest)) {
-        copy("$ftp_src", "$fullTmpDest");
-        $orgLogoFileName = $tmpDest .$nwFileName;
-    } 
-    $_SESSION['ORG_LOGO_FILE_NAME'] = $orgLogoFileName;
-    $txt .= "orgLogoFileName:" . $orgLogoFileName . "|strlFileNm11:" . trim($strlFileNm) . "|extnsn:" . $extnsn;
-    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", $txt . $logNxtLine, FILE_APPEND | LOCK_EX);
 }
 
-function recordFailedLogin($username, $machdet, $msg = "") {
+function recordFailedLogin($username, $machdet, $msg = "")
+{
     global $app_version;
     $dateStr = getDB_Date_time();
     $mach_details = $machdet;
     $ssnID = session_id();
     $sqlStr = "INSERT INTO sec.sec_track_user_logins(user_id, login_time, 
     logout_time, host_mach_details, was_lgn_atmpt_succsful, app_vrsn, web_session_id, last_active_time, lgn_remarks) " .
-            "VALUES (" . getUserID($username) . ", '" . $dateStr . "', '', '" .
-            loc_db_escape_string($mach_details) . "', FALSE, '" . $app_version .
-            "', '" . loc_db_escape_string($ssnID) . "', '" . loc_db_escape_string($dateStr) .
-            "', '" . loc_db_escape_string($msg) . "')";
+        "VALUES (" . getUserID($username) . ", '" . $dateStr . "', '', '" .
+        loc_db_escape_string($mach_details) . "', FALSE, '" . $app_version .
+        "', '" . loc_db_escape_string($ssnID) . "', '" . loc_db_escape_string($dateStr) .
+        "', '" . loc_db_escape_string($msg) . "')";
     executeSQLNoParams($sqlStr);
     if (strpos($msg, "Simultaneous") === FALSE) {
         updtFailedLgnCnt($username);
@@ -441,7 +477,8 @@ function recordFailedLogin($username, $machdet, $msg = "") {
     updtLastLgnAttmpTme($username, $dateStr);
 }
 
-function checkLogin($unm, $paswd, $machdet, &$msg) {
+function checkLogin($unm, $paswd, $machdet, &$msg)
+{
     $inUsrID = getUserID($unm);
     $inUnm = getUserName($inUsrID);
     if ($inUsrID <= 0) {
@@ -450,8 +487,10 @@ function checkLogin($unm, $paswd, $machdet, &$msg) {
     if (isAccntSuspended($inUnm) === true) {
         return "This account has been suspended!\nContact your System Administrator!";
     }
-    if (isUserAccntLckd($inUnm) === true &&
-            shdUnlckAccnt($inUnm) === false) {
+    if (
+        isUserAccntLckd($inUnm) === true &&
+        shdUnlckAccnt($inUnm) === false
+    ) {
         return "Your account has been Locked!\nContact your System Administrator!";
     }
     if (isLoginInfoCorrct($inUnm, $paswd)) {
@@ -469,7 +508,8 @@ function checkLogin($unm, $paswd, $machdet, &$msg) {
     }
 }
 
-function kh_getUserIP() {
+function kh_getUserIP()
+{
     //$client = @$_SERVER['HTTP_CLIENT_IP'];
     //$forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
     $remote = @$_SERVER['REMOTE_ADDR'];
