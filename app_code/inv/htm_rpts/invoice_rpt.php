@@ -160,7 +160,7 @@ text-align: left !important;
                         <div class=\"row\">
                             <div class=\"col\">
                                 <a target=\"_blank\" href=\"$app_url\">
-                                    <img src=\"../images/" . $orgLogo . "\" data-holder-rendered=\"true\"/>
+                                    <img src=\"../images/" . $orgLogo . "\" data-holder-rendered=\"true\" style=\"height:80px !important;width:auto;\"/>
                                 </a>
                             </div>
                             <div class=\"col company-details\">
