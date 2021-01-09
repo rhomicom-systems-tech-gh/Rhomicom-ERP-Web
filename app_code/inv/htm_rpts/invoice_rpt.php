@@ -161,7 +161,7 @@ text-align: left !important;
                         <div class=\"row\">
                             <div class=\"col\">
                                 <a target=\"_blank\" href=\"$app_url\">
-                                    <img src=\"".$fldrPrfx . "dwnlds/amcharts_2100/images/" . $orgLogo . "\" data-holder-rendered=\"true\" style=\"height:70px !important;width:auto;\"/>
+                                    <img src=\"../images/" . $orgLogo . "\" data-holder-rendered=\"true\" style=\"height:70px !important;width:auto;\"/>
                                 </a>
                             </div>
                             <div class=\"col company-details\">
