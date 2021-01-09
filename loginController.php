@@ -439,6 +439,7 @@ function recopyOrgLogo($orgid, $lgn_num)
         $nwFileName = encrypt1($strlFileNm . session_id(), $smplTokenWord1) . '.' . $extnsn;
         $fullTmpDest = $fldrPrfx . $tmpDest . $nwFileName;
         $fullRptDest = $fldrPrfx . "dwnlds/amcharts_2100/images/" . $strlFileNm;
+        $fullRptDestPnG = $fldrPrfx . "dwnlds/amcharts_2100/images/" . $orgid . ".png";
         $ftp_src = $ftp_base_db_fldr . "/Org/" . $strlFileNm;
         $txt = "";
         $orgLogoFileName =  $app_image1;
@@ -449,6 +450,9 @@ function recopyOrgLogo($orgid, $lgn_num)
         logSessionErrs($fullRptDest);
         if (file_exists($ftp_src) && !file_exists($fullRptDest)) {
             copy("$ftp_src", "$fullRptDest");
+        }
+        if (file_exists($ftp_src) && !file_exists($fullRptDestPnG)) {
+            copy("$ftp_src", "$fullRptDestPnG");
         }
         $_SESSION['ORG_LOGO_FILE_NAME'] = $orgLogoFileName;
         $txt .= "orgLogoFileName:" . $orgLogoFileName . "|strlFileNm11:" . trim($strlFileNm) . "|extnsn:" . $extnsn;

@@ -705,9 +705,11 @@ function uploadDaOrgImage($orgid, &$nwImgLoc)
                 move_uploaded_file($_FILES["daOrgPicture"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/Org/$orgid" . "." . $extension;
                 $fullRptDest = $fldrPrfx . "dwnlds/amcharts_2100/images/" .  $orgid . "." . $extension;
+                $fullRptDestPnG = $fldrPrfx . "dwnlds/amcharts_2100/images/" . $orgid . ".png";
                 if (file_exists($img_src)) {
                     copy("$img_src", "$ftp_src");
                     copy("$img_src", "$fullRptDest");
+                    copy("$img_src", "$fullRptDestPnG");
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE org.org_details SET " .
                         "org_logo = '" . $orgid . "." . $extension . "', " .
