@@ -153,7 +153,6 @@ text-align: left !important;
           border-top: 1px solid #DDD;
         }
         </style>
-    <!--<p><img src=\"../images/" . $orgID . ".png\">" . $orgNm . "<br/>" . $pstl . "<br/>" . $cntcts . "<br/>" . $email . "<br/>" . "</p>-->
         <div id=\"invoice\">
             <div class=\"invoice overflow-auto\">
                 <div style=\"min-width: 600px\">
@@ -161,7 +160,7 @@ text-align: left !important;
                         <div class=\"row\">
                             <div class=\"col\">
                                 <a target=\"_blank\" href=\"$app_url\">
-                                    <img src=\"../images/" . $orgLogo . "\" data-holder-rendered=\"true\" style=\"height:70px !important;width:auto;\"/>
+                                    <img src=\"../images/" . $orgLogo . "\" data-holder-rendered=\"true\"/>
                                 </a>
                             </div>
                             <div class=\"col company-details\">
