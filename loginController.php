@@ -446,6 +446,7 @@ function recopyOrgLogo($orgid, $lgn_num)
             copy("$ftp_src", "$fullTmpDest");
             $orgLogoFileName = $tmpDest . $nwFileName;
         }
+        logSessionErrs($fullRptDest);
         if (file_exists($ftp_src) && !file_exists($fullRptDest)) {
             copy("$ftp_src", "$fullRptDest");
         }
