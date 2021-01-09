@@ -9,6 +9,7 @@ $email = "";
 $webSite = "";
 $slogan = "";
 $orgType = "";
+$orgLogo = "";
 while ($orgRw = loc_db_fetch_array($orgRslt)) {
     $orgNm = $orgRw[0];
     $pstl = $orgRw[1];
@@ -17,6 +18,7 @@ while ($orgRw = loc_db_fetch_array($orgRslt)) {
     $webSite = $orgRw[4];
     $slogan = $orgRw[5];
     $orgType = $orgRw[7];
+    $orgLogo = $orgRw[8];
 }
 /* @media print {
   .page-break { display: block; page-break-before: always; }
@@ -105,7 +107,7 @@ $html = "<!DOCTYPE html>
         #invoice-POS #top .logo {
           height: 60px;
           width: 60px;
-          background: url(" . $app_url . "/dwnlds/amcharts_2100/images/" . $orgID . ".png) no-repeat;
+          background: url(" . $app_url . "/dwnlds/amcharts_2100/images/" . $orgLogo . ") no-repeat;
           background-size: 60px 60px;
         }
         

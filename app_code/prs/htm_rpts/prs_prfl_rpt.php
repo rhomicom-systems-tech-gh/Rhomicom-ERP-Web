@@ -2,7 +2,26 @@
 
 header("content-type:application/json");
 $sbmtdPersonID = isset($_POST['pKeyID']) ? cleanInputData($_POST['pKeyID']) : -1;
-$orgNm = getOrgName($orgID);
+$orgRslt = getOrgRptDetails($orgID);
+$orgNm = "";
+$pstl = "";
+$cntcts = "";
+$email = "";
+$webSite = "";
+$slogan = "";
+$orgType = "";
+$orgLogo = "";
+while ($orgRw = loc_db_fetch_array($orgRslt)) {
+    $orgNm = $orgRw[0];
+    $pstl = $orgRw[1];
+    $cntcts = $orgRw[2];
+    $email = $orgRw[3];
+    $webSite = $orgRw[4];
+    $slogan = $orgRw[5];
+    $orgType = $orgRw[7];
+    $orgLogo = $orgRw[8];
+}
+/*$orgNm = getOrgName($orgID);
 $pstl = getOrgPstlAddrs($orgID);
 $cntcts = getOrgContactNos($orgID);
 $email = getOrgEmailAddrs($orgID);
@@ -13,7 +32,7 @@ $orgType = getPssblValNm((int) (getGnrlRecNm(
     "org_id",
     "org_typ_id",
     $orgID
-)));
+)));*/
 $daReligionLbl = "Religion:";
 if (strtoupper($orgType) == "CHURCH") {
     $daReligionLbl = "Place of Worship / Name of Service:";
@@ -292,7 +311,7 @@ font-weight:bold;
                         <div class=\"row\">
                             <div class=\"col\">
                                 <a target=\"_blank\" href=\"$app_url\">
-                                    <img src=\"../images/" . $orgID . ".png\" data-holder-rendered=\"true\" />
+                                    <img src=\"../images/" . $orgLogo . "\" data-holder-rendered=\"true\" />
                                 </a>
                             </div>
                             <div class=\"col company-details\">
