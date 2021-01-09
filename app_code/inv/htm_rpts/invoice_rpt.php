@@ -19,7 +19,7 @@ while ($orgRw = loc_db_fetch_array($orgRslt)) {
     $webSite = $orgRw[4];
     $slogan = $orgRw[5];
     $orgType = $orgRw[7];
-    $orgLogo = $orgRw[9];
+    $orgLogo = $orgRw[8];
 }
 
 $result = getInvoiceReport($sbmtdInvoiceID);
