@@ -10,6 +10,7 @@ $email = "";
 $webSite = "";
 $slogan = "";
 $orgType = "";
+$orgLogo = "";
 while ($orgRw = loc_db_fetch_array($orgRslt)) {
     $orgNm = $orgRw[0];
     $pstl = $orgRw[1];
@@ -18,6 +19,7 @@ while ($orgRw = loc_db_fetch_array($orgRslt)) {
     $webSite = $orgRw[4];
     $slogan = $orgRw[5];
     $orgType = $orgRw[7];
+    $orgLogo = $orgRw[8];
 }
 
 
@@ -170,7 +172,7 @@ $html = "<!DOCTYPE html>
                             <td style=\"max-width:25%;width:25%;padding:5px;\">
                                 <div class=\"col\">
                                     <a target=\"_blank\" href=\"$app_url\">
-                                        <img src=\"../images/" . $orgID . ".png\" data-holder-rendered=\"true\" style=\"height:100px !important;width:auto;\"/>
+                                        <img src=\"../images/" . $orgLogo . "\" data-holder-rendered=\"true\" style=\"height:100px !important;width:auto;\"/>
                                     </a>
                                 </div>
                             </td>

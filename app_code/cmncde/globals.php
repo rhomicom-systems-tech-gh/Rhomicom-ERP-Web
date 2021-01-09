@@ -1522,7 +1522,7 @@ function getOrgWebsite($orgid)
 
 function getOrgRptDetails($orgID)
 {
-    $strSQL = "SELECT org_name,pstl_addrs,cntct_nos,email_addrsses,websites,org_slogan,org_typ_id, gst.get_pssbl_val(org_typ_id) org_type FROM org.org_details WHERE org_id = $orgID";
+    $strSQL = "SELECT org_name,pstl_addrs,cntct_nos,email_addrsses,websites,org_slogan,org_typ_id, gst.get_pssbl_val(org_typ_id) org_type, COALESCE(org_logo,'') FROM org.org_details WHERE org_id = $orgID";
     $result = executeSQLNoParams($strSQL);
     return $result;
     //$conn
