@@ -24,7 +24,7 @@ while ($orgRw = loc_db_fetch_array($orgRslt)) {
 
 $result = getInvoiceReport($sbmtdInvoiceID);
 
-$docNo = "";
+$docNo = "UKNWN_".getRandomNum(10000,99999);
 $rcptNo = "";
 $dateReceived = "";
 $invcDate = "";
