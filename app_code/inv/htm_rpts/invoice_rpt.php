@@ -10,6 +10,7 @@ $email = "";
 $webSite = "";
 $slogan = "";
 $orgType = "";
+$orgLogo = "";
 while ($orgRw = loc_db_fetch_array($orgRslt)) {
     $orgNm = $orgRw[0];
     $pstl = $orgRw[1];
@@ -18,6 +19,7 @@ while ($orgRw = loc_db_fetch_array($orgRslt)) {
     $webSite = $orgRw[4];
     $slogan = $orgRw[5];
     $orgType = $orgRw[7];
+    $orgLogo = $orgRw[9];
 }
 
 $result = getInvoiceReport($sbmtdInvoiceID);
@@ -159,7 +161,7 @@ text-align: left !important;
                         <div class=\"row\">
                             <div class=\"col\">
                                 <a target=\"_blank\" href=\"$app_url\">
-                                    <img src=\"../images/" . $orgID . ".png\" data-holder-rendered=\"true\" style=\"height:70px !important;width:auto;\"/>
+                                    <img src=\"".$app_url."/dwnlds/amcharts_2100/images/" . $orgID . ".png\" data-holder-rendered=\"true\" style=\"height:70px !important;width:auto;\"/>
                                 </a>
                             </div>
                             <div class=\"col company-details\">

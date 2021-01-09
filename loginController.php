@@ -438,7 +438,7 @@ function recopyOrgLogo($orgid, $lgn_num)
         }
         $nwFileName = encrypt1($strlFileNm . session_id(), $smplTokenWord1) . '.' . $extnsn;
         $fullTmpDest = $fldrPrfx . $tmpDest . $nwFileName;
-        $fullRptDest = $fldrPrfx . "dwnlds/amcharts_2100/images/" .  $orgid . ".png";
+        $fullRptDest = $fldrPrfx . "dwnlds/amcharts_2100/images/" . $strlFileNm;
         $ftp_src = $ftp_base_db_fldr . "/Org/" . $strlFileNm;
         $txt = "";
         $orgLogoFileName =  $app_image1;
