@@ -13,7 +13,7 @@ ini_set("html_errors", TRUE);
 require '../app_code/cmncde/connect_pg.php';
 if (isset($_SESSION['LAST_ACTIVITY'])) {
     if ((time() - $_SESSION['LAST_ACTIVITY'] > 1800) && $_SESSION['LGN_NUM'] > 0) {
-// last request was more than 50 minates ago
+        // last request was more than 50 minates ago
         destroySession();
         if (count($_POST) <= 0) {
             header("Location: index.php");
@@ -32,7 +32,7 @@ require '../app_code/cmncde/globals.php';
 require '../app_code/cmncde/admin_funcs.php';
 
 
-$filename = decrypt($_GET['q'], $smplTokenWord1);
+$filename = decrypt((isset($_GET['q']) ? $_GET['q'] : "unknown"), $smplTokenWord1);
 $error = false;
 // required for IE, otherwise Content-disposition is ignored
 if (ini_get('zlib.output_compression')) {
@@ -70,7 +70,7 @@ if (file_exists($filename)) {
 if ($error == false) {
     $nwAppUrl = $app_url; // str_replace("self/", "", $app_url);
     echo "<script type=\"text/javascript\"> window.location='$nwAppUrl" . "$nwDwnldFileNm'; </script>"
-    . "<a href=\"" . $nwAppUrl . $nwDwnldFileNm . "\">" . $nwAppUrl . "" . $nwDwnldFileNm . "</a>";
+        . "<a href=\"" . $nwAppUrl . $nwDwnldFileNm . "\">" . $nwAppUrl . "" . $nwDwnldFileNm . "</a>";
     /* switch ($file_extension) {
       case "pdf": $ctype = "application/pdf";
       break;
@@ -115,4 +115,3 @@ if ($error == false) {
 } else {
     echo "File not Available!";
 }
-

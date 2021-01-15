@@ -829,39 +829,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 </label>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-12">
-                                                            <div class="form-group" style="padding:5px 1px 0px 1px !important;">
-                                                                <label for="accbFSRptAcntNum" class="control-label col-md-12" style="padding:5px 1px 0px 1px !important;display:none;">GL Account:</label>
-                                                                <div class="col-md-12" style="padding:5px 1px 0px 1px !important;">
-                                                                    <div class="input-group">
-                                                                        <input type="text" class="form-control" aria-label="..." id="accbFSRptAcntNum" name="accbFSRptAcntNum" value="<?php echo $accbFSRptAcntNum; ?>" style="width:100%;" readonly="true">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt1ValID" name="accbFSRptSgmnt1ValID" value="<?php echo $accbFSRptSgmnt1ValID; ?>">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt2ValID" name="accbFSRptSgmnt2ValID" value="<?php echo $accbFSRptSgmnt2ValID; ?>">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt3ValID" name="accbFSRptSgmnt3ValID" value="<?php echo $accbFSRptSgmnt3ValID; ?>">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt4ValID" name="accbFSRptSgmnt4ValID" value="<?php echo $accbFSRptSgmnt4ValID; ?>">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt5ValID" name="accbFSRptSgmnt5ValID" value="<?php echo $accbFSRptSgmnt5ValID; ?>">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt6ValID" name="accbFSRptSgmnt6ValID" value="<?php echo $accbFSRptSgmnt6ValID; ?>">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt7ValID" name="accbFSRptSgmnt7ValID" value="<?php echo $accbFSRptSgmnt7ValID; ?>">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt8ValID" name="accbFSRptSgmnt8ValID" value="<?php echo $accbFSRptSgmnt8ValID; ?>">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt9ValID" name="accbFSRptSgmnt9ValID" value="<?php echo $accbFSRptSgmnt9ValID; ?>">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt10ValID" name="accbFSRptSgmnt10ValID" value="<?php echo $accbFSRptSgmnt10ValID; ?>">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt" name="accbFSRptSgmnt" value="">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptAcntNum1" name="accbFSRptAcntNum1" value="">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="rcnclAccntID" name="rcnclAccntID" value="-1">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="rcnclAccntNm" name="accbFSRptAcntNum1" value="">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="nwRowHtml2" name="nwRowHtml2" value="<?php echo $nwRowHtml2; ?>">
-                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
-                                                                            <span class="glyphicon glyphicon-th-list"></span>
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                                <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSbmtdAccountID" name="accbFSRptSbmtdAccountID" value="<?php echo $accbFSRptSbmtdAccountID; ?>">
-                                                            </div>
-                                                        </div>
                                                         <div class="col-md-8" style="padding:5px 1px 0px 1px !important;">
                                                             <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;text-align: left;" onclick="getAccbFSRptRpts(1, '#allmodules', 'grp=6&typ=1&pg=19&vtyp=0');">
                                                                 <img src="cmn_images/98.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
-                                                                Generate Report&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                Retrieve Statement&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                             </button>
                                                         </div>
                                                         <div class="col-md-2" style="padding:5px 1px 0px 1px !important;" title="Reset Report">
@@ -879,7 +850,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 moveSelectedTrans();
                                                                             });">
                                                                 <img src="cmn_images/98.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
-                                                                Move Selected Trns. from A/c&nbsp;
+                                                                Move Selected Trns. to A/c&nbsp;
                                                             </button>
                                                         </div>
                                                         <div class="col-md-2" style="padding:5px 1px 0px 1px !important;" title="Get Bank Statement Import Excel Template">
@@ -909,8 +880,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </form>
                                             </div>
                                             <div class="col-md-9" style="padding:0px 15px 0px 15px;" id="rightDivFSRpt">
-                                                <form class="form-horizontal" id="accbFSRptDetForm">
-                                                    <table class="table table-striped table-bordered table-responsive" id="accbFSRptTable" cellspacing="0" width="100%" style="width:100%;min-width: 300px !important;">
+                                                <form class="form-horizontal" id="accbImprtdFSRptDetForm">
+                                                    <table class="table table-striped table-bordered table-responsive" id="accbImprtdFSRptTable" cellspacing="0" width="100%" style="width:100%;min-width: 300px !important;">
                                                         <caption class="basic_person_lg" style="padding:5px 15px 5px 15px;font-weight:bold;font-size: 18px;">
                                                             <a id="rightDivFSRptBtn" class="rhopagination hideNotice" href="javascript:shwHideFSRptDivs('show');" aria-label="Show" style="float:left;padding: 0px 15px 0px 15px !important;">
                                                                 <span aria-hidden="true">&raquo;</span>
@@ -934,7 +905,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             $maxNoRows = 0;
                                                             $resultRw = null;
                                                             if ($fsrptRunID > 0) {
-                                                                $resultRw = get_GLStmntRpt($fsrptRunID, $accbStrtFSRptDte, $accbFSRptDte);
+                                                                $resultRw = get_ImprtdBnkStmntRpt($accbFSRptSbmtdAccountID, $accbStrtFSRptDte, $accbFSRptDte);
                                                                 $maxNoRows = loc_db_num_rows($resultRw);
                                                             }
                                                             $ttlTrsctnDbtAmnt = 0;
@@ -995,22 +966,22 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     continue;
                                                                 }
                                                             ?>
-                                                                <tr id="oneAccbFSRptRow_<?php echo $cntr; ?>" class="hand_cursor" style="<?php echo $rowStyle; ?>">
+                                                                <tr id="oneAccbImprtdFSRptRow_<?php echo $cntr; ?>" class="hand_cursor" style="<?php echo $rowStyle; ?>">
                                                                     <td class="lovtd">
-                                                                        <input type="checkbox" name="oneAccbFSRptRow<?php echo $cntr; ?>_CheckBox" value="oneAccbFSRptRow_<?php echo $cntr; ?>">
+                                                                        <input type="checkbox" name="oneAccbImprtdFSRptRow<?php echo $cntr; ?>_CheckBox" value="oneAccbImprtdFSRptRow_<?php echo $cntr; ?>">
                                                                     </td>
                                                                     <td class="lovtd"><span><?php echo ($rowNumber); ?></span></td>
                                                                     <td class="lovtd" style="<?php echo $nameStyle1; ?>">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_TransLineID" value="<?php echo $trsctnLineID; ?>" style="width:100% !important;">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_AccountID" value="<?php echo $trsctnAcntID; ?>" style="width:100% !important;">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_IsParent" value="<?php echo $isParent; ?>" style="width:100% !important;">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_AccntNum" value="<?php echo trim($rowRw[1]); ?>" style="width:100% !important;">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_AccntNm" value="<?php echo trim($trsctnAcntNm); ?>" style="width:100% !important;">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_LineDesc" value="<?php echo trim($trsctnAcntDesc); ?>" style="width:100% !important;">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_DbtAmnt" value="<?php echo $trsctnDbtAmnt; ?>" style="width:100% !important;">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_CrdtAmnt" value="<?php echo $trsctnCrdtAmnt; ?>" style="width:100% !important;">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_TrnsDte" value="<?php echo trim($trsctnLineDate); ?>" style="width:100% !important;">
-                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_IsRcncld" value="<?php echo trim($trsctnIsRcncld); ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbImprtdFSRptRow<?php echo $cntr; ?>_TransLineID" value="<?php echo $trsctnLineID; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbImprtdFSRptRow<?php echo $cntr; ?>_AccountID" value="<?php echo $trsctnAcntID; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbImprtdFSRptRow<?php echo $cntr; ?>_IsParent" value="<?php echo $isParent; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbImprtdFSRptRow<?php echo $cntr; ?>_AccntNum" value="<?php echo trim($rowRw[1]); ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbImprtdFSRptRow<?php echo $cntr; ?>_AccntNm" value="<?php echo trim($trsctnAcntNm); ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbImprtdFSRptRow<?php echo $cntr; ?>_LineDesc" value="<?php echo trim($trsctnAcntDesc); ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbImprtdFSRptRow<?php echo $cntr; ?>_DbtAmnt" value="<?php echo $trsctnDbtAmnt; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbImprtdFSRptRow<?php echo $cntr; ?>_CrdtAmnt" value="<?php echo $trsctnCrdtAmnt; ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbImprtdFSRptRow<?php echo $cntr; ?>_TrnsDte" value="<?php echo trim($trsctnLineDate); ?>" style="width:100% !important;">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbImprtdFSRptRow<?php echo $cntr; ?>_IsRcncld" value="<?php echo trim($trsctnIsRcncld); ?>" style="width:100% !important;">
                                                                         <span><?php echo $trsctnAcntDesc; ?></span>
                                                                     </td>
                                                                     <td class="lovtd" style="">
@@ -1041,37 +1012,37 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <th style="">&nbsp;</th>
                                                                 <th style="text-align: right;">
                                                                     <?php
-                                                                    echo "<span style=\"color:blue;font-weight:bold;font-size:14px;\" id=\"myCptrdJbDbtsTtlBtn\">" . number_format(
+                                                                    echo "<span style=\"color:blue;font-weight:bold;font-size:14px;\" id=\"myImprtdJbDbtsTtlBtn\">" . number_format(
                                                                         $ttlTrsctnDbtAmnt,
                                                                         2,
                                                                         '.',
                                                                         ','
                                                                     ) . "</span>";
                                                                     ?>
-                                                                    <input type="hidden" id="myCptrdJbDbtsTtlVal" value="<?php echo $ttlTrsctnDbtAmnt; ?>">
+                                                                    <input type="hidden" id="myImprtdJbDbtsTtlVal" value="<?php echo $ttlTrsctnDbtAmnt; ?>">
                                                                 </th>
                                                                 <th style="text-align: right;">
                                                                     <?php
-                                                                    echo "<span style=\"color:blue;font-weight:bold;font-size:14px;\" id=\"myCptrdJbCrdtsTtlBtn\">" . number_format(
+                                                                    echo "<span style=\"color:blue;font-weight:bold;font-size:14px;\" id=\"myImprtdJbCrdtsTtlBtn\">" . number_format(
                                                                         $ttlTrsctnCrdtAmnt,
                                                                         2,
                                                                         '.',
                                                                         ','
                                                                     ) . "</span>";
                                                                     ?>
-                                                                    <input type="hidden" id="myCptrdJbCrdtsTtlVal" value="<?php echo $ttlTrsctnCrdtAmnt; ?>">
+                                                                    <input type="hidden" id="myImprtdJbCrdtsTtlVal" value="<?php echo $ttlTrsctnCrdtAmnt; ?>">
                                                                 </th>
                                                                 <th style="text-align: right;">
                                                                     <?php
                                                                     if ($ttlTrsctnNetAmnt <= 0) {
-                                                                        echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdJbNetTtlBtn\">" . number_format(
+                                                                        echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myImprtdJbNetTtlBtn\">" . number_format(
                                                                             $ttlTrsctnNetAmnt,
                                                                             2,
                                                                             '.',
                                                                             ','
                                                                         ) . "</span>";
                                                                     } else {
-                                                                        echo "<span style=\"color:green;font-weight:bold;font-size:14px;\" id=\"myCptrdJbNetTtlBtn\">" . number_format(
+                                                                        echo "<span style=\"color:green;font-weight:bold;font-size:14px;\" id=\"myImprtdJbNetTtlBtn\">" . number_format(
                                                                             $ttlTrsctnNetAmnt,
                                                                             2,
                                                                             '.',
@@ -1079,7 +1050,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         ) . "</span>";
                                                                     }
                                                                     ?>
-                                                                    <input type="hidden" id="myCptrdJbNetTtlVal" value="<?php echo $ttlTrsctnNetAmnt; ?>">
+                                                                    <input type="hidden" id="myImprtdJbNetTtlVal" value="<?php echo $ttlTrsctnNetAmnt; ?>">
                                                                 </th>
                                                                 <th style="">&nbsp;</th>
                                                             </tr>
