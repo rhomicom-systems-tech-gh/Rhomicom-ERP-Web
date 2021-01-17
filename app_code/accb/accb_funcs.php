@@ -3292,6 +3292,7 @@ WHERE tbl1.accb_rpt_runid=" . $trnsID . " ORDER BY tbl1.gnrl_data1::INTEGER";
 
 function get_ImprtdBnkStmntRpt($accntID, $asAtDate1, $asAtDate2)
 {
+    global $orgID;
     /**row_number() over(ORDER BY a.cust_sup_site_id) as row */
     $strSql = "SELECT
                 imprtd_rec_pos_cntr rownumbr,
@@ -3322,12 +3323,15 @@ function get_ImprtdBnkStmntRpt($accntID, $asAtDate1, $asAtDate2)
                 to_char(to_timestamp(a.value_date,'YYYY-MM-DD'),'DD-Mon-YYYY') value_date,
                 a.import_hdr_runid
                 FROM accb.accb_trans_to_reconcile a 
-                WHERE a.import_hdr_runid = (Select MAX(c.import_hdr_runid) 
+                WHERE a.import_hdr_runid IN (Select DISTINCT (c.import_hdr_runid) 
                                     FROM accb.accb_trans_to_reconcile c 
                                     WHERE c.account_id=" . $accntID .
-        " and c.reconcile_strt_date>='" . $asAtDate1 .
-        "' and c.reconcile_end_date<='" . $asAtDate2 . "') 
-                ORDER BY a.imprtd_rec_pos_cntr";
+                                    " and c.org_id=".$orgID.
+                                    " and (('" . $asAtDate1 .
+                                    "' >=c.reconcile_strt_date and '" . $asAtDate1 .
+                                    "' <= c.reconcile_end_date) or ('" . $asAtDate2 .
+                                    "' >= c.reconcile_strt_date and '" . $asAtDate2 . "' <= c.reconcile_end_date))) 
+                ORDER BY a.import_hdr_runid, a.imprtd_rec_pos_cntr";
     $result = executeSQLNoParams($strSql);
     return $result;
 }

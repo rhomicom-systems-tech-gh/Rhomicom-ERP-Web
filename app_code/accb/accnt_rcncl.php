@@ -1,6 +1,10 @@
 <?php
 $canview = test_prmssns($dfltPrvldgs[36], $mdlNm);
+$canAdd = test_prmssns($dfltPrvldgs[14], $mdlNm);
+$canEdt = test_prmssns($dfltPrvldgs[15], $mdlNm);
 $canDel = test_prmssns($dfltPrvldgs[16], $mdlNm);
+//$canVoid = test_prmssns($dfltPrvldgs[16], $mdlNm);
+$canPost = test_prmssns($dfltPrvldgs[21], $mdlNm);
 $defaultBrkdwnLOV = "";
 
 $pageNo = isset($_POST['pageNo']) ? cleanInputData($_POST['pageNo']) : 1;
@@ -58,6 +62,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $afftctd = 0;
                 $afftctd1 = 0;
                 $afftctd2 = 0;
+
                 if (trim($slctdLineTrans, "|~") != "") {
                     $variousRows = explode("|", trim($slctdLineTrans, "|"));
                     for ($y = 0; $y < count($variousRows); $y++) {
@@ -72,6 +77,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         }
                     }
                 }
+                
                 $arr_content['percent'] = 100;
                 $arr_content['rcnclAccntID'] = $rcnclAccntID;
                 $arr_content['message'] = $afftctd1 . " Transaction Status(es) Successfully Modified";
@@ -362,11 +368,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             }
         } else {
             if ($vwtyp == 0 || $vwtyp == 10 || $vwtyp == 20) {
-                $canAdd = test_prmssns($dfltPrvldgs[14], $mdlNm);
-                $canEdt = test_prmssns($dfltPrvldgs[15], $mdlNm);
-                $canDel = test_prmssns($dfltPrvldgs[16], $mdlNm);
-                $canVoid = test_prmssns($dfltPrvldgs[16], $mdlNm);
-                $canPost = test_prmssns($dfltPrvldgs[21], $mdlNm);
                 $cntent .= "<li onclick=\"openATab('#allmodules', 'grp=$group&typ=$type&pg=$pgNo&vtyp=$vwtyp');\">
                                     <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
                                     <span style=\"text-decoration:none;\">Account Reconciliation</span>
@@ -918,7 +919,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 </button>
                                                             </div>
                                                             <div class="col-md-2" style="padding:5px 1px 0px 1px !important;" title="Excel Export">
-                                                                <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;" onclick="funcHtmlToExcel('accbFSRptTable');">
+                                                                <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;" onclick="funcHtmlToExcel('accbImprtdFSRptTable');">
                                                                     <img src="cmn_images/image007.png" style="left: 0.01%; padding-right: 1px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                 </button>
                                                             </div>

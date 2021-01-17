@@ -1,594 +1,528 @@
-Number.prototype.padLeft = function (base, chr) {
-    var len = (String(base || 10).length - String(this).length) + 1;
-    return len > 0 ? new Array(len).join(chr || '0') + this : this;
+Number.prototype.padLeft = function (base,chr) {
+  var len = (String(base || 10).length - String(this).length) + 1;
+  return len > 0 ? new Array(len).join(chr || '0') + this : this;
 };
-$(document).on("hidden.bs.modal", ".bootbox.modal", function (e) {
-    $("body").css("padding", "0px 0px 0px 0px");
+$(document).on("hidden.bs.modal",".bootbox.modal",function (e) {
+  $("body").css("padding","0px 0px 0px 0px");
 });
-$(document).on("change", ".form_date input", function (e) {
-    $("body").css("overflow", "auto");
+$(document).on("change",".form_date input",function (e) {
+  $("body").css("overflow","auto");
 });
 
 function isMyScriptLoaded(url) {
-    var scripts = document.getElementsByTagName('script');
-    for (var i = scripts.length; i--; ) {
-        var cururl = scripts[i].src;
-        if (cururl.indexOf(url) >= 0)
-        {
-            return true;
-        }
+  var scripts = document.getElementsByTagName('script');
+  for (var i = scripts.length; i--;) {
+    var cururl = scripts[i].src;
+    if (cururl.indexOf(url) >= 0) {
+      return true;
     }
-    return false;
+  }
+  return false;
 }
 
 function isMyCssLoaded(url) {
-    var scripts = document.getElementsByTagName('link');
-    for (var i = scripts.length; i--; ) {
-        var cururl = scripts[i].href;
-        if (cururl.indexOf(url) >= 0)
-        {
-            return true;
-        }
+  var scripts = document.getElementsByTagName('link');
+  for (var i = scripts.length; i--;) {
+    var cururl = scripts[i].href;
+    if (cururl.indexOf(url) >= 0) {
+      return true;
     }
-    return false;
+  }
+  return false;
 }
 
 function isMobileNumValid(mobileNum) {
-    if (/^\+?[1-9]\d{4,14}$/.test(mobileNum))
-    {
-        return (true);
-    }
-    return (false);
-    /* var regex = /^\+(?:[0-9] ?){6,14}[0-9]$/;*/
+  if (/^\+?[1-9]\d{4,14}$/.test(mobileNum)) {
+    return (true);
+  }
+  return (false);
+  /* var regex = /^\+(?:[0-9] ?){6,14}[0-9]$/;*/
 }
 
 function isEmailValid(email) {
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
-    {
-        return (true);
+  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+    return (true);
+  }
+  return (false);
+  /*var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+   return re.test(email);*/
+}
+
+function getTtlRows(tblID) {
+  var cntr = 0;
+  $('#' + tblID).find('tr').each(function (i,el) {
+    if (i > 0) {
+      cntr++;
     }
-    return (false);
-    /*var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-     return re.test(email);*/
+  });
+  return cntr;
 }
 
-function getTtlRows(tblID)
-{
-    var cntr = 0;
-    $('#' + tblID).find('tr').each(function (i, el) {
-        if (i > 0)
-        {
-            cntr++;
-        }
-    });
-    return cntr;
-}
-
-function clearTblRows(tblID)
-{
-    var cntr = 0;
-    $('#' + tblID).find('tr').each(function (i, el) {
-        if (i > 0)
-        {
-            /*var rowIDAttrb = $(el).attr('id');
-             $("#" + rowIDAttrb).remove();*/
-            $(el).remove();
-        }
-    });
-}
-
-function getRowIndx(rowIDAttrb, tblID)
-{
-    var indx = 0;
-    $('#' + tblID).find('tr').each(function (i, el) {
-        if (i > 0 && $(el).attr('id') === rowIDAttrb)
-        {
-            indx = i;
-        }
-    });
-    return indx;
-}
-
-function getFreeRowNum(freePKeyRowSffx, tblID)
-{
-    var indx = 0;
-    var rwNumber = "";
-    $('#' + tblID).find('tr').each(function (i, el) {
-        if (i > 0)
-        {
-            if (typeof $(el).attr('id') === 'undefined')
-            {
-                /*Do Nothing*/
-            } else {
-                var prfx = $(el).attr('id').split("_")[0];
-                var rndmNum = $(el).attr('id').split("_")[1];
-                var ln_TrnsLnID = typeof $('#' + prfx + rndmNum + freePKeyRowSffx).val() === 'undefined' ? '-1' : $('#' + prfx + rndmNum + freePKeyRowSffx).val();
-                if (Number(ln_TrnsLnID.replace(/[^-?0-9\.]/g, '')) <= 0) {
-                    indx = i;
-                    rwNumber = rndmNum;
-                }
-            }
-        }
-    });
-    return rwNumber;
-}
-
-function addCommas(nStr)
-{
-    nStr += '';
-    x = nStr.split('.');
-    x1 = x[0];
-    x2 = x.length > 1 ? '.' + x[1] : '';
-    var rgx = /(-?\d+)(\d{3})/;
-    while (rgx.test(x1)) {
-        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+function clearTblRows(tblID) {
+  var cntr = 0;
+  $('#' + tblID).find('tr').each(function (i,el) {
+    if (i > 0) {
+      /*var rowIDAttrb = $(el).attr('id');
+       $("#" + rowIDAttrb).remove();*/
+      $(el).remove();
     }
-    return x1 + x2;
+  });
+}
+
+function getRowIndx(rowIDAttrb,tblID) {
+  var indx = 0;
+  $('#' + tblID).find('tr').each(function (i,el) {
+    if (i > 0 && $(el).attr('id') === rowIDAttrb) {
+      indx = i;
+    }
+  });
+  return indx;
+}
+
+function getFreeRowNum(freePKeyRowSffx,tblID) {
+  var indx = 0;
+  var rwNumber = "";
+  $('#' + tblID).find('tr').each(function (i,el) {
+    if (i > 0) {
+      if (typeof $(el).attr('id') === 'undefined') {
+        /*Do Nothing*/
+      } else {
+        var prfx = $(el).attr('id').split("_")[0];
+        var rndmNum = $(el).attr('id').split("_")[1];
+        var ln_TrnsLnID = typeof $('#' + prfx + rndmNum + freePKeyRowSffx).val() === 'undefined' ? '-1' : $('#' + prfx + rndmNum + freePKeyRowSffx).val();
+        if (Number(ln_TrnsLnID.replace(/[^-?0-9\.]/g,'')) <= 0) {
+          indx = i;
+          rwNumber = rndmNum;
+        }
+      }
+    }
+  });
+  return rwNumber;
+}
+
+function addCommas(nStr) {
+  nStr += '';
+  x = nStr.split('.');
+  x1 = x[0];
+  x2 = x.length > 1 ? '.' + x[1] : '';
+  var rgx = /(-?\d+)(\d{3})/;
+  while (rgx.test(x1)) {
+    x1 = x1.replace(rgx,'$1' + ',' + '$2');
+  }
+  return x1 + x2;
 }
 
 function checkAllBtns(elmntID) {
-    var form = document.getElementById(elmntID);
+  var form = document.getElementById(elmntID);
 
-    for (var i = 0; i < form.elements.length; i++) {
-        if (form.elements[i].type === 'checkbox') {
-            form.elements[i].checked = true;
-        }
+  for (var i = 0; i < form.elements.length; i++) {
+    if (form.elements[i].type === 'checkbox') {
+      form.elements[i].checked = true;
     }
+  }
 }
 
 function unCheckAllBtns(elmntID) {
-    var form = document.getElementById(elmntID);
+  var form = document.getElementById(elmntID);
 
-    for (var i = 0; i < form.elements.length; i++) {
-        if (form.elements[i].type === 'checkbox') {
-            form.elements[i].checked = false;
-        }
+  for (var i = 0; i < form.elements.length; i++) {
+    if (form.elements[i].type === 'checkbox') {
+      form.elements[i].checked = false;
     }
+  }
 }
 
-function changeImgSrc(input, imgId, imgSrcLocID) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
+function changeImgSrc(input,imgId,imgSrcLocID) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
 
-        reader.onload = function (e) {
-            //$('#img1Test')
-            $(imgId).attr('src', e.target.result);
-            $(imgSrcLocID).attr('value', $(input).val());
-        };
+    reader.onload = function (e) {
+      $(imgId).attr('src',e.target.result);
+      $(imgSrcLocID).attr('value',$(input).val());
+    };
 
-        reader.readAsDataURL(input.files[0]);
-    }
+    reader.readAsDataURL(input.files[0]);
+  }
 }
 
-function setFileLoc(input, nwSrcLocElmnt) {
-    if (input.files && input.files[0]) {
-        $(nwSrcLocElmnt).attr('value', $(input).val());
-    }
+function setFileLoc(input,nwSrcLocElmnt) {
+  if (input.files && input.files[0]) {
+    $(nwSrcLocElmnt).attr('value',$(input).val());
+  }
 }
 
 function scrollTo(hash) {
-    location.hash = "#" + hash;
+  location.hash = "#" + hash;
 }
 
-function rhotrim(s, mask) {
-    while (~mask.indexOf(s[0])) {
-        s = s.slice(1);
-    }
-    while (~mask.indexOf(s[s.length - 1])) {
-        s = s.slice(0, -1);
-    }
-    return s;
+function rhotrim(s,mask) {
+  while (~mask.indexOf(s[0])) {
+    s = s.slice(1);
+  }
+  while (~mask.indexOf(s[s.length - 1])) {
+    s = s.slice(0,-1);
+  }
+  return s;
 }
 
-function rhoFrmtDate()
-{
-    var m_names = new Array("Jan", "Feb", "Mar",
-            "Apr", "May", "Jun", "Jul", "Aug", "Sep",
-            "Oct", "Nov", "Dec");
+function rhoFrmtDate() {
+  var m_names = new Array("Jan","Feb","Mar",
+    "Apr","May","Jun","Jul","Aug","Sep",
+    "Oct","Nov","Dec");
 
-    var d = new Date();
-    var curr_date = d.getDate().padLeft();
-    var curr_month = d.getMonth();
-    var curr_year = d.getFullYear();
-    var first_part = curr_date + "-" + m_names[curr_month]
-            + "-" + curr_year;
+  var d = new Date();
+  var curr_date = d.getDate().padLeft();
+  var curr_month = d.getMonth();
+  var curr_year = d.getFullYear();
+  var first_part = curr_date + "-" + m_names[curr_month]
+    + "-" + curr_year;
 
-    var dformat = first_part + ' ' +
-            [d.getHours().padLeft(),
-                d.getMinutes().padLeft(),
-                d.getSeconds().padLeft()].join(':');
-    return dformat;
+  var dformat = first_part + ' ' +
+    [d.getHours().padLeft(),
+    d.getMinutes().padLeft(),
+    d.getSeconds().padLeft()].join(':');
+  return dformat;
 }
 
 
 function isReaderAPIAvlbl() {
-    // Check for the various File API support.
-    if (window.File && window.FileReader && window.FileList && window.Blob) {
-        // Great success! All the File APIs are supported.
-        return true;
-    } else {
-        // source: File API availability - http://caniuse.com/#feat=fileapi
-        // source: <output> availability - http://html5doctor.com/the-output-element/
-        var errMsg = "";
-        errMsg += 'The HTML5 APIs used in this form are only available in the following browsers:<br />';
-        // 6.0 File API & 13.0 <output>
-        errMsg += ' - Google Chrome: 13.0 or later<br />';
-        // 3.6 File API & 6.0 <output>
-        errMsg += ' - Mozilla Firefox: 6.0 or later<br />';
-        // 10.0 File API & 10.0 <output>
-        errMsg += ' - Internet Explorer: Not supported (partial support expected in 10.0)<br />';
-        // ? File API & 5.1 <output>
-        errMsg += ' - Safari: Not supported<br />';
-        // ? File API & 9.2 <output>
-        errMsg += ' - Opera: Not supported';
-        var dialog = bootbox.alert({
-            title: 'System Alert',
-            size: 'small',
-            message: '<p style="color:red;font-weight:bold;">' + errMsg + '</p>',
-            callback: function () {
-            }
-        });
-        return false;
-    }
+  if (window.File && window.FileReader && window.FileList && window.Blob) {
+    return true;
+  } else {
+    var errMsg = "";
+    errMsg += 'The HTML5 APIs used in this form are only available in the following browsers:<br />';
+    errMsg += ' - Google Chrome: 13.0 or later<br />';
+    errMsg += ' - Mozilla Firefox: 6.0 or later<br />';
+    errMsg += ' - Internet Explorer: Not supported (partial support expected in 10.0)<br />';
+    errMsg += ' - Safari: Not supported<br />';
+    errMsg += ' - Opera: Not supported';
+    var dialog = bootbox.alert({
+      title: 'System Alert',
+      size: 'small',
+      message: '<p style="color:red;font-weight:bold;">' + errMsg + '</p>',
+      callback: function () {
+      }
+    });
+    return false;
+  }
 }
 
 function isNumber(n) {
-    return !isNaN(parseFloat(n)) && isFinite(n);
+  return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
 function isInt(n) {
-    return Number(n) === n && n % 1 === 0;
+  return Number(n) === n && n % 1 === 0;
 }
 
 function isFloat(n) {
-    return Number(n) === n && n % 1 !== 0;
+  return Number(n) === n && n % 1 !== 0;
 }
 
-function fmtAsNumber(elementID)
-{
-    var num = $("#" + elementID).val();
-    $("#" + elementID).val(addCommas(Number(num.replace(/[^-?0-9\.]/g, '')).toFixed(2)));
-    return Number(num.replace(/[^-?0-9\.]/g, ''));
+function fmtAsNumber(elementID) {
+  var num = $("#" + elementID).val();
+  $("#" + elementID).val(addCommas(Number(num.replace(/[^-?0-9\.]/g,'')).toFixed(2)));
+  return Number(num.replace(/[^-?0-9\.]/g,''));
 }
 
-function fmtAsNumber2(elementID)
-{
-    var num = $("#" + elementID).val();
-    $("#" + elementID).val(addCommas(Number(num.replace(/[^-?0-9\.]/g, '')).toFixed(4)));
-    return Number(num.replace(/[^-?0-9\.]/g, ''));
+function fmtAsNumber2(elementID) {
+  var num = $("#" + elementID).val();
+  $("#" + elementID).val(addCommas(Number(num.replace(/[^-?0-9\.]/g,'')).toFixed(4)));
+  return Number(num.replace(/[^-?0-9\.]/g,''));
 }
 
-function newLoanRequestOpenATab(slctr, linkArgs) {
-    openATab(slctr, linkArgs + "&lnprflFctrId=" + $("#lnprflFctrId").val() + "&lnRqstID=" + $("#lnRqstID").val() +
-            "&optn=" + $("#optn").val() + "&status=" + $("#status").val() + "&assmntCmnts=" + $("#assmntCmnts").val());
+function newLoanRequestOpenATab(slctr,linkArgs) {
+  openATab(slctr,linkArgs + "&lnprflFctrId=" + $("#lnprflFctrId").val() + "&lnRqstID=" + $("#lnRqstID").val() +
+    "&optn=" + $("#optn").val() + "&status=" + $("#status").val() + "&assmntCmnts=" + $("#assmntCmnts").val());
 }
 
 function ClearAllIntervals() {
-    for (var i = 1; i < 99999; i++)
-        window.clearInterval(i);
+  for (var i = 1; i < 99999; i++)
+    window.clearInterval(i);
 }
 
-function gnrlFldKeyPress(event, elementIDAttrb, sbmtdTblRowID, classNm)
-{
-    if (event.which === 13) {
-        var nextItem;
-        var nextItemVal = 0;
-        var curItemVal = 0;
-        var indx = 0;
-        var ttlElmnts = 0;
-        $('#' + sbmtdTblRowID + ' .' + classNm).each(function (i, el) {
-            ttlElmnts++;
-            if ($(el).attr('id') === elementIDAttrb)
-            {
-                indx = i;
-            }
-        });
-        curItemVal = indx + 1;
-        if (curItemVal >= ttlElmnts) {
-            nextItem = $('#' + sbmtdTblRowID + ' .' + classNm).eq(0);
-        } else {
-            nextItemVal = Number(curItemVal);
-            nextItem = $('#' + sbmtdTblRowID + ' .' + classNm).eq(nextItemVal);
-        }
-        nextItem.focus();
+function gnrlFldKeyPress(event,elementIDAttrb,sbmtdTblRowID,classNm) {
+  if (event.which === 13) {
+    var nextItem;
+    var nextItemVal = 0;
+    var curItemVal = 0;
+    var indx = 0;
+    var ttlElmnts = 0;
+    $('#' + sbmtdTblRowID + ' .' + classNm).each(function (i,el) {
+      ttlElmnts++;
+      if ($(el).attr('id') === elementIDAttrb) {
+        indx = i;
+      }
+    });
+    curItemVal = indx + 1;
+    if (curItemVal >= ttlElmnts) {
+      nextItem = $('#' + sbmtdTblRowID + ' .' + classNm).eq(0);
+    } else {
+      nextItemVal = Number(curItemVal);
+      nextItem = $('#' + sbmtdTblRowID + ' .' + classNm).eq(nextItemVal);
     }
+    nextItem.focus();
+  }
 }
 
 function disableBtnFunc(btnElementID) {
-    document.getElementById(btnElementID).disabled = 'true';
+  document.getElementById(btnElementID).disabled = 'true';
 }
 function enableBtnFunc(btnElementID) {
-    document.getElementById(btnElementID).disabled = 'false';
+  document.getElementById(btnElementID).disabled = 'false';
 }
 
 function changeElmntTitleFunc(htmElementID) {
-    //$('body').tooltip('dispose');
-    $('[data-toggle="tooltip"]').tooltip('destroy');
-    var titleTxt = $("#" + htmElementID).val();
-    document.getElementById(htmElementID).title = titleTxt;
-    //$('[data-toggle="tooltip"]').tooltip();
+  $('[data-toggle="tooltip"]').tooltip('destroy');
+  var titleTxt = $("#" + htmElementID).val();
+  document.getElementById(htmElementID).title = titleTxt;
 
-    $("body").tooltip({selector: '[data-toggle=tooltip]'});
+  $("body").tooltip({ selector: '[data-toggle=tooltip]' });
 }
 
-function changeBtnTitleFunc(htmElementID, btnElementID) {
-    //$('body').tooltip('dispose');
-    $('[data-toggle="tooltip"]').tooltip('destroy');
-    var titleTxt = $("#" + htmElementID).val();
-    document.getElementById(btnElementID).title = titleTxt;
-    //$('[data-toggle="tooltip"]').tooltip();
+function changeBtnTitleFunc(htmElementID,btnElementID) {
+  $('[data-toggle="tooltip"]').tooltip('destroy');
+  var titleTxt = $("#" + htmElementID).val();
+  document.getElementById(btnElementID).title = titleTxt;
 
-    $("body").tooltip({selector: '[data-toggle=tooltip]'});
+  $("body").tooltip({ selector: '[data-toggle=tooltip]' });
 }
 
-function startDashBoardRpts()
-{
-    var linkArgs = 'grp=40&typ=401';
+function startDashBoardRpts() {
+  var linkArgs = 'grp=40&typ=401';
 
-    $body = $("body");
-    var xmlhttp;
-    if (window.XMLHttpRequest)
-    {
-        xmlhttp = new XMLHttpRequest();
-    } else
-    {
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+  $body = $("body");
+  var xmlhttp;
+  if (window.XMLHttpRequest) {
+    xmlhttp = new XMLHttpRequest();
+  } else {
+    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+  xmlhttp.onreadystatechange = function () {
+    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+      console.log("Report Run Finished");
     }
-
-    xmlhttp.onreadystatechange = function ()
-    {
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-        {
-            console.log("Report Run Finished");
-        }
-    };
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.send(linkArgs.trim());
-    console.log("Report Run Started");
-    quickStartMainRunner();
+  };
+  xmlhttp.open("POST","index.php",true);
+  xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  xmlhttp.send(linkArgs.trim());
+  console.log("Report Run Started");
+  quickStartMainRunner();
 }
 
 function funcHtmlToExcel(tableid) {
-// Opera 8.0+
-    var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-// Firefox 1.0+
-    var isFirefox = typeof InstallTrigger !== 'undefined' || navigator.userAgent.indexOf(' Firefox/') >= 0;
-// Safari 3.0+ "[object HTMLElementConstructor]" 
-    var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) {
-        return p.toString() === "[object SafariRemoteNotification]";
-    })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification)) || (navigator.userAgent.indexOf(' Safari/') >= 0 && navigator.vendor.indexOf('Apple') >= 0);
-// Internet Explorer 6-11
-    var isIE = /*@cc_on!@*/false || !!document.documentMode || navigator.userAgent.indexOf(' Trident/') >= 0;
-// Edge 20+
-    var isEdge = (!isIE && !!window.StyleMedia) || navigator.userAgent.indexOf(' Edge/') >= 0;
-// Chrome 1+
-    var isChrome = (!!window.chrome) || (navigator.userAgent.indexOf(' Chrome/') >= 0 && navigator.vendor.indexOf('Google') >= 0);
-    // && !!window.chrome.webstore
-    //alert(navigator.userAgent.indexOf(' Chrome/') + ':HH:' + navigator.vendor.indexOf('Google'));
-// Blink engine detection
-    var isBlink = (isChrome || isOpera) && !!window.CSS;
-    //getting values of current time for generating the file name
-    var dt = new Date();
-    var day = dt.getDate();
-    var month = dt.getMonth() + 1;
-    var year = dt.getFullYear();
-    var hour = dt.getHours();
-    var mins = dt.getMinutes();
-    var secns = dt.getSeconds();
-    var postfix = day + "." + month + "." + year + "_" + hour + "." + mins + "." + secns + "_" + getRandomInt2(100, 999);
-    var myURL = window.URL || window.webkitURL;
-    //alert(navigator.userAgent + ':HH:' + navigator.vendor);
-    if (isChrome || isFirefox || isEdge || isBlink) {
-        //alert('Here1');
-        //creating a temporary HTML link element (they support setting file names)
+  var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+  var isFirefox = typeof InstallTrigger !== 'undefined' || navigator.userAgent.indexOf(' Firefox/') >= 0;
+  var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) {
+    return p.toString() === "[object SafariRemoteNotification]";
+  })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification)) || (navigator.userAgent.indexOf(' Safari/') >= 0 && navigator.vendor.indexOf('Apple') >= 0);
+  var isIE = false || !!document.documentMode || navigator.userAgent.indexOf(' Trident/') >= 0;
+  var isEdge = (!isIE && !!window.StyleMedia) || navigator.userAgent.indexOf(' Edge/') >= 0;
+  var isChrome = (!!window.chrome) || (navigator.userAgent.indexOf(' Chrome/') >= 0 && navigator.vendor.indexOf('Google') >= 0);
+  var isBlink = (isChrome || isOpera) && !!window.CSS;
+  var dt = new Date();
+  var day = dt.getDate();
+  var month = dt.getMonth() + 1;
+  var year = dt.getFullYear();
+  var hour = dt.getHours();
+  var mins = dt.getMinutes();
+  var secns = dt.getSeconds();
+  var postfix = day + "." + month + "." + year + "_" + hour + "." + mins + "." + secns + "_" + getRandomInt2(100,999);
+  var myURL = window.URL || window.webkitURL;
+  if (isChrome || isFirefox || isEdge || isBlink) {
+    var a = document.getElementById('allOtherATag1');
+    var data_type = 'data:application/vnd.ms-excel';
 
-        var a = document.getElementById('allOtherATag1');
-        //getting data from our div that contains the HTML table
-        var data_type = 'data:application/vnd.ms-excel';
-
-        var table_div = document.getElementById(tableid);
-        var cptnTxt = $("caption").text();
-        var tab_text = "<table border='2px'><caption style=\"font-weight:bold;font-size: 18px;\">" + cptnTxt + "</caption><tr bgcolor='#87AFC6'>";
-        var textRange;
-        var j = 0;
-        tab = document.getElementById(tableid); // id of table
-
-
-        for (j = 0; j < tab.rows.length; j++)
-        {
-            if (j === 0) {
-                tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
-            } else {
-                tab_text = tab_text + "<tr>" + tab.rows[j].innerHTML + "</tr>";
-            }
-            //tab_text=tab_text+"</tr>";
-        }
-
-        tab_text = tab_text + "</table>";
-        tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
-        tab_text = tab_text.replace(/<a[^>]*>|<\/a>/g, "").replace(/Â»/g, "");//remove if u want links in your table
-        tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
-        tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
-
-        var binaryData = [];
-        /*table_div.outerHTML*/
-        binaryData.push(tab_text);
-        var url = myURL.createObjectURL(new Blob(binaryData, {type: "data:application/vnd.ms-excel"}));
-        var table_html = url;
-        a.href = table_html;
-        //setting the file name
-        a.download = 'exported_table_' + postfix + '.xls';
-        //triggering the function
-        a.click();
-    } else {
-        //alert('Here2');
-        fnExcelReport(tableid, 'exported_table_' + postfix);
-    }
-    return false;
-}
-
-function fnExcelReport(tableid, fileNm)
-{
-    var x = document.getElementById('allOtherIframe1');
-    var frame = (x.contentWindow || x.contentDocument);
+    var table_div = document.getElementById(tableid);
     var cptnTxt = $("caption").text();
     var tab_text = "<table border='2px'><caption style=\"font-weight:bold;font-size: 18px;\">" + cptnTxt + "</caption><tr bgcolor='#87AFC6'>";
     var textRange;
     var j = 0;
-    tab = document.getElementById(tableid); // id of table
+    tab = document.getElementById(tableid);
 
-    for (j = 0; j < tab.rows.length; j++)
-    {
-        if (j === 0) {
-            tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
-        } else {
-            tab_text = tab_text + "<tr>" + tab.rows[j].innerHTML + "</tr>";
-        }
+
+    for (j = 0; j < tab.rows.length; j++) {
+      if (j === 0) {
+        tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+      } else {
+        tab_text = tab_text + "<tr>" + tab.rows[j].innerHTML + "</tr>";
+      }
     }
 
     tab_text = tab_text + "</table>";
-    tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
-    tab_text = tab_text.replace(/<a[^>]*>|<\/a>/g, "").replace(/Â»/g, "");//remove if u want links in your table
-    tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
-    tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+    tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g,"");
+    tab_text = tab_text.replace(/<a[^>]*>|<\/a>/g,"").replace(/Â»/g,"");
+    tab_text = tab_text.replace(/<img[^>]*>/gi,"");
+    tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi,"");
 
-    var ua = window.navigator.userAgent;
-    var msie = ua.indexOf("MSIE ");
-    /*if (event.data.browser !== 'IE') {
-     $.util.open('data:application/vnd.ms-excel,' + event.data.content);
-     } else {
-     // The iframe already has to be included in the HTML, or you'll get a 'no access error'.
-     frame.document.open("txt/html", "replace");
-     frame.document.write(event.data.content);
-     frame.document.close();
-     frame.focus();
-     command = frame.document.execCommand("SaveAs", true, "data_table.xls");
-     }*/
-    /**/
-    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./) || navigator.userAgent.indexOf(' Trident/') >= 0 || navigator.userAgent.indexOf(' Edge/') >= 0)      // If Internet Explorer
-    {
-        frame.document.open("txt/html", "replace");
-        frame.document.write(tab_text);
-        frame.document.close();
-        frame.focus();
-        sa = frame.document.execCommand("SaveAs", true, fileNm + ".xls");
-        /*// IE10+ : (has Blob, but not a[download] or URL)
-         if (navigator.msSaveBlob) {
-         return navigator.msSaveBlob(blob, fileName);
-         }*/
+    var binaryData = [];
+    binaryData.push(tab_text);
+    var url = myURL.createObjectURL(new Blob(binaryData,{ type: "data:application/vnd.ms-excel" }));
+    var table_html = url;
+    a.href = table_html;
+    a.download = 'exported_table_' + postfix + '.xls';
+    a.click();
+  } else {
+    fnExcelReport(tableid,'exported_table_' + postfix);
+  }
+  return false;
+}
+
+function fnExcelReport(tableid,fileNm) {
+  var x = document.getElementById('allOtherIframe1');
+  var frame = (x.contentWindow || x.contentDocument);
+  var cptnTxt = $("caption").text();
+  var tab_text = "<table border='2px'><caption style=\"font-weight:bold;font-size: 18px;\">" + cptnTxt + "</caption><tr bgcolor='#87AFC6'>";
+  var textRange;
+  var j = 0;
+  tab = document.getElementById(tableid);
+
+  for (j = 0; j < tab.rows.length; j++) {
+    if (j === 0) {
+      tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
     } else {
-        //other browser not tested on IE 11
-        sa = generateHtmlExcel(tableid);
+      tab_text = tab_text + "<tr>" + tab.rows[j].innerHTML + "</tr>";
     }
-    return (sa);
+  }
+
+  tab_text = tab_text + "</table>";
+  tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g,"");
+  tab_text = tab_text.replace(/<a[^>]*>|<\/a>/g,"").replace(/Â»/g,"");
+  tab_text = tab_text.replace(/<img[^>]*>/gi,"");
+  tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi,"");
+
+  var ua = window.navigator.userAgent;
+  var msie = ua.indexOf("MSIE ");
+  if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./) || navigator.userAgent.indexOf(' Trident/') >= 0 || navigator.userAgent.indexOf(' Edge/') >= 0) {
+    frame.document.open("txt/html","replace");
+    frame.document.write(tab_text);
+    frame.document.close();
+    frame.focus();
+    sa = frame.document.execCommand("SaveAs",true,fileNm + ".xls");
+  } else {
+    sa = generateHtmlExcel(tableid);
+  }
+  return (sa);
 }
 
 function generateHtmlExcel(tableid) {
-    var cptnTxt = $("caption").text();
-    var tab_text = "<table border='2px'><caption style=\"font-weight:bold;font-size: 18px;\">" + cptnTxt + "</caption><tr bgcolor='#87AFC6'>";
-    var textRange;
-    var j = 0;
-    tab = document.getElementById(tableid); // id of table
+  var cptnTxt = $("caption").text();
+  var tab_text = "<table border='2px'><caption style=\"font-weight:bold;font-size: 18px;\">" + cptnTxt + "</caption><tr bgcolor='#87AFC6'>";
+  var textRange;
+  var j = 0;
+  tab = document.getElementById(tableid);
 
 
-    for (j = 0; j < tab.rows.length; j++)
-    {
-        if (j === 0) {
-            tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
-        } else {
-            tab_text = tab_text + "<tr>" + tab.rows[j].innerHTML + "</tr>";
-        }
+  for (j = 0; j < tab.rows.length; j++) {
+    if (j === 0) {
+      tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+    } else {
+      tab_text = tab_text + "<tr>" + tab.rows[j].innerHTML + "</tr>";
     }
+  }
 
-    tab_text = tab_text + "</table>";
-    tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
-    tab_text = tab_text.replace(/<a[^>]*>|<\/a>/g, "").replace(/Â»/g, "");//remove if u want links in your table
-    tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
-    tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
-    /*table.outerHTML*/
-    var myURL = window.URL || window.webkitURL;
-    var table = document.getElementById(tableid);
-    var html = tab_text;
-    var binaryData = [];
-    binaryData.push(html);
-    var url = myURL.createObjectURL(new Blob(binaryData, {type: "data:application/vnd.ms-excel"}));
-    return window.open(url);
+  tab_text = tab_text + "</table>";
+  tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g,"");
+  tab_text = tab_text.replace(/<a[^>]*>|<\/a>/g,"").replace(/Â»/g,"");
+  tab_text = tab_text.replace(/<img[^>]*>/gi,"");
+  tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi,"");
+  /*table.outerHTML*/
+  var myURL = window.URL || window.webkitURL;
+  var table = document.getElementById(tableid);
+  var html = tab_text;
+  var binaryData = [];
+  binaryData.push(html);
+  var url = myURL.createObjectURL(new Blob(binaryData,{ type: "data:application/vnd.ms-excel" }));
+  return window.open(url);
 }
 
 function getRandomInt1(max) {
-    return Math.floor(Math.random() * Math.floor(max));
+  return Math.floor(Math.random() * Math.floor(max));
 }
 
-function getRandomInt2(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+function getRandomInt2(min,max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
 }
 
 function rhovoid() {
-    return false;
+  return false;
 }
 
 function escapeRegExp(str) {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+  return str.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
 }
 
 function tickUntickChckBx(chckBxElmnt) {
-    $("input[name='" + chckBxElmnt + "']").trigger("click");
+  $("input[name='" + chckBxElmnt + "']").trigger("click");
 }
 
-String.prototype.replaceAll = function (search, replacement) {
-    var target = this;
-    return target.replace(new RegExp(escapeRegExp(search), 'g'), replacement);
+String.prototype.replaceAll = function (search,replacement) {
+  var target = this;
+  return target.replace(new RegExp(escapeRegExp(search),'g'),replacement);
 };
 
-// Numeric only control handler
+
 jQuery.fn.ForceNumericOnly =
-        function ()
-        {
-            return this.each(function ()
-            {
-                $(this).keydown(function (e)
-                {
-                    var key = e.charCode || e.keyCode || 0;
-                    // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
-                    // home, end, period, and numpad decimal
-                    return (
-                            key == 8 ||
-                            key == 9 ||
-                            key == 13 ||
-                            key == 46 ||
-                            key == 110 ||
-                            key == 190 ||
-                            (key >= 35 && key <= 40) ||
-                            (key >= 48 && key <= 57) ||
-                            (key >= 96 && key <= 105));
-                });
-            });
-        };
+  function () {
+    return this.each(function () {
+      $(this).keydown(function (e) {
+        var key = e.charCode || e.keyCode || 0;
+        return (
+          key == 8 ||
+          key == 9 ||
+          key == 13 ||
+          key == 46 ||
+          key == 110 ||
+          key == 190 ||
+          (key >= 35 && key <= 40) ||
+          (key >= 48 && key <= 57) ||
+          (key >= 96 && key <= 105));
+      });
+    });
+  };
 
 
-        /*
-    PDFObject v2.1.1
-    https://github.com/pipwerks/PDFObject
-    Copyright (c) 2008-2018 Philip Hutchison
-    MIT-style license: http://pipwerks.mit-license.org/
-    UMD module pattern from https://github.com/umdjs/umd/blob/master/templates/returnExports.js
+/*
+PDFObject v2.1.1
+https://github.com/pipwerks/PDFObject
+Copyright (c) 2008-2018 Philip Hutchison
+MIT-style license: http://pipwerks.mit-license.org/
+UMD module pattern from https://github.com/umdjs/umd/blob/master/templates/returnExports.js
 */
 
-(function(root,factory){if(typeof define==='function'&&define.amd){define([],factory);}else if(typeof module==='object'&&module.exports){module.exports=factory();}else{root.PDFObject=factory();}}(this,function(){"use strict";if(typeof window==="undefined"||typeof navigator==="undefined"){return false;}
-var pdfobjectversion="2.1.1",ua=window.navigator.userAgent,supportsPDFs,isIE,supportsPdfMimeType=(typeof navigator.mimeTypes['application/pdf']!=="undefined"),supportsPdfActiveX,isModernBrowser=(function(){return(typeof window.Promise!=="undefined");})(),isFirefox=(function(){return(ua.indexOf("irefox")!==-1);})(),isFirefoxWithPDFJS=(function(){if(!isFirefox){return false;}
-return(parseInt(ua.split("rv:")[1].split(".")[0],10)>18);})(),isIOS=(function(){return(/iphone|ipad|ipod/i.test(ua.toLowerCase()));})(),createAXO,buildFragmentString,log,embedError,embed,getTargetElement,generatePDFJSiframe,generateEmbedElement;createAXO=function(type){var ax;try{ax=new ActiveXObject(type);}catch(e){ax=null;}
-return ax;};isIE=function(){return!!(window.ActiveXObject||"ActiveXObject"in window);};supportsPdfActiveX=function(){return!!(createAXO("AcroPDF.PDF")||createAXO("PDF.PdfCtrl"));};supportsPDFs=(!isIOS&&(isFirefoxWithPDFJS||supportsPdfMimeType||(isIE()&&supportsPdfActiveX())));buildFragmentString=function(pdfParams){var string="",prop;if(pdfParams){for(prop in pdfParams){if(pdfParams.hasOwnProperty(prop)){string+=encodeURIComponent(prop)+"="+encodeURIComponent(pdfParams[prop])+"&";}}
-if(string){string="#"+string;string=string.slice(0,string.length-1);}}
-return string;};log=function(msg){if(typeof console!=="undefined"&&console.log){console.log("[PDFObject] "+msg);}};embedError=function(msg){log(msg);return false;};getTargetElement=function(targetSelector){var targetNode=document.body;if(typeof targetSelector==="string"){targetNode=document.querySelector(targetSelector);}else if(typeof jQuery!=="undefined"&&targetSelector instanceof jQuery&&targetSelector.length){targetNode=targetSelector.get(0);}else if(typeof targetSelector.nodeType!=="undefined"&&targetSelector.nodeType===1){targetNode=targetSelector;}
-return targetNode;};generatePDFJSiframe=function(targetNode,url,pdfOpenFragment,PDFJS_URL,id){var fullURL=PDFJS_URL+"?file="+encodeURIComponent(url)+pdfOpenFragment;var scrollfix=(isIOS)?"-webkit-overflow-scrolling: touch; overflow-y: scroll; ":"overflow: hidden; ";var iframe="<div style='"+scrollfix+"position: absolute; top: 0; right: 0; bottom: 0; left: 0;'><iframe  "+id+" src='"+fullURL+"' style='border: none; width: 100%; height: 100%;' frameborder='0'></iframe></div>";targetNode.className+=" pdfobject-container";targetNode.style.position="relative";targetNode.style.overflow="auto";targetNode.innerHTML=iframe;return targetNode.getElementsByTagName("iframe")[0];};generateEmbedElement=function(targetNode,targetSelector,url,pdfOpenFragment,width,height,id){var style="";if(targetSelector&&targetSelector!==document.body){style="width: "+width+"; height: "+height+";";}else{style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;";}
-targetNode.className+=" pdfobject-container";targetNode.innerHTML="<embed "+id+" class='pdfobject' src='"+url+pdfOpenFragment+"' type='application/pdf' style='overflow: auto; "+style+"'/>";return targetNode.getElementsByTagName("embed")[0];};embed=function(url,targetSelector,options){if(typeof url!=="string"){return embedError("URL is not valid");}
-targetSelector=(typeof targetSelector!=="undefined")?targetSelector:false;options=(typeof options!=="undefined")?options:{};var id=(options.id&&typeof options.id==="string")?"id='"+options.id+"'":"",page=(options.page)?options.page:false,pdfOpenParams=(options.pdfOpenParams)?options.pdfOpenParams:{},fallbackLink=(typeof options.fallbackLink!=="undefined")?options.fallbackLink:true,width=(options.width)?options.width:"100%",height=(options.height)?options.height:"100%",assumptionMode=(typeof options.assumptionMode==="boolean")?options.assumptionMode:true,forcePDFJS=(typeof options.forcePDFJS==="boolean")?options.forcePDFJS:false,PDFJS_URL=(options.PDFJS_URL)?options.PDFJS_URL:false,targetNode=getTargetElement(targetSelector),fallbackHTML="",pdfOpenFragment="",fallbackHTML_default="<p>This browser does not support inline PDFs. Please download the PDF to view it: <a href='[url]'>Download PDF</a></p>";if(!targetNode){return embedError("Target element cannot be determined");}
-if(page){pdfOpenParams.page=page;}
-pdfOpenFragment=buildFragmentString(pdfOpenParams);if(forcePDFJS&&PDFJS_URL){return generatePDFJSiframe(targetNode,url,pdfOpenFragment,PDFJS_URL,id);}else if(supportsPDFs||(assumptionMode&&isModernBrowser&&!isIOS)){return generateEmbedElement(targetNode,targetSelector,url,pdfOpenFragment,width,height,id);}else if(PDFJS_URL){return generatePDFJSiframe(targetNode,url,pdfOpenFragment,PDFJS_URL,id);}else{if(fallbackLink){fallbackHTML=(typeof fallbackLink==="string")?fallbackLink:fallbackHTML_default;targetNode.innerHTML=fallbackHTML.replace(/\[url\]/g,url);}
-return embedError("This browser does not support embedded PDFs");}};return{embed:function(a,b,c){return embed(a,b,c);},pdfobjectversion:(function(){return pdfobjectversion;})(),supportsPDFs:(function(){return supportsPDFs;})()};}));
+(function (root,factory) { if (typeof define === 'function' && define.amd) { define([],factory); } else if (typeof module === 'object' && module.exports) { module.exports = factory(); } else { root.PDFObject = factory(); } }(this,function () {
+  "use strict"; if (typeof window === "undefined" || typeof navigator === "undefined") { return false; }
+  var pdfobjectversion = "2.1.1",ua = window.navigator.userAgent,supportsPDFs,isIE,supportsPdfMimeType = (typeof navigator.mimeTypes['application/pdf'] !== "undefined"),supportsPdfActiveX,isModernBrowser = (function () { return (typeof window.Promise !== "undefined"); })(),isFirefox = (function () { return (ua.indexOf("irefox") !== -1); })(),isFirefoxWithPDFJS = (function () {
+    if (!isFirefox) { return false; }
+    return (parseInt(ua.split("rv:")[1].split(".")[0],10) > 18);
+  })(),isIOS = (function () { return (/iphone|ipad|ipod/i.test(ua.toLowerCase())); })(),createAXO,buildFragmentString,log,embedError,embed,getTargetElement,generatePDFJSiframe,generateEmbedElement; createAXO = function (type) {
+    var ax; try { ax = new ActiveXObject(type); } catch (e) { ax = null; }
+    return ax;
+  }; isIE = function () { return !!(window.ActiveXObject || "ActiveXObject" in window); }; supportsPdfActiveX = function () { return !!(createAXO("AcroPDF.PDF") || createAXO("PDF.PdfCtrl")); }; supportsPDFs = (!isIOS && (isFirefoxWithPDFJS || supportsPdfMimeType || (isIE() && supportsPdfActiveX()))); buildFragmentString = function (pdfParams) {
+    var string = "",prop; if (pdfParams) {
+      for (prop in pdfParams) { if (pdfParams.hasOwnProperty(prop)) { string += encodeURIComponent(prop) + "=" + encodeURIComponent(pdfParams[prop]) + "&"; } }
+      if (string) { string = "#" + string; string = string.slice(0,string.length - 1); }
+    }
+    return string;
+  }; log = function (msg) { if (typeof console !== "undefined" && console.log) { console.log("[PDFObject] " + msg); } }; embedError = function (msg) { log(msg); return false; }; getTargetElement = function (targetSelector) {
+    var targetNode = document.body; if (typeof targetSelector === "string") { targetNode = document.querySelector(targetSelector); } else if (typeof jQuery !== "undefined" && targetSelector instanceof jQuery && targetSelector.length) { targetNode = targetSelector.get(0); } else if (typeof targetSelector.nodeType !== "undefined" && targetSelector.nodeType === 1) { targetNode = targetSelector; }
+    return targetNode;
+  }; generatePDFJSiframe = function (targetNode,url,pdfOpenFragment,PDFJS_URL,id) { var fullURL = PDFJS_URL + "?file=" + encodeURIComponent(url) + pdfOpenFragment; var scrollfix = (isIOS) ? "-webkit-overflow-scrolling: touch; overflow-y: scroll; " : "overflow: hidden; "; var iframe = "<div style='" + scrollfix + "position: absolute; top: 0; right: 0; bottom: 0; left: 0;'><iframe  " + id + " src='" + fullURL + "' style='border: none; width: 100%; height: 100%;' frameborder='0'></iframe></div>"; targetNode.className += " pdfobject-container"; targetNode.style.position = "relative"; targetNode.style.overflow = "auto"; targetNode.innerHTML = iframe; return targetNode.getElementsByTagName("iframe")[0]; }; generateEmbedElement = function (targetNode,targetSelector,url,pdfOpenFragment,width,height,id) {
+    var style = ""; if (targetSelector && targetSelector !== document.body) { style = "width: " + width + "; height: " + height + ";"; } else { style = "position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;"; }
+    targetNode.className += " pdfobject-container"; targetNode.innerHTML = "<embed " + id + " class='pdfobject' src='" + url + pdfOpenFragment + "' type='application/pdf' style='overflow: auto; " + style + "'/>"; return targetNode.getElementsByTagName("embed")[0];
+  }; embed = function (url,targetSelector,options) {
+    if (typeof url !== "string") { return embedError("URL is not valid"); }
+    targetSelector = (typeof targetSelector !== "undefined") ? targetSelector : false; options = (typeof options !== "undefined") ? options : {}; var id = (options.id && typeof options.id === "string") ? "id='" + options.id + "'" : "",page = (options.page) ? options.page : false,pdfOpenParams = (options.pdfOpenParams) ? options.pdfOpenParams : {},fallbackLink = (typeof options.fallbackLink !== "undefined") ? options.fallbackLink : true,width = (options.width) ? options.width : "100%",height = (options.height) ? options.height : "100%",assumptionMode = (typeof options.assumptionMode === "boolean") ? options.assumptionMode : true,forcePDFJS = (typeof options.forcePDFJS === "boolean") ? options.forcePDFJS : false,PDFJS_URL = (options.PDFJS_URL) ? options.PDFJS_URL : false,targetNode = getTargetElement(targetSelector),fallbackHTML = "",pdfOpenFragment = "",fallbackHTML_default = "<p>This browser does not support inline PDFs. Please download the PDF to view it: <a href='[url]'>Download PDF</a></p>"; if (!targetNode) { return embedError("Target element cannot be determined"); }
+    if (page) { pdfOpenParams.page = page; }
+    pdfOpenFragment = buildFragmentString(pdfOpenParams); if (forcePDFJS && PDFJS_URL) { return generatePDFJSiframe(targetNode,url,pdfOpenFragment,PDFJS_URL,id); } else if (supportsPDFs || (assumptionMode && isModernBrowser && !isIOS)) { return generateEmbedElement(targetNode,targetSelector,url,pdfOpenFragment,width,height,id); } else if (PDFJS_URL) { return generatePDFJSiframe(targetNode,url,pdfOpenFragment,PDFJS_URL,id); } else {
+      if (fallbackLink) { fallbackHTML = (typeof fallbackLink === "string") ? fallbackLink : fallbackHTML_default; targetNode.innerHTML = fallbackHTML.replace(/\[url\]/g,url); }
+      return embedError("This browser does not support embedded PDFs");
+    }
+  }; return { embed: function (a,b,c) { return embed(a,b,c); },pdfobjectversion: (function () { return pdfobjectversion; })(),supportsPDFs: (function () { return supportsPDFs; })() };
+}));
 
 
 
@@ -621,8 +555,8 @@ return embedError("This browser does not support embedded PDFs");}};return{embed
  * Copyrighted 2012 by Evan Plaice.
  */
 
-RegExp.escape= function(s) {
-    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+RegExp.escape = function (s) {
+  return s.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&');
 };
 
 (function (undefined) {
@@ -630,7 +564,6 @@ RegExp.escape= function(s) {
 
   var $;
 
-  // to keep backwards compatibility
   if (typeof jQuery !== 'undefined' && jQuery) {
     $ = jQuery;
   } else {
@@ -645,13 +578,13 @@ RegExp.escape= function(s) {
 
   $.csv = {
     defaults: {
-      separator:',',
-      delimiter:'"',
-      headers:true
+      separator: ',',
+      delimiter: '"',
+      headers: true
     },
 
     hooks: {
-      castToScalar: function(value, state) {
+      castToScalar: function (value,state) {
         var hasDot = /\./;
         if (isNaN(value)) {
           return value;
@@ -660,7 +593,7 @@ RegExp.escape= function(s) {
             return parseFloat(value);
           } else {
             var integer = parseInt(value);
-            if(isNaN(integer)) {
+            if (isNaN(integer)) {
               return null;
             } else {
               return integer;
@@ -671,20 +604,15 @@ RegExp.escape= function(s) {
     },
 
     parsers: {
-      parse: function(csv, options) {
-        // cache settings
+      parse: function (csv,options) {
         var separator = options.separator;
         var delimiter = options.delimiter;
-
-        // set initial state if it's missing
-        if(!options.state.rowNum) {
+        if (!options.state.rowNum) {
           options.state.rowNum = 1;
         }
-        if(!options.state.colNum) {
+        if (!options.state.colNum) {
           options.state.colNum = 1;
         }
-
-        // clear initial state
         var data = [];
         var entry = [];
         var state = 0;
@@ -692,486 +620,343 @@ RegExp.escape= function(s) {
         var exit = false;
 
         function endOfEntry() {
-          // reset the state
           state = 0;
           value = '';
 
-          // if 'start' hasn't been met, don't output
-          if(options.start && options.state.rowNum < options.start) {
-            // update global state
+          if (options.start && options.state.rowNum < options.start) {
             entry = [];
             options.state.rowNum++;
             options.state.colNum = 1;
             return;
           }
-          
-          if(options.onParseEntry === undefined) {
-            // onParseEntry hook not set
+
+          if (options.onParseEntry === undefined) {
             data.push(entry);
           } else {
-            var hookVal = options.onParseEntry(entry, options.state); // onParseEntry Hook
-            // false skips the row, configurable through a hook
-            if(hookVal !== false) {
+            var hookVal = options.onParseEntry(entry,options.state);
+            if (hookVal !== false) {
               data.push(hookVal);
             }
           }
-          //console.log('entry:' + entry);
-          
-          // cleanup
           entry = [];
-
-          // if 'end' is met, stop parsing
-          if(options.end && options.state.rowNum >= options.end) {
+          if (options.end && options.state.rowNum >= options.end) {
             exit = true;
           }
-          
-          // update global state
           options.state.rowNum++;
           options.state.colNum = 1;
         }
 
         function endOfValue() {
-          if(options.onParseValue === undefined) {
-            // onParseValue hook not set
+          if (options.onParseValue === undefined) {
             entry.push(value);
           } else {
-            var hook = options.onParseValue(value, options.state); // onParseValue Hook
-            // false skips the row, configurable through a hook
-            if(hook !== false) {
+            var hook = options.onParseValue(value,options.state);
+            if (hook !== false) {
               entry.push(hook);
             }
           }
-          //console.log('value:' + value);
-          // reset the state
           value = '';
           state = 0;
-          // update global state
           options.state.colNum++;
         }
 
-        // escape regex-specific control chars
         var escSeparator = RegExp.escape(separator);
         var escDelimiter = RegExp.escape(delimiter);
-
-        // compile the regEx str using the custom delimiter/separator
         var match = /(D|S|\r\n|\n|\r|[^DS\r\n]+)/;
         var matchSrc = match.source;
-        matchSrc = matchSrc.replace(/S/g, escSeparator);
-        matchSrc = matchSrc.replace(/D/g, escDelimiter);
-        match = new RegExp(matchSrc, 'gm');
-
-        // put on your fancy pants...
-        // process control chars individually, use look-ahead on non-control chars
-        csv.replace(match, function (m0) {
-          if(exit) {
+        matchSrc = matchSrc.replace(/S/g,escSeparator);
+        matchSrc = matchSrc.replace(/D/g,escDelimiter);
+        match = new RegExp(matchSrc,'gm');
+        csv.replace(match,function (m0) {
+          if (exit) {
             return;
           }
           switch (state) {
-            // the start of a value
             case 0:
-              // null last value
               if (m0 === separator) {
                 value += '';
                 endOfValue();
                 break;
               }
-              // opening delimiter
               if (m0 === delimiter) {
                 state = 1;
                 break;
               }
-              // null last value
               if (/^(\r\n|\n|\r)$/.test(m0)) {
                 endOfValue();
                 endOfEntry();
                 break;
               }
-              // un-delimited value
               value += m0;
               state = 3;
               break;
-
-            // delimited input
             case 1:
-              // second delimiter? check further
               if (m0 === delimiter) {
                 state = 2;
                 break;
               }
-              // delimited data
               value += m0;
               state = 1;
               break;
-
-            // delimiter found in delimited input
             case 2:
-              // escaped delimiter?
               if (m0 === delimiter) {
                 value += m0;
                 state = 1;
                 break;
               }
-              // null value
               if (m0 === separator) {
                 endOfValue();
                 break;
               }
-              // end of entry
               if (/^(\r\n|\n|\r)$/.test(m0)) {
                 endOfValue();
                 endOfEntry();
                 break;
               }
-              // broken paser?
               throw new Error('CSVDataError: Illegal State [Row:' + options.state.rowNum + '][Col:' + options.state.colNum + ']');
-
-            // un-delimited input
             case 3:
-              // null last value
               if (m0 === separator) {
                 endOfValue();
                 break;
               }
-              // end of entry
               if (/^(\r\n|\n|\r)$/.test(m0)) {
                 endOfValue();
                 endOfEntry();
                 break;
               }
               if (m0 === delimiter) {
-              // non-compliant data
                 throw new Error('CSVDataError: Illegal Quote [Row:' + options.state.rowNum + '][Col:' + options.state.colNum + ']');
               }
-              // broken parser?
               throw new Error('CSVDataError: Illegal Data [Row:' + options.state.rowNum + '][Col:' + options.state.colNum + ']');
             default:
-              // shenanigans
               throw new Error('CSVDataError: Unknown State [Row:' + options.state.rowNum + '][Col:' + options.state.colNum + ']');
           }
-          //console.log('val:' + m0 + ' state:' + state);
         });
-
-        // submit the last entry
-        // ignore null last line
-        if(entry.length !== 0) {
+        if (entry.length !== 0) {
           endOfValue();
           endOfEntry();
         }
 
         return data;
       },
-
-      // a csv-specific line splitter
-      splitLines: function(csv, options) {
-        // cache settings
+      splitLines: function (csv,options) {
         var separator = options.separator;
         var delimiter = options.delimiter;
-
-        // set initial state if it's missing
-        if(!options.state.rowNum) {
+        if (!options.state.rowNum) {
           options.state.rowNum = 1;
         }
-
-        // clear initial state
         var entries = [];
         var state = 0;
         var entry = '';
         var exit = false;
 
-        function endOfLine() {          
-          // reset the state
+        function endOfLine() {
           state = 0;
-          
-          // if 'start' hasn't been met, don't output
-          if(options.start && options.state.rowNum < options.start) {
-            // update global state
+          if (options.start && options.state.rowNum < options.start) {
             entry = '';
             options.state.rowNum++;
             return;
           }
-          
-          if(options.onParseEntry === undefined) {
-            // onParseEntry hook not set
+
+          if (options.onParseEntry === undefined) {
             entries.push(entry);
           } else {
-            var hookVal = options.onParseEntry(entry, options.state); // onParseEntry Hook
-            // false skips the row, configurable through a hook
-            if(hookVal !== false) {
+            var hookVal = options.onParseEntry(entry,options.state);
+            if (hookVal !== false) {
               entries.push(hookVal);
             }
           }
-
-          // cleanup
           entry = '';
-
-          // if 'end' is met, stop parsing
-          if(options.end && options.state.rowNum >= options.end) {
+          if (options.end && options.state.rowNum >= options.end) {
             exit = true;
           }
-          
-          // update global state
           options.state.rowNum++;
         }
 
-        // escape regex-specific control chars
         var escSeparator = RegExp.escape(separator);
         var escDelimiter = RegExp.escape(delimiter);
-
-        // compile the regEx str using the custom delimiter/separator
         var match = /(D|S|\n|\r|[^DS\r\n]+)/;
         var matchSrc = match.source;
-        matchSrc = matchSrc.replace(/S/g, escSeparator);
-        matchSrc = matchSrc.replace(/D/g, escDelimiter);
-        match = new RegExp(matchSrc, 'gm');
-
-        // put on your fancy pants...
-        // process control chars individually, use look-ahead on non-control chars
-        csv.replace(match, function (m0) {
-          if(exit) {
+        matchSrc = matchSrc.replace(/S/g,escSeparator);
+        matchSrc = matchSrc.replace(/D/g,escDelimiter);
+        match = new RegExp(matchSrc,'gm');
+        csv.replace(match,function (m0) {
+          if (exit) {
             return;
           }
           switch (state) {
-            // the start of a value/entry
             case 0:
-              // null value
               if (m0 === separator) {
                 entry += m0;
                 state = 0;
                 break;
               }
-              // opening delimiter
               if (m0 === delimiter) {
                 entry += m0;
                 state = 1;
                 break;
               }
-              // end of line
               if (m0 === '\n') {
                 endOfLine();
                 break;
               }
-              // phantom carriage return
               if (/^\r$/.test(m0)) {
                 break;
               }
-              // un-delimit value
               entry += m0;
               state = 3;
               break;
-
-            // delimited input
             case 1:
-              // second delimiter? check further
               if (m0 === delimiter) {
                 entry += m0;
                 state = 2;
                 break;
               }
-              // delimited data
               entry += m0;
               state = 1;
               break;
 
-            // delimiter found in delimited input
             case 2:
-              // escaped delimiter?
               var prevChar = entry.substr(entry.length - 1);
               if (m0 === delimiter && prevChar === delimiter) {
                 entry += m0;
                 state = 1;
                 break;
               }
-              // end of value
               if (m0 === separator) {
                 entry += m0;
                 state = 0;
                 break;
               }
-              // end of line
               if (m0 === '\n') {
                 endOfLine();
                 break;
               }
-              // phantom carriage return
               if (m0 === '\r') {
                 break;
               }
-              // broken paser?
               throw new Error('CSVDataError: Illegal state [Row:' + options.state.rowNum + ']');
-
-            // un-delimited input
             case 3:
-              // null value
               if (m0 === separator) {
                 entry += m0;
                 state = 0;
                 break;
               }
-              // end of line
               if (m0 === '\n') {
                 endOfLine();
                 break;
               }
-              // phantom carriage return
               if (m0 === '\r') {
                 break;
               }
-              // non-compliant data
               if (m0 === delimiter) {
                 throw new Error('CSVDataError: Illegal quote [Row:' + options.state.rowNum + ']');
               }
-              // broken parser?
               throw new Error('CSVDataError: Illegal state [Row:' + options.state.rowNum + ']');
             default:
-              // shenanigans
               throw new Error('CSVDataError: Unknown state [Row:' + options.state.rowNum + ']');
           }
-          //console.log('val:' + m0 + ' state:' + state);
         });
-
-        // submit the last entry
-        // ignore null last line
-        if(entry !== '') {
+        if (entry !== '') {
           endOfLine();
         }
 
         return entries;
       },
 
-      // a csv entry parser
-      parseEntry: function(csv, options) {
-        // cache settings
+      parseEntry: function (csv,options) {
         var separator = options.separator;
         var delimiter = options.delimiter;
-        
-        // set initial state if it's missing
-        if(!options.state.rowNum) {
+        if (!options.state.rowNum) {
           options.state.rowNum = 1;
         }
-        if(!options.state.colNum) {
+        if (!options.state.colNum) {
           options.state.colNum = 1;
         }
-
-        // clear initial state
         var entry = [];
         var state = 0;
         var value = '';
 
         function endOfValue() {
-          if(options.onParseValue === undefined) {
-            // onParseValue hook not set
+          if (options.onParseValue === undefined) {
             entry.push(value);
           } else {
-            var hook = options.onParseValue(value, options.state); // onParseValue Hook
-            // false skips the value, configurable through a hook
-            if(hook !== false) {
+            var hook = options.onParseValue(value,options.state);
+            if (hook !== false) {
               entry.push(hook);
             }
           }
-          // reset the state
           value = '';
           state = 0;
-          // update global state
           options.state.colNum++;
         }
-
-        // checked for a cached regEx first
-        if(!options.match) {
-          // escape regex-specific control chars
+        if (!options.match) {
           var escSeparator = RegExp.escape(separator);
           var escDelimiter = RegExp.escape(delimiter);
-          
-          // compile the regEx str using the custom delimiter/separator
           var match = /(D|S|\n|\r|[^DS\r\n]+)/;
           var matchSrc = match.source;
-          matchSrc = matchSrc.replace(/S/g, escSeparator);
-          matchSrc = matchSrc.replace(/D/g, escDelimiter);
-          options.match = new RegExp(matchSrc, 'gm');
+          matchSrc = matchSrc.replace(/S/g,escSeparator);
+          matchSrc = matchSrc.replace(/D/g,escDelimiter);
+          options.match = new RegExp(matchSrc,'gm');
         }
-
-        // put on your fancy pants...
-        // process control chars individually, use look-ahead on non-control chars
-        csv.replace(options.match, function (m0) {
+        csv.replace(options.match,function (m0) {
           switch (state) {
-            // the start of a value
             case 0:
-              // null last value
               if (m0 === separator) {
                 value += '';
                 endOfValue();
                 break;
               }
-              // opening delimiter
               if (m0 === delimiter) {
                 state = 1;
                 break;
               }
-              // skip un-delimited new-lines
               if (m0 === '\n' || m0 === '\r') {
                 break;
               }
-              // un-delimited value
               value += m0;
               state = 3;
               break;
-
-            // delimited input
             case 1:
-              // second delimiter? check further
               if (m0 === delimiter) {
                 state = 2;
                 break;
               }
-              // delimited data
               value += m0;
               state = 1;
               break;
-
-            // delimiter found in delimited input
             case 2:
-              // escaped delimiter?
               if (m0 === delimiter) {
                 value += m0;
                 state = 1;
                 break;
               }
-              // null value
               if (m0 === separator) {
                 endOfValue();
                 break;
               }
-              // skip un-delimited new-lines
               if (m0 === '\n' || m0 === '\r') {
                 break;
               }
-              // broken paser?
               throw new Error('CSVDataError: Illegal State [Row:' + options.state.rowNum + '][Col:' + options.state.colNum + ']');
 
-            // un-delimited input
             case 3:
-              // null last value
               if (m0 === separator) {
                 endOfValue();
                 break;
               }
-              // skip un-delimited new-lines
               if (m0 === '\n' || m0 === '\r') {
                 break;
               }
-              // non-compliant data
               if (m0 === delimiter) {
                 throw new Error('CSVDataError: Illegal Quote [Row:' + options.state.rowNum + '][Col:' + options.state.colNum + ']');
               }
-              // broken parser?
               throw new Error('CSVDataError: Illegal Data [Row:' + options.state.rowNum + '][Col:' + options.state.colNum + ']');
             default:
-              // shenanigans
               throw new Error('CSVDataError: Unknown State [Row:' + options.state.rowNum + '][Col:' + options.state.colNum + ']');
           }
-          //console.log('val:' + m0 + ' state:' + state);
         });
 
-        // submit the last value
         endOfValue();
 
         return entry;
@@ -1191,12 +976,12 @@ RegExp.escape= function(s) {
        */
       collectPropertyNames: function (objects) {
 
-        var o, propName, props = [];
+        var o,propName,props = [];
         for (o in objects) {
           for (propName in objects[o]) {
             if ((objects[o].hasOwnProperty(propName)) &&
-                (props.indexOf(propName) < 0) && 
-                (typeof objects[o][propName] !== 'function')) {
+              (props.indexOf(propName) < 0) &&
+              (typeof objects[o][propName] !== 'function')) {
 
               props.push(propName);
             }
@@ -1219,15 +1004,14 @@ RegExp.escape= function(s) {
      * need to parse a single entry. If you need to parse more than one line,
      * use $.csv2Array instead.
      */
-    toArray: function(csv, options, callback) {
+    toArray: function (csv,options,callback) {
       options = (options !== undefined ? options : {});
       var config = {};
-      config.callback = ((callback !== undefined && typeof(callback) === 'function') ? callback : false);
+      config.callback = ((callback !== undefined && typeof (callback) === 'function') ? callback : false);
       config.separator = 'separator' in options ? options.separator : $.csv.defaults.separator;
       config.delimiter = 'delimiter' in options ? options.delimiter : $.csv.defaults.delimiter;
       var state = (options.state !== undefined ? options.state : {});
 
-      // setup
       options = {
         delimiter: config.delimiter,
         separator: config.separator,
@@ -1236,13 +1020,12 @@ RegExp.escape= function(s) {
         state: state
       };
 
-      var entry = $.csv.parsers.parseEntry(csv, options);
+      var entry = $.csv.parsers.parseEntry(csv,options);
 
-      // push the value to a callback if one is defined
-      if(!config.callback) {
+      if (!config.callback) {
         return entry;
       } else {
-        config.callback('', entry);
+        config.callback('',entry);
       }
     },
 
@@ -1259,14 +1042,13 @@ RegExp.escape= function(s) {
      * dimension of the array represents the line (or entry/row) while the second
      * dimension contains the values (or values/columns).
      */
-    toArrays: function(csv, options, callback) {
+    toArrays: function (csv,options,callback) {
       options = (options !== undefined ? options : {});
       var config = {};
-      config.callback = ((callback !== undefined && typeof(callback) === 'function') ? callback : false);
+      config.callback = ((callback !== undefined && typeof (callback) === 'function') ? callback : false);
       config.separator = 'separator' in options ? options.separator : $.csv.defaults.separator;
       config.delimiter = 'delimiter' in options ? options.delimiter : $.csv.defaults.delimiter;
 
-      // setup
       var data = [];
       options = {
         delimiter: config.delimiter,
@@ -1283,24 +1065,20 @@ RegExp.escape= function(s) {
         }
       };
 
-      // onPreParse hook
-      if(options.onPreParse !== undefined) {
-        options.onPreParse(csv, options.state);
+      if (options.onPreParse !== undefined) {
+        options.onPreParse(csv,options.state);
       }
 
-      // parse the data
-      data = $.csv.parsers.parse(csv, options);
+      data = $.csv.parsers.parse(csv,options);
 
-      // onPostParse hook
-      if(options.onPostParse !== undefined) {
-        options.onPostParse(data, options.state);
+      if (options.onPostParse !== undefined) {
+        options.onPostParse(data,options.state);
       }
 
-      // push the value to a callback if one is defined
-      if(!config.callback) {
+      if (!config.callback) {
         return data;
       } else {
-        config.callback('', data);
+        config.callback('',data);
       }
     },
 
@@ -1316,24 +1094,22 @@ RegExp.escape= function(s) {
      * This method deals with multi-line CSV strings. Where the headers line is
      * used as the key for each value per entry.
      */
-    toObjects: function(csv, options, callback) {
+    toObjects: function (csv,options,callback) {
       options = (options !== undefined ? options : {});
       var config = {};
-      config.callback = ((callback !== undefined && typeof(callback) === 'function') ? callback : false);
+      config.callback = ((callback !== undefined && typeof (callback) === 'function') ? callback : false);
       config.separator = 'separator' in options ? options.separator : $.csv.defaults.separator;
       config.delimiter = 'delimiter' in options ? options.delimiter : $.csv.defaults.delimiter;
       config.headers = 'headers' in options ? options.headers : $.csv.defaults.headers;
       options.start = 'start' in options ? options.start : 1;
-      
-      // account for headers
-      if(config.headers) {
+
+      if (config.headers) {
         options.start++;
       }
-      if(options.end && config.headers) {
+      if (options.end && config.headers) {
         options.end++;
       }
 
-      // setup
       var lines = [];
       var data = [];
 
@@ -1354,90 +1130,81 @@ RegExp.escape= function(s) {
         transform: options.transform
       };
 
-      // fetch the headers
       var headerOptions = {
         delimiter: config.delimiter,
         separator: config.separator,
         start: 1,
         end: 1,
         state: {
-          rowNum:1,
-          colNum:1
+          rowNum: 1,
+          colNum: 1
         }
       };
 
-      // onPreParse hook
-      if(options.onPreParse !== undefined) {
-        options.onPreParse(csv, options.state);
+      if (options.onPreParse !== undefined) {
+        options.onPreParse(csv,options.state);
       }
 
-      // parse the csv
-      var headerLine = $.csv.parsers.splitLines(csv, headerOptions);
-      var headers = $.csv.toArray(headerLine[0], options);
+      var headerLine = $.csv.parsers.splitLines(csv,headerOptions);
+      var headers = $.csv.toArray(headerLine[0],options);
 
-      // fetch the data
-      lines = $.csv.parsers.splitLines(csv, options);
+      lines = $.csv.parsers.splitLines(csv,options);
 
-      // reset the state for re-use
       options.state.colNum = 1;
-      if(headers){
+      if (headers) {
         options.state.rowNum = 2;
       } else {
         options.state.rowNum = 1;
       }
-      
-      // convert data to objects
-      for(var i=0, len=lines.length; i<len; i++) {
-        var entry = $.csv.toArray(lines[i], options);
+
+      for (var i = 0,len = lines.length; i < len; i++) {
+        var entry = $.csv.toArray(lines[i],options);
         var object = {};
-        for(var j=0; j <headers.length; j++) {
+        for (var j = 0; j < headers.length; j++) {
           object[headers[j]] = entry[j];
         }
         if (options.transform !== undefined) {
-          data.push(options.transform.call(undefined, object));
+          data.push(options.transform.call(undefined,object));
         } else {
           data.push(object);
         }
-        
-        // update row state
+
         options.state.rowNum++;
       }
 
-      // onPostParse hook
-      if(options.onPostParse !== undefined) {
-        options.onPostParse(data, options.state);
+      if (options.onPostParse !== undefined) {
+        options.onPostParse(data,options.state);
       }
 
-      // push the value to a callback if one is defined
-      if(!config.callback) {
+      if (!config.callback) {
         return data;
       } else {
-        config.callback('', data);
+        config.callback('',data);
       }
     },
 
-     /**
-     * $.csv.fromArrays(arrays)
-     * Converts a javascript array to a CSV String.
-     *
-     * @param {Array} arrays An array containing an array of CSV entries.
-     * @param {Object} [options] An object containing user-defined options.
-     * @param {Character} [separator] An override for the separator character. Defaults to a comma(,).
-     * @param {Character} [delimiter] An override for the delimiter character. Defaults to a double-quote(").
-     *
-     * This method generates a CSV file from an array of arrays (representing entries).
-     */
-    fromArrays: function(arrays, options, callback) {
+    /**
+    * $.csv.fromArrays(arrays)
+    * Converts a javascript array to a CSV String.
+    *
+    * @param {Array} arrays An array containing an array of CSV entries.
+    * @param {Object} [options] An object containing user-defined options.
+    * @param {Character} [separator] An override for the separator character. Defaults to a comma(,).
+    * @param {Character} [delimiter] An override for the delimiter character. Defaults to a double-quote(").
+    *
+    * This method generates a CSV file from an array of arrays (representing entries).
+    */
+    fromArrays: function (arrays,options,callback) {
       options = (options !== undefined ? options : {});
       var config = {};
-      config.callback = ((callback !== undefined && typeof(callback) === 'function') ? callback : false);
+      config.callback = ((callback !== undefined && typeof (callback) === 'function') ? callback : false);
       config.separator = 'separator' in options ? options.separator : $.csv.defaults.separator;
       config.delimiter = 'delimiter' in options ? options.delimiter : $.csv.defaults.delimiter;
 
       var output = '',
-          line,
-          lineValues,
-          i, j;
+        line,
+        lineValues,
+        i,j;
 
       for (i = 0; i < arrays.length; i++) {
         line = arrays[i];
@@ -1445,12 +1212,12 @@ RegExp.escape= function(s) {
         for (j = 0; j < line.length; j++) {
           var strValue = (line[j] === undefined || line[j] === null) ? '' : line[j].toString();
           if (strValue.indexOf(config.delimiter) > -1) {
-            strValue = strValue.replace(config.delimiter, config.delimiter + config.delimiter);
+            strValue = strValue.replace(config.delimiter,config.delimiter + config.delimiter);
           }
 
           var escMatcher = '\n|\r|S|D';
-          escMatcher = escMatcher.replace('S', config.separator);
-          escMatcher = escMatcher.replace('D', config.delimiter);
+          escMatcher = escMatcher.replace('S',config.separator);
+          escMatcher = escMatcher.replace('D',config.delimiter);
 
           if (strValue.search(escMatcher) > -1) {
             strValue = config.delimiter + strValue + config.delimiter;
@@ -1460,11 +1227,10 @@ RegExp.escape= function(s) {
         output += lineValues.join(config.separator) + '\r\n';
       }
 
-      // push the value to a callback if one is defined
-      if(!config.callback) {
+      if (!config.callback) {
         return output;
       } else {
-        config.callback('', output);
+        config.callback('',output);
       }
     },
 
@@ -1490,10 +1256,10 @@ RegExp.escape= function(s) {
      * It starts by detecting the headers and adding them as the first line of
      * the CSV file, followed by a structured dump of the data.
      */
-    fromObjects: function(objects, options, callback) {
+    fromObjects: function (objects,options,callback) {
       options = (options !== undefined ? options : {});
       var config = {};
-      config.callback = ((callback !== undefined && typeof(callback) === 'function') ? callback : false);
+      config.callback = ((callback !== undefined && typeof (callback) === 'function') ? callback : false);
       config.separator = 'separator' in options ? options.separator : $.csv.defaults.separator;
       config.delimiter = 'delimiter' in options ? options.delimiter : $.csv.defaults.delimiter;
       config.headers = 'headers' in options ? options.headers : $.csv.defaults.headers;
@@ -1502,7 +1268,7 @@ RegExp.escape= function(s) {
       config.transform = options.transform;
 
       if (typeof config.manualOrder === 'string') {
-        config.manualOrder = $.csv.toArray(config.manualOrder, config);
+        config.manualOrder = $.csv.toArray(config.manualOrder,config);
       }
 
       if (config.transform !== undefined) {
@@ -1511,7 +1277,7 @@ RegExp.escape= function(s) {
 
         var i;
         for (i = 0; i < origObjects.length; i++) {
-          objects.push(config.transform.call(undefined, origObjects[i]));
+          objects.push(config.transform.call(undefined,origObjects[i]));
         }
       }
 
@@ -1519,21 +1285,21 @@ RegExp.escape= function(s) {
 
       if (config.sortOrder === 'alpha') {
         props.sort();
-      } // else {} - nothing to do for 'declare' order
+      }
 
       if (config.manualOrder.length > 0) {
 
         var propsManual = [].concat(config.manualOrder);
         var p;
         for (p = 0; p < props.length; p++) {
-          if (propsManual.indexOf( props[p] ) < 0) {
-            propsManual.push( props[p] );
+          if (propsManual.indexOf(props[p]) < 0) {
+            propsManual.push(props[p]);
           }
         }
         props = propsManual;
       }
 
-      var o, p, line, output = [], propName;
+      var o,p,line,output = [],propName;
       if (config.headers) {
         output.push(props);
       }
@@ -1551,23 +1317,19 @@ RegExp.escape= function(s) {
         output.push(line);
       }
 
-      // push the value to a callback if one is defined
-      return $.csv.fromArrays(output, options, config.callback);
+      return $.csv.fromArrays(output,options,config.callback);
     }
   };
 
-  // Maintenance code to maintain backward-compatibility
-  // Will be removed in release 1.0
   $.csvEntry2Array = $.csv.toArray;
   $.csv2Array = $.csv.toArrays;
   $.csv2Dictionary = $.csv.toObjects;
 
-  // CommonJS module is defined
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = $.csv;
   }
 
-}).call( this );
+}).call(this);
 
 /*!
  * jScrollPane - v2.0.23 - 2016-01-28
@@ -1576,304 +1338,993 @@ RegExp.escape= function(s) {
  * Copyright (c) 2014 Kelvin Luck
  * Dual licensed under the MIT or GPL licenses.
  */
-!function(a){"function"==typeof define&&define.amd?define(["jquery"],a):"object"==typeof exports?module.exports=a(require("jquery")):a(jQuery)}(function(a){a.fn.jScrollPane=function(b){function c(b,c){function d(c){var f,h,j,k,l,o,p=!1,q=!1;if(N=c,void 0===O)l=b.scrollTop(),o=b.scrollLeft(),b.css({overflow:"hidden",padding:0}),P=b.innerWidth()+rb,Q=b.innerHeight(),b.width(P),O=a('<div class="jspPane" />').css("padding",qb).append(b.children()),R=a('<div class="jspContainer" />').css({width:P+"px",height:Q+"px"}).append(O).appendTo(b);else{if(b.css("width",""),p=N.stickToBottom&&A(),q=N.stickToRight&&B(),k=b.innerWidth()+rb!=P||b.outerHeight()!=Q,k&&(P=b.innerWidth()+rb,Q=b.innerHeight(),R.css({width:P+"px",height:Q+"px"})),!k&&sb==S&&O.outerHeight()==T)return void b.width(P);sb=S,O.css("width",""),b.width(P),R.find(">.jspVerticalBar,>.jspHorizontalBar").remove().end()}O.css("overflow","auto"),S=c.contentWidth?c.contentWidth:O[0].scrollWidth,T=O[0].scrollHeight,O.css("overflow",""),U=S/P,V=T/Q,W=V>1,X=U>1,X||W?(b.addClass("jspScrollable"),f=N.maintainPosition&&($||bb),f&&(h=y(),j=z()),e(),g(),i(),f&&(w(q?S-P:h,!1),v(p?T-Q:j,!1)),F(),C(),L(),N.enableKeyboardNavigation&&H(),N.clickOnTrack&&m(),J(),N.hijackInternalLinks&&K()):(b.removeClass("jspScrollable"),O.css({top:0,left:0,width:R.width()-rb}),D(),G(),I(),n()),N.autoReinitialise&&!pb?pb=setInterval(function(){d(N)},N.autoReinitialiseDelay):!N.autoReinitialise&&pb&&clearInterval(pb),l&&b.scrollTop(0)&&v(l,!1),o&&b.scrollLeft(0)&&w(o,!1),b.trigger("jsp-initialised",[X||W])}function e(){W&&(R.append(a('<div class="jspVerticalBar" />').append(a('<div class="jspCap jspCapTop" />'),a('<div class="jspTrack" />').append(a('<div class="jspDrag" />').append(a('<div class="jspDragTop" />'),a('<div class="jspDragBottom" />'))),a('<div class="jspCap jspCapBottom" />'))),cb=R.find(">.jspVerticalBar"),db=cb.find(">.jspTrack"),Y=db.find(">.jspDrag"),N.showArrows&&(hb=a('<a class="jspArrow jspArrowUp" />').bind("mousedown.jsp",k(0,-1)).bind("click.jsp",E),ib=a('<a class="jspArrow jspArrowDown" />').bind("mousedown.jsp",k(0,1)).bind("click.jsp",E),N.arrowScrollOnHover&&(hb.bind("mouseover.jsp",k(0,-1,hb)),ib.bind("mouseover.jsp",k(0,1,ib))),j(db,N.verticalArrowPositions,hb,ib)),fb=Q,R.find(">.jspVerticalBar>.jspCap:visible,>.jspVerticalBar>.jspArrow").each(function(){fb-=a(this).outerHeight()}),Y.hover(function(){Y.addClass("jspHover")},function(){Y.removeClass("jspHover")}).bind("mousedown.jsp",function(b){a("html").bind("dragstart.jsp selectstart.jsp",E),Y.addClass("jspActive");var c=b.pageY-Y.position().top;return a("html").bind("mousemove.jsp",function(a){p(a.pageY-c,!1)}).bind("mouseup.jsp mouseleave.jsp",o),!1}),f())}function f(){db.height(fb+"px"),$=0,eb=N.verticalGutter+db.outerWidth(),O.width(P-eb-rb);try{0===cb.position().left&&O.css("margin-left",eb+"px")}catch(a){}}function g(){X&&(R.append(a('<div class="jspHorizontalBar" />').append(a('<div class="jspCap jspCapLeft" />'),a('<div class="jspTrack" />').append(a('<div class="jspDrag" />').append(a('<div class="jspDragLeft" />'),a('<div class="jspDragRight" />'))),a('<div class="jspCap jspCapRight" />'))),jb=R.find(">.jspHorizontalBar"),kb=jb.find(">.jspTrack"),_=kb.find(">.jspDrag"),N.showArrows&&(nb=a('<a class="jspArrow jspArrowLeft" />').bind("mousedown.jsp",k(-1,0)).bind("click.jsp",E),ob=a('<a class="jspArrow jspArrowRight" />').bind("mousedown.jsp",k(1,0)).bind("click.jsp",E),N.arrowScrollOnHover&&(nb.bind("mouseover.jsp",k(-1,0,nb)),ob.bind("mouseover.jsp",k(1,0,ob))),j(kb,N.horizontalArrowPositions,nb,ob)),_.hover(function(){_.addClass("jspHover")},function(){_.removeClass("jspHover")}).bind("mousedown.jsp",function(b){a("html").bind("dragstart.jsp selectstart.jsp",E),_.addClass("jspActive");var c=b.pageX-_.position().left;return a("html").bind("mousemove.jsp",function(a){r(a.pageX-c,!1)}).bind("mouseup.jsp mouseleave.jsp",o),!1}),lb=R.innerWidth(),h())}function h(){R.find(">.jspHorizontalBar>.jspCap:visible,>.jspHorizontalBar>.jspArrow").each(function(){lb-=a(this).outerWidth()}),kb.width(lb+"px"),bb=0}function i(){if(X&&W){var b=kb.outerHeight(),c=db.outerWidth();fb-=b,a(jb).find(">.jspCap:visible,>.jspArrow").each(function(){lb+=a(this).outerWidth()}),lb-=c,Q-=c,P-=b,kb.parent().append(a('<div class="jspCorner" />').css("width",b+"px")),f(),h()}X&&O.width(R.outerWidth()-rb+"px"),T=O.outerHeight(),V=T/Q,X&&(mb=Math.ceil(1/U*lb),mb>N.horizontalDragMaxWidth?mb=N.horizontalDragMaxWidth:mb<N.horizontalDragMinWidth&&(mb=N.horizontalDragMinWidth),_.width(mb+"px"),ab=lb-mb,s(bb)),W&&(gb=Math.ceil(1/V*fb),gb>N.verticalDragMaxHeight?gb=N.verticalDragMaxHeight:gb<N.verticalDragMinHeight&&(gb=N.verticalDragMinHeight),Y.height(gb+"px"),Z=fb-gb,q($))}function j(a,b,c,d){var e,f="before",g="after";"os"==b&&(b=/Mac/.test(navigator.platform)?"after":"split"),b==f?g=b:b==g&&(f=b,e=c,c=d,d=e),a[f](c)[g](d)}function k(a,b,c){return function(){return l(a,b,this,c),this.blur(),!1}}function l(b,c,d,e){d=a(d).addClass("jspActive");var f,g,h=!0,i=function(){0!==b&&tb.scrollByX(b*N.arrowButtonSpeed),0!==c&&tb.scrollByY(c*N.arrowButtonSpeed),g=setTimeout(i,h?N.initialDelay:N.arrowRepeatFreq),h=!1};i(),f=e?"mouseout.jsp":"mouseup.jsp",e=e||a("html"),e.bind(f,function(){d.removeClass("jspActive"),g&&clearTimeout(g),g=null,e.unbind(f)})}function m(){n(),W&&db.bind("mousedown.jsp",function(b){if(void 0===b.originalTarget||b.originalTarget==b.currentTarget){var c,d=a(this),e=d.offset(),f=b.pageY-e.top-$,g=!0,h=function(){var a=d.offset(),e=b.pageY-a.top-gb/2,j=Q*N.scrollPagePercent,k=Z*j/(T-Q);if(0>f)$-k>e?tb.scrollByY(-j):p(e);else{if(!(f>0))return void i();e>$+k?tb.scrollByY(j):p(e)}c=setTimeout(h,g?N.initialDelay:N.trackClickRepeatFreq),g=!1},i=function(){c&&clearTimeout(c),c=null,a(document).unbind("mouseup.jsp",i)};return h(),a(document).bind("mouseup.jsp",i),!1}}),X&&kb.bind("mousedown.jsp",function(b){if(void 0===b.originalTarget||b.originalTarget==b.currentTarget){var c,d=a(this),e=d.offset(),f=b.pageX-e.left-bb,g=!0,h=function(){var a=d.offset(),e=b.pageX-a.left-mb/2,j=P*N.scrollPagePercent,k=ab*j/(S-P);if(0>f)bb-k>e?tb.scrollByX(-j):r(e);else{if(!(f>0))return void i();e>bb+k?tb.scrollByX(j):r(e)}c=setTimeout(h,g?N.initialDelay:N.trackClickRepeatFreq),g=!1},i=function(){c&&clearTimeout(c),c=null,a(document).unbind("mouseup.jsp",i)};return h(),a(document).bind("mouseup.jsp",i),!1}})}function n(){kb&&kb.unbind("mousedown.jsp"),db&&db.unbind("mousedown.jsp")}function o(){a("html").unbind("dragstart.jsp selectstart.jsp mousemove.jsp mouseup.jsp mouseleave.jsp"),Y&&Y.removeClass("jspActive"),_&&_.removeClass("jspActive")}function p(c,d){if(W){0>c?c=0:c>Z&&(c=Z);var e=new a.Event("jsp-will-scroll-y");if(b.trigger(e,[c]),!e.isDefaultPrevented()){var f=c||0,g=0===f,h=f==Z,i=c/Z,j=-i*(T-Q);void 0===d&&(d=N.animateScroll),d?tb.animate(Y,"top",c,q,function(){b.trigger("jsp-user-scroll-y",[-j,g,h])}):(Y.css("top",c),q(c),b.trigger("jsp-user-scroll-y",[-j,g,h]))}}}function q(a){void 0===a&&(a=Y.position().top),R.scrollTop(0),$=a||0;var c=0===$,d=$==Z,e=a/Z,f=-e*(T-Q);(ub!=c||wb!=d)&&(ub=c,wb=d,b.trigger("jsp-arrow-change",[ub,wb,vb,xb])),t(c,d),O.css("top",f),b.trigger("jsp-scroll-y",[-f,c,d]).trigger("scroll")}function r(c,d){if(X){0>c?c=0:c>ab&&(c=ab);var e=new a.Event("jsp-will-scroll-x");if(b.trigger(e,[c]),!e.isDefaultPrevented()){var f=c||0,g=0===f,h=f==ab,i=c/ab,j=-i*(S-P);void 0===d&&(d=N.animateScroll),d?tb.animate(_,"left",c,s,function(){b.trigger("jsp-user-scroll-x",[-j,g,h])}):(_.css("left",c),s(c),b.trigger("jsp-user-scroll-x",[-j,g,h]))}}}function s(a){void 0===a&&(a=_.position().left),R.scrollTop(0),bb=a||0;var c=0===bb,d=bb==ab,e=a/ab,f=-e*(S-P);(vb!=c||xb!=d)&&(vb=c,xb=d,b.trigger("jsp-arrow-change",[ub,wb,vb,xb])),u(c,d),O.css("left",f),b.trigger("jsp-scroll-x",[-f,c,d]).trigger("scroll")}function t(a,b){N.showArrows&&(hb[a?"addClass":"removeClass"]("jspDisabled"),ib[b?"addClass":"removeClass"]("jspDisabled"))}function u(a,b){N.showArrows&&(nb[a?"addClass":"removeClass"]("jspDisabled"),ob[b?"addClass":"removeClass"]("jspDisabled"))}function v(a,b){var c=a/(T-Q);p(c*Z,b)}function w(a,b){var c=a/(S-P);r(c*ab,b)}function x(b,c,d){var e,f,g,h,i,j,k,l,m,n=0,o=0;try{e=a(b)}catch(p){return}for(f=e.outerHeight(),g=e.outerWidth(),R.scrollTop(0),R.scrollLeft(0);!e.is(".jspPane");)if(n+=e.position().top,o+=e.position().left,e=e.offsetParent(),/^body|html$/i.test(e[0].nodeName))return;h=z(),j=h+Q,h>n||c?l=n-N.horizontalGutter:n+f>j&&(l=n-Q+f+N.horizontalGutter),isNaN(l)||v(l,d),i=y(),k=i+P,i>o||c?m=o-N.horizontalGutter:o+g>k&&(m=o-P+g+N.horizontalGutter),isNaN(m)||w(m,d)}function y(){return-O.position().left}function z(){return-O.position().top}function A(){var a=T-Q;return a>20&&a-z()<10}function B(){var a=S-P;return a>20&&a-y()<10}function C(){R.unbind(zb).bind(zb,function(a,b,c,d){bb||(bb=0),$||($=0);var e=bb,f=$,g=a.deltaFactor||N.mouseWheelSpeed;return tb.scrollBy(c*g,-d*g,!1),e==bb&&f==$})}function D(){R.unbind(zb)}function E(){return!1}function F(){O.find(":input,a").unbind("focus.jsp").bind("focus.jsp",function(a){x(a.target,!1)})}function G(){O.find(":input,a").unbind("focus.jsp")}function H(){function c(){var a=bb,b=$;switch(d){case 40:tb.scrollByY(N.keyboardSpeed,!1);break;case 38:tb.scrollByY(-N.keyboardSpeed,!1);break;case 34:case 32:tb.scrollByY(Q*N.scrollPagePercent,!1);break;case 33:tb.scrollByY(-Q*N.scrollPagePercent,!1);break;case 39:tb.scrollByX(N.keyboardSpeed,!1);break;case 37:tb.scrollByX(-N.keyboardSpeed,!1)}return e=a!=bb||b!=$}var d,e,f=[];X&&f.push(jb[0]),W&&f.push(cb[0]),O.bind("focus.jsp",function(){b.focus()}),b.attr("tabindex",0).unbind("keydown.jsp keypress.jsp").bind("keydown.jsp",function(b){if(b.target===this||f.length&&a(b.target).closest(f).length){var g=bb,h=$;switch(b.keyCode){case 40:case 38:case 34:case 32:case 33:case 39:case 37:d=b.keyCode,c();break;case 35:v(T-Q),d=null;break;case 36:v(0),d=null}return e=b.keyCode==d&&g!=bb||h!=$,!e}}).bind("keypress.jsp",function(b){return b.keyCode==d&&c(),b.target===this||f.length&&a(b.target).closest(f).length?!e:void 0}),N.hideFocus?(b.css("outline","none"),"hideFocus"in R[0]&&b.attr("hideFocus",!0)):(b.css("outline",""),"hideFocus"in R[0]&&b.attr("hideFocus",!1))}function I(){b.attr("tabindex","-1").removeAttr("tabindex").unbind("keydown.jsp keypress.jsp"),O.unbind(".jsp")}function J(){if(location.hash&&location.hash.length>1){var b,c,d=escape(location.hash.substr(1));try{b=a("#"+d+', a[name="'+d+'"]')}catch(e){return}b.length&&O.find(d)&&(0===R.scrollTop()?c=setInterval(function(){R.scrollTop()>0&&(x(b,!0),a(document).scrollTop(R.position().top),clearInterval(c))},50):(x(b,!0),a(document).scrollTop(R.position().top)))}}function K(){a(document.body).data("jspHijack")||(a(document.body).data("jspHijack",!0),a(document.body).delegate('a[href*="#"]',"click",function(b){var c,d,e,f,g,h,i=this.href.substr(0,this.href.indexOf("#")),j=location.href;if(-1!==location.href.indexOf("#")&&(j=location.href.substr(0,location.href.indexOf("#"))),i===j){c=escape(this.href.substr(this.href.indexOf("#")+1));try{d=a("#"+c+', a[name="'+c+'"]')}catch(k){return}d.length&&(e=d.closest(".jspScrollable"),f=e.data("jsp"),f.scrollToElement(d,!0),e[0].scrollIntoView&&(g=a(window).scrollTop(),h=d.offset().top,(g>h||h>g+a(window).height())&&e[0].scrollIntoView()),b.preventDefault())}}))}function L(){var a,b,c,d,e,f=!1;R.unbind("touchstart.jsp touchmove.jsp touchend.jsp click.jsp-touchclick").bind("touchstart.jsp",function(g){var h=g.originalEvent.touches[0];a=y(),b=z(),c=h.pageX,d=h.pageY,e=!1,f=!0}).bind("touchmove.jsp",function(g){if(f){var h=g.originalEvent.touches[0],i=bb,j=$;return tb.scrollTo(a+c-h.pageX,b+d-h.pageY),e=e||Math.abs(c-h.pageX)>5||Math.abs(d-h.pageY)>5,i==bb&&j==$}}).bind("touchend.jsp",function(){f=!1}).bind("click.jsp-touchclick",function(){return e?(e=!1,!1):void 0})}function M(){var a=z(),c=y();b.removeClass("jspScrollable").unbind(".jsp"),O.unbind(".jsp"),b.replaceWith(yb.append(O.children())),yb.scrollTop(a),yb.scrollLeft(c),pb&&clearInterval(pb)}var N,O,P,Q,R,S,T,U,V,W,X,Y,Z,$,_,ab,bb,cb,db,eb,fb,gb,hb,ib,jb,kb,lb,mb,nb,ob,pb,qb,rb,sb,tb=this,ub=!0,vb=!0,wb=!1,xb=!1,yb=b.clone(!1,!1).empty(),zb=a.fn.mwheelIntent?"mwheelIntent.jsp":"mousewheel.jsp";"border-box"===b.css("box-sizing")?(qb=0,rb=0):(qb=b.css("paddingTop")+" "+b.css("paddingRight")+" "+b.css("paddingBottom")+" "+b.css("paddingLeft"),rb=(parseInt(b.css("paddingLeft"),10)||0)+(parseInt(b.css("paddingRight"),10)||0)),a.extend(tb,{reinitialise:function(b){b=a.extend({},N,b),d(b)},scrollToElement:function(a,b,c){x(a,b,c)},scrollTo:function(a,b,c){w(a,c),v(b,c)},scrollToX:function(a,b){w(a,b)},scrollToY:function(a,b){v(a,b)},scrollToPercentX:function(a,b){w(a*(S-P),b)},scrollToPercentY:function(a,b){v(a*(T-Q),b)},scrollBy:function(a,b,c){tb.scrollByX(a,c),tb.scrollByY(b,c)},scrollByX:function(a,b){var c=y()+Math[0>a?"floor":"ceil"](a),d=c/(S-P);r(d*ab,b)},scrollByY:function(a,b){var c=z()+Math[0>a?"floor":"ceil"](a),d=c/(T-Q);p(d*Z,b)},positionDragX:function(a,b){r(a,b)},positionDragY:function(a,b){p(a,b)},animate:function(a,b,c,d,e){var f={};f[b]=c,a.animate(f,{duration:N.animateDuration,easing:N.animateEase,queue:!1,step:d,complete:e})},getContentPositionX:function(){return y()},getContentPositionY:function(){return z()},getContentWidth:function(){return S},getContentHeight:function(){return T},getPercentScrolledX:function(){return y()/(S-P)},getPercentScrolledY:function(){return z()/(T-Q)},getIsScrollableH:function(){return X},getIsScrollableV:function(){return W},getContentPane:function(){return O},scrollToBottom:function(a){p(Z,a)},hijackInternalLinks:a.noop,destroy:function(){M()}}),d(c)}return b=a.extend({},a.fn.jScrollPane.defaults,b),a.each(["arrowButtonSpeed","trackClickSpeed","keyboardSpeed"],function(){b[this]=b[this]||b.speed}),this.each(function(){var d=a(this),e=d.data("jsp");e?e.reinitialise(b):(a("script",d).filter('[type="text/javascript"],:not([type])').remove(),e=new c(d,b),d.data("jsp",e))})},a.fn.jScrollPane.defaults={showArrows:!1,maintainPosition:!0,stickToBottom:!1,stickToRight:!1,clickOnTrack:!0,autoReinitialise:!1,autoReinitialiseDelay:500,verticalDragMinHeight:0,verticalDragMaxHeight:99999,horizontalDragMinWidth:0,horizontalDragMaxWidth:99999,contentWidth:void 0,animateScroll:!1,animateDuration:300,animateEase:"linear",hijackInternalLinks:!1,verticalGutter:4,horizontalGutter:4,mouseWheelSpeed:3,arrowButtonSpeed:0,arrowRepeatFreq:50,arrowScrollOnHover:!1,trackClickSpeed:0,trackClickRepeatFreq:70,verticalArrowPositions:"split",horizontalArrowPositions:"split",enableKeyboardNavigation:!0,hideFocus:!1,keyboardSpeed:0,initialDelay:300,speed:30,scrollPagePercent:.8}});
-
+!(function (a) {
+  "function" == typeof define && define.amd ? define(["jquery"],a) : "object" == typeof exports ? (module.exports = a(require("jquery"))) : a(jQuery);
+})(function (a) {
+  (a.fn.jScrollPane = function (b) {
+    function c(b,c) {
+      function d(c) {
+        var f,
+          h,
+          j,
+          k,
+          l,
+          o,
+          p = !1,
+          q = !1;
+        if (((N = c),void 0 === O))
+          (l = b.scrollTop()),
+            (o = b.scrollLeft()),
+            b.css({ overflow: "hidden",padding: 0 }),
+            (P = b.innerWidth() + rb),
+            (Q = b.innerHeight()),
+            b.width(P),
+            (O = a('<div class="jspPane" />').css("padding",qb).append(b.children())),
+            (R = a('<div class="jspContainer" />')
+              .css({ width: P + "px",height: Q + "px" })
+              .append(O)
+              .appendTo(b));
+        else {
+          if (
+            (b.css("width",""),
+              (p = N.stickToBottom && A()),
+              (q = N.stickToRight && B()),
+              (k = b.innerWidth() + rb != P || b.outerHeight() != Q),
+              k && ((P = b.innerWidth() + rb),(Q = b.innerHeight()),R.css({ width: P + "px",height: Q + "px" })),
+              !k && sb == S && O.outerHeight() == T)
+          )
+            return void b.width(P);
+          (sb = S),O.css("width",""),b.width(P),R.find(">.jspVerticalBar,>.jspHorizontalBar").remove().end();
+        }
+        O.css("overflow","auto"),
+          (S = c.contentWidth ? c.contentWidth : O[0].scrollWidth),
+          (T = O[0].scrollHeight),
+          O.css("overflow",""),
+          (U = S / P),
+          (V = T / Q),
+          (W = V > 1),
+          (X = U > 1),
+          X || W
+            ? (b.addClass("jspScrollable"),
+              (f = N.maintainPosition && ($ || bb)),
+              f && ((h = y()),(j = z())),
+              e(),
+              g(),
+              i(),
+              f && (w(q ? S - P : h,!1),v(p ? T - Q : j,!1)),
+              F(),
+              C(),
+              L(),
+              N.enableKeyboardNavigation && H(),
+              N.clickOnTrack && m(),
+              J(),
+              N.hijackInternalLinks && K())
+            : (b.removeClass("jspScrollable"),O.css({ top: 0,left: 0,width: R.width() - rb }),D(),G(),I(),n()),
+          N.autoReinitialise && !pb
+            ? (pb = setInterval(function () {
+              d(N);
+            },N.autoReinitialiseDelay))
+            : !N.autoReinitialise && pb && clearInterval(pb),
+          l && b.scrollTop(0) && v(l,!1),
+          o && b.scrollLeft(0) && w(o,!1),
+          b.trigger("jsp-initialised",[X || W]);
+      }
+      function e() {
+        W &&
+          (R.append(
+            a('<div class="jspVerticalBar" />').append(
+              a('<div class="jspCap jspCapTop" />'),
+              a('<div class="jspTrack" />').append(a('<div class="jspDrag" />').append(a('<div class="jspDragTop" />'),a('<div class="jspDragBottom" />'))),
+              a('<div class="jspCap jspCapBottom" />')
+            )
+          ),
+            (cb = R.find(">.jspVerticalBar")),
+            (db = cb.find(">.jspTrack")),
+            (Y = db.find(">.jspDrag")),
+            N.showArrows &&
+            ((hb = a('<a class="jspArrow jspArrowUp" />').bind("mousedown.jsp",k(0,-1)).bind("click.jsp",E)),
+              (ib = a('<a class="jspArrow jspArrowDown" />').bind("mousedown.jsp",k(0,1)).bind("click.jsp",E)),
+              N.arrowScrollOnHover && (hb.bind("mouseover.jsp",k(0,-1,hb)),ib.bind("mouseover.jsp",k(0,1,ib))),
+              j(db,N.verticalArrowPositions,hb,ib)),
+            (fb = Q),
+            R.find(">.jspVerticalBar>.jspCap:visible,>.jspVerticalBar>.jspArrow").each(function () {
+              fb -= a(this).outerHeight();
+            }),
+            Y.hover(
+              function () {
+                Y.addClass("jspHover");
+              },
+              function () {
+                Y.removeClass("jspHover");
+              }
+            ).bind("mousedown.jsp",function (b) {
+              a("html").bind("dragstart.jsp selectstart.jsp",E),Y.addClass("jspActive");
+              var c = b.pageY - Y.position().top;
+              return (
+                a("html")
+                  .bind("mousemove.jsp",function (a) {
+                    p(a.pageY - c,!1);
+                  })
+                  .bind("mouseup.jsp mouseleave.jsp",o),
+                !1
+              );
+            }),
+            f());
+      }
+      function f() {
+        db.height(fb + "px"),($ = 0),(eb = N.verticalGutter + db.outerWidth()),O.width(P - eb - rb);
+        try {
+          0 === cb.position().left && O.css("margin-left",eb + "px");
+        } catch (a) { }
+      }
+      function g() {
+        X &&
+          (R.append(
+            a('<div class="jspHorizontalBar" />').append(
+              a('<div class="jspCap jspCapLeft" />'),
+              a('<div class="jspTrack" />').append(a('<div class="jspDrag" />').append(a('<div class="jspDragLeft" />'),a('<div class="jspDragRight" />'))),
+              a('<div class="jspCap jspCapRight" />')
+            )
+          ),
+            (jb = R.find(">.jspHorizontalBar")),
+            (kb = jb.find(">.jspTrack")),
+            (_ = kb.find(">.jspDrag")),
+            N.showArrows &&
+            ((nb = a('<a class="jspArrow jspArrowLeft" />').bind("mousedown.jsp",k(-1,0)).bind("click.jsp",E)),
+              (ob = a('<a class="jspArrow jspArrowRight" />').bind("mousedown.jsp",k(1,0)).bind("click.jsp",E)),
+              N.arrowScrollOnHover && (nb.bind("mouseover.jsp",k(-1,0,nb)),ob.bind("mouseover.jsp",k(1,0,ob))),
+              j(kb,N.horizontalArrowPositions,nb,ob)),
+            _.hover(
+              function () {
+                _.addClass("jspHover");
+              },
+              function () {
+                _.removeClass("jspHover");
+              }
+            ).bind("mousedown.jsp",function (b) {
+              a("html").bind("dragstart.jsp selectstart.jsp",E),_.addClass("jspActive");
+              var c = b.pageX - _.position().left;
+              return (
+                a("html")
+                  .bind("mousemove.jsp",function (a) {
+                    r(a.pageX - c,!1);
+                  })
+                  .bind("mouseup.jsp mouseleave.jsp",o),
+                !1
+              );
+            }),
+            (lb = R.innerWidth()),
+            h());
+      }
+      function h() {
+        R.find(">.jspHorizontalBar>.jspCap:visible,>.jspHorizontalBar>.jspArrow").each(function () {
+          lb -= a(this).outerWidth();
+        }),
+          kb.width(lb + "px"),
+          (bb = 0);
+      }
+      function i() {
+        if (X && W) {
+          var b = kb.outerHeight(),
+            c = db.outerWidth();
+          (fb -= b),
+            a(jb)
+              .find(">.jspCap:visible,>.jspArrow")
+              .each(function () {
+                lb += a(this).outerWidth();
+              }),
+            (lb -= c),
+            (Q -= c),
+            (P -= b),
+            kb.parent().append(a('<div class="jspCorner" />').css("width",b + "px")),
+            f(),
+            h();
+        }
+        X && O.width(R.outerWidth() - rb + "px"),
+          (T = O.outerHeight()),
+          (V = T / Q),
+          X && ((mb = Math.ceil((1 / U) * lb)),mb > N.horizontalDragMaxWidth ? (mb = N.horizontalDragMaxWidth) : mb < N.horizontalDragMinWidth && (mb = N.horizontalDragMinWidth),_.width(mb + "px"),(ab = lb - mb),s(bb)),
+          W && ((gb = Math.ceil((1 / V) * fb)),gb > N.verticalDragMaxHeight ? (gb = N.verticalDragMaxHeight) : gb < N.verticalDragMinHeight && (gb = N.verticalDragMinHeight),Y.height(gb + "px"),(Z = fb - gb),q($));
+      }
+      function j(a,b,c,d) {
+        var e,
+          f = "before",
+          g = "after";
+        "os" == b && (b = /Mac/.test(navigator.platform) ? "after" : "split"),b == f ? (g = b) : b == g && ((f = b),(e = c),(c = d),(d = e)),a[f](c)[g](d);
+      }
+      function k(a,b,c) {
+        return function () {
+          return l(a,b,this,c),this.blur(),!1;
+        };
+      }
+      function l(b,c,d,e) {
+        d = a(d).addClass("jspActive");
+        var f,
+          g,
+          h = !0,
+          i = function () {
+            0 !== b && tb.scrollByX(b * N.arrowButtonSpeed),0 !== c && tb.scrollByY(c * N.arrowButtonSpeed),(g = setTimeout(i,h ? N.initialDelay : N.arrowRepeatFreq)),(h = !1);
+          };
+        i(),
+          (f = e ? "mouseout.jsp" : "mouseup.jsp"),
+          (e = e || a("html")),
+          e.bind(f,function () {
+            d.removeClass("jspActive"),g && clearTimeout(g),(g = null),e.unbind(f);
+          });
+      }
+      function m() {
+        n(),
+          W &&
+          db.bind("mousedown.jsp",function (b) {
+            if (void 0 === b.originalTarget || b.originalTarget == b.currentTarget) {
+              var c,
+                d = a(this),
+                e = d.offset(),
+                f = b.pageY - e.top - $,
+                g = !0,
+                h = function () {
+                  var a = d.offset(),
+                    e = b.pageY - a.top - gb / 2,
+                    j = Q * N.scrollPagePercent,
+                    k = (Z * j) / (T - Q);
+                  if (0 > f) $ - k > e ? tb.scrollByY(-j) : p(e);
+                  else {
+                    if (!(f > 0)) return void i();
+                    e > $ + k ? tb.scrollByY(j) : p(e);
+                  }
+                  (c = setTimeout(h,g ? N.initialDelay : N.trackClickRepeatFreq)),(g = !1);
+                },
+                i = function () {
+                  c && clearTimeout(c),(c = null),a(document).unbind("mouseup.jsp",i);
+                };
+              return h(),a(document).bind("mouseup.jsp",i),!1;
+            }
+          }),
+          X &&
+          kb.bind("mousedown.jsp",function (b) {
+            if (void 0 === b.originalTarget || b.originalTarget == b.currentTarget) {
+              var c,
+                d = a(this),
+                e = d.offset(),
+                f = b.pageX - e.left - bb,
+                g = !0,
+                h = function () {
+                  var a = d.offset(),
+                    e = b.pageX - a.left - mb / 2,
+                    j = P * N.scrollPagePercent,
+                    k = (ab * j) / (S - P);
+                  if (0 > f) bb - k > e ? tb.scrollByX(-j) : r(e);
+                  else {
+                    if (!(f > 0)) return void i();
+                    e > bb + k ? tb.scrollByX(j) : r(e);
+                  }
+                  (c = setTimeout(h,g ? N.initialDelay : N.trackClickRepeatFreq)),(g = !1);
+                },
+                i = function () {
+                  c && clearTimeout(c),(c = null),a(document).unbind("mouseup.jsp",i);
+                };
+              return h(),a(document).bind("mouseup.jsp",i),!1;
+            }
+          });
+      }
+      function n() {
+        kb && kb.unbind("mousedown.jsp"),db && db.unbind("mousedown.jsp");
+      }
+      function o() {
+        a("html").unbind("dragstart.jsp selectstart.jsp mousemove.jsp mouseup.jsp mouseleave.jsp"),Y && Y.removeClass("jspActive"),_ && _.removeClass("jspActive");
+      }
+      function p(c,d) {
+        if (W) {
+          0 > c ? (c = 0) : c > Z && (c = Z);
+          var e = new a.Event("jsp-will-scroll-y");
+          if ((b.trigger(e,[c]),!e.isDefaultPrevented())) {
+            var f = c || 0,
+              g = 0 === f,
+              h = f == Z,
+              i = c / Z,
+              j = -i * (T - Q);
+            void 0 === d && (d = N.animateScroll),
+              d
+                ? tb.animate(Y,"top",c,q,function () {
+                  b.trigger("jsp-user-scroll-y",[-j,g,h]);
+                })
+                : (Y.css("top",c),q(c),b.trigger("jsp-user-scroll-y",[-j,g,h]));
+          }
+        }
+      }
+      function q(a) {
+        void 0 === a && (a = Y.position().top),R.scrollTop(0),($ = a || 0);
+        var c = 0 === $,
+          d = $ == Z,
+          e = a / Z,
+          f = -e * (T - Q);
+        (ub != c || wb != d) && ((ub = c),(wb = d),b.trigger("jsp-arrow-change",[ub,wb,vb,xb])),t(c,d),O.css("top",f),b.trigger("jsp-scroll-y",[-f,c,d]).trigger("scroll");
+      }
+      function r(c,d) {
+        if (X) {
+          0 > c ? (c = 0) : c > ab && (c = ab);
+          var e = new a.Event("jsp-will-scroll-x");
+          if ((b.trigger(e,[c]),!e.isDefaultPrevented())) {
+            var f = c || 0,
+              g = 0 === f,
+              h = f == ab,
+              i = c / ab,
+              j = -i * (S - P);
+            void 0 === d && (d = N.animateScroll),
+              d
+                ? tb.animate(_,"left",c,s,function () {
+                  b.trigger("jsp-user-scroll-x",[-j,g,h]);
+                })
+                : (_.css("left",c),s(c),b.trigger("jsp-user-scroll-x",[-j,g,h]));
+          }
+        }
+      }
+      function s(a) {
+        void 0 === a && (a = _.position().left),R.scrollTop(0),(bb = a || 0);
+        var c = 0 === bb,
+          d = bb == ab,
+          e = a / ab,
+          f = -e * (S - P);
+        (vb != c || xb != d) && ((vb = c),(xb = d),b.trigger("jsp-arrow-change",[ub,wb,vb,xb])),u(c,d),O.css("left",f),b.trigger("jsp-scroll-x",[-f,c,d]).trigger("scroll");
+      }
+      function t(a,b) {
+        N.showArrows && (hb[a ? "addClass" : "removeClass"]("jspDisabled"),ib[b ? "addClass" : "removeClass"]("jspDisabled"));
+      }
+      function u(a,b) {
+        N.showArrows && (nb[a ? "addClass" : "removeClass"]("jspDisabled"),ob[b ? "addClass" : "removeClass"]("jspDisabled"));
+      }
+      function v(a,b) {
+        var c = a / (T - Q);
+        p(c * Z,b);
+      }
+      function w(a,b) {
+        var c = a / (S - P);
+        r(c * ab,b);
+      }
+      function x(b,c,d) {
+        var e,
+          f,
+          g,
+          h,
+          i,
+          j,
+          k,
+          l,
+          m,
+          n = 0,
+          o = 0;
+        try {
+          e = a(b);
+        } catch (p) {
+          return;
+        }
+        for (f = e.outerHeight(),g = e.outerWidth(),R.scrollTop(0),R.scrollLeft(0); !e.is(".jspPane");) if (((n += e.position().top),(o += e.position().left),(e = e.offsetParent()),/^body|html$/i.test(e[0].nodeName))) return;
+        (h = z()),
+          (j = h + Q),
+          h > n || c ? (l = n - N.horizontalGutter) : n + f > j && (l = n - Q + f + N.horizontalGutter),
+          isNaN(l) || v(l,d),
+          (i = y()),
+          (k = i + P),
+          i > o || c ? (m = o - N.horizontalGutter) : o + g > k && (m = o - P + g + N.horizontalGutter),
+          isNaN(m) || w(m,d);
+      }
+      function y() {
+        return -O.position().left;
+      }
+      function z() {
+        return -O.position().top;
+      }
+      function A() {
+        var a = T - Q;
+        return a > 20 && a - z() < 10;
+      }
+      function B() {
+        var a = S - P;
+        return a > 20 && a - y() < 10;
+      }
+      function C() {
+        R.unbind(zb).bind(zb,function (a,b,c,d) {
+          bb || (bb = 0),$ || ($ = 0);
+          var e = bb,
+            f = $,
+            g = a.deltaFactor || N.mouseWheelSpeed;
+          return tb.scrollBy(c * g,-d * g,!1),e == bb && f == $;
+        });
+      }
+      function D() {
+        R.unbind(zb);
+      }
+      function E() {
+        return !1;
+      }
+      function F() {
+        O.find(":input,a")
+          .unbind("focus.jsp")
+          .bind("focus.jsp",function (a) {
+            x(a.target,!1);
+          });
+      }
+      function G() {
+        O.find(":input,a").unbind("focus.jsp");
+      }
+      function H() {
+        function c() {
+          var a = bb,
+            b = $;
+          switch (d) {
+            case 40:
+              tb.scrollByY(N.keyboardSpeed,!1);
+              break;
+            case 38:
+              tb.scrollByY(-N.keyboardSpeed,!1);
+              break;
+            case 34:
+            case 32:
+              tb.scrollByY(Q * N.scrollPagePercent,!1);
+              break;
+            case 33:
+              tb.scrollByY(-Q * N.scrollPagePercent,!1);
+              break;
+            case 39:
+              tb.scrollByX(N.keyboardSpeed,!1);
+              break;
+            case 37:
+              tb.scrollByX(-N.keyboardSpeed,!1);
+          }
+          return (e = a != bb || b != $);
+        }
+        var d,
+          e,
+          f = [];
+        X && f.push(jb[0]),
+          W && f.push(cb[0]),
+          O.bind("focus.jsp",function () {
+            b.focus();
+          }),
+          b
+            .attr("tabindex",0)
+            .unbind("keydown.jsp keypress.jsp")
+            .bind("keydown.jsp",function (b) {
+              if (b.target === this || (f.length && a(b.target).closest(f).length)) {
+                var g = bb,
+                  h = $;
+                switch (b.keyCode) {
+                  case 40:
+                  case 38:
+                  case 34:
+                  case 32:
+                  case 33:
+                  case 39:
+                  case 37:
+                    (d = b.keyCode),c();
+                    break;
+                  case 35:
+                    v(T - Q),(d = null);
+                    break;
+                  case 36:
+                    v(0),(d = null);
+                }
+                return (e = (b.keyCode == d && g != bb) || h != $),!e;
+              }
+            })
+            .bind("keypress.jsp",function (b) {
+              return b.keyCode == d && c(),b.target === this || (f.length && a(b.target).closest(f).length) ? !e : void 0;
+            }),
+          N.hideFocus ? (b.css("outline","none"),"hideFocus" in R[0] && b.attr("hideFocus",!0)) : (b.css("outline",""),"hideFocus" in R[0] && b.attr("hideFocus",!1));
+      }
+      function I() {
+        b.attr("tabindex","-1").removeAttr("tabindex").unbind("keydown.jsp keypress.jsp"),O.unbind(".jsp");
+      }
+      function J() {
+        if (location.hash && location.hash.length > 1) {
+          var b,
+            c,
+            d = escape(location.hash.substr(1));
+          try {
+            b = a("#" + d + ', a[name="' + d + '"]');
+          } catch (e) {
+            return;
+          }
+          b.length &&
+            O.find(d) &&
+            (0 === R.scrollTop()
+              ? (c = setInterval(function () {
+                R.scrollTop() > 0 && (x(b,!0),a(document).scrollTop(R.position().top),clearInterval(c));
+              },50))
+              : (x(b,!0),a(document).scrollTop(R.position().top)));
+        }
+      }
+      function K() {
+        a(document.body).data("jspHijack") ||
+          (a(document.body).data("jspHijack",!0),
+            a(document.body).delegate('a[href*="#"]',"click",function (b) {
+              var c,
+                d,
+                e,
+                f,
+                g,
+                h,
+                i = this.href.substr(0,this.href.indexOf("#")),
+                j = location.href;
+              if ((-1 !== location.href.indexOf("#") && (j = location.href.substr(0,location.href.indexOf("#"))),i === j)) {
+                c = escape(this.href.substr(this.href.indexOf("#") + 1));
+                try {
+                  d = a("#" + c + ', a[name="' + c + '"]');
+                } catch (k) {
+                  return;
+                }
+                d.length &&
+                  ((e = d.closest(".jspScrollable")),
+                    (f = e.data("jsp")),
+                    f.scrollToElement(d,!0),
+                    e[0].scrollIntoView && ((g = a(window).scrollTop()),(h = d.offset().top),(g > h || h > g + a(window).height()) && e[0].scrollIntoView()),
+                    b.preventDefault());
+              }
+            }));
+      }
+      function L() {
+        var a,
+          b,
+          c,
+          d,
+          e,
+          f = !1;
+        R.unbind("touchstart.jsp touchmove.jsp touchend.jsp click.jsp-touchclick")
+          .bind("touchstart.jsp",function (g) {
+            var h = g.originalEvent.touches[0];
+            (a = y()),(b = z()),(c = h.pageX),(d = h.pageY),(e = !1),(f = !0);
+          })
+          .bind("touchmove.jsp",function (g) {
+            if (f) {
+              var h = g.originalEvent.touches[0],
+                i = bb,
+                j = $;
+              return tb.scrollTo(a + c - h.pageX,b + d - h.pageY),(e = e || Math.abs(c - h.pageX) > 5 || Math.abs(d - h.pageY) > 5),i == bb && j == $;
+            }
+          })
+          .bind("touchend.jsp",function () {
+            f = !1;
+          })
+          .bind("click.jsp-touchclick",function () {
+            return e ? ((e = !1),!1) : void 0;
+          });
+      }
+      function M() {
+        var a = z(),
+          c = y();
+        b.removeClass("jspScrollable").unbind(".jsp"),O.unbind(".jsp"),b.replaceWith(yb.append(O.children())),yb.scrollTop(a),yb.scrollLeft(c),pb && clearInterval(pb);
+      }
+      var N,
+        O,
+        P,
+        Q,
+        R,
+        S,
+        T,
+        U,
+        V,
+        W,
+        X,
+        Y,
+        Z,
+        $,
+        _,
+        ab,
+        bb,
+        cb,
+        db,
+        eb,
+        fb,
+        gb,
+        hb,
+        ib,
+        jb,
+        kb,
+        lb,
+        mb,
+        nb,
+        ob,
+        pb,
+        qb,
+        rb,
+        sb,
+        tb = this,
+        ub = !0,
+        vb = !0,
+        wb = !1,
+        xb = !1,
+        yb = b.clone(!1,!1).empty(),
+        zb = a.fn.mwheelIntent ? "mwheelIntent.jsp" : "mousewheel.jsp";
+      "border-box" === b.css("box-sizing")
+        ? ((qb = 0),(rb = 0))
+        : ((qb = b.css("paddingTop") + " " + b.css("paddingRight") + " " + b.css("paddingBottom") + " " + b.css("paddingLeft")),(rb = (parseInt(b.css("paddingLeft"),10) || 0) + (parseInt(b.css("paddingRight"),10) || 0))),
+        a.extend(tb,{
+          reinitialise: function (b) {
+            (b = a.extend({},N,b)),d(b);
+          },
+          scrollToElement: function (a,b,c) {
+            x(a,b,c);
+          },
+          scrollTo: function (a,b,c) {
+            w(a,c),v(b,c);
+          },
+          scrollToX: function (a,b) {
+            w(a,b);
+          },
+          scrollToY: function (a,b) {
+            v(a,b);
+          },
+          scrollToPercentX: function (a,b) {
+            w(a * (S - P),b);
+          },
+          scrollToPercentY: function (a,b) {
+            v(a * (T - Q),b);
+          },
+          scrollBy: function (a,b,c) {
+            tb.scrollByX(a,c),tb.scrollByY(b,c);
+          },
+          scrollByX: function (a,b) {
+            var c = y() + Math[0 > a ? "floor" : "ceil"](a),
+              d = c / (S - P);
+            r(d * ab,b);
+          },
+          scrollByY: function (a,b) {
+            var c = z() + Math[0 > a ? "floor" : "ceil"](a),
+              d = c / (T - Q);
+            p(d * Z,b);
+          },
+          positionDragX: function (a,b) {
+            r(a,b);
+          },
+          positionDragY: function (a,b) {
+            p(a,b);
+          },
+          animate: function (a,b,c,d,e) {
+            var f = {};
+            (f[b] = c),a.animate(f,{ duration: N.animateDuration,easing: N.animateEase,queue: !1,step: d,complete: e });
+          },
+          getContentPositionX: function () {
+            return y();
+          },
+          getContentPositionY: function () {
+            return z();
+          },
+          getContentWidth: function () {
+            return S;
+          },
+          getContentHeight: function () {
+            return T;
+          },
+          getPercentScrolledX: function () {
+            return y() / (S - P);
+          },
+          getPercentScrolledY: function () {
+            return z() / (T - Q);
+          },
+          getIsScrollableH: function () {
+            return X;
+          },
+          getIsScrollableV: function () {
+            return W;
+          },
+          getContentPane: function () {
+            return O;
+          },
+          scrollToBottom: function (a) {
+            p(Z,a);
+          },
+          hijackInternalLinks: a.noop,
+          destroy: function () {
+            M();
+          },
+        }),
+        d(c);
+    }
+    return (
+      (b = a.extend({},a.fn.jScrollPane.defaults,b)),
+      a.each(["arrowButtonSpeed","trackClickSpeed","keyboardSpeed"],function () {
+        b[this] = b[this] || b.speed;
+      }),
+      this.each(function () {
+        var d = a(this),
+          e = d.data("jsp");
+        e ? e.reinitialise(b) : (a("script",d).filter('[type="text/javascript"],:not([type])').remove(),(e = new c(d,b)),d.data("jsp",e));
+      })
+    );
+  }),
+    (a.fn.jScrollPane.defaults = {
+      showArrows: !1,
+      maintainPosition: !0,
+      stickToBottom: !1,
+      stickToRight: !1,
+      clickOnTrack: !0,
+      autoReinitialise: !1,
+      autoReinitialiseDelay: 500,
+      verticalDragMinHeight: 0,
+      verticalDragMaxHeight: 99999,
+      horizontalDragMinWidth: 0,
+      horizontalDragMaxWidth: 99999,
+      contentWidth: void 0,
+      animateScroll: !1,
+      animateDuration: 300,
+      animateEase: "linear",
+      hijackInternalLinks: !1,
+      verticalGutter: 4,
+      horizontalGutter: 4,
+      mouseWheelSpeed: 3,
+      arrowButtonSpeed: 0,
+      arrowRepeatFreq: 50,
+      arrowScrollOnHover: !1,
+      trackClickSpeed: 0,
+      trackClickRepeatFreq: 70,
+      verticalArrowPositions: "split",
+      horizontalArrowPositions: "split",
+      enableKeyboardNavigation: !0,
+      hideFocus: !1,
+      keyboardSpeed: 0,
+      initialDelay: 300,
+      speed: 30,
+      scrollPagePercent: 0.8,
+    });
+});
 /**mwheelIntent.js
  * @author trixta
  * @version 1.2
  */
-(function($){
+(function ($) {
 
-    var mwheelI = {
-                pos: [-260, -260]
-            },
-        minDif 	= 3,
-        doc 	= document,
-        root 	= doc.documentElement,
-        body 	= doc.body,
-        longDelay, shortDelay
+  var mwheelI = {
+    pos: [-260,-260]
+  },
+    minDif = 3,
+    doc = document,
+    root = doc.documentElement,
+    body = doc.body,
+    longDelay,shortDelay
     ;
-    
-    function unsetPos(){
-        if(this === mwheelI.elem){
-            mwheelI.pos = [-260, -260];
-            mwheelI.elem = false;
-            minDif = 3;
-        }
+
+  function unsetPos() {
+    if (this === mwheelI.elem) {
+      mwheelI.pos = [-260,-260];
+      mwheelI.elem = false;
+      minDif = 3;
     }
-    
-    $.event.special.mwheelIntent = {
-        setup: function(){
-            var jElm = $(this).bind('mousewheel', $.event.special.mwheelIntent.handler);
-            if( this !== doc && this !== root && this !== body ){
-                jElm.bind('mouseleave', unsetPos);
-            }
-            jElm = null;
-            return true;
-        },
-        teardown: function(){
-            $(this)
-                .unbind('mousewheel', $.event.special.mwheelIntent.handler)
-                .unbind('mouseleave', unsetPos)
-            ;
-            return true;
-        },
-        handler: function(e, d){
-            var pos = [e.clientX, e.clientY];
-            if( this === mwheelI.elem || Math.abs(mwheelI.pos[0] - pos[0]) > minDif || Math.abs(mwheelI.pos[1] - pos[1]) > minDif ){
-                mwheelI.elem = this;
-                mwheelI.pos = pos;
-                minDif = 250;
-                
-                clearTimeout(shortDelay);
-                shortDelay = setTimeout(function(){
-                    minDif = 10;
-                }, 200);
-                clearTimeout(longDelay);
-                longDelay = setTimeout(function(){
-                    minDif = 3;
-                }, 1500);
-                e = $.extend({}, e, {type: 'mwheelIntent'});
-                return ($.event.dispatch || $.event.handle).apply(this, arguments);
-            }
-        }
-    };
-    $.fn.extend({
-        mwheelIntent: function(fn) {
-            return fn ? this.bind("mwheelIntent", fn) : this.trigger("mwheelIntent");
-        },
-        
-        unmwheelIntent: function(fn) {
-            return this.unbind("mwheelIntent", fn);
-        }
-    });
-    
-    $(function(){
-        body = doc.body;
-        //assume that document is always scrollable, doesn't hurt if not
-        $(doc).bind('mwheelIntent.mwheelIntentDefault', $.noop);
-    });
-    })(jQuery);   
-  
-    /*//jquery.mousewheel.js
-    !
- * jQuery Mousewheel 3.1.12
- *
- * Copyright 2014 jQuery Foundation and other contributors
- * Released under the MIT license.
- * http://jquery.org/license
- */
+  }
+
+  $.event.special.mwheelIntent = {
+    setup: function () {
+      var jElm = $(this).bind('mousewheel',$.event.special.mwheelIntent.handler);
+      if (this !== doc && this !== root && this !== body) {
+        jElm.bind('mouseleave',unsetPos);
+      }
+      jElm = null;
+      return true;
+    },
+    teardown: function () {
+      $(this)
+        .unbind('mousewheel',$.event.special.mwheelIntent.handler)
+        .unbind('mouseleave',unsetPos)
+        ;
+      return true;
+    },
+    handler: function (e,d) {
+      var pos = [e.clientX,e.clientY];
+      if (this === mwheelI.elem || Math.abs(mwheelI.pos[0] - pos[0]) > minDif || Math.abs(mwheelI.pos[1] - pos[1]) > minDif) {
+        mwheelI.elem = this;
+        mwheelI.pos = pos;
+        minDif = 250;
+
+        clearTimeout(shortDelay);
+        shortDelay = setTimeout(function () {
+          minDif = 10;
+        },200);
+        clearTimeout(longDelay);
+        longDelay = setTimeout(function () {
+          minDif = 3;
+        },1500);
+        e = $.extend({},e,{ type: 'mwheelIntent' });
+        return ($.event.dispatch || $.event.handle).apply(this,arguments);
+      }
+    }
+  };
+  $.fn.extend({
+    mwheelIntent: function (fn) {
+      return fn ? this.bind("mwheelIntent",fn) : this.trigger("mwheelIntent");
+    },
+
+    unmwheelIntent: function (fn) {
+      return this.unbind("mwheelIntent",fn);
+    }
+  });
+
+  $(function () {
+    body = doc.body;
+    $(doc).bind('mwheelIntent.mwheelIntentDefault',$.noop);
+  });
+})(jQuery);
+
+/*//jquery.mousewheel.js
+!
+* jQuery Mousewheel 3.1.12
+*
+* Copyright 2014 jQuery Foundation and other contributors
+* Released under the MIT license.
+* http://jquery.org/license
+*/
 
 (function (factory) {
-    if ( typeof define === 'function' && define.amd ) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof exports === 'object') {
-        // Node/CommonJS style for Browserify
-        module.exports = factory;
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
+  if (typeof define === 'function' && define.amd) {
+    define(['jquery'],factory);
+  } else if (typeof exports === 'object') {
+    module.exports = factory;
+  } else {
+    factory(jQuery);
+  }
 }(function ($) {
 
-    var toFix  = ['wheel', 'mousewheel', 'DOMMouseScroll', 'MozMousePixelScroll'],
-        toBind = ( 'onwheel' in document || document.documentMode >= 9 ) ?
-                    ['wheel'] : ['mousewheel', 'DomMouseScroll', 'MozMousePixelScroll'],
-        slice  = Array.prototype.slice,
-        nullLowestDeltaTimeout, lowestDelta;
+  var toFix = ['wheel','mousewheel','DOMMouseScroll','MozMousePixelScroll'],
+    toBind = ('onwheel' in document || document.documentMode >= 9) ?
+      ['wheel'] : ['mousewheel','DomMouseScroll','MozMousePixelScroll'],
+    slice = Array.prototype.slice,
+    nullLowestDeltaTimeout,lowestDelta;
 
-    if ( $.event.fixHooks ) {
-        for ( var i = toFix.length; i; ) {
-            $.event.fixHooks[ toFix[--i] ] = $.event.mouseHooks;
+  if ($.event.fixHooks) {
+    for (var i = toFix.length; i;) {
+      $.event.fixHooks[toFix[--i]] = $.event.mouseHooks;
+    }
+  }
+
+  var special = $.event.special.mousewheel = {
+    version: '3.1.12',
+
+    setup: function () {
+      if (this.addEventListener) {
+        for (var i = toBind.length; i;) {
+          this.addEventListener(toBind[--i],handler,false);
         }
+      } else {
+        this.onmousewheel = handler;
+      }
+      $.data(this,'mousewheel-line-height',special.getLineHeight(this));
+      $.data(this,'mousewheel-page-height',special.getPageHeight(this));
+    },
+
+    teardown: function () {
+      if (this.removeEventListener) {
+        for (var i = toBind.length; i;) {
+          this.removeEventListener(toBind[--i],handler,false);
+        }
+      } else {
+        this.onmousewheel = null;
+      }
+      $.removeData(this,'mousewheel-line-height');
+      $.removeData(this,'mousewheel-page-height');
+    },
+
+    getLineHeight: function (elem) {
+      var $elem = $(elem),
+        $parent = $elem['offsetParent' in $.fn ? 'offsetParent' : 'parent']();
+      if (!$parent.length) {
+        $parent = $('body');
+      }
+      return parseInt($parent.css('fontSize'),10) || parseInt($elem.css('fontSize'),10) || 16;
+    },
+
+    getPageHeight: function (elem) {
+      return $(elem).height();
+    },
+
+    settings: {
+      adjustOldDeltas: true,
+      normalizeOffset: true
+    }
+  };
+
+  $.fn.extend({
+    mousewheel: function (fn) {
+      return fn ? this.bind('mousewheel',fn) : this.trigger('mousewheel');
+    },
+
+    unmousewheel: function (fn) {
+      return this.unbind('mousewheel',fn);
+    }
+  });
+
+
+  function handler(event) {
+    var orgEvent = event || window.event,
+      args = slice.call(arguments,1),
+      delta = 0,
+      deltaX = 0,
+      deltaY = 0,
+      absDelta = 0,
+      offsetX = 0,
+      offsetY = 0;
+    event = $.event.fix(orgEvent);
+    event.type = 'mousewheel';
+
+    if ('detail' in orgEvent) { deltaY = orgEvent.detail * -1; }
+    if ('wheelDelta' in orgEvent) { deltaY = orgEvent.wheelDelta; }
+    if ('wheelDeltaY' in orgEvent) { deltaY = orgEvent.wheelDeltaY; }
+    if ('wheelDeltaX' in orgEvent) { deltaX = orgEvent.wheelDeltaX * -1; }
+
+    if ('axis' in orgEvent && orgEvent.axis === orgEvent.HORIZONTAL_AXIS) {
+      deltaX = deltaY * -1;
+      deltaY = 0;
     }
 
-    var special = $.event.special.mousewheel = {
-        version: '3.1.12',
+    delta = deltaY === 0 ? deltaX : deltaY;
 
-        setup: function() {
-            if ( this.addEventListener ) {
-                for ( var i = toBind.length; i; ) {
-                    this.addEventListener( toBind[--i], handler, false );
-                }
-            } else {
-                this.onmousewheel = handler;
-            }
-            // Store the line height and page height for this particular element
-            $.data(this, 'mousewheel-line-height', special.getLineHeight(this));
-            $.data(this, 'mousewheel-page-height', special.getPageHeight(this));
-        },
-
-        teardown: function() {
-            if ( this.removeEventListener ) {
-                for ( var i = toBind.length; i; ) {
-                    this.removeEventListener( toBind[--i], handler, false );
-                }
-            } else {
-                this.onmousewheel = null;
-            }
-            // Clean up the data we added to the element
-            $.removeData(this, 'mousewheel-line-height');
-            $.removeData(this, 'mousewheel-page-height');
-        },
-
-        getLineHeight: function(elem) {
-            var $elem = $(elem),
-                $parent = $elem['offsetParent' in $.fn ? 'offsetParent' : 'parent']();
-            if (!$parent.length) {
-                $parent = $('body');
-            }
-            return parseInt($parent.css('fontSize'), 10) || parseInt($elem.css('fontSize'), 10) || 16;
-        },
-
-        getPageHeight: function(elem) {
-            return $(elem).height();
-        },
-
-        settings: {
-            adjustOldDeltas: true, // see shouldAdjustOldDeltas() below
-            normalizeOffset: true  // calls getBoundingClientRect for each event
-        }
-    };
-
-    $.fn.extend({
-        mousewheel: function(fn) {
-            return fn ? this.bind('mousewheel', fn) : this.trigger('mousewheel');
-        },
-
-        unmousewheel: function(fn) {
-            return this.unbind('mousewheel', fn);
-        }
-    });
-
-
-    function handler(event) {
-        var orgEvent   = event || window.event,
-            args       = slice.call(arguments, 1),
-            delta      = 0,
-            deltaX     = 0,
-            deltaY     = 0,
-            absDelta   = 0,
-            offsetX    = 0,
-            offsetY    = 0;
-        event = $.event.fix(orgEvent);
-        event.type = 'mousewheel';
-
-        // Old school scrollwheel delta
-        if ( 'detail'      in orgEvent ) { deltaY = orgEvent.detail * -1;      }
-        if ( 'wheelDelta'  in orgEvent ) { deltaY = orgEvent.wheelDelta;       }
-        if ( 'wheelDeltaY' in orgEvent ) { deltaY = orgEvent.wheelDeltaY;      }
-        if ( 'wheelDeltaX' in orgEvent ) { deltaX = orgEvent.wheelDeltaX * -1; }
-
-        // Firefox < 17 horizontal scrolling related to DOMMouseScroll event
-        if ( 'axis' in orgEvent && orgEvent.axis === orgEvent.HORIZONTAL_AXIS ) {
-            deltaX = deltaY * -1;
-            deltaY = 0;
-        }
-
-        // Set delta to be deltaY or deltaX if deltaY is 0 for backwards compatabilitiy
-        delta = deltaY === 0 ? deltaX : deltaY;
-
-        // New school wheel delta (wheel event)
-        if ( 'deltaY' in orgEvent ) {
-            deltaY = orgEvent.deltaY * -1;
-            delta  = deltaY;
-        }
-        if ( 'deltaX' in orgEvent ) {
-            deltaX = orgEvent.deltaX;
-            if ( deltaY === 0 ) { delta  = deltaX * -1; }
-        }
-
-        // No change actually happened, no reason to go any further
-        if ( deltaY === 0 && deltaX === 0 ) { return; }
-
-        // Need to convert lines and pages to pixels if we aren't already in pixels
-        // There are three delta modes:
-        //   * deltaMode 0 is by pixels, nothing to do
-        //   * deltaMode 1 is by lines
-        //   * deltaMode 2 is by pages
-        if ( orgEvent.deltaMode === 1 ) {
-            var lineHeight = $.data(this, 'mousewheel-line-height');
-            delta  *= lineHeight;
-            deltaY *= lineHeight;
-            deltaX *= lineHeight;
-        } else if ( orgEvent.deltaMode === 2 ) {
-            var pageHeight = $.data(this, 'mousewheel-page-height');
-            delta  *= pageHeight;
-            deltaY *= pageHeight;
-            deltaX *= pageHeight;
-        }
-
-        // Store lowest absolute delta to normalize the delta values
-        absDelta = Math.max( Math.abs(deltaY), Math.abs(deltaX) );
-
-        if ( !lowestDelta || absDelta < lowestDelta ) {
-            lowestDelta = absDelta;
-
-            // Adjust older deltas if necessary
-            if ( shouldAdjustOldDeltas(orgEvent, absDelta) ) {
-                lowestDelta /= 40;
-            }
-        }
-
-        // Adjust older deltas if necessary
-        if ( shouldAdjustOldDeltas(orgEvent, absDelta) ) {
-            // Divide all the things by 40!
-            delta  /= 40;
-            deltaX /= 40;
-            deltaY /= 40;
-        }
-
-        // Get a whole, normalized value for the deltas
-        delta  = Math[ delta  >= 1 ? 'floor' : 'ceil' ](delta  / lowestDelta);
-        deltaX = Math[ deltaX >= 1 ? 'floor' : 'ceil' ](deltaX / lowestDelta);
-        deltaY = Math[ deltaY >= 1 ? 'floor' : 'ceil' ](deltaY / lowestDelta);
-
-        // Normalise offsetX and offsetY properties
-        if ( special.settings.normalizeOffset && this.getBoundingClientRect ) {
-            var boundingRect = this.getBoundingClientRect();
-            offsetX = event.clientX - boundingRect.left;
-            offsetY = event.clientY - boundingRect.top;
-        }
-
-        // Add information to the event object
-        event.deltaX = deltaX;
-        event.deltaY = deltaY;
-        event.deltaFactor = lowestDelta;
-        event.offsetX = offsetX;
-        event.offsetY = offsetY;
-        // Go ahead and set deltaMode to 0 since we converted to pixels
-        // Although this is a little odd since we overwrite the deltaX/Y
-        // properties with normalized deltas.
-        event.deltaMode = 0;
-
-        // Add event and delta to the front of the arguments
-        args.unshift(event, delta, deltaX, deltaY);
-
-        // Clearout lowestDelta after sometime to better
-        // handle multiple device types that give different
-        // a different lowestDelta
-        // Ex: trackpad = 3 and mouse wheel = 120
-        if (nullLowestDeltaTimeout) { clearTimeout(nullLowestDeltaTimeout); }
-        nullLowestDeltaTimeout = setTimeout(nullLowestDelta, 200);
-
-        return ($.event.dispatch || $.event.handle).apply(this, args);
+    if ('deltaY' in orgEvent) {
+      deltaY = orgEvent.deltaY * -1;
+      delta = deltaY;
+    }
+    if ('deltaX' in orgEvent) {
+      deltaX = orgEvent.deltaX;
+      if (deltaY === 0) { delta = deltaX * -1; }
     }
 
-    function nullLowestDelta() {
-        lowestDelta = null;
+    if (deltaY === 0 && deltaX === 0) { return; }
+
+    if (orgEvent.deltaMode === 1) {
+      var lineHeight = $.data(this,'mousewheel-line-height');
+      delta *= lineHeight;
+      deltaY *= lineHeight;
+      deltaX *= lineHeight;
+    } else if (orgEvent.deltaMode === 2) {
+      var pageHeight = $.data(this,'mousewheel-page-height');
+      delta *= pageHeight;
+      deltaY *= pageHeight;
+      deltaX *= pageHeight;
     }
 
-    function shouldAdjustOldDeltas(orgEvent, absDelta) {
-        // If this is an older event and the delta is divisable by 120,
-        // then we are assuming that the browser is treating this as an
-        // older mouse wheel event and that we should divide the deltas
-        // by 40 to try and get a more usable deltaFactor.
-        // Side note, this actually impacts the reported scroll distance
-        // in older browsers and can cause scrolling to be slower than native.
-        // Turn this off by setting $.event.special.mousewheel.settings.adjustOldDeltas to false.
-        return special.settings.adjustOldDeltas && orgEvent.type === 'mousewheel' && absDelta % 120 === 0;
+    absDelta = Math.max(Math.abs(deltaY),Math.abs(deltaX));
+
+    if (!lowestDelta || absDelta < lowestDelta) {
+      lowestDelta = absDelta;
+
+      if (shouldAdjustOldDeltas(orgEvent,absDelta)) {
+        lowestDelta /= 40;
+      }
     }
+
+    if (shouldAdjustOldDeltas(orgEvent,absDelta)) {
+      delta /= 40;
+      deltaX /= 40;
+      deltaY /= 40;
+    }
+
+    delta = Math[delta >= 1 ? 'floor' : 'ceil'](delta / lowestDelta);
+    deltaX = Math[deltaX >= 1 ? 'floor' : 'ceil'](deltaX / lowestDelta);
+    deltaY = Math[deltaY >= 1 ? 'floor' : 'ceil'](deltaY / lowestDelta);
+
+    if (special.settings.normalizeOffset && this.getBoundingClientRect) {
+      var boundingRect = this.getBoundingClientRect();
+      offsetX = event.clientX - boundingRect.left;
+      offsetY = event.clientY - boundingRect.top;
+    }
+
+    event.deltaX = deltaX;
+    event.deltaY = deltaY;
+    event.deltaFactor = lowestDelta;
+    event.offsetX = offsetX;
+    event.offsetY = offsetY;
+    event.deltaMode = 0;
+
+    args.unshift(event,delta,deltaX,deltaY);
+
+    if (nullLowestDeltaTimeout) { clearTimeout(nullLowestDeltaTimeout); }
+    nullLowestDeltaTimeout = setTimeout(nullLowestDelta,200);
+
+    return ($.event.dispatch || $.event.handle).apply(this,args);
+  }
+
+  function nullLowestDelta() {
+    lowestDelta = null;
+  }
+
+  function shouldAdjustOldDeltas(orgEvent,absDelta) {
+    return special.settings.adjustOldDeltas && orgEvent.type === 'mousewheel' && absDelta % 120 === 0;
+  }
 
 }));
