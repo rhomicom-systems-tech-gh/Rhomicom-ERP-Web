@@ -31,26 +31,30 @@ if (isset($_SESSION['LAST_ACTIVITY'])) {
 require '../app_code/cmncde/globals.php';
 require '../app_code/cmncde/admin_funcs.php';
 
-$allowed = array('png', 'jpg', 'gif', 'jpeg', 'bmp');
-if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
-    $extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-    if (!in_array(strtolower($extension), $allowed)) {
-        echo '[Error Occurred:Unpermitted File Type!]';
-        exit;
-    }
-    $filename = str_replace("." . $extension, "", str_replace(" ", "_", basename($_FILES["file"]["name"])) . "_" . encrypt1(getRandomTxt(10), $smplTokenWord1)) . "." . $extension;
-    $destination_path = getcwd() . DIRECTORY_SEPARATOR . "pem" . DIRECTORY_SEPARATOR;
-    $target_path = $destination_path . $filename;
-    /*
+if (array_key_exists('lgn_num', get_defined_vars())) {
+    if ($lgn_num > 0) {
+        $allowed = array('png', 'jpg', 'gif', 'jpeg', 'bmp');
+        if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
+            $extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+            if (!in_array(strtolower($extension), $allowed)) {
+                echo '[Error Occurred:Unpermitted File Type!]';
+                exit;
+            }
+            $filename = str_replace("." . $extension, "", str_replace(" ", "_", basename($_FILES["file"]["name"])) . "_" . encrypt1(getRandomTxt(10), $smplTokenWord1)) . "." . $extension;
+            $destination_path = getcwd() . DIRECTORY_SEPARATOR . "pem" . DIRECTORY_SEPARATOR;
+            $target_path = $destination_path . $filename;
+            /*
       if (!file_exists(dirname($target_path))) {
       mkdir('path/to/directory', 0777, true);
       }
      */
-    $res = move_uploaded_file($_FILES['file']['tmp_name'], $target_path);
-    if ($res) {
-        echo $app_url . 'dwnlds/pem/' . $filename;
+            $res = move_uploaded_file($_FILES['file']['tmp_name'], $target_path);
+            if ($res) {
+                echo $app_url . 'dwnlds/pem/' . $filename;
+                exit();
+            }
+        }
+        echo '[Error:Unknown]';
         exit();
     }
 }
-echo '[Error:Unknown]';
-exit();

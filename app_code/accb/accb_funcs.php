@@ -3292,6 +3292,7 @@ WHERE tbl1.accb_rpt_runid=" . $trnsID . " ORDER BY tbl1.gnrl_data1::INTEGER";
 
 function get_ImprtdBnkStmntRpt($accntID, $asAtDate1, $asAtDate2)
 {
+    global $orgID;
     /**row_number() over(ORDER BY a.cust_sup_site_id) as row */
     $strSql = "SELECT
                 imprtd_rec_pos_cntr rownumbr,
@@ -3311,22 +3312,26 @@ function get_ImprtdBnkStmntRpt($accntID, $asAtDate1, $asAtDate2)
                 to_char(to_timestamp(a.bnk_trans_date,'YYYY-MM-DD'),'DD-Mon-YYYY') trnsctn_date,
                 to_char(to_timestamp('" . $asAtDate1 . "','YYYY-MM-DD'),'DD-Mon-YYYY') P_FROM_DATE,
                 to_char(to_timestamp('" . $asAtDate2 . "','YYYY-MM-DD'),'DD-Mon-YYYY') P_TO_DATE, 
-                (SELECT SUM(b.net_amount) FROM accb.accb_trans_to_reconcile b
+                ((SELECT SUM(b.net_amount) FROM accb.accb_trans_to_reconcile b
                 WHERE b.imprtd_rec_pos_cntr <= a.imprtd_rec_pos_cntr
-                AND b.import_hdr_runid=a.import_hdr_runid) rnng_bals,
+                AND b.import_hdr_runid=a.import_hdr_runid)+a.opng_net_amount) rnng_bals,
                 a.reconcile_line_id trnsctn_line,
                 a.account_id accnt_id,
                 a.is_reconciled is_reconciled,
                 'VALID' batch_vldty_status,
                 -1 src_batch_id,
-                to_char(to_timestamp(a.value_date,'YYYY-MM-DD'),'DD-Mon-YYYY') value_date
+                to_char(to_timestamp(a.value_date,'YYYY-MM-DD'),'DD-Mon-YYYY') value_date,
+                a.import_hdr_runid
                 FROM accb.accb_trans_to_reconcile a 
-                WHERE a.import_hdr_runid = (Select MAX(c.import_hdr_runid) 
+                WHERE a.import_hdr_runid IN (Select DISTINCT (c.import_hdr_runid) 
                                     FROM accb.accb_trans_to_reconcile c 
                                     WHERE c.account_id=" . $accntID .
-        " and c.reconcile_strt_date>='" . $asAtDate1 .
-        "' and c.reconcile_end_date<='" . $asAtDate2 . "') 
-                ORDER BY a.imprtd_rec_pos_cntr";
+                                    " and c.org_id=".$orgID.
+                                    " and (('" . $asAtDate1 .
+                                    "' >=c.reconcile_strt_date and '" . $asAtDate1 .
+                                    "' <= c.reconcile_end_date) or ('" . $asAtDate2 .
+                                    "' >= c.reconcile_strt_date and '" . $asAtDate2 . "' <= c.reconcile_end_date))) 
+                ORDER BY a.import_hdr_runid, a.imprtd_rec_pos_cntr";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
@@ -3347,6 +3352,7 @@ function get_MxImprtdBnkStmntID($accntID, $asAtDate1, $asAtDate2)
         "' >=c.reconcile_strt_date and '" . $asAtDate1 .
         "' <= c.reconcile_end_date) or ('" . $asAtDate2 .
         "' >= c.reconcile_strt_date and '" . $asAtDate2 . "' <= c.reconcile_end_date))";
+        logSessionErrs($strSql);
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return (float) $row[0];
@@ -3444,19 +3450,38 @@ function createBnkStmntTrans(
         ", " . ($opngCredits - $opngDebits) .
         ", " . $clsngDebits .
         ", " . $clsngCredits .
-        ", " . ($clsngCredits - $clsngDebits) .
+        ", " . ($clsngCredits + $clsngDebits) .
         ", '0', -1, " . $orgID . ", " . $usrID .
         ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $usrID .
         ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'))";
     return execUpdtInsSQL($insSQL);
 }
 
+function changeImprtdReconciledStatus($trnsID, $nwStatus)
+{
+    if ($trnsID <= 0) {
+        return;
+    }
+    $updtSQL = "UPDATE accb.accb_trans_to_reconcile SET is_reconciled = '" .
+        loc_db_escape_string($nwStatus) . "' WHERE reconcile_line_id=" . $trnsID;
+    return execUpdtInsSQL($updtSQL);
+}
+
 function delBnkStmntTrans(
-    $rcnclHdrID
+    $rcnclHdrID, $docNum
 ) {
     global $orgID;
-    $insSQL = "DELETE FROM accb.accb_trans_to_reconcile WHERE reconcile_line_id = " . $rcnclHdrID . " and org_id=" . $orgID;
-    return execUpdtInsSQL($insSQL);
+    $delSQL = "DELETE FROM accb.accb_trans_to_reconcile WHERE (import_hdr_runid = " . $rcnclHdrID . " or import_hdr_runid<=0) and org_id=" . $orgID;
+    $affctd1 = execUpdtInsSQL($delSQL, "Desc:" . $docNum);
+    if ($affctd1 > 0) {
+        $dsply = "";
+        $dsply .= "<br/>Successfully Executed the ff-";
+        $dsply .= "<br/>Deleted $affctd1 Imported Statement(s)!";
+        return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
+    } else {
+        $dsply = "No Record Deleted";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
 }
 
 function get_Trns_AmntBrkdwn($trnsID, $lovID, $mode)
@@ -14345,7 +14370,7 @@ function loadTypRqstsOptions($payTrnsRqstsItmTypID, $payTrnsRqstsPrsnID, &$first
     global $orgID;
     $payTrnsRqstsDpndtItmTypID = (float) getGnrlRecNm("pay.loan_pymnt_invstmnt_typs", "item_type_id", "lnkd_loan_type_id", $payTrnsRqstsItmTypID);
     $payTrnsRqstsDpndtBalsItmID = (float) getGnrlRecNm("pay.loan_pymnt_invstmnt_typs", "item_type_id", "lnkd_loan_mn_itm_id", $payTrnsRqstsItmTypID);
-    $titleRslt = get_UnsttldLoanRqsts("%", "Requestor", 0, 5, $orgID, $payTrnsRqstsPrsnID, $payTrnsRqstsDpndtItmTypID, $payTrnsRqstsDpndtBalsItmID, "LOAN");
+    $titleRslt = get_UnsttldLoanRqsts("%", "Requestor", 0, 500, $orgID, $payTrnsRqstsPrsnID, $payTrnsRqstsDpndtItmTypID, $payTrnsRqstsDpndtBalsItmID, "LOAN");
     $pssblItems = [];
     $i = 0;
     while ($titleRow = loc_db_fetch_array($titleRslt)) {

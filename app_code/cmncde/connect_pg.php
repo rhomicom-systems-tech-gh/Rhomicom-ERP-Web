@@ -115,6 +115,7 @@ $noticesElmntNm = '';
 $smplTokenWord = "";
 $smplTokenWord1 = "";
 $database = "";
+$currentPgConn;
 $db_folder = "";
 $fldrPrfx = "";
 $tmpDest = '';
@@ -643,11 +644,13 @@ function rhoErrorHandler($errno, $errstr, $errfile, $errline)
     global $lgn_num;
     global $logNxtLine;
     //echo "RHOMICOM ERROR: [$errno] $errstr<br />\n Error occured on line $errline in file $errfile";
-    file_put_contents(
+    /*file_put_contents(
         $ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho",
         PHP_EOL . "RHOMICOM ERROR: [$errno] $errstr<br />\n This Rhomicom Error happened on line $errline in file $errfile" . $logNxtLine,
         FILE_APPEND | LOCK_EX
-    );
+    );*/
+    $txt = "RHOMICOM ERROR: [$errno] $errstr<br />\n This Rhomicom Error happened on line $errline in file $errfile";
+    logSessionErrs($txt);
     $msg = str_replace("ERROR:", "", str_replace("pg_query():", "", $errstr));
     if (strpos($msg, 'CONTEXT:') !== FALSE) {
         $msg = substr($msg, 0, (((int) strpos($msg, 'CONTEXT:')) + 1));
@@ -657,10 +660,10 @@ function rhoErrorHandler($errno, $errstr, $errfile, $errline)
     //trigger_error("RHO ERROR:" . $errTxt, E_USER_ERROR);
     $group = isset($_POST['grp']) ? (int) cleanInputData($_POST['grp']) : 0;
     //$cpGet = isset($_GET['cp']) ? (int) cleanInputData($_GET['cp']) : 0;
+    error_reporting(0);
     if (!empty($_POST)) {
         echo ("<span style=\"color:red;font-weight:bold;\">" . "RHO ERROR:" . $errTxt . "</span>");
     }
-    error_reporting(0);
     throw new RuntimeException("");
     //<br />\n This Rhomicom Error happened on line $errline in file $errfile
     /* if (!(error_reporting() & $errno)) {
@@ -698,15 +701,18 @@ function rhoErrorHandler2($errno, $errstr, $errfile, $errline)
 {
     // This error code is not included in error_reporting, so let it fall
     // through to the standard PHP error handler
+    $txt = "RHOMICOM ERROR: [$errno] $errstr<br />\n This Rhomicom Error happened on line $errline in file $errfile";
+    logSessionErrs($txt);
     return false;
 }
 
 function rhoErrorHandler3($errno, $errstr, $errfile, $errline)
 {
     //No echoing of error
+    $txt = "RHOMICOM ERROR: [$errno] $errstr<br />\n This Rhomicom Error happened on line $errline in file $errfile";
+    logSessionErrs($txt);
     return true;
 }
-
 function getConn()
 {
     global $database;
@@ -714,9 +720,11 @@ function getConn()
     global $db_usr;
     global $port;
     global $host;
+    global $currentPgConn;
     $conn_string = "host=$host port=$port dbname=$database user=$db_usr password=$db_pwd";
     try {
         $conn = pg_connect($conn_string);
+        $currentPgConn = $conn;
         return $conn;
     } catch (\Exception $e) {
         logSessionErrs($e->getMessage());
@@ -726,6 +734,15 @@ function getConn()
 
 function loc_db_escape_string($str)
 {
+    /*global $currentPgConn;
+    if (!isset($currentPgConn)) {
+        $currentPgConn = getConn();
+    }
+    if (isset($currentPgConn)) {
+        return pg_escape_string($currentPgConn, $str);
+    } else {
+        return pg_escape_string($str);
+    }*/
     return pg_escape_string($str);
 }
 

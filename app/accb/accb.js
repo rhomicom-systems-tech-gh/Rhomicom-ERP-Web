@@ -16559,6 +16559,142 @@ function moveSelectedTrans() {
     calcAllJrnlBatchEditTtl();
 }
 
+function moveSelectedImprtdTrans() {
+    var inptHtml =
+        typeof $("#nwRowHtml2").val() === "undefined" ? "" : $("#nwRowHtml2").val();
+    var rcnclAccntID =
+        typeof $("#rcnclAccntID").val() === "undefined"
+            ? "-1"
+            : $("#rcnclAccntID").val();
+    var rcnclAccntNm =
+        typeof $("#rcnclAccntNm").val() === "undefined"
+            ? ""
+            : $("#rcnclAccntNm").val();
+    var jrnlBatchAmountCrncy =
+        typeof $("#jrnlBatchAmountCrncy").text() === "undefined"
+            ? ""
+            : $("#jrnlBatchAmountCrncy").text();
+    var jrnlBatchDesc =
+        typeof $("#jrnlBatchDesc").val() === "undefined"
+            ? ""
+            : $("#jrnlBatchDesc").val();
+    if (jrnlBatchDesc.trim() === "") {
+        jrnlBatchDesc = "Reconciliation Movement of Imported Account Transactions";
+        $("#jrnlBatchDesc").val(jrnlBatchDesc);
+    }
+    var form = document.getElementById("accbImprtdFSRptDetForm");
+    var cbResults = "";
+    var fnl_res = "";
+    var entrdFgrs = "";
+    for (var i = 0; i < form.elements.length; i++) {
+        if (form.elements[i].type === "checkbox") {
+            if (form.elements[i].checked === true) {
+                cbResults += form.elements[i].value + "|";
+            }
+        }
+    }
+    if (cbResults.length > 1) {
+        fnl_res = cbResults.slice(0,-1);
+    }
+    var bigArry = [];
+    var bigArry2 = [];
+    bigArry = fnl_res.split("|");
+    var i = 0;
+    var ln_TransLineID = "";
+    var ln_AccntNm = "";
+    var ln_LineDesc = "";
+    var ln_AccntID = -1;
+    var ln_Rmrks = "";
+    var ln_CrncyID = -1;
+    var ln_CrncyNm = "";
+    var ln_DbtAmt = 0;
+    var ln_CrdtAmnt = 0;
+    var ln_TrnsDte = "";
+    var ln_IsParent = "";
+    var rowPrfxNm = "oneJrnlBatchDetRow";
+    for (i = 0; i < bigArry.length; i++) {
+        var rndmNum1 = bigArry[i].split("_")[1];
+        var rowPrfxNm1 = bigArry[i].split("_")[0];
+        ln_AccntID =
+            typeof $("#" + rowPrfxNm1 + rndmNum1 + "_AccountID").val() === "undefined"
+                ? "-1"
+                : $("#" + rowPrfxNm1 + rndmNum1 + "_AccountID").val();
+        ln_TransLineID =
+            typeof $("#" + rowPrfxNm1 + rndmNum1 + "_TransLineID").val() ===
+                "undefined"
+                ? "-1"
+                : $("#" + rowPrfxNm1 + rndmNum1 + "_TransLineID").val();
+        ln_AccntNm =
+            typeof $("#" + rowPrfxNm1 + rndmNum1 + "_AccntNm").val() === "undefined"
+                ? ""
+                : $("#" + rowPrfxNm1 + rndmNum1 + "_AccntNm").val();
+        ln_LineDesc =
+            typeof $("#" + rowPrfxNm1 + rndmNum1 + "_LineDesc").val() === "undefined"
+                ? ""
+                : $("#" + rowPrfxNm1 + rndmNum1 + "_LineDesc").val();
+        ln_DbtAmt =
+            typeof $("#" + rowPrfxNm1 + rndmNum1 + "_DbtAmnt").val() === "undefined"
+                ? "0.00"
+                : $("#" + rowPrfxNm1 + rndmNum1 + "_DbtAmnt").val();
+        ln_CrdtAmnt =
+            typeof $("#" + rowPrfxNm1 + rndmNum1 + "_CrdtAmnt").val() === "undefined"
+                ? "0.00"
+                : $("#" + rowPrfxNm1 + rndmNum1 + "_CrdtAmnt").val();
+        ln_TrnsDte =
+            typeof $("#" + rowPrfxNm1 + rndmNum1 + "_TrnsDte").val() === "undefined"
+                ? ""
+                : $("#" + rowPrfxNm1 + rndmNum1 + "_TrnsDte").val();
+        ln_IsParent =
+            typeof $("#" + rowPrfxNm1 + rndmNum1 + "_IsParent").val() === "undefined"
+                ? "0"
+                : $("#" + rowPrfxNm1 + rndmNum1 + "_IsParent").val();
+        if (ln_TrnsDte.trim().length <= 11) {
+            ln_TrnsDte = ln_TrnsDte.trim() + " 12:00:00";
+        }
+        ln_DbtAmt = Number(ln_DbtAmt.replace(/[^-?0-9\.]/g,""));
+        ln_CrdtAmnt = Number(ln_CrdtAmnt.replace(/[^-?0-9\.]/g,""));
+        var newNetAmnt = 0;
+        if (Number(ln_TransLineID.replace(/[^-?0-9\.]/g,"")) > 0) {
+            /*Reverse current accounts trans*/
+            var nwRndm = insertOnlyJrnlBatcRows(
+                "oneJrnlBatchDetLinesTable",
+                1,
+                inptHtml
+            );
+            $("#" + rowPrfxNm + nwRndm + "_AccountID").val(ln_AccntID);
+            $("#" + rowPrfxNm + nwRndm + "_AccountNm").val(ln_AccntNm.trim());
+            $("#" + rowPrfxNm + nwRndm + "_LineDesc").val(
+                "(Imported Trans.) " + ln_LineDesc
+            );
+            $("#" + rowPrfxNm + nwRndm + "_TrnsCurNm").val(jrnlBatchAmountCrncy);
+            $("#" + rowPrfxNm + nwRndm + "_TrnsCurNm1").text(jrnlBatchAmountCrncy);
+            $("#" + rowPrfxNm + nwRndm + "_CreditAmnt").val(ln_DbtAmt);
+            $("#" + rowPrfxNm + nwRndm + "_DebitAmnt").val(ln_CrdtAmnt);
+            $("#" + rowPrfxNm + nwRndm + "_TransDte").val(ln_TrnsDte);
+        }
+    }
+
+    var cntr = 0;
+    $("#oneJrnlBatchDetLinesTable")
+        .find("tr")
+        .each(function (i,el) {
+            if (i > 0) {
+                if (typeof $(el).attr("id") === "undefined") {
+                    /*Do Nothing*/
+                } else {
+                    cntr++;
+                    var prfxName1 = $(el).attr("id").split("_")[0];
+                    var rndmNum1 = $(el).attr("id").split("_")[1];
+                    var $tds = $("#" + prfxName1 + "_" + rndmNum1).find("td");
+                    $tds.eq(0).html(cntr);
+                }
+            }
+        });
+    $("#accbRcnclJrnlTrnsLinestab").tab("show");
+    calcAllJrnlBatchDetTtl();
+    calcAllJrnlBatchEditTtl();
+}
+
 function markSelectedTransRcncld() {
     var inptHtml = typeof $("#nwRowHtml2").val() === "undefined" ? "" : $("#nwRowHtml2").val();
     var rcnclAccntID = typeof $("#rcnclAccntID").val() === "undefined" ? "-1" : $("#rcnclAccntID").val();
@@ -16696,6 +16832,147 @@ function markSelectedTransRcncld() {
             }
         });
     $("#accbRcnclGlStatemtLinestab").tab("show");
+}
+
+
+function markSelectedImprtdTransRcncld() {
+    var inptHtml = typeof $("#nwRowHtml2").val() === "undefined" ? "" : $("#nwRowHtml2").val();
+    var accbFSRptSbmtdAccountID = typeof $("#accbFSRptSbmtdAccountID").val() === 'undefined' ? -1 : $("#accbFSRptSbmtdAccountID").val();
+    var rcnclAccntID = typeof $("#rcnclAccntID").val() === "undefined" ? "-1" : $("#rcnclAccntID").val();
+    var rcnclAccntNm = typeof $("#rcnclAccntNm").val() === "undefined" ? "" : $("#rcnclAccntNm").val();
+    var jrnlBatchAmountCrncy = typeof $("#jrnlBatchAmountCrncy").text() === "undefined" ? "" : $("#jrnlBatchAmountCrncy").text();
+    var jrnlBatchDesc = typeof $("#jrnlBatchDesc").val() === "undefined" ? "" : $("#jrnlBatchDesc").val();
+    if (jrnlBatchDesc.trim() === "") {
+        jrnlBatchDesc = "Reconciliation Movement of Account Transactions";
+        $("#jrnlBatchDesc").val(jrnlBatchDesc);
+    }
+    var form = document.getElementById("accbImprtdFSRptDetForm");
+    var cbResults = "";
+    var fnl_res = "";
+    var entrdFgrs = "";
+    for (var i = 0; i < form.elements.length; i++) {
+        if (form.elements[i].type === "checkbox") {
+            if (form.elements[i].checked === true) {
+                cbResults += form.elements[i].value + "|";
+            }
+        }
+    }
+    if (cbResults.length > 1) {
+        fnl_res = cbResults.slice(0,-1);
+    }
+    var bigArry = [];
+    var bigArry2 = [];
+    bigArry = fnl_res.split("|");
+    var i = 0;
+    var ln_TransLineID = "";
+    var ln_AccntNm = "";
+    var ln_LineDesc = "";
+    var ln_AccntID = -1;
+    var ln_Rmrks = "";
+    var ln_CrncyID = -1;
+    var ln_CrncyNm = "";
+    var ln_DbtAmt = 0;
+    var ln_CrdtAmnt = 0;
+    var ln_TrnsDte = "";
+    var ln_IsParent = "";
+    var ln_IsRcncld = "0";
+    var rowPrfxNm = "oneJrnlBatchDetRow";
+    var slctdLineTrans = "";
+    for (i = 0; i < bigArry.length; i++) {
+        var rndmNum1 = bigArry[i].split("_")[1];
+        var rowPrfxNm1 = bigArry[i].split("_")[0];
+        ln_AccntID = typeof $("#" + rowPrfxNm1 + rndmNum1 + "_AccountID").val() === "undefined" ? "-1" : $("#" + rowPrfxNm1 + rndmNum1 + "_AccountID").val();
+        ln_TransLineID = typeof $("#" + rowPrfxNm1 + rndmNum1 + "_TransLineID").val() === "undefined" ? "-1" : $("#" + rowPrfxNm1 + rndmNum1 + "_TransLineID").val();
+        ln_AccntNm = typeof $("#" + rowPrfxNm1 + rndmNum1 + "_AccntNm").val() === "undefined" ? "" : $("#" + rowPrfxNm1 + rndmNum1 + "_AccntNm").val();
+        ln_LineDesc = typeof $("#" + rowPrfxNm1 + rndmNum1 + "_LineDesc").val() === "undefined" ? "" : $("#" + rowPrfxNm1 + rndmNum1 + "_LineDesc").val();
+        ln_DbtAmt = typeof $("#" + rowPrfxNm1 + rndmNum1 + "_DbtAmnt").val() === "undefined" ? "0.00" : $("#" + rowPrfxNm1 + rndmNum1 + "_DbtAmnt").val();
+        ln_CrdtAmnt = typeof $("#" + rowPrfxNm1 + rndmNum1 + "_CrdtAmnt").val() === "undefined" ? "0.00" : $("#" + rowPrfxNm1 + rndmNum1 + "_CrdtAmnt").val();
+        ln_TrnsDte = typeof $("#" + rowPrfxNm1 + rndmNum1 + "_TrnsDte").val() === "undefined" ? "" : $("#" + rowPrfxNm1 + rndmNum1 + "_TrnsDte").val();
+        ln_IsParent = typeof $("#" + rowPrfxNm1 + rndmNum1 + "_IsParent").val() === "undefined" ? "0" : $("#" + rowPrfxNm1 + rndmNum1 + "_IsParent").val();
+        ln_IsRcncld = typeof $("#" + rowPrfxNm1 + rndmNum1 + "_IsRcncld").val() === "undefined" ? "0" : $("#" + rowPrfxNm1 + rndmNum1 + "_IsRcncld").val();
+        if (ln_TrnsDte.trim().length <= 11) {
+            ln_TrnsDte = ln_TrnsDte.trim() + " 12:00:00";
+        }
+        ln_DbtAmt = Number(ln_DbtAmt.replace(/[^-?0-9\.]/g,""));
+        ln_CrdtAmnt = Number(ln_CrdtAmnt.replace(/[^-?0-9\.]/g,""));
+        var newNetAmnt = 0;
+        if (ln_IsRcncld.trim() == "1") {
+            ln_IsRcncld = "0";
+            $("#" + rowPrfxNm1 + rndmNum1 + "_IsRcncld").val(ln_IsRcncld);
+            $("#" + bigArry[i]).css("background-color","#ffcccb");
+        } else {
+            ln_IsRcncld = "1";
+            $("#" + rowPrfxNm1 + rndmNum1 + "_IsRcncld").val(ln_IsRcncld);
+            $("#" + bigArry[i]).css("background-color","#BFFF00");
+        }
+
+        slctdLineTrans = slctdLineTrans +
+            ln_TransLineID.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+            ln_IsRcncld.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "~" +
+            ln_AccntID.replace(/(~)/g,"{-;-;}").replace(/(\|)/g,"{:;:;}") + "|";
+    }
+
+    var dialog = bootbox.alert({
+        title: 'Change Transaction Reconciled Status',
+        size: 'small',
+        message: '<p><i class="fa fa-spin fa-spinner"></i> Changing Transaction Reconciled Status...Please Wait...</p>',
+        callback: function () { }
+    });
+
+    var formData = new FormData();
+    formData.append('grp',6);
+    formData.append('typ',1);
+    formData.append('pg',19);
+    formData.append('q','UPDATE');
+    formData.append('actyp',2);
+    formData.append('rcnclAccntID',rcnclAccntID);
+    formData.append('slctdLineTrans',slctdLineTrans);
+
+    dialog.init(function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session',function () {
+            $body = $("body");
+            $body.removeClass("mdlloading");
+            $.ajax({
+                url: 'index.php',
+                method: 'POST',
+                data: formData,
+                async: true,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    setTimeout(function () {
+                        dialog.find('.bootbox-body').html(data.message);
+                        if (data.message.indexOf("Success") !== -1) {
+                            rcnclAccntID = data.rcnclAccntID;
+                            dialog.modal('hide');
+                        }
+                    },500);
+                },
+                error: function (jqXHR,textStatus,errorThrown) {
+                    console.log(textStatus + " " + errorThrown);
+                    console.warn(jqXHR.responseText);
+                }
+            });
+        });
+    });
+    var cntr = 0;
+    $("#oneJrnlBatchDetLinesTable")
+        .find("tr")
+        .each(function (i,el) {
+            if (i > 0) {
+                if (typeof $(el).attr("id") === "undefined") {
+                    /*Do Nothing*/
+                } else {
+                    cntr++;
+                    var prfxName1 = $(el).attr("id").split("_")[0];
+                    var rndmNum1 = $(el).attr("id").split("_")[1];
+                    var $tds = $("#" + prfxName1 + "_" + rndmNum1).find("td");
+                    $tds.eq(0).html(cntr);
+                }
+            }
+        });
+    $("#accbRcnclImprtdTrnsLinestab").tab("show");
 }
 
 var prgstimerid2;
@@ -20971,7 +21248,7 @@ function saveImprtToRcnclExcl(dataToSend) {
             ClearAllIntervals();
         },
     });
-    var rcnclAccntID = typeof $("#rcnclAccntID").val() === 'undefined' ? -1 : $("#rcnclAccntID").val();
+    var rcnclAccntID = typeof $("#accbFSRptSbmtdAccountID").val() === 'undefined' ? -1 : $("#accbFSRptSbmtdAccountID").val();
     var accbStrtFSRptDte = typeof $("#accbStrtFSRptDte").val() === 'undefined' ? '' : $("#accbStrtFSRptDte").val();
     var accbEndFSRptDte = typeof $("#accbFSRptDte").val() === 'undefined' ? '' : $("#accbFSRptDte").val();
     dialog.init(function () {

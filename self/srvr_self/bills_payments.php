@@ -2735,7 +2735,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         $payTrnsRqstsDpndtItmTypID = (float) getGnrlRecNm("pay.loan_pymnt_invstmnt_typs", "item_type_id", "lnkd_loan_type_id", $payTrnsRqstsItmTypID);
                                         $payTrnsRqstsDpndtBalsItmID = (float) getGnrlRecNm("pay.loan_pymnt_invstmnt_typs", "item_type_id", "lnkd_loan_mn_itm_id", $payTrnsRqstsItmTypID);
                                         $cnt = 0;
-                                        $titleRslt = get_UnsttldLoanRqsts("%", "Requestor", 0, 5, $orgID, $payTrnsRqstsPrsnID, $payTrnsRqstsDpndtItmTypID, $payTrnsRqstsDpndtBalsItmID, "LOAN");
+                                        $titleRslt = get_UnsttldLoanRqsts("%", "Requestor", 0, 500, $orgID, $payTrnsRqstsPrsnID, $payTrnsRqstsDpndtItmTypID, $payTrnsRqstsDpndtBalsItmID, "LOAN");
                                         while ($titleRow = loc_db_fetch_array($titleRslt)) {
                                             $selectedTxt = "";
                                             $cnt++;
@@ -4556,7 +4556,7 @@ to_char(to_timestamp(a.paymnt_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI
                                 global $orgID;
                                 $payTrnsRqstsDpndtItmTypID = (float) getGnrlRecNm("pay.loan_pymnt_invstmnt_typs", "item_type_id", "lnkd_loan_type_id", $payTrnsRqstsItmTypID);
                                 $payTrnsRqstsDpndtBalsItmID = (float) getGnrlRecNm("pay.loan_pymnt_invstmnt_typs", "item_type_id", "lnkd_loan_mn_itm_id", $payTrnsRqstsItmTypID);
-                                $titleRslt = get_UnsttldLoanRqsts("%", "Requestor", 0, 5, $orgID, $payTrnsRqstsPrsnID, $payTrnsRqstsDpndtItmTypID, $payTrnsRqstsDpndtBalsItmID, "LOAN");
+                                $titleRslt = get_UnsttldLoanRqsts("%", "Requestor", 0, 500, $orgID, $payTrnsRqstsPrsnID, $payTrnsRqstsDpndtItmTypID, $payTrnsRqstsDpndtBalsItmID, "LOAN");
                                 $pssblItems = [];
                                 $i = 0;
                                 while ($titleRow = loc_db_fetch_array($titleRslt)) {

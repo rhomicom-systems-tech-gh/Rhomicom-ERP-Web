@@ -2179,7 +2179,7 @@ function printPayPOSRcpt(pKeyID) {
         }
     });
 }
-         getOneJrnlBatchForm(-1, 11, 'ReloadDialog', -1, '', '#accbRcnclJrnlTrnsLines');
+getOneJrnlBatchForm(-1,11,'ReloadDialog',-1,'','#accbRcnclJrnlTrnsLines');
 function getOneJrnlBatchForm(pKeyID,vwtype,actionTxt,extraPKeyID,extraPKeyType,destElmntID) {
     if (typeof actionTxt === 'undefined' || actionTxt === null) {
         actionTxt = 'ShowDialog';
@@ -2858,6 +2858,109 @@ function getAccbFSRptRpts(startRunng,slctr,linkArgs,startAcntID) {
     }
 }
 
+
+function getAccbImprtdFSRptRpts(startRunng,slctr,linkArgs,startAcntID) {
+    var accbFSRptMaxAcntLvl = typeof $("#accbFSRptMaxAcntLvl").val() === 'undefined' ? 1 : $("#accbFSRptMaxAcntLvl").val();
+    var accbFSRptSbmtdAccountID = typeof $("#accbFSRptSbmtdAccountID").val() === 'undefined' ? -1 : $("#accbFSRptSbmtdAccountID").val();
+    var accbFSRptAcntNum = typeof $("#accbFSRptAcntNum").val() === 'undefined' ? '' : $("#accbFSRptAcntNum").val();
+    var accbStrtFSRptDte = typeof $("#accbStrtFSRptDte").val() === 'undefined' ? '' : $("#accbStrtFSRptDte").val();
+    var accbFSRptDte = typeof $("#accbFSRptDte").val() === 'undefined' ? '' : $("#accbFSRptDte").val();
+    var accbFSRptAcntTypes = typeof $("#accbFSRptAcntTypes").val() === 'undefined' ? '' : $("#accbFSRptAcntTypes").val();
+    var accbFSRptPrdType = typeof $("#accbFSRptPrdType").val() === 'undefined' ? '' : $("#accbFSRptPrdType").val();
+    var accbFSRptShwVariance = $('#accbFSRptShwVariance:checked').length > 0 ? "YES" : "NO";
+    var accbFSRptShwHideZero = $('#accbFSRptShwHideZero:checked').length > 0 ? "YES" : "NO";
+    var accbFSRptShwSmmry = $('#accbFSRptShwSmmry:checked').length > 0 ? "YES" : "NO";
+    var accbFSRptShwNetPos = $('#accbFSRptShwNetPos:checked').length > 0 ? "YES" : "NO";
+    var accbFSRptUseCreationDte = $('#accbFSRptUseCreationDte:checked').length > 0 ? "YES" : "NO";
+    var accbFSRptShwUnBalsd = $('#accbFSRptShwUnBalsd:checked').length > 0 ? "YES" : "NO";
+    var accbFSRptShwUnmtchd = $('#accbFSRptShwUnmtchd:checked').length > 0 ? "YES" : "NO";
+    var accbFSRptShwVoided = $('#accbFSRptShwVoided:checked').length > 0 ? "YES" : "NO";
+    var accbFSRptShwUnrcncld = $('#accbImprtdFSRptShwUnrcncld:checked').length > 0 ? "YES" : "NO";
+    var accbFSRptSgmnt1ValID = typeof $("#accbFSRptSgmnt1ValID").val() === 'undefined' ? -1 : $("#accbFSRptSgmnt1ValID").val();
+    var accbFSRptSgmnt2ValID = typeof $("#accbFSRptSgmnt2ValID").val() === 'undefined' ? -1 : $("#accbFSRptSgmnt2ValID").val();
+    var accbFSRptSgmnt3ValID = typeof $("#accbFSRptSgmnt3ValID").val() === 'undefined' ? -1 : $("#accbFSRptSgmnt3ValID").val();
+    var accbFSRptSgmnt4ValID = typeof $("#accbFSRptSgmnt4ValID").val() === 'undefined' ? -1 : $("#accbFSRptSgmnt4ValID").val();
+    var accbFSRptSgmnt5ValID = typeof $("#accbFSRptSgmnt5ValID").val() === 'undefined' ? -1 : $("#accbFSRptSgmnt5ValID").val();
+    var accbFSRptSgmnt6ValID = typeof $("#accbFSRptSgmnt6ValID").val() === 'undefined' ? -1 : $("#accbFSRptSgmnt6ValID").val();
+    var accbFSRptSgmnt7ValID = typeof $("#accbFSRptSgmnt7ValID").val() === 'undefined' ? -1 : $("#accbFSRptSgmnt7ValID").val();
+    var accbFSRptSgmnt8ValID = typeof $("#accbFSRptSgmnt8ValID").val() === 'undefined' ? -1 : $("#accbFSRptSgmnt8ValID").val();
+    var accbFSRptSgmnt9ValID = typeof $("#accbFSRptSgmnt9ValID").val() === 'undefined' ? -1 : $("#accbFSRptSgmnt9ValID").val();
+    var accbFSRptSgmnt10ValID = typeof $("#accbFSRptSgmnt10ValID").val() === 'undefined' ? -1 : $("#accbFSRptSgmnt10ValID").val();
+
+    var accbFSRptCreatedByID = typeof $("#accbFSRptCreatedByID").val() === 'undefined' ? -1 : $("#accbFSRptCreatedByID").val();
+    var accbFSRptCreatedBy = typeof $("#accbFSRptCreatedBy").val() === 'undefined' ? '' : $("#accbFSRptCreatedBy").val();
+    var accbFSRptDocType = typeof $("#accbFSRptDocType").val() === 'undefined' ? '' : $("#accbFSRptDocType").val();
+    var accbFSRptSortBy = typeof $("#accbFSRptSortBy").val() === 'undefined' ? '' : $("#accbFSRptSortBy").val();
+
+    var accbFSRptItemCodeID = typeof $("#accbFSRptItemCodeID").val() === 'undefined' ? -1 : $("#accbFSRptItemCodeID").val();
+    var accbFSRptItemCode = typeof $("#accbFSRptItemCode").val() === 'undefined' ? '' : $("#accbFSRptItemCode").val();
+    var accbFSRptStoreID = typeof $("#accbFSRptStoreID").val() === 'undefined' ? -1 : $("#accbFSRptStoreID").val();
+    var accbFSRptStore = typeof $("#accbFSRptStore").val() === 'undefined' ? '' : $("#accbFSRptStore").val();
+    var accbFSRptCtgryID = typeof $("#accbFSRptCtgryID").val() === 'undefined' ? -1 : $("#accbFSRptCtgryID").val();
+    var accbFSRptCtgry = typeof $("#accbFSRptCtgry").val() === 'undefined' ? '' : $("#accbFSRptCtgry").val();
+    var accbFSRptItemType = typeof $("#accbFSRptItemType").val() === 'undefined' ? '' : $("#accbFSRptItemType").val();
+    var accbFSRptQTYType = typeof $("#accbFSRptQTYType").val() === 'undefined' ? '' : $("#accbFSRptQTYType").val();
+    var accbFSRptMinQTY = typeof $("#accbFSRptMinQTY").val() === 'undefined' ? 0 : $("#accbFSRptMinQTY").val();
+    var accbFSRptMaxQTY = typeof $("#accbFSRptMaxQTY").val() === 'undefined' ? 9999999999 : $("#accbFSRptMaxQTY").val();
+    if (startAcntID >= 1) {
+        accbFSRptSbmtdAccountID = startAcntID;
+        accbFSRptMaxAcntLvl = 100;
+        accbFSRptShwSmmry = "NO";
+    }
+    if (startAcntID >= 1) {
+        shdHideFSRpt = 1;
+    } else {
+        shdHideFSRpt = 0;
+    }
+    linkArgs = linkArgs + "&accbFSRptMaxAcntLvl=" + accbFSRptMaxAcntLvl +
+        "&accbFSRptSbmtdAccountID=" + accbFSRptSbmtdAccountID +
+        "&accbFSRptAcntNum=" + accbFSRptAcntNum +
+        "&accbFSRptDte=" + accbFSRptDte +
+        "&accbStrtFSRptDte=" + accbStrtFSRptDte +
+        "&accbFSRptAcntTypes=" + accbFSRptAcntTypes +
+        "&accbFSRptPrdType=" + accbFSRptPrdType +
+        "&startRunng=" + startRunng +
+        "&accbFSRptShwVariance=" + accbFSRptShwVariance +
+        "&accbFSRptShwHideZero=" + accbFSRptShwHideZero +
+        "&accbFSRptShwSmmry=" + accbFSRptShwSmmry +
+        "&accbFSRptShwNetPos=" + accbFSRptShwNetPos +
+        "&accbFSRptSgmnt1ValID=" + accbFSRptSgmnt1ValID +
+        "&accbFSRptSgmnt2ValID=" + accbFSRptSgmnt2ValID +
+        "&accbFSRptSgmnt3ValID=" + accbFSRptSgmnt3ValID +
+        "&accbFSRptSgmnt4ValID=" + accbFSRptSgmnt4ValID +
+        "&accbFSRptSgmnt5ValID=" + accbFSRptSgmnt5ValID +
+        "&accbFSRptSgmnt6ValID=" + accbFSRptSgmnt6ValID +
+        "&accbFSRptSgmnt7ValID=" + accbFSRptSgmnt7ValID +
+        "&accbFSRptSgmnt8ValID=" + accbFSRptSgmnt8ValID +
+        "&accbFSRptSgmnt9ValID=" + accbFSRptSgmnt9ValID +
+        "&accbFSRptSgmnt10ValID=" + accbFSRptSgmnt10ValID +
+        "&accbFSRptItemCodeID=" + accbFSRptItemCodeID +
+        "&accbFSRptStoreID=" + accbFSRptStoreID +
+        "&accbFSRptCtgryID=" + accbFSRptCtgryID +
+        "&accbFSRptItemType=" + accbFSRptItemType +
+        "&accbFSRptQTYType=" + accbFSRptQTYType +
+        "&accbFSRptMinQTY=" + accbFSRptMinQTY +
+        "&accbFSRptMaxQTY=" + accbFSRptMaxQTY +
+        "&accbFSRptItemCode=" + accbFSRptItemCode +
+        "&accbFSRptStore=" + accbFSRptStore +
+        "&accbFSRptCtgry=" + accbFSRptCtgry +
+        "&accbFSRptDocType=" + accbFSRptDocType +
+        "&accbFSRptSortBy=" + accbFSRptSortBy +
+        "&accbFSRptCreatedByID=" + accbFSRptCreatedByID +
+        "&accbFSRptCreatedBy=" + accbFSRptCreatedBy +
+        "&accbFSRptUseCreationDte=" + accbFSRptUseCreationDte +
+        "&accbFSRptShwUnBalsd=" + accbFSRptShwUnBalsd +
+        "&accbFSRptShwUnmtchd=" + accbFSRptShwUnmtchd +
+        "&accbFSRptShwVoided=" + accbFSRptShwVoided +
+        "&accbFSRptShwUnrcncld=" + accbFSRptShwUnrcncld;
+    openATab(slctr,linkArgs);
+    if (startAcntID >= 1) {
+        shdHideFSRpt = 1;
+    } else {
+        shdHideFSRpt = 0;
+    }
+}
+
 function shwHideFSRptDivs(whtToDo) {
     if (whtToDo === 'hide') {
         $('#leftDivFSRpt').addClass('hideNotice');
@@ -2884,6 +2987,73 @@ function shwHideImprtdFSRptDivs(whtToDo) {
         $('#rightDivImprtdFSRpt').addClass('col-md-9');
         $('#rightDivImprtdFSRptBtn').addClass('hideNotice');
     }
+}
+
+function delBnkStmntTrans() {
+    var pKeyID = typeof $("#accbFSRptRcnclImprtHdrID").val() === "undefined" ? -1 : $("#accbFSRptRcnclImprtHdrID").val();
+    var pKeyNm = "";
+    var msgPrt = "Imported Statement?";
+    var dialog = bootbox.confirm({
+        title: "Delete " + msgPrt + "?",
+        size: "small",
+        message:
+            '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">DELETE</span> this ' +
+            msgPrt +
+            "?<br/>Action cannot be Undone!</p>",
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: "btn-success",
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: "btn-danger",
+            },
+        },
+        callback: function (result) {
+            if (result === true) {
+                var dialog1 = bootbox.alert({
+                    title: "Delete " + msgPrt + "?",
+                    size: "small",
+                    message:
+                        '<p><i class="fa fa-spin fa-spinner"></i> Deleting ' +
+                        msgPrt +
+                        "...Please Wait...</p>",
+                    callback: function () {
+                        $("body").css("padding-right","0px");
+                        getAccbFSRptRpts(1,'#accbRcnclImprtdTrnsLines','grp=6&typ=1&pg=19&vtyp=10');
+                    },
+                });
+                dialog1.init(function () {
+                    getMsgAsyncSilent("grp=1&typ=11&q=Check Session",function () {
+                        $body = $("body");
+                        $body.removeClass("mdlloading");
+                        $.ajax({
+                            method: "POST",
+                            url: "index.php",
+                            data: {
+                                grp: 6,
+                                typ: 1,
+                                pg: 19,
+                                q: "DELETE",
+                                actyp: 1,
+                                pKeyID: pKeyID,
+                                pKeyNm: pKeyNm,
+                            },
+                            success: function (result1) {
+                                setTimeout(function () {
+                                    dialog1.find(".bootbox-body").html(result1);
+                                },500);
+                            },
+                            error: function (jqXHR1,textStatus1,errorThrown1) {
+                                dialog1.find(".bootbox-body").html(errorThrown1);
+                            },
+                        });
+                    });
+                });
+            }
+        },
+    });
 }
 
 var prgstimerid;

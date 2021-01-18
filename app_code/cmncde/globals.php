@@ -1896,7 +1896,7 @@ function incrsOrDcrsAccnt($accntid, $dbtOrCrdt)
     return "";
 }
 
-function add_date($givendate, $day = 0, $mth = 0, $yr = 0)
+function rho_add_date($givendate, $day = 0, $mth = 0, $yr = 0)
 {
     $cd = strtotime($givendate);
     $newdate = date(
@@ -1904,6 +1904,13 @@ function add_date($givendate, $day = 0, $mth = 0, $yr = 0)
         mktime(date('h', $cd), date('i', $cd), date('s', $cd), date('m', $cd) + $mth, date('d', $cd) + $day, date('Y', $cd) + $yr)
     );
     return $newdate;
+}
+
+function rho_getDateInDMY($givendate)
+{
+    $newdate = rho_add_date($givendate);
+    $date = new DateTime($newdate);
+    return $date->format('d-M-Y');
 }
 
 function createWelcomeMsg($username)

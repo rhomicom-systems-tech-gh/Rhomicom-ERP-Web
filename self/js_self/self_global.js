@@ -4114,7 +4114,7 @@ function funcHtmlToExcel(tableid) {
         return p.toString() === "[object SafariRemoteNotification]";
     })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification)) || (navigator.userAgent.indexOf(' Safari/') >= 0 && navigator.vendor.indexOf('Apple') >= 0);
     // Internet Explorer 6-11
-    var isIE = /*@cc_on!@*/ false || !!document.documentMode || navigator.userAgent.indexOf(' Trident/') >= 0;
+    var isIE = false || !!document.documentMode || navigator.userAgent.indexOf(' Trident/') >= 0;
     // Edge 20+
     var isEdge = (!isIE && !!window.StyleMedia) || navigator.userAgent.indexOf(' Edge/') >= 0;
     // Chrome 1+
