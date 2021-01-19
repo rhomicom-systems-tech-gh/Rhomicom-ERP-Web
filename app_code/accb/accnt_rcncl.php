@@ -83,7 +83,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $arr_content['message'] = $afftctd1 . " Transaction Status(es) Successfully Modified";
                 echo json_encode($arr_content);
                 exit();
-            } else if ($actyp == 901) {
+            }  else if ($actyp == 3) {
+                /*Auto-Reconciliation
+                 1. Loop through all imported transactions for the Import Hdr ID
+                 2. For each record check in accb Transactions table whether a match is found
+                 using supplied matching criteria
+                 3. Mark found transactions as reconciled and update linked_system_trans_id Column in imported table
+                 4. Create a new column with button to show linked matched transaction Details
+                */
+            }else if ($actyp == 901) {
                 //Import Bank Statement                
                 $rcnclAccntID = isset($_POST['rcnclAccntID']) ? (int) cleanInputData($_POST['rcnclAccntID']) : -1;
                 $accbStrtFSRptDte = isset($_POST['accbStrtFSRptDte']) ? cleanInputData($_POST['accbStrtFSRptDte']) : '';

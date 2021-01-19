@@ -2288,7 +2288,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     }
                                 }
 
-
                                 //ASSESSMENT SHEETS
                                 function get_AssessSheets($searchWord, $searchIn, $offset, $limit_size, $orgID, $shwSelfOnly, $assessTypeFltr = "Assessment Sheet Per Group")
                                 {
