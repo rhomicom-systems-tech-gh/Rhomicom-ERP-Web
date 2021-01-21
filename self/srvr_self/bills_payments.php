@@ -4176,7 +4176,7 @@ a.pybls_smmry_type !='7Total Payments Made' and a.pybls_smmry_type !='8Outstandi
                                             $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                                             move_uploaded_file($_FILES["daInvstTransAttchmnt"]["tmp_name"], $img_src);
                                             $ftp_src = $ftp_base_db_fldr . "/PayDocs/$attchmntID" . "." . $extension;
-                                            if (file_exists($img_src)) {
+                                            if (file_exists($img_src) && !is_dir($img_src)) {
                                                 copy("$img_src", "$ftp_src");
                                                 $dateStr = getDB_Date_time();
                                                 $updtSQL = "UPDATE pay.pay_trans_attchmnts

@@ -393,7 +393,7 @@ function recopyPrflPic($username, $lgn_num)
     $fullTmpDest = $fldrPrfx . $tmpDest . $nwFileName;
     $ftp_src = $ftp_base_db_fldr . "/Person/$prsnid" . '.' . $extnsn;
     $txt = ""; // "Source:" . $ftp_src . "|Dest:" . $fullTmpDest."<br/>";
-    if (file_exists($ftp_src) && !file_exists($fullTmpDest)) {
+    if (file_exists($ftp_src) && !file_exists($fullTmpDest) && !is_dir($ftp_src)) {
         copy("$ftp_src", "$fullTmpDest");
         //$txt .= "<br/>HAS";
     } else if (!file_exists($fullTmpDest)) {
@@ -437,7 +437,7 @@ function recopyOrgLogo($orgid, $lgn_num)
     $ftp_src = $ftp_base_db_fldr . "/Org/" . $strlFileNm;
     $txt = "";
     $orgLogoFileName =  $app_image1;
-    if (file_exists($ftp_src) && !file_exists($fullTmpDest)) {
+    if (file_exists($ftp_src) && !file_exists($fullTmpDest) && !is_dir($ftp_src)) {
         copy("$ftp_src", "$fullTmpDest");
         $orgLogoFileName = $tmpDest . $nwFileName;
     }

@@ -8250,7 +8250,7 @@ function uploadDaMCFTrnsDoc($attchmntID, $docTrsType, $docFileType, &$nwImgLoc, 
                 } else {
                     $ftp_src = $ftp_base_db_fldr . "/Mcf/Transactions/$attchmntID" . "." . $extension;
                 }
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE mcf.mcf_doc_attchmnts

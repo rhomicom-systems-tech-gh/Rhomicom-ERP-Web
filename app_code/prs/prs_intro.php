@@ -1238,7 +1238,7 @@ function uploadDaImage($prsnid, &$nwImgLoc)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daPrsnPicture"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/Person/$prsnid" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
 
                     $dateStr = getDB_Date_time();
@@ -1288,7 +1288,7 @@ function uploadDaImageExcel($prsnid, $inputImgName, &$nwImgLoc)
             //$img_src = $fldrPrfx . $tmpDest . "$nwFileName";
             //copy($inputImgName, $img_src);
             $ftp_src = $ftp_base_db_fldr . "/Person/$prsnid" . "." . $extension;
-            if (file_exists($img_src)) {
+            if (file_exists($img_src) && !is_dir($img_src)) {
                 copy("$img_src", "$ftp_src");
                 $dateStr = getDB_Date_time();
                 $updtSQL = "UPDATE prs.prsn_names_nos " .
@@ -1346,7 +1346,7 @@ function uploadDaImageSelf($prsnid, &$nwImgLoc)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daPrsnPicture"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/Person/Request/$prsnid" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
 
                     $dateStr = getDB_Date_time();
@@ -1406,7 +1406,7 @@ function uploadDaDocSelf($attchmntID, &$nwImgLoc, &$errMsg)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daPrsnAttchmnt"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/PrsnDocs/Request/$attchmntID" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
 
                     $dateStr = getDB_Date_time();
@@ -1469,7 +1469,7 @@ function uploadDaDoc($attchmntID, &$nwImgLoc, &$errMsg)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daPrsnAttchmnt"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/PrsnDocs/$attchmntID" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
 
                     $dateStr = getDB_Date_time();
@@ -4047,13 +4047,13 @@ function prsnDataRODsply1($pkID)
                 $img_srcRqst = $tmpDest . $nwFileNameRqst;
                 $ftp_srcRqst = $ftp_base_db_fldr . "/Person/Request/" . $rowRqst[$d];
                 if ($row[$d] != "") {
-                    if (file_exists($ftp_src)) {
+                    if (file_exists($ftp_src) && !is_dir($ftp_src)) {
                         copy("$ftp_src", $fldrPrfx . "$img_src");
                     }
                 }
                 //echo $ftp_srcRqst . " | " . $rowRqst[$d];
                 if ($rowRqst[$d] != "") {
-                    if (file_exists($ftp_srcRqst)) {
+                    if (file_exists($ftp_srcRqst) && !is_dir($ftp_srcRqst)) {
                         copy("$ftp_srcRqst", $fldrPrfx . "$img_srcRqst");
                     }
                 }
@@ -4319,7 +4319,7 @@ function trnsfrRecsFrmSelfToPrs($pkID)
         $extension = end($temp);
         $img_src = $ftp_base_db_fldr . "/Person/Request/" . $row2[2];
         $ftp_src = $ftp_base_db_fldr . "/Person/" . "$pkID.$extension";
-        if (file_exists($img_src)) {
+        if (file_exists($img_src) && !is_dir($img_src)) {
             copy($img_src, "$ftp_src");
         }
 
@@ -4474,7 +4474,7 @@ function trnsfrRecsFrmSelfToPrs($pkID)
         $extension = end($temp);
         $img_src = $ftp_base_db_fldr . "/PrsnDocs/Request/" . $row1[3];
         $ftp_src = $ftp_base_db_fldr . "/PrsnDocs/" . "$nwAttchID.$extension";
-        if (file_exists($img_src)) {
+        if (file_exists($img_src) && !is_dir($img_src)) {
             copy("$img_src", "$ftp_src");
         }
         $insSQL = "INSERT INTO prs.prsn_doc_attchmnts(

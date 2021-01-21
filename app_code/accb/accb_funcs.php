@@ -1473,7 +1473,7 @@ function uploadDaJrnlBatchDoc($attchmntID, &$nwImgLoc, &$errMsg)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daJrnlBatchAttchmnt"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/Accntn/$attchmntID" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE accb.accb_batch_trns_attchmnts
@@ -2544,7 +2544,7 @@ function uploadDaPttyCashDoc($attchmntID, &$nwImgLoc, &$errMsg)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daPttyCashAttchmnt"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/PtyCshDocs/$attchmntID" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE accb.accb_ptycsh_doc_attchmnts
@@ -8573,7 +8573,7 @@ function uploadDaPyblsInvcDoc($attchmntID, &$nwImgLoc, &$errMsg)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daPyblsInvcAttchmnt"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/PyblDocs/$attchmntID" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE accb.accb_pybl_doc_attchmnts
@@ -8719,7 +8719,7 @@ function uploadDaRcvblsInvcDoc($attchmntID, &$nwImgLoc, &$errMsg)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daRcvblsInvcAttchmnt"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/RcvblDocs/$attchmntID" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE accb.accb_rcvbl_doc_attchmnts
@@ -12385,7 +12385,7 @@ function uploadDaImageCstmr($cstmrid, &$nwImgLoc)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daCstmrPicture"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/Cstmr/$cstmrid" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
 
                     $dateStr = getDB_Date_time();
@@ -12524,7 +12524,7 @@ function uploadDaCstmrDoc($attchmntID, &$nwImgLoc, &$errMsg)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daCstmrAttchmnt"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/FirmsDocs/$attchmntID" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE accb.accb_firms_doc_attchmnts
@@ -14026,7 +14026,7 @@ function uploadDaInvstTransDoc($attchmntID, &$nwImgLoc, &$errMsg)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daInvstTransAttchmnt"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/PayDocs/$attchmntID" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE pay.pay_trans_attchmnts

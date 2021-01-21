@@ -700,7 +700,7 @@ if ($usrID > 0) {
             if ($rpt_dest1 != "") {
                 recurse_copy($rpt_src1, $rpt_dest1);
             }
-            if (file_exists($rpt_src)) {
+            if (file_exists($rpt_src) && !is_dir($rpt_src)) {
 //file exists!
                 if (copy("$rpt_src", "$rpt_dest") == TRUE) {
                     $_SESSION['CUR_RPT_FILES'] .= "$rpt_dest" . "|";

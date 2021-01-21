@@ -1400,7 +1400,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         $ftp_src = $ftp_base_db_fldr . "/Person/" . $row[8];
                                                         $fullPemDest = $fldrPrfx . $tmpDest . $nwFileName;
                                                         if (!file_exists($fullPemDest)) {
-                                                            if (file_exists($ftp_src) && $row[8] != "") {
+                                                            if (file_exists($ftp_src) && $row[8] != "" && !is_dir($ftp_src)) {
                                                                 copy("$ftp_src", "$fullPemDest");
                                                             } else {
                                                                 $ftp_src = $fldrPrfx . 'cmn_images/image_up.png';
@@ -1494,7 +1494,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         $ftp_src = $ftp_base_db_fldr . "/Person/" . $row[8];
                                         $fullPemDest = $fldrPrfx . $tmpDest . $nwFileName;
                                         if (!file_exists($fullPemDest)) {
-                                            if (file_exists($ftp_src) && $row[8] != "") {
+                                            if (file_exists($ftp_src) && $row[8] != "" && !is_dir($ftp_src)) {
                                                 copy("$ftp_src", "$fullPemDest");
                                             } else {
                                                 $ftp_src = $fldrPrfx . 'cmn_images/image_up.png';
@@ -1535,7 +1535,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $ftp_src = $ftp_base_db_fldr . "/Person/" . $row1[8];
                                             $fullPemDest = $fldrPrfx . $tmpDest . $nwFileName;
                                             if (!file_exists($fullPemDest)) {
-                                                if (file_exists($ftp_src)) {
+                                                if (file_exists($ftp_src) && !is_dir($ftp_src)) {
                                                     copy("$ftp_src", "$fullPemDest");
                                                 } else {
                                                     $ftp_src = $fldrPrfx . 'cmn_images/image_up.png';
@@ -1603,7 +1603,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $ftp_src = $ftp_base_db_fldr . "/Person/" . $row1[8];
                             $fullPemDest = $fldrPrfx . $tmpDest . $nwFileName;
                             if (!file_exists($fullPemDest)) {
-                                if (file_exists($ftp_src)) {
+                                if (file_exists($ftp_src) && !is_dir($ftp_src)) {
                                     copy("$ftp_src", "$fullPemDest");
                                 } else {
                                     $ftp_src = $fldrPrfx . 'cmn_images/image_up.png';
@@ -1662,7 +1662,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $ftp_src = $ftp_base_db_fldr . "/Person/" . $row1[8];
                             $fullPemDest = $fldrPrfx . $tmpDest . $nwFileName;
                             if (!file_exists($fullPemDest)) {
-                                if (file_exists($ftp_src)) {
+                                if (file_exists($ftp_src) && !is_dir($ftp_src)) {
                                     copy("$ftp_src", "$fullPemDest");
                                 } else {
                                     $ftp_src = $fldrPrfx . 'cmn_images/image_up.png';
@@ -1739,7 +1739,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $ftp_src = $ftp_base_db_fldr . "/Person/" . $row[8];
                                             $fullPemDest = $fldrPrfx . $tmpDest . $nwFileName;
                                             if (!file_exists($fullPemDest)) {
-                                                if (file_exists($ftp_src)) {
+                                                if (file_exists($ftp_src) && !is_dir($ftp_src)) {
                                                     copy("$ftp_src", "$fullPemDest");
                                                 } else {
                                                     $ftp_src = $fldrPrfx . 'cmn_images/image_up.png';

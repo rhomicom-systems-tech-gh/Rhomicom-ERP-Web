@@ -4359,7 +4359,7 @@ function getSlogan()
   if ($orgID > 0) {
   $img_src = $pemDest . "$orgID.png";
   $ftp_src = $ftp_base_db_fldr . "/Org/$orgID.png";
-  if (file_exists($ftp_src)) {
+  if (file_exists($ftp_src) && !is_dir($ftp_src)) {
   copy("$ftp_src", "$img_src");
   }
   echo "<img src=\"$img_src\" style=\"left: 0.5%; margin:2px; padding-right: 1em; height:65px; width:auto; position: relative; vertical-align: middle;\"/>";

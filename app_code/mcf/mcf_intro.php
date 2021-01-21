@@ -14009,7 +14009,7 @@ function uploadDaImage($custID, &$nwImgLoc, $subFolder, $rvsnTtl) {
             $img_src = $fldrPrfx . "dwnlds/tmp/$nwFileName";
             move_uploaded_file($_FILES[$imgImptID]["tmp_name"], $img_src);
             $ftp_src = $ftp_base_db_fldr . "/Mcf/Customers/$subFolder/$custID" . "." . $extension;
-            if (file_exists($img_src)) {
+            if (file_exists($img_src) && !is_dir($img_src)) {
                 copy("$img_src", "$ftp_src");
 
                 $dateStr = getDB_Date_time();
@@ -14584,7 +14584,7 @@ function uploadDaImageOP($personID, &$nwImgLoc, $subFolder, $rvsnTtl) {
             $img_src = $fldrPrfx . "dwnlds/tmp/$nwFileName";
             move_uploaded_file($_FILES[$imgImptID]["tmp_name"], $img_src);
             $ftp_src = $ftp_base_db_fldr . "/Mcf/Customers/$subFolder/$personID" . "." . $extension;
-            if (file_exists($img_src)) {
+            if (file_exists($img_src) && !is_dir($img_src)) {
                 copy("$img_src", "$ftp_src");
 
                 $dateStr = getDB_Date_time();
