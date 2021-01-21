@@ -1392,7 +1392,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 }
                 $ftp_src = $ftp_base_db_fldr . "/Inv/" . $sbmtdItmID . "." . $extension;
                 $fullPemDest = $fldrPrfx . $tmpDest . $nwFileName;
-                if (file_exists($ftp_src)) {
+                if (file_exists($ftp_src) && !is_dir($ftp_src)) {
                     copy("$ftp_src", "$fullPemDest");
                 } else if (!file_exists($fullPemDest)) {
                     $ftp_src = $fldrPrfx . 'cmn_images/actions_document_preview.png';

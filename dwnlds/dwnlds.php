@@ -61,7 +61,7 @@ if ($file_extension != 'html') {
     $nwDwnldFileNm = "dwnlds/amcharts_2100/samples/" . encrypt1(basename($filename), $smplTokenWord1) . "." . $file_extension;
 }
 
-if (file_exists($filename)) {
+if (file_exists($filename) && !is_dir($filename)) {
     copy($filename, $fldrPrfx . $nwDwnldFileNm);
     $filename = $fldrPrfx . $nwDwnldFileNm;
     $curFiles = $_SESSION['CUR_RPT_FILES'];

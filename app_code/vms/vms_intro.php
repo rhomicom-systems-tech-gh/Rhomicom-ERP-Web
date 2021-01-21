@@ -1754,7 +1754,7 @@ function uploadDaVMSDoc($attchmntID, &$nwImgLoc, &$errMsg)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daVMSAttchmnt"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/Vms/$attchmntID" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE vms.vms_doc_attchmnts
@@ -5882,7 +5882,7 @@ function uploadDaImageCstmr($cstmrid, &$nwImgLoc)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daCstmrPicture"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/Cstmr/$cstmrid" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
 
                     $dateStr = getDB_Date_time();
@@ -6029,7 +6029,7 @@ function uploadDaCstmrDoc($attchmntID, &$nwImgLoc, &$errMsg)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daCstmrAttchmnt"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/FirmsDocs/$attchmntID" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE accb.accb_firms_doc_attchmnts
@@ -6498,7 +6498,7 @@ function uploadDaImageItem($itemid, &$nwImgLoc)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daItemPicture"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/Inv/$itemid" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
 
                     $dateStr = getDB_Date_time();

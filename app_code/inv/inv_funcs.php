@@ -1158,7 +1158,7 @@ function uploadDaImageItem($itemid, &$nwImgLoc)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daItemPicture"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/Inv/$itemid" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
 
                     $dateStr = getDB_Date_time();
@@ -4609,7 +4609,7 @@ function uploadDaSalesInvcDoc($attchmntID, &$nwImgLoc, &$errMsg)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daSalesInvcAttchmnt"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/Sales/$attchmntID" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE scm.scm_sales_doc_attchmnts
@@ -5497,7 +5497,7 @@ function uploadDaCnsgnRcptDoc($attchmntID, &$nwImgLoc, &$errMsg)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daCnsgnRcptAttchmnt"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/Rcpts/$attchmntID" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE inv.inv_doc_attchmnts
@@ -5557,7 +5557,7 @@ function uploadDaCnsgnRtrnDoc($attchmntID, &$nwImgLoc, &$errMsg)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daCnsgnRtrnAttchmnt"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/Rcpts/$attchmntID" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE inv.inv_doc_attchmnts
@@ -5617,7 +5617,7 @@ function uploadDaStockTrnsfrDoc($attchmntID, &$nwImgLoc, &$errMsg)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daStockTrnsfrAttchmnt"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/Rcpts/$attchmntID" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE inv.inv_doc_attchmnts
@@ -5677,7 +5677,7 @@ function uploadDaPrchsDocDoc($attchmntID, &$nwImgLoc, &$errMsg)
                 $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
                 move_uploaded_file($_FILES["daPrchsDocAttchmnt"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/Prchs/$attchmntID" . "." . $extension;
-                if (file_exists($img_src)) {
+                if (file_exists($img_src) && !is_dir($img_src)) {
                     copy("$img_src", "$ftp_src");
                     $dateStr = getDB_Date_time();
                     $updtSQL = "UPDATE inv.inv_doc_attchmnts

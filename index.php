@@ -233,7 +233,7 @@ if ($isMntnceMode) {
     $group = 0;
     $pgNo = 0;
     $cnfgFileExists = file_exists($superAdminConfigFilePath);
-    if ($cnfgFileExists === FALSE) {
+    if ($cnfgFileExists === FALSE || is_dir($superAdminConfigFilePath)) {
         require 'header1.php';
         require 'rho_config.php';
         exit();

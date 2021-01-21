@@ -672,7 +672,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         }
                                         $nwDwnldFileNm = "dwnlds/amcharts_2100/samples/" . encrypt1(basename($rpt_src), $smplTokenWord1) . "." . $file_extension;
                                     }
-                                    if (file_exists($rpt_src)) {
+                                    if (file_exists($rpt_src) && !is_dir($rpt_src)) {
                                         copy($rpt_src, $fldrPrfx . $nwDwnldFileNm);
                                         $filename = $fldrPrfx . $nwDwnldFileNm;
                                         $curFiles = $_SESSION['CUR_RPT_FILES'];

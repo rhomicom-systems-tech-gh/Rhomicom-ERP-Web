@@ -71,7 +71,7 @@ if ($pkID > 0) {
         }
         $fullPemDest = $fldrPrfx . $tmpDest . $nwFileName;
         //logSessionErrs("TEST_PATH1:" . $fullPemDest);
-        if (file_exists($ftp_src)) {
+        if (file_exists($ftp_src) && !is_dir($ftp_src)) {
             copy("$ftp_src", "$fullPemDest");
         } else if (!file_exists($fullPemDest)) {
             $ftp_src = $fldrPrfx . 'cmn_images/image_up.png';
