@@ -19712,11 +19712,12 @@ function computeMaturity(pCost, pRate, pTime) {
     }
     rate2 = rate2 / 100.00;
     /*var mv2 = (( cost2 * (365 + (rate2 * time2))) / (365 + ( 0.2 * (rate2 * time2))));*/
-    var mv2 = cost2 / (1.00 - ((rate2 * time2) / 364.00))
-
+    //var mv2 = cost2 / (1.00 - ((rate2 * time2) / 364.00)) OLD27022021
+    var mv2 = cost2 * ((rate2 * time2) / 365.00);
     //form.mv2.value = eval(parseFloat(mv2 * 100.00) * .01);
 
-    return eval(parseFloat(mv2 * 100.00) * .01);
+    //eval(parseFloat(mv2 * 100.00) * .01) + cost2; OLD27022021
+    return eval((parseFloat(mv2 * 100.00) * .01) + parseFloat(cost2)); 
 }
 
 function computeCost(pMaturity, pRate, pTime) {
@@ -19744,7 +19745,8 @@ function computeCost(pMaturity, pRate, pTime) {
         return false;
     }
     rate = rate / 100.00;
-    var cost = maturity * (1 - ((rate * time) / 364.00));
+    //var cost = maturity * (1 - ((rate * time) / 364.00)); OLD27022021
+    var cost = maturity / (((rate * time) / 365.00) + 1);
     /*var cost = (( maturity * (365 + ( 0.2 * (rate * time)))) / (365 + (rate * time)));*/
 
     //form2.cost.value = eval(parseFloat(cost * 100.00) * .01);
