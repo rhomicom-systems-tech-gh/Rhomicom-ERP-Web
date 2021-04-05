@@ -52,7 +52,8 @@ jobs:
       #- run: touch storage/testing.sqlite
       #- run: php artisan migrate --env=testing --database=sqlite_testing --force
 
-      # run tests with phpunit or codecept
+      # run tests with phpunit or codecept   ./vendor/bin/codecept run
+      - run: php -S localhost:8013
       - run: ./vendor/bin/phpunit
       #- run: ./vendor/bin/codecept build
-      #- run: ./vendor/bin/codecept run
+      - run: ./vendor/bin/codecept run

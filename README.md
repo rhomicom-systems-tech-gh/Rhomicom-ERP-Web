@@ -89,3 +89,11 @@ composer update
 composer require --dev phpunit/phpunit ^8
 ./vendor/bin/phpunit --version
 ./vendor/bin/phpunit
+
+composer require "codeception/codeception" --dev
+./vendor/bin/codecept bootstrap
+./vendor/bin/codecept g:cest acceptance First
+./vendor/bin/codecept run
+
+php vendor/bin/codecept bootstrap
+php vendor/bin/codecept generate:cest acceptance First
