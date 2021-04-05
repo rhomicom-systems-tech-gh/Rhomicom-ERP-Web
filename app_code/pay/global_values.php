@@ -131,7 +131,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=$group&typ=$type&pg=$pgNo&vtyp=0');\">
                                     <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
                                     <span style=\"text-decoration:none;\">Global Values</span>
-				</li>
+				                </li>
                                </ul>
                               </div>";
 

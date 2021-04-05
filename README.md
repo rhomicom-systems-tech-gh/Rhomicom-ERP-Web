@@ -78,3 +78,14 @@ Before you start to code, we recommend discussing your plans through a GitHub is
 
 # License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
+# Others
+composer init --require=twig/twig:1.13.* -n
+
+composer init
+composer install
+composer update
+
+composer require --dev phpunit/phpunit ^8
+./vendor/bin/phpunit --version
+./vendor/bin/phpunit
