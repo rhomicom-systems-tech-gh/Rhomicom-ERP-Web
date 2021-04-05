@@ -7,3 +7,4 @@ dwnlds/tmp/*.html
 dwnlds/tmp/*.jrxml
 phpinfo.php
 phpsecinfo
+/vendor/
