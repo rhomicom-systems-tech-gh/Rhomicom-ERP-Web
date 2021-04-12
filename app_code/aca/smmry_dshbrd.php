@@ -470,11 +470,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     if ($canAdd === true) {
                                                     ?>
                                                         <div class="<?php echo $colClassType2; ?>" style="padding:0px 1px 0px 15px !important;">
-                                                            <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="getReportCardDets('clear', '#reportCardDetList', 'grp=15&typ=1&pg=1&vtyp=1&assessSbmtdSheetID=-1&assessSbmtdSheetNm=&mdl=<?php echo $mdlACAorPMS;?>', 1);">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="getReportCardDets('clear', '#reportCardDetList', 'grp=15&typ=1&pg=1&vtyp=1&assessSbmtdSheetID=-1&assessSbmtdSheetNm=&mdl=<?php echo $mdlACAorPMS; ?>', 1);">
                                                                 <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                 New Report Card
                                                             </button>
-                                                            <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="getMyMdlRptRuns('', 'ShowDialog', 'grp=9&typ=1&pg=1&vtyp=50&sbmtdRptID=<?php echo $rptID1; ?>&mdl=<?php echo $mdlACAorPMS;?>');" data-toggle="tooltip" data-placement="bottom" title="<?php echo $reportTitle1; ?>">
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="getMyMdlRptRuns('', 'ShowDialog', 'grp=9&typ=1&pg=1&vtyp=50&sbmtdRptID=<?php echo $rptID1; ?>&mdl=<?php echo $mdlACAorPMS; ?>');" data-toggle="tooltip" data-placement="bottom" title="<?php echo $reportTitle1; ?>">
                                                                 <img src="cmn_images/98.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">Auto-Compute All&nbsp;
                                                             </button>
                                                         </div>
@@ -489,12 +489,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="input-group">
                                                             <input class="form-control" id="reportCardsSrchFor" type="text" placeholder="Search For" value="<?php
                                                                                                                                                             echo trim(str_replace("%", " ", $srchFor));
-                                                                                                                                                            ?>" onkeyup="enterKeyFuncReportCards(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0&mdl=<?php echo $mdlACAorPMS;?>')">
+                                                                                                                                                            ?>" onkeyup="enterKeyFuncReportCards(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0&mdl=<?php echo $mdlACAorPMS; ?>')">
                                                             <input id="reportCardsPageNo" type="hidden" value="<?php echo $pageNo; ?>">
-                                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getReportCards('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0&mdl=<?php echo $mdlACAorPMS;?>');">
+                                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getReportCards('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0&mdl=<?php echo $mdlACAorPMS; ?>');">
                                                                 <span class="glyphicon glyphicon-remove"></span>
                                                             </label>
-                                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getReportCards('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0&mdl=<?php echo $mdlACAorPMS;?>');">
+                                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getReportCards('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0&mdl=<?php echo $mdlACAorPMS; ?>');">
                                                                 <span class="glyphicon glyphicon-search"></span>
                                                             </label>
                                                             <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
@@ -536,12 +536,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <nav aria-label="Page navigation">
                                                             <ul class="pagination" style="margin: 0px !important;">
                                                                 <li>
-                                                                    <a href="javascript:getReportCards('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0&mdl=<?php echo $mdlACAorPMS;?>');" aria-label="Previous">
+                                                                    <a href="javascript:getReportCards('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0&mdl=<?php echo $mdlACAorPMS; ?>');" aria-label="Previous">
                                                                         <span aria-hidden="true">&laquo;</span>
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="javascript:getReportCards('next', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0&mdl=<?php echo $mdlACAorPMS;?>');" aria-label="Next">
+                                                                    <a href="javascript:getReportCards('next', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0&mdl=<?php echo $mdlACAorPMS; ?>');" aria-label="Next">
                                                                         <span aria-hidden="true">&raquo;</span>
                                                                     </a>
                                                                 </li>
@@ -558,7 +558,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         $shwSelfOnlyChkd = "checked=\"true\"";
                                                                     }
                                                                     ?>
-                                                                    <input type="checkbox" class="form-check-input" onclick="getReportCards('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS;?>');" id="reportCardsShwUsrOnly" name="reportCardsShwUsrOnly" <?php echo $shwSelfOnlyChkd; ?>>
+                                                                    <input type="checkbox" class="form-check-input" onclick="getReportCards('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS; ?>');" id="reportCardsShwUsrOnly" name="reportCardsShwUsrOnly" <?php echo $shwSelfOnlyChkd; ?>>
                                                                     Self-Created
                                                                 </label>
                                                             </div>
@@ -628,7 +628,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     <tr id="reportCardsHdrsRow_<?php echo $cntr; ?>">
                                                                         <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
                                                                         <td class="lovtd">
-                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Edit Report Card" onclick="getReportCardDets('clear', '#reportCardDetList', 'grp=15&typ=1&pg=1&vtyp=1&assessSbmtdSheetID=<?php echo $reportCardID1; ?>&assessSbmtdSheetNm=<?php echo urlencode($reportCardNm1); ?>&mdl=<?php echo $mdlACAorPMS;?>', <?php echo $reportCardID1; ?>);" style="padding:2px !important;" style="padding:2px !important;">
+                                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Edit Report Card" onclick="getReportCardDets('clear', '#reportCardDetList', 'grp=15&typ=1&pg=1&vtyp=1&assessSbmtdSheetID=<?php echo $reportCardID1; ?>&assessSbmtdSheetNm=<?php echo urlencode($reportCardNm1); ?>&mdl=<?php echo $mdlACAorPMS; ?>', <?php echo $reportCardID1; ?>);" style="padding:2px !important;" style="padding:2px !important;">
                                                                                 <?php
                                                                                 if ($canAdd === true) {
                                                                                 ?>
@@ -719,7 +719,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <?php if ($canAdd === true) {
                             ?>
                                 <div class="col-md-6" style="padding:0px 15px 0px 15px !important;">
-                                    <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="getReportCardDets('clear', '#reportCardDetList', 'grp=15&typ=1&pg=1&vtyp=1&assessSbmtdSheetID=-1&assessSbmtdSheetNm=&mdl=<?php echo $mdlACAorPMS;?>', 1);" style="width:100% !important;" data-toggle="tooltip" data-placement="bottom" title=" New Report Card">
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="getReportCardDets('clear', '#reportCardDetList', 'grp=15&typ=1&pg=1&vtyp=1&assessSbmtdSheetID=-1&assessSbmtdSheetNm=&mdl=<?php echo $mdlACAorPMS; ?>', 1);" style="width:100% !important;" data-toggle="tooltip" data-placement="bottom" title=" New Report Card">
                                         <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                         New Report
                                     </button>
@@ -728,7 +728,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                         </button>
                                     <?php } ?>
-                                    <button type="button" class="btn btn-default" style="" onclick="getReportCardDets('clear', '#reportCardDetList', 'grp=15&typ=1&pg=1&vtyp=1&mdl=<?php echo $mdlACAorPMS;?>');" style="width:100% !important;">
+                                    <button type="button" class="btn btn-default" style="" onclick="getReportCardDets('clear', '#reportCardDetList', 'grp=15&typ=1&pg=1&vtyp=1&mdl=<?php echo $mdlACAorPMS; ?>');" style="width:100% !important;">
                                         <img src="cmn_images/refresh.bmp" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">
                                     </button>
                                     <button type="button" class="btn btn-default" style="" onclick="saveReportCrdHdrForm(2);" style="width:100% !important;">
@@ -759,7 +759,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <input type="hidden" class="form-control" aria-label="..." id="assessSbmtdSheetID" value="<?php echo $assessSbmtdSheetID; ?>" style="width:100% !important;">
                                     <input type="hidden" class="form-control" aria-label="..." id="assessSbmtdSheetType" value="<?php echo $assessTypeFltr; ?>" style="width:100% !important;">
                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Assessment Sheets', 'allOtherInputOrgID', 'assessSbmtdSheetType', '', 'radio', true, '', 'assessSbmtdSheetID', 'assessSbmtdSheetNm', 'clear', 1, '', function () {
-                                                                getReportCardDets('clear', '#reportCardDetList', 'grp=15&typ=1&pg=1&vtyp=1&mdl=<?php echo $mdlACAorPMS;?>');
+                                                                getReportCardDets('clear', '#reportCardDetList', 'grp=15&typ=1&pg=1&vtyp=1&mdl=<?php echo $mdlACAorPMS; ?>');
                                                             });">
                                         <span class="glyphicon glyphicon-th-list"></span>
                                     </label>
@@ -1014,7 +1014,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                                     ?>
                                                                                                         <input class="form-control reportCrdHdrFtrVal <?php echo $isRqrdFld; ?>" id="reportCrdHdrFtrFld_<?php echo $columnNo; ?>" type="text" placeholder="" value="<?php echo $prsnDValPulld; ?>" />
                                                                                                     <?php
-                                                                                                    } else {
+                                                                                                    }  else if ($row1[20] != "") {
+                                                                                                        ?>
+                                                                                                            <div class="input-group">
+                                                                                                                <input class="form-control reportCrdHdrFtrVal <?php echo $isRqrdFld; ?>" id="reportCrdHdrFtrFld_<?php echo $columnNo; ?>" type="text" placeholder="" value="<?php echo $prsnDValPulld; ?>" />
+                                                                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', '<?php echo $row1[20]; ?>', '', '', '', 'radio', true, '', 'reportCrdHdrFtrFld_<?php echo $columnNo; ?>', 'reportCrdHdrFtrFld_<?php echo $columnNo; ?>', 'clear', 1, '', function () {});">
+                                                                                                                    <span class="glyphicon glyphicon-th-list"></span>
+                                                                                                                </label>
+                                                                                                            </div>
+                                                                                                        <?php } else {
                                                                                                     ?>
                                                                                                         <input class="form-control reportCrdHdrFtrVal <?php echo $isRqrdFld; ?>" id="reportCrdHdrFtrFld_<?php echo $columnNo; ?>" type="text" placeholder="" value="<?php echo $prsnDValPulld; ?>" />
                                                                                                 <?php
@@ -1094,18 +1102,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="row">
                                                                 <div class="col-md-12" style="display:none;">
                                                                     <div class="col-md-3" style="padding:0px 0px 0px 0px !important;float:left;">
-                                                                        <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getReportCrdHdr('', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS;?>');"><img src="cmn_images/refresh.bmp" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;"></button>
+                                                                        <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getReportCrdHdr('', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS; ?>');"><img src="cmn_images/refresh.bmp" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;"></button>
                                                                     </div>
                                                                     <div class="col-md-7" style="display:none;">
                                                                         <div class="input-group">
                                                                             <input class="form-control" id="reportCrdHdrSrchFor" type="text" placeholder="Search For" value="<?php
                                                                                                                                                                                 echo trim(str_replace("%", " ", $srchFor));
-                                                                                                                                                                                ?>" onkeyup="enterKeyFuncReportCrdHdr(event, '', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS;?>')">
+                                                                                                                                                                                ?>" onkeyup="enterKeyFuncReportCrdHdr(event, '', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS; ?>')">
                                                                             <input id="reportCrdHdrPageNo" type="hidden" value="<?php echo $pageNo; ?>">
-                                                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getReportCrdHdr('clear', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS;?>')">
+                                                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getReportCrdHdr('clear', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS; ?>')">
                                                                                 <span class="glyphicon glyphicon-remove"></span>
                                                                             </label>
-                                                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getReportCrdHdr('', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS;?>');">
+                                                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getReportCrdHdr('', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS; ?>');">
                                                                                 <span class="glyphicon glyphicon-search"></span>
                                                                             </label>
                                                                             <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
@@ -1144,12 +1152,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         <nav aria-label="Page navigation">
                                                                             <ul class="pagination" style="margin: 0px !important;">
                                                                                 <li>
-                                                                                    <a class="rhopagination" href="javascript:getReportCrdHdr('previous', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS;?>');" aria-label="Previous">
+                                                                                    <a class="rhopagination" href="javascript:getReportCrdHdr('previous', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS; ?>');" aria-label="Previous">
                                                                                         <span aria-hidden="true">&laquo;</span>
                                                                                     </a>
                                                                                 </li>
                                                                                 <li>
-                                                                                    <a class="rhopagination" href="javascript:getReportCrdHdr('next', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS;?>');" aria-label="Next">
+                                                                                    <a class="rhopagination" href="javascript:getReportCrdHdr('next', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS; ?>');" aria-label="Next">
                                                                                         <span aria-hidden="true">&raquo;</span>
                                                                                     </a>
                                                                                 </li>
@@ -1410,7 +1418,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                             ?>
                                                                                                 <input class="form-control reportCrdHdrFtrVal <?php echo $isRqrdFld; ?>" id="reportCrdHdrFtrFld_<?php echo $columnNo; ?>" type="text" placeholder="" value="<?php echo $prsnDValPulld; ?>" />
                                                                                             <?php
-                                                                                            } else {
+                                                                                            }  else if ($row1[20] != "") {
+                                                                                                ?>
+                                                                                                    <div class="input-group">
+                                                                                                        <input class="form-control reportCrdHdrFtrVal <?php echo $isRqrdFld; ?>" id="reportCrdHdrFtrFld_<?php echo $columnNo; ?>" type="text" placeholder="" value="<?php echo $prsnDValPulld; ?>" />
+                                                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', '<?php echo $row1[20]; ?>', '', '', '', 'radio', true, '', 'reportCrdHdrFtrFld_<?php echo $columnNo; ?>', 'reportCrdHdrFtrFld_<?php echo $columnNo; ?>', 'clear', 1, '', function () {});">
+                                                                                                            <span class="glyphicon glyphicon-th-list"></span>
+                                                                                                        </label>
+                                                                                                    </div>
+                                                                                                <?php } else {
                                                                                             ?>
                                                                                                 <input class="form-control reportCrdHdrFtrVal <?php echo $isRqrdFld; ?>" id="reportCrdHdrFtrFld_<?php echo $columnNo; ?>" type="text" placeholder="" value="<?php echo $prsnDValPulld; ?>" />
                                                                                         <?php
@@ -1489,7 +1505,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <div class="row">
                         <div class="col-md-12">
                             <div class="col-md-3" style="padding:0px 0px 0px 0px !important;float:left;">
-                                <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getReportCrdHdr('', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS;?>');"><img src="cmn_images/refresh.bmp" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;"></button>
+                                <button type="button" class="btn btn-default" style="margin-bottom: 1px;height:30px;" onclick="getReportCrdHdr('', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS; ?>');"><img src="cmn_images/refresh.bmp" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;"></button>
                                 <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="exprtScoreCards();" data-toggle="tooltip" title="Export Assessment Lines">
                                     <img src="cmn_images/document_export.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                 </button>
@@ -1502,12 +1518,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <div class="input-group">
                                     <input class="form-control" id="reportCrdHdrSrchFor" type="text" placeholder="Search For" value="<?php
                                                                                                                                         echo trim(str_replace("%", " ", $srchFor));
-                                                                                                                                        ?>" onkeyup="enterKeyFuncReportCrdHdr(event, '', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS;?>')">
+                                                                                                                                        ?>" onkeyup="enterKeyFuncReportCrdHdr(event, '', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS; ?>')">
                                     <input id="reportCrdHdrPageNo" type="hidden" value="<?php echo $pageNo; ?>">
-                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getReportCrdHdr('clear', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS;?>')">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getReportCrdHdr('clear', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS; ?>')">
                                         <span class="glyphicon glyphicon-remove"></span>
                                     </label>
-                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getReportCrdHdr('', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS;?>');">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getReportCrdHdr('', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS; ?>');">
                                         <span class="glyphicon glyphicon-search"></span>
                                     </label>
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
@@ -1546,12 +1562,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination" style="margin: 0px !important;">
                                         <li>
-                                            <a class="rhopagination" href="javascript:getReportCrdHdr('previous', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS;?>');" aria-label="Previous">
+                                            <a class="rhopagination" href="javascript:getReportCrdHdr('previous', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS; ?>');" aria-label="Previous">
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="rhopagination" href="javascript:getReportCrdHdr('next', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS;?>');" aria-label="Next">
+                                            <a class="rhopagination" href="javascript:getReportCrdHdr('next', '#asShtDetlsTrans', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&mdl=<?php echo $mdlACAorPMS; ?>');" aria-label="Next">
                                                 <span aria-hidden="true">&raquo;</span>
                                             </a>
                                         </li>
@@ -1784,7 +1800,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     ?>
                                                         <input class="form-control reportCrdHdrFtrVal <?php echo $isRqrdFld; ?>" id="reportCrdHdrFtrFld_<?php echo $columnNo; ?>" type="text" placeholder="" value="<?php echo $prsnDValPulld; ?>" />
                                                     <?php
-                                                    } else {
+                                                    } else if ($row1[20] != "") {
+                                                    ?>
+                                                        <div class="input-group">
+                                                            <input class="form-control reportCrdHdrFtrVal <?php echo $isRqrdFld; ?>" id="reportCrdHdrFtrFld_<?php echo $columnNo; ?>" type="text" placeholder="" value="<?php echo $prsnDValPulld; ?>" />
+                                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', '<?php echo $row1[20]; ?>', '', '', '', 'radio', true, '', 'reportCrdHdrFtrFld_<?php echo $columnNo; ?>', 'reportCrdHdrFtrFld_<?php echo $columnNo; ?>', 'clear', 1, '', function () {});">
+                                                                <span class="glyphicon glyphicon-th-list"></span>
+                                                            </label>
+                                                        </div>
+                                                    <?php } else {
                                                     ?>
                                                         <input class="form-control reportCrdHdrFtrVal <?php echo $isRqrdFld; ?>" id="reportCrdHdrFtrFld_<?php echo $columnNo; ?>" type="text" placeholder="" value="<?php echo $prsnDValPulld; ?>" />
                                                 <?php
