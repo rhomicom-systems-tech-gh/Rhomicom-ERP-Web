@@ -90,7 +90,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($lgn_num > 0) {
         if ($qstr == "DELETE") {
             if ($actyp == 1) {
-                
             }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {
@@ -186,8 +185,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         $msgtyp = $msgType;
                         $msgsts = "0";
 
-                        $affctd2 += updateWkfMsg($msg_id, $msghdr, $msgbody, $userID, $appID, $msgtyp, $msgsts, $srcdoctyp, $srcdocid, $hrchyid,
-                                $attchmnts, $attchmnts_desc);
+                        $affctd2 += updateWkfMsg(
+                            $msg_id,
+                            $msghdr,
+                            $msgbody,
+                            $userID,
+                            $appID,
+                            $msgtyp,
+                            $msgsts,
+                            $srcdoctyp,
+                            $srcdocid,
+                            $hrchyid,
+                            $attchmnts,
+                            $attchmnts_desc
+                        );
                         $affctd3 += routWkfMsg($msg_id, $fromPrsnID, $nwPrsnID, $userID, $curStatus, $actnToPrfm, $curPrsnsLevel, $msgbodyAddOn);
 
                         if ($affctd > 0) {
@@ -205,7 +216,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 }
                 echo $msg;
             } else if ($actyp == 2) {
-                
             }
         } else if ($qstr == "act") {
             $usrID = $_SESSION['USRID'];
@@ -227,7 +237,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
                 $curIdx = $pageNo - 1;
                 $result = get_MyInbx($srchFor, $srchIn, $curIdx, $lmtSze);
-                ?>
+?>
                 <section class="content-header">
                     <div class="container-fluid">
                         <div class="row mb-2">
@@ -248,13 +258,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <!-- /.col -->
                         <div class="col-md-12">
                             <div class="card card-primary card-outline" style="margin:0px 10px 10px 10px !important;padding: 0px !important; border-left:1px solid #ddd; border-right:1px solid #bbb; border-bottom:1px solid #ddd;">
-                                <div class="card-header" style="padding:6px 0px 4px 0px !important;">                                        
+                                <div class="card-header" style="padding:6px 0px 4px 0px !important;">
                                     <form id='myInbxForm' action='' method='post' accept-charset='UTF-8'>
                                         <div class="row col-sm-12">
                                             <div class="col-sm-7">
                                                 <div class="input-group input-group-sm">
                                                     <input type="text" class="form-control" placeholder="Search Mail" id="myInbxSrchFor" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncMyInbx(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
-                                                    <input id="myInbxPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                                                    <input id="myInbxPageNo" type="hidden" value="<?php echo $pageNo; ?>">
                                                     <div class="input-group-append handCursor" onclick="getMyInbx('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
                                                         <span class="input-group-text rhoclickable"><i class="fas fa-times"></i></span>
                                                     </div>
@@ -264,7 +274,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text"><i class="fas fa-filter"></i></span>
                                                     </div>
-                                                    <select data-placeholder="Select..." class="form-control chosen-select"  id="myInbxSrchIn" style="max-width:160px !important;border-bottom-left-radius: 1px !important;">
+                                                    <select data-placeholder="Select..." class="form-control chosen-select" id="myInbxSrchIn" style="max-width:160px !important;border-bottom-left-radius: 1px !important;">
                                                         <?php
                                                         $valslctdArry = array("", "", "", "", "", "");
                                                         $srchInsArrys = array("Status", "Source App", "Subject", "Person From", "Person To", "Message Type");
@@ -273,14 +283,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             if ($srchIn == $srchInsArrys[$z]) {
                                                                 $valslctdArry[$z] = "selected";
                                                             }
-                                                            ?>
+                                                        ?>
                                                             <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                                         <?php } ?>
                                                     </select>
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text"><i class="fas fa-filter"></i></span>
                                                     </div>
-                                                    <select data-placeholder="Select..." class="form-control chosen-select" id="myInbxDsplySze" style="max-width:70px !important;">                            
+                                                    <select data-placeholder="Select..." class="form-control chosen-select" id="myInbxDsplySze" style="max-width:70px !important;">
                                                         <?php
                                                         $valslctdArry = array("", "", "", "", "", "", "", "");
                                                         $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
@@ -290,9 +300,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             } else {
                                                                 $valslctdArry[$y] = "";
                                                             }
-                                                            ?>
-                                                            <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
-                                                            <?php
+                                                        ?>
+                                                            <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>
+                                                        <?php
                                                         }
                                                         ?>
                                                     </select>
@@ -318,7 +328,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <div class="input-group-append handCursor" data-target="#myInbxEndDateDP" data-toggle="datetimepicker">
                                                         <span class="input-group-text rhoclickable"><i class="fa fa-calendar"></i></span>
                                                     </div>
-                                                </div>                            
+                                                </div>
                                             </div>
                                             <div class="col-sm-1" style="padding-right:1px !important;">
                                                 <div class="float-right">
@@ -367,7 +377,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 }
                                                 ?>
                                                 <div class="form-check" style="font-size: 12px !important;">
-                                                    <input type="checkbox" class="form-check-input handCursor" onclick="getMyInbx('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="myInbxShwActvNtfs" name="myInbxShwActvNtfs"  <?php echo $actvChekd; ?>>
+                                                    <input type="checkbox" class="form-check-input handCursor" onclick="getMyInbx('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="myInbxShwActvNtfs" name="myInbxShwActvNtfs" <?php echo $actvChekd; ?>>
                                                     <label class="form-check-label handCursor" style="padding-top: 6px;" onclick="toggleCheckBx('myInbxShwActvNtfs', function () {
                                                                 getMyInbx('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');
                                                             });">
@@ -377,7 +387,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </div>
                                             <div class="col-sm-2 form-group mb-0" style="padding:5px 1px 0px 1px !important;">
                                                 <div class="form-check" style="font-size: 12px !important;">
-                                                    <input type="checkbox" class="form-check-input handCursor" onclick="getMyInbx('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="myInbxShwNonLgnNtfs" name="myInbxShwNonLgnNtfs"  <?php echo $noLgnChekd; ?>>
+                                                    <input type="checkbox" class="form-check-input handCursor" onclick="getMyInbx('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="myInbxShwNonLgnNtfs" name="myInbxShwNonLgnNtfs" <?php echo $noLgnChekd; ?>>
                                                     <label class="form-check-label handCursor" style="padding-top: 6px;" onclick="toggleCheckBx('myInbxShwNonLgnNtfs', function () {
                                                                 getMyInbx('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');
                                                             });">
@@ -387,14 +397,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </div>
                                             <div class="col-sm-2 form-group mb-0" style="padding:5px 1px 0px 1px !important;">
                                                 <div class="form-check" style="font-size: 12px !important;">
-                                                    <input type="checkbox" class="form-check-input handCursor" onclick="getMyInbx('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="myInbxShwNonAknwNtfs" name="myInbxShwNonAknwNtfs"  <?php echo $noAknwChekd; ?>>
+                                                    <input type="checkbox" class="form-check-input handCursor" onclick="getMyInbx('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" id="myInbxShwNonAknwNtfs" name="myInbxShwNonAknwNtfs" <?php echo $noAknwChekd; ?>>
                                                     <label class="form-check-label handCursor" style="padding-top: 6px;" onclick="toggleCheckBx('myInbxShwNonAknwNtfs', function () {
                                                                 getMyInbx('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');
                                                             });">
                                                         Non-Informational
                                                     </label>
                                                 </div>
-                                            </div>                            
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
@@ -432,7 +442,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             $cntrStrtVal = ($curIdx * $lmtSze) + ($cntr);
                                                         }
                                                         $cntrEndVal = ($curIdx * $lmtSze) + ($cntr);
-                                                        ?>
+                                                    ?>
                                                         <tr id="myInbxRow_<?php echo $cntr; ?>">
                                                             <td class="lovtd mailbox-star" style="text-align:center;">
                                                                 <div class="icheck-primary">
@@ -448,8 +458,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <td class="lovtd mailbox-star" style="text-align:center;"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
                                                             <td class="lovtd mailbox-star">
                                                                 <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Details" onclick="getOneMyInbxForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'myInbxDetForm', 'View Message (ID: <?php echo $row[0]; ?> - <?php
-                                                                echo str_replace("'", "\'", $row[2]);
-                                                                ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo ?>);" style="padding:2px !important;" style="padding:2px !important;">
+                                                                                                                                                                                                                                                                                                                                                echo str_replace("'", "\'", $row[2]);
+                                                                                                                                                                                                                                                                                                                                                ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo ?>);" style="padding:2px !important;" style="padding:2px !important;">
                                                                     <img src="../cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                 </button>
                                                             </td>
@@ -476,14 +486,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <?php if ($row[10] == "1") { ?>
                                                                 <td class="lovtd mailbox-subject">
                                                                     <a href="javascript:getOneMyInbxForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'myInbxDetForm', 'View Message (ID: <?php echo $row[0]; ?> - <?php
-                                                                    echo str_replace("'", "\'", $row[2]);
-                                                                    ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo ?>);" style="font-weight:normal;color:#0000FF;"><?php echo $row[2]; ?>
+                                                                                                                                                                                                                                        echo str_replace("'", "\'", $row[2]);
+                                                                                                                                                                                                                                        ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo ?>);" style="font-weight:normal;color:#0000FF;"><?php echo $row[2]; ?>
                                                                     </a>
                                                                 </td>
-                                                            <?php } else { ?>                                                
+                                                            <?php } else { ?>
                                                                 <td class="lovtd mailbox-subject"><a href="javascript:getOneMyInbxForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'myInbxDetForm', 'View Message (ID: <?php echo $row[0]; ?> - <?php
-                                                                    echo str_replace("'", "\'", $row[2]);
-                                                                    ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo ?>);" style="font-weight:bold;color:#0000FF;"><?php echo $row[2]; ?>
+                                                                                                                                                                                                                                                                    echo str_replace("'", "\'", $row[2]);
+                                                                                                                                                                                                                                                                    ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo ?>);" style="font-weight:bold;color:#0000FF;"><?php echo $row[2]; ?>
                                                                     </a>
                                                                 </td>
                                                             <?php } ?>
@@ -498,7 +508,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 </button>
                                                             </td>
                                                         </tr>
-                                                        <?php
+                                                    <?php
                                                     }
                                                     ?>
                                                 </tbody>
@@ -542,14 +552,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     </div>
                     <!-- /.row -->
                 </section>
-                <?php
+            <?php
             } else if ($vwtyp == "1") {
                 //Get My Inbox Detail
                 $result = get_MyInbxDetl($RoutingID);
-                ?>
+            ?>
                 <form id='myInbxDetForm' action='' method='post' accept-charset='UTF-8'>
-                    <div class="row"> 
-                        <div  class="col-md-12">                      
+                    <div class="row">
+                        <div class="col-md-12">
                             <div class="table-responsive">
                                 <table class="gridtable table" id="myInbxDetTable" cellspacing="0" width="100%" style="width:100%;">
                                     <thead style="display:none;">
@@ -591,28 +601,36 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     $output .= "<td width=\"20%\" class=\"likeheader\">" . $labl . ":</td>";
                                                 }
                                                 if ($d == 14 && $row[15] == '0') {
+                                                    $cnrtLevel = (int)$row[25];
                                                     $arry1 = explode(";", $row[$d]);
                                                     $output .= "<td $style>";
                                                     for ($r = 0; $r < count($arry1); $r++) {
                                                         if ($arry1[$r] !== "" && $arry1[$r] != "None") {
                                                             $isadmnonly = getActionAdminOnly($row[0], $arry1[$r]);
+                                                            $actionDesc = $arry1[$r]; //getActionDescription($row[0], $arry1[$r]);
                                                             if ($isadmnonly == '0' || $isMaster == 1) {
                                                                 $webUrlDsply = getActionUrlDsplyTyp($row[0], $arry1[$r]);
                                                                 $hrf1 = "<div style=\"padding:2px;float:left;\">"
-                                                                        . "<button type=\"button\" class=\"btn btn-primary\""
-                                                                        . " onclick=\"actionProcess('$cmpID', '$row[0]','$arry1[$r]','$webUrlDsply','$row[24]','" . str_replace("'",
-                                                                                "\'", $row[5]) . "','" . str_replace("'", "\'", $row[8]) . "','$row[7]','$row[2]');\">";
+                                                                    . "<button type=\"button\" class=\"btn btn-primary\""
+                                                                    . " onclick=\"actionProcess('$cmpID', '$row[0]','$arry1[$r]','$webUrlDsply','$row[24]','" . str_replace(
+                                                                        "'",
+                                                                        "\'",
+                                                                        $row[5]
+                                                                    ) . "','" . str_replace("'", "\'", $row[8]) . "','$row[7]','$row[2]');\">";
                                                                 $hrf2 = "</button></div>";
-                                                                $output .= "$hrf1" . $arry1[$r] . "$hrf2";
+                                                                $output .= "$hrf1" . $actionDesc . "$hrf2";
                                                             }
                                                         }
 
                                                         if ($r == count($arry1) - 1) {
                                                             $webUrlDsply = "";
                                                             $hrf1 = "<div style=\"padding:2px;float:left;\">"
-                                                                    . "<button type=\"button\" class=\"btn btn-primary\" "
-                                                                    . "onclick=\"actionProcess('$cmpID', '$row[0]','View Attachments','$webUrlDsply','$row[24]','" . str_replace("'",
-                                                                            "\'", $row[5]) . "','" . str_replace("'", "\'", $row[8]) . "','$row[7]','$row[2]');\">";
+                                                                . "<button type=\"button\" class=\"btn btn-primary\" "
+                                                                . "onclick=\"actionProcess('$cmpID', '$row[0]','View Attachments','$webUrlDsply','$row[24]','" . str_replace(
+                                                                    "'",
+                                                                    "\'",
+                                                                    $row[5]
+                                                                ) . "','" . str_replace("'", "\'", $row[8]) . "','$row[7]','$row[2]');\">";
                                                             $hrf2 = "</button></div>";
                                                             $output .= "$hrf1" . 'View Attachments' . "$hrf2";
                                                         }
@@ -639,11 +657,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             </div>
                         </div>
                     </div>
-                    <div class="row"> 
-                        <div  class="col-md-12">                            
+                    <div class="row">
+                        <div class="col-md-12">
                             <div class="table-responsive">
-                                <div class = "caption basic_person_lg">ACTION HISTORY</div>
-                                <table class="gridtable table" id="myInbxActionsTable">   
+                                <div class="caption basic_person_lg">ACTION HISTORY</div>
+                                <table class="gridtable table" id="myInbxActionsTable">
                                     <?php
                                     $result1 = get_ActionHistory($msgID);
                                     $colsCnt1 = loc_db_num_fields($result1);
@@ -672,13 +690,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     }
                                     $output .= "</tbody>";
                                     echo $output;
-                                    ?>                                
+                                    ?>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </form>
-                <?php
+            <?php
             } else if ($vwtyp == 3) {
                 //Reject Form 
                 $RoutingID = isset($_POST['RoutingID']) ? cleanInputData($_POST['RoutingID']) : -1;
@@ -686,7 +704,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $msgDate = isset($_POST['msgDate']) ? cleanInputData($_POST['msgDate']) : "";
                 $actionNm = isset($_POST['actionNm']) ? cleanInputData($_POST['actionNm']) : "Reject";
                 $isResDiag = isset($_POST['isResDiag']) ? cleanInputData($_POST['isResDiag']) : "1";
-                ?>
+            ?>
                 <form class="form-horizontal" method="post">
                     <div class="row" style="margin-bottom: 5px;">
                         <div class="col-md-2"><label class="control-label">Notice: </label></div>
@@ -717,7 +735,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                     </div>
                 </form>
-                <?php
+            <?php
             } else if ($vwtyp == 4) {
                 //Request for Information Form
                 $RoutingID = isset($_POST['RoutingID']) ? cleanInputData($_POST['RoutingID']) : -1;
@@ -725,7 +743,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $msgDate = isset($_POST['msgDate']) ? cleanInputData($_POST['msgDate']) : "";
                 $actionNm = isset($_POST['actionNm']) ? cleanInputData($_POST['actionNm']) : "Request for Information";
                 $isResDiag = isset($_POST['isResDiag']) ? cleanInputData($_POST['isResDiag']) : "1";
-                ?>
+            ?>
                 <form class="form-horizontal" method="post">
                     <div class="row" style="margin-bottom: 5px;">
                         <div class="col-md-2"><label class="control-label">Person to Question(*): </label></div>
@@ -733,7 +751,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="input-group" style="width:100% !important;">
                                 <input type="text" class="form-control rqrdFld" aria-label="..." id="wkfInfoRqstToPrsn" value="" style="width:100% !important;" readonly="true">
                                 <input type="hidden" class="form-control" aria-label="..." id="wkfToPrsnLocID" value="">
-                                <div class="input-group-append handCursor"  onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Active Persons', '', '', '', 'radio', true, '', 'wkfToPrsnLocID', 'wkfInfoRqstToPrsn', 'clear', 0, '');">
+                                <div class="input-group-append handCursor" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Active Persons', '', '', '', 'radio', true, '', 'wkfToPrsnLocID', 'wkfInfoRqstToPrsn', 'clear', 0, '');">
                                     <span class="input-group-text rhoclickable"><i class="fas fa-list-ul"></i></span>
                                 </div>
                             </div>
@@ -760,7 +778,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                     </div>
                 </form>
-                <?php
+            <?php
             } else if ($vwtyp == 5) {
                 //Respond Form
                 $RoutingID = isset($_POST['RoutingID']) ? cleanInputData($_POST['RoutingID']) : -1;
@@ -770,7 +788,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $toPrsNm = isset($_POST['toPrsNm']) ? cleanInputData($_POST['toPrsNm']) : "";
                 $actionNm = isset($_POST['actionNm']) ? cleanInputData($_POST['actionNm']) : "Respond";
                 $isResDiag = isset($_POST['isResDiag']) ? cleanInputData($_POST['isResDiag']) : "1";
-                ?>
+            ?>
                 <form class="form-horizontal" method="post">
                     <div class="row" style="margin-bottom: 5px;">
                         <div class="col-md-2"><label class="control-label">Notice: </label></div>
@@ -810,7 +828,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                     </div>
                 </form>
-                <?php
+            <?php
             } else if ($vwtyp == 6) {
                 //Attachments Form
                 $RoutingID = isset($_POST['RoutingID']) ? cleanInputData($_POST['RoutingID']) : -1;
@@ -822,7 +840,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $inCount = isset($_POST['inCount']) ? cleanInputData($_POST['inCount']) : 0;
                 $actionNm = isset($_POST['actionNm']) ? cleanInputData($_POST['actionNm']) : "Re-Assign";
                 $isResDiag = isset($_POST['isResDiag']) ? cleanInputData($_POST['isResDiag']) : "1";
-                ?>
+            ?>
                 <form class="form-horizontal" method="post">
                     <div class="row" style="margin-bottom: 5px;">
                         <div class="col-md-2"><label class="control-label">Notice: </label></div>
@@ -839,7 +857,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <input type="text" class="form-control rqrdFld" aria-label="..." id="wkfInfoRqstToPrsn" value="" style="width:100% !important;" readonly="true">
                                 <input type="hidden" class="form-control" aria-label="..." id="wkfToPrsnLocID" value="">
                                 <input type="hidden" class="form-control" aria-label="..." id="wkfSlctdRoutingIDs" value="<?php echo $routingIDs; ?>">
-                                <div class="input-group-append handCursor"  onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Active Persons', '', '', '', 'radio', true, '', 'wkfToPrsnLocID', 'wkfInfoRqstToPrsn', 'clear', 0, '');">
+                                <div class="input-group-append handCursor" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Active Persons', '', '', '', 'radio', true, '', 'wkfToPrsnLocID', 'wkfInfoRqstToPrsn', 'clear', 0, '');">
                                     <span class="input-group-text rhoclickable"><i class="fas fa-list-ul"></i></span>
                                 </div>
                             </div>
@@ -866,17 +884,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                     </div>
                 </form>
-                <?php
+            <?php
             } else if ($vwtyp == 8) {
                 //Get Action History
                 $msgID = (float) getGnrlRecNm("wkf.wkf_actual_msgs_routng", "routing_id", "msg_id", $RoutingID);
-                ?>
-                <div class="row"> 
-                    <div  class="col-md-12">
+            ?>
+                <div class="row">
+                    <div class="col-md-12">
                         <?php
                         $output = "<div class=\"caption basic_person_lg\">ACTION HISTORY</div>";
                         ?>
-                        <table class="gridtable" id="gnrlInbxActionsTable" cellspacing="0" cellpadding="0" width="100%" style="width:100%;min-width: 300px;">   
+                        <table class="gridtable" id="gnrlInbxActionsTable" cellspacing="0" cellpadding="0" width="100%" style="width:100%;min-width: 300px;">
                             <?php
                             $result1 = get_ActionHistory($msgID);
                             $colsCnt1 = loc_db_num_fields($result1);
@@ -904,17 +922,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             }
                             $output .= "</tbody>";
                             echo $output;
-                            ?>                                
+                            ?>
                         </table>
                     </div>
                 </div>
-                <?php
+<?php
             } else if ($vwtyp == 9) {
-                
             } else if ($vwtyp == 10) {
-                
             } else if ($vwtyp == 11) {
-                
             }
         }
     } else {
@@ -922,7 +937,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
     }
 }
 
-function get_ActionHistory($msgID) {
+function get_ActionHistory($msgID)
+{
     $selSQL = "SELECT row_number() OVER (ORDER BY (CASE WHEN TBL2.date_action_ws_prfmd='' or tbl1.level=-999 THEN 
        TBL2.date_sent
        ELSE 
@@ -980,7 +996,8 @@ string_agg(prs.get_prsn_name(a.from_prsn_id)||' ('||prs.get_prsn_loc_id(a.from_p
     return $result;
 }
 
-function get_MyInbx($searchFor, $searchIn, $offset, $limit_size) {
+function get_MyInbx($searchFor, $searchIn, $offset, $limit_size)
+{
     global $user_Name;
     global $qStrtDte;
     global $qEndDte;
@@ -999,7 +1016,7 @@ function get_MyInbx($searchFor, $searchIn, $offset, $limit_size) {
         $wherecls .= " AND (CASE WHEN a.is_action_done='0' THEN a.msg_status ELSE a.status_aftr_action END ilike '" . loc_db_escape_string($searchFor) . "')";
     } else if ($searchIn == "Source App") {
         $wherecls .= " AND ((c.app_name ilike '%" . loc_db_escape_string($searchFor) . "%')"
-                . " or (c.source_module ilike '%" . loc_db_escape_string($searchFor) . "%'))";
+            . " or (c.source_module ilike '%" . loc_db_escape_string($searchFor) . "%'))";
     } else if ($searchIn == "Subject") {
         $wherecls .= " AND (b.msg_hdr ilike '%" . loc_db_escape_string($searchFor) . "%')";
     } else if ($searchIn == "Person From") {
@@ -1032,7 +1049,7 @@ function get_MyInbx($searchFor, $searchIn, $offset, $limit_size) {
         $extrWhr = "";
     }
     $sqlStr = "SELECT  a.routing_id mt, a.msg_id mt, b.msg_hdr message_header, "
-            . "CASE WHEN a.from_prsn_id<=0 THEN 'System Administrator' 
+        . "CASE WHEN a.from_prsn_id<=0 THEN 'System Administrator' 
         ELSE prs.get_prsn_name(a.from_prsn_id) || ' (' || prs.get_prsn_loc_id(a.from_prsn_id) || ')' 
         END \"from\", a.to_prsn_id mt, to_char(to_timestamp(a.date_sent,
         'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') \"Date_sent\", a.created_by mt, a.creation_date mt, 
@@ -1044,13 +1061,14 @@ function get_MyInbx($searchFor, $searchIn, $offset, $limit_size) {
         END \"to\", b.msg_typ message_type, prs.get_prsn_loc_id(a.from_prsn_id) locid, a.from_prsn_id, a.to_prsn_id 
   FROM wkf.wkf_actual_msgs_routng a, wkf.wkf_actual_msgs_hdr b, wkf.wkf_apps c
 WHERE ((c.app_id=b.app_id) AND (a.msg_id=b.msg_id)" . $extrWhr . $wherecls .
-            ") ORDER BY a.date_sent DESC LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+        ") ORDER BY a.date_sent DESC LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
     //echo $sqlStr;
     $result = executeSQLNoParams($sqlStr);
     return $result;
 }
 
-function get_MyInbxTtls($searchFor, $searchIn) {
+function get_MyInbxTtls($searchFor, $searchIn)
+{
     global $user_Name;
     global $qStrtDte;
     global $qEndDte;
@@ -1067,7 +1085,7 @@ function get_MyInbxTtls($searchFor, $searchIn) {
         $wherecls .= " AND (CASE WHEN a.is_action_done='0' THEN a.msg_status ELSE a.status_aftr_action END ilike '" . loc_db_escape_string($searchFor) . "')";
     } else if ($searchIn == "Source App") {
         $wherecls .= " AND ((c.app_name ilike '%" . loc_db_escape_string($searchFor) . "%')"
-                . " or (c.source_module ilike '%" . loc_db_escape_string($searchFor) . "%'))";
+            . " or (c.source_module ilike '%" . loc_db_escape_string($searchFor) . "%'))";
     } else if ($searchIn == "Subject") {
         $wherecls .= " AND (b.msg_hdr ilike '%" . loc_db_escape_string($searchFor) . "%')";
     } else if ($searchIn == "Person From") {
@@ -1109,7 +1127,8 @@ WHERE ((c.app_id=b.app_id) AND (a.msg_id=b.msg_id)" . $extrWhr . $wherecls . ")"
     return 0;
 }
 
-function get_MyInbxDetl($routingID) {
+function get_MyInbxDetl($routingID)
+{
     $wherecls = "";
     $wherecls = " AND (a.routing_id = " . loc_db_escape_string($routingID) . ")";
 
@@ -1130,7 +1149,8 @@ function get_MyInbxDetl($routingID) {
        a.nxt_action_to_prfm next_action_to_perform, 
        a.who_prfms_next_action \"Who Performes Next Action\", 
        a.last_update_by mt, a.last_update_date mt,
-       prs.get_prsn_loc_id(a.from_prsn_id) mt
+       prs.get_prsn_loc_id(a.from_prsn_id) mt,
+       a.to_prsns_hrchy_level mt
   FROM wkf.wkf_actual_msgs_routng a, wkf.wkf_actual_msgs_hdr b, wkf.wkf_apps c
 WHERE ((c.app_id=b.app_id) AND (a.msg_id=b.msg_id)$wherecls)";
 
@@ -1138,13 +1158,14 @@ WHERE ((c.app_id=b.app_id) AND (a.msg_id=b.msg_id)$wherecls)";
     return $result;
 }
 
-function saveReassignForm() {
+function saveReassignForm()
+{
     global $usrID;
     global $user_Name;
     global $formArray;
 
     $inptSlctdRtngs = isset($formArray['routingIDs']) ? cleanInputData($formArray['routingIDs']) : "";
-//$formName = isset($formArray['formNme']) ? cleanInputData($formArray['formNme']) : "";
+    //$formName = isset($formArray['formNme']) ? cleanInputData($formArray['formNme']) : "";
     $nwPrsnLocID = isset($formArray['prsnLocID']) ? cleanInputData($formArray['prsnLocID']) : "";
     $raCmmnts = isset($formArray['noticeDetails']) ? cleanInputData($formArray['noticeDetails']) : "";
 
@@ -1199,7 +1220,8 @@ function saveReassignForm() {
     return $res;
 }
 
-function actOnMsgSQL($routingID, $usr_ID, $actyp) {
+function actOnMsgSQL($routingID, $usr_ID, $actyp)
+{
     $dsply = "";
     if ($routingID > 0) {
         /*
@@ -1213,7 +1235,7 @@ function actOnMsgSQL($routingID, $usr_ID, $actyp) {
         $sql = str_replace("{:routing_id}", "$routingID", $sql);
         $sql = str_replace("{:userID}", "$usr_ID", $sql);
         $sql = str_replace("{:actToPrfm}", "$actyp", $sql);
-//echo $sql;{:actToPrfm}
+        //echo $sql;{:actToPrfm}
         $rtrn_msg = executeActionOnMsg($sql);
         $dsply = str_replace("|SUCCESS|", "", $rtrn_msg);
         $dsply = str_replace("|ERROR|", "", $rtrn_msg);
@@ -1226,7 +1248,8 @@ function actOnMsgSQL($routingID, $usr_ID, $actyp) {
     }
 }
 
-function downloadForm() {
+function downloadForm()
+{
     global $RoutingID;
     global $smplTokenWord1;
 
@@ -1242,8 +1265,8 @@ function downloadForm() {
         if ($arry1[$r] !== "") {
             $arry1[$r] = encrypt1($arry1[$r], $smplTokenWord1);
             $hrf1 = "<tr><td><div style=\"padding:2px;float:none;\">"
-                    . "<button type=\"button\"  class=\"btn btn-primary\" "
-                    . "onclick=\"dwnldAjxCall('grp=1&typ=11&q=Download&fnm=$arry1[$r]','FileNo$r');\">" . "File No." . ($r + 1) . "-" . $arry2[$r] . " ";
+                . "<button type=\"button\"  class=\"btn btn-primary\" "
+                . "onclick=\"dwnldAjxCall('grp=1&typ=11&q=Download&fnm=$arry1[$r]','FileNo$r');\">" . "File No." . ($r + 1) . "-" . $arry2[$r] . " ";
             $hrf2 = "</button></div></td><td><div id=\"FileNo$r\"></div></td></tr>";
             $output .= "$hrf1" . "" . "$hrf2";
         }

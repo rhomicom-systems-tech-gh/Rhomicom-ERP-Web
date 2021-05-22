@@ -4324,6 +4324,23 @@ and b.routing_id=$routingID";
     return "";
 }
 
+
+function getActionDescription($routingID, $actyp)
+{
+    $sqlStr = "select a.action_desc 
+from wkf.wkf_apps_actions a, wkf.wkf_actual_msgs_routng b, wkf.wkf_actual_msgs_hdr c
+where a.action_performed_nm='" . loc_db_escape_string($actyp) . "' 
+and a.app_id=c.app_id
+and b.msg_id = c.msg_id
+and b.routing_id=$routingID";
+    //echo $sqlStr;
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return "";
+}
+
 function executeActionOnMsg($sqlStr)
 {
     if ($sqlStr != "") {
