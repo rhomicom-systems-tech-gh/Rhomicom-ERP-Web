@@ -3020,7 +3020,7 @@ function getSelfPgPrmssns($prsnid)
 function getHomePgPrmssns($prsnid)
 {
     global $ssnRoles;
-    $rslts = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    $rslts = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     $sqlStr = "Select (Select MAX(lnkd_firm_org_id) from prs.prsn_names_nos where person_id=$prsnid) lnkd_firm_org_id, "
         . "sec.test_prmssns('View Self-Service', 'Self Service','" . loc_db_escape_string($ssnRoles) . "') canViewSelfsrvc, "
         . "sec.test_prmssns('View e-Voting', 'e-Voting','" . loc_db_escape_string($ssnRoles) . "')+sec.test_prmssns('View Elections', 'Self Service','" . loc_db_escape_string($ssnRoles) . "') canViewEvote, "
@@ -3049,7 +3049,8 @@ function getHomePgPrmssns($prsnid)
                gst.get_pssbl_val_desc(gst.getenbldpssblvalid('Create Links to Main App', gst.get_lov_id('All Other Self-Service Setups'))) self_link, 
                gst.get_pssbl_val_desc(gst.getenbldpssblvalid('Allow User Account Self-Registration', gst.get_lov_id('All Other General Setups'))) self_rgstr, "
         . "sec.test_prmssns('View Help Desk', 'Self Service','" . loc_db_escape_string($ssnRoles) . "') canViewHlpDsk, "
-        . "sec.test_prmssns('View Appraisal', 'Learning/Performance Management','" . loc_db_escape_string($ssnRoles) . "') canViewAppraisal";
+        . "sec.test_prmssns('View Appraisal', 'Learning/Performance Management','" . loc_db_escape_string($ssnRoles) . "') canViewAppraisal,"
+            . "sec.test_prmssns('View Sacrament', 'Catholic Church Sacrament','" . loc_db_escape_string($ssnRoles) . "') canViewSacrament";
     //echo $sqlStr;getEnbldPssblValID("Allow User Account Self-Registration", getLovID("All Other General Setups"))
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -3082,6 +3083,7 @@ function getHomePgPrmssns($prsnid)
         $rslts[26] = ($row[26]);
         $rslts[27] = ((int) $row[27]);
         $rslts[28] = ((int) $row[28]);
+        $rslts[29] = ((int) $row[29]);
     }
     return $rslts;
 }

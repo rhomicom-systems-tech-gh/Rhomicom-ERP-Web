@@ -7,6 +7,7 @@ ini_set('display_startup_errors', true);
 ini_set("display_errors", TRUE);
 ini_set("html_errors", TRUE);
 require 'app_code/cmncde/connect_pg.php';
+require 'xlsxwriter.class.php';
 $isMntnceMode = ($putInMntnceMode == "YES") ? TRUE : FALSE;
 $mstChngPwd = isset($_GET['cp']) ? (int) cleanInputData($_GET['cp']) : '0';
 $shdGoConfig = isset($_POST['shdGoConfig']) ? (int) ($_POST['shdGoConfig']) : 0;
@@ -638,7 +639,13 @@ if ($isMntnceMode) {
             } else {
                 restricted();
             }
-        } else {
+        } else if ($group == 50){
+            //Catholic Church Sacrament
+            if ($type == 1) {
+                require 'app_code/ccs/ccs_intro.php';
+            }            
+        } 
+        else {
             header('location: index.php');
         }
         exit();

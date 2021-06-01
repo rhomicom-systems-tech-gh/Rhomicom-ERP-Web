@@ -1244,6 +1244,7 @@ function loadMdlsNthrRolesNLovs()
     loadELearnMdl();
     loadHelpDskMdl();
     loadAstTrckrMdl();
+    loadCcsMdl(); //Catholic Church Sacrament
     createSysLovs($sysLovs, $sysLovsDesc, $sysLovsDynQrys);
     createSysLovsPssblVals($pssblVals, $sysLovs);
 
@@ -5111,4 +5112,54 @@ function createPssblValsForLov($lovID, $pssblVal, $pssblValDesc, $isEnbld, $allw
         "', " . $usrID . ", '" . $dateStr . "', " . $usrID .
         ", '" . $dateStr . "', '" . $isEnbld . "', '" . loc_db_escape_string($allwd) . "')";
     $result = execUpdtInsSQL($sqlStr);
+}
+
+function loadCcsMdl()
+{
+    //Catholic Church Sacrament
+    $DefaultPrvldgs = array(
+        "View Sacrament", 
+		/* 1 */ "Add Sacrament",
+        /* 2 */ "Edit Sacrament", "Delete Sacrament"
+    );
+
+    $subGrpNames = "";
+    $mainTableNames = "";
+    $keyColumnNames = "";
+    $myName = "Catholic Church Sacrament";
+    $myDesc = "This module helps you to manage the Catholic Church Sacrament Needs!";
+    $audit_tbl_name = "ccs.ccs_audit_trail_tbl";
+
+    $smplRoleName = "Sacrament Administrator";
+    checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
+    createCcsRqrdLOVs();
+}
+
+function createCcsRqrdLOVs()
+{
+    $sysLovs = array(
+        "Baptism ID Numbers", 
+        /* 1 */ "Religions"
+    );
+
+    $sysLovsDesc = array(
+        "Baptism ID Numbers", 
+        /* 1 */ "Religions"
+    );
+
+    $sysLovsDynQrys = array(
+        "select ''||bptsm_id a, bptsm_sys_code||' ('||first_name||' '||last_name||')' b, '' c from ccs.baptism where 1 = 1 order by bptsm_sys_code",
+        /* 1 */ "",
+    );
+
+    $pssblVals = array(
+        "1", "Anglican", "Anglican",
+        "1", "Catholic", "Catholic",
+        "1", "EP Church", "EP Church",
+        "1", "I.C.G.C", "I.C.G.C",
+        "1", "Presby", "Presby",
+        "1", "Methodist", "Methodist"
+    );
+    createSysLovs($sysLovs, $sysLovsDesc, $sysLovsDynQrys);
+    createSysLovsPssblVals($pssblVals, $sysLovs);
 }

@@ -11,8 +11,9 @@ $menuItems = array(
     "Academics Management", "Projects Management", "Clinic & Hospital",
     "Banking", "Vault Management", "Agent Registry", "Asset Tracking",
     "Summary Dashboard", "Notices & Content Management",
-    "Reports / Processes", "Help Desk",
+    "Reports / Processes", "Help Desk", "Sacrament",
     "Performance Appraisal System"
+    
 );
 $menuImages = array(
     "person.png", "invcBill.png", "calendar2.png",
@@ -21,7 +22,8 @@ $menuImages = array(
     "education.png", "engineer.png", "medical.png",
     "bank_256.png", "secure_icon.png", "registry-icon.png", "delivery-icon.png",
     "dashboard220.png", "Notebook.png",
-    "settings.png", "helpdesk1.png", "pms1.jpg"
+    "settings.png", "helpdesk1.png", "sacrament.jpg", "pms1.jpg"
+    
 );
 $menuLinks = array(
     "grp=8&typ=1", "grp=7&typ=1", "grp=16&typ=1",
@@ -30,7 +32,8 @@ $menuLinks = array(
     "grp=15&typ=1&mdl=ACA", "grp=13&typ=1", "grp=14&typ=1&mdl=Clinic/Hospital",
     "grp=17&typ=1", "grp=25&typ=1", "grp=26&typ=1", "grp=27&typ=1",
     "grp=40&typ=4", "grp=40&typ=3&vtyp=1",
-    "grp=9&typ=1", "grp=41&typ=1", "grp=15&typ=1&mdl=PMS"
+    "grp=9&typ=1", "grp=41&typ=1", "grp=50&typ=1", "grp=15&typ=1&mdl=PMS" 
+    
 );
 $mdlNms = array(
     "Basic Person Data", "Self Service", "Self Service",
@@ -39,7 +42,8 @@ $mdlNms = array(
     "Learning/Performance Management", "Projects Management", "Clinic/Hospital",
     "Banking", "Vault Management", "Agent Registry", "Asset Tracking",
     "Self Service", "Self Service",
-    "Reports And Processes", "Self Service", "Learning/Performance Management"
+    "Reports And Processes", "Self Service", "Catholic Church Sacrament", "Learning/Performance Management"
+    
 );
 
 $dfltPrvldgs = array(
@@ -49,7 +53,8 @@ $dfltPrvldgs = array(
     "View Learning/Performance Management", "View Projects Management", "View Clinic/Hospital",
     "View Banking", "View Vault Management", "View Agent Registry", "View Asset Tracking",
     "View Self-Service", "View Self-Service",
-    "View Reports And Processes", "View Self-Service", "View Learning/Performance Management"
+    "View Reports And Processes", "View Self-Service", "View Person", "View Learning/Performance Management",
+    
 );
 
 
@@ -83,7 +88,9 @@ $canViewArtclAdmn = ($prmSnsRstl[22] >= 1) ? true : false;
 $canViewRpts = ($prmSnsRstl[23] >= 1) ? true : false;
 $canViewHlpDsk = ($prmSnsRstl[27] >= 1) ? true : false;
 $canViewAppraisal = ($prmSnsRstl[28] >= 1) ? true : false;
+$canViewSacrament = ($prmSnsRstl[29] >= 1) ? true : false;
 $canview = $canViewSelfsrvc || $canViewPrsn;
+//$canViewSacrament = true;
 $cntent = "<div>
 				<ul class=\"breadcrumb\" style=\"$breadCrmbBckclr\">
 					<li onclick=\"openATab('#home', 'grp=40&typ=1');\">
@@ -104,11 +111,13 @@ if ($lgn_num > 0) {
     for ($i = 0; $i < count($menuItems); $i++) {
         $iToUse = $i;
         if ($i == 10) {
-            $i = 20;
+            $i = 21;
         } else if ($i >= 11) {
             $i = $i - 1;
         }
+        //echo " i is ". $i ." ";
         $customMdlNm = $menuItems[$i];
+        //echo $menuItems[$i];
         if ($i > 0) {
             if ($i == 1 && $canViewIntrnlPay == FALSE) {
                 $i = $iToUse;
@@ -137,7 +146,7 @@ if ($lgn_num > 0) {
             } else if ($i == 9 && $canViewPrfmnc == FALSE) {
                 $i = $iToUse;
                 continue;
-            } else if ($i == 20 && $canViewAppraisal == FALSE) {
+            } else if ($i == 21 && $canViewAppraisal == FALSE) {
                 $i = $iToUse;
                 continue;
             } else if ($i == 10 && $canViewProjs == FALSE) {
@@ -165,6 +174,9 @@ if ($lgn_num > 0) {
                 $i = $iToUse;
                 continue;
             } else if ($i == 18 && $canViewRpts == FALSE) {
+                $i = $iToUse;
+                continue;
+            } else if ($i == 20 && $canViewSacrament == FALSE) {
                 $i = $iToUse;
                 continue;
             } else if ($i == 19 && $canViewHlpDsk == FALSE) {

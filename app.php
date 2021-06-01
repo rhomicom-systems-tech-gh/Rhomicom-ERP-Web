@@ -39,6 +39,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         $canViewArtclAdmn = ($prmSnsRstl[22] >= 1) ? true : false;
         $canViewRpts = ($prmSnsRstl[23] >= 1) ? true : false;
         $canViewHlpDsk = ($prmSnsRstl[27] >= 1) ? true : false;
+        $canViewSacrament = ($prmSnsRstl[29] >= 1) ? true : false;
         $startOfDayDate = substr(getStartOfDayDMYHMS(), 0, 11);
     ?>
         <link href="cmn_scrpts/bootstrap337/bootstrap3-dialog/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
