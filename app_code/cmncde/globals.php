@@ -98,7 +98,7 @@ function rhoHex2Rgba($color, $opacity = false)
     print_r($rslt);
     exit();
  */
-function rhofetchFromAPI($url, $data, $cntentTyp = "application/x-www-form-urlencoded", $method = 'GET')
+function rhofetchFromAPI($url = '', $data = [], $cntentTyp = "application/x-www-form-urlencoded", $method = 'GET')
 {
     //$url = 'https://jsonplaceholder.typicode.com/todos/1';
     //$data = array('key1' => 'value1', 'key2' => 'value2');
@@ -2828,7 +2828,10 @@ function getItmUomLovs($uomItemCode)
 
 function insertSpaces($str, $insChar, $maxChrWidth)
 {
-    $arrystr = str_split($str);
+    $arrystr = [];
+    if ($str != "") {
+        $arrystr = str_split($str);
+    }
     $res = "";
     for ($i = 0; $i < count($arrystr); $i++) {
         $res .= $arrystr[$i];
@@ -4313,6 +4316,23 @@ and b.routing_id=$routingID";
 function getActionAdminOnly($routingID, $actyp)
 {
     $sqlStr = "select a.is_admin_only 
+from wkf.wkf_apps_actions a, wkf.wkf_actual_msgs_routng b, wkf.wkf_actual_msgs_hdr c
+where a.action_performed_nm='" . loc_db_escape_string($actyp) . "' 
+and a.app_id=c.app_id
+and b.msg_id = c.msg_id
+and b.routing_id=$routingID";
+    //echo $sqlStr;
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return "";
+}
+
+
+function getActionDescription($routingID, $actyp)
+{
+    $sqlStr = "select a.action_desc 
 from wkf.wkf_apps_actions a, wkf.wkf_actual_msgs_routng b, wkf.wkf_actual_msgs_hdr c
 where a.action_performed_nm='" . loc_db_escape_string($actyp) . "' 
 and a.app_id=c.app_id

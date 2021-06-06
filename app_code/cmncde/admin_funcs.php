@@ -3822,7 +3822,7 @@ function createPayRqrdLOVs()
         "Internal Pay Loan Types", "Internal Pay Payment Types", "Internal Pay Settlement Types",
         /* 11 */ "Internal Pay Loan Classifications", "Internal Pay Payment Classifications", "Internal Pay Settlement Classifications",
         /* 14 */ "Internal Pay Loan Requests", "Internal Pay Payment Requests", "Internal Pay Settlement Requests",
-        /* 17 */ "Internal Pay Item Classifications"
+        /* 17 */ "Internal Pay Item Classifications", "All Internal Pay Loan Types"
     );
     $sysLovsDesc = array(
         "Item Sets for Payments(Enabled)", "Person Sets for Payments(Enabled)",
@@ -3831,7 +3831,7 @@ function createPayRqrdLOVs()
         "Internal Pay Loan Types", "Internal Pay Payment Types", "Internal Pay Settlement Types",
         /* 11 */ "Internal Pay Loan Classifications", "Internal Pay Payment Classifications", "Internal Pay Settlement Classifications",
         /* 14 */ "Internal Pay Loan Requests", "Internal Pay Payment Requests", "Internal Pay Settlement Requests",
-        /* 17 */ "Internal Pay Item Classifications"
+        /* 17 */ "Internal Pay Item Classifications", "All Internal Pay Loan Types"
     );
     $sysLovsDynQrys = array(
         "select distinct trim(to_char(z.hdr_id,'999999999999999999999999999999')) a, z.itm_set_name b, '' c, z.org_id d, '' e, '' f, y.user_role_id g from pay.pay_itm_sets_hdr z, pay.pay_sets_allwd_roles y where z.hdr_id = y.itm_set_id and z.is_enabled='1' order by z.itm_set_name",
@@ -3854,7 +3854,9 @@ function createPayRqrdLOVs()
                    || prs.get_prsn_loc_id(RQSTD_FOR_PERSON_ID) || ')', ' ()', '')||'-'||local_clsfctn b, '' c, RQSTD_FOR_PERSON_ID d from pay.pay_loan_pymnt_rqsts where request_status NOT IN ('Not Submitted','Rejected','Withdrawn') and pay.get_trans_type(item_type_id)='PAYMENT'",
         /* 16 */ "select ''||pay_request_id a, REPLACE(prs.get_prsn_surname(RQSTD_FOR_PERSON_ID) || ' ('
                    || prs.get_prsn_loc_id(RQSTD_FOR_PERSON_ID) || ')', ' ()', '')||'-'||local_clsfctn b, '' c, RQSTD_FOR_PERSON_ID d from pay.pay_loan_pymnt_rqsts where request_status NOT IN ('Not Submitted','Rejected','Withdrawn') and pay.get_trans_type(item_type_id)='SETTLEMENT'",
-        /* 17 */ "select DISTINCT ''||local_classfctn a, local_classfctn b, '' c from org.org_pay_items"
+        /* 17 */ "select DISTINCT ''||local_classfctn a, local_classfctn b, '' c from org.org_pay_items",
+        /* 18 */ "select distinct ''||item_type_id a, item_type_name b, '' c, org_id d from pay.loan_pymnt_invstmnt_typs where item_type='LOAN'",
+        
     );
 
     $pssblVals = array(

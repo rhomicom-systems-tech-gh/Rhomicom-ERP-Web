@@ -737,7 +737,7 @@ function saveAcaSbjctsForm() {
         title: 'Save Subjects/Tasks',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Subjects/Tasks...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
     formData.append('grp', 15);
@@ -1009,7 +1009,7 @@ function saveAcaCoursesForm() {
         title: 'Save Courses/Objectives',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Courses/Objectives...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
     formData.append('grp', 15);
@@ -1322,6 +1322,7 @@ function saveAcaAssessTypesForm() {
                 var ln_CSStyle = typeof $('#oneAcaAssessTypesSmryRow' + rndmNum + '_CSStyle').val() === 'undefined' ? '' : $('#oneAcaAssessTypesSmryRow' + rndmNum + '_CSStyle').val();
                 var ln_MinValue = typeof $('#oneAcaAssessTypesSmryRow' + rndmNum + '_MinValue').val() === 'undefined' ? '' : $('#oneAcaAssessTypesSmryRow' + rndmNum + '_MinValue').val();
                 var ln_MaxValue = typeof $('#oneAcaAssessTypesSmryRow' + rndmNum + '_MaxValue').val() === 'undefined' ? '' : $('#oneAcaAssessTypesSmryRow' + rndmNum + '_MaxValue').val();
+                var ln_LovName = typeof $('#oneAcaAssessTypesSmryRow' + rndmNum + '_LovName').val() === 'undefined' ? '' : $('#oneAcaAssessTypesSmryRow' + rndmNum + '_LovName').val();
                 var ln_IsDsplyd = typeof $("input[name='oneAcaAssessTypesSmryRow" + rndmNum + "_IsDsplyd']:checked").val() === 'undefined' ? 'NO' : 'YES';
                 var ln_IsFormular = ln_SQLFormular.trim() === '' ? 'NO' : 'YES';
                 if (ln_LineName.trim() !== '') {
@@ -1363,8 +1364,8 @@ function saveAcaAssessTypesForm() {
                             ln_MinValue.replace(/[^-?0-9\.]/g, '').replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
                             ln_MaxValue.replace(/[^-?0-9\.]/g, '').replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
                             ln_IsDsplyd.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
-                            ln_CSStyle.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
-
+                            ln_CSStyle.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~" +
+                            ln_LovName.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
                     }
                 }
             }
@@ -1382,7 +1383,7 @@ function saveAcaAssessTypesForm() {
         title: 'Save ' + msgPart + '',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving ' + msgPart + '...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
     formData.append('grp', 15);
@@ -1835,7 +1836,7 @@ function saveAcaGradeScalesForm() {
         title: 'Save ' + msgPart + '',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving ' + msgPart + '...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
     formData.append('grp', 15);
@@ -2157,7 +2158,7 @@ function saveAcaPeriodsForm() {
         title: 'Save ' + msgPart + '',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving ' + msgPart + '...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
     formData.append('grp', 15);
@@ -2441,7 +2442,7 @@ function saveAcaPosHldrsForm() {
         title: 'Save ' + msgPart + '',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving ' + msgPart + '...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
     formData.append('grp', 15);
@@ -2857,7 +2858,7 @@ function saveAcaClassesForm(actionTxt, destElmntID, titleMsg, titleElementID, mo
         title: 'Save ' + msgPart,
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving  ' + msgPart + '...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
     formData.append('grp', 15);
@@ -3828,7 +3829,7 @@ function saveAcaRgstratnForm(actionTxt, destElmntID, titleMsg, titleElementID, m
         title: 'Save ' + msgPart,
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving  ' + msgPart + '...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
     formData.append('grp', 15);
@@ -4598,7 +4599,7 @@ function saveAssessShtHdrForm(shdSbmt) {
         title: 'Save Assessment Sheet',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Assessment Sheet...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
     formData.append('grp', 15);
@@ -5012,7 +5013,7 @@ function saveReportCrdHdrForm(shdSbmt) {
         title: 'Save Report Card',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Report Card...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
     formData.append('grp', 15);
@@ -5189,7 +5190,7 @@ function exprtGrdScale() {
         closable: true,
         closeByBackdrop: false,
         closeByKeyboard: false,
-        onshow: function (dialogItself) {},
+        onshow: function (dialogItself) { },
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_rpt');
             $("#recsToExprtForm").submit(function (e) {
@@ -5228,7 +5229,7 @@ function exprtGrdScale() {
                         title: 'Exporting ' + msgPart + '',
                         size: 'small',
                         message: 'Please provide a valid Number!',
-                        callback: function () {}
+                        callback: function () { }
                     });
                     return false;
                 } else {
@@ -5766,7 +5767,7 @@ function importPersons() {
                                                                 title: 'Error-Validating Selected File',
                                                                 size: 'small',
                                                                 message: '<span style="color:red;font-weight:bold:">An error occurred reading this file.Invalid Column in File! Remove any Commas in the actual data/fields!</span>',
-                                                                callback: function () {}
+                                                                callback: function () { }
                                                             });
                                                     };
                                                 }
@@ -5784,7 +5785,7 @@ function importPersons() {
                                                             title: 'Error-Import Persons',
                                                             size: 'small',
                                                             message: '<span style="color:red;font-weight:bold:">Invalid File Selected!</span>',
-                                                            callback: function () {}
+                                                            callback: function () { }
                                                         });
                                                     }
                                                 }
@@ -5909,7 +5910,7 @@ function importPersons() {
                                                 title: 'Error-Import Persons',
                                                 size: 'small',
                                                 message: 'Error:' + err.message,
-                                                callback: function () {}
+                                                callback: function () { }
                                             });
                                         }
                                     };
@@ -5940,7 +5941,7 @@ function importPersons() {
                                             title: 'Error-Import Persons',
                                             size: 'small',
                                             message: '<span style="color:red;font-weight:bold:">Invalid File Selected!</span>',
-                                            callback: function () {}
+                                            callback: function () { }
                                         });
                                     }
                                 }
@@ -6055,7 +6056,7 @@ function exprtSbjctTask() {
         closable: true,
         closeByBackdrop: false,
         closeByKeyboard: false,
-        onshow: function (dialogItself) {},
+        onshow: function (dialogItself) { },
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_rpt');
             $("#recsToExprtForm").submit(function (e) {
@@ -6094,7 +6095,7 @@ function exprtSbjctTask() {
                         title: 'Exporting ' + msgPart + '',
                         size: 'small',
                         message: 'Please provide a valid Number!',
-                        callback: function () {}
+                        callback: function () { }
                     });
                     return false;
                 } else {
@@ -6194,7 +6195,7 @@ function exprtCourseObjctv() {
         closable: true,
         closeByBackdrop: false,
         closeByKeyboard: false,
-        onshow: function (dialogItself) {},
+        onshow: function (dialogItself) { },
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_rpt');
             $("#recsToExprtForm").submit(function (e) {
@@ -6233,7 +6234,7 @@ function exprtCourseObjctv() {
                         title: 'Exporting ' + msgPart + '',
                         size: 'small',
                         message: 'Please provide a valid Number!',
-                        callback: function () {}
+                        callback: function () { }
                     });
                     return false;
                 } else {
@@ -6334,7 +6335,7 @@ function exprtAssessTypes() {
         closable: true,
         closeByBackdrop: false,
         closeByKeyboard: false,
-        onshow: function (dialogItself) {},
+        onshow: function (dialogItself) { },
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_rpt');
             $("#recsToExprtForm").submit(function (e) {
@@ -6373,7 +6374,7 @@ function exprtAssessTypes() {
                         title: 'Exporting ' + msgPart + '',
                         size: 'small',
                         message: 'Please provide a valid Number!',
-                        callback: function () {}
+                        callback: function () { }
                     });
                     return false;
                 } else {
@@ -6473,7 +6474,7 @@ function exprtAssessGrps() {
         closable: true,
         closeByBackdrop: false,
         closeByKeyboard: false,
-        onshow: function (dialogItself) {},
+        onshow: function (dialogItself) { },
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_rpt');
             $("#recsToExprtForm").submit(function (e) {
@@ -6512,7 +6513,7 @@ function exprtAssessGrps() {
                         title: 'Exporting ' + msgPart + '',
                         size: 'small',
                         message: 'Please provide a valid Number!',
-                        callback: function () {}
+                        callback: function () { }
                     });
                     return false;
                 } else {
@@ -6613,7 +6614,7 @@ function exprtRgstrtns() {
         closable: true,
         closeByBackdrop: false,
         closeByKeyboard: false,
-        onshow: function (dialogItself) {},
+        onshow: function (dialogItself) { },
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_rpt');
             $("#recsToExprtForm").submit(function (e) {
@@ -6652,7 +6653,7 @@ function exprtRgstrtns() {
                         title: 'Exporting ' + msgPart + '',
                         size: 'small',
                         message: 'Please provide a valid Number!',
-                        callback: function () {}
+                        callback: function () { }
                     });
                     return false;
                 } else {
@@ -6752,7 +6753,7 @@ function exprtAsessShts() {
         closable: true,
         closeByBackdrop: false,
         closeByKeyboard: false,
-        onshow: function (dialogItself) {},
+        onshow: function (dialogItself) { },
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_rpt');
             $("#recsToExprtForm").submit(function (e) {
@@ -6794,7 +6795,7 @@ function exprtAsessShts() {
                         title: 'Exporting ' + msgPart + '',
                         size: 'small',
                         message: 'Please provide a valid Number!',
-                        callback: function () {}
+                        callback: function () { }
                     });
                     return false;
                 } else {
@@ -6898,7 +6899,7 @@ function exprtScoreCards() {
         closable: true,
         closeByBackdrop: false,
         closeByKeyboard: false,
-        onshow: function (dialogItself) {},
+        onshow: function (dialogItself) { },
         onshown: function (dialogItself) {
             exprtBtn = dialogItself.getButton('btn_exprt_rpt');
             $("#recsToExprtForm").submit(function (e) {
@@ -6940,7 +6941,7 @@ function exprtScoreCards() {
                         title: 'Exporting ' + msgPart + '',
                         size: 'small',
                         message: 'Please provide a valid Number!',
-                        callback: function () {}
+                        callback: function () { }
                     });
                     return false;
                 } else {
@@ -7019,7 +7020,7 @@ function printEmailFullTermRpt(pKeyID) {
         title: 'GET PDF',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Getting PDF...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
     formData.append('grp', 15);
@@ -7088,35 +7089,35 @@ function printEmailFullTermRpt(pKeyID) {
                                     PDFObject.embed(dwnldURL, "#allRhoPDFDocDisplays", options);
                                 },
                                 buttons: [{
-                                        label: 'CLOSE',
-                                        icon: 'glyphicon glyphicon-menu-left',
-                                        cssClass: 'btn-default',
-                                        action: function (dialogItself) {
-                                            var $button = this;
-                                            dialogItself.setClosable(true);
-                                            dialogItself.close();
-                                        }
-                                    }, {
-                                        id: 'popOKBtnSsn',
-                                        label: 'RELOAD PDF',
-                                        icon: 'glyphicon glyphicon glyphicon-refresh',
-                                        cssClass: 'btn-default',
-                                        action: function (dialogItself) {
-                                            popDialogItself = dialogItself;
-
-                                            var options = {
-                                                height: "550px"
-                                                /*,
-                                                                                                 page: '2',
-                                                                                                 pdfOpenParams: {
-                                                                                                 view: 'FitV',
-                                                                                                 pagemode: 'thumbs',
-                                                                                                 search: 'lorem ipsum'
-                                                                                                 }*/
-                                            };
-                                            PDFObject.embed(dwnldURL, "#allRhoPDFDocDisplays", options);
-                                        }
+                                    label: 'CLOSE',
+                                    icon: 'glyphicon glyphicon-menu-left',
+                                    cssClass: 'btn-default',
+                                    action: function (dialogItself) {
+                                        var $button = this;
+                                        dialogItself.setClosable(true);
+                                        dialogItself.close();
                                     }
+                                }, {
+                                    id: 'popOKBtnSsn',
+                                    label: 'RELOAD PDF',
+                                    icon: 'glyphicon glyphicon glyphicon-refresh',
+                                    cssClass: 'btn-default',
+                                    action: function (dialogItself) {
+                                        popDialogItself = dialogItself;
+
+                                        var options = {
+                                            height: "550px"
+                                            /*,
+                                                                                             page: '2',
+                                                                                             pdfOpenParams: {
+                                                                                             view: 'FitV',
+                                                                                             pagemode: 'thumbs',
+                                                                                             search: 'lorem ipsum'
+                                                                                             }*/
+                                        };
+                                        PDFObject.embed(dwnldURL, "#allRhoPDFDocDisplays", options);
+                                    }
+                                }
                                     /*, {
                                                                          id: 'popOKBtnHtml',
                                                                          label: 'VIEW HTML',
@@ -7128,18 +7129,18 @@ function printEmailFullTermRpt(pKeyID) {
                                                                          }
                                                                          }*/
                                     , {
-                                        id: 'popOKBtnEmail',
-                                        label: 'SEND MAIL',
-                                        icon: 'glyphicon glyphicon-envelope',
-                                        cssClass: 'btn-primary',
-                                        action: function (dialogItself) {
-                                            popDialogItself = dialogItself;
-                                            sendGeneralMessage1('Email', mailTo, mailCc, mailSubject, bulkMessageBody, mailAttchmnts);
-                                            /*window.open(dwnldURL.replace(/(.pdf)/gi, ".html"), '_blank');*/
-                                            dialogItself.setClosable(true);
-                                            dialogItself.close();
-                                        }
+                                    id: 'popOKBtnEmail',
+                                    label: 'SEND MAIL',
+                                    icon: 'glyphicon glyphicon-envelope',
+                                    cssClass: 'btn-primary',
+                                    action: function (dialogItself) {
+                                        popDialogItself = dialogItself;
+                                        sendGeneralMessage1('Email', mailTo, mailCc, mailSubject, bulkMessageBody, mailAttchmnts);
+                                        /*window.open(dwnldURL.replace(/(.pdf)/gi, ".html"), '_blank');*/
+                                        dialogItself.setClosable(true);
+                                        dialogItself.close();
                                     }
+                                }
                                 ]
                             });
                         }
@@ -7162,7 +7163,7 @@ function printEmailFullRgstrSlp(pKeyID, sbmtdAcaSttngsID) {
         title: 'GET PDF',
         size: 'small',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Getting PDF...Please Wait...</p>',
-        callback: function () {}
+        callback: function () { }
     });
     var formData = new FormData();
     formData.append('grp', 15);
@@ -7232,35 +7233,35 @@ function printEmailFullRgstrSlp(pKeyID, sbmtdAcaSttngsID) {
                                     PDFObject.embed(dwnldURL, "#allRhoPDFDocDisplays", options);
                                 },
                                 buttons: [{
-                                        label: 'CLOSE',
-                                        icon: 'glyphicon glyphicon-menu-left',
-                                        cssClass: 'btn-default',
-                                        action: function (dialogItself) {
-                                            var $button = this;
-                                            dialogItself.setClosable(true);
-                                            dialogItself.close();
-                                        }
-                                    }, {
-                                        id: 'popOKBtnSsn',
-                                        label: 'RELOAD PDF',
-                                        icon: 'glyphicon glyphicon glyphicon-refresh',
-                                        cssClass: 'btn-default',
-                                        action: function (dialogItself) {
-                                            popDialogItself = dialogItself;
-
-                                            var options = {
-                                                height: "550px"
-                                                /*,
-                                                                                                 page: '2',
-                                                                                                 pdfOpenParams: {
-                                                                                                 view: 'FitV',
-                                                                                                 pagemode: 'thumbs',
-                                                                                                 search: 'lorem ipsum'
-                                                                                                 }*/
-                                            };
-                                            PDFObject.embed(dwnldURL, "#allRhoPDFDocDisplays", options);
-                                        }
+                                    label: 'CLOSE',
+                                    icon: 'glyphicon glyphicon-menu-left',
+                                    cssClass: 'btn-default',
+                                    action: function (dialogItself) {
+                                        var $button = this;
+                                        dialogItself.setClosable(true);
+                                        dialogItself.close();
                                     }
+                                }, {
+                                    id: 'popOKBtnSsn',
+                                    label: 'RELOAD PDF',
+                                    icon: 'glyphicon glyphicon glyphicon-refresh',
+                                    cssClass: 'btn-default',
+                                    action: function (dialogItself) {
+                                        popDialogItself = dialogItself;
+
+                                        var options = {
+                                            height: "550px"
+                                            /*,
+                                                                                             page: '2',
+                                                                                             pdfOpenParams: {
+                                                                                             view: 'FitV',
+                                                                                             pagemode: 'thumbs',
+                                                                                             search: 'lorem ipsum'
+                                                                                             }*/
+                                        };
+                                        PDFObject.embed(dwnldURL, "#allRhoPDFDocDisplays", options);
+                                    }
+                                }
                                     /*, {
                                                                          id: 'popOKBtnHtml',
                                                                          label: 'VIEW HTML',
@@ -7272,18 +7273,18 @@ function printEmailFullRgstrSlp(pKeyID, sbmtdAcaSttngsID) {
                                                                          }
                                                                          }*/
                                     , {
-                                        id: 'popOKBtnEmail',
-                                        label: 'SEND MAIL',
-                                        icon: 'glyphicon glyphicon-envelope',
-                                        cssClass: 'btn-primary',
-                                        action: function (dialogItself) {
-                                            popDialogItself = dialogItself;
-                                            sendGeneralMessage1('Email', mailTo, mailCc, mailSubject, bulkMessageBody, mailAttchmnts);
-                                            /*window.open(dwnldURL.replace(/(.pdf)/gi, ".html"), '_blank');*/
-                                            dialogItself.setClosable(true);
-                                            dialogItself.close();
-                                        }
+                                    id: 'popOKBtnEmail',
+                                    label: 'SEND MAIL',
+                                    icon: 'glyphicon glyphicon-envelope',
+                                    cssClass: 'btn-primary',
+                                    action: function (dialogItself) {
+                                        popDialogItself = dialogItself;
+                                        sendGeneralMessage1('Email', mailTo, mailCc, mailSubject, bulkMessageBody, mailAttchmnts);
+                                        /*window.open(dwnldURL.replace(/(.pdf)/gi, ".html"), '_blank');*/
+                                        dialogItself.setClosable(true);
+                                        dialogItself.close();
                                     }
+                                }
                                 ]
                             });
                         }

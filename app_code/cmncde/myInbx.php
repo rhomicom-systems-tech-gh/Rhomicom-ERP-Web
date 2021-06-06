@@ -550,6 +550,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $output .= "<td width=\"20%\" class=\"likeheader\">" . $labl . ":</td>";
                                         }
                                         if ($d == 14 && $row[15] == '0') {
+                                            $crntLevel = (int)$row[25];
                                             $arry1 = explode(";", $row[$d]);
                                             $output .= "<td $style>";
                                             for ($r = 0; $r < count($arry1); $r++) {
@@ -557,6 +558,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     $isadmnonly = getActionAdminOnly($row[0], $arry1[$r]);
                                                     if ($isadmnonly == '0' || $isMaster == 1) {
                                                         $webUrlDsply = getActionUrlDsplyTyp($row[0], $arry1[$r]);
+                                                        $actionDesc = $arry1[$r]; //getActionDescription($row[0], $arry1[$r]);
+
                                                         $hrf1 = "<div style=\"padding:2px;float:left;\">"
                                                             . "<button type=\"button\" class=\"btn btn-primary\""
                                                             . " onclick=\"actionProcess('$cmpID', '$row[0]','$arry1[$r]','$webUrlDsply','$row[24]','" . str_replace(
@@ -565,7 +568,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 $row[5]
                                                             ) . "','" . str_replace("'", "\'", $row[8]) . "','$row[7]','$row[2]');\">";
                                                         $hrf2 = "</button></div>";
-                                                        $output .= "$hrf1" . $arry1[$r] . "$hrf2";
+                                                        $output .= "$hrf1" . $actionDesc . "$hrf2";
                                                     }
                                                 }
 
@@ -1352,9 +1355,10 @@ function get_MyInbxDetl($routingID)
         'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') END date_action_was_performed, 
        a.status_aftr_action new_message_status_after_action, 
        a.nxt_action_to_prfm next_action_to_perform, 
-       a.who_prfms_next_action \"Who Performes Next Action\", 
+       a.who_prfms_next_action \"Who Performs Next Action\", 
        a.last_update_by mt, a.last_update_date mt,
-       prs.get_prsn_loc_id(a.from_prsn_id) mt
+       prs.get_prsn_loc_id(a.from_prsn_id) mt,
+       a.to_prsns_hrchy_level mt
   FROM wkf.wkf_actual_msgs_routng a, wkf.wkf_actual_msgs_hdr b, wkf.wkf_apps c
 WHERE ((c.app_id=b.app_id) AND (a.msg_id=b.msg_id)$wherecls)";
 

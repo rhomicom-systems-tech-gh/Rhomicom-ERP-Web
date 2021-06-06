@@ -183,11 +183,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     echo json_encode($arr_content);
                     exit();
                 } else {
-                    $arr_content['percent'] = 100;
-                    $arr_content['cstmrid'] = (float) $sbmtdCstmrSpplrID;
-                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Data Supplied is Incomplete or Invalid at some fields!</span>";
-                    echo json_encode($arr_content);
-                    exit();
+                    if (!($oldCstmrID <= 0 || $oldCstmrID == $sbmtdCstmrSpplrID)) {
+                        $arr_content['percent'] = 100;
+                        $arr_content['cstmrid'] = (float) $sbmtdCstmrSpplrID;
+                        $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>New Business Partner exists already!</span>";
+                        echo json_encode($arr_content);
+                        exit();
+                    } else {
+                        $arr_content['percent'] = 100;
+                        $arr_content['cstmrid'] = (float) $sbmtdCstmrSpplrID;
+                        $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Data Supplied is Incomplete or Invalid at some fields!</span>";
+                        echo json_encode($arr_content);
+                        exit();
+                    }
                 }
             } else if ($actyp == 2) {
                 //Customer/Supplier Sites

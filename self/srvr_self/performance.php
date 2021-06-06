@@ -248,7 +248,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         $affctRws = createPDivGrp($sbmtdRgstrPersonID, $pDivGrpDivID, $pDivGrpStartDate, $pDivGrpEndDate);
                     }
                 }
-                
+
                 $acaPrdTyp = getGnrlRecNm("aca.aca_assessment_periods", "assmnt_period_id", "period_type", $acaRgstrPrdID);
                 $acaPrdNum = (int) getGnrlRecNm("aca.aca_assessment_periods", "assmnt_period_id", "period_number", $acaRgstrPrdID);
                 $ttlSbjcts = get_TtlAcaSttngsSbjcts($acaRgstrClassPkeyID, "Name", "%");
@@ -975,12 +975,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 $errMsg .= "NO:SQL is NOT valid!";
                                                 //$ln_ValSQL = "Select 0";
                                             }
-                                        }
+                                        }                                        
                                         if (strpos($errMsg, "NO:") !== FALSE) {
                                             echo "<div style=\"padding:50px;color:red;font-weight:bold;font-size:20px;font-family:georgia,times;font-style:italic;\">" . str_replace("NO:", "", $errMsg) . "</div>";
                                             echo "</div></section>";
                                             exit();
-                                        } ?>
+                                        }
+                ?>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card card-outline card-outline-tabs">

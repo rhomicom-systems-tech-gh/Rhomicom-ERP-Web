@@ -1088,7 +1088,7 @@ function get_AcaAssessCols($asessTypID, $offset, $limit_size, $searchIn, $search
         "' or a.column_desc ilike '" . loc_db_escape_string($searchWord) .
         "' or a.column_header_text ilike '" . loc_db_escape_string($searchWord) . "')";
     $strSql = "SELECT column_id, column_name, column_desc, column_header_text, section_located, data_type, "
-        . " data_length, is_formula_column, column_formular, is_enabled, column_no, col_min_val, col_max_val, is_dsplyd, html_css_style " .
+        . " data_length, is_formula_column, column_formular, is_enabled, column_no, col_min_val, col_max_val, is_dsplyd, html_css_style, lov_name " .
         "FROM aca.aca_assessment_columns a " .
         "WHERE a.assmnt_typ_id = " . $asessTypID . $whereClause .
         " ORDER BY a.section_located, a.column_name LIMIT " . $limit_size .
@@ -1152,13 +1152,14 @@ function create_AcaAssessCols(
     $ln_MinValue,
     $ln_MaxValue,
     $ln_IsDsplyd,
-    $ln_CSStyle
+    $ln_CSStyle,
+    $ln_LovName
 ) {
     global $usrID;
     $insSQL = "INSERT INTO aca.aca_assessment_columns(
 	column_id, assmnt_typ_id, column_name, column_desc, column_header_text, is_formula_column, column_formular, 
 	created_by, creation_date, last_update_by, last_update_date, section_located, data_type, 
-	data_length, is_enabled, column_no, col_min_val, col_max_val,is_dsplyd,html_css_style) " .
+	data_length, is_enabled, column_no, col_min_val, col_max_val,is_dsplyd,html_css_style, lov_name) " .
         "VALUES (" . $colID .
         ", " . $assesstyp_id .
         ", '" . loc_db_escape_string($colNm) .
@@ -1176,6 +1177,7 @@ function create_AcaAssessCols(
         ", " . $ln_MaxValue .
         ", '" . cnvrtBoolToBitStr($ln_IsDsplyd) .
         "', '" . loc_db_escape_string($ln_CSStyle) .
+        "', '" . loc_db_escape_string($ln_LovName) .
         "')";
     return execUpdtInsSQL($insSQL);
 }
@@ -1196,7 +1198,8 @@ function update_AcaAssessCols(
     $ln_MinValue,
     $ln_MaxValue,
     $ln_IsDsplyd,
-    $ln_CSStyle
+    $ln_CSStyle,
+    $ln_LovName
 ) {
     global $usrID;
     $updtSQL = "UPDATE aca.aca_assessment_columns SET " .
@@ -1214,6 +1217,7 @@ function update_AcaAssessCols(
         ", col_max_val = " . $ln_MaxValue .
         ", is_dsplyd='" . cnvrtBoolToBitStr($ln_IsDsplyd) .
         "', html_css_style='" . loc_db_escape_string($ln_CSStyle) .
+        "', lov_name='" . loc_db_escape_string($ln_LovName) .
         "', last_update_by = " . $usrID .
         ", last_update_date = to_char(now(),'YYYY-MM-DD HH24:MI:SS') WHERE (column_id =" . $colID . ")";
     return execUpdtInsSQL($updtSQL);
@@ -2685,7 +2689,7 @@ function get_AssessShtGrpCols($grpnm, $assesstyp_ID)
     $strSql = "SELECT column_id, column_name, column_header_text, '', 
                 data_type, section_located, data_length, '', 
                 assmnt_typ_id, 0, column_name, '','0' is_required, is_formula_column, column_formular, column_no,
-                col_min_val, col_max_val, is_dsplyd, html_css_style
+                col_min_val, col_max_val, is_dsplyd, html_css_style, lov_name
             FROM aca.aca_assessment_columns 
             WHERE section_located = '" . loc_db_escape_string($grpnm) .
         "' and assmnt_typ_id = " . $assesstyp_ID .

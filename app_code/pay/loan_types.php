@@ -690,7 +690,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <div class="col-md-8">
                                         <select data-placeholder="Select..." class="form-control chosen-select rqrdFld" id="lnkdPayTransTypsID" name="lnkdPayTransTypsID" style="width:100% !important;">
                                             <?php
-                                            $lqlovNm = "Internal Pay Loan Types";
+                                            $lqlovNm = "All Internal Pay Loan Types";
                                             $cnt = 0;
                                             $brghtStr = "";
                                             $isDynmyc = true;
