@@ -1,10 +1,12 @@
 <?php
 $canview = test_prmssns($dfltPrvldgs[4], $mdlNm) || test_prmssns($dfltPrvldgs[5], $mdlNm) || test_prmssns($dfltPrvldgs[6], $mdlNm);
 $finStmtItems = array("Trial Balance", "Profit & Loss", "Balance Sheet", "Sub-Ledger Balances",
-    "GL Account Statements", "Period By Period Net Trns.", "Cash Flow Statement", "Cash Book", "Financial Ratios");
+    "GL Account Statements", "Period By Period Net Trns.", "Cash Flow Statement", "Cash Book", 
+    "Financial Ratios","Consolidated Trial Balance");
 $finStmtImages = array("report-icon-png.png", "report-icon-png.png", "report-icon-png.png",
     "report-icon-png.png", "report-icon-png.png", "report-icon-png.png",
-    "report-icon-png.png", "report-icon-png.png", "report-icon-png.png", "report-icon-png.png");
+    "report-icon-png.png", "report-icon-png.png", "report-icon-png.png", 
+    "report-icon-png.png", "report-icon-png.png");
 $pageNo = isset($_POST['pageNo']) ? cleanInputData($_POST['pageNo']) : 1;
 $lmtSze = isset($_POST['limitSze']) ? cleanInputData($_POST['limitSze']) : 10;
 $sortBy = isset($_POST['sortBy']) ? cleanInputData($_POST['sortBy']) : "Value";
@@ -4220,6 +4222,415 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     </div>
                 </div>
                 </form>
+                <?php
+            }else if ($vwtyp == 100) {
+                $canAdd = test_prmssns($dfltPrvldgs[14], $mdlNm);
+                $canEdt = test_prmssns($dfltPrvldgs[15], $mdlNm);
+                $canDel = test_prmssns($dfltPrvldgs[16], $mdlNm);
+                $canVoid = test_prmssns($dfltPrvldgs[16], $mdlNm);
+                $canPost = test_prmssns($dfltPrvldgs[21], $mdlNm);
+                $cntent .= "<li onclick=\"openATab('#allmodules', 'grp=$group&typ=$type&pg=$pgNo&vtyp=$vwtyp');\">
+                                    <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+                                    <span style=\"text-decoration:none;\">Consolidated Trial Balance</span>
+				</li>
+                               </ul>
+                              </div>";
+                echo $cntent;
+                ?>
+                <div class="row">
+                    <?php
+                    $ymdtme = substr($gnrlTrnsDteDMYHMS, 2, 9);
+                    //echo $ymdtme;
+                    $ymdtme1 = getDB_Date_TmIntvlAddSub("01" . $ymdtme, "1 month", "Add");
+                    $ymdtme2 = getDB_Date_TmIntvlAddSub($ymdtme1, "1 day", "Subtract");
+
+                    $startRunng = isset($_POST['startRunng']) ? (int) cleanInputData($_POST['startRunng']) : 0;
+                    $qShwVariance = isset($_POST['accbFSRptShwVariance']) ? (cleanInputData($_POST['accbFSRptShwVariance']) === "YES" ? TRUE
+                                : FALSE) : FALSE;
+                    $qShwHideZero = isset($_POST['accbFSRptShwHideZero']) ? (cleanInputData($_POST['accbFSRptShwHideZero']) === "YES" ? TRUE
+                                : FALSE) : TRUE;
+                    $qShwSmmry = isset($_POST['accbFSRptShwSmmry']) ? (cleanInputData($_POST['accbFSRptShwSmmry']) === "YES" ? TRUE : FALSE)
+                                : TRUE;
+                    $qShwNetPos = isset($_POST['accbFSRptShwNetPos']) ? (cleanInputData($_POST['accbFSRptShwNetPos']) === "YES" ? TRUE : FALSE)
+                                : TRUE;
+
+                    $accbFSRptMaxAcntLvl = isset($_POST['accbFSRptMaxAcntLvl']) ? (int) cleanInputData($_POST['accbFSRptMaxAcntLvl']) : 1;
+                    $accbFSRptSbmtdAccountID = isset($_POST['accbFSRptSbmtdAccountID']) ? (int) cleanInputData($_POST['accbFSRptSbmtdAccountID'])
+                                : -1;
+                    $accbFSRptAcntNum = isset($_POST['accbFSRptAcntNum']) ? cleanInputData($_POST['accbFSRptAcntNum']) : "";
+                    if ($accbFSRptSbmtdAccountID > 0) {
+                        $accbFSRptAcntNum = getAccntNum($accbFSRptSbmtdAccountID) . "." . getAccntName($accbFSRptSbmtdAccountID);
+                    }
+                    $accbFSRptDte = isset($_POST['accbFSRptDte']) ? cleanInputData($_POST['accbFSRptDte']) : substr($ymdtme2, 0, 11);
+                    $accbFSRptDte1 = $accbFSRptDte;
+                    $accbFSRptSgmnt1ValID = isset($_POST['accbFSRptSgmnt1ValID']) ? (int) cleanInputData($_POST['accbFSRptSgmnt1ValID']) : -1;
+                    $accbFSRptSgmnt2ValID = isset($_POST['accbFSRptSgmnt2ValID']) ? (int) cleanInputData($_POST['accbFSRptSgmnt2ValID']) : -1;
+                    $accbFSRptSgmnt3ValID = isset($_POST['accbFSRptSgmnt3ValID']) ? (int) cleanInputData($_POST['accbFSRptSgmnt3ValID']) : -1;
+                    $accbFSRptSgmnt4ValID = isset($_POST['accbFSRptSgmnt4ValID']) ? (int) cleanInputData($_POST['accbFSRptSgmnt4ValID']) : -1;
+                    $accbFSRptSgmnt5ValID = isset($_POST['accbFSRptSgmnt5ValID']) ? (int) cleanInputData($_POST['accbFSRptSgmnt5ValID']) : -1;
+                    $accbFSRptSgmnt6ValID = isset($_POST['accbFSRptSgmnt6ValID']) ? (int) cleanInputData($_POST['accbFSRptSgmnt6ValID']) : -1;
+                    $accbFSRptSgmnt7ValID = isset($_POST['accbFSRptSgmnt7ValID']) ? (int) cleanInputData($_POST['accbFSRptSgmnt7ValID']) : -1;
+                    $accbFSRptSgmnt8ValID = isset($_POST['accbFSRptSgmnt8ValID']) ? (int) cleanInputData($_POST['accbFSRptSgmnt8ValID']) : -1;
+                    $accbFSRptSgmnt9ValID = isset($_POST['accbFSRptSgmnt9ValID']) ? (int) cleanInputData($_POST['accbFSRptSgmnt9ValID']) : -1;
+                    $accbFSRptSgmnt10ValID = isset($_POST['accbFSRptSgmnt10ValID']) ? (int) cleanInputData($_POST['accbFSRptSgmnt10ValID']) : -1;
+
+                    $shwVarianceChkd = "";
+                    if ($qShwVariance == true) {
+                        $shwVarianceChkd = "checked=\"true\"";
+                    }
+                    $shwHideZeroChkd = "";
+                    if ($qShwHideZero == true) {
+                        $shwHideZeroChkd = "checked=\"true\"";
+                    }
+                    $shwSmmryChkd = "";
+                    if ($qShwSmmry == true) {
+                        $shwSmmryChkd = "checked=\"true\"";
+                    }
+                    $shwNetPosChkd = "";
+                    if ($qShwNetPos == true) {
+                        $shwNetPosChkd = "checked=\"true\"";
+                    }
+                    $fsrptRunID = -1;
+                    if ($startRunng == 1) {
+                        $fsrptRunID = getNewFSRptRunID();
+                        $useNetPos = $qShwNetPos ? "Yes" : "No";
+                        $shwVarnce = $qShwVariance ? "Yes" : "No";
+                        if ($accbFSRptDte != "") {
+                            $accbFSRptDte = cnvrtDMYToYMD($accbFSRptDte);
+                        }
+                        //Here's the main work
+                        $strSql = "select accb.populate_conso_trial_bals( " . $fsrptRunID . ", '" . $useNetPos .
+                                "', '" . $accbFSRptDte . "', " . $accbFSRptMaxAcntLvl . ", "
+                                . $accbFSRptSbmtdAccountID . ", '" . $shwVarnce . "', "
+                                . $accbFSRptSgmnt1ValID . ", " . $accbFSRptSgmnt2ValID . ", "
+                                . $accbFSRptSgmnt3ValID . ", " . $accbFSRptSgmnt4ValID . ", "
+                                . $accbFSRptSgmnt5ValID . ", " . $accbFSRptSgmnt6ValID . ", "
+                                . $accbFSRptSgmnt7ValID . ", " . $accbFSRptSgmnt8ValID . ", "
+                                . $accbFSRptSgmnt9ValID . ", " . $accbFSRptSgmnt10ValID . ", "
+                                . $usrID . ", to_char(now(),'YYYY-MM-DD HH24:MI:SS'), " . $orgID . ", -1);";
+                        $result = executeSQLNoParams($strSql);
+                    }
+
+                    $nwRowHtml2 = "<tr id=\"oneJrnlBatchDetRow__WWW123WWW\" onclick=\"$('#allOtherInputData99').val($('#oneJrnlBatchDetLinesTable tr').index(this));\">"
+                            . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
+                            . "<td class=\"lovtd\">
+                                                                        <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"oneJrnlBatchDetRow_WWW123WWW_AccountID\" value=\"-1\" style=\"width:100% !important;\">  
+                                                                        <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"oneJrnlBatchDetRow_WWW123WWW_TrnsLnID\" value=\"-1\" style=\"width:100% !important;\">    
+                                                                        <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"oneJrnlBatchDetRow_WWW123WWW_TrnsSmryLnID\" value=\"-1\" style=\"width:100% !important;\">  
+                                                                        <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"oneJrnlBatchDetRow_WWW123WWW_SlctdAmtBrkdwns\" value=\"\" style=\"width:100% !important;\"> 
+                                                                        <div class=\"input-group\" style=\"width:100% !important;\">
+                                                                                <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"oneJrnlBatchDetRow_WWW123WWW_AccountNm\" name=\"oneJrnlBatchDetRow_WWW123WWW_AccountNm\" value=\"\" readonly=\"true\" style=\"width:100% !important;\">
+                                                                                <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Transaction Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'oneJrnlBatchDetRow_WWW123WWW_AccountID', 'oneJrnlBatchDetRow_WWW123WWW_AccountNm', 'clear', 1, '', function () {
+
+                                                                                                                });\">
+                                                                                    <span class=\"glyphicon glyphicon-th-list\"></span>
+                                                                                </label>
+                                                                        </div>                                              
+                                                                    </td>                                          
+                                                                    <td class=\"lovtd\"  style=\"\">
+                                                                            <input type=\"text\" class=\"form-control rqrdFld jbDetDesc\" aria-label=\"...\" id=\"oneJrnlBatchDetRow_WWW123WWW_LineDesc\" name=\"oneJrnlBatchDetRow_WWW123WWW_LineDesc\" value=\"\" style=\"width:100% !important;\" onkeypress=\"gnrlFldKeyPress(event, 'oneJrnlBatchDetRow_WWW123WWW_LineDesc', 'oneJrnlBatchDetLinesTable', 'jbDetDesc');\">                                                    
+                                                                    </td>                                                  
+                                                                    <td class=\"lovtd\">
+                                                                        <div class=\"\" style=\"width:100% !important;\">
+                                                                            <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"oneJrnlBatchDetRow_WWW123WWW_TrnsCurNm\" name=\"oneJrnlBatchDetRow_WWW123WWW_TrnsCurNm\" value=\"" . $fnccurnm . "\" readonly=\"true\" style=\"width:100% !important;\">
+                                                                            <label class=\"btn btn-primary btn-file\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Currencies', '', '', '', 'radio', true, '', 'oneJrnlBatchDetRow_WWW123WWW_TrnsCurNm', '', 'clear', 1, '', function () {
+                                                                                                            $('#oneJrnlBatchDetRow_WWW123WWW_TrnsCurNm1').html($('#oneJrnlBatchDetRow_WWW123WWW_TrnsCurNm').val());
+                                                                                                        });\">
+                                                                                <span class=\"\" id=\"oneJrnlBatchDetRow_WWW123WWW_TrnsCurNm1\">" . $fnccurnm . "</span>
+                                                                            </label>
+                                                                        </div>                                              
+                                                                    </td>
+                                                                    <td class=\"lovtd\">
+                                                                        <input type=\"text\" class=\"form-control rqrdFld jbDetDbt\" aria-label=\"...\" id=\"oneJrnlBatchDetRow_WWW123WWW_DebitAmnt\" name=\"oneJrnlBatchDetRow_WWW123WWW_DebitAmnt\" value=\"0.00\" onkeypress=\"gnrlFldKeyPress(event, 'oneJrnlBatchDetRow_WWW123WWW_DebitAmnt', 'oneJrnlBatchDetLinesTable', 'jbDetDbt');\" style=\"width:100% !important;text-align: right;\" onchange=\"calcAllJrnlBatchDetTtl();\">                                                    
+                                                                    </td>
+                                                                    <td class=\"lovtd\">
+                                                                        <input type=\"text\" class=\"form-control rqrdFld jbDetCrdt\" aria-label=\"...\" id=\"oneJrnlBatchDetRow_WWW123WWW_CreditAmnt\" name=\"oneJrnlBatchDetRow_WWW123WWW_CreditAmnt\" value=\"0.00\" onkeypress=\"gnrlFldKeyPress(event, 'oneJrnlBatchDetRow_WWW123WWW_CreditAmnt', 'oneJrnlBatchDetLinesTable', 'jbDetCrdt');\" style=\"width:100% !important;text-align: right;\" onchange=\"calcAllJrnlBatchDetTtl();\">                                                    
+                                                                    </td>
+                                                                    <td class=\"lovtd\">
+                                                                            <button type=\"button\" class=\"btn btn-default btn-sm\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"View Denominational Breakdown\" 
+                                                                                    onclick=\"getAccbCashBreakdown(-1, 'ShowDialog', 'Transaction Amount Breakdown', 'EDIT', '" . $defaultBrkdwnLOV . "', 'oneJrnlBatchDetRow_WWW123WWW_DebitAmnt', 'oneJrnlBatchDetRow_WWW123WWW_SlctdAmtBrkdwns');\" style=\"padding:2px !important;\" style=\"padding:2px !important;\"> 
+                                                                                <img src=\"cmn_images/cash_breakdown.png\" style=\"height:20px; width:auto; position: relative; vertical-align: middle;\">                                                            
+                                                                            </button>
+                                                                    </td>
+                                                                    <td class=\"lovtd\">
+                                                                            <div class=\"input-group date form_date_tme\" data-date=\"\" data-date-format=\"dd-M-yyyy hh:ii:ss\" data-link-field=\"dtp_input2\" data-link-format=\"yyyy-mm-dd hh:ii:ss\" style=\"width:100% !important;\">
+                                                                                <input class=\"form-control\" size=\"16\" type=\"text\" id=\"oneJrnlBatchDetRow_WWW123WWW_TransDte\" value=\"" . $accbFSRptDte1 . " 12:00:00\">
+                                                                                <!--<span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-remove\"></span></span>-->
+                                                                                <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-calendar\"></span></span>
+                                                                            </div>                                                        
+                                                                    </td>                                         
+                                                                    <td class=\"lovtd\"  style=\"\">
+                                                                        <input type=\"text\" class=\"form-control jbDetRfDc\" aria-label=\"...\" id=\"oneJrnlBatchDetRow_WWW123WWW_RefDoc\" name=\"oneJrnlBatchDetRow_WWW123WWW_RefDoc\" value=\"\" style=\"width:100% !important;\" onkeypress=\"gnrlFldKeyPress(event, 'oneJrnlBatchDetRow_WWW123WWW_RefDoc', 'oneJrnlBatchDetLinesTable', 'jbDetRfDc');\">                                                    
+                                                                    </td>";
+                    if ($canDel === true && $canEdt === true) {
+                        $nwRowHtml2 .= "<td class=\"lovtd\">
+                                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delAccbJrnlBatchDetLn('oneJrnlBatchDetRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Journal Line\">
+                                                                                <img src=\"cmn_images/no.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
+                                                                            </button>
+                                                                        </td>";
+                    }
+                    if ($canVwRcHstry === true) {
+                        $nwRowHtml2 .= "<td class=\"lovtd\">&nbsp;</td>";
+                    }
+                    $nwRowHtml2 .= "</tr>";
+                    $nwRowHtml2 = urlencode($nwRowHtml2);
+                    ?>
+                    <div class="col-md-12" style="padding:0px 15px 0px 15px;">
+                        <fieldset class="basic_person_fs1" style="padding: 0px 5px 5px 5px !important;">
+                            <ul class="nav nav-tabs" style="margin-top:1px !important;">
+                                <li class="active"><a data-toggle="tabajxaccrcncl" data-rhodata="" href="#accbRcnclGlStatemtLines" id="accbRcnclGlStatemtLinestab">Main Report</a></li>
+                                <li class="" style="display:none;"><a data-toggle="tabajxaccrcncl" data-rhodata="" href="#accbRcnclJrnlTrnsLines" id="accbRcnclJrnlTrnsLinestab">Corrective Journal Entries</a></li>
+                            </ul>
+                            <div class="custDiv" style="padding:0px !important;min-height: 40px !important;" id="oneAccbFSRptTblSctn"> 
+                                <div class="tab-content" style="padding:5px !important;padding-top:7px !important;">
+                                    <div id="accbRcnclGlStatemtLines" class="tab-pane fadein active" style="border:none !important;padding:0px !important;">
+                                        <div class="row"> 
+                                            <div class="col-md-3" style="padding:0px 1px 0px 15px;" id="leftDivFSRpt">
+                                                <form class="form-horizontal" id="accbFSRptForm">
+                                                    <fieldset class="basic_person_fs1" style="padding: 0px 5px 5px 5px !important;">
+                                                        <legend class="basic_person_lg">
+                                                            Parameters<a class="rhopagination" href="javascript:shwHideFSRptDivs('hide');" aria-label="hide" style="float:right;padding: 0px 15px 0px 15px !important;">
+                                                                <span aria-hidden="true">&laquo;</span>
+                                                            </a>
+                                                        </legend>
+                                                        <div class="col-md-12" style="padding:5px 1px 0px 1px !important;">
+                                                            <div class="form-check" style="font-size: 12px !important;">
+                                                                <label class="form-check-label">
+                                                                    <input type="checkbox" class="form-check-input" onclick="" id="accbFSRptShwVariance" name="accbFSRptShwVariance" <?php echo $shwVarianceChkd; ?>>
+                                                                    Show Variances
+                                                                </label>
+                                                            </div>                            
+                                                        </div>
+                                                        <div class="col-md-12" style="padding:5px 1px 0px 1px !important;display:none;">
+                                                            <div class="form-check" style="font-size: 12px !important;">
+                                                                <label class="form-check-label">
+                                                                    <input type="checkbox" class="form-check-input" onclick="" id="accbFSRptShwHideZero" name="accbFSRptShwHideZero" <?php echo $shwHideZeroChkd; ?>>
+                                                                    Hide Zero Balances
+                                                                </label>
+                                                            </div>                            
+                                                        </div>
+                                                        <div class="col-md-12" style="padding:5px 1px 0px 1px !important;">
+                                                            <div class="form-check" style="font-size: 12px !important;">
+                                                                <label class="form-check-label">
+                                                                    <input type="checkbox" class="form-check-input" onclick="" id="accbFSRptShwSmmry" name="accbFSRptShwSmmry" <?php echo $shwSmmryChkd; ?>>
+                                                                    Summary Report
+                                                                </label>
+                                                            </div>                            
+                                                        </div>
+                                                        <div class="col-md-12" style="padding:5px 1px 0px 1px !important;">
+                                                            <div class="form-check" style="font-size: 12px !important;">
+                                                                <label class="form-check-label">
+                                                                    <input type="checkbox" class="form-check-input" onclick="" id="accbFSRptShwNetPos" name="accbFSRptShwNetPos" <?php echo $shwNetPosChkd; ?>>
+                                                                    Use Net Positions
+                                                                </label>
+                                                            </div>                            
+                                                        </div>
+                                                        <div  class="col-md-12">
+                                                            <div class="form-group">
+                                                                <div class="col-md-6" style="padding:5px 1px 0px 1px !important;">
+                                                                    <label style="margin-bottom:0px !important;">As At Date:</label>
+                                                                </div>
+                                                                <div class="col-md-6 input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd" style="padding:0px 0px 0px 0px !important;">
+                                                                    <input class="form-control" size="16" type="text" id="accbFSRptDte" name="accbFSRptDte" value="<?php echo $accbFSRptDte1; ?>" placeholder="As At Date:">
+                                                                    <!--<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>-->
+                                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <div class="col-md-6" style="padding:5px 1px 0px 1px !important;">
+                                                                    <label style="margin-bottom:0px !important;">Account Level Maximum Depth:</label>
+                                                                </div>
+                                                                <div class="col-md-6" style="padding:5px 1px 0px 1px !important;">
+                                                                    <input type="number" min="1" max="10000" class="form-control" aria-label="..." id="accbFSRptMaxAcntLvl" name="accbFSRptMaxAcntLvl" value="<?php echo $accbFSRptMaxAcntLvl; ?>">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group" style="padding:5px 1px 0px 1px !important;">
+                                                                <label for="accbFSRptAcntNum" class="control-label col-md-12" style="padding:5px 1px 0px 1px !important;display:none;">Starting Parent Account:</label>
+                                                                <div  class="col-md-12" style="padding:5px 1px 0px 1px !important;">
+                                                                    <div class="input-group">
+                                                                        <input type="text" class="form-control" aria-label="..." id="accbFSRptAcntNum" name="accbFSRptAcntNum" value="<?php echo $accbFSRptAcntNum; ?>" style="width:100%;" readonly="true">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt1ValID" name="accbFSRptSgmnt1ValID" value="<?php echo $accbFSRptSgmnt1ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt2ValID" name="accbFSRptSgmnt2ValID" value="<?php echo $accbFSRptSgmnt2ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt3ValID" name="accbFSRptSgmnt3ValID" value="<?php echo $accbFSRptSgmnt3ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt4ValID" name="accbFSRptSgmnt4ValID" value="<?php echo $accbFSRptSgmnt4ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt5ValID" name="accbFSRptSgmnt5ValID" value="<?php echo $accbFSRptSgmnt5ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt6ValID" name="accbFSRptSgmnt6ValID" value="<?php echo $accbFSRptSgmnt6ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt7ValID" name="accbFSRptSgmnt7ValID" value="<?php echo $accbFSRptSgmnt7ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt8ValID" name="accbFSRptSgmnt8ValID" value="<?php echo $accbFSRptSgmnt8ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt9ValID" name="accbFSRptSgmnt9ValID" value="<?php echo $accbFSRptSgmnt9ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt10ValID" name="accbFSRptSgmnt10ValID" value="<?php echo $accbFSRptSgmnt10ValID; ?>">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSgmnt" name="accbFSRptSgmnt" value="">
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="accbFSRptAcntNum1" name="accbFSRptAcntNum1" value="">
+                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Accounts', 'allOtherInputOrgID', '', '', 'radio', true, '', 'accbFSRptSbmtdAccountID', 'accbFSRptAcntNum', 'clear', 1, '', function () {});">
+                                                                            <span class="glyphicon glyphicon-th-list"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div  class="col-md-12" style="padding:5px 1px 0px 1px !important;">
+                                                                    <label style="width:100%;" class="btn btn-primary btn-file" onclick="getAcntSgmtBrkdwnForm(<?php echo $accbFSRptSbmtdAccountID; ?>, 2, 'accbFSRptSgmnt', 'accbFSRptAcntNum1', 'accbFSRptAcntNum');">
+                                                                        <span class="glyphicon glyphicon-th-list"></span>&nbsp;Account Segments
+                                                                    </label>
+                                                                </div>
+                                                                <input type="hidden" class="form-control" aria-label="..." id="accbFSRptSbmtdAccountID" name="accbFSRptSbmtdAccountID" value="<?php echo $accbFSRptSbmtdAccountID; ?>">
+                                                            </div>
+                                                        </div> 
+                                                        <div class="col-md-8" style="padding:5px 1px 0px 1px !important;">           
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;" onclick="getAccbFSRptRpts(1, '#allmodules', 'grp=6&typ=1&pg=5&vtyp=100');">
+                                                                <img src="cmn_images/98.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                Generate Report
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-2" style="padding:5px 1px 0px 1px !important;" title="Reset Report">           
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;" onclick="resetAccbFSRptRpts('#allmodules', 'grp=6&typ=1&pg=5&vtyp=100');">
+                                                                <img src="cmn_images/undo_256.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-2" style="padding:5px 1px 0px 1px !important;" title="Excel Export">           
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;width:100% !important;" onclick="funcHtmlToExcel('accbFSRptTable');">
+                                                                <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                            </button>
+                                                        </div>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
+                                            <div class="col-md-9" style="padding:0px 15px 0px 15px;" id="rightDivFSRpt">
+                                                <form class="form-horizontal" id="accbFSRptDetForm">
+                                                    <table class="table table-striped table-bordered table-responsive" id="accbFSRptTable" cellspacing="0" width="100%" style="width:100%;min-width: 300px !important;">
+                                                        <caption class="basic_person_lg" style="padding:5px 15px 5px 15px;font-weight:bold;font-size: 18px;">
+                                                            <a id="rightDivFSRptBtn" class="rhopagination hideNotice" href="javascript:shwHideFSRptDivs('show');" aria-label="Show" style="float:left;padding: 0px 15px 0px 15px !important;">
+                                                                <span aria-hidden="true">&raquo;</span>
+                                                            </a> CONSOLIDATED TRIAL BALANCE AS AT <?php echo strtoupper($accbFSRptDte1); ?>
+                                                        </caption>
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="max-width:20px;width:20px;">&nbsp;</th>
+                                                                <!--<th style="max-width:20px;width:20px;">...</th>-->
+                                                                <th style="max-width:20px;width:20px;">No.</th>
+                                                                <th style="max-width:450px !important;">Account Number/Name</th>
+                                                                <th style="text-align: right;">Debit Balance</th>
+                                                                <th style="text-align: right;">Credit Balance</th>
+                                                                <th style="text-align: right;">Net Balance</th>
+                                                                <th style="max-width:70px;width:70px;">Transaction Date</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>   
+                                                            <?php
+                                                            $cntr = 0;
+                                                            $maxNoRows = 0;
+                                                            $resultRw = null;
+                                                            if ($fsrptRunID > 0) {
+                                                                $resultRw = get_TbalsRpt($fsrptRunID, $accbFSRptDte);
+                                                                $maxNoRows = loc_db_num_rows($resultRw);
+                                                            }
+                                                            $ttlTrsctnDbtAmnt = 0;
+                                                            $ttlTrsctnCrdtAmnt = 0;
+                                                            $ttlTrsctnNetAmnt = 0;
+                                                            while ($cntr < $maxNoRows) {
+                                                                $rowNumber = 0;
+                                                                $trsctnAcntID = -1;
+                                                                $trsctnAcntNm = "";
+                                                                $trsctnDbtAmnt = 0;
+                                                                $trsctnCrdtAmnt = 0;
+                                                                $trsctnNetAmnt = 0;
+                                                                $trsctnLineDate = "";
+                                                                $isParent = "0";
+                                                                $numStyle1 = "text-align:right;";
+                                                                $nameStyle1 = "";
+                                                                if ($rowRw = loc_db_fetch_array($resultRw)) {
+                                                                    $rowNumber = (float) $rowRw[0];
+                                                                    $trsctnAcntID = (int) $rowRw[7];
+                                                                    $trsctnAcntNm = str_replace(" ", "&nbsp;", $rowRw[1] . "." . $rowRw[2]);
+                                                                    $trsctnDbtAmnt = (float) $rowRw[3];
+                                                                    $trsctnCrdtAmnt = (float) $rowRw[4];
+                                                                    $trsctnNetAmnt = (float) $rowRw[5];
+                                                                    $trsctnLineDate = $rowRw[6];
+                                                                    $isParent = $rowRw[8];
+                                                                    if ($isParent == "1") {
+                                                                        $numStyle1 = "text-align:right;font-weight:bold;";
+                                                                        $nameStyle1 = "font-weight:bold;";
+                                                                    }
+                                                                    $ttlTrsctnDbtAmnt = $ttlTrsctnDbtAmnt + (float) $rowRw[10];
+                                                                    $ttlTrsctnCrdtAmnt = $ttlTrsctnCrdtAmnt + (float) $rowRw[11];
+                                                                    $ttlTrsctnNetAmnt = $ttlTrsctnDbtAmnt - $ttlTrsctnCrdtAmnt;
+                                                                }
+                                                                $cntr += 1;
+                                                                ?>
+                                                                <tr id="oneAccbFSRptRow_<?php echo $cntr; ?>" class="hand_cursor"> 
+                                                                    <td class="lovtd">
+                                                                        <input type="checkbox" name="oneAccbFSRptRow<?php echo $cntr; ?>_CheckBox" value="oneAccbFSRptRow_<?php echo $cntr; ?>">
+                                                                    </td>                                
+                                                                    <td class="lovtd"><span><?php echo ($rowNumber); ?></span></td>    
+                                                                    <td class="lovtd" style="<?php echo $nameStyle1; ?>max-width:350px !important;white-space: nowrap; width: 450px; overflow: hidden;text-overflow: ellipsis;" title="<?php echo $rowRw[2]; ?>" >
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_AccountID" value="<?php echo $trsctnAcntID; ?>" style="width:100% !important;">  
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_IsParent" value="<?php echo $isParent; ?>" style="width:100% !important;">  
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_AccntNum" value="<?php echo trim($rowRw[1]); ?>" style="width:100% !important;">   
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_AccntNm" value="<?php echo trim($trsctnAcntNm); ?>" style="width:100% !important;">  
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_DbtAmnt" value="<?php echo $trsctnDbtAmnt; ?>" style="width:100% !important;">  
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_CrdtAmnt" value="<?php echo $trsctnCrdtAmnt; ?>" style="width:100% !important;">  
+                                                                        <input type="hidden" class="form-control" aria-label="..." id="oneAccbFSRptRow<?php echo $cntr; ?>_TrnsDte" value="<?php echo trim($trsctnLineDate); ?>" style="width:100% !important;">
+                                                                        <span><?php echo $trsctnAcntNm; ?></span>             
+                                                                    </td>
+                                                                    <td class="lovtd" style="<?php echo $numStyle1; ?>">
+                                                                        <span><?php echo number_format($trsctnDbtAmnt, 2); ?></span>
+                                                                    </td>
+                                                                    <td class="lovtd" style="<?php echo $numStyle1; ?>">
+                                                                        <span><?php echo number_format($trsctnCrdtAmnt, 2); ?></span>
+                                                                    </td>
+                                                                    <td class="lovtd" style="<?php echo $numStyle1; ?>">
+                                                                        <span><?php echo number_format($trsctnNetAmnt, 2); ?></span>
+                                                                    </td>
+                                                                    <td class="lovtd">
+                                                                        <span><?php echo $trsctnLineDate; ?></span>                   
+                                                                    </td>
+                                                                </tr>
+                                                                <?php
+                                                            }
+                                                            ?>
+                                                        </tbody>
+                                                        <tfoot>                                                            
+                                                            <tr>
+                                                                <th>&nbsp;</th>
+                                                                <!--<th>&nbsp;</th>-->
+                                                                <th style="">&nbsp;</th>
+                                                                <th>TOTALS:</th>
+                                                                <th style="text-align: right;">
+                                                                    <?php
+                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdJbDbtsTtlBtn\">" . number_format($ttlTrsctnDbtAmnt,
+                                                                            2, '.', ',') . "</span>";
+                                                                    ?>
+                                                                    <input type="hidden" id="myCptrdJbDbtsTtlVal" value="<?php echo $ttlTrsctnDbtAmnt; ?>">
+                                                                </th>
+                                                                <th style="text-align: right;">
+                                                                    <?php
+                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdJbCrdtsTtlBtn\">" . number_format($ttlTrsctnCrdtAmnt,
+                                                                            2, '.', ',') . "</span>";
+                                                                    ?>
+                                                                    <input type="hidden" id="myCptrdJbCrdtsTtlVal" value="<?php echo $ttlTrsctnCrdtAmnt; ?>">
+                                                                </th>
+                                                                <th style="text-align: right;">
+                                                                    <?php
+                                                                    echo "<span style=\"color:red;font-weight:bold;font-size:14px;\" id=\"myCptrdJbNetTtlBtn\">" . number_format($ttlTrsctnNetAmnt,
+                                                                            2, '.', ',') . "</span>";
+                                                                    ?>
+                                                                    <input type="hidden" id="myCptrdJbNetTtlVal" value="<?php echo $ttlTrsctnNetAmnt; ?>">
+                                                                </th>   
+                                                                <th style="">&nbsp;</th>   
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
                 <?php
             }
         }

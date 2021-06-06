@@ -13497,6 +13497,7 @@ function saveAccbPymntsForm(funccrnm,shdSbmt,rptID,alrtID,paramsStr) {
                                     slctdDetTransLines +
                                     $("#oneAccbPymntsSmryRow" + rndmNum + "_TrnsLnID")
                                         .val()
+                                        .replace(/[^-?0-9\.]/g,"")
                                         .replace(/(~)/g,"{-;-;}")
                                         .replace(/(\|)/g,"{:;:;}") +
                                     "~" +
@@ -13509,6 +13510,7 @@ function saveAccbPymntsForm(funccrnm,shdSbmt,rptID,alrtID,paramsStr) {
                                         .replace(/(\|)/g,"{:;:;}") +
                                     "~" +
                                     lineEntrdAmt
+                                        .replace(/[^-?0-9\.]/g,"")
                                         .replace(/(~)/g,"{-;-;}")
                                         .replace(/(\|)/g,"{:;:;}") +
                                     "|";

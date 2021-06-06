@@ -98,7 +98,7 @@ function rhoHex2Rgba($color, $opacity = false)
     print_r($rslt);
     exit();
  */
-function rhofetchFromAPI($url, $data, $cntentTyp = "application/x-www-form-urlencoded", $method = 'GET')
+function rhofetchFromAPI($url = '', $data = [], $cntentTyp = "application/x-www-form-urlencoded", $method = 'GET')
 {
     //$url = 'https://jsonplaceholder.typicode.com/todos/1';
     //$data = array('key1' => 'value1', 'key2' => 'value2');
@@ -2828,7 +2828,10 @@ function getItmUomLovs($uomItemCode)
 
 function insertSpaces($str, $insChar, $maxChrWidth)
 {
-    $arrystr = str_split($str);
+    $arrystr = [];
+    if ($str != "") {
+        $arrystr = str_split($str);
+    }
     $res = "";
     for ($i = 0; $i < count($arrystr); $i++) {
         $res .= $arrystr[$i];
