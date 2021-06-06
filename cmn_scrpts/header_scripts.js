@@ -932,6 +932,11 @@ function openATab(slctr, linkArgs) {
                             prepareHosp(linkArgs, $body, targ, xmlhttp.responseText);
                         });
                         loadScript("app/inv/inv.js?v=" + jsFilesVrsn, function () {});
+                    } else if (linkArgs.indexOf("grp=50&typ=1") !== -1) {
+                        loadScript("app/ccs/ccs.js?v=" + jsFilesVrsn,function () {
+                            $this.tab('show');
+                            prepareCcs(linkArgs,$body,targ,xmlhttp.responseText);
+                        });
                     } else {
                         $(targ).html(xmlhttp.responseText);
                         $this.tab('show');
