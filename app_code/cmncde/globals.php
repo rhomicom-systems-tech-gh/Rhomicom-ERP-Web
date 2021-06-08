@@ -3346,23 +3346,23 @@ function getLovValues(
                 " OFFSET " . abs($offset * $limit_size);
         } else if ($criteriaID >= 0 && $criteriaID2 != "" && $criteriaID3 == "") {
             $strSql = "select " . $selLst . " from (" . str_replace("{:prsn_id}", getUserPrsnID1($usrID), getSQLForDynamicVlLst($lovID)) .
-                ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and tbl1.e = '" .
+                ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and (''||tbl1.e) = '" .
                 loc_db_escape_string($criteriaID2) . "' " . $extrWhere . $addtnlWhere . ") " . $ordrBy . " LIMIT " . $limit_size .
                 " OFFSET " . abs($offset * $limit_size);
         } else if ($criteriaID >= 0 && $criteriaID2 != "" && $criteriaID3 != "") {
             $strSql = "select " . $selLst . " from (" . str_replace("{:prsn_id}", getUserPrsnID1($usrID), getSQLForDynamicVlLst($lovID)) .
-                ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and tbl1.e = '" .
-                loc_db_escape_string($criteriaID2) . "' and tbl1.f like '" . loc_db_escape_string($criteriaID3) .
+                ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and (''||tbl1.e) = '" .
+                loc_db_escape_string($criteriaID2) . "' and (''||tbl1.f) like '" . loc_db_escape_string($criteriaID3) .
                 "' " . $extrWhere . $addtnlWhere . ") " . $ordrBy . " LIMIT " . $limit_size .
                 " OFFSET " . abs($offset * $limit_size);
         } else if ($criteriaID < 0 && $criteriaID2 != "" && $criteriaID3 == "") {
             $strSql = "select " . $selLst . " from (" . str_replace("{:prsn_id}", getUserPrsnID1($usrID), getSQLForDynamicVlLst($lovID)) .
-                ") tbl1 WHERE (tbl1.e = '" .
+                ") tbl1 WHERE ((''||tbl1.e) = '" .
                 loc_db_escape_string($criteriaID2) . "' " . $extrWhere . $addtnlWhere . ") " . $ordrBy . " LIMIT " . $limit_size .
                 " OFFSET " . abs($offset * $limit_size);
         } else if ($criteriaID >= 0 && $criteriaID2 == "" && $criteriaID3 != "") {
             $strSql = "select " . $selLst . " from (" . str_replace("{:prsn_id}", getUserPrsnID1($usrID), getSQLForDynamicVlLst($lovID)) .
-                ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and tbl1.f like '" . loc_db_escape_string($criteriaID3) .
+                ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and (''||tbl1.f) like '" . loc_db_escape_string($criteriaID3) .
                 "' " . $extrWhere . $addtnlWhere . ") " . $ordrBy . " LIMIT " . $limit_size .
                 " OFFSET " . abs($offset * $limit_size);
         } else {
@@ -3439,20 +3439,20 @@ function getTtlLovValues(
                 ") tbl1 WHERE tbl1.d = " . $criteriaID . " " . $extrWhere . $addtnlWhere . " ";
         } else if ($criteriaID >= 0 && $criteriaID2 != "" && $criteriaID3 == "") {
             $strSql = "select count(1) from (" . str_replace("{:prsn_id}", getUserPrsnID1($usrID), getSQLForDynamicVlLst($lovID)) .
-                ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and tbl1.e = '" .
+                ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and (''||tbl1.e) = '" .
                 loc_db_escape_string($criteriaID2) . "' " . $extrWhere . $addtnlWhere . ") ";
         } else if ($criteriaID >= 0 && $criteriaID2 != "" && $criteriaID3 != "") {
             $strSql = "select count(1) from (" . str_replace("{:prsn_id}", getUserPrsnID1($usrID), getSQLForDynamicVlLst($lovID)) .
-                ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and tbl1.e = '" .
-                loc_db_escape_string($criteriaID2) . "' and tbl1.f like '" . loc_db_escape_string($criteriaID3) .
+                ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and (''||tbl1.e) = '" .
+                loc_db_escape_string($criteriaID2) . "' and (''||tbl1.f) like '" . loc_db_escape_string($criteriaID3) .
                 "' " . $extrWhere . $addtnlWhere . ") ";
         } else if ($criteriaID < 0 && $criteriaID2 != "" && $criteriaID3 == "") {
             $strSql = "select count(1) from (" . str_replace("{:prsn_id}", getUserPrsnID1($usrID), getSQLForDynamicVlLst($lovID)) .
-                ") tbl1 WHERE (tbl1.e = '" .
+                ") tbl1 WHERE ((''||tbl1.e) = '" .
                 loc_db_escape_string($criteriaID2) . "' " . $extrWhere . $addtnlWhere . ") ";
         } else if ($criteriaID >= 0 && $criteriaID2 == "" && $criteriaID3 != "") {
             $strSql = "select count(1) from (" . str_replace("{:prsn_id}", getUserPrsnID1($usrID), getSQLForDynamicVlLst($lovID)) .
-                ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and tbl1.f like '" . loc_db_escape_string($criteriaID3) .
+                ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and (''||tbl1.f) like '" . loc_db_escape_string($criteriaID3) .
                 "' " . $extrWhere . $addtnlWhere . ") ";
         } else {
             $strSql = "select count(1) from (" . str_replace("{:prsn_id}", getUserPrsnID1($usrID), getSQLForDynamicVlLst($lovID)) .
