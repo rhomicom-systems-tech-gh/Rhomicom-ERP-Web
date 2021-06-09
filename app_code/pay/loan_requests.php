@@ -444,7 +444,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                                                         echo $row[13] . " - <span style=\"" . $style2 . "\">" . ($row[15] == "1" ? "Processed" : "Not Processed") . "</span>";
                                                                                                                         ?>
                                                     </td>
-                                                    <td class="lovtd" style="font-weight:bold;color:#aaa;"><?php
+                                                    <td class="lovtd" style="font-weight:bold;color:#555;"><?php
                                                                                                             echo $row[16] . " - <span style=\"" . $style3 . "\">" . ($row[17]) . "</span>";
                                                                                                             ?>
                                                     </td>
@@ -2193,7 +2193,7 @@ function LoanRqstRODsply($sbmtdPayTrnsRqstsID)
                                                                                                         echo $row[13] . " - <span style=\"" . $style2 . "\">" . ($row[15] == "1" ? "Processed" : "Not Processed") . "</span>";
                                                                                                         ?>
                                     </td>
-                                    <td class="lovtd" style="font-weight:bold;color:#aaa;"><?php
+                                    <td class="lovtd" style="font-weight:bold;color:#555;"><?php
                                                                                             echo $row[16] . " - <span style=\"" . $style3 . "\">" . ($row[17]) . "</span>";
                                                                                             ?>
                                     </td>

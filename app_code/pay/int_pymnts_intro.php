@@ -4445,9 +4445,11 @@ function get_TrnsRqstsDocHdr($searchWord, $searchIn, $offset, $limit_size, $orgI
         to_char(to_timestamp(a.creation_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') rqst_sbmt_date, 
         round(a.PRNCPL_AMOUNT,2) PRNCPL_AMOUNT, a.MNTHLY_DEDUC, a.INTRST_RATE, 
         a.REPAY_PERIOD, a.REQUEST_STATUS is_pstd, a.HAS_AGREED, a.IS_PROCESSED,
-        pay.get_tk_loan_end_dte(a.pay_request_id), 
+        (CASE  
+        WHEN pay.get_tk_loan_end_dte(pay_request_id) like '%0001%' THEN ''
+        ELSE pay.get_tk_loan_end_dte(a.pay_request_id) END) repay_end_date, 
         (CASE WHEN a.request_type <> 'LOAN' THEN ''
-        WHEN pay.get_tk_loan_end_dte(pay_request_id) like '%0001%' THEN 'NOT PAID'
+        WHEN pay.get_tk_loan_end_dte(pay_request_id) like '%0001%' THEN ''
         WHEN to_timestamp(pay.get_tk_loan_end_dte(pay_request_id),'DD-MON-YYYY')< now() THEN 'PAID'
         ELSE 'NOT PAID' END) payment_status
         FROM pay.pay_loan_pymnt_rqsts a, pay.loan_pymnt_invstmnt_typs b 
@@ -4517,9 +4519,11 @@ function get_IndvdlTrnsRqsts($searchWord, $searchIn, $offset, $limit_size, $orgI
         to_char(to_timestamp(a.creation_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') rqst_sbmt_date, 
         round(a.PRNCPL_AMOUNT,2) PRNCPL_AMOUNT, a.MNTHLY_DEDUC, a.INTRST_RATE, 
         a.REPAY_PERIOD, a.REQUEST_STATUS is_pstd, a.HAS_AGREED, a.IS_PROCESSED,
-        pay.get_tk_loan_end_dte(a.pay_request_id), 
+        (CASE  
+        WHEN pay.get_tk_loan_end_dte(pay_request_id) like '%0001%' THEN ''
+        ELSE pay.get_tk_loan_end_dte(a.pay_request_id) END) repay_end_date, 
         (CASE WHEN a.request_type <> 'LOAN' THEN ''
-        WHEN pay.get_tk_loan_end_dte(pay_request_id) like '%0001%' THEN 'NOT PAID'
+        WHEN pay.get_tk_loan_end_dte(pay_request_id) like '%0001%' THEN ''
         WHEN to_timestamp(pay.get_tk_loan_end_dte(pay_request_id),'DD-MON-YYYY')< now() THEN 'PAID'
         ELSE 'NOT PAID' END) payment_status
         FROM pay.pay_loan_pymnt_rqsts a, pay.loan_pymnt_invstmnt_typs b 
