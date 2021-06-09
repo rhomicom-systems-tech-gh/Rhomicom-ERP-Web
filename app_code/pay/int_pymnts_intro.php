@@ -4517,9 +4517,10 @@ function get_IndvdlTrnsRqsts($searchWord, $searchIn, $offset, $limit_size, $orgI
         to_char(to_timestamp(a.creation_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') rqst_sbmt_date, 
         round(a.PRNCPL_AMOUNT,2) PRNCPL_AMOUNT, a.MNTHLY_DEDUC, a.INTRST_RATE, 
         a.REPAY_PERIOD, a.REQUEST_STATUS is_pstd, a.HAS_AGREED, a.IS_PROCESSED,
-        pay.get_tk_loan_end_dte(a.pay_request_id), 
-        (CASE WHEN to_timestamp(coalesce(NULLIF(pay.get_tk_loan_end_dte(pay_request_id),''),to_char(now(),'DD-MON-YYYY')),'DD-MON-YYYY')< now() 
-        AND pay.get_tk_loan_end_dte(pay_request_id) NOT like '%0001%' THEN 'PAID'
+        pay.get_tk_loan_end_dte(a.pay_request_id) 
+        (CASE WHEN a.request_type <> 'LOAN' THEN ''
+        WHEN pay.get_tk_loan_end_dte(pay_request_id) like '%0001%' THEN 'NOT PAID'
+        WHEN to_timestamp(pay.get_tk_loan_end_dte(pay_request_id),'DD-MON-YYYY')< now() THEN 'PAID'
         ELSE 'NOT PAID' END) payment_status
         FROM pay.pay_loan_pymnt_rqsts a, pay.loan_pymnt_invstmnt_typs b 
         WHERE((a.item_type_id=b.item_type_id and a.REQUEST_STATUS NOT IN ('Not Submitted','Rejected','Withdrawn') and a.org_id = " . $orgID . ")" . $whrcls . $unpstdCls .

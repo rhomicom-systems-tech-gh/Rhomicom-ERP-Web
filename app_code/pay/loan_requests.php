@@ -437,7 +437,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     }
                                                     $style3 = "color:red;";
                                                     if ($row[17] == "PAID") {
-                                                        $style2 = "color:green;";
+                                                        $style3 = "color:green;";
                                                     }
                                                     ?>
                                                     <td class="lovtd" style="font-weight:bold;<?php echo $style1; ?>"><?php
@@ -2186,7 +2186,7 @@ function LoanRqstRODsply($sbmtdPayTrnsRqstsID)
                                     }
                                     $style3 = "color:red;";
                                     if ($row[17] == "PAID") {
-                                        $style2 = "color:green;";
+                                        $style3 = "color:green;";
                                     }
                                     ?>
                                     <td class="lovtd" style="font-weight:bold;<?php echo $style1; ?>"><?php
