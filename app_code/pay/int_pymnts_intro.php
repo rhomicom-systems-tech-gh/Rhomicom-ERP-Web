@@ -4450,7 +4450,7 @@ function get_TrnsRqstsDocHdr($searchWord, $searchIn, $offset, $limit_size, $orgI
         ELSE pay.get_tk_loan_end_dte(a.pay_request_id) END) repay_end_date, 
         (CASE WHEN a.request_type <> 'LOAN' OR a.is_processed <> '1' THEN ''
         WHEN pay.get_tk_loan_req_cur_bals (pay_request_id,'') = 0 THEN 'PAID'
-        WHEN to_timestamp(pay.get_tk_loan_end_dte(pay_request_id),'DD-MON-YYYY')< now() THEN 'PAID'
+        WHEN (to_timestamp(pay.get_tk_loan_end_dte(pay_request_id),'DD-MON-YYYY')+ interval '15 day') < now() THEN 'PAID'
         ELSE 'NOT PAID' END) payment_status
         FROM pay.pay_loan_pymnt_rqsts a, pay.loan_pymnt_invstmnt_typs b 
         WHERE((a.item_type_id=b.item_type_id and a.org_id = " . $orgID . ")" . $whrcls . $unpstdCls .
@@ -4524,7 +4524,7 @@ function get_IndvdlTrnsRqsts($searchWord, $searchIn, $offset, $limit_size, $orgI
         ELSE pay.get_tk_loan_end_dte(a.pay_request_id) END) repay_end_date, 
         (CASE WHEN a.request_type <> 'LOAN' OR a.is_processed <> '1' THEN ''
         WHEN pay.get_tk_loan_req_cur_bals (pay_request_id,'') = 0 THEN 'PAID'
-        WHEN to_timestamp(pay.get_tk_loan_end_dte(pay_request_id),'DD-MON-YYYY')< now() THEN 'PAID'
+        WHEN (to_timestamp(pay.get_tk_loan_end_dte(pay_request_id),'DD-MON-YYYY')+ interval '15 day') < now() THEN 'PAID'
         ELSE 'NOT PAID' END) payment_status
         FROM pay.pay_loan_pymnt_rqsts a, pay.loan_pymnt_invstmnt_typs b 
         WHERE((a.item_type_id=b.item_type_id and a.REQUEST_STATUS NOT IN ('Not Submitted','Rejected','Withdrawn') and a.org_id = " . $orgID . ")" . $whrcls . $unpstdCls .
