@@ -4448,7 +4448,7 @@ function get_TrnsRqstsDocHdr($searchWord, $searchIn, $offset, $limit_size, $orgI
         (CASE  
         WHEN pay.get_tk_loan_end_dte(pay_request_id) like '%0001%' THEN ''
         ELSE pay.get_tk_loan_end_dte(a.pay_request_id) END) repay_end_date, 
-        (CASE WHEN a.request_type <> 'LOAN' THEN ''
+        (CASE WHEN a.request_type <> 'LOAN' OR a.is_processed <> '1' THEN ''
         WHEN pay.get_tk_loan_req_cur_bals (pay_request_id,'') = 0 THEN 'PAID'
         WHEN to_timestamp(pay.get_tk_loan_end_dte(pay_request_id),'DD-MON-YYYY')< now() THEN 'PAID'
         ELSE 'NOT PAID' END) payment_status
@@ -4522,7 +4522,7 @@ function get_IndvdlTrnsRqsts($searchWord, $searchIn, $offset, $limit_size, $orgI
         (CASE  
         WHEN pay.get_tk_loan_end_dte(pay_request_id) like '%0001%' THEN ''
         ELSE pay.get_tk_loan_end_dte(a.pay_request_id) END) repay_end_date, 
-        (CASE WHEN a.request_type <> 'LOAN' THEN ''
+        (CASE WHEN a.request_type <> 'LOAN' OR a.is_processed <> '1' THEN ''
         WHEN pay.get_tk_loan_req_cur_bals (pay_request_id,'') = 0 THEN 'PAID'
         WHEN to_timestamp(pay.get_tk_loan_end_dte(pay_request_id),'DD-MON-YYYY')< now() THEN 'PAID'
         ELSE 'NOT PAID' END) payment_status
