@@ -387,7 +387,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <th style="text-align:center;max-width:35px;width:35px;padding:8px 4px !important;">CUR.</th>
                                                 <th style="text-align:right;max-width:90px;width:90px;">Principal Amount</th>
                                                 <th style="max-width:145px;width:145px;">Request Status</th>
-                                                <th style="max-width:165px;width:165px;">Payment Status</th>
+                                                <th style="max-width:165px;width:165px;">Repayment End-Date</th>
                                                 <?php if ($canDel === true) { ?>
                                                     <th style="max-width:30px;width:30px;">...</th>
                                                 <?php } ?>
@@ -444,7 +444,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                                                         echo $row[13] . " - <span style=\"" . $style2 . "\">" . ($row[15] == "1" ? "Processed" : "Not Processed") . "</span>";
                                                                                                                         ?>
                                                     </td>
-                                                    <td class="lovtd" style="font-weight:bold;color:blue;"><?php
+                                                    <td class="lovtd" style="font-weight:bold;color:#aaa;"><?php
                                                                                                             echo $row[16] . " - <span style=\"" . $style3 . "\">" . ($row[17]) . "</span>";
                                                                                                             ?>
                                                     </td>
@@ -2148,7 +2148,7 @@ function LoanRqstRODsply($sbmtdPayTrnsRqstsID)
                                 <th style="text-align:center;max-width:40px;width:40px;padding:8px 4px !important;">CUR.</th>
                                 <th style="text-align:right;max-width:100px;width:100px;">Principal Amount</th>
                                 <th style="max-width:165px;width:165px;">Request Status</th>
-                                <th style="max-width:165px;width:165px;">Payment Status</th>
+                                <th style="max-width:165px;width:165px;">Repayment End-Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -2193,7 +2193,7 @@ function LoanRqstRODsply($sbmtdPayTrnsRqstsID)
                                                                                                         echo $row[13] . " - <span style=\"" . $style2 . "\">" . ($row[15] == "1" ? "Processed" : "Not Processed") . "</span>";
                                                                                                         ?>
                                     </td>
-                                    <td class="lovtd" style="font-weight:bold;color:blue;"><?php
+                                    <td class="lovtd" style="font-weight:bold;color:#aaa;"><?php
                                                                                             echo $row[16] . " - <span style=\"" . $style3 . "\">" . ($row[17]) . "</span>";
                                                                                             ?>
                                     </td>
