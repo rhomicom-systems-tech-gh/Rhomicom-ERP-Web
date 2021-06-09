@@ -387,6 +387,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <th style="text-align:center;max-width:35px;width:35px;padding:8px 4px !important;">CUR.</th>
                                                 <th style="text-align:right;max-width:90px;width:90px;">Principal Amount</th>
                                                 <th style="max-width:145px;width:145px;">Request Status</th>
+                                                <th style="max-width:165px;width:165px;">Payment Status</th>
                                                 <?php if ($canDel === true) { ?>
                                                     <th style="max-width:30px;width:30px;">...</th>
                                                 <?php } ?>
@@ -434,10 +435,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     if ($row[15] == "1") {
                                                         $style2 = "color:blue;";
                                                     }
+                                                    $style3 = "color:red;";
+                                                    if ($row[17] == "PAID") {
+                                                        $style2 = "color:green;";
+                                                    }
                                                     ?>
                                                     <td class="lovtd" style="font-weight:bold;<?php echo $style1; ?>"><?php
                                                                                                                         echo $row[13] . " - <span style=\"" . $style2 . "\">" . ($row[15] == "1" ? "Processed" : "Not Processed") . "</span>";
                                                                                                                         ?>
+                                                    </td>
+                                                    <td class="lovtd" style="font-weight:bold;color:blue;"><?php
+                                                                                                            echo $row[16] . " - <span style=\"" . $style3 . "\">" . ($row[17]) . "</span>";
+                                                                                                            ?>
                                                     </td>
                                                     <?php if ($canDel === true) { ?>
                                                         <td class="lovtd">
@@ -558,11 +567,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $rqstStatus = $rqStatus;
                 $routingID = getMxRoutingID($sbmtdPayTrnsRqstsID, "Internal Pay " . ucfirst(strtolower($payTrnsRqstsType)) . " Requests");
                 $reportTitle = "Loan Application Letter";
-                                    if ($payTrnsRqstsType == "SETTLEMENT") {
-                                        $reportTitle = "Loan Settlement Request";
-                                    } else if ($payTrnsRqstsType == "PAYMENT") {
-                                        $reportTitle = "Dues Contribution Payment Request";
-                                    }
+                if ($payTrnsRqstsType == "SETTLEMENT") {
+                    $reportTitle = "Loan Settlement Request";
+                } else if ($payTrnsRqstsType == "PAYMENT") {
+                    $reportTitle = "Dues Contribution Payment Request";
+                }
                 $reportName = "Welfare Loan Application Letter";
                 $rptID = getRptID($reportName);
                 $prmID1 = getParamIDUseSQLRep("{:pay_rqst_id}", $rptID);
@@ -2139,6 +2148,7 @@ function LoanRqstRODsply($sbmtdPayTrnsRqstsID)
                                 <th style="text-align:center;max-width:40px;width:40px;padding:8px 4px !important;">CUR.</th>
                                 <th style="text-align:right;max-width:100px;width:100px;">Principal Amount</th>
                                 <th style="max-width:165px;width:165px;">Request Status</th>
+                                <th style="max-width:165px;width:165px;">Payment Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -2174,10 +2184,18 @@ function LoanRqstRODsply($sbmtdPayTrnsRqstsID)
                                     if ($row[15] == "1") {
                                         $style2 = "color:blue;";
                                     }
+                                    $style3 = "color:red;";
+                                    if ($row[17] == "PAID") {
+                                        $style2 = "color:green;";
+                                    }
                                     ?>
                                     <td class="lovtd" style="font-weight:bold;<?php echo $style1; ?>"><?php
                                                                                                         echo $row[13] . " - <span style=\"" . $style2 . "\">" . ($row[15] == "1" ? "Processed" : "Not Processed") . "</span>";
                                                                                                         ?>
+                                    </td>
+                                    <td class="lovtd" style="font-weight:bold;color:blue;"><?php
+                                                                                            echo $row[16] . " - <span style=\"" . $style3 . "\">" . ($row[17]) . "</span>";
+                                                                                            ?>
                                     </td>
                                 </tr>
                             <?php
