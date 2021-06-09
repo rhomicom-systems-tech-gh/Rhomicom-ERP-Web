@@ -4447,7 +4447,7 @@ function get_TrnsRqstsDocHdr($searchWord, $searchIn, $offset, $limit_size, $orgI
         a.REPAY_PERIOD, a.REQUEST_STATUS is_pstd, a.HAS_AGREED, a.IS_PROCESSED,
         pay.get_tk_loan_end_dte(a.pay_request_id), 
         (CASE WHEN to_timestamp(coalesce(NULLIF(pay.get_tk_loan_end_dte(pay_request_id),''),now()),'DD-MON-YYYY')< now() 
-        AND to_char(to_timestamp(coalesce(NULLIF(pay.get_tk_loan_end_dte(pay_request_id),''),now()),'DD-MON-YYYY'),'YYYY') != '0001' THEN 'PAID'
+        AND pay.get_tk_loan_end_dte(pay_request_id) NOT like '%0001%' THEN 'PAID'
         ELSE 'NOT PAID' END) payment_status
         FROM pay.pay_loan_pymnt_rqsts a, pay.loan_pymnt_invstmnt_typs b 
         WHERE((a.item_type_id=b.item_type_id and a.org_id = " . $orgID . ")" . $whrcls . $unpstdCls .
@@ -4518,7 +4518,7 @@ function get_IndvdlTrnsRqsts($searchWord, $searchIn, $offset, $limit_size, $orgI
         a.REPAY_PERIOD, a.REQUEST_STATUS is_pstd, a.HAS_AGREED, a.IS_PROCESSED,
         pay.get_tk_loan_end_dte(a.pay_request_id), 
         (CASE WHEN to_timestamp(coalesce(NULLIF(pay.get_tk_loan_end_dte(pay_request_id),''),now()),'DD-MON-YYYY')< now() 
-        AND to_char(to_timestamp(coalesce(NULLIF(pay.get_tk_loan_end_dte(pay_request_id),''),now()),'DD-MON-YYYY'),'YYYY') != '0001' THEN 'PAID'
+        AND pay.get_tk_loan_end_dte(pay_request_id) NOT like '%0001%' THEN 'PAID'
         ELSE 'NOT PAID' END) payment_status
         FROM pay.pay_loan_pymnt_rqsts a, pay.loan_pymnt_invstmnt_typs b 
         WHERE((a.item_type_id=b.item_type_id and a.REQUEST_STATUS NOT IN ('Not Submitted','Rejected','Withdrawn') and a.org_id = " . $orgID . ")" . $whrcls . $unpstdCls .
