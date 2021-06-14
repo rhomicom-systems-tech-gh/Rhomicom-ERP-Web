@@ -1018,6 +1018,7 @@ function printEmailFullTermRpt(pKeyID) {
                 processData: false,
                 success: function (data) {
                     setTimeout(function () {
+                        console.log('RPT:::',data);
                         dialog.find('.bootbox-body').html(data.message);
                         if (data.message.indexOf("Success") !== -1) {
                             dialog.modal('hide');

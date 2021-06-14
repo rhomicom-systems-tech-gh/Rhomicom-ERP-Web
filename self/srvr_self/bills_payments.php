@@ -1787,6 +1787,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <th style="text-align:center;">CUR.</th>
                                         <th style="text-align:right;">Principal Amount</th>
                                         <th style="">Request Status</th>
+                                        <th style="">Repayment End-Date</th>
                                         <?php if ($canDel === true) { ?>
                                             <th style="">...</th>
                                         <?php } ?>
@@ -1834,10 +1835,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             if ($row[15] == "1") {
                                                 $style2 = "color:blue;";
                                             }
+                                            $style3 = "color:red;";
+                                            if ($row[17] == "PAID") {
+                                                $style3 = "color:green;";
+                                            }
                                             ?>
                                             <td class="lovtd" style="font-weight:bold;<?php echo $style1; ?>"><?php
                                                                                                                 echo $row[13] . " - <span style=\"" . $style2 . "\">" . ($row[15] == "1" ? "Processed" : "Not Processed") . "</span>";
                                                                                                                 ?>
+                                            </td>
+                                            <td class="lovtd" style="font-weight:bold;color:#555;"><?php
+                                                                                                    echo $row[16] . " - <span style=\"" . $style3 . "\">" . ($row[17]) . "</span>";
+                                                                                                    ?>
                                             </td>
                                             <?php if ($canDel === true) { ?>
                                                 <td class="lovtd">
@@ -4235,7 +4244,14 @@ a.pybls_smmry_type !='7Total Payments Made' and a.pybls_smmry_type !='8Outstandi
         a.item_type_id,b.item_type_name, a.local_clsfctn, a.REQUEST_REASON, 
         to_char(to_timestamp(a.creation_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') rqst_sbmt_date, 
         round(a.PRNCPL_AMOUNT,2) PRNCPL_AMOUNT, a.MNTHLY_DEDUC, a.INTRST_RATE, 
-        a.REPAY_PERIOD, a.REQUEST_STATUS is_pstd, a.HAS_AGREED, a.IS_PROCESSED
+        a.REPAY_PERIOD, a.REQUEST_STATUS is_pstd, a.HAS_AGREED, a.IS_PROCESSED,
+        (CASE  
+        WHEN pay.get_tk_loan_end_dte(pay_request_id) like '%0001%' THEN ''
+        ELSE pay.get_tk_loan_end_dte(a.pay_request_id) END) repay_end_date, 
+        (CASE WHEN a.request_type <> 'LOAN' OR a.is_processed <> '1' THEN ''
+        WHEN pay.get_tk_loan_req_cur_bals (pay_request_id,'') = 0 THEN 'PAID'
+        WHEN (to_timestamp(pay.get_tk_loan_end_dte(pay_request_id),'DD-MON-YYYY')+ interval '15 day') < now() THEN 'PAID'
+        ELSE 'NOT PAID' END) payment_status
         FROM pay.pay_loan_pymnt_rqsts a, pay.loan_pymnt_invstmnt_typs b 
         WHERE((a.item_type_id=b.item_type_id and a.org_id = " . $orgID . ")" . $whrcls . $unpstdCls .
                                     ") ORDER BY pay_request_id DESC LIMIT " . $limit_size .

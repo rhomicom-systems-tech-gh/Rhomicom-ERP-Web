@@ -298,7 +298,7 @@ function getAcaPgPrmssns($prsnID, $orgid, $usrID)
         . "pasn.get_prsn_siteid(" . $prsnID . "), "
         . "pasn.get_prsn_divid_of_spctype(" . $prsnID . ", 'Access Control Group'),"
         . "scm.getUserStoreID(" . $usrID . ", " . $orgid . "), "
-        . "sec.test_prmssns('View Summary Reports', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "') vwInvntry, "
+        . "sec.test_prmssns('View Summary Reports', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "')+sec.test_prmssns('View My Performance', 'Self Service','" . loc_db_escape_string($ssnRoles) . "') vwInvntry, "
         . "sec.test_prmssns('View Learning/Performance Management', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
         . "sec.test_prmssns('View Assessment Sheets', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
         . "sec.test_prmssns('View Task Assignment Setups', '" . $mdlNm . "','" . loc_db_escape_string($ssnRoles) . "'), "
@@ -1242,7 +1242,7 @@ function compute_one_assess_sht($p_assess_hdrid, $p_who_rn)
 {
     $strSql = "select aca.compute_one_assess_sht(" . $p_assess_hdrid .
         ", " . $p_who_rn . ")";
-
+    //var_dump($strSql);
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
