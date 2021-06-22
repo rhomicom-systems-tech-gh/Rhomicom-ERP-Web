@@ -3219,7 +3219,7 @@ function get_GLStmntRpt($trnsID, $asAtDate1, $asAtDate2)
 {
     /**(CASE WHEN tbl1.gnrl_data5 !='' THEN 'Ref. No.:'||tbl1.gnrl_data5 ELSE '' END) */
     $strSql = "SELECT
-tbl1.gnrl_data1::INTEGER rownumbr,
+public.chartoint(tbl1.gnrl_data1) rownumbr,
 tbl1.gnrl_data2 account_number,
 tbl1.gnrl_data3 accnt_name,
 tbl1.gnrl_data4 transaction_desc,
@@ -3237,15 +3237,15 @@ tbl1.gnrl_data12 trnsctn_date,
 to_char(to_timestamp('" . $asAtDate1 . "','YYYY-MM-DD'),'DD-Mon-YYYY') P_FROM_DATE,
 to_char(to_timestamp('" . $asAtDate2 . "','YYYY-MM-DD'),'DD-Mon-YYYY') P_TO_DATE, 
 (SELECT SUM(b.gnrl_data8::NUMERIC) FROM rpt.rpt_accb_data_storage b
-WHERE b.gnrl_data1::INTEGER <= tbl1.gnrl_data1::INTEGER
+WHERE public.chartoint(b.gnrl_data1) <= public.chartoint(tbl1.gnrl_data1)
 AND b.accb_rpt_runid=tbl1.accb_rpt_runid) rnng_bals,
 tbl1.gnrl_data11::NUMERIC trnsctn_line,
-tbl1.gnrl_data10::INTEGER accnt_id,
+public.chartoint(tbl1.gnrl_data10) accnt_id,
 tbl1.gnrl_data19 is_reconciled,
 tbl1.gnrl_data20 batch_vldty_status,
-tbl1.gnrl_data21::INTEGER src_batch_id
+public.chartoint(tbl1.gnrl_data21) src_batch_id
 FROM rpt.rpt_accb_data_storage tbl1 
-WHERE tbl1.accb_rpt_runid=" . $trnsID . " ORDER BY tbl1.gnrl_data1::INTEGER";
+WHERE tbl1.accb_rpt_runid=" . $trnsID . " ORDER BY public.chartoint(tbl1.gnrl_data1)";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
